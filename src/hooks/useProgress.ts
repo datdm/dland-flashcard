@@ -1,0 +1,67 @@
+"use client";
+
+import { useState, useEffect, useCallback } from "react";
+import { ProgressMap, VocabProgress } from "@/types";
+import { getItem, setItem, StorageKeys } from "@/lib/storage";
+
+const defaultProgress = (): VocabProgress => ({ learned: false, favorite: false });
+
+export function useProgress() {
+  const [progress, setProgress] = useState<ProgressMap>({});
+
+  useEffect(() => {
+    const data = getItem<ProgressMap>(StorageKeys.PROGRESS);
+    if (data) setProgress(data);
+  }, []);
+
+  const updateProgress = useCallback((id: string, patch: Partial<VocabProgress>) => {
+    setProgress((prev) => {
+      const current = prev[id] ?? defaultProgress();
+      const updated: ProgressMap = {
+        ...prev,
+        [id]: { ...current, ...patch },
+      };
+      setItem(StorageKeys.PROGRESS, updated);
+      return updated;
+    });
+  }, []);
+
+  const toggleLearned = useCallback(
+    (id: string) => {
+      setProgress((prev) => {
+        const current = prev[id] ?? defaultProgress();
+        const learned = !current.learned;
+        const updated: ProgressMap = {
+          ...prev,
+          [id]: {
+            ...current,
+            learned,
+            learnedAt: learned ? new Date().toISOString() : undefined,
+          },
+        };
+        setItem(StorageKeys.PROGRESS, updated);
+        return updated;
+      });
+    },
+    []
+  );
+
+  const toggleFavorite = useCallback((id: string) => {
+    setProgress((prev) => {
+      const current = prev[id] ?? defaultProgress();
+      const updated: ProgressMap = {
+        ...prev,
+        [id]: { ...current, favorite: !current.favorite },
+      };
+      setItem(StorageKeys.PROGRESS, updated);
+      return updated;
+    });
+  }, []);
+
+  const getVocabProgress = useCallback(
+    (id: string): VocabProgress => progress[id] ?? defaultProgress(),
+    [progress]
+  );
+
+  return { progress, toggleLearned, toggleFavorite, updateProgress, getVocabProgress };
+}

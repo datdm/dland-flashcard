@@ -1,0 +1,108 @@
+{
+  "lessons": [
+    {
+      "id": "n5-bai-1",
+      "name": "Bài 1 - Chào hỏi & Xưng hô",
+      "level": "N5",
+      "description": "Từ vựng cơ bản về chào hỏi và xưng hô trong tiếng Nhật",
+      "vocabulary": [
+        {
+          "id": "n5-001",
+          "kanji": "私",
+          "hiragana": "わたし",
+          "onyomi": "ワタシ",
+          "meaning": "Tôi (ngôi thứ nhất)",
+          "phonetic": "watashi"
+        },
+        {
+          "id": "n5-002",
+          "kanji": "先生",
+          "hiragana": "せんせい",
+          "onyomi": "センセイ",
+          "meaning": "Giáo viên, thầy/cô giáo",
+          "phonetic": "sensei"
+        },
+        {
+          "id": "n5-003",
+          "kanji": "学生",
+          "hiragana": "がくせい",
+          "onyomi": "ガクセイ",
+          "meaning": "Học sinh, sinh viên",
+          "phonetic": "gakusei"
+        },
+        {
+          "id": "n5-004",
+          "kanji": "日本語",
+          "hiragana": "にほんご",
+          "onyomi": "ニホンゴ",
+          "meaning": "Tiếng Nhật",
+          "phonetic": "nihongo"
+        },
+        {
+          "id": "n5-005",
+          "kanji": "名前",
+          "hiragana": "なまえ",
+          "onyomi": "ナマエ",
+          "meaning": "Tên",
+          "phonetic": "namae"
+        }
+      ]
+    },
+    {
+      "id": "n5-bai-2",
+      "name": "Bài 2 - Số đếm & Thời gian",
+      "level": "N5",
+      "description": "Số đếm và từ vựng về thời gian",
+      "vocabulary": [
+        {
+          "id": "n5-006",
+          "kanji": "一",
+          "hiragana": "いち",
+          "onyomi": "イチ",
+          "meaning": "Một (1)",
+          "phonetic": "ichi"
+        },
+        {
+          "id": "n5-007",
+          "kanji": "二",
+          "hiragana": "に",
+          "onyomi": "ニ",
+          "meaning": "Hai (2)",
+          "phonetic": "ni"
+        },
+        {
+          "id": "n5-008",
+          "kanji": "三",
+          "hiragana": "さん",
+          "onyomi": "サン",
+          "meaning": "Ba (3)",
+          "phonetic": "san"
+        },
+        {
+          "id": "n5-009",
+          "kanji": "今日",
+          "hiragana": "きょう",
+          "onyomi": "キョウ",
+          "meaning": "Hôm nay",
+          "phonetic": "kyou"
+        },
+        {
+          "id": "n5-010",
+          "kanji": "明日",
+          "hiragana": "あした",
+          "onyomi": "アシタ",
+          "meaning": "Ngày mai",
+          "phonetic": "ashita"
+        },
+        {
+          "id": "n5-011",
+          "kanji": "昨日",
+          "hiragana": "きのう",
+          "onyomi": "キノウ",
+          "meaning": "Hôm qua",
+          "phonetic": "kinou"
+        }
+      ]
+    }
+  ]
+}
