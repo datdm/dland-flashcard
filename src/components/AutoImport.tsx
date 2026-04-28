@@ -21,7 +21,8 @@ export default function AutoImport() {
 
     // Version changed → merge new lessons (don't overwrite existing ones)
     if (savedVersion !== DATA_VERSION) {
-      const merged: Lesson[] = [...existing.lessons];
+      // const merged: Lesson[] = [...existing.lessons];
+      const merged: Lesson[] = [];
       for (const lesson of DEFAULT_VOCABULARY.lessons) {
         merged.push(lesson);
         // const alreadyExists = merged.some((l) => l.id === lesson.id);
