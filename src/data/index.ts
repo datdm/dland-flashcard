@@ -9,7 +9,7 @@ import superMasterN5 from "./n5-super-master.json";
  * Tăng DATA_VERSION mỗi khi thêm bài học mới vào src/data/.
  * AutoImport sẽ tự động merge bài mới vào localStorage của user.
  */
-export const DATA_VERSION = "1.1.1";
+export const DATA_VERSION = "1.1.2";
 
 export const DEFAULT_VOCABULARY: LessonsData = {
   lessons: [
