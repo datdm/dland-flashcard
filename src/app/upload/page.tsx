@@ -62,6 +62,7 @@ export default function UploadPage() {
   const [saved, setSaved] = useState(false);
   const [pasteMode, setPasteMode] = useState(false);
   const [pasteText, setPasteText] = useState("");
+  const [curriculumName, setCurriculumName] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
 
   // Group existing lessons by level
@@ -118,10 +119,14 @@ export default function UploadPage() {
 
   const handleSave = () => {
     if (!preview?.valid || !preview.lessons) return;
-    addLessons(preview.lessons);
+    const lessonsToSave = curriculumName.trim()
+      ? preview.lessons.map((l) => (l.curriculum ? l : { ...l, curriculum: curriculumName.trim() }))
+      : preview.lessons;
+    addLessons(lessonsToSave);
     setSaved(true);
     setPreview(null);
     setPendingText(null);
+    setCurriculumName("");
   };
 
   const exampleJson = JSON.stringify(
@@ -222,6 +227,19 @@ export default function UploadPage() {
                   <li key={l.id}>• <strong>{l.name}</strong> ({l.vocabulary.length} từ)</li>
                 ))}
               </ul>
+              <div className="mb-4">
+                <label className="block text-xs font-medium text-gray-600 mb-1">
+                  Tên giáo trình (tuỳ chọn)
+                </label>
+                <input
+                  type="text"
+                  value={curriculumName}
+                  onChange={(e) => setCurriculumName(e.target.value)}
+                  placeholder="Ví dụ: N5 Super Master 語彙"
+                  className="w-full rounded-xl border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:border-indigo-400"
+                />
+                <p className="text-xs text-gray-400 mt-1">Nếu để trống, giáo trình sẽ theo dữ liệu JSON (nếu có).</p>
+              </div>
               <button
                 onClick={handleSave}
                 className="bg-emerald-600 text-white px-5 py-2 rounded-xl text-sm font-semibold hover:bg-emerald-700 transition-colors"

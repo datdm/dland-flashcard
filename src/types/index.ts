@@ -12,6 +12,7 @@ export interface Lesson {
   name: string;
   description?: string;
   level?: string;
+  curriculum?: string;
   vocabulary: Vocabulary[];
 }
 
