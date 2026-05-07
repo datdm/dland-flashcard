@@ -21,14 +21,12 @@ export default function AutoImport() {
 
     // Version changed → merge new lessons (don't overwrite existing ones)
     if (savedVersion !== DATA_VERSION) {
-      // const merged: Lesson[] = [...existing.lessons];
-      const merged: Lesson[] = [];
+      const merged: Lesson[] = [...existing.lessons];
       for (const lesson of DEFAULT_VOCABULARY.lessons) {
-        merged.push(lesson);
-        // const alreadyExists = merged.some((l) => l.id === lesson.id);
-        // if (!alreadyExists) {
-        //   merged.push(lesson);
-        // }
+        const alreadyExists = merged.some((l) => l.id === lesson.id);
+        if (!alreadyExists) {
+          merged.push(lesson);
+        }
       }
       setItem(StorageKeys.LESSONS, { lessons: merged });
       localStorage.setItem(VERSION_KEY, DATA_VERSION);

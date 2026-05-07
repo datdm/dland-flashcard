@@ -1,11 +1,13 @@
 const LESSONS_KEY = "flashcash-lessons";
 const PROGRESS_KEY = "flashcash-progress";
 const SETTINGS_KEY = "flashcash-settings";
+const NOTEBOOKS_KEY = "flashcash-notebooks";
 
 export const StorageKeys = {
   LESSONS: LESSONS_KEY,
   PROGRESS: PROGRESS_KEY,
   SETTINGS: SETTINGS_KEY,
+  NOTEBOOKS: NOTEBOOKS_KEY,
 } as const;
 
 export function getItem<T>(key: string): T | null {
@@ -32,7 +34,7 @@ export function removeItem(key: string): void {
 export function exportAllData(): string {
   if (typeof window === "undefined") return "{}";
   const data: Record<string, unknown> = {};
-  const keys = [LESSONS_KEY, PROGRESS_KEY, SETTINGS_KEY];
+  const keys = [LESSONS_KEY, PROGRESS_KEY, SETTINGS_KEY, NOTEBOOKS_KEY];
   for (const key of keys) {
     const raw = localStorage.getItem(key);
     if (raw) {
@@ -49,7 +51,7 @@ export function exportAllData(): string {
 export function importAllData(jsonString: string): void {
   if (typeof window === "undefined") return;
   const data = JSON.parse(jsonString) as Record<string, unknown>;
-  const keys = [LESSONS_KEY, PROGRESS_KEY, SETTINGS_KEY];
+  const keys = [LESSONS_KEY, PROGRESS_KEY, SETTINGS_KEY, NOTEBOOKS_KEY];
   for (const key of keys) {
     if (data[key] !== undefined) {
       localStorage.setItem(key, JSON.stringify(data[key]));

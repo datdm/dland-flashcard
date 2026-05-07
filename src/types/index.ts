@@ -22,6 +22,17 @@ export interface LessonsData {
   lessons: Lesson[];
 }
 
+export interface Notebook {
+  id: string;
+  name: string;
+  createdAt: string;
+  vocabulary: Vocabulary[];
+}
+
+export interface NotebooksData {
+  notebooks: Notebook[];
+}
+
 export interface VocabProgress {
   learned: boolean;
   favorite: boolean;

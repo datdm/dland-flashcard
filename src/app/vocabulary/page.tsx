@@ -29,7 +29,7 @@ export default function VocabularyPage() {
   });
 
   return (
-    <div className="p-4 max-w-2xl mx-auto">
+    <div className="p-4 max-w-5xl mx-auto">
       <div className="flex items-center justify-between mb-4">
         <h1 className="text-xl font-bold text-gray-800">Từ vựng</h1>
         <Link href="/" className="text-sm text-indigo-600 hover:underline">← Trang chủ</Link>
@@ -47,7 +47,7 @@ export default function VocabularyPage() {
           {filtered.length === 0 ? (
             <p className="text-center text-gray-400 py-10">Không có từ vựng nào trong mục này</p>
           ) : (
-            <div className="space-y-3">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
               {filtered.map((vocab) => (
                 <VocabularyListItem
                   key={vocab.id}
@@ -55,6 +55,7 @@ export default function VocabularyPage() {
                   progress={getVocabProgress(vocab.id)}
                   onToggleLearned={toggleLearned}
                   onToggleFavorite={toggleFavorite}
+                  variant="card"
                 />
               ))}
             </div>
