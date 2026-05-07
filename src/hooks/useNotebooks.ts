@@ -124,6 +124,31 @@ export function useNotebooks() {
     []
   );
 
+  // --- Validation ---
+
+  const checkDuplicate = useCallback(
+    (notebookId: string, kanji?: string, hiragana?: string, excludeVocabId?: string): Vocabulary | null => {
+      const nb = notebooks.find((n) => n.id === notebookId);
+      if (!nb) return null;
+      
+      // Only check if both kanji and hiragana are provided and non-empty
+      if (!kanji?.trim() || !hiragana?.trim()) return null;
+      
+      const normalizedKanji = kanji.trim();
+      const normalizedHiragana = hiragana.trim();
+      
+      const duplicate = nb.vocabulary.find(
+        (v) =>
+          v.id !== excludeVocabId &&
+          v.kanji?.trim() === normalizedKanji &&
+          v.hiragana?.trim() === normalizedHiragana
+      );
+      
+      return duplicate ?? null;
+    },
+    [notebooks]
+  );
+
   // --- Export / Import ---
 
   const exportNotebook = useCallback(
@@ -226,6 +251,7 @@ export function useNotebooks() {
     addVocab,
     updateVocab,
     deleteVocab,
+    checkDuplicate,
     exportNotebook,
     importVocabFromJson,
     importNotebook,

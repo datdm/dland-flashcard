@@ -26,13 +26,16 @@ const FIELD_LABELS: { key: keyof VocabFields; label: string; placeholder: string
 
 export default function NotebookDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
-  const { notebooks, addVocab, updateVocab, deleteVocab, exportNotebook, importVocabFromJson } = useNotebooks();
+  const { notebooks, addVocab, updateVocab, deleteVocab, exportNotebook, importVocabFromJson, checkDuplicate } = useNotebooks();
   const notebook = notebooks.find((nb) => nb.id === id);
 
   const [form, setForm] = useState<VocabFields>(EMPTY_FIELDS);
   const [showAddModal, setShowAddModal] = useState(false);
-  const [editId, setEditId] = useState<string | null>(null);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editingVocab, setEditingVocab] = useState<Vocabulary | null>(null);
   const [editFields, setEditFields] = useState<VocabFields>(EMPTY_FIELDS);
+  const [duplicateError, setDuplicateError] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
   const [importResult, setImportResult] = useState<{ msg: string; ok: boolean } | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -49,13 +52,22 @@ export default function NotebookDetailPage({ params }: { params: Promise<{ id: s
 
   const handleAdd = () => {
     if (!isFormValid) return;
+    
+    // Check for duplicates
+    const duplicate = checkDuplicate(id, form.kanji, form.hiragana);
+    if (duplicate) {
+      setDuplicateError(`Từ vựng đã tồn tại (kanji: ${duplicate.kanji}, hiragana: ${duplicate.hiragana})`);
+      return;
+    }
+    
     addVocab(id, form);
     setForm(EMPTY_FIELDS);
+    setDuplicateError(null);
     setShowAddModal(false);
   };
 
   const startEdit = (v: Vocabulary) => {
-    setEditId(v.id);
+    setEditingVocab(v);
     setEditFields({
       kanji: v.kanji ?? "",
       hiragana: v.hiragana ?? "",
@@ -63,12 +75,24 @@ export default function NotebookDetailPage({ params }: { params: Promise<{ id: s
       meaning: v.meaning ?? "",
       phonetic: v.phonetic ?? "",
     });
+    setDuplicateError(null);
+    setShowEditModal(true);
   };
 
   const saveEdit = () => {
-    if (!editId) return;
-    updateVocab(id, editId, editFields);
-    setEditId(null);
+    if (!editingVocab) return;
+    
+    // Check for duplicates, excluding the current vocab being edited
+    const duplicate = checkDuplicate(id, editFields.kanji, editFields.hiragana, editingVocab.id);
+    if (duplicate) {
+      setDuplicateError(`Từ vựng đã tồn tại (kanji: ${duplicate.kanji}, hiragana: ${duplicate.hiragana})`);
+      return;
+    }
+    
+    updateVocab(id, editingVocab.id, editFields);
+    setDuplicateError(null);
+    setShowEditModal(false);
+    setEditingVocab(null);
   };
 
   const handleExport = () => {
@@ -98,6 +122,19 @@ export default function NotebookDetailPage({ params }: { params: Promise<{ id: s
     };
     reader.readAsText(file);
   };
+
+  // Filter vocabulary by search query
+  const filteredVocabulary = notebook.vocabulary.filter((v) => {
+    if (!searchQuery.trim()) return true;
+    const query = searchQuery.toLowerCase();
+    return (
+      v.kanji?.toLowerCase().includes(query) ||
+      v.hiragana?.toLowerCase().includes(query) ||
+      v.onyomi?.toLowerCase().includes(query) ||
+      v.meaning?.toLowerCase().includes(query) ||
+      v.phonetic?.toLowerCase().includes(query)
+    );
+  });
 
   return (
     <div className="p-4 max-w-5xl mx-auto">
@@ -147,42 +184,47 @@ export default function NotebookDetailPage({ params }: { params: Promise<{ id: s
         </div>
       )}
 
+      {/* Search input */}
+      {notebook.vocabulary.length > 0 && (
+        <div className="mb-4 relative">
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Tìm kiếm từ vựng..."
+            className="w-full rounded-xl border border-gray-300 px-4 py-2.5 pr-10 text-sm focus:outline-none focus:border-indigo-400"
+          />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery("")}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-lg leading-none"
+            >
+              ✕
+            </button>
+          )}
+        </div>
+      )}
+
+      {searchQuery && notebook.vocabulary.length > 0 && (
+        <div className="mb-3 text-xs text-gray-500">
+          Hiển thị {filteredVocabulary.length} / {notebook.vocabulary.length} từ
+        </div>
+      )}
+
       {/* Vocabulary list */}
       {notebook.vocabulary.length === 0 ? (
         <div className="text-center text-gray-400 py-12">
           <p>Chưa có từ nào. Thêm từ đầu tiên ở trên!</p>
         </div>
+      ) : filteredVocabulary.length === 0 ? (
+        <div className="text-center text-gray-400 py-12">
+          <p className="text-4xl mb-3">🔍</p>
+          <p>Không tìm thấy từ vựng nào</p>
+        </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-          {notebook.vocabulary.map((v) =>
-            editId === v.id ? (
-              /* Edit inline within the card */
-              <div key={v.id} className="flex flex-col rounded-2xl border border-indigo-200 bg-indigo-50 shadow-sm">
-                <div className="px-3 pt-3 pb-2 flex-1">
-                  <p className="text-xs font-semibold text-indigo-600 mb-2">Chỉnh sửa</p>
-                  <div className="space-y-2">
-                    {FIELD_LABELS.map(({ key, label, placeholder }) => (
-                      <div key={key}>
-                        <label className="block text-xs text-gray-500 mb-0.5">{label}</label>
-                        <input
-                          type="text"
-                          value={(editFields[key] as string) ?? ""}
-                          onChange={(e) => setEditFields((f) => ({ ...f, [key]: e.target.value }))}
-                          placeholder={placeholder}
-                          className="w-full rounded-xl border border-indigo-300 px-2 py-1.5 text-xs focus:outline-none focus:border-indigo-500 bg-white"
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div className="flex gap-2 px-3 pb-3 mt-2">
-                  <button onClick={saveEdit} className="flex-1 bg-indigo-600 text-white rounded-xl py-1.5 text-xs font-medium hover:bg-indigo-700 transition-colors">Lưu</button>
-                  <button onClick={() => setEditId(null)} className="flex-1 border border-gray-300 rounded-xl py-1.5 text-xs text-gray-600 hover:border-gray-400 transition-colors">Hủy</button>
-                </div>
-              </div>
-            ) : (
-              /* Card display */
-              <div key={v.id} className="flex flex-col rounded-2xl border border-gray-200 bg-white shadow-sm h-full">
+          {filteredVocabulary.map((v) => (
+            <div key={v.id} className="flex flex-col rounded-2xl border border-gray-200 bg-white shadow-sm h-full">
                 {/* Top: word + edit/delete */}
                 <div className="flex items-start justify-between gap-1 px-3 pt-3 pb-1">
                   <div className="min-w-0 flex-1">
@@ -226,30 +268,40 @@ export default function NotebookDetailPage({ params }: { params: Promise<{ id: s
                   {v.onyomi || v.hiragana || "\u2013"}
                 </div>
               </div>
-            )
-          )}
+            ))}
         </div>
       )}
 
       {/* Add vocab modal */}
       {showAddModal && (
         <div
-          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40 p-4"
-          onClick={() => setShowAddModal(false)}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 overflow-y-auto"
+          onClick={() => {
+            setShowAddModal(false);
+            setDuplicateError(null);
+          }}
         >
           <div
-            className="w-full max-w-md bg-white rounded-2xl shadow-xl p-5"
+            className="w-full max-w-md bg-white rounded-2xl shadow-xl p-5 my-auto"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-4">
               <p className="font-semibold text-gray-800">Thêm từ mới</p>
               <button
-                onClick={() => setShowAddModal(false)}
+                onClick={() => {
+                  setShowAddModal(false);
+                  setDuplicateError(null);
+                }}
                 className="text-gray-400 hover:text-gray-600 text-xl leading-none"
               >
                 ✕
               </button>
             </div>
+            {duplicateError && (
+              <div className="mb-4 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-600">
+                ✗ {duplicateError}
+              </div>
+            )}
             <div className="space-y-3 mb-4">
               {FIELD_LABELS.map(({ key, label, placeholder }) => (
                 <div key={key}>
@@ -271,6 +323,63 @@ export default function NotebookDetailPage({ params }: { params: Promise<{ id: s
               className="w-full bg-indigo-600 text-white rounded-xl py-2.5 text-sm font-semibold hover:bg-indigo-700 disabled:opacity-40 transition-colors"
             >
               + Thêm từ
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Edit vocab modal */}
+      {showEditModal && editingVocab && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 overflow-y-auto"
+          onClick={() => {
+            setShowEditModal(false);
+            setEditingVocab(null);
+            setDuplicateError(null);
+          }}
+        >
+          <div
+            className="w-full max-w-md bg-white rounded-2xl shadow-xl p-5 my-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-4">
+              <p className="font-semibold text-gray-800">Chỉnh sửa từ</p>
+              <button
+                onClick={() => {
+                  setShowEditModal(false);
+                  setEditingVocab(null);
+                  setDuplicateError(null);
+                }}
+                className="text-gray-400 hover:text-gray-600 text-xl leading-none"
+              >
+                ✕
+              </button>
+            </div>
+            {duplicateError && (
+              <div className="mb-4 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-600">
+                ✗ {duplicateError}
+              </div>
+            )}
+            <div className="space-y-3 mb-4">
+              {FIELD_LABELS.map(({ key, label, placeholder }) => (
+                <div key={key}>
+                  <label className="block text-xs text-gray-500 mb-1">{label}</label>
+                  <input
+                    type="text"
+                    value={(editFields[key] as string) ?? ""}
+                    onChange={(e) => setEditFields((f) => ({ ...f, [key]: e.target.value }))}
+                    onKeyDown={(e) => e.key === "Enter" && saveEdit()}
+                    placeholder={placeholder}
+                    className="w-full rounded-xl border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:border-indigo-400"
+                  />
+                </div>
+              ))}
+            </div>
+            <button
+              onClick={saveEdit}
+              className="w-full bg-indigo-600 text-white rounded-xl py-2.5 text-sm font-semibold hover:bg-indigo-700 transition-colors"
+            >
+              Lưu thay đổi
             </button>
           </div>
         </div>

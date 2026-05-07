@@ -7,6 +7,7 @@ import { useNotebooks } from "@/hooks/useNotebooks";
 export default function NotebooksPage() {
   const { notebooks, createNotebook, deleteNotebook, exportNotebook, importNotebook } = useNotebooks();
   const [newName, setNewName] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const [importError, setImportError] = useState<string | null>(null);
   const [importSuccess, setImportSuccess] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -47,6 +48,24 @@ export default function NotebooksPage() {
     };
     reader.readAsText(file);
   };
+
+  // Filter notebooks by search query
+  const filteredNotebooks = notebooks.filter((nb) => {
+    if (!searchQuery.trim()) return true;
+    const query = searchQuery.toLowerCase();
+    
+    // Search in notebook name
+    if (nb.name.toLowerCase().includes(query)) return true;
+    
+    // Search in vocabulary fields
+    return nb.vocabulary.some((v) =>
+      v.kanji?.toLowerCase().includes(query) ||
+      v.hiragana?.toLowerCase().includes(query) ||
+      v.onyomi?.toLowerCase().includes(query) ||
+      v.meaning?.toLowerCase().includes(query) ||
+      v.phonetic?.toLowerCase().includes(query)
+    );
+  });
 
   return (
     <div className="p-4 max-w-2xl mx-auto">
@@ -91,15 +110,49 @@ export default function NotebooksPage() {
         </button>
       </div>
 
+      {/* Search input */}
+      <div className="mb-4 relative">
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Tìm kiếm sổ tay hoặc từ vựng..."
+          className="w-full rounded-xl border border-gray-300 px-4 py-2.5 pr-10 text-sm focus:outline-none focus:border-indigo-400"
+        />
+        {searchQuery && (
+          <button
+            onClick={() => setSearchQuery("")}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-lg leading-none"
+          >
+            ✕
+          </button>
+        )}
+      </div>
+
+      {searchQuery && (
+        <div className="mb-3 text-xs text-gray-500">
+          Tìm thấy {filteredNotebooks.length} / {notebooks.length} sổ tay
+        </div>
+      )}
+
       {/* Notebook list */}
       <div className="space-y-3">
-        {notebooks.length === 0 ? (
+        {filteredNotebooks.length === 0 ? (
           <div className="text-center text-gray-400 py-16">
-            <p className="text-4xl mb-3">📓</p>
-            <p>Chưa có sổ tay nào. Hãy tạo sổ tay đầu tiên!</p>
+            {searchQuery ? (
+              <>
+                <p className="text-4xl mb-3">🔍</p>
+                <p>Không tìm thấy sổ tay nào</p>
+              </>
+            ) : (
+              <>
+                <p className="text-4xl mb-3">📓</p>
+                <p>Chưa có sổ tay nào. Hãy tạo sổ tay đầu tiên!</p>
+              </>
+            )}
           </div>
         ) : (
-          notebooks.map((nb) => (
+          filteredNotebooks.map((nb) => (
             <div
               key={nb.id}
               className="bg-white border border-gray-200 rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow"
