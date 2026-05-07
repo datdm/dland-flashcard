@@ -53,10 +53,10 @@ export default function NotebooksPage() {
   const filteredNotebooks = notebooks.filter((nb) => {
     if (!searchQuery.trim()) return true;
     const query = searchQuery.toLowerCase();
-    
+
     // Search in notebook name
     if (nb.name.toLowerCase().includes(query)) return true;
-    
+
     // Search in vocabulary fields
     return nb.vocabulary.some((v) =>
       v.kanji?.toLowerCase().includes(query) ||
@@ -67,16 +67,28 @@ export default function NotebooksPage() {
     );
   });
 
+  const hasVocabulary = notebooks.some((nb) => nb.vocabulary.length > 0);
+
   return (
     <div className="p-4 max-w-2xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-xl font-bold text-gray-800">📓 Sổ tay</h1>
-        <button
-          onClick={() => fileRef.current?.click()}
-          className="text-sm text-indigo-600 border border-indigo-300 rounded-xl px-3 py-1.5 hover:bg-indigo-50 transition-colors"
-        >
-          Import sổ tay
-        </button>
+        <div className="flex gap-2">
+          {hasVocabulary && (
+            <Link
+              href="/flashcard/all-notebooks"
+              className="text-sm bg-indigo-600 text-white rounded-xl px-3 py-1.5 font-semibold hover:bg-indigo-700 transition-colors"
+            >
+              Flashcard tất cả
+            </Link>
+          )}
+          <button
+            onClick={() => fileRef.current?.click()}
+            className="text-sm text-indigo-600 border border-indigo-300 rounded-xl px-3 py-1.5 hover:bg-indigo-50 transition-colors"
+          >
+            Import sổ tay
+          </button>
+        </div>
         <input ref={fileRef} type="file" accept=".json" className="sr-only" onChange={handleImportFile} />
       </div>
 
@@ -131,7 +143,7 @@ export default function NotebooksPage() {
 
       {searchQuery && (
         <div className="mb-3 text-xs text-gray-500">
-          Tìm thấy {filteredNotebooks.length} / {notebooks.length} sổ tay
+          Tìm thấy {filteredNotebooks.length} / {notebooks.length} sổ tay
         </div>
       )}
 
@@ -161,7 +173,7 @@ export default function NotebooksPage() {
                 <div className="flex-1 min-w-0">
                   <h2 className="font-bold text-gray-800 truncate">{nb.name}</h2>
                   <p className="text-xs text-gray-400 mt-0.5">
-                    {nb.vocabulary.length} từ · {new Date(nb.createdAt).toLocaleDateString("vi-VN")}
+                    {nb.vocabulary.length} từ · {new Date(nb.createdAt).toLocaleDateString("vi-VN")}
                   </p>
                 </div>
               </div>
@@ -174,11 +186,10 @@ export default function NotebooksPage() {
                 </Link>
                 <Link
                   href={`/flashcard/notebook/${nb.id}`}
-                  className={`flex-1 min-w-[80px] text-center py-2 rounded-xl text-sm font-medium transition-colors ${
-                    nb.vocabulary.length === 0
+                  className={`flex-1 min-w-[80px] text-center py-2 rounded-xl text-sm font-medium transition-colors ${nb.vocabulary.length === 0
                       ? "bg-gray-100 text-gray-400 cursor-not-allowed"
                       : "bg-indigo-600 text-white hover:bg-indigo-700"
-                  }`}
+                    }`}
                   aria-disabled={nb.vocabulary.length === 0}
                   onClick={(e) => nb.vocabulary.length === 0 && e.preventDefault()}
                 >
