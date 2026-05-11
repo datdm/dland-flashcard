@@ -7,6 +7,8 @@ interface VocabularyListItemProps {
   progress: VocabProgress;
   onToggleLearned: (id: string) => void;
   onToggleFavorite: (id: string) => void;
+  onEdit?: (vocab: Vocabulary) => void;
+  onDelete?: (id: string) => void;
   variant?: "list" | "card";
 }
 
@@ -15,6 +17,8 @@ export default function VocabularyListItem({
   progress,
   onToggleLearned,
   onToggleFavorite,
+  onEdit,
+  onDelete,
   variant = "list",
 }: VocabularyListItemProps) {
   if (variant === "card") {
@@ -125,11 +129,11 @@ export default function VocabularyListItem({
       </div>
 
       {/* Actions */}
-      <div className="flex flex-col items-center gap-2 shrink-0">
+      <div className="flex items-center gap-1 shrink-0">
         <button
           onClick={() => onToggleFavorite(vocab.id)}
           title="Yêu thích"
-          className={`flex items-center justify-center min-h-[44px] min-w-[44px] text-xl leading-none transition-colors ${
+          className={`min-h-[44px] min-w-[44px] flex items-center justify-center text-xl leading-none transition-colors ${
             progress.favorite ? "text-yellow-400" : "text-gray-300 hover:text-yellow-300"
           }`}
         >
@@ -146,6 +150,26 @@ export default function VocabularyListItem({
         >
           {progress.learned ? "✓" : ""}
         </button>
+        {onEdit && (
+          <button
+            onClick={() => onEdit(vocab)}
+            className="min-h-[44px] min-w-[44px] flex items-center justify-center text-indigo-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
+            title="Sửa"
+          >
+            <span className="text-base">✎</span>
+          </button>
+        )}
+        {onDelete && (
+          <button
+            onClick={() => {
+              if (confirm("Xóa từ này?")) onDelete(vocab.id);
+            }}
+            className="min-h-[44px] min-w-[44px] flex items-center justify-center text-red-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+            title="Xóa"
+          >
+            <span className="text-base">✕</span>
+          </button>
+        )}
       </div>
     </div>
   );

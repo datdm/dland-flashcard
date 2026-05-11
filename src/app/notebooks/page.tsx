@@ -3,9 +3,11 @@
 import { useState, useRef } from "react";
 import Link from "next/link";
 import { useNotebooks } from "@/hooks/useNotebooks";
+import { useProgress } from "@/hooks/useProgress";
 
 export default function NotebooksPage() {
-  const { notebooks, createNotebook, deleteNotebook, exportNotebook, importNotebook } = useNotebooks();
+  const { notebooks, createNotebook, deleteNotebook, exportNotebook, exportAllNotebooks, importNotebook } = useNotebooks();
+  const { progress } = useProgress();
   const [newName, setNewName] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [importError, setImportError] = useState<string | null>(null);
@@ -26,6 +28,18 @@ export default function NotebooksPage() {
     const a = document.createElement("a");
     a.href = url;
     a.download = `notebook-${name.replace(/\s+/g, "-")}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleExportAll = () => {
+    const json = exportAllNotebooks();
+    const blob = new Blob([json], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    const date = new Date().toISOString().split('T')[0];
+    a.download = `all-notebooks-${date}.json`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -53,10 +67,10 @@ export default function NotebooksPage() {
   const filteredNotebooks = notebooks.filter((nb) => {
     if (!searchQuery.trim()) return true;
     const query = searchQuery.toLowerCase();
-
+    
     // Search in notebook name
     if (nb.name.toLowerCase().includes(query)) return true;
-
+    
     // Search in vocabulary fields
     return nb.vocabulary.some((v) =>
       v.kanji?.toLowerCase().includes(query) ||
@@ -81,6 +95,14 @@ export default function NotebooksPage() {
             >
               Flashcard tất cả
             </Link>
+          )}
+          {notebooks.length > 0 && (
+            <button
+              onClick={handleExportAll}
+              className="text-sm text-emerald-600 border border-emerald-300 rounded-xl px-3 py-1.5 hover:bg-emerald-50 transition-colors"
+            >
+              Export tất cả
+            </button>
           )}
           <button
             onClick={() => fileRef.current?.click()}
@@ -143,7 +165,7 @@ export default function NotebooksPage() {
 
       {searchQuery && (
         <div className="mb-3 text-xs text-gray-500">
-          Tìm thấy {filteredNotebooks.length} / {notebooks.length} sổ tay
+          Tìm thấy {filteredNotebooks.length} / {notebooks.length} sổ tay
         </div>
       )}
 
@@ -164,20 +186,27 @@ export default function NotebooksPage() {
             )}
           </div>
         ) : (
-          filteredNotebooks.map((nb) => (
-            <div
-              key={nb.id}
-              className="bg-white border border-gray-200 rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow"
-            >
-              <div className="flex items-center justify-between gap-3">
-                <div className="flex-1 min-w-0">
-                  <h2 className="font-bold text-gray-800 truncate">{nb.name}</h2>
-                  <p className="text-xs text-gray-400 mt-0.5">
-                    {nb.vocabulary.length} từ · {new Date(nb.createdAt).toLocaleDateString("vi-VN")}
-                  </p>
+          filteredNotebooks.map((nb) => {
+            const learnedCount = nb.vocabulary.filter((v) => progress[v.id]?.learned).length;
+            const unlearnedCount = nb.vocabulary.length - learnedCount;
+
+            return (
+              <div
+                key={nb.id}
+                className="bg-white border border-gray-200 rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow"
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex-1 min-w-0">
+                    <h2 className="font-bold text-gray-800 truncate">{nb.name}</h2>
+                    <p className="text-xs text-gray-500 mt-0.5">
+                      {nb.vocabulary.length} từ • {learnedCount} Đã học • {unlearnedCount} Chưa học
+                    </p>
+                    <p className="text-xs text-gray-400 mt-0.5">
+                      {new Date(nb.createdAt).toLocaleDateString("vi-VN")}
+                    </p>
+                  </div>
                 </div>
-              </div>
-              <div className="flex gap-2 mt-3 flex-wrap">
+                <div className="flex gap-2 mt-3 flex-wrap">
                 <Link
                   href={`/notebooks/${nb.id}`}
                   className="flex-1 min-w-[80px] text-center py-2 rounded-xl border border-gray-300 text-sm text-gray-600 hover:border-indigo-400 hover:text-indigo-600 transition-colors"
@@ -186,10 +215,11 @@ export default function NotebooksPage() {
                 </Link>
                 <Link
                   href={`/flashcard/notebook/${nb.id}`}
-                  className={`flex-1 min-w-[80px] text-center py-2 rounded-xl text-sm font-medium transition-colors ${nb.vocabulary.length === 0
+                  className={`flex-1 min-w-[80px] text-center py-2 rounded-xl text-sm font-medium transition-colors ${
+                    nb.vocabulary.length === 0
                       ? "bg-gray-100 text-gray-400 cursor-not-allowed"
                       : "bg-indigo-600 text-white hover:bg-indigo-700"
-                    }`}
+                  }`}
                   aria-disabled={nb.vocabulary.length === 0}
                   onClick={(e) => nb.vocabulary.length === 0 && e.preventDefault()}
                 >
@@ -210,8 +240,9 @@ export default function NotebooksPage() {
                   Xóa
                 </button>
               </div>
-            </div>
-          ))
+              </div>
+            );
+          })
         )}
       </div>
     </div>

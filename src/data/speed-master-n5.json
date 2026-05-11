@@ -1,2318 +1,334 @@
 {
-    "lessons":  [
-                    {
-                        "id":  "sm-n5-01",
-                        "name":  "第1回 - 人・家族",
-                        "level":  "N5",
-                        "description":  "Speed Master N5 語彙 — Người \u0026 Gia đình",
-                        "vocabulary":  [
-                                           {
-                                               "id":  "sm-n5-001",
-                                               "kanji":  "人",
-                                               "hiragana":  "ひと",
-                                               "onyomi":  "ヒト",
-                                               "meaning":  "Người",
-                                               "phonetic":  "hito"
-                                           },
-                                           {
-                                               "id":  "sm-n5-002",
-                                               "kanji":  "男",
-                                               "hiragana":  "おとこ",
-                                               "onyomi":  "オトコ",
-                                               "meaning":  "Đàn ông, nam",
-                                               "phonetic":  "otoko"
-                                           },
-                                           {
-                                               "id":  "sm-n5-003",
-                                               "kanji":  "女",
-                                               "hiragana":  "おんな",
-                                               "onyomi":  "オンナ",
-                                               "meaning":  "Phụ nữ, nữ",
-                                               "phonetic":  "onna"
-                                           },
-                                           {
-                                               "id":  "sm-n5-004",
-                                               "kanji":  "子供",
-                                               "hiragana":  "こども",
-                                               "onyomi":  "コドモ",
-                                               "meaning":  "Trẻ em",
-                                               "phonetic":  "kodomo"
-                                           },
-                                           {
-                                               "id":  "sm-n5-005",
-                                               "kanji":  "父",
-                                               "hiragana":  "ちち",
-                                               "onyomi":  "チチ",
-                                               "meaning":  "Bố (khiêm tốn)",
-                                               "phonetic":  "chichi"
-                                           },
-                                           {
-                                               "id":  "sm-n5-006",
-                                               "kanji":  "母",
-                                               "hiragana":  "はは",
-                                               "onyomi":  "ハハ",
-                                               "meaning":  "Mẹ (khiêm tốn)",
-                                               "phonetic":  "haha"
-                                           },
-                                           {
-                                               "id":  "sm-n5-007",
-                                               "kanji":  "お父さん",
-                                               "hiragana":  "おとうさん",
-                                               "onyomi":  "オトウサン",
-                                               "meaning":  "Bố (kính ngữ)",
-                                               "phonetic":  "otousan"
-                                           },
-                                           {
-                                               "id":  "sm-n5-008",
-                                               "kanji":  "お母さん",
-                                               "hiragana":  "おかあさん",
-                                               "onyomi":  "オカアサン",
-                                               "meaning":  "Mẹ (kính ngữ)",
-                                               "phonetic":  "okaasan"
-                                           },
-                                           {
-                                               "id":  "sm-n5-009",
-                                               "kanji":  "兄",
-                                               "hiragana":  "あに",
-                                               "onyomi":  "アニ",
-                                               "meaning":  "Anh trai (khiêm tốn)",
-                                               "phonetic":  "ani"
-                                           },
-                                           {
-                                               "id":  "sm-n5-010",
-                                               "kanji":  "姉",
-                                               "hiragana":  "あね",
-                                               "onyomi":  "アネ",
-                                               "meaning":  "Chị gái (khiêm tốn)",
-                                               "phonetic":  "ane"
-                                           },
-                                           {
-                                               "id":  "sm-n5-011",
-                                               "kanji":  "弟",
-                                               "hiragana":  "おとうと",
-                                               "onyomi":  "オトウト",
-                                               "meaning":  "Em trai",
-                                               "phonetic":  "otouto"
-                                           },
-                                           {
-                                               "id":  "sm-n5-012",
-                                               "kanji":  "妹",
-                                               "hiragana":  "いもうと",
-                                               "onyomi":  "イモウト",
-                                               "meaning":  "Em gái",
-                                               "phonetic":  "imouto"
-                                           },
-                                           {
-                                               "id":  "sm-n5-013",
-                                               "kanji":  "家族",
-                                               "hiragana":  "かぞく",
-                                               "onyomi":  "カゾク",
-                                               "meaning":  "Gia đình",
-                                               "phonetic":  "kazoku"
-                                           },
-                                           {
-                                               "id":  "sm-n5-014",
-                                               "kanji":  "友達",
-                                               "hiragana":  "ともだち",
-                                               "onyomi":  "トモダチ",
-                                               "meaning":  "Bạn bè",
-                                               "phonetic":  "tomodachi"
-                                           },
-                                           {
-                                               "id":  "sm-n5-015",
-                                               "kanji":  "名前",
-                                               "hiragana":  "なまえ",
-                                               "onyomi":  "ナマエ",
-                                               "meaning":  "Tên",
-                                               "phonetic":  "namae"
-                                           },
-                                           {
-                                               "id":  "sm-n5-016",
-                                               "kanji":  "私",
-                                               "hiragana":  "わたし",
-                                               "onyomi":  "ワタシ",
-                                               "meaning":  "Tôi",
-                                               "phonetic":  "watashi"
-                                           },
-                                           {
-                                               "id":  "sm-n5-017",
-                                               "kanji":  "皆さん",
-                                               "hiragana":  "みなさん",
-                                               "onyomi":  "ミナサン",
-                                               "meaning":  "Mọi người",
-                                               "phonetic":  "minasan"
-                                           },
-                                           {
-                                               "id":  "sm-n5-018",
-                                               "kanji":  "方",
-                                               "hiragana":  "かた",
-                                               "onyomi":  "カタ",
-                                               "meaning":  "Người (kính ngữ)",
-                                               "phonetic":  "kata"
-                                           }
-                                       ],
-                        "curriculum":  "Speed Master N5 語彙"
-                    },
-                    {
-                        "id":  "sm-n5-02",
-                        "name":  "第2回 - 身体・健康",
-                        "level":  "N5",
-                        "description":  "Speed Master N5 語彙 — Cơ thể \u0026 Sức khoẻ",
-                        "vocabulary":  [
-                                           {
-                                               "id":  "sm-n5-019",
-                                               "kanji":  "頭",
-                                               "hiragana":  "あたま",
-                                               "onyomi":  "アタマ",
-                                               "meaning":  "Đầu",
-                                               "phonetic":  "atama"
-                                           },
-                                           {
-                                               "id":  "sm-n5-020",
-                                               "kanji":  "顔",
-                                               "hiragana":  "かお",
-                                               "onyomi":  "カオ",
-                                               "meaning":  "Mặt",
-                                               "phonetic":  "kao"
-                                           },
-                                           {
-                                               "id":  "sm-n5-021",
-                                               "kanji":  "目",
-                                               "hiragana":  "め",
-                                               "onyomi":  "メ",
-                                               "meaning":  "Mắt",
-                                               "phonetic":  "me"
-                                           },
-                                           {
-                                               "id":  "sm-n5-022",
-                                               "kanji":  "耳",
-                                               "hiragana":  "みみ",
-                                               "onyomi":  "ミミ",
-                                               "meaning":  "Tai",
-                                               "phonetic":  "mimi"
-                                           },
-                                           {
-                                               "id":  "sm-n5-023",
-                                               "kanji":  "口",
-                                               "hiragana":  "くち",
-                                               "onyomi":  "クチ",
-                                               "meaning":  "Miệng",
-                                               "phonetic":  "kuchi"
-                                           },
-                                           {
-                                               "id":  "sm-n5-024",
-                                               "kanji":  "手",
-                                               "hiragana":  "て",
-                                               "onyomi":  "テ",
-                                               "meaning":  "Tay",
-                                               "phonetic":  "te"
-                                           },
-                                           {
-                                               "id":  "sm-n5-025",
-                                               "kanji":  "足",
-                                               "hiragana":  "あし",
-                                               "onyomi":  "アシ",
-                                               "meaning":  "Chân",
-                                               "phonetic":  "ashi"
-                                           },
-                                           {
-                                               "id":  "sm-n5-026",
-                                               "kanji":  "体",
-                                               "hiragana":  "からだ",
-                                               "onyomi":  "カラダ",
-                                               "meaning":  "Cơ thể",
-                                               "phonetic":  "karada"
-                                           },
-                                           {
-                                               "id":  "sm-n5-027",
-                                               "kanji":  "病気",
-                                               "hiragana":  "びょうき",
-                                               "onyomi":  "ビョウキ",
-                                               "meaning":  "Bệnh tật",
-                                               "phonetic":  "byouki"
-                                           },
-                                           {
-                                               "id":  "sm-n5-028",
-                                               "kanji":  "薬",
-                                               "hiragana":  "くすり",
-                                               "onyomi":  "クスリ",
-                                               "meaning":  "Thuốc",
-                                               "phonetic":  "kusuri"
-                                           },
-                                           {
-                                               "id":  "sm-n5-029",
-                                               "kanji":  "病院",
-                                               "hiragana":  "びょういん",
-                                               "onyomi":  "ビョウイン",
-                                               "meaning":  "Bệnh viện",
-                                               "phonetic":  "byouin"
-                                           },
-                                           {
-                                               "id":  "sm-n5-030",
-                                               "kanji":  "医者",
-                                               "hiragana":  "いしゃ",
-                                               "onyomi":  "イシャ",
-                                               "meaning":  "Bác sĩ",
-                                               "phonetic":  "isha"
-                                           },
-                                           {
-                                               "id":  "sm-n5-031",
-                                               "kanji":  "歯",
-                                               "hiragana":  "は",
-                                               "onyomi":  "ハ",
-                                               "meaning":  "Răng",
-                                               "phonetic":  "ha"
-                                           },
-                                           {
-                                               "id":  "sm-n5-032",
-                                               "kanji":  "鼻",
-                                               "hiragana":  "はな",
-                                               "onyomi":  "ハナ",
-                                               "meaning":  "Mũi",
-                                               "phonetic":  "hana"
-                                           }
-                                       ],
-                        "curriculum":  "Speed Master N5 語彙"
-                    },
-                    {
-                        "id":  "sm-n5-03",
-                        "name":  "第3回 - 時間・日付",
-                        "level":  "N5",
-                        "description":  "Speed Master N5 語彙 — Thời gian \u0026 Ngày tháng",
-                        "vocabulary":  [
-                                           {
-                                               "id":  "sm-n5-033",
-                                               "kanji":  "今日",
-                                               "hiragana":  "きょう",
-                                               "onyomi":  "キョウ",
-                                               "meaning":  "Hôm nay",
-                                               "phonetic":  "kyou"
-                                           },
-                                           {
-                                               "id":  "sm-n5-034",
-                                               "kanji":  "明日",
-                                               "hiragana":  "あした",
-                                               "onyomi":  "アシタ",
-                                               "meaning":  "Ngày mai",
-                                               "phonetic":  "ashita"
-                                           },
-                                           {
-                                               "id":  "sm-n5-035",
-                                               "kanji":  "昨日",
-                                               "hiragana":  "きのう",
-                                               "onyomi":  "キノウ",
-                                               "meaning":  "Hôm qua",
-                                               "phonetic":  "kinou"
-                                           },
-                                           {
-                                               "id":  "sm-n5-036",
-                                               "kanji":  "今朝",
-                                               "hiragana":  "けさ",
-                                               "onyomi":  "ケサ",
-                                               "meaning":  "Sáng nay",
-                                               "phonetic":  "kesa"
-                                           },
-                                           {
-                                               "id":  "sm-n5-037",
-                                               "kanji":  "今晩",
-                                               "hiragana":  "こんばん",
-                                               "onyomi":  "コンバン",
-                                               "meaning":  "Tối nay",
-                                               "phonetic":  "konban"
-                                           },
-                                           {
-                                               "id":  "sm-n5-038",
-                                               "kanji":  "朝",
-                                               "hiragana":  "あさ",
-                                               "onyomi":  "アサ",
-                                               "meaning":  "Buổi sáng",
-                                               "phonetic":  "asa"
-                                           },
-                                           {
-                                               "id":  "sm-n5-039",
-                                               "kanji":  "昼",
-                                               "hiragana":  "ひる",
-                                               "onyomi":  "ヒル",
-                                               "meaning":  "Buổi trưa",
-                                               "phonetic":  "hiru"
-                                           },
-                                           {
-                                               "id":  "sm-n5-040",
-                                               "kanji":  "夜",
-                                               "hiragana":  "よる",
-                                               "onyomi":  "ヨル",
-                                               "meaning":  "Buổi tối",
-                                               "phonetic":  "yoru"
-                                           },
-                                           {
-                                               "id":  "sm-n5-041",
-                                               "kanji":  "今",
-                                               "hiragana":  "いま",
-                                               "onyomi":  "イマ",
-                                               "meaning":  "Bây giờ",
-                                               "phonetic":  "ima"
-                                           },
-                                           {
-                                               "id":  "sm-n5-042",
-                                               "kanji":  "時間",
-                                               "hiragana":  "じかん",
-                                               "onyomi":  "ジカン",
-                                               "meaning":  "Thời gian",
-                                               "phonetic":  "jikan"
-                                           },
-                                           {
-                                               "id":  "sm-n5-043",
-                                               "kanji":  "分",
-                                               "hiragana":  "ふん／ぷん",
-                                               "onyomi":  "フン／プン",
-                                               "meaning":  "Phút",
-                                               "phonetic":  "fun/pun"
-                                           },
-                                           {
-                                               "id":  "sm-n5-044",
-                                               "kanji":  "半",
-                                               "hiragana":  "はん",
-                                               "onyomi":  "ハン",
-                                               "meaning":  "Rưỡi",
-                                               "phonetic":  "han"
-                                           },
-                                           {
-                                               "id":  "sm-n5-045",
-                                               "kanji":  "来週",
-                                               "hiragana":  "らいしゅう",
-                                               "onyomi":  "ライシュウ",
-                                               "meaning":  "Tuần tới",
-                                               "phonetic":  "raishuu"
-                                           },
-                                           {
-                                               "id":  "sm-n5-046",
-                                               "kanji":  "先週",
-                                               "hiragana":  "せんしゅう",
-                                               "onyomi":  "センシュウ",
-                                               "meaning":  "Tuần trước",
-                                               "phonetic":  "senshuu"
-                                           },
-                                           {
-                                               "id":  "sm-n5-047",
-                                               "kanji":  "来年",
-                                               "hiragana":  "らいねん",
-                                               "onyomi":  "ライネン",
-                                               "meaning":  "Năm tới",
-                                               "phonetic":  "rainen"
-                                           },
-                                           {
-                                               "id":  "sm-n5-048",
-                                               "kanji":  "去年",
-                                               "hiragana":  "きょねん",
-                                               "onyomi":  "キョネン",
-                                               "meaning":  "Năm ngoái",
-                                               "phonetic":  "kyonen"
-                                           },
-                                           {
-                                               "id":  "sm-n5-049",
-                                               "kanji":  "毎日",
-                                               "hiragana":  "まいにち",
-                                               "onyomi":  "マイニチ",
-                                               "meaning":  "Mỗi ngày",
-                                               "phonetic":  "mainichi"
-                                           },
-                                           {
-                                               "id":  "sm-n5-050",
-                                               "kanji":  "毎朝",
-                                               "hiragana":  "まいあさ",
-                                               "onyomi":  "マイアサ",
-                                               "meaning":  "Mỗi sáng",
-                                               "phonetic":  "maiasa"
-                                           },
-                                           {
-                                               "id":  "sm-n5-051",
-                                               "kanji":  "毎晩",
-                                               "hiragana":  "まいばん",
-                                               "onyomi":  "マイバン",
-                                               "meaning":  "Mỗi tối",
-                                               "phonetic":  "maiban"
-                                           }
-                                       ],
-                        "curriculum":  "Speed Master N5 語彙"
-                    },
-                    {
-                        "id":  "sm-n5-04",
-                        "name":  "第4回 - 場所・建物",
-                        "level":  "N5",
-                        "description":  "Speed Master N5 語彙 — Địa điểm \u0026 Công trình",
-                        "vocabulary":  [
-                                           {
-                                               "id":  "sm-n5-052",
-                                               "kanji":  "学校",
-                                               "hiragana":  "がっこう",
-                                               "onyomi":  "ガッコウ",
-                                               "meaning":  "Trường học",
-                                               "phonetic":  "gakkou"
-                                           },
-                                           {
-                                               "id":  "sm-n5-053",
-                                               "kanji":  "大学",
-                                               "hiragana":  "だいがく",
-                                               "onyomi":  "ダイガク",
-                                               "meaning":  "Đại học",
-                                               "phonetic":  "daigaku"
-                                           },
-                                           {
-                                               "id":  "sm-n5-054",
-                                               "kanji":  "会社",
-                                               "hiragana":  "かいしゃ",
-                                               "onyomi":  "カイシャ",
-                                               "meaning":  "Công ty",
-                                               "phonetic":  "kaisha"
-                                           },
-                                           {
-                                               "id":  "sm-n5-055",
-                                               "kanji":  "銀行",
-                                               "hiragana":  "ぎんこう",
-                                               "onyomi":  "ギンコウ",
-                                               "meaning":  "Ngân hàng",
-                                               "phonetic":  "ginkou"
-                                           },
-                                           {
-                                               "id":  "sm-n5-056",
-                                               "kanji":  "郵便局",
-                                               "hiragana":  "ゆうびんきょく",
-                                               "onyomi":  "ユウビンキョク",
-                                               "meaning":  "Bưu điện",
-                                               "phonetic":  "yuubinkyoku"
-                                           },
-                                           {
-                                               "id":  "sm-n5-057",
-                                               "kanji":  "図書館",
-                                               "hiragana":  "としょかん",
-                                               "onyomi":  "トショカン",
-                                               "meaning":  "Thư viện",
-                                               "phonetic":  "toshokan"
-                                           },
-                                           {
-                                               "id":  "sm-n5-058",
-                                               "kanji":  "駅",
-                                               "hiragana":  "えき",
-                                               "onyomi":  "エキ",
-                                               "meaning":  "Ga tàu điện",
-                                               "phonetic":  "eki"
-                                           },
-                                           {
-                                               "id":  "sm-n5-059",
-                                               "kanji":  "空港",
-                                               "hiragana":  "くうこう",
-                                               "onyomi":  "クウコウ",
-                                               "meaning":  "Sân bay",
-                                               "phonetic":  "kuukou"
-                                           },
-                                           {
-                                               "id":  "sm-n5-060",
-                                               "kanji":  "店",
-                                               "hiragana":  "みせ",
-                                               "onyomi":  "ミセ",
-                                               "meaning":  "Cửa hàng",
-                                               "phonetic":  "mise"
-                                           },
-                                           {
-                                               "id":  "sm-n5-061",
-                                               "kanji":  "スーパー",
-                                               "hiragana":  "スーパー",
-                                               "onyomi":  "スーパー",
-                                               "meaning":  "Siêu thị",
-                                               "phonetic":  "suupaa"
-                                           },
-                                           {
-                                               "id":  "sm-n5-062",
-                                               "kanji":  "レストラン",
-                                               "hiragana":  "レストラン",
-                                               "onyomi":  "レストラン",
-                                               "meaning":  "Nhà hàng",
-                                               "phonetic":  "resutoran"
-                                           },
-                                           {
-                                               "id":  "sm-n5-063",
-                                               "kanji":  "公園",
-                                               "hiragana":  "こうえん",
-                                               "onyomi":  "コウエン",
-                                               "meaning":  "Công viên",
-                                               "phonetic":  "kouen"
-                                           },
-                                           {
-                                               "id":  "sm-n5-064",
-                                               "kanji":  "家",
-                                               "hiragana":  "いえ／うち",
-                                               "onyomi":  "イエ／ウチ",
-                                               "meaning":  "Nhà",
-                                               "phonetic":  "ie/uchi"
-                                           },
-                                           {
-                                               "id":  "sm-n5-065",
-                                               "kanji":  "部屋",
-                                               "hiragana":  "へや",
-                                               "onyomi":  "ヘヤ",
-                                               "meaning":  "Phòng",
-                                               "phonetic":  "heya"
-                                           },
-                                           {
-                                               "id":  "sm-n5-066",
-                                               "kanji":  "外",
-                                               "hiragana":  "そと",
-                                               "onyomi":  "ソト",
-                                               "meaning":  "Bên ngoài",
-                                               "phonetic":  "soto"
-                                           },
-                                           {
-                                               "id":  "sm-n5-067",
-                                               "kanji":  "中",
-                                               "hiragana":  "なか",
-                                               "onyomi":  "ナカ",
-                                               "meaning":  "Bên trong",
-                                               "phonetic":  "naka"
-                                           }
-                                       ],
-                        "curriculum":  "Speed Master N5 語彙"
-                    },
-                    {
-                        "id":  "sm-n5-05",
-                        "name":  "第5回 - 方向・位置",
-                        "level":  "N5",
-                        "description":  "Speed Master N5 語彙 — Hướng \u0026 Vị trí",
-                        "vocabulary":  [
-                                           {
-                                               "id":  "sm-n5-068",
-                                               "kanji":  "右",
-                                               "hiragana":  "みぎ",
-                                               "onyomi":  "ミギ",
-                                               "meaning":  "Bên phải",
-                                               "phonetic":  "migi"
-                                           },
-                                           {
-                                               "id":  "sm-n5-069",
-                                               "kanji":  "左",
-                                               "hiragana":  "ひだり",
-                                               "onyomi":  "ヒダリ",
-                                               "meaning":  "Bên trái",
-                                               "phonetic":  "hidari"
-                                           },
-                                           {
-                                               "id":  "sm-n5-070",
-                                               "kanji":  "前",
-                                               "hiragana":  "まえ",
-                                               "onyomi":  "マエ",
-                                               "meaning":  "Phía trước",
-                                               "phonetic":  "mae"
-                                           },
-                                           {
-                                               "id":  "sm-n5-071",
-                                               "kanji":  "後ろ",
-                                               "hiragana":  "うしろ",
-                                               "onyomi":  "ウシロ",
-                                               "meaning":  "Phía sau",
-                                               "phonetic":  "ushiro"
-                                           },
-                                           {
-                                               "id":  "sm-n5-072",
-                                               "kanji":  "上",
-                                               "hiragana":  "うえ",
-                                               "onyomi":  "ウエ",
-                                               "meaning":  "Phía trên",
-                                               "phonetic":  "ue"
-                                           },
-                                           {
-                                               "id":  "sm-n5-073",
-                                               "kanji":  "下",
-                                               "hiragana":  "した",
-                                               "onyomi":  "シタ",
-                                               "meaning":  "Phía dưới",
-                                               "phonetic":  "shita"
-                                           },
-                                           {
-                                               "id":  "sm-n5-074",
-                                               "kanji":  "横",
-                                               "hiragana":  "よこ",
-                                               "onyomi":  "ヨコ",
-                                               "meaning":  "Bên cạnh (ngang)",
-                                               "phonetic":  "yoko"
-                                           },
-                                           {
-                                               "id":  "sm-n5-075",
-                                               "kanji":  "隣",
-                                               "hiragana":  "となり",
-                                               "onyomi":  "トナリ",
-                                               "meaning":  "Kế bên",
-                                               "phonetic":  "tonari"
-                                           },
-                                           {
-                                               "id":  "sm-n5-076",
-                                               "kanji":  "近く",
-                                               "hiragana":  "ちかく",
-                                               "onyomi":  "チカク",
-                                               "meaning":  "Gần",
-                                               "phonetic":  "chikaku"
-                                           },
-                                           {
-                                               "id":  "sm-n5-077",
-                                               "kanji":  "遠く",
-                                               "hiragana":  "とおく",
-                                               "onyomi":  "トオク",
-                                               "meaning":  "Xa",
-                                               "phonetic":  "tooku"
-                                           },
-                                           {
-                                               "id":  "sm-n5-078",
-                                               "kanji":  "東",
-                                               "hiragana":  "ひがし",
-                                               "onyomi":  "ヒガシ",
-                                               "meaning":  "Phía Đông",
-                                               "phonetic":  "higashi"
-                                           },
-                                           {
-                                               "id":  "sm-n5-079",
-                                               "kanji":  "西",
-                                               "hiragana":  "にし",
-                                               "onyomi":  "ニシ",
-                                               "meaning":  "Phía Tây",
-                                               "phonetic":  "nishi"
-                                           },
-                                           {
-                                               "id":  "sm-n5-080",
-                                               "kanji":  "南",
-                                               "hiragana":  "みなみ",
-                                               "onyomi":  "ミナミ",
-                                               "meaning":  "Phía Nam",
-                                               "phonetic":  "minami"
-                                           },
-                                           {
-                                               "id":  "sm-n5-081",
-                                               "kanji":  "北",
-                                               "hiragana":  "きた",
-                                               "onyomi":  "キタ",
-                                               "meaning":  "Phía Bắc",
-                                               "phonetic":  "kita"
-                                           }
-                                       ],
-                        "curriculum":  "Speed Master N5 語彙"
-                    },
-                    {
-                        "id":  "sm-n5-06",
-                        "name":  "第6回 - 食べ物・飲み物",
-                        "level":  "N5",
-                        "description":  "Speed Master N5 語彙 — Đồ ăn \u0026 Đồ uống",
-                        "vocabulary":  [
-                                           {
-                                               "id":  "sm-n5-082",
-                                               "kanji":  "ご飯",
-                                               "hiragana":  "ごはん",
-                                               "onyomi":  "ゴハン",
-                                               "meaning":  "Cơm, bữa ăn",
-                                               "phonetic":  "gohan"
-                                           },
-                                           {
-                                               "id":  "sm-n5-083",
-                                               "kanji":  "パン",
-                                               "hiragana":  "パン",
-                                               "onyomi":  "パン",
-                                               "meaning":  "Bánh mì",
-                                               "phonetic":  "pan"
-                                           },
-                                           {
-                                               "id":  "sm-n5-084",
-                                               "kanji":  "肉",
-                                               "hiragana":  "にく",
-                                               "onyomi":  "ニク",
-                                               "meaning":  "Thịt",
-                                               "phonetic":  "niku"
-                                           },
-                                           {
-                                               "id":  "sm-n5-085",
-                                               "kanji":  "魚",
-                                               "hiragana":  "さかな",
-                                               "onyomi":  "サカナ",
-                                               "meaning":  "Cá",
-                                               "phonetic":  "sakana"
-                                           },
-                                           {
-                                               "id":  "sm-n5-086",
-                                               "kanji":  "野菜",
-                                               "hiragana":  "やさい",
-                                               "onyomi":  "ヤサイ",
-                                               "meaning":  "Rau củ",
-                                               "phonetic":  "yasai"
-                                           },
-                                           {
-                                               "id":  "sm-n5-087",
-                                               "kanji":  "果物",
-                                               "hiragana":  "くだもの",
-                                               "onyomi":  "クダモノ",
-                                               "meaning":  "Trái cây",
-                                               "phonetic":  "kudamono"
-                                           },
-                                           {
-                                               "id":  "sm-n5-088",
-                                               "kanji":  "卵",
-                                               "hiragana":  "たまご",
-                                               "onyomi":  "タマゴ",
-                                               "meaning":  "Trứng",
-                                               "phonetic":  "tamago"
-                                           },
-                                           {
-                                               "id":  "sm-n5-089",
-                                               "kanji":  "牛乳",
-                                               "hiragana":  "ぎゅうにゅう",
-                                               "onyomi":  "ギュウニュウ",
-                                               "meaning":  "Sữa bò",
-                                               "phonetic":  "gyuunyuu"
-                                           },
-                                           {
-                                               "id":  "sm-n5-090",
-                                               "kanji":  "水",
-                                               "hiragana":  "みず",
-                                               "onyomi":  "ミズ",
-                                               "meaning":  "Nước",
-                                               "phonetic":  "mizu"
-                                           },
-                                           {
-                                               "id":  "sm-n5-091",
-                                               "kanji":  "お茶",
-                                               "hiragana":  "おちゃ",
-                                               "onyomi":  "オチャ",
-                                               "meaning":  "Trà",
-                                               "phonetic":  "ocha"
-                                           },
-                                           {
-                                               "id":  "sm-n5-092",
-                                               "kanji":  "コーヒー",
-                                               "hiragana":  "コーヒー",
-                                               "onyomi":  "コーヒー",
-                                               "meaning":  "Cà phê",
-                                               "phonetic":  "koohii"
-                                           },
-                                           {
-                                               "id":  "sm-n5-093",
-                                               "kanji":  "ビール",
-                                               "hiragana":  "ビール",
-                                               "onyomi":  "ビール",
-                                               "meaning":  "Bia",
-                                               "phonetic":  "biiru"
-                                           },
-                                           {
-                                               "id":  "sm-n5-094",
-                                               "kanji":  "朝ご飯",
-                                               "hiragana":  "あさごはん",
-                                               "onyomi":  "アサゴハン",
-                                               "meaning":  "Bữa sáng",
-                                               "phonetic":  "asagohan"
-                                           },
-                                           {
-                                               "id":  "sm-n5-095",
-                                               "kanji":  "昼ご飯",
-                                               "hiragana":  "ひるごはん",
-                                               "onyomi":  "ヒルゴハン",
-                                               "meaning":  "Bữa trưa",
-                                               "phonetic":  "hirugohan"
-                                           },
-                                           {
-                                               "id":  "sm-n5-096",
-                                               "kanji":  "晩ご飯",
-                                               "hiragana":  "ばんごはん",
-                                               "onyomi":  "バンゴハン",
-                                               "meaning":  "Bữa tối",
-                                               "phonetic":  "bangohan"
-                                           },
-                                           {
-                                               "id":  "sm-n5-097",
-                                               "kanji":  "食堂",
-                                               "hiragana":  "しょくどう",
-                                               "onyomi":  "ショクドウ",
-                                               "meaning":  "Căng-tin, phòng ăn",
-                                               "phonetic":  "shokudou"
-                                           }
-                                       ],
-                        "curriculum":  "Speed Master N5 語彙"
-                    },
-                    {
-                        "id":  "sm-n5-07",
-                        "name":  "第7回 - 乗り物・交通",
-                        "level":  "N5",
-                        "description":  "Speed Master N5 語彙 — Phương tiện \u0026 Giao thông",
-                        "vocabulary":  [
-                                           {
-                                               "id":  "sm-n5-098",
-                                               "kanji":  "電車",
-                                               "hiragana":  "でんしゃ",
-                                               "onyomi":  "デンシャ",
-                                               "meaning":  "Tàu điện",
-                                               "phonetic":  "densha"
-                                           },
-                                           {
-                                               "id":  "sm-n5-099",
-                                               "kanji":  "バス",
-                                               "hiragana":  "バス",
-                                               "onyomi":  "バス",
-                                               "meaning":  "Xe buýt",
-                                               "phonetic":  "basu"
-                                           },
-                                           {
-                                               "id":  "sm-n5-100",
-                                               "kanji":  "タクシー",
-                                               "hiragana":  "タクシー",
-                                               "onyomi":  "タクシー",
-                                               "meaning":  "Taxi",
-                                               "phonetic":  "takushii"
-                                           },
-                                           {
-                                               "id":  "sm-n5-101",
-                                               "kanji":  "自転車",
-                                               "hiragana":  "じてんしゃ",
-                                               "onyomi":  "ジテンシャ",
-                                               "meaning":  "Xe đạp",
-                                               "phonetic":  "jitensha"
-                                           },
-                                           {
-                                               "id":  "sm-n5-102",
-                                               "kanji":  "車",
-                                               "hiragana":  "くるま",
-                                               "onyomi":  "クルマ",
-                                               "meaning":  "Ô tô",
-                                               "phonetic":  "kuruma"
-                                           },
-                                           {
-                                               "id":  "sm-n5-103",
-                                               "kanji":  "飛行機",
-                                               "hiragana":  "ひこうき",
-                                               "onyomi":  "ヒコウキ",
-                                               "meaning":  "Máy bay",
-                                               "phonetic":  "hikouki"
-                                           },
-                                           {
-                                               "id":  "sm-n5-104",
-                                               "kanji":  "船",
-                                               "hiragana":  "ふね",
-                                               "onyomi":  "フネ",
-                                               "meaning":  "Tàu thuyền",
-                                               "phonetic":  "fune"
-                                           },
-                                           {
-                                               "id":  "sm-n5-105",
-                                               "kanji":  "地下鉄",
-                                               "hiragana":  "ちかてつ",
-                                               "onyomi":  "チカテツ",
-                                               "meaning":  "Tàu điện ngầm",
-                                               "phonetic":  "chikatetsu"
-                                           },
-                                           {
-                                               "id":  "sm-n5-106",
-                                               "kanji":  "道",
-                                               "hiragana":  "みち",
-                                               "onyomi":  "ミチ",
-                                               "meaning":  "Đường",
-                                               "phonetic":  "michi"
-                                           },
-                                           {
-                                               "id":  "sm-n5-107",
-                                               "kanji":  "橋",
-                                               "hiragana":  "はし",
-                                               "onyomi":  "ハシ",
-                                               "meaning":  "Cầu",
-                                               "phonetic":  "hashi"
-                                           }
-                                       ],
-                        "curriculum":  "Speed Master N5 語彙"
-                    },
-                    {
-                        "id":  "sm-n5-08",
-                        "name":  "第8回 - 自然・天気",
-                        "level":  "N5",
-                        "description":  "Speed Master N5 語彙 — Thiên nhiên \u0026 Thời tiết",
-                        "vocabulary":  [
-                                           {
-                                               "id":  "sm-n5-108",
-                                               "kanji":  "天気",
-                                               "hiragana":  "てんき",
-                                               "onyomi":  "テンキ",
-                                               "meaning":  "Thời tiết",
-                                               "phonetic":  "tenki"
-                                           },
-                                           {
-                                               "id":  "sm-n5-109",
-                                               "kanji":  "晴れ",
-                                               "hiragana":  "はれ",
-                                               "onyomi":  "ハレ",
-                                               "meaning":  "Trời nắng",
-                                               "phonetic":  "hare"
-                                           },
-                                           {
-                                               "id":  "sm-n5-110",
-                                               "kanji":  "雨",
-                                               "hiragana":  "あめ",
-                                               "onyomi":  "アメ",
-                                               "meaning":  "Mưa",
-                                               "phonetic":  "ame"
-                                           },
-                                           {
-                                               "id":  "sm-n5-111",
-                                               "kanji":  "雪",
-                                               "hiragana":  "ゆき",
-                                               "onyomi":  "ユキ",
-                                               "meaning":  "Tuyết",
-                                               "phonetic":  "yuki"
-                                           },
-                                           {
-                                               "id":  "sm-n5-112",
-                                               "kanji":  "風",
-                                               "hiragana":  "かぜ",
-                                               "onyomi":  "カゼ",
-                                               "meaning":  "Gió",
-                                               "phonetic":  "kaze"
-                                           },
-                                           {
-                                               "id":  "sm-n5-113",
-                                               "kanji":  "曇り",
-                                               "hiragana":  "くもり",
-                                               "onyomi":  "クモリ",
-                                               "meaning":  "Trời nhiều mây",
-                                               "phonetic":  "kumori"
-                                           },
-                                           {
-                                               "id":  "sm-n5-114",
-                                               "kanji":  "山",
-                                               "hiragana":  "やま",
-                                               "onyomi":  "ヤマ",
-                                               "meaning":  "Núi",
-                                               "phonetic":  "yama"
-                                           },
-                                           {
-                                               "id":  "sm-n5-115",
-                                               "kanji":  "川",
-                                               "hiragana":  "かわ",
-                                               "onyomi":  "カワ",
-                                               "meaning":  "Sông",
-                                               "phonetic":  "kawa"
-                                           },
-                                           {
-                                               "id":  "sm-n5-116",
-                                               "kanji":  "海",
-                                               "hiragana":  "うみ",
-                                               "onyomi":  "ウミ",
-                                               "meaning":  "Biển",
-                                               "phonetic":  "umi"
-                                           },
-                                           {
-                                               "id":  "sm-n5-117",
-                                               "kanji":  "空",
-                                               "hiragana":  "そら",
-                                               "onyomi":  "ソラ",
-                                               "meaning":  "Bầu trời",
-                                               "phonetic":  "sora"
-                                           },
-                                           {
-                                               "id":  "sm-n5-118",
-                                               "kanji":  "花",
-                                               "hiragana":  "はな",
-                                               "onyomi":  "ハナ",
-                                               "meaning":  "Hoa",
-                                               "phonetic":  "hana"
-                                           },
-                                           {
-                                               "id":  "sm-n5-119",
-                                               "kanji":  "木",
-                                               "hiragana":  "き",
-                                               "onyomi":  "キ",
-                                               "meaning":  "Cây",
-                                               "phonetic":  "ki"
-                                           },
-                                           {
-                                               "id":  "sm-n5-120",
-                                               "kanji":  "春",
-                                               "hiragana":  "はる",
-                                               "onyomi":  "ハル",
-                                               "meaning":  "Mùa xuân",
-                                               "phonetic":  "haru"
-                                           },
-                                           {
-                                               "id":  "sm-n5-121",
-                                               "kanji":  "夏",
-                                               "hiragana":  "なつ",
-                                               "onyomi":  "ナツ",
-                                               "meaning":  "Mùa hè",
-                                               "phonetic":  "natsu"
-                                           },
-                                           {
-                                               "id":  "sm-n5-122",
-                                               "kanji":  "秋",
-                                               "hiragana":  "あき",
-                                               "onyomi":  "アキ",
-                                               "meaning":  "Mùa thu",
-                                               "phonetic":  "aki"
-                                           },
-                                           {
-                                               "id":  "sm-n5-123",
-                                               "kanji":  "冬",
-                                               "hiragana":  "ふゆ",
-                                               "onyomi":  "フユ",
-                                               "meaning":  "Mùa đông",
-                                               "phonetic":  "fuyu"
-                                           }
-                                       ],
-                        "curriculum":  "Speed Master N5 語彙"
-                    },
-                    {
-                        "id":  "sm-n5-09",
-                        "name":  "第9回 - 学校・勉強",
-                        "level":  "N5",
-                        "description":  "Speed Master N5 語彙 — Trường học \u0026 Học tập",
-                        "vocabulary":  [
-                                           {
-                                               "id":  "sm-n5-124",
-                                               "kanji":  "先生",
-                                               "hiragana":  "せんせい",
-                                               "onyomi":  "センセイ",
-                                               "meaning":  "Giáo viên, thầy/cô",
-                                               "phonetic":  "sensei"
-                                           },
-                                           {
-                                               "id":  "sm-n5-125",
-                                               "kanji":  "学生",
-                                               "hiragana":  "がくせい",
-                                               "onyomi":  "ガクセイ",
-                                               "meaning":  "Học sinh, sinh viên",
-                                               "phonetic":  "gakusei"
-                                           },
-                                           {
-                                               "id":  "sm-n5-126",
-                                               "kanji":  "教室",
-                                               "hiragana":  "きょうしつ",
-                                               "onyomi":  "キョウシツ",
-                                               "meaning":  "Lớp học",
-                                               "phonetic":  "kyoushitsu"
-                                           },
-                                           {
-                                               "id":  "sm-n5-127",
-                                               "kanji":  "本",
-                                               "hiragana":  "ほん",
-                                               "onyomi":  "ホン",
-                                               "meaning":  "Sách",
-                                               "phonetic":  "hon"
-                                           },
-                                           {
-                                               "id":  "sm-n5-128",
-                                               "kanji":  "教科書",
-                                               "hiragana":  "きょうかしょ",
-                                               "onyomi":  "キョウカショ",
-                                               "meaning":  "Sách giáo khoa",
-                                               "phonetic":  "kyoukasho"
-                                           },
-                                           {
-                                               "id":  "sm-n5-129",
-                                               "kanji":  "ノート",
-                                               "hiragana":  "ノート",
-                                               "onyomi":  "ノート",
-                                               "meaning":  "Vở ghi",
-                                               "phonetic":  "nooto"
-                                           },
-                                           {
-                                               "id":  "sm-n5-130",
-                                               "kanji":  "鉛筆",
-                                               "hiragana":  "えんぴつ",
-                                               "onyomi":  "エンピツ",
-                                               "meaning":  "Bút chì",
-                                               "phonetic":  "enpitsu"
-                                           },
-                                           {
-                                               "id":  "sm-n5-131",
-                                               "kanji":  "ペン",
-                                               "hiragana":  "ペン",
-                                               "onyomi":  "ペン",
-                                               "meaning":  "Bút",
-                                               "phonetic":  "pen"
-                                           },
-                                           {
-                                               "id":  "sm-n5-132",
-                                               "kanji":  "黒板",
-                                               "hiragana":  "こくばん",
-                                               "onyomi":  "コクバン",
-                                               "meaning":  "Bảng đen",
-                                               "phonetic":  "kokuban"
-                                           },
-                                           {
-                                               "id":  "sm-n5-133",
-                                               "kanji":  "授業",
-                                               "hiragana":  "じゅぎょう",
-                                               "onyomi":  "ジュギョウ",
-                                               "meaning":  "Buổi học, bài giảng",
-                                               "phonetic":  "jugyou"
-                                           },
-                                           {
-                                               "id":  "sm-n5-134",
-                                               "kanji":  "宿題",
-                                               "hiragana":  "しゅくだい",
-                                               "onyomi":  "シュクダイ",
-                                               "meaning":  "Bài tập về nhà",
-                                               "phonetic":  "shukudai"
-                                           },
-                                           {
-                                               "id":  "sm-n5-135",
-                                               "kanji":  "試験",
-                                               "hiragana":  "しけん",
-                                               "onyomi":  "シケン",
-                                               "meaning":  "Kỳ thi, bài kiểm tra",
-                                               "phonetic":  "shiken"
-                                           },
-                                           {
-                                               "id":  "sm-n5-136",
-                                               "kanji":  "辞書",
-                                               "hiragana":  "じしょ",
-                                               "onyomi":  "ジショ",
-                                               "meaning":  "Từ điển",
-                                               "phonetic":  "jisho"
-                                           },
-                                           {
-                                               "id":  "sm-n5-137",
-                                               "kanji":  "日本語",
-                                               "hiragana":  "にほんご",
-                                               "onyomi":  "ニホンゴ",
-                                               "meaning":  "Tiếng Nhật",
-                                               "phonetic":  "nihongo"
-                                           },
-                                           {
-                                               "id":  "sm-n5-138",
-                                               "kanji":  "英語",
-                                               "hiragana":  "えいご",
-                                               "onyomi":  "エイゴ",
-                                               "meaning":  "Tiếng Anh",
-                                               "phonetic":  "eigo"
-                                           }
-                                       ],
-                        "curriculum":  "Speed Master N5 語彙"
-                    },
-                    {
-                        "id":  "sm-n5-10",
-                        "name":  "第10回 - 仕事・職業",
-                        "level":  "N5",
-                        "description":  "Speed Master N5 語彙 — Công việc \u0026 Nghề nghiệp",
-                        "vocabulary":  [
-                                           {
-                                               "id":  "sm-n5-139",
-                                               "kanji":  "仕事",
-                                               "hiragana":  "しごと",
-                                               "onyomi":  "シゴト",
-                                               "meaning":  "Công việc",
-                                               "phonetic":  "shigoto"
-                                           },
-                                           {
-                                               "id":  "sm-n5-140",
-                                               "kanji":  "会社員",
-                                               "hiragana":  "かいしゃいん",
-                                               "onyomi":  "カイシャイン",
-                                               "meaning":  "Nhân viên công ty",
-                                               "phonetic":  "kaishain"
-                                           },
-                                           {
-                                               "id":  "sm-n5-141",
-                                               "kanji":  "銀行員",
-                                               "hiragana":  "ぎんこういん",
-                                               "onyomi":  "ギンコウイン",
-                                               "meaning":  "Nhân viên ngân hàng",
-                                               "phonetic":  "ginkouin"
-                                           },
-                                           {
-                                               "id":  "sm-n5-142",
-                                               "kanji":  "看護師",
-                                               "hiragana":  "かんごし",
-                                               "onyomi":  "カンゴシ",
-                                               "meaning":  "Y tá",
-                                               "phonetic":  "kangoshi"
-                                           },
-                                           {
-                                               "id":  "sm-n5-143",
-                                               "kanji":  "店員",
-                                               "hiragana":  "てんいん",
-                                               "onyomi":  "テンイン",
-                                               "meaning":  "Nhân viên bán hàng",
-                                               "phonetic":  "ten\u0027in"
-                                           },
-                                           {
-                                               "id":  "sm-n5-144",
-                                               "kanji":  "料理人",
-                                               "hiragana":  "りょうりにん",
-                                               "onyomi":  "リョウリニン",
-                                               "meaning":  "Đầu bếp",
-                                               "phonetic":  "ryourinin"
-                                           },
-                                           {
-                                               "id":  "sm-n5-145",
-                                               "kanji":  "主婦",
-                                               "hiragana":  "しゅふ",
-                                               "onyomi":  "シュフ",
-                                               "meaning":  "Nội trợ",
-                                               "phonetic":  "shufu"
-                                           },
-                                           {
-                                               "id":  "sm-n5-146",
-                                               "kanji":  "会議",
-                                               "hiragana":  "かいぎ",
-                                               "onyomi":  "カイギ",
-                                               "meaning":  "Cuộc họp",
-                                               "phonetic":  "kaigi"
-                                           },
-                                           {
-                                               "id":  "sm-n5-147",
-                                               "kanji":  "電話",
-                                               "hiragana":  "でんわ",
-                                               "onyomi":  "デンワ",
-                                               "meaning":  "Điện thoại",
-                                               "phonetic":  "denwa"
-                                           }
-                                       ],
-                        "curriculum":  "Speed Master N5 語彙"
-                    },
-                    {
-                        "id":  "sm-n5-11",
-                        "name":  "第11回 - 家・家具",
-                        "level":  "N5",
-                        "description":  "Speed Master N5 語彙 — Nhà \u0026 Đồ nội thất",
-                        "vocabulary":  [
-                                           {
-                                               "id":  "sm-n5-148",
-                                               "kanji":  "玄関",
-                                               "hiragana":  "げんかん",
-                                               "onyomi":  "ゲンカン",
-                                               "meaning":  "Lối vào nhà, tiền sảnh",
-                                               "phonetic":  "genkan"
-                                           },
-                                           {
-                                               "id":  "sm-n5-149",
-                                               "kanji":  "台所",
-                                               "hiragana":  "だいどころ",
-                                               "onyomi":  "ダイドコロ",
-                                               "meaning":  "Nhà bếp",
-                                               "phonetic":  "daidokoro"
-                                           },
-                                           {
-                                               "id":  "sm-n5-150",
-                                               "kanji":  "お風呂",
-                                               "hiragana":  "おふろ",
-                                               "onyomi":  "オフロ",
-                                               "meaning":  "Bồn tắm, phòng tắm",
-                                               "phonetic":  "ofuro"
-                                           },
-                                           {
-                                               "id":  "sm-n5-151",
-                                               "kanji":  "トイレ",
-                                               "hiragana":  "トイレ",
-                                               "onyomi":  "トイレ",
-                                               "meaning":  "Nhà vệ sinh",
-                                               "phonetic":  "toire"
-                                           },
-                                           {
-                                               "id":  "sm-n5-152",
-                                               "kanji":  "窓",
-                                               "hiragana":  "まど",
-                                               "onyomi":  "マド",
-                                               "meaning":  "Cửa sổ",
-                                               "phonetic":  "mado"
-                                           },
-                                           {
-                                               "id":  "sm-n5-153",
-                                               "kanji":  "ドア",
-                                               "hiragana":  "ドア",
-                                               "onyomi":  "ドア",
-                                               "meaning":  "Cửa ra vào",
-                                               "phonetic":  "doa"
-                                           },
-                                           {
-                                               "id":  "sm-n5-154",
-                                               "kanji":  "椅子",
-                                               "hiragana":  "いす",
-                                               "onyomi":  "イス",
-                                               "meaning":  "Ghế",
-                                               "phonetic":  "isu"
-                                           },
-                                           {
-                                               "id":  "sm-n5-155",
-                                               "kanji":  "机",
-                                               "hiragana":  "つくえ",
-                                               "onyomi":  "ツクエ",
-                                               "meaning":  "Bàn (học/làm việc)",
-                                               "phonetic":  "tsukue"
-                                           },
-                                           {
-                                               "id":  "sm-n5-156",
-                                               "kanji":  "テーブル",
-                                               "hiragana":  "テーブル",
-                                               "onyomi":  "テーブル",
-                                               "meaning":  "Bàn ăn",
-                                               "phonetic":  "teeburu"
-                                           },
-                                           {
-                                               "id":  "sm-n5-157",
-                                               "kanji":  "ベッド",
-                                               "hiragana":  "ベッド",
-                                               "onyomi":  "ベッド",
-                                               "meaning":  "Giường",
-                                               "phonetic":  "beddo"
-                                           },
-                                           {
-                                               "id":  "sm-n5-158",
-                                               "kanji":  "冷蔵庫",
-                                               "hiragana":  "れいぞうこ",
-                                               "onyomi":  "レイゾウコ",
-                                               "meaning":  "Tủ lạnh",
-                                               "phonetic":  "reizouko"
-                                           },
-                                           {
-                                               "id":  "sm-n5-159",
-                                               "kanji":  "テレビ",
-                                               "hiragana":  "テレビ",
-                                               "onyomi":  "テレビ",
-                                               "meaning":  "Tivi",
-                                               "phonetic":  "terebi"
-                                           },
-                                           {
-                                               "id":  "sm-n5-160",
-                                               "kanji":  "電気",
-                                               "hiragana":  "でんき",
-                                               "onyomi":  "デンキ",
-                                               "meaning":  "Điện, đèn điện",
-                                               "phonetic":  "denki"
-                                           },
-                                           {
-                                               "id":  "sm-n5-161",
-                                               "kanji":  "鍵",
-                                               "hiragana":  "かぎ",
-                                               "onyomi":  "カギ",
-                                               "meaning":  "Chìa khoá",
-                                               "phonetic":  "kagi"
-                                           }
-                                       ],
-                        "curriculum":  "Speed Master N5 語彙"
-                    },
-                    {
-                        "id":  "sm-n5-12",
-                        "name":  "第12回 - 買い物・お金",
-                        "level":  "N5",
-                        "description":  "Speed Master N5 語彙 — Mua sắm \u0026 Tiền bạc",
-                        "vocabulary":  [
-                                           {
-                                               "id":  "sm-n5-162",
-                                               "kanji":  "お金",
-                                               "hiragana":  "おかね",
-                                               "onyomi":  "オカネ",
-                                               "meaning":  "Tiền",
-                                               "phonetic":  "okane"
-                                           },
-                                           {
-                                               "id":  "sm-n5-163",
-                                               "kanji":  "円",
-                                               "hiragana":  "えん",
-                                               "onyomi":  "エン",
-                                               "meaning":  "Yên (tiền Nhật)",
-                                               "phonetic":  "en"
-                                           },
-                                           {
-                                               "id":  "sm-n5-164",
-                                               "kanji":  "財布",
-                                               "hiragana":  "さいふ",
-                                               "onyomi":  "サイフ",
-                                               "meaning":  "Ví tiền",
-                                               "phonetic":  "saifu"
-                                           },
-                                           {
-                                               "id":  "sm-n5-165",
-                                               "kanji":  "値段",
-                                               "hiragana":  "ねだん",
-                                               "onyomi":  "ネダン",
-                                               "meaning":  "Giá tiền",
-                                               "phonetic":  "nedan"
-                                           },
-                                           {
-                                               "id":  "sm-n5-166",
-                                               "kanji":  "安い",
-                                               "hiragana":  "やすい",
-                                               "onyomi":  "ヤスイ",
-                                               "meaning":  "Rẻ",
-                                               "phonetic":  "yasui"
-                                           },
-                                           {
-                                               "id":  "sm-n5-167",
-                                               "kanji":  "高い",
-                                               "hiragana":  "たかい",
-                                               "onyomi":  "タカイ",
-                                               "meaning":  "Đắt tiền",
-                                               "phonetic":  "takai"
-                                           },
-                                           {
-                                               "id":  "sm-n5-168",
-                                               "kanji":  "買い物",
-                                               "hiragana":  "かいもの",
-                                               "onyomi":  "カイモノ",
-                                               "meaning":  "Mua sắm",
-                                               "phonetic":  "kaimono"
-                                           },
-                                           {
-                                               "id":  "sm-n5-169",
-                                               "kanji":  "おつり",
-                                               "hiragana":  "おつり",
-                                               "onyomi":  "オツリ",
-                                               "meaning":  "Tiền thừa, tiền thối",
-                                               "phonetic":  "otsuri"
-                                           },
-                                           {
-                                               "id":  "sm-n5-170",
-                                               "kanji":  "レシート",
-                                               "hiragana":  "レシート",
-                                               "onyomi":  "レシート",
-                                               "meaning":  "Hoá đơn, biên lai",
-                                               "phonetic":  "reshiito"
-                                           },
-                                           {
-                                               "id":  "sm-n5-171",
-                                               "kanji":  "半額",
-                                               "hiragana":  "はんがく",
-                                               "onyomi":  "ハンガク",
-                                               "meaning":  "Giảm một nửa",
-                                               "phonetic":  "hangaku"
-                                           }
-                                       ],
-                        "curriculum":  "Speed Master N5 語彙"
-                    },
-                    {
-                        "id":  "sm-n5-13",
-                        "name":  "第13回 - 動詞 I (基本動詞)",
-                        "level":  "N5",
-                        "description":  "Speed Master N5 語彙 — Động từ cơ bản",
-                        "vocabulary":  [
-                                           {
-                                               "id":  "sm-n5-172",
-                                               "kanji":  "います",
-                                               "hiragana":  "います",
-                                               "onyomi":  "イマス",
-                                               "meaning":  "Có, ở (người/động vật)",
-                                               "phonetic":  "imasu"
-                                           },
-                                           {
-                                               "id":  "sm-n5-173",
-                                               "kanji":  "あります",
-                                               "hiragana":  "あります",
-                                               "onyomi":  "アリマス",
-                                               "meaning":  "Có, ở (đồ vật)",
-                                               "phonetic":  "arimasu"
-                                           },
-                                           {
-                                               "id":  "sm-n5-174",
-                                               "kanji":  "来ます",
-                                               "hiragana":  "きます",
-                                               "onyomi":  "キマス",
-                                               "meaning":  "Đến",
-                                               "phonetic":  "kimasu"
-                                           },
-                                           {
-                                               "id":  "sm-n5-175",
-                                               "kanji":  "行きます",
-                                               "hiragana":  "いきます",
-                                               "onyomi":  "イキマス",
-                                               "meaning":  "Đi",
-                                               "phonetic":  "ikimasu"
-                                           },
-                                           {
-                                               "id":  "sm-n5-176",
-                                               "kanji":  "帰ります",
-                                               "hiragana":  "かえります",
-                                               "onyomi":  "カエリマス",
-                                               "meaning":  "Về, trở về",
-                                               "phonetic":  "kaerimasu"
-                                           },
-                                           {
-                                               "id":  "sm-n5-177",
-                                               "kanji":  "起きます",
-                                               "hiragana":  "おきます",
-                                               "onyomi":  "オキマス",
-                                               "meaning":  "Thức dậy",
-                                               "phonetic":  "okimasu"
-                                           },
-                                           {
-                                               "id":  "sm-n5-178",
-                                               "kanji":  "寝ます",
-                                               "hiragana":  "ねます",
-                                               "onyomi":  "ネマス",
-                                               "meaning":  "Ngủ",
-                                               "phonetic":  "nemasu"
-                                           },
-                                           {
-                                               "id":  "sm-n5-179",
-                                               "kanji":  "食べます",
-                                               "hiragana":  "たべます",
-                                               "onyomi":  "タベマス",
-                                               "meaning":  "Ăn",
-                                               "phonetic":  "tabemasu"
-                                           },
-                                           {
-                                               "id":  "sm-n5-180",
-                                               "kanji":  "飲みます",
-                                               "hiragana":  "のみます",
-                                               "onyomi":  "ノミマス",
-                                               "meaning":  "Uống",
-                                               "phonetic":  "nomimasu"
-                                           },
-                                           {
-                                               "id":  "sm-n5-181",
-                                               "kanji":  "見ます",
-                                               "hiragana":  "みます",
-                                               "onyomi":  "ミマス",
-                                               "meaning":  "Xem, nhìn",
-                                               "phonetic":  "mimasu"
-                                           },
-                                           {
-                                               "id":  "sm-n5-182",
-                                               "kanji":  "聞きます",
-                                               "hiragana":  "ききます",
-                                               "onyomi":  "キキマス",
-                                               "meaning":  "Nghe, hỏi",
-                                               "phonetic":  "kikimasu"
-                                           },
-                                           {
-                                               "id":  "sm-n5-183",
-                                               "kanji":  "話します",
-                                               "hiragana":  "はなします",
-                                               "onyomi":  "ハナシマス",
-                                               "meaning":  "Nói chuyện",
-                                               "phonetic":  "hanashimasu"
-                                           },
-                                           {
-                                               "id":  "sm-n5-184",
-                                               "kanji":  "読みます",
-                                               "hiragana":  "よみます",
-                                               "onyomi":  "ヨミマス",
-                                               "meaning":  "Đọc",
-                                               "phonetic":  "yomimasu"
-                                           },
-                                           {
-                                               "id":  "sm-n5-185",
-                                               "kanji":  "書きます",
-                                               "hiragana":  "かきます",
-                                               "onyomi":  "カキマス",
-                                               "meaning":  "Viết",
-                                               "phonetic":  "kakimasu"
-                                           },
-                                           {
-                                               "id":  "sm-n5-186",
-                                               "kanji":  "買います",
-                                               "hiragana":  "かいます",
-                                               "onyomi":  "カイマス",
-                                               "meaning":  "Mua",
-                                               "phonetic":  "kaimasu"
-                                           },
-                                           {
-                                               "id":  "sm-n5-187",
-                                               "kanji":  "使います",
-                                               "hiragana":  "つかいます",
-                                               "onyomi":  "ツカイマス",
-                                               "meaning":  "Sử dụng",
-                                               "phonetic":  "tsukaimasu"
-                                           }
-                                       ],
-                        "curriculum":  "Speed Master N5 語彙"
-                    },
-                    {
-                        "id":  "sm-n5-14",
-                        "name":  "第14回 - 動詞 II (活動・移動)",
-                        "level":  "N5",
-                        "description":  "Speed Master N5 語彙 — Động từ hoạt động \u0026 di chuyển",
-                        "vocabulary":  [
-                                           {
-                                               "id":  "sm-n5-188",
-                                               "kanji":  "乗ります",
-                                               "hiragana":  "のります",
-                                               "onyomi":  "ノリマス",
-                                               "meaning":  "Lên (xe, tàu)",
-                                               "phonetic":  "norimasu"
-                                           },
-                                           {
-                                               "id":  "sm-n5-189",
-                                               "kanji":  "降ります",
-                                               "hiragana":  "おります",
-                                               "onyomi":  "オリマス",
-                                               "meaning":  "Xuống (xe, tàu)",
-                                               "phonetic":  "orimasu"
-                                           },
-                                           {
-                                               "id":  "sm-n5-190",
-                                               "kanji":  "歩きます",
-                                               "hiragana":  "あるきます",
-                                               "onyomi":  "アルキマス",
-                                               "meaning":  "Đi bộ",
-                                               "phonetic":  "arukimasu"
-                                           },
-                                           {
-                                               "id":  "sm-n5-191",
-                                               "kanji":  "走ります",
-                                               "hiragana":  "はしります",
-                                               "onyomi":  "ハシリマス",
-                                               "meaning":  "Chạy",
-                                               "phonetic":  "hashirimasu"
-                                           },
-                                           {
-                                               "id":  "sm-n5-192",
-                                               "kanji":  "泳ぎます",
-                                               "hiragana":  "およぎます",
-                                               "onyomi":  "オヨギマス",
-                                               "meaning":  "Bơi",
-                                               "phonetic":  "oyogimasu"
-                                           },
-                                           {
-                                               "id":  "sm-n5-193",
-                                               "kanji":  "働きます",
-                                               "hiragana":  "はたらきます",
-                                               "onyomi":  "ハタラキマス",
-                                               "meaning":  "Làm việc",
-                                               "phonetic":  "hatarakimasu"
-                                           },
-                                           {
-                                               "id":  "sm-n5-194",
-                                               "kanji":  "勉強します",
-                                               "hiragana":  "べんきょうします",
-                                               "onyomi":  "ベンキョウシマス",
-                                               "meaning":  "Học bài",
-                                               "phonetic":  "benkyoushimasu"
-                                           },
-                                           {
-                                               "id":  "sm-n5-195",
-                                               "kanji":  "練習します",
-                                               "hiragana":  "れんしゅうします",
-                                               "onyomi":  "レンシュウシマス",
-                                               "meaning":  "Luyện tập",
-                                               "phonetic":  "renshuushimasu"
-                                           },
-                                           {
-                                               "id":  "sm-n5-196",
-                                               "kanji":  "遊びます",
-                                               "hiragana":  "あそびます",
-                                               "onyomi":  "アソビマス",
-                                               "meaning":  "Chơi, vui chơi",
-                                               "phonetic":  "asobimasu"
-                                           },
-                                           {
-                                               "id":  "sm-n5-197",
-                                               "kanji":  "休みます",
-                                               "hiragana":  "やすみます",
-                                               "onyomi":  "ヤスミマス",
-                                               "meaning":  "Nghỉ ngơi",
-                                               "phonetic":  "yasumimasu"
-                                           },
-                                           {
-                                               "id":  "sm-n5-198",
-                                               "kanji":  "待ちます",
-                                               "hiragana":  "まちます",
-                                               "onyomi":  "マチマス",
-                                               "meaning":  "Chờ đợi",
-                                               "phonetic":  "machimasu"
-                                           },
-                                           {
-                                               "id":  "sm-n5-199",
-                                               "kanji":  "会います",
-                                               "hiragana":  "あいます",
-                                               "onyomi":  "アイマス",
-                                               "meaning":  "Gặp gỡ",
-                                               "phonetic":  "aimasu"
-                                           },
-                                           {
-                                               "id":  "sm-n5-200",
-                                               "kanji":  "分かります",
-                                               "hiragana":  "わかります",
-                                               "onyomi":  "ワカリマス",
-                                               "meaning":  "Hiểu",
-                                               "phonetic":  "wakarimasu"
-                                           },
-                                           {
-                                               "id":  "sm-n5-201",
-                                               "kanji":  "始まります",
-                                               "hiragana":  "はじまります",
-                                               "onyomi":  "ハジマリマス",
-                                               "meaning":  "Bắt đầu (tự thân)",
-                                               "phonetic":  "hajimarimasu"
-                                           },
-                                           {
-                                               "id":  "sm-n5-202",
-                                               "kanji":  "終わります",
-                                               "hiragana":  "おわります",
-                                               "onyomi":  "オワリマス",
-                                               "meaning":  "Kết thúc (tự thân)",
-                                               "phonetic":  "owarimasu"
-                                           }
-                                       ],
-                        "curriculum":  "Speed Master N5 語彙"
-                    },
-                    {
-                        "id":  "sm-n5-15",
-                        "name":  "第15回 - い形容詞",
-                        "level":  "N5",
-                        "description":  "Speed Master N5 語彙 — Tính từ đuôi い",
-                        "vocabulary":  [
-                                           {
-                                               "id":  "sm-n5-203",
-                                               "kanji":  "大きい",
-                                               "hiragana":  "おおきい",
-                                               "onyomi":  "オオキイ",
-                                               "meaning":  "To, lớn",
-                                               "phonetic":  "ookii"
-                                           },
-                                           {
-                                               "id":  "sm-n5-204",
-                                               "kanji":  "小さい",
-                                               "hiragana":  "ちいさい",
-                                               "onyomi":  "チイサイ",
-                                               "meaning":  "Nhỏ, bé",
-                                               "phonetic":  "chiisai"
-                                           },
-                                           {
-                                               "id":  "sm-n5-205",
-                                               "kanji":  "長い",
-                                               "hiragana":  "ながい",
-                                               "onyomi":  "ナガイ",
-                                               "meaning":  "Dài",
-                                               "phonetic":  "nagai"
-                                           },
-                                           {
-                                               "id":  "sm-n5-206",
-                                               "kanji":  "短い",
-                                               "hiragana":  "みじかい",
-                                               "onyomi":  "ミジカイ",
-                                               "meaning":  "Ngắn",
-                                               "phonetic":  "mijikai"
-                                           },
-                                           {
-                                               "id":  "sm-n5-207",
-                                               "kanji":  "高い",
-                                               "hiragana":  "たかい",
-                                               "onyomi":  "タカイ",
-                                               "meaning":  "Cao, đắt",
-                                               "phonetic":  "takai"
-                                           },
-                                           {
-                                               "id":  "sm-n5-208",
-                                               "kanji":  "低い",
-                                               "hiragana":  "ひくい",
-                                               "onyomi":  "ヒクイ",
-                                               "meaning":  "Thấp",
-                                               "phonetic":  "hikui"
-                                           },
-                                           {
-                                               "id":  "sm-n5-209",
-                                               "kanji":  "暑い",
-                                               "hiragana":  "あつい",
-                                               "onyomi":  "アツイ",
-                                               "meaning":  "Nóng (thời tiết)",
-                                               "phonetic":  "atsui"
-                                           },
-                                           {
-                                               "id":  "sm-n5-210",
-                                               "kanji":  "寒い",
-                                               "hiragana":  "さむい",
-                                               "onyomi":  "サムイ",
-                                               "meaning":  "Lạnh (thời tiết)",
-                                               "phonetic":  "samui"
-                                           },
-                                           {
-                                               "id":  "sm-n5-211",
-                                               "kanji":  "熱い",
-                                               "hiragana":  "あつい",
-                                               "onyomi":  "アツイ",
-                                               "meaning":  "Nóng (đồ vật)",
-                                               "phonetic":  "atsui (vật)"
-                                           },
-                                           {
-                                               "id":  "sm-n5-212",
-                                               "kanji":  "冷たい",
-                                               "hiragana":  "つめたい",
-                                               "onyomi":  "ツメタイ",
-                                               "meaning":  "Lạnh (đồ vật)",
-                                               "phonetic":  "tsumetai"
-                                           },
-                                           {
-                                               "id":  "sm-n5-213",
-                                               "kanji":  "いい／よい",
-                                               "hiragana":  "いい／よい",
-                                               "onyomi":  "イイ／ヨイ",
-                                               "meaning":  "Tốt, hay",
-                                               "phonetic":  "ii/yoi"
-                                           },
-                                           {
-                                               "id":  "sm-n5-214",
-                                               "kanji":  "悪い",
-                                               "hiragana":  "わるい",
-                                               "onyomi":  "ワルイ",
-                                               "meaning":  "Xấu, tệ",
-                                               "phonetic":  "warui"
-                                           },
-                                           {
-                                               "id":  "sm-n5-215",
-                                               "kanji":  "新しい",
-                                               "hiragana":  "あたらしい",
-                                               "onyomi":  "アタラシイ",
-                                               "meaning":  "Mới",
-                                               "phonetic":  "atarashii"
-                                           },
-                                           {
-                                               "id":  "sm-n5-216",
-                                               "kanji":  "古い",
-                                               "hiragana":  "ふるい",
-                                               "onyomi":  "フルイ",
-                                               "meaning":  "Cũ",
-                                               "phonetic":  "furui"
-                                           },
-                                           {
-                                               "id":  "sm-n5-217",
-                                               "kanji":  "白い",
-                                               "hiragana":  "しろい",
-                                               "onyomi":  "シロイ",
-                                               "meaning":  "Màu trắng",
-                                               "phonetic":  "shiroi"
-                                           },
-                                           {
-                                               "id":  "sm-n5-218",
-                                               "kanji":  "黒い",
-                                               "hiragana":  "くろい",
-                                               "onyomi":  "クロイ",
-                                               "meaning":  "Màu đen",
-                                               "phonetic":  "kuroi"
-                                           },
-                                           {
-                                               "id":  "sm-n5-219",
-                                               "kanji":  "赤い",
-                                               "hiragana":  "あかい",
-                                               "onyomi":  "アカイ",
-                                               "meaning":  "Màu đỏ",
-                                               "phonetic":  "akai"
-                                           },
-                                           {
-                                               "id":  "sm-n5-220",
-                                               "kanji":  "青い",
-                                               "hiragana":  "あおい",
-                                               "onyomi":  "アオイ",
-                                               "meaning":  "Màu xanh lam/lục",
-                                               "phonetic":  "aoi"
-                                           },
-                                           {
-                                               "id":  "sm-n5-221",
-                                               "kanji":  "難しい",
-                                               "hiragana":  "むずかしい",
-                                               "onyomi":  "ムズカシイ",
-                                               "meaning":  "Khó",
-                                               "phonetic":  "muzukashii"
-                                           },
-                                           {
-                                               "id":  "sm-n5-222",
-                                               "kanji":  "易しい",
-                                               "hiragana":  "やさしい",
-                                               "onyomi":  "ヤサシイ",
-                                               "meaning":  "Dễ (bài học)",
-                                               "phonetic":  "yasashii"
-                                           },
-                                           {
-                                               "id":  "sm-n5-223",
-                                               "kanji":  "忙しい",
-                                               "hiragana":  "いそがしい",
-                                               "onyomi":  "イソガシイ",
-                                               "meaning":  "Bận rộn",
-                                               "phonetic":  "isogashii"
-                                           },
-                                           {
-                                               "id":  "sm-n5-224",
-                                               "kanji":  "楽しい",
-                                               "hiragana":  "たのしい",
-                                               "onyomi":  "タノシイ",
-                                               "meaning":  "Vui, thú vị",
-                                               "phonetic":  "tanoshii"
-                                           }
-                                       ],
-                        "curriculum":  "Speed Master N5 語彙"
-                    },
-                    {
-                        "id":  "sm-n5-16",
-                        "name":  "第16回 - な形容詞",
-                        "level":  "N5",
-                        "description":  "Speed Master N5 語彙 — Tính từ đuôi な",
-                        "vocabulary":  [
-                                           {
-                                               "id":  "sm-n5-225",
-                                               "kanji":  "好き",
-                                               "hiragana":  "すき",
-                                               "onyomi":  "スキ",
-                                               "meaning":  "Thích",
-                                               "phonetic":  "suki"
-                                           },
-                                           {
-                                               "id":  "sm-n5-226",
-                                               "kanji":  "嫌い",
-                                               "hiragana":  "きらい",
-                                               "onyomi":  "キライ",
-                                               "meaning":  "Ghét, không thích",
-                                               "phonetic":  "kirai"
-                                           },
-                                           {
-                                               "id":  "sm-n5-227",
-                                               "kanji":  "上手",
-                                               "hiragana":  "じょうず",
-                                               "onyomi":  "ジョウズ",
-                                               "meaning":  "Giỏi, khéo léo",
-                                               "phonetic":  "jouzu"
-                                           },
-                                           {
-                                               "id":  "sm-n5-228",
-                                               "kanji":  "下手",
-                                               "hiragana":  "へた",
-                                               "onyomi":  "ヘタ",
-                                               "meaning":  "Vụng về, kém",
-                                               "phonetic":  "heta"
-                                           },
-                                           {
-                                               "id":  "sm-n5-229",
-                                               "kanji":  "有名",
-                                               "hiragana":  "ゆうめい",
-                                               "onyomi":  "ユウメイ",
-                                               "meaning":  "Nổi tiếng",
-                                               "phonetic":  "yuumei"
-                                           },
-                                           {
-                                               "id":  "sm-n5-230",
-                                               "kanji":  "親切",
-                                               "hiragana":  "しんせつ",
-                                               "onyomi":  "シンセツ",
-                                               "meaning":  "Tốt bụng, thân thiện",
-                                               "phonetic":  "shinsetsu"
-                                           },
-                                           {
-                                               "id":  "sm-n5-231",
-                                               "kanji":  "丁寧",
-                                               "hiragana":  "ていねい",
-                                               "onyomi":  "テイネイ",
-                                               "meaning":  "Lịch sự, cẩn thận",
-                                               "phonetic":  "teinei"
-                                           },
-                                           {
-                                               "id":  "sm-n5-232",
-                                               "kanji":  "元気",
-                                               "hiragana":  "げんき",
-                                               "onyomi":  "ゲンキ",
-                                               "meaning":  "Khoẻ mạnh, sôi nổi",
-                                               "phonetic":  "genki"
-                                           },
-                                           {
-                                               "id":  "sm-n5-233",
-                                               "kanji":  "暇",
-                                               "hiragana":  "ひま",
-                                               "onyomi":  "ヒマ",
-                                               "meaning":  "Rảnh rỗi",
-                                               "phonetic":  "hima"
-                                           },
-                                           {
-                                               "id":  "sm-n5-234",
-                                               "kanji":  "大切",
-                                               "hiragana":  "たいせつ",
-                                               "onyomi":  "タイセツ",
-                                               "meaning":  "Quan trọng, quý giá",
-                                               "phonetic":  "taisetsu"
-                                           },
-                                           {
-                                               "id":  "sm-n5-235",
-                                               "kanji":  "大丈夫",
-                                               "hiragana":  "だいじょうぶ",
-                                               "onyomi":  "ダイジョウブ",
-                                               "meaning":  "Ổn, không sao",
-                                               "phonetic":  "daijoubu"
-                                           },
-                                           {
-                                               "id":  "sm-n5-236",
-                                               "kanji":  "便利",
-                                               "hiragana":  "べんり",
-                                               "onyomi":  "ベンリ",
-                                               "meaning":  "Tiện lợi",
-                                               "phonetic":  "benri"
-                                           },
-                                           {
-                                               "id":  "sm-n5-237",
-                                               "kanji":  "不便",
-                                               "hiragana":  "ふべん",
-                                               "onyomi":  "フベン",
-                                               "meaning":  "Bất tiện",
-                                               "phonetic":  "fuben"
-                                           },
-                                           {
-                                               "id":  "sm-n5-238",
-                                               "kanji":  "静か",
-                                               "hiragana":  "しずか",
-                                               "onyomi":  "シズカ",
-                                               "meaning":  "Yên tĩnh",
-                                               "phonetic":  "shizuka"
-                                           },
-                                           {
-                                               "id":  "sm-n5-239",
-                                               "kanji":  "賑やか",
-                                               "hiragana":  "にぎやか",
-                                               "onyomi":  "ニギヤカ",
-                                               "meaning":  "Nhộn nhịp, sôi động",
-                                               "phonetic":  "nigiyaka"
-                                           },
-                                           {
-                                               "id":  "sm-n5-240",
-                                               "kanji":  "きれい",
-                                               "hiragana":  "きれい",
-                                               "onyomi":  "キレイ",
-                                               "meaning":  "Đẹp, sạch sẽ",
-                                               "phonetic":  "kirei"
-                                           }
-                                       ],
-                        "curriculum":  "Speed Master N5 語彙"
-                    },
-                    {
-                        "id":  "sm-n5-17",
-                        "name":  "第17回 - 数・助数詞",
-                        "level":  "N5",
-                        "description":  "Speed Master N5 語彙 — Số đếm \u0026 Trợ số từ",
-                        "vocabulary":  [
-                                           {
-                                               "id":  "sm-n5-241",
-                                               "kanji":  "一",
-                                               "hiragana":  "いち",
-                                               "onyomi":  "イチ",
-                                               "meaning":  "1 (một)",
-                                               "phonetic":  "ichi"
-                                           },
-                                           {
-                                               "id":  "sm-n5-242",
-                                               "kanji":  "二",
-                                               "hiragana":  "に",
-                                               "onyomi":  "ニ",
-                                               "meaning":  "2 (hai)",
-                                               "phonetic":  "ni"
-                                           },
-                                           {
-                                               "id":  "sm-n5-243",
-                                               "kanji":  "三",
-                                               "hiragana":  "さん",
-                                               "onyomi":  "サン",
-                                               "meaning":  "3 (ba)",
-                                               "phonetic":  "san"
-                                           },
-                                           {
-                                               "id":  "sm-n5-244",
-                                               "kanji":  "四",
-                                               "hiragana":  "よん／し",
-                                               "onyomi":  "ヨン／シ",
-                                               "meaning":  "4 (bốn)",
-                                               "phonetic":  "yon/shi"
-                                           },
-                                           {
-                                               "id":  "sm-n5-245",
-                                               "kanji":  "五",
-                                               "hiragana":  "ご",
-                                               "onyomi":  "ゴ",
-                                               "meaning":  "5 (năm)",
-                                               "phonetic":  "go"
-                                           },
-                                           {
-                                               "id":  "sm-n5-246",
-                                               "kanji":  "六",
-                                               "hiragana":  "ろく",
-                                               "onyomi":  "ロク",
-                                               "meaning":  "6 (sáu)",
-                                               "phonetic":  "roku"
-                                           },
-                                           {
-                                               "id":  "sm-n5-247",
-                                               "kanji":  "七",
-                                               "hiragana":  "なな／しち",
-                                               "onyomi":  "ナナ／シチ",
-                                               "meaning":  "7 (bảy)",
-                                               "phonetic":  "nana/shichi"
-                                           },
-                                           {
-                                               "id":  "sm-n5-248",
-                                               "kanji":  "八",
-                                               "hiragana":  "はち",
-                                               "onyomi":  "ハチ",
-                                               "meaning":  "8 (tám)",
-                                               "phonetic":  "hachi"
-                                           },
-                                           {
-                                               "id":  "sm-n5-249",
-                                               "kanji":  "九",
-                                               "hiragana":  "きゅう／く",
-                                               "onyomi":  "キュウ／ク",
-                                               "meaning":  "9 (chín)",
-                                               "phonetic":  "kyuu/ku"
-                                           },
-                                           {
-                                               "id":  "sm-n5-250",
-                                               "kanji":  "十",
-                                               "hiragana":  "じゅう",
-                                               "onyomi":  "ジュウ",
-                                               "meaning":  "10 (mười)",
-                                               "phonetic":  "juu"
-                                           },
-                                           {
-                                               "id":  "sm-n5-251",
-                                               "kanji":  "百",
-                                               "hiragana":  "ひゃく",
-                                               "onyomi":  "ヒャク",
-                                               "meaning":  "100 (một trăm)",
-                                               "phonetic":  "hyaku"
-                                           },
-                                           {
-                                               "id":  "sm-n5-252",
-                                               "kanji":  "千",
-                                               "hiragana":  "せん",
-                                               "onyomi":  "セン",
-                                               "meaning":  "1000 (một nghìn)",
-                                               "phonetic":  "sen"
-                                           },
-                                           {
-                                               "id":  "sm-n5-253",
-                                               "kanji":  "万",
-                                               "hiragana":  "まん",
-                                               "onyomi":  "マン",
-                                               "meaning":  "10000 (mười nghìn)",
-                                               "phonetic":  "man"
-                                           },
-                                           {
-                                               "id":  "sm-n5-254",
-                                               "kanji":  "〜枚",
-                                               "hiragana":  "〜まい",
-                                               "onyomi":  "〜マイ",
-                                               "meaning":  "~tờ, ~cái (vật phẳng)",
-                                               "phonetic":  "~mai"
-                                           },
-                                           {
-                                               "id":  "sm-n5-255",
-                                               "kanji":  "〜本",
-                                               "hiragana":  "〜ほん",
-                                               "onyomi":  "〜ホン",
-                                               "meaning":  "~cái (vật dài tròn)",
-                                               "phonetic":  "~hon"
-                                           },
-                                           {
-                                               "id":  "sm-n5-256",
-                                               "kanji":  "〜冊",
-                                               "hiragana":  "〜さつ",
-                                               "onyomi":  "〜サツ",
-                                               "meaning":  "~quyển (sách, vở)",
-                                               "phonetic":  "~satsu"
-                                           },
-                                           {
-                                               "id":  "sm-n5-257",
-                                               "kanji":  "〜台",
-                                               "hiragana":  "〜だい",
-                                               "onyomi":  "〜ダイ",
-                                               "meaning":  "~cái (máy móc, xe)",
-                                               "phonetic":  "~dai"
-                                           },
-                                           {
-                                               "id":  "sm-n5-258",
-                                               "kanji":  "〜人",
-                                               "hiragana":  "〜にん／り",
-                                               "onyomi":  "〜ニン／リ",
-                                               "meaning":  "~người",
-                                               "phonetic":  "~nin/ri"
-                                           }
-                                       ],
-                        "curriculum":  "Speed Master N5 語彙"
-                    },
-                    {
-                        "id":  "sm-n5-18",
-                        "name":  "第18回 - 趣味・余暇",
-                        "level":  "N5",
-                        "description":  "Speed Master N5 語彙 — Sở thích \u0026 Thời gian rảnh",
-                        "vocabulary":  [
-                                           {
-                                               "id":  "sm-n5-259",
-                                               "kanji":  "趣味",
-                                               "hiragana":  "しゅみ",
-                                               "onyomi":  "シュミ",
-                                               "meaning":  "Sở thích",
-                                               "phonetic":  "shumi"
-                                           },
-                                           {
-                                               "id":  "sm-n5-260",
-                                               "kanji":  "音楽",
-                                               "hiragana":  "おんがく",
-                                               "onyomi":  "オンガク",
-                                               "meaning":  "Âm nhạc",
-                                               "phonetic":  "ongaku"
-                                           },
-                                           {
-                                               "id":  "sm-n5-261",
-                                               "kanji":  "映画",
-                                               "hiragana":  "えいが",
-                                               "onyomi":  "エイガ",
-                                               "meaning":  "Phim ảnh",
-                                               "phonetic":  "eiga"
-                                           },
-                                           {
-                                               "id":  "sm-n5-262",
-                                               "kanji":  "スポーツ",
-                                               "hiragana":  "スポーツ",
-                                               "onyomi":  "スポーツ",
-                                               "meaning":  "Thể thao",
-                                               "phonetic":  "supootsu"
-                                           },
-                                           {
-                                               "id":  "sm-n5-263",
-                                               "kanji":  "旅行",
-                                               "hiragana":  "りょこう",
-                                               "onyomi":  "リョコウ",
-                                               "meaning":  "Du lịch",
-                                               "phonetic":  "ryokou"
-                                           },
-                                           {
-                                               "id":  "sm-n5-264",
-                                               "kanji":  "写真",
-                                               "hiragana":  "しゃしん",
-                                               "onyomi":  "シャシン",
-                                               "meaning":  "Ảnh, chụp ảnh",
-                                               "phonetic":  "shashin"
-                                           },
-                                           {
-                                               "id":  "sm-n5-265",
-                                               "kanji":  "料理",
-                                               "hiragana":  "りょうり",
-                                               "onyomi":  "リョウリ",
-                                               "meaning":  "Nấu ăn, món ăn",
-                                               "phonetic":  "ryouri"
-                                           },
-                                           {
-                                               "id":  "sm-n5-266",
-                                               "kanji":  "歌",
-                                               "hiragana":  "うた",
-                                               "onyomi":  "ウタ",
-                                               "meaning":  "Bài hát",
-                                               "phonetic":  "uta"
-                                           },
-                                           {
-                                               "id":  "sm-n5-267",
-                                               "kanji":  "踊り",
-                                               "hiragana":  "おどり",
-                                               "onyomi":  "オドリ",
-                                               "meaning":  "Điệu nhảy, múa",
-                                               "phonetic":  "odori"
-                                           },
-                                           {
-                                               "id":  "sm-n5-268",
-                                               "kanji":  "散歩",
-                                               "hiragana":  "さんぽ",
-                                               "onyomi":  "サンポ",
-                                               "meaning":  "Đi dạo",
-                                               "phonetic":  "sanpo"
-                                           },
-                                           {
-                                               "id":  "sm-n5-269",
-                                               "kanji":  "ゲーム",
-                                               "hiragana":  "ゲーム",
-                                               "onyomi":  "ゲーム",
-                                               "meaning":  "Trò chơi",
-                                               "phonetic":  "geemu"
-                                           }
-                                       ],
-                        "curriculum":  "Speed Master N5 語彙"
-                    }
-                ]
+  "curriculums": [
+    {
+      "id": "default-speed-master-n5-tango",
+      "name": "Speed Master N5 語彙",
+      "createdAt": "2026-05-10T00:00:00.000Z",
+      "lessons": [
+        {
+          "id": "sm-n5-01",
+          "name": "第1回 - 人・家族",
+          "vocabulary": [
+            {"id": "sm-n5-001", "kanji": "人", "hiragana": "ひと", "onyomi": "ヒト", "meaning": "Người", "phonetic": "hito"},
+            {"id": "sm-n5-002", "kanji": "男", "hiragana": "おとこ", "onyomi": "オトコ", "meaning": "Đàn ông", "phonetic": "otoko"},
+            {"id": "sm-n5-003", "kanji": "女", "hiragana": "おんな", "onyomi": "オンナ", "meaning": "Phụ nữ", "phonetic": "onna"},
+            {"id": "sm-n5-004", "kanji": "子供", "hiragana": "こども", "onyomi": "コドモ", "meaning": "Trẻ em", "phonetic": "kodomo"},
+            {"id": "sm-n5-005", "kanji": "父", "hiragana": "ちち", "onyomi": "チチ", "meaning": "Bố (khiêm tốn)", "phonetic": "chichi"},
+            {"id": "sm-n5-006", "kanji": "母", "hiragana": "はは", "onyomi": "ハハ", "meaning": "Mẹ (khiêm tốn)", "phonetic": "haha"},
+            {"id": "sm-n5-007", "kanji": "お父さん", "hiragana": "おとうさん", "onyomi": "オトウサン", "meaning": "Bố (kính ngữ)", "phonetic": "otousan"},
+            {"id": "sm-n5-008", "kanji": "お母さん", "hiragana": "おかあさん", "onyomi": "オカアサン", "meaning": "Mẹ (kính ngữ)", "phonetic": "okaasan"},
+            {"id": "sm-n5-009", "kanji": "兄", "hiragana": "あに", "onyomi": "アニ", "meaning": "Anh trai (khiêm tốn)", "phonetic": "ani"},
+            {"id": "sm-n5-010", "kanji": "姉", "hiragana": "あね", "onyomi": "アネ", "meaning": "Chị gái (khiêm tốn)", "phonetic": "ane"},
+            {"id": "sm-n5-011", "kanji": "弟", "hiragana": "おとうと", "onyomi": "オトウト", "meaning": "Em trai", "phonetic": "otouto"},
+            {"id": "sm-n5-012", "kanji": "妹", "hiragana": "いもうと", "onyomi": "イモウト", "meaning": "Em gái", "phonetic": "imouto"},
+            {"id": "sm-n5-013", "kanji": "家族", "hiragana": "かぞく", "onyomi": "カゾク", "meaning": "Gia đình", "phonetic": "kazoku"},
+            {"id": "sm-n5-014", "kanji": "友達", "hiragana": "ともだち", "onyomi": "トモダチ", "meaning": "Bạn bè", "phonetic": "tomodachi"},
+            {"id": "sm-n5-015", "kanji": "名前", "hiragana": "なまえ", "onyomi": "ナマエ", "meaning": "Tên", "phonetic": "namae"},
+            {"id": "sm-n5-016", "kanji": "私", "hiragana": "わたし", "onyomi": "ワタシ", "meaning": "Tôi", "phonetic": "watashi"},
+            {"id": "sm-n5-017", "kanji": "皆さん", "hiragana": "みなさん", "onyomi": "ミナサン", "meaning": "Mọi người", "phonetic": "minasan"},
+            {"id": "sm-n5-018", "kanji": "方", "hiragana": "かた", "onyomi": "カタ", "meaning": "Người (kính ngữ)", "phonetic": "kata"}
+          ]
+        },
+        {
+          "id": "sm-n5-02",
+          "name": "第2回 - 身体・健康",
+          "vocabulary": [
+            {"id": "sm-n5-019", "kanji": "頭", "hiragana": "あたま", "onyomi": "アタマ", "meaning": "Đầu", "phonetic": "atama"},
+            {"id": "sm-n5-020", "kanji": "顔", "hiragana": "かお", "onyomi": "カオ", "meaning": "Mặt", "phonetic": "kao"},
+            {"id": "sm-n5-021", "kanji": "目", "hiragana": "め", "onyomi": "メ", "meaning": "Mắt", "phonetic": "me"},
+            {"id": "sm-n5-022", "kanji": "耳", "hiragana": "みみ", "onyomi": "ミミ", "meaning": "Tai", "phonetic": "mimi"},
+            {"id": "sm-n5-023", "kanji": "口", "hiragana": "くち", "onyomi": "クチ", "meaning": "Miệng", "phonetic": "kuchi"},
+            {"id": "sm-n5-024", "kanji": "手", "hiragana": "て", "onyomi": "テ", "meaning": "Tay", "phonetic": "te"},
+            {"id": "sm-n5-025", "kanji": "足", "hiragana": "あし", "onyomi": "アシ", "meaning": "Chân", "phonetic": "ashi"},
+            {"id": "sm-n5-026", "kanji": "体", "hiragana": "からだ", "onyomi": "カラダ", "meaning": "Cơ thể", "phonetic": "karada"},
+            {"id": "sm-n5-027", "kanji": "病気", "hiragana": "びょうき", "onyomi": "ビョウキ", "meaning": "Bệnh tật", "phonetic": "byouki"},
+            {"id": "sm-n5-028", "kanji": "薬", "hiragana": "くすり", "onyomi": "クスリ", "meaning": "Thuốc", "phonetic": "kusuri"},
+            {"id": "sm-n5-029", "kanji": "病院", "hiragana": "びょういん", "onyomi": "ビョウイン", "meaning": "Bệnh viện", "phonetic": "byouin"},
+            {"id": "sm-n5-030", "kanji": "医者", "hiragana": "いしゃ", "onyomi": "イシャ", "meaning": "Bác sĩ", "phonetic": "isha"},
+            {"id": "sm-n5-031", "kanji": "歯", "hiragana": "は", "onyomi": "ハ", "meaning": "Răng", "phonetic": "ha"},
+            {"id": "sm-n5-032", "kanji": "鼻", "hiragana": "はな", "onyomi": "ハナ", "meaning": "Mũi", "phonetic": "hana"}
+          ]
+        },
+        {
+          "id": "sm-n5-03",
+          "name": "第3回 - 時間・日付",
+          "vocabulary": [
+            {"id": "sm-n5-033", "kanji": "今日", "hiragana": "きょう", "onyomi": "キョウ", "meaning": "Hôm nay", "phonetic": "kyou"},
+            {"id": "sm-n5-034", "kanji": "明日", "hiragana": "あした", "onyomi": "アシタ", "meaning": "Ngày mai", "phonetic": "ashita"},
+            {"id": "sm-n5-035", "kanji": "昨日", "hiragana": "きのう", "onyomi": "キノウ", "meaning": "Hôm qua", "phonetic": "kinou"},
+            {"id": "sm-n5-036", "kanji": "今朝", "hiragana": "けさ", "onyomi": "ケサ", "meaning": "Sáng nay", "phonetic": "kesa"},
+            {"id": "sm-n5-037", "kanji": "今晩", "hiragana": "こんばん", "onyomi": "コンバン", "meaning": "Tối nay", "phonetic": "konban"},
+            {"id": "sm-n5-038", "kanji": "朝", "hiragana": "あさ", "onyomi": "アサ", "meaning": "Buổi sáng", "phonetic": "asa"},
+            {"id": "sm-n5-039", "kanji": "昼", "hiragana": "ひる", "onyomi": "ヒル", "meaning": "Buổi trưa", "phonetic": "hiru"},
+            {"id": "sm-n5-040", "kanji": "夜", "hiragana": "よる", "onyomi": "ヨル", "meaning": "Buổi tối", "phonetic": "yoru"},
+            {"id": "sm-n5-041", "kanji": "今", "hiragana": "いま", "onyomi": "イマ", "meaning": "Bây giờ", "phonetic": "ima"},
+            {"id": "sm-n5-042", "kanji": "時間", "hiragana": "じかん", "onyomi": "ジカン", "meaning": "Thời gian", "phonetic": "jikan"},
+            {"id": "sm-n5-043", "kanji": "分", "hiragana": "ふん", "onyomi": "フン", "meaning": "Phút", "phonetic": "fun"},
+            {"id": "sm-n5-044", "kanji": "半", "hiragana": "はん", "onyomi": "ハン", "meaning": "Rưỡi", "phonetic": "han"},
+            {"id": "sm-n5-045", "kanji": "来週", "hiragana": "らいしゅう", "onyomi": "ライシュウ", "meaning": "Tuần tới", "phonetic": "raishuu"},
+            {"id": "sm-n5-046", "kanji": "先週", "hiragana": "せんしゅう", "onyomi": "センシュウ", "meaning": "Tuần trước", "phonetic": "senshuu"},
+            {"id": "sm-n5-047", "kanji": "来年", "hiragana": "らいねん", "onyomi": "ライネン", "meaning": "Năm tới", "phonetic": "rainen"},
+            {"id": "sm-n5-048", "kanji": "去年", "hiragana": "きょねん", "onyomi": "キョネン", "meaning": "Năm ngoái", "phonetic": "kyonen"},
+            {"id": "sm-n5-049", "kanji": "毎日", "hiragana": "まいにち", "onyomi": "マイニチ", "meaning": "Mỗi ngày", "phonetic": "mainichi"},
+            {"id": "sm-n5-050", "kanji": "毎朝", "hiragana": "まいあさ", "onyomi": "マイアサ", "meaning": "Mỗi sáng", "phonetic": "maiasa"},
+            {"id": "sm-n5-051", "kanji": "毎晩", "hiragana": "まいばん", "onyomi": "マイバン", "meaning": "Mỗi tối", "phonetic": "maiban"}
+          ]
+        },
+        {
+          "id": "sm-n5-04",
+          "name": "第4回 - 場所・建物",
+          "vocabulary": [
+            {"id": "sm-n5-052", "kanji": "学校", "hiragana": "がっこう", "onyomi": "ガッコウ", "meaning": "Trường học", "phonetic": "gakkou"},
+            {"id": "sm-n5-053", "kanji": "大学", "hiragana": "だいがく", "onyomi": "ダイガク", "meaning": "Đại học", "phonetic": "daigaku"},
+            {"id": "sm-n5-054", "kanji": "会社", "hiragana": "かいしゃ", "onyomi": "カイシャ", "meaning": "Công ty", "phonetic": "kaisha"},
+            {"id": "sm-n5-055", "kanji": "銀行", "hiragana": "ぎんこう", "onyomi": "ギンコウ", "meaning": "Ngân hàng", "phonetic": "ginkou"},
+            {"id": "sm-n5-056", "kanji": "郵便局", "hiragana": "ゆうびんきょく", "onyomi": "ユウビンキョク", "meaning": "Bưu điện", "phonetic": "yuubinkyoku"},
+            {"id": "sm-n5-057", "kanji": "図書館", "hiragana": "としょかん", "onyomi": "トショカン", "meaning": "Thư viện", "phonetic": "toshokan"},
+            {"id": "sm-n5-058", "kanji": "駅", "hiragana": "えき", "onyomi": "エキ", "meaning": "Ga tàu", "phonetic": "eki"},
+            {"id": "sm-n5-059", "kanji": "空港", "hiragana": "くうこう", "onyomi": "クウコウ", "meaning": "Sân bay", "phonetic": "kuukou"},
+            {"id": "sm-n5-060", "kanji": "店", "hiragana": "みせ", "onyomi": "ミセ", "meaning": "Cửa hàng", "phonetic": "mise"},
+            {"id": "sm-n5-061", "kanji": "スーパー", "hiragana": "スーパー", "onyomi": "スーパー", "meaning": "Siêu thị", "phonetic": "suupaa"},
+            {"id": "sm-n5-062", "kanji": "レストラン", "hiragana": "レストラン", "onyomi": "レストラン", "meaning": "Nhà hàng", "phonetic": "resutoran"},
+            {"id": "sm-n5-063", "kanji": "公園", "hiragana": "こうえん", "onyomi": "コウエン", "meaning": "Công viên", "phonetic": "kouen"},
+            {"id": "sm-n5-064", "kanji": "家", "hiragana": "いえ", "onyomi": "イエ", "meaning": "Nhà", "phonetic": "ie"},
+            {"id": "sm-n5-065", "kanji": "部屋", "hiragana": "へや", "onyomi": "ヘヤ", "meaning": "Phòng", "phonetic": "heya"},
+            {"id": "sm-n5-066", "kanji": "外", "hiragana": "そと", "onyomi": "ソト", "meaning": "Bên ngoài", "phonetic": "soto"},
+            {"id": "sm-n5-067", "kanji": "中", "hiragana": "なか", "onyomi": "ナカ", "meaning": "Bên trong", "phonetic": "naka"}
+          ]
+        },
+        {
+          "id": "sm-n5-05",
+          "name": "第5回 - 食べ物・飲み物",
+          "vocabulary": [
+            {"id": "sm-n5-068", "kanji": "ご飯", "hiragana": "ごはん", "onyomi": "ゴハン", "meaning": "Cơm", "phonetic": "gohan"},
+            {"id": "sm-n5-069", "kanji": "パン", "hiragana": "パン", "onyomi": "パン", "meaning": "Bánh", "phonetic": "pan"},
+            {"id": "sm-n5-070", "kanji": "麺", "hiragana": "めん", "onyomi": "メン", "meaning": "Mì", "phonetic": "men"},
+            {"id": "sm-n5-071", "kanji": "肉", "hiragana": "にく", "onyomi": "ニク", "meaning": "Thịt", "phonetic": "niku"},
+            {"id": "sm-n5-072", "kanji": "魚", "hiragana": "さかな", "onyomi": "サカナ", "meaning": "Cá", "phonetic": "sakana"},
+            {"id": "sm-n5-073", "kanji": "野菜", "hiragana": "やさい", "onyomi": "ヤサイ", "meaning": "Rau", "phonetic": "yasai"},
+            {"id": "sm-n5-074", "kanji": "果物", "hiragana": "くだもの", "onyomi": "クダモノ", "meaning": "Trái cây", "phonetic": "kudamono"},
+            {"id": "sm-n5-075", "kanji": "卵", "hiragana": "たまご", "onyomi": "タマゴ", "meaning": "Trứng", "phonetic": "tamago"},
+            {"id": "sm-n5-076", "kanji": "牛乳", "hiragana": "ぎゅうにゅう", "onyomi": "ギュウニュウ", "meaning": "Sữa", "phonetic": "gyuunyuu"},
+            {"id": "sm-n5-077", "kanji": "水", "hiragana": "みず", "onyomi": "ミズ", "meaning": "Nước", "phonetic": "mizu"},
+            {"id": "sm-n5-078", "kanji": "コーヒー", "hiragana": "コーヒー", "onyomi": "コーヒー", "meaning": "Cà phê", "phonetic": "koohii"},
+            {"id": "sm-n5-079", "kanji": "茶", "hiragana": "ちゃ", "onyomi": "チャ", "meaning": "Trà", "phonetic": "cha"},
+            {"id": "sm-n5-080", "kanji": "酒", "hiragana": "さけ", "onyomi": "サケ", "meaning": "Rượu", "phonetic": "sake"},
+            {"id": "sm-n5-081", "kanji": "ビール", "hiragana": "ビール", "onyomi": "ビール", "meaning": "Bia", "phonetic": "biiru"},
+            {"id": "sm-n5-082", "kanji": "美味しい", "hiragana": "おいしい", "onyomi": "オイシイ", "meaning": "Ngon", "phonetic": "oishii"},
+            {"id": "sm-n5-083", "kanji": "食べ物", "hiragana": "たべもの", "onyomi": "タベモノ", "meaning": "Thức ăn", "phonetic": "tabemono"},
+            {"id": "sm-n5-084", "kanji": "飲み物", "hiragana": "のみもの", "onyomi": "ノミモノ", "meaning": "Đồ uống", "phonetic": "nomimono"},
+            {"id": "sm-n5-085", "kanji": "料理", "hiragana": "りょうり", "onyomi": "リョウリ", "meaning": "Nấu ăn", "phonetic": "ryouri"}
+          ]
+        },
+        {
+          "id": "sm-n5-06",
+          "name": "第6回 - 衣類・装飾品",
+          "vocabulary": [
+            {"id": "sm-n5-086", "kanji": "服", "hiragana": "ふく", "onyomi": "フク", "meaning": "Quần áo", "phonetic": "fuku"},
+            {"id": "sm-n5-087", "kanji": "シャツ", "hiragana": "シャツ", "onyomi": "シャツ", "meaning": "Áo sơ mi", "phonetic": "shatsu"},
+            {"id": "sm-n5-088", "kanji": "ズボン", "hiragana": "ズボン", "onyomi": "ズボン", "meaning": "Quần", "phonetic": "zubon"},
+            {"id": "sm-n5-089", "kanji": "スカート", "hiragana": "スカート", "onyomi": "スカート", "meaning": "Váy", "phonetic": "sukaato"},
+            {"id": "sm-n5-090", "kanji": "靴", "hiragana": "くつ", "onyomi": "クツ", "meaning": "Giày", "phonetic": "kutsu"},
+            {"id": "sm-n5-091", "kanji": "靴下", "hiragana": "くつした", "onyomi": "クツシタ", "meaning": "Tất", "phonetic": "kutsushita"},
+            {"id": "sm-n5-092", "kanji": "帽子", "hiragana": "ぼうし", "onyomi": "ボウシ", "meaning": "Mũ", "phonetic": "boushi"},
+            {"id": "sm-n5-093", "kanji": "眼鏡", "hiragana": "めがね", "onyomi": "メガネ", "meaning": "Kính", "phonetic": "megane"},
+            {"id": "sm-n5-094", "kanji": "時計", "hiragana": "とけい", "onyomi": "トケイ", "meaning": "Đồng hồ", "phonetic": "tokei"},
+            {"id": "sm-n5-095", "kanji": "ネクタイ", "hiragana": "ネクタイ", "onyomi": "ネクタイ", "meaning": "Cà vạt", "phonetic": "nekutai"}
+          ]
+        },
+        {
+          "id": "sm-n5-07",
+          "name": "第7回 - 移動・交通",
+          "vocabulary": [
+            {"id": "sm-n5-096", "kanji": "電車", "hiragana": "でんしゃ", "onyomi": "デンシャ", "meaning": "Tàu điện", "phonetic": "densha"},
+            {"id": "sm-n5-097", "kanji": "バス", "hiragana": "バス", "onyomi": "バス", "meaning": "Xe buýt", "phonetic": "basu"},
+            {"id": "sm-n5-098", "kanji": "タクシー", "hiragana": "タクシー", "onyomi": "タクシー", "meaning": "Taxi", "phonetic": "takushii"},
+            {"id": "sm-n5-099", "kanji": "自動車", "hiragana": "じどうしゃ", "onyomi": "ジドウシャ", "meaning": "Xe ô tô", "phonetic": "jidousha"},
+            {"id": "sm-n5-100", "kanji": "飛行機", "hiragana": "ひこうき", "onyomi": "ヒコウキ", "meaning": "Máy bay", "phonetic": "hikouki"},
+            {"id": "sm-n5-101", "kanji": "船", "hiragana": "ふね", "onyomi": "フネ", "meaning": "Thuyền", "phonetic": "fune"},
+            {"id": "sm-n5-102", "kanji": "駅", "hiragana": "えき", "onyomi": "エキ", "meaning": "Ga tàu", "phonetic": "eki"},
+            {"id": "sm-n5-103", "kanji": "切符", "hiragana": "きっぷ", "onyomi": "キップ", "meaning": "Vé", "phonetic": "kippu"},
+            {"id": "sm-n5-104", "kanji": "乗る", "hiragana": "のる", "onyomi": "ノル", "meaning": "Lên", "phonetic": "noru"},
+            {"id": "sm-n5-105", "kanji": "降りる", "hiragana": "おりる", "onyomi": "オリル", "meaning": "Xuống", "phonetic": "oriru"}
+          ]
+        },
+        {
+          "id": "sm-n5-08",
+          "name": "第8回 - 日常生活",
+          "vocabulary": [
+            {"id": "sm-n5-106", "kanji": "朝", "hiragana": "あさ", "onyomi": "アサ", "meaning": "Sáng", "phonetic": "asa"},
+            {"id": "sm-n5-107", "kanji": "昼", "hiragana": "ひる", "onyomi": "ヒル", "meaning": "Trưa", "phonetic": "hiru"},
+            {"id": "sm-n5-108", "kanji": "夜", "hiragana": "よる", "onyomi": "ヨル", "meaning": "Tối", "phonetic": "yoru"},
+            {"id": "sm-n5-109", "kanji": "起きる", "hiragana": "おきる", "onyomi": "オキル", "meaning": "Thức dậy", "phonetic": "okiru"},
+            {"id": "sm-n5-110", "kanji": "寝る", "hiragana": "ねる", "onyomi": "ネル", "meaning": "Nằm ngủ", "phonetic": "neru"},
+            {"id": "sm-n5-111", "kanji": "食べる", "hiragana": "たべる", "onyomi": "タベル", "meaning": "Ăn", "phonetic": "taberu"},
+            {"id": "sm-n5-112", "kanji": "飲む", "hiragana": "のむ", "onyomi": "ノム", "meaning": "Uống", "phonetic": "nomu"},
+            {"id": "sm-n5-113", "kanji": "働く", "hiragana": "はたらく", "onyomi": "ハタラク", "meaning": "Làm việc", "phonetic": "hataraku"},
+            {"id": "sm-n5-114", "kanji": "遊ぶ", "hiragana": "あそぶ", "onyomi": "アソブ", "meaning": "Chơi", "phonetic": "asobu"},
+            {"id": "sm-n5-115", "kanji": "勉強する", "hiragana": "べんきょうする", "onyomi": "ベンキョウスル", "meaning": "Học", "phonetic": "benkyousuru"}
+          ]
+        },
+        {
+          "id": "sm-n5-09",
+          "name": "第9回 - 感情・状態",
+          "vocabulary": [
+            {"id": "sm-n5-116", "kanji": "嬉しい", "hiragana": "うれしい", "onyomi": "ウレシイ", "meaning": "Vui", "phonetic": "ureshii"},
+            {"id": "sm-n5-117", "kanji": "悲しい", "hiragana": "かなしい", "onyomi": "カナシイ", "meaning": "Buồn", "phonetic": "kanashii"},
+            {"id": "sm-n5-118", "kanji": "怖い", "hiragana": "こわい", "onyomi": "コワイ", "meaning": "Sợ", "phonetic": "kowai"},
+            {"id": "sm-n5-119", "kanji": "驚く", "hiragana": "おどろく", "onyomi": "オドロク", "meaning": "Ngạc nhiên", "phonetic": "odoroku"},
+            {"id": "sm-n5-120", "kanji": "疲れる", "hiragana": "つかれる", "onyomi": "ツカレル", "meaning": "Mệt", "phonetic": "tsukareru"},
+            {"id": "sm-n5-121", "kanji": "元気", "hiragana": "げんき", "onyomi": "ゲンキ", "meaning": "Khỏe", "phonetic": "genki"},
+            {"id": "sm-n5-122", "kanji": "病気", "hiragana": "びょうき", "onyomi": "ビョウキ", "meaning": "Bệnh", "phonetic": "byouki"},
+            {"id": "sm-n5-123", "kanji": "怒る", "hiragana": "おこる", "onyomi": "オコル", "meaning": "Giận", "phonetic": "okoru"},
+            {"id": "sm-n5-124", "kanji": "笑う", "hiragana": "わらう", "onyomi": "ワラウ", "meaning": "Cười", "phonetic": "warau"},
+            {"id": "sm-n5-125", "kanji": "泣く", "hiragana": "なく", "onyomi": "ナク", "meaning": "Khóc", "phonetic": "naku"}
+          ]
+        },
+        {
+          "id": "sm-n5-10",
+          "name": "第10回 - 学校・教育",
+          "vocabulary": [
+            {"id": "sm-n5-126", "kanji": "学校", "hiragana": "がっこう", "onyomi": "ガッコウ", "meaning": "Trường", "phonetic": "gakkou"},
+            {"id": "sm-n5-127", "kanji": "教室", "hiragana": "きょうしつ", "onyomi": "キョウシツ", "meaning": "Lớp", "phonetic": "kyoushitsu"},
+            {"id": "sm-n5-128", "kanji": "先生", "hiragana": "せんせい", "onyomi": "センセイ", "meaning": "Giáo viên", "phonetic": "sensei"},
+            {"id": "sm-n5-129", "kanji": "学生", "hiragana": "がくせい", "onyomi": "ガクセイ", "meaning": "Học sinh", "phonetic": "gakusei"},
+            {"id": "sm-n5-130", "kanji": "友人", "hiragana": "ゆうじん", "onyomi": "ユウジン", "meaning": "Bạn", "phonetic": "yuujin"},
+            {"id": "sm-n5-131", "kanji": "本", "hiragana": "ほん", "onyomi": "ホン", "meaning": "Sách", "phonetic": "hon"},
+            {"id": "sm-n5-132", "kanji": "ペン", "hiragana": "ペン", "onyomi": "ペン", "meaning": "Bút", "phonetic": "pen"},
+            {"id": "sm-n5-133", "kanji": "ノート", "hiragana": "ノート", "onyomi": "ノート", "meaning": "Sổ", "phonetic": "nooto"},
+            {"id": "sm-n5-134", "kanji": "試験", "hiragana": "しけん", "onyomi": "シケン", "meaning": "Thi", "phonetic": "shiken"},
+            {"id": "sm-n5-135", "kanji": "成績", "hiragana": "せいせき", "onyomi": "セイセキ", "meaning": "Điểm", "phonetic": "seiseki"}
+          ]
+        },
+        {
+          "id": "sm-n5-11",
+          "name": "第11回 - 娯楽・趣味",
+          "vocabulary": [
+            {"id": "sm-n5-136", "kanji": "映画", "hiragana": "えいが", "onyomi": "エイガ", "meaning": "Phim", "phonetic": "eiga"},
+            {"id": "sm-n5-137", "kanji": "テレビ", "hiragana": "テレビ", "onyomi": "テレビ", "meaning": "TV", "phonetic": "terebi"},
+            {"id": "sm-n5-138", "kanji": "ゲーム", "hiragana": "ゲーム", "onyomi": "ゲーム", "meaning": "Trò chơi", "phonetic": "geemu"},
+            {"id": "sm-n5-139", "kanji": "本", "hiragana": "ほん", "onyomi": "ホン", "meaning": "Sách", "phonetic": "hon"},
+            {"id": "sm-n5-140", "kanji": "新聞", "hiragana": "しんぶん", "onyomi": "シンブン", "meaning": "Báo", "phonetic": "shinbun"},
+            {"id": "sm-n5-141", "kanji": "雑誌", "hiragana": "ざっし", "onyomi": "ザッシ", "meaning": "Tạp chí", "phonetic": "zasshi"},
+            {"id": "sm-n5-142", "kanji": "音楽", "hiragana": "おんがく", "onyomi": "オンガク", "meaning": "Âm nhạc", "phonetic": "ongaku"},
+            {"id": "sm-n5-143", "kanji": "歌", "hiragana": "うた", "onyomi": "ウタ", "meaning": "Bài hát", "phonetic": "uta"},
+            {"id": "sm-n5-144", "kanji": "楽器", "hiragana": "がっき", "onyomi": "ガッキ", "meaning": "Nhạc cụ", "phonetic": "gakki"},
+            {"id": "sm-n5-145", "kanji": "美術", "hiragana": "びじゅつ", "onyomi": "ビジュツ", "meaning": "Mỹ thuật", "phonetic": "bijutsu"}
+          ]
+        },
+        {
+          "id": "sm-n5-12",
+          "name": "第12回 - スポーツ・運動",
+          "vocabulary": [
+            {"id": "sm-n5-146", "kanji": "スポーツ", "hiragana": "スポーツ", "onyomi": "スポーツ", "meaning": "Thể thao", "phonetic": "supootsu"},
+            {"id": "sm-n5-147", "kanji": "野球", "hiragana": "やきゅう", "onyomi": "ヤキュウ", "meaning": "Bóng chày", "phonetic": "yakyuu"},
+            {"id": "sm-n5-148", "kanji": "サッカー", "hiragana": "サッカー", "onyomi": "サッカー", "meaning": "Bóng đá", "phonetic": "sakkaa"},
+            {"id": "sm-n5-149", "kanji": "テニス", "hiragana": "テニス", "onyomi": "テニス", "meaning": "Quần vợt", "phonetic": "tenisu"},
+            {"id": "sm-n5-150", "kanji": "水泳", "hiragana": "すいえい", "onyomi": "スイエイ", "meaning": "Bơi", "phonetic": "suiei"},
+            {"id": "sm-n5-151", "kanji": "スキー", "hiragana": "スキー", "onyomi": "スキー", "meaning": "Trượt tuyết", "phonetic": "sukii"},
+            {"id": "sm-n5-152", "kanji": "体操", "hiragana": "たいそう", "onyomi": "タイソウ", "meaning": "Thể dục", "phonetic": "taisou"},
+            {"id": "sm-n5-153", "kanji": "運動", "hiragana": "うんどう", "onyomi": "ウンドウ", "meaning": "Tập thể dục", "phonetic": "undou"},
+            {"id": "sm-n5-154", "kanji": "試合", "hiragana": "しあい", "onyomi": "シアイ", "meaning": "Trận đấu", "phonetic": "shiai"},
+            {"id": "sm-n5-155", "kanji": "勝つ", "hiragana": "かつ", "onyomi": "カツ", "meaning": "Thắng", "phonetic": "katsu"}
+          ]
+        },
+        {
+          "id": "sm-n5-13",
+          "name": "第13回 - 天気・季節",
+          "vocabulary": [
+            {"id": "sm-n5-156", "kanji": "天気", "hiragana": "てんき", "onyomi": "テンキ", "meaning": "Thời tiết", "phonetic": "tenki"},
+            {"id": "sm-n5-157", "kanji": "晴れ", "hiragana": "はれ", "onyomi": "ハレ", "meaning": "Nắng", "phonetic": "hare"},
+            {"id": "sm-n5-158", "kanji": "曇り", "hiragana": "くもり", "onyomi": "クモリ", "meaning": "Âm u", "phonetic": "kumori"},
+            {"id": "sm-n5-159", "kanji": "雨", "hiragana": "あめ", "onyomi": "アメ", "meaning": "Mưa", "phonetic": "ame"},
+            {"id": "sm-n5-160", "kanji": "雪", "hiragana": "ゆき", "onyomi": "ユキ", "meaning": "Tuyết", "phonetic": "yuki"},
+            {"id": "sm-n5-161", "kanji": "風", "hiragana": "かぜ", "onyomi": "カゼ", "meaning": "Gió", "phonetic": "kaze"},
+            {"id": "sm-n5-162", "kanji": "春", "hiragana": "はる", "onyomi": "ハル", "meaning": "Mùa xuân", "phonetic": "haru"},
+            {"id": "sm-n5-163", "kanji": "夏", "hiragana": "なつ", "onyomi": "ナツ", "meaning": "Mùa hè", "phonetic": "natsu"},
+            {"id": "sm-n5-164", "kanji": "秋", "hiragana": "あき", "onyomi": "アキ", "meaning": "Mùa thu", "phonetic": "aki"},
+            {"id": "sm-n5-165", "kanji": "冬", "hiragana": "ふゆ", "onyomi": "フユ", "meaning": "Mùa đông", "phonetic": "fuyu"}
+          ]
+        },
+        {
+          "id": "sm-n5-14",
+          "name": "第14回 - 買い物・金銭",
+          "vocabulary": [
+            {"id": "sm-n5-166", "kanji": "店", "hiragana": "みせ", "onyomi": "ミセ", "meaning": "Cửa hàng", "phonetic": "mise"},
+            {"id": "sm-n5-167", "kanji": "商品", "hiragana": "しょうひん", "onyomi": "ショウヒン", "meaning": "Hàng hóa", "phonetic": "shouhin"},
+            {"id": "sm-n5-168", "kanji": "値段", "hiragana": "ねだん", "onyomi": "ネダン", "meaning": "Giá", "phonetic": "nedan"},
+            {"id": "sm-n5-169", "kanji": "お金", "hiragana": "おかね", "onyomi": "オカネ", "meaning": "Tiền", "phonetic": "okane"},
+            {"id": "sm-n5-170", "kanji": "硬貨", "hiragana": "こうか", "onyomi": "コウカ", "meaning": "Đồng xu", "phonetic": "kouka"},
+            {"id": "sm-n5-171", "kanji": "札", "hiragana": "さつ", "onyomi": "サツ", "meaning": "Tờ tiền", "phonetic": "satsu"},
+            {"id": "sm-n5-172", "kanji": "買う", "hiragana": "かう", "onyomi": "カウ", "meaning": "Mua", "phonetic": "kau"},
+            {"id": "sm-n5-173", "kanji": "売る", "hiragana": "うる", "onyomi": "ウル", "meaning": "Bán", "phonetic": "uru"},
+            {"id": "sm-n5-174", "kanji": "安い", "hiragana": "やすい", "onyomi": "ヤスイ", "meaning": "Rẻ", "phonetic": "yasui"},
+            {"id": "sm-n5-175", "kanji": "高い", "hiragana": "たかい", "onyomi": "タカイ", "meaning": "Đắt", "phonetic": "takai"}
+          ]
+        },
+        {
+          "id": "sm-n5-15",
+          "name": "第15回 - 家・家具",
+          "vocabulary": [
+            {"id": "sm-n5-176", "kanji": "家", "hiragana": "いえ", "onyomi": "イエ", "meaning": "Nhà", "phonetic": "ie"},
+            {"id": "sm-n5-177", "kanji": "部屋", "hiragana": "へや", "onyomi": "ヘヤ", "meaning": "Phòng", "phonetic": "heya"},
+            {"id": "sm-n5-178", "kanji": "寝室", "hiragana": "しんしつ", "onyomi": "シンシツ", "meaning": "Phòng ngủ", "phonetic": "shinshitsu"},
+            {"id": "sm-n5-179", "kanji": "台所", "hiragana": "だいどころ", "onyomi": "ダイドコロ", "meaning": "Bếp", "phonetic": "daidokoro"},
+            {"id": "sm-n5-180", "kanji": "風呂", "hiragana": "ふろ", "onyomi": "フロ", "meaning": "Phòng tắm", "phonetic": "furo"},
+            {"id": "sm-n5-181", "kanji": "トイレ", "hiragana": "トイレ", "onyomi": "トイレ", "meaning": "Nhà vệ sinh", "phonetic": "toire"},
+            {"id": "sm-n5-182", "kanji": "ベッド", "hiragana": "ベッド", "onyomi": "ベッド", "meaning": "Giường", "phonetic": "beddo"},
+            {"id": "sm-n5-183", "kanji": "机", "hiragana": "つくえ", "onyomi": "ツクエ", "meaning": "Bàn", "phonetic": "tsukue"},
+            {"id": "sm-n5-184", "kanji": "椅子", "hiragana": "いす", "onyomi": "イス", "meaning": "Ghế", "phonetic": "isu"},
+            {"id": "sm-n5-185", "kanji": "窓", "hiragana": "まど", "onyomi": "マド", "meaning": "Cửa sổ", "phonetic": "mado"}
+          ]
+        },
+        {
+          "id": "sm-n5-16",
+          "name": "第16回 - 数字・単位",
+          "vocabulary": [
+            {"id": "sm-n5-186", "kanji": "一", "hiragana": "いち", "onyomi": "イチ", "meaning": "Một", "phonetic": "ichi"},
+            {"id": "sm-n5-187", "kanji": "二", "hiragana": "に", "onyomi": "ニ", "meaning": "Hai", "phonetic": "ni"},
+            {"id": "sm-n5-188", "kanji": "三", "hiragana": "さん", "onyomi": "サン", "meaning": "Ba", "phonetic": "san"},
+            {"id": "sm-n5-189", "kanji": "四", "hiragana": "し", "onyomi": "シ", "meaning": "Bốn", "phonetic": "shi"},
+            {"id": "sm-n5-190", "kanji": "五", "hiragana": "ご", "onyomi": "ゴ", "meaning": "Năm", "phonetic": "go"},
+            {"id": "sm-n5-191", "kanji": "六", "hiragana": "ろく", "onyomi": "ロク", "meaning": "Sáu", "phonetic": "roku"},
+            {"id": "sm-n5-192", "kanji": "七", "hiragana": "しち", "onyomi": "シチ", "meaning": "Bảy", "phonetic": "shichi"},
+            {"id": "sm-n5-193", "kanji": "八", "hiragana": "はち", "onyomi": "ハチ", "meaning": "Tám", "phonetic": "hachi"},
+            {"id": "sm-n5-194", "kanji": "九", "hiragana": "きゅう", "onyomi": "キュウ", "meaning": "Chín", "phonetic": "kyuu"},
+            {"id": "sm-n5-195", "kanji": "十", "hiragana": "じゅう", "onyomi": "ジュウ", "meaning": "Mười", "phonetic": "juu"}
+          ]
+        },
+        {
+          "id": "sm-n5-17",
+          "name": "第17回 - 出会い・交流",
+          "vocabulary": [
+            {"id": "sm-n5-196", "kanji": "初めて", "hiragana": "はじめて", "onyomi": "ハジメテ", "meaning": "Lần đầu", "phonetic": "hajimete"},
+            {"id": "sm-n5-197", "kanji": "友達", "hiragana": "ともだち", "onyomi": "トモダチ", "meaning": "Bạn bè", "phonetic": "tomodachi"},
+            {"id": "sm-n5-198", "kanji": "知人", "hiragana": "ちじん", "onyomi": "チジン", "meaning": "Người quen", "phonetic": "chijin"},
+            {"id": "sm-n5-199", "kanji": "同僚", "hiragana": "どうりょう", "onyomi": "ドウリョウ", "meaning": "Đồng nghiệp", "phonetic": "douryou"},
+            {"id": "sm-n5-200", "kanji": "近所", "hiragana": "きんじょ", "onyomi": "キンジョ", "meaning": "Hàng xóm", "phonetic": "kinjo"},
+            {"id": "sm-n5-201", "kanji": "お世話になります", "hiragana": "おせわになります", "onyomi": "オセワニナリマス", "meaning": "Xin lỗi vì bận rộn", "phonetic": "osewaninarimasu"},
+            {"id": "sm-n5-202", "kanji": "はじめまして", "hiragana": "はじめまして", "onyomi": "ハジメマシテ", "meaning": "Rất vui được gặp bạn", "phonetic": "hajimemashite"},
+            {"id": "sm-n5-203", "kanji": "よろしくお願いします", "hiragana": "よろしくおねがいします", "onyomi": "ヨロシクオネガイシマス", "meaning": "Mong được hỗ trợ", "phonetic": "yoroshikuonegaishimasu"},
+            {"id": "sm-n5-204", "kanji": "どうぞ", "hiragana": "どうぞ", "onyomi": "ドウゾ", "meaning": "Vui lòng", "phonetic": "douzo"},
+            {"id": "sm-n5-205", "kanji": "ありがとう", "hiragana": "ありがとう", "onyomi": "アリガトウ", "meaning": "Cảm ơn", "phonetic": "arigatou"}
+          ]
+        },
+        {
+          "id": "sm-n5-18",
+          "name": "第18回 - 好き・嫌い・興味",
+          "vocabulary": [
+            {"id": "sm-n5-206", "kanji": "好き", "hiragana": "すき", "onyomi": "スキ", "meaning": "Thích", "phonetic": "suki"},
+            {"id": "sm-n5-207", "kanji": "嫌い", "hiragana": "きらい", "onyomi": "キライ", "meaning": "Không thích", "phonetic": "kirai"},
+            {"id": "sm-n5-208", "kanji": "大好き", "hiragana": "だいすき", "onyomi": "ダイスキ", "meaning": "Rất thích", "phonetic": "daisuki"},
+            {"id": "sm-n5-209", "kanji": "大嫌い", "hiragana": "だいきらい", "onyomi": "ダイキライ", "meaning": "Rất không thích", "phonetic": "daikiragi"},
+            {"id": "sm-n5-210", "kanji": "興味", "hiragana": "きょうみ", "onyomi": "キョウミ", "meaning": "Quan tâm", "phonetic": "kyoumi"},
+            {"id": "sm-n5-211", "kanji": "趣味", "hiragana": "しゅみ", "onyomi": "シュミ", "meaning": "Sở thích", "phonetic": "shumi"},
+            {"id": "sm-n5-212", "kanji": "好物", "hiragana": "こうぶつ", "onyomi": "コウブツ", "meaning": "Đồ ưa thích", "phonetic": "koubutsu"},
+            {"id": "sm-n5-213", "kanji": "美味しい", "hiragana": "おいしい", "onyomi": "オイシイ", "meaning": "Ngon", "phonetic": "oishii"},
+            {"id": "sm-n5-214", "kanji": "面白い", "hiragana": "おもしろい", "onyomi": "オモシロイ", "meaning": "Thú vị", "phonetic": "omoshiroi"},
+            {"id": "sm-n5-215", "kanji": "つまらない", "hiragana": "つまらない", "onyomi": "ツマラナイ", "meaning": "Chán", "phonetic": "tsumaranai"}
+          ]
+        }
+      ]
+    }
+  ]
 }

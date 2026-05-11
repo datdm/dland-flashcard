@@ -1,9 +1,11 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { use } from "react";
 import Link from "next/link";
 import { useNotebooks } from "@/hooks/useNotebooks";
+import { useProgress } from "@/hooks/useProgress";
+import FilterBar, { FilterTab } from "@/components/FilterBar";
 import { Vocabulary } from "@/types";
 
 type VocabFields = Omit<Vocabulary, "id">;
@@ -27,8 +29,8 @@ const FIELD_LABELS: { key: keyof VocabFields; label: string; placeholder: string
 export default function NotebookDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const { notebooks, addVocab, updateVocab, deleteVocab, exportNotebook, importVocabFromJson, checkDuplicate } = useNotebooks();
-  const notebook = notebooks.find((nb) => nb.id === id);
-
+  const { getVocabProgress, toggleLearned, toggleFavorite, progress } = useProgress();
+  
   const [form, setForm] = useState<VocabFields>(EMPTY_FIELDS);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -37,7 +39,19 @@ export default function NotebookDetailPage({ params }: { params: Promise<{ id: s
   const [duplicateError, setDuplicateError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [importResult, setImportResult] = useState<{ msg: string; ok: boolean } | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [tab, setTab] = useState<FilterTab>("all");
   const fileRef = useRef<HTMLInputElement>(null);
+
+  const notebook = notebooks.find((nb) => nb.id === id);
+
+    // Reset to page 1 when search or tab changes
+  useEffect(() => {
+    if (currentPage !== 1) {
+      setCurrentPage(1);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchQuery, tab]);
 
   if (!notebook) {
     return (
@@ -54,9 +68,17 @@ export default function NotebookDetailPage({ params }: { params: Promise<{ id: s
     if (!isFormValid) return;
     
     // Check for duplicates
-    const duplicate = checkDuplicate(id, form.kanji, form.hiragana);
-    if (duplicate) {
-      setDuplicateError(`Từ vựng đã tồn tại (kanji: ${duplicate.kanji}, hiragana: ${duplicate.hiragana})`);
+    const duplicates = checkDuplicate(id, form.kanji, form.hiragana);
+    if (duplicates && duplicates.length > 0) {
+      // Find duplicates in OTHER notebooks
+      const otherDuplicates = duplicates.filter(d => d.notebookId !== id);
+      if (otherDuplicates.length > 0) {
+        const notebookNames = otherDuplicates.map(d => `"${d.notebookName}"`).join(", ");
+        setDuplicateError(`Từ này đã tồn tại trong sổ tay: ${notebookNames}`);
+      } else {
+        // Duplicate in current notebook only
+        setDuplicateError("Từ vựng này đã tồn tại trong sổ tay này");
+      }
       return;
     }
     
@@ -83,9 +105,17 @@ export default function NotebookDetailPage({ params }: { params: Promise<{ id: s
     if (!editingVocab) return;
     
     // Check for duplicates, excluding the current vocab being edited
-    const duplicate = checkDuplicate(id, editFields.kanji, editFields.hiragana, editingVocab.id);
-    if (duplicate) {
-      setDuplicateError(`Từ vựng đã tồn tại (kanji: ${duplicate.kanji}, hiragana: ${duplicate.hiragana})`);
+    const duplicates = checkDuplicate(id, editFields.kanji, editFields.hiragana, editingVocab.id);
+    if (duplicates && duplicates.length > 0) {
+      // Find duplicates in OTHER notebooks
+      const otherDuplicates = duplicates.filter(d => d.notebookId !== id);
+      if (otherDuplicates.length > 0) {
+        const notebookNames = otherDuplicates.map(d => `"${d.notebookName}"`).join(", ");
+        setDuplicateError(`Từ này đã tồn tại trong sổ tay: ${notebookNames}`);
+      } else {
+        // Duplicate in current notebook only
+        setDuplicateError("Từ vựng này đã tồn tại trong sổ tay này");
+      }
       return;
     }
     
@@ -135,6 +165,30 @@ export default function NotebookDetailPage({ params }: { params: Promise<{ id: s
       v.phonetic?.toLowerCase().includes(query)
     );
   });
+
+  // Calculate filter counts
+  const counts = {
+    all: filteredVocabulary.length,
+    learned: filteredVocabulary.filter((v) => progress[v.id]?.learned).length,
+    unlearned: filteredVocabulary.filter((v) => !progress[v.id]?.learned).length,
+    favorite: filteredVocabulary.filter((v) => progress[v.id]?.favorite).length,
+  };
+
+  // Apply tab filter
+  const tabFiltered = filteredVocabulary.filter((v) => {
+    if (tab === "learned") return progress[v.id]?.learned;
+    if (tab === "unlearned") return !progress[v.id]?.learned;
+    if (tab === "favorite") return progress[v.id]?.favorite;
+    return true;
+  });
+
+  // Pagination
+  const ITEMS_PER_PAGE = 30;
+  const totalPages = Math.ceil(tabFiltered.length / ITEMS_PER_PAGE);
+  const startIdx = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIdx = startIdx + ITEMS_PER_PAGE;
+  const paginatedVocabulary = tabFiltered.slice(startIdx, endIdx);
+
 
   return (
     <div className="p-4 max-w-5xl mx-auto">
@@ -205,9 +259,22 @@ export default function NotebookDetailPage({ params }: { params: Promise<{ id: s
         </div>
       )}
 
+      {/* Filter tabs */}
+      {notebook.vocabulary.length > 0 && (
+        <div className="mb-4">
+          <FilterBar active={tab} onChange={setTab} counts={counts} />
+        </div>
+      )}
+
       {searchQuery && notebook.vocabulary.length > 0 && (
         <div className="mb-3 text-xs text-gray-500">
           Hiển thị {filteredVocabulary.length} / {notebook.vocabulary.length} từ
+        </div>
+      )}
+
+      {!searchQuery && notebook.vocabulary.length > 0 && totalPages > 1 && (
+        <div className="mb-3 text-xs text-gray-500">
+          Trang {currentPage} / {totalPages} • {filteredVocabulary.length} từ
         </div>
       )}
 
@@ -222,9 +289,12 @@ export default function NotebookDetailPage({ params }: { params: Promise<{ id: s
           <p>Không tìm thấy từ vựng nào</p>
         </div>
       ) : (
+        <>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-          {filteredVocabulary.map((v) => (
-            <div key={v.id} className="flex flex-col rounded-2xl border border-gray-200 bg-white shadow-sm h-full">
+          {paginatedVocabulary.map((v) => (
+            <div key={v.id} className={`flex flex-col rounded-2xl border bg-white shadow-sm h-full transition-colors ${
+              progress[v.id]?.learned ? "border-emerald-200" : "border-gray-200"
+            }`}>
                 {/* Top: word + edit/delete */}
                 <div className="flex items-start justify-between gap-1 px-3 pt-3 pb-1">
                   <div className="min-w-0 flex-1">
@@ -238,6 +308,26 @@ export default function NotebookDetailPage({ params }: { params: Promise<{ id: s
                     </p>
                   </div>
                   <div className="flex items-center shrink-0">
+                    <button
+                      onClick={() => toggleFavorite(v.id)}
+                      title="Yêu thích"
+                      className={`w-7 h-7 flex items-center justify-center text-base transition-colors ${
+                        progress[v.id]?.favorite ? "text-yellow-400" : "text-gray-300 hover:text-yellow-300"
+                      }`}
+                    >
+                      {"\u2605"}
+                    </button>
+                    <button
+                      onClick={() => toggleLearned(v.id)}
+                      title={progress[v.id]?.learned ? "Đã học" : "Chưa học"}
+                      className={`w-7 h-7 flex items-center justify-center text-sm font-bold transition-colors ${
+                        progress[v.id]?.learned
+                          ? "text-emerald-500 hover:text-emerald-600"
+                          : "text-gray-300 hover:text-emerald-400"
+                      }`}
+                    >
+                      {progress[v.id]?.learned ? "\u2713" : "\u25cb"}
+                    </button>
                     <button
                       onClick={() => startEdit(v)}
                       className="w-7 h-7 flex items-center justify-center text-sm text-indigo-400 hover:text-indigo-600 rounded-lg hover:bg-indigo-50 transition-colors"
@@ -264,12 +354,69 @@ export default function NotebookDetailPage({ params }: { params: Promise<{ id: s
                 )}
 
                 {/* Bottom strip */}
-                <div className="mt-auto px-3 py-1.5 rounded-b-2xl border-t border-gray-100 bg-gray-50 text-xs text-gray-400">
+                <div className={`mt-auto px-3 py-1.5 rounded-b-2xl border-t text-xs transition-colors ${
+                  progress[v.id]?.learned
+                    ? "bg-emerald-50 border-emerald-100 text-emerald-600"
+                    : "bg-gray-50 border-gray-100 text-gray-400"
+                }`}>
                   {v.onyomi || v.hiragana || "\u2013"}
                 </div>
               </div>
             ))}
         </div>
+
+        {/* Pagination controls */}
+        {totalPages > 1 && !searchQuery && (
+          <div className="flex items-center justify-center gap-2 mt-6 mb-4">
+            <button
+              onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+              disabled={currentPage === 1}
+              className="px-3 py-1.5 text-sm border border-gray-300 rounded-lg text-gray-600 hover:border-indigo-400 hover:text-indigo-600 disabled:opacity-40 transition-colors"
+            >
+              ← Trước
+            </button>
+            <div className="flex items-center gap-1">
+              {Array.from({ length: totalPages }).map((_, i) => {
+                const page = i + 1;
+                const isActive = page === currentPage;
+                const isNear = Math.abs(page - currentPage) <= 2;
+                const isEnd = page === totalPages;
+                const isStart = page === 1;
+
+                if (isNear || isStart || isEnd) {
+                  return (
+                    <button
+                      key={page}
+                      onClick={() => setCurrentPage(page)}
+                      className={`w-8 h-8 rounded text-xs font-semibold transition-colors ${
+                        isActive
+                          ? "bg-indigo-600 text-white"
+                          : "border border-gray-300 text-gray-600 hover:border-indigo-400 hover:text-indigo-600"
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  );
+                } else if (i === currentPage - 3 || i === currentPage + 1) {
+                  return (
+                    <span key={`dots-${i}`} className="text-gray-400">
+                      …
+                    </span>
+                  );
+                }
+                return null;
+              })}
+            </div>
+            <button
+              onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+              disabled={currentPage === totalPages}
+              className="px-3 py-1.5 text-sm border border-gray-300 rounded-lg text-gray-600 hover:border-indigo-400 hover:text-indigo-600 disabled:opacity-40 transition-colors"
+            >
+              Sau →
+            </button>
+          </div>
+        )}
+        </>
       )}
 
       {/* Add vocab modal */}

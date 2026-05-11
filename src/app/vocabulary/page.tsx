@@ -1,7 +1,7 @@
-﻿"use client";
+"use client";
 
 import { useState, useMemo } from "react";
-import { useLessons } from "@/hooks/useLessons";
+import { useCurriculums } from "@/hooks/useCurriculums";
 import { useNotebooks } from "@/hooks/useNotebooks";
 import { useProgress } from "@/hooks/useProgress";
 import VocabularyListItem from "@/components/VocabularyListItem";
@@ -9,7 +9,7 @@ import FilterBar, { FilterTab } from "@/components/FilterBar";
 import Link from "next/link";
 
 export default function VocabularyPage() {
-  const { lessons } = useLessons();
+  const { curriculums } = useCurriculums();
   const { notebooks } = useNotebooks();
   const { getVocabProgress, toggleLearned, toggleFavorite, progress } = useProgress();
   const [tab, setTab] = useState<FilterTab>("all");
@@ -17,33 +17,39 @@ export default function VocabularyPage() {
   const [selectedNotebook, setSelectedNotebook] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Get unique curriculums
-  const curriculums = useMemo(() => {
-    const unique = new Set(lessons.map((l) => l.curriculum).filter(Boolean));
-    return Array.from(unique).sort();
-  }, [lessons]);
+  // Get curriculum list
+  const curriculumList = useMemo(() => {
+    return curriculums.map((c) => ({ id: c.id, name: c.name }));
+  }, [curriculums]);
 
   // Get all vocabulary with source info
   const allVocabWithSource = useMemo(() => {
-    const lessonVocab = lessons.flatMap((l) =>
-      l.vocabulary.map((v) => ({ ...v, source: "lesson" as const, curriculum: l.curriculum }))
+    const curriculumVocab = curriculums.flatMap((curr) => 
+      curr.lessons.flatMap((lesson) =>
+        lesson.vocabulary.map((v) => ({ 
+          ...v, 
+          source: "curriculum" as const, 
+          curriculumId: curr.id,
+          curriculumName: curr.name 
+        }))
+      )
     );
     const notebookVocab = notebooks.flatMap((nb) =>
       nb.vocabulary.map((v) => ({ ...v, source: "notebook" as const, notebookId: nb.id, notebookName: nb.name }))
     );
-    return [...lessonVocab, ...notebookVocab];
-  }, [lessons, notebooks]);
+    return [...curriculumVocab, ...notebookVocab];
+  }, [curriculums, notebooks]);
 
   // Filter by curriculum and notebook
   const filteredBySource = allVocabWithSource.filter((v) => {
-    if (selectedCurriculum !== "all" && v.source === "lesson") {
-      if (v.curriculum !== selectedCurriculum) return false;
+    if (selectedCurriculum !== "all" && v.source === "curriculum") {
+      if (v.curriculumId !== selectedCurriculum) return false;
     }
     if (selectedNotebook !== "all" && v.source === "notebook") {
       if (v.notebookId !== selectedNotebook) return false;
     }
-    // If curriculum filter is active, only show lesson vocab
-    if (selectedCurriculum !== "all" && v.source !== "lesson") return false;
+    // If curriculum filter is active, only show curriculum vocab
+    if (selectedCurriculum !== "all" && v.source !== "curriculum") return false;
     // If notebook filter is active, only show notebook vocab
     if (selectedNotebook !== "all" && v.source !== "notebook") return false;
     return true;
@@ -101,9 +107,9 @@ export default function VocabularyPage() {
                 className="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-400"
               >
                 <option value="all">Tất cả giáo trình</option>
-                {curriculums.map((c) => (
-                  <option key={c} value={c}>
-                    {c}
+                {curriculumList.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name}
                   </option>
                 ))}
               </select>

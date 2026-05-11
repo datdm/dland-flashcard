@@ -1,16 +1,24 @@
-﻿"use client";
+"use client";
 
-import { useState, useRef, useMemo } from "react";
-import { useLessons } from "@/hooks/useLessons";
-import { LessonsData, Lesson, Vocabulary, JLPT_LEVELS } from "@/types";
+import { useState, useRef } from "react";
+import { useCurriculums } from "@/hooks/useCurriculums";
+import { useNotebooks } from "@/hooks/useNotebooks";
 import ExportImportPanel from "@/components/ExportImportPanel";
 import Link from "next/link";
+import { Vocabulary } from "@/types";
 
 interface ParseResult {
   valid: boolean;
-  lessons?: Lesson[];
+  type?: "curriculum" | "notebook" | "notebooks" | "curriculums";
+  data?: {
+    curriculumName?: string;
+    lessonCount?: number;
+    notebookName?: string;
+    notebookCount?: number;
+    curriculumCount?: number;
+    vocabCount?: number;
+  };
   error?: string;
-  warnings?: string[];
 }
 
 function parseUploadedJson(text: string): ParseResult {
@@ -21,90 +29,130 @@ function parseUploadedJson(text: string): ParseResult {
     return { valid: false, error: "Không thể parse JSON. Kiểm tra lại định dạng file." };
   }
 
-  const data = raw as LessonsData;
-  if (!data || !Array.isArray(data.lessons)) {
-    return { valid: false, error: 'JSON phải có trường "lessons" là một mảng.' };
+  const data = raw as Record<string, unknown>;
+
+  // Check if curriculum format
+  if (data.curriculum && typeof data.curriculum === "string" && Array.isArray(data.lessons)) {
+    const lessons = data.lessons as unknown[];
+    let vocabCount = 0;
+
+    for (const lesson of lessons) {
+      const l = lesson as Record<string, unknown>;
+      if (!l.name || !Array.isArray(l.vocabulary)) {
+        return { valid: false, error: `Bài học phải có "name" và "vocabulary".` };
+      }
+      vocabCount += (l.vocabulary as unknown[]).length;
+    }
+
+    return {
+      valid: true,
+      type: "curriculum",
+      data: {
+        curriculumName: data.curriculum,
+        lessonCount: lessons.length,
+        vocabCount,
+      },
+    };
   }
 
-  const warnings: string[] = [];
-  const seenIds = new Set<string>();
-  const lessons: Lesson[] = [];
-
-  for (const lesson of data.lessons) {
-    if (!lesson.id || !lesson.name) {
-      return { valid: false, error: `Bài học thiếu trường "id" hoặc "name".` };
+  // Check if single notebook format
+  if (data.notebook && typeof data.notebook === "object") {
+    const nb = data.notebook as Record<string, unknown>;
+    if (nb.name && Array.isArray(nb.vocabulary)) {
+      return {
+        valid: true,
+        type: "notebook",
+        data: {
+          notebookName: nb.name as string,
+          vocabCount: (nb.vocabulary as unknown[]).length,
+        },
+      };
     }
-    if (!Array.isArray(lesson.vocabulary)) {
-      return { valid: false, error: `Bài "${lesson.name}" thiếu trường "vocabulary".` };
-    }
-    const vocab: Vocabulary[] = [];
-    for (const v of lesson.vocabulary) {
-      if (!v.id) {
-        return { valid: false, error: `Từ vựng trong bài "${lesson.name}" thiếu trường "id".` };
-      }
-      if (seenIds.has(v.id)) {
-        warnings.push(`ID trùng lặp: "${v.id}" — dữ liệu cũ sẽ bị ghi đè.`);
-      }
-      seenIds.add(v.id);
-      vocab.push(v as Vocabulary);
-    }
-    lessons.push({ ...lesson, vocabulary: vocab });
   }
 
-  return { valid: true, lessons, warnings };
+  // Check if multiple notebooks format
+  if (Array.isArray(data.notebooks)) {
+    let totalVocab = 0;
+    for (const nb of data.notebooks) {
+      const notebook = nb as Record<string, unknown>;
+      if (!notebook.name || !Array.isArray(notebook.vocabulary)) {
+        return { valid: false, error: "Mỗi sổ tay phải có 'name' và 'vocabulary'." };
+      }
+      totalVocab += (notebook.vocabulary as unknown[]).length;
+    }
+    return {
+      valid: true,
+      type: "notebooks",
+      data: {
+        notebookCount: data.notebooks.length,
+        vocabCount: totalVocab,
+      },
+    };
+  }
+
+  // Check if multiple curriculums format (export all)
+  if (Array.isArray(data.curriculums)) {
+    let totalLessons = 0;
+    let totalVocab = 0;
+    for (const curr of data.curriculums) {
+      const curriculum = curr as Record<string, unknown>;
+      if (!curriculum.name || !Array.isArray(curriculum.lessons)) {
+        return { valid: false, error: "Mỗi giáo trình phải có 'name' và 'lessons'." };
+      }
+      totalLessons += (curriculum.lessons as unknown[]).length;
+      for (const lesson of curriculum.lessons as unknown[]) {
+        const l = lesson as Record<string, unknown>;
+        if (Array.isArray(l.vocabulary)) {
+          totalVocab += (l.vocabulary as unknown[]).length;
+        }
+      }
+    }
+    return {
+      valid: true,
+      type: "curriculums",
+      data: {
+        curriculumCount: data.curriculums.length,
+        lessonCount: totalLessons,
+        vocabCount: totalVocab,
+      },
+    };
+  }
+
+  return { valid: false, error: 'File phải có định dạng Giáo trình {"curriculum": "...", "lessons": [...]} hoặc Sổ tay {"notebook": {...}} hoặc {"notebooks": [...]} hoặc {"curriculums": [...]}.' };
 }
 
 export default function UploadPage() {
-  const { addLessons, deleteLesson, lessons } = useLessons();
+  const { curriculums, addCurriculum, addLessonsToExistingCurriculum } = useCurriculums();
+  const { notebooks, createNotebook, addVocab } = useNotebooks();
   const [dragOver, setDragOver] = useState(false);
-  const [preview, setPreview] = useState<ParseResult | null>(null);
-  const [pendingText, setPendingText] = useState<string | null>(null);
-  const [saved, setSaved] = useState(false);
+  const [result, setResult] = useState<ParseResult | null>(null);
+  const [rawData, setRawData] = useState<string | null>(null);
+  const [saved, setSaved] = useState<string | null>(null);
   const [pasteMode, setPasteMode] = useState(false);
   const [pasteText, setPasteText] = useState("");
-  const [curriculumName, setCurriculumName] = useState("");
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  // Group existing lessons by level
-  const groupedLessons = useMemo(() => {
-    const groups: Record<string, Lesson[]> = {};
-    for (const lesson of lessons) {
-      const key = lesson.level || "Chưa phân cấp";
-      if (!groups[key]) groups[key] = [];
-      groups[key].push(lesson);
-    }
-    // Sort: JLPT standard order first, then custom, then ungrouped
-    const sortedKeys = [
-      ...JLPT_LEVELS.filter((l) => groups[l]),
-      ...Object.keys(groups).filter(
-        (k) => !(JLPT_LEVELS as readonly string[]).includes(k) && k !== "Chưa phân cấp"
-      ).sort(),
-      ...(groups["Chưa phân cấp"] ? ["Chưa phân cấp"] : []),
-    ];
-    return { groups, sortedKeys };
-  }, [lessons]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleParsePaste = () => {
-    setSaved(false);
-    const result = parseUploadedJson(pasteText);
-    setPreview(result);
-    if (result.valid) setPendingText(pasteText);
+    setSaved(null);
+    const res = parseUploadedJson(pasteText);
+    setResult(res);
+    if (res.valid) setRawData(pasteText);
   };
 
   const processFile = (file: File) => {
-    setSaved(false);
-    setPreview(null);
+    setSaved(null);
+    setResult(null);
     const reader = new FileReader();
     reader.onload = (e) => {
       const text = e.target?.result as string;
-      const result = parseUploadedJson(text);
-      setPreview(result);
-      if (result.valid) setPendingText(text);
+      setRawData(text);
+      const res = parseUploadedJson(text);
+      setResult(res);
     };
     reader.readAsText(file);
   };
 
-  const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) processFile(file);
     e.target.value = "";
@@ -118,35 +166,197 @@ export default function UploadPage() {
   };
 
   const handleSave = () => {
-    if (!preview?.valid || !preview.lessons) return;
-    const lessonsToSave = curriculumName.trim()
-      ? preview.lessons.map((l) => (l.curriculum ? l : { ...l, curriculum: curriculumName.trim() }))
-      : preview.lessons;
-    addLessons(lessonsToSave);
-    setSaved(true);
-    setPreview(null);
-    setPendingText(null);
-    setCurriculumName("");
-  };
+    if (!result?.valid || !result.type || !rawData) return;
 
-  const exampleJson = JSON.stringify(
-    {
-      lessons: [
-        {
-          id: "n5-bai-1",
-          name: "Bài 1 - Chào hỏi",
-          level: "N5",
-          description: "Từ vựng cơ bản",
-          vocabulary: [
-            { id: "n5-001", kanji: "日本語", hiragana: "にほんご", onyomi: "ニホンゴ", meaning: "Tiếng Nhật", phonetic: "nihongo" },
-            { id: "n5-002", kanji: "学生", hiragana: "がくせい", onyomi: "ガクセイ", meaning: "Học sinh", phonetic: "gakusei" }
-          ]
+    try {
+      const data = JSON.parse(rawData) as Record<string, unknown>;
+
+      if (result.type === "curriculum") {
+        const curriculumName = data.curriculum as string;
+        const lessonsData = data.lessons as Record<string, unknown>[];
+        
+        // Check for duplicate curriculum name
+        const duplicate = curriculums.find((c) => c.name.toLowerCase() === curriculumName.toLowerCase());
+        if (duplicate) {
+          setSaved(`❌ Giáo trình "${curriculumName}" đã tồn tại!`);
+          return;
         }
-      ]
-    },
-    null,
-    2
-  );
+        
+        const newCurriculum = addCurriculum(curriculumName);
+        
+        // Map lessons with vocabulary IDs generated automatically
+        const lessons = lessonsData.map((lessonData) => ({
+          name: lessonData.name as string,
+          vocabulary: (lessonData.vocabulary as Record<string, unknown>[]).map((v, idx) => ({
+            id: `v-${Date.now()}-${idx}-${Math.random().toString(36).slice(2, 5)}`,
+            kanji: v.kanji as string | undefined,
+            hiragana: v.hiragana as string | undefined,
+            onyomi: v.onyomi as string | undefined,
+            meaning: v.meaning as string | undefined,
+            phonetic: v.phonetic as string | undefined,
+          }))
+        }));
+        
+        addLessonsToExistingCurriculum(newCurriculum.id, lessons);
+        
+        setSaved(`✅ Đã import giáo trình "${curriculumName}" với ${lessonsData.length} bài học (${result.data?.vocabCount} từ)!`);
+        
+      } else if (result.type === "notebook") {
+        const notebook = data.notebook as Record<string, unknown>;
+        const notebookName = notebook.name as string;
+        const vocabulary = notebook.vocabulary as Record<string, unknown>[];
+        
+        // Check for duplicate notebook name
+        const duplicate = notebooks.find((nb) => nb.name.toLowerCase() === notebookName.toLowerCase());
+        if (duplicate) {
+          setSaved(`❌ Sổ tay "${notebookName}" đã tồn tại!`);
+          return;
+        }
+        
+        const newNotebook = createNotebook(notebookName);
+        
+        for (const vocab of vocabulary) {
+          addVocab(newNotebook.id, {
+            kanji: vocab.kanji as string | undefined,
+            hiragana: vocab.hiragana as string | undefined,
+            onyomi: vocab.onyomi as string | undefined,
+            meaning: vocab.meaning as string | undefined,
+            phonetic: vocab.phonetic as string | undefined,
+          });
+        }
+        
+        setSaved(`✅ Đã import sổ tay "${notebookName}" với ${vocabulary.length} từ vựng!`);
+        
+      } else if (result.type === "notebooks") {
+        const notebooksData = data.notebooks as Record<string, unknown>[];
+        let imported = 0;
+        let skipped = 0;
+        let totalVocab = 0;
+        const importedNames: string[] = [];
+        const skippedNames: string[] = [];
+        
+        for (const nb of notebooksData) {
+          const notebookName = nb.name as string;
+          const vocabulary = nb.vocabulary as Record<string, unknown>[];
+          
+          // Check for duplicate notebook name
+          const duplicate = notebooks.find((existing) => existing.name.toLowerCase() === notebookName.toLowerCase());
+          if (duplicate) {
+            skipped++;
+            skippedNames.push(notebookName);
+            continue;
+          }
+          
+          const newNotebook = createNotebook(notebookName);
+          imported++;
+          importedNames.push(notebookName);
+          totalVocab += vocabulary.length;
+          
+          for (const vocab of vocabulary) {
+            addVocab(newNotebook.id, {
+              kanji: vocab.kanji as string | undefined,
+              hiragana: vocab.hiragana as string | undefined,
+              onyomi: vocab.onyomi as string | undefined,
+              meaning: vocab.meaning as string | undefined,
+              phonetic: vocab.phonetic as string | undefined,
+            });
+          }
+        }
+        
+        // Build detailed message
+        let message = '';
+        if (imported > 0) {
+          message += `✅ Đã import ${imported} sổ tay (${totalVocab} từ):\n`;
+          importedNames.forEach(name => {
+            message += `   • ${name}\n`;
+          });
+        }
+        if (skipped > 0) {
+          if (message) message += '\n';
+          message += `⚠️ Bỏ qua ${skipped} sổ tay (trùng lặp):\n`;
+          skippedNames.forEach(name => {
+            message += `   • ${name}\n`;
+          });
+        }
+        setSaved(message || '✅ Hoàn tất!');
+      } else if (result.type === "curriculums") {
+        const curriculumsData = data.curriculums as Record<string, unknown>[];
+        let imported = 0;
+        let skipped = 0;
+        let totalLessons = 0;
+        let totalVocab = 0;
+        const importedDetails: Array<{ name: string; lessons: number; vocab: number }> = [];
+        const skippedNames: string[] = [];
+        
+        for (const curr of curriculumsData) {
+          const curriculumName = curr.name as string;
+          const lessonsData = curr.lessons as Record<string, unknown>[];
+          
+          // Check for duplicate curriculum name
+          const duplicate = curriculums.find((existing) => existing.name.toLowerCase() === curriculumName.toLowerCase());
+          if (duplicate) {
+            skipped++;
+            skippedNames.push(curriculumName);
+            continue;
+          }
+          
+          const newCurriculum = addCurriculum(curriculumName);
+          imported++;
+          
+          let currLessons = 0;
+          let currVocab = 0;
+          const lessons = lessonsData.map((lessonData) => {
+            const vocabList = lessonData.vocabulary as Record<string, unknown>[];
+            currLessons++;
+            currVocab += vocabList.length;
+            totalLessons++;
+            totalVocab += vocabList.length;
+            return {
+              name: lessonData.name as string,
+              vocabulary: vocabList.map((v, idx) => ({
+                id: `v-${Date.now()}-${idx}-${Math.random().toString(36).slice(2, 5)}`,
+                kanji: v.kanji as string | undefined,
+                hiragana: v.hiragana as string | undefined,
+                onyomi: v.onyomi as string | undefined,
+                meaning: v.meaning as string | undefined,
+                phonetic: v.phonetic as string | undefined,
+              }))
+            };
+          });
+          
+          importedDetails.push({ name: curriculumName, lessons: currLessons, vocab: currVocab });
+          addLessonsToExistingCurriculum(newCurriculum.id, lessons);
+        }
+        
+        // Build detailed message
+        let message = '';
+        if (imported > 0) {
+          message += `✅ Đã import ${imported} giáo trình (${totalLessons} bài, ${totalVocab} từ):\n`;
+          importedDetails.forEach(detail => {
+            message += `   • ${detail.name} (${detail.lessons} bài, ${detail.vocab} từ)\n`;
+          });
+        }
+        if (skipped > 0) {
+          if (message) message += '\n';
+          message += `⚠️ Bỏ qua ${skipped} giáo trình (trùng lặp):\n`;
+          skippedNames.forEach(name => {
+            message += `   • ${name}\n`;
+          });
+        }
+        setSaved(message || '✅ Hoàn tất!');
+      }
+
+      // Reset
+      setResult(null);
+      setRawData(null);
+      setPasteText("");
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    } catch (err) {
+      setSaved("❌ Lỗi khi lưu dữ liệu: " + (err instanceof Error ? err.message : String(err)));
+    }
+  };
 
   return (
     <div className="p-4 max-w-2xl mx-auto space-y-6">
@@ -158,7 +368,7 @@ export default function UploadPage() {
       {/* Input mode toggle */}
       <div className="flex gap-2">
         <button
-          onClick={() => { setPasteMode(false); setPreview(null); }}
+          onClick={() => { setPasteMode(false); setResult(null); }}
           className={`flex-1 py-2 rounded-xl border text-sm font-medium transition-colors ${
             !pasteMode ? "bg-indigo-600 text-white border-indigo-600" : "border-gray-300 text-gray-600 hover:border-indigo-400"
           }`}
@@ -166,7 +376,7 @@ export default function UploadPage() {
           📁 Chọn file / Kéo thả
         </button>
         <button
-          onClick={() => { setPasteMode(true); setPreview(null); }}
+          onClick={() => { setPasteMode(true); setResult(null); }}
           className={`flex-1 py-2 rounded-xl border text-sm font-medium transition-colors ${
             pasteMode ? "bg-indigo-600 text-white border-indigo-600" : "border-gray-300 text-gray-600 hover:border-indigo-400"
           }`}
@@ -181,14 +391,14 @@ export default function UploadPage() {
           onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
           onDragLeave={() => setDragOver(false)}
           onDrop={handleDrop}
-          onClick={() => inputRef.current?.click()}
+          onClick={() => fileInputRef.current?.click()}
           className={`border-2 border-dashed rounded-2xl p-10 text-center cursor-pointer transition-colors ${
             dragOver ? "border-indigo-500 bg-indigo-50" : "border-gray-300 hover:border-indigo-400"
           }`}
         >
-          <input ref={inputRef} type="file" accept=".json,application/json" className="sr-only" onChange={handleFileInput} />
+          <input ref={fileInputRef} type="file" accept=".json,application/json" className="sr-only" onChange={handleFileChange} />
           <p className="text-gray-500">Kéo thả file JSON vào đây hoặc <span className="text-indigo-600 underline">chọn file</span></p>
-          <p className="text-xs text-gray-400 mt-1">Chỉ hỗ trợ định dạng JSON</p>
+          <p className="text-xs text-gray-400 mt-1">Hỗ trợ định dạng Giáo trình, Sổ tay, hoặc Export All</p>
         </div>
       )}
 
@@ -198,7 +408,7 @@ export default function UploadPage() {
           <textarea
             value={pasteText}
             onChange={(e) => setPasteText(e.target.value)}
-            placeholder={`Dán nội dung JSON vào đây...\n\nVí dụ:\n{\n  "lessons": [{\n    "id": "bai-1",\n    "name": "Bài 1",\n    "level": "N5",\n    "vocabulary": [...]\n  }]\n}`}
+            placeholder="Dán nội dung JSON vào đây..."
             className="w-full h-48 rounded-2xl border border-gray-300 p-4 text-sm font-mono text-gray-700 focus:outline-none focus:border-indigo-400 resize-none"
           />
           <button
@@ -212,34 +422,34 @@ export default function UploadPage() {
       )}
 
       {/* Preview */}
-      {preview && (
-        <div className={`rounded-2xl border p-4 ${preview.valid ? "border-emerald-200 bg-emerald-50" : "border-red-200 bg-red-50"}`}>
-          {preview.valid ? (
+      {result && (
+        <div className={`rounded-2xl border p-4 ${result.valid ? "border-emerald-200 bg-emerald-50" : "border-red-200 bg-red-50"}`}>
+          {result.valid ? (
             <>
-              <p className="font-semibold text-emerald-700 mb-2">✓ File hợp lệ — {preview.lessons!.length} bài học</p>
-              {preview.warnings && preview.warnings.length > 0 && (
-                <ul className="text-xs text-amber-600 mb-3 space-y-1">
-                  {preview.warnings.map((w, i) => <li key={i}>⚠ {w}</li>)}
-                </ul>
+              {result.type === "curriculum" && (
+                <>
+                  <p className="font-semibold text-emerald-700 mb-2">✓ Định dạng Giáo trình — {result.data?.curriculumName}</p>
+                  <p className="text-sm text-gray-700 mb-4">{result.data?.lessonCount} bài học • {result.data?.vocabCount} từ vựng</p>
+                </>
               )}
-              <ul className="text-sm text-gray-700 space-y-1 mb-4">
-                {preview.lessons!.map((l) => (
-                  <li key={l.id}>• <strong>{l.name}</strong> ({l.vocabulary.length} từ)</li>
-                ))}
-              </ul>
-              <div className="mb-4">
-                <label className="block text-xs font-medium text-gray-600 mb-1">
-                  Tên giáo trình (tuỳ chọn)
-                </label>
-                <input
-                  type="text"
-                  value={curriculumName}
-                  onChange={(e) => setCurriculumName(e.target.value)}
-                  placeholder="Ví dụ: N5 Super Master 語彙"
-                  className="w-full rounded-xl border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:border-indigo-400"
-                />
-                <p className="text-xs text-gray-400 mt-1">Nếu để trống, giáo trình sẽ theo dữ liệu JSON (nếu có).</p>
-              </div>
+              {result.type === "notebook" && (
+                <>
+                  <p className="font-semibold text-emerald-700 mb-2">✓ Định dạng Sổ tay — {result.data?.notebookName}</p>
+                  <p className="text-sm text-gray-700 mb-4">{result.data?.vocabCount} từ vựng</p>
+                </>
+              )}
+              {result.type === "notebooks" && (
+                <>
+                  <p className="font-semibold text-emerald-700 mb-2">✓ Định dạng Nhiều sổ tay</p>
+                  <p className="text-sm text-gray-700 mb-4">{result.data?.notebookCount} sổ tay • {result.data?.vocabCount} từ vựng</p>
+                </>
+              )}
+              {result.type === "curriculums" && (
+                <>
+                  <p className="font-semibold text-emerald-700 mb-2">✓ Định dạng Nhiều giáo trình</p>
+                  <p className="text-sm text-gray-700 mb-4">{result.data?.curriculumCount} giáo trình • {result.data?.lessonCount} bài học • {result.data?.vocabCount} từ vựng</p>
+                </>
+              )}
               <button
                 onClick={handleSave}
                 className="bg-emerald-600 text-white px-5 py-2 rounded-xl text-sm font-semibold hover:bg-emerald-700 transition-colors"
@@ -248,55 +458,106 @@ export default function UploadPage() {
               </button>
             </>
           ) : (
-            <p className="text-red-600 text-sm">✗ {preview.error}</p>
+            <p className="text-red-600 text-sm">✗ {result.error}</p>
           )}
         </div>
       )}
 
       {saved && (
         <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-4">
-          <p className="text-emerald-700 font-semibold">✓ Đã lưu thành công!</p>
-          <Link href="/" className="text-indigo-600 underline text-sm mt-1 inline-block">Xem danh sách bài học →</Link>
+          <p className="text-emerald-700 font-semibold">{saved}</p>
+          <Link href="/" className="text-indigo-600 underline text-sm mt-1 inline-block">Xem danh sách →</Link>
         </div>
       )}
 
-      {/* Existing lessons grouped by level */}
-      {lessons.length > 0 && (
-        <div>
-          <h2 className="font-bold text-gray-700 mb-3">Bài học hiện tại</h2>
-          <div className="space-y-4">
-            {groupedLessons.sortedKeys.map((key) => (
-              <div key={key}>
-                <p className="text-xs font-semibold text-indigo-500 uppercase tracking-wider mb-2">{key}</p>
-                <div className="space-y-2">
-                  {groupedLessons.groups[key].map((l) => (
-                    <div key={l.id} className="flex items-center justify-between bg-white border border-gray-200 rounded-xl px-4 py-3">
-                      <span className="text-sm text-gray-700 font-medium">{l.name} <span className="text-gray-400">({l.vocabulary.length} từ)</span></span>
-                      <button
-                        onClick={() => { if (confirm(`Xoá bài "${l.name}"?`)) deleteLesson(l.id); }}
-                        className="text-red-400 hover:text-red-600 text-sm transition-colors min-h-[44px] px-2"
-                      >
-                        Xoá
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
+      {/* Format examples */}
+      <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm space-y-4">
+        <h2 className="text-lg font-bold text-gray-800">Định dạng hỗ trợ</h2>
+
+        <div className="space-y-3">
+          <details className="group">
+            <summary className="cursor-pointer font-medium text-gray-700 hover:text-indigo-600">
+              📚 Giáo trình (Curriculum)
+            </summary>
+            <pre className="mt-2 text-xs bg-gray-50 p-3 rounded-xl overflow-x-auto text-gray-700">
+{`{
+  "curriculum": "N5 Super Master 語彙",
+  "lessons": [
+    {
+      "name": "Bài 1 - Chào hỏi",
+      "vocabulary": [
+        {
+          "kanji": "日本語",
+          "hiragana": "にほんご",
+          "onyomi": "ニホンゴ",
+          "meaning": "Tiếng Nhật",
+          "phonetic": "nihongo"
+        }
+      ]
+    }
+  ]
+}`}
+            </pre>
+          </details>
+
+          <details className="group">
+            <summary className="cursor-pointer font-medium text-gray-700 hover:text-indigo-600">
+              📓 Sổ tay đơn (Single Notebook)
+            </summary>
+            <pre className="mt-2 text-xs bg-gray-50 p-3 rounded-xl overflow-x-auto text-gray-700">
+{`{
+  "notebook": {
+    "name": "Từ vựng hay nhầm",
+    "vocabulary": [
+      {
+        "kanji": "日本語",
+        "hiragana": "にほんご",
+        "onyomi": "ニホンゴ",
+        "meaning": "Tiếng Nhật",
+        "phonetic": "nihongo"
+      }
+    ]
+  }
+}`}
+            </pre>
+          </details>
+
+          <details className="group">
+            <summary className="cursor-pointer font-medium text-gray-700 hover:text-indigo-600">
+              📚 Nhiều sổ tay (Multiple Notebooks)
+            </summary>
+            <pre className="mt-2 text-xs bg-gray-50 p-3 rounded-xl overflow-x-auto text-gray-700">
+{`{
+  "notebooks": [
+    {
+      "name": "Sổ tay 1",
+      "vocabulary": [
+        {
+          "kanji": "日本語",
+          "hiragana": "にほんご",
+          "meaning": "Tiếng Nhật"
+        }
+      ]
+    },
+    {
+      "name": "Sổ tay 2",
+      "vocabulary": [
+        {
+          "kanji": "学生",
+          "hiragana": "がくせい",
+          "meaning": "Học sinh"
+        }
+      ]
+    }
+  ]
+}`}
+            </pre>
+          </details>
         </div>
-      )}
+      </div>
 
-      {/* Export / Import */}
-      <ExportImportPanel onImportSuccess={() => window.location.reload()} />
-
-      {/* Example */}
-      <details className="border border-gray-200 rounded-2xl">
-        <summary className="px-5 py-3 cursor-pointer text-sm font-semibold text-gray-600 hover:text-indigo-600">
-          Xem cấu trúc JSON mẫu
-        </summary>
-        <pre className="p-4 text-xs text-gray-600 bg-gray-50 overflow-x-auto rounded-b-2xl">{exampleJson}</pre>
-      </details>
+      {/* Export/Import panel */}
+      <ExportImportPanel />
     </div>
   );
 }

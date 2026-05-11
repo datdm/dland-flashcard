@@ -16,6 +16,19 @@ export interface Lesson {
   vocabulary: Vocabulary[];
 }
 
+export interface LessonInCurriculum {
+  id: string;
+  name: string;
+  vocabulary: Vocabulary[];
+}
+
+export interface Curriculum {
+  id: string;
+  name: string;
+  createdAt: string;
+  lessons: LessonInCurriculum[];
+}
+
 export const JLPT_LEVELS = ["N5", "N4", "N3", "N2", "N1"] as const;
 
 export interface LessonsData {
@@ -31,6 +44,10 @@ export interface Notebook {
 
 export interface NotebooksData {
   notebooks: Notebook[];
+}
+
+export interface CurriculumsData {
+  curriculums: Curriculum[];
 }
 
 export interface VocabProgress {

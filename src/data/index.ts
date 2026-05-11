@@ -1,6 +1,9 @@
-import type { LessonsData } from "@/types";
-import speedMasterN5 from "./speed-master-n5.json";
-import superMasterN5 from "./n5-super-master.json";
+import type { CurriculumsData } from "@/types";
+import superMasterN5Data from "./n5-super-master.json";
+import speedMasterN5Data from "./speed-master-n5.json";
+
+const superMasterN5 = superMasterN5Data as unknown as CurriculumsData;
+const speedMasterN5 = speedMasterN5Data as unknown as CurriculumsData;
 // Thêm import khi có file mới:
 // import n4 from "./n4.json";
 // import n3 from "./n3.json";
@@ -9,13 +12,18 @@ import superMasterN5 from "./n5-super-master.json";
  * Tăng DATA_VERSION mỗi khi thêm bài học mới vào src/data/.
  * AutoImport sẽ tự động merge bài mới vào localStorage của user.
  */
-export const DATA_VERSION = "1.1.0";
+export const DATA_VERSION = "1.4.0";
 
-export const DEFAULT_VOCABULARY: LessonsData = {
-  lessons: [
-    // ...(speedMasterN5 as LessonsData).lessons,
-    ...(superMasterN5 as LessonsData).lessons,
-    // ...(n4 as LessonsData).lessons,
-    // ...(n3 as LessonsData).lessons,
+// Import vocabulary data in native Curriculum format
+// Thêm import khi có file mới:
+// import n4 from "./n4.json";
+// import n3 from "./n3.json";
+
+export const DEFAULT_VOCABULARY: CurriculumsData = {
+  curriculums: [
+    ...superMasterN5.curriculums,
+    // ...speedMasterN5.curriculums,
+    // ...(n4 as CurriculumsData).curriculums,
+    // ...(n3 as CurriculumsData).curriculums,
   ],
 };

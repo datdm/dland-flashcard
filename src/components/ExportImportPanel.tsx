@@ -46,7 +46,7 @@ export default function ExportImportPanel({ onImportSuccess }: ExportImportPanel
     <div className="border border-gray-200 rounded-2xl p-5 space-y-4">
       <h2 className="font-bold text-gray-800">Đồng bộ dữ liệu</h2>
       <p className="text-sm text-gray-500">
-        Export dữ liệu ra file JSON để chuyển sang thiết bị khác, sau đó Import lại.
+        Export toàn bộ dữ liệu (sổ tay, giáo trình, tiến độ, cài đặt) ra file JSON để chuyển sang thiết bị/trình duyệt khác, sau đó Import lại.
       </p>
 
       <div className="flex gap-3 flex-wrap">
@@ -54,7 +54,7 @@ export default function ExportImportPanel({ onImportSuccess }: ExportImportPanel
           onClick={handleExport}
           className="flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700 transition-colors"
         >
-          ↓ Export backup
+          ↓ Export toàn bộ
         </button>
 
         <label className="flex items-center gap-2 px-4 py-2 rounded-xl border border-gray-300 text-gray-600 text-sm font-medium cursor-pointer hover:border-indigo-400 hover:text-indigo-600 transition-colors">
@@ -74,6 +74,15 @@ export default function ExportImportPanel({ onImportSuccess }: ExportImportPanel
         </p>
       )}
       {importError && <p className="text-sm text-red-500">{importError}</p>}
+      
+      <div className="text-xs text-gray-400 border-t border-gray-100 pt-3 mt-3">
+        <p className="font-medium text-gray-600 mb-1">⚠️ Chú ý:</p>
+        <ul className="list-disc list-inside space-y-0.5">
+          <li>File backup bao gồm: Sổ tay, Giáo trình, Tiến độ học, Cài đặt</li>
+          <li>Import sẽ ghi đè dữ liệu hiện tại</li>
+          <li>Nên export đều đặn để backup dữ liệu</li>
+        </ul>
+      </div>
     </div>
   );
 }

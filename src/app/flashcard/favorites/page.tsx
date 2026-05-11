@@ -1,19 +1,23 @@
 "use client";
 
 import { useMemo } from "react";
-import { useLessons } from "@/hooks/useLessons";
+import { useCurriculums } from "@/hooks/useCurriculums";
+import { useNotebooks } from "@/hooks/useNotebooks";
 import { useProgress } from "@/hooks/useProgress";
 import FlashCardViewer from "@/components/FlashCardViewer";
 import Link from "next/link";
 
 export default function FlashCardFavoritesPage() {
-  const { lessons } = useLessons();
+  const { curriculums } = useCurriculums();
+  const { notebooks } = useNotebooks();
   const { progress } = useProgress();
 
-  const favorites = useMemo(
-    () => lessons.flatMap((l) => l.vocabulary).filter((v) => progress[v.id]?.favorite),
-    [lessons, progress]
-  );
+  const favorites = useMemo(() => {
+    const curriculumVocab = curriculums.flatMap((c) => c.lessons.flatMap((l) => l.vocabulary));
+    const notebookVocab = notebooks.flatMap((nb) => nb.vocabulary);
+    const allVocab = [...curriculumVocab, ...notebookVocab];
+    return allVocab.filter((v) => progress[v.id]?.favorite);
+  }, [curriculums, notebooks, progress]);
 
   if (favorites.length === 0) {
     return (

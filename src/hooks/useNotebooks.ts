@@ -78,7 +78,7 @@ export function useNotebooks() {
       setNotebooks((prev) => {
         const updated = prev.map((nb) =>
           nb.id === notebookId
-            ? { ...nb, vocabulary: [...nb.vocabulary, vocab] }
+            ? { ...nb, vocabulary: [vocab, ...nb.vocabulary] }
             : nb
         );
         setItem<NotebooksData>(StorageKeys.NOTEBOOKS, { notebooks: updated });
@@ -127,24 +127,34 @@ export function useNotebooks() {
   // --- Validation ---
 
   const checkDuplicate = useCallback(
-    (notebookId: string, kanji?: string, hiragana?: string, excludeVocabId?: string): Vocabulary | null => {
-      const nb = notebooks.find((n) => n.id === notebookId);
-      if (!nb) return null;
-      
+    (notebookId: string, kanji?: string, hiragana?: string, excludeVocabId?: string): Array<{ notebookId: string; notebookName: string; vocab: Vocabulary }> | null => {
       // Only check if both kanji and hiragana are provided and non-empty
       if (!kanji?.trim() || !hiragana?.trim()) return null;
       
       const normalizedKanji = kanji.trim();
       const normalizedHiragana = hiragana.trim();
       
-      const duplicate = nb.vocabulary.find(
-        (v) =>
-          v.id !== excludeVocabId &&
-          v.kanji?.trim() === normalizedKanji &&
-          v.hiragana?.trim() === normalizedHiragana
-      );
+      const duplicates: Array<{ notebookId: string; notebookName: string; vocab: Vocabulary }> = [];
       
-      return duplicate ?? null;
+      // Search across ALL notebooks for duplicates
+      for (const nb of notebooks) {
+        const duplicate = nb.vocabulary.find(
+          (v) =>
+            v.id !== excludeVocabId &&
+            v.kanji?.trim() === normalizedKanji &&
+            v.hiragana?.trim() === normalizedHiragana
+        );
+        
+        if (duplicate) {
+          duplicates.push({
+            notebookId: nb.id,
+            notebookName: nb.name,
+            vocab: duplicate,
+          });
+        }
+      }
+      
+      return duplicates.length > 0 ? duplicates : null;
     },
     [notebooks]
   );
@@ -156,6 +166,13 @@ export function useNotebooks() {
       const nb = notebooks.find((n) => n.id === id);
       if (!nb) return "{}";
       return JSON.stringify({ notebook: nb }, null, 2);
+    },
+    [notebooks]
+  );
+
+  const exportAllNotebooks = useCallback(
+    (): string => {
+      return JSON.stringify({ notebooks }, null, 2);
     },
     [notebooks]
   );
@@ -253,6 +270,7 @@ export function useNotebooks() {
     deleteVocab,
     checkDuplicate,
     exportNotebook,
+    exportAllNotebooks,
     importVocabFromJson,
     importNotebook,
   };
