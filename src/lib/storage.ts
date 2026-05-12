@@ -5,6 +5,8 @@ const PROGRESS_KEY = "flashcash-progress";
 const SETTINGS_KEY = "flashcash-settings";
 const NOTEBOOKS_KEY = "flashcash-notebooks";
 const CURRICULUMS_KEY = "flashcash-curriculums";
+const GRAMMAR_COLLECTIONS_KEY = "flashcash-grammar-collections";
+const GRAMMAR_PROGRESS_KEY = "flashcash-grammar-progress";
 
 export const StorageKeys = {
   LESSONS: LESSONS_KEY,
@@ -12,6 +14,8 @@ export const StorageKeys = {
   SETTINGS: SETTINGS_KEY,
   NOTEBOOKS: NOTEBOOKS_KEY,
   CURRICULUMS: CURRICULUMS_KEY,
+  GRAMMAR_COLLECTIONS: GRAMMAR_COLLECTIONS_KEY,
+  GRAMMAR_PROGRESS: GRAMMAR_PROGRESS_KEY,
 } as const;
 
 export function getItem<T>(key: string): T | null {
@@ -38,7 +42,7 @@ export function removeItem(key: string): void {
 export function exportAllData(): string {
   if (typeof window === "undefined") return "{}";
   const data: Record<string, unknown> = {};
-  const keys = [LESSONS_KEY, PROGRESS_KEY, SETTINGS_KEY, NOTEBOOKS_KEY, CURRICULUMS_KEY];
+  const keys = [LESSONS_KEY, PROGRESS_KEY, SETTINGS_KEY, NOTEBOOKS_KEY, CURRICULUMS_KEY, GRAMMAR_COLLECTIONS_KEY, GRAMMAR_PROGRESS_KEY];
   for (const key of keys) {
     const raw = localStorage.getItem(key);
     if (raw) {
@@ -55,7 +59,7 @@ export function exportAllData(): string {
 export function importAllData(jsonString: string): void {
   if (typeof window === "undefined") return;
   const data = JSON.parse(jsonString) as Record<string, unknown>;
-  const keys = [LESSONS_KEY, PROGRESS_KEY, SETTINGS_KEY, NOTEBOOKS_KEY, CURRICULUMS_KEY];
+  const keys = [LESSONS_KEY, PROGRESS_KEY, SETTINGS_KEY, NOTEBOOKS_KEY, CURRICULUMS_KEY, GRAMMAR_COLLECTIONS_KEY, GRAMMAR_PROGRESS_KEY];
   for (const key of keys) {
     if (data[key] !== undefined) {
       localStorage.setItem(key, JSON.stringify(data[key]));

@@ -3,13 +3,14 @@
 import { useState, useRef } from "react";
 import { useCurriculums } from "@/hooks/useCurriculums";
 import { useNotebooks } from "@/hooks/useNotebooks";
+import { useGrammarCollections } from "@/hooks/useGrammarCollections";
 import ExportImportPanel from "@/components/ExportImportPanel";
 import Link from "next/link";
 import { Vocabulary } from "@/types";
 
 interface ParseResult {
   valid: boolean;
-  type?: "curriculum" | "notebook" | "notebooks" | "curriculums";
+  type?: "curriculum" | "notebook" | "notebooks" | "curriculums" | "grammar" | "grammars";
   data?: {
     curriculumName?: string;
     lessonCount?: number;
@@ -17,6 +18,9 @@ interface ParseResult {
     notebookCount?: number;
     curriculumCount?: number;
     vocabCount?: number;
+    grammarCollectionName?: string;
+    grammarPointCount?: number;
+    grammarCollectionCount?: number;
   };
   error?: string;
 }
@@ -118,12 +122,56 @@ function parseUploadedJson(text: string): ParseResult {
     };
   }
 
-  return { valid: false, error: 'File phải có định dạng Giáo trình {"curriculum": "...", "lessons": [...]} hoặc Sổ tay {"notebook": {...}} hoặc {"notebooks": [...]} hoặc {"curriculums": [...]}.' };
+  // Check if single grammar collection format
+  if (data.collection && typeof data.collection === "object") {
+    const coll = data.collection as Record<string, unknown>;
+    if (coll.name && Array.isArray(coll.grammarPoints)) {
+      let pointCount = (coll.grammarPoints as unknown[]).length;
+      let exampleCount = 0;
+      for (const point of coll.grammarPoints as unknown[]) {
+        const p = point as Record<string, unknown>;
+        if (Array.isArray(p.examples)) {
+          exampleCount += (p.examples as unknown[]).length;
+        }
+      }
+      return {
+        valid: true,
+        type: "grammar",
+        data: {
+          grammarCollectionName: coll.name as string,
+          grammarPointCount: pointCount,
+        },
+      };
+    }
+  }
+
+  // Check if multiple grammar collections format
+  if (Array.isArray(data.collections)) {
+    let totalPoints = 0;
+    for (const coll of data.collections) {
+      const collection = coll as Record<string, unknown>;
+      if (!collection.name || !Array.isArray(collection.grammarPoints)) {
+        return { valid: false, error: "Mỗi bộ ngữ pháp phải có 'name' và 'grammarPoints'." };
+      }
+      totalPoints += (collection.grammarPoints as unknown[]).length;
+    }
+    return {
+      valid: true,
+      type: "grammars",
+      data: {
+        grammarCollectionCount: data.collections.length,
+        grammarPointCount: totalPoints,
+      },
+    };
+  }
+
+  return { valid: false, error: 'File phải có định dạng Giáo trình {"curriculum": "...", "lessons": [...]} hoặc Sổ tay {"notebook": {...}} hoặc {"notebooks": [...]} hoặc {"curriculums": [...]} hoặc Ngữ pháp {"collection": {...}} hoặc {"collections": [...]}.' };
 }
 
 export default function UploadPage() {
   const { curriculums, addCurriculum, addLessonsToExistingCurriculum } = useCurriculums();
-  const { notebooks, createNotebook, addVocab } = useNotebooks();
+  const { notebooks, createNotebook, addVocab, mergeVocabIntoNotebook } = useNotebooks();
+  const { collections, addCollection, addGrammarPoint, addExample } = useGrammarCollections();
   const [dragOver, setDragOver] = useState(false);
   const [result, setResult] = useState<ParseResult | null>(null);
   const [rawData, setRawData] = useState<string | null>(null);
@@ -206,51 +254,31 @@ export default function UploadPage() {
         const notebookName = notebook.name as string;
         const vocabulary = notebook.vocabulary as Record<string, unknown>[];
         
-        // Check for duplicate notebook name
-        const duplicate = notebooks.find((nb) => nb.name.toLowerCase() === notebookName.toLowerCase());
-        if (duplicate) {
-          setSaved(`❌ Sổ tay "${notebookName}" đã tồn tại!`);
-          return;
-        }
+        // Check if notebook with same name exists
+        const existingNotebook = notebooks.find((nb) => nb.name.toLowerCase() === notebookName.toLowerCase());
         
-        const newNotebook = createNotebook(notebookName);
-        
-        for (const vocab of vocabulary) {
-          addVocab(newNotebook.id, {
-            kanji: vocab.kanji as string | undefined,
-            hiragana: vocab.hiragana as string | undefined,
-            onyomi: vocab.onyomi as string | undefined,
-            meaning: vocab.meaning as string | undefined,
-            phonetic: vocab.phonetic as string | undefined,
-          });
-        }
-        
-        setSaved(`✅ Đã import sổ tay "${notebookName}" với ${vocabulary.length} từ vựng!`);
-        
-      } else if (result.type === "notebooks") {
-        const notebooksData = data.notebooks as Record<string, unknown>[];
-        let imported = 0;
-        let skipped = 0;
-        let totalVocab = 0;
-        const importedNames: string[] = [];
-        const skippedNames: string[] = [];
-        
-        for (const nb of notebooksData) {
-          const notebookName = nb.name as string;
-          const vocabulary = nb.vocabulary as Record<string, unknown>[];
+        if (existingNotebook) {
+          // Merge vocabulary into existing notebook
+          const vocabToAdd = vocabulary.map((v) => ({
+            kanji: v.kanji as string | undefined,
+            hiragana: v.hiragana as string | undefined,
+            onyomi: v.onyomi as string | undefined,
+            meaning: v.meaning as string | undefined,
+            phonetic: v.phonetic as string | undefined,
+          }));
           
-          // Check for duplicate notebook name
-          const duplicate = notebooks.find((existing) => existing.name.toLowerCase() === notebookName.toLowerCase());
-          if (duplicate) {
-            skipped++;
-            skippedNames.push(notebookName);
-            continue;
+          const { added, skipped } = mergeVocabIntoNotebook(existingNotebook.id, vocabToAdd);
+          
+          if (added > 0 && skipped > 0) {
+            setSaved(`✅ Sổ tay "${notebookName}" đã tồn tại - Thêm ${added} từ mới, bỏ qua ${skipped} từ trùng`);
+          } else if (added > 0) {
+            setSaved(`✅ Sổ tay "${notebookName}" đã tồn tại - Thêm ${added} từ mới`);
+          } else {
+            setSaved(`⚠️ Sổ tay "${notebookName}" đã tồn tại - Tất cả ${skipped} từ đều bị trùng`);
           }
-          
+        } else {
+          // Create new notebook
           const newNotebook = createNotebook(notebookName);
-          imported++;
-          importedNames.push(notebookName);
-          totalVocab += vocabulary.length;
           
           for (const vocab of vocabulary) {
             addVocab(newNotebook.id, {
@@ -261,21 +289,79 @@ export default function UploadPage() {
               phonetic: vocab.phonetic as string | undefined,
             });
           }
+          
+          setSaved(`✅ Tạo sổ tay "${notebookName}" với ${vocabulary.length} từ vựng!`);
+        }
+        
+      } else if (result.type === "notebooks") {
+        const notebooksData = data.notebooks as Record<string, unknown>[];
+        let created = 0;
+        let merged = 0;
+        const createdDetails: Array<{ name: string; vocabCount: number }> = [];
+        const mergedDetails: Array<{ name: string; added: number; skipped: number }> = [];
+        
+        for (const nb of notebooksData) {
+          const notebookName = nb.name as string;
+          const vocabulary = nb.vocabulary as Record<string, unknown>[];
+          
+          // Check if notebook with same name exists
+          const existingNotebook = notebooks.find((existing) => existing.name.toLowerCase() === notebookName.toLowerCase());
+          
+          if (existingNotebook) {
+            // Merge vocabulary into existing notebook
+            const vocabToAdd = vocabulary.map((v) => ({
+              kanji: v.kanji as string | undefined,
+              hiragana: v.hiragana as string | undefined,
+              onyomi: v.onyomi as string | undefined,
+              meaning: v.meaning as string | undefined,
+              phonetic: v.phonetic as string | undefined,
+            }));
+            
+            const { added, skipped } = mergeVocabIntoNotebook(existingNotebook.id, vocabToAdd);
+            merged++;
+            mergedDetails.push({ name: notebookName, added, skipped });
+          } else {
+            // Create new notebook
+            const newNotebook = createNotebook(notebookName);
+            created++;
+            createdDetails.push({ name: notebookName, vocabCount: vocabulary.length });
+            
+            for (const vocab of vocabulary) {
+              addVocab(newNotebook.id, {
+                kanji: vocab.kanji as string | undefined,
+                hiragana: vocab.hiragana as string | undefined,
+                onyomi: vocab.onyomi as string | undefined,
+                meaning: vocab.meaning as string | undefined,
+                phonetic: vocab.phonetic as string | undefined,
+              });
+            }
+          }
         }
         
         // Build detailed message
         let message = '';
-        if (imported > 0) {
-          message += `✅ Đã import ${imported} sổ tay (${totalVocab} từ):\n`;
-          importedNames.forEach(name => {
-            message += `   • ${name}\n`;
+        if (created > 0) {
+          const totalCreatedVocab = createdDetails.reduce((sum, d) => sum + d.vocabCount, 0);
+          message += `✅ Tạo mới ${created} sổ tay (${totalCreatedVocab} từ):\n`;
+          createdDetails.forEach(detail => {
+            message += `   • ${detail.name} (${detail.vocabCount} từ)\n`;
           });
         }
-        if (skipped > 0) {
+        if (merged > 0) {
           if (message) message += '\n';
-          message += `⚠️ Bỏ qua ${skipped} sổ tay (trùng lặp):\n`;
-          skippedNames.forEach(name => {
-            message += `   • ${name}\n`;
+          message += `🔄 Đồng bộ ${merged} sổ tay:\n`;
+          mergedDetails.forEach(detail => {
+            message += `   • ${detail.name}`;
+            if (detail.added > 0) {
+              message += ` (+${detail.added} từ mới)`;
+            }
+            if (detail.skipped > 0) {
+              message += ` (bỏ qua ${detail.skipped} từ trùng)`;
+            }
+            if (detail.added === 0 && detail.skipped === 0) {
+              message += ` (không có thay đổi)`;
+            }
+            message += '\n';
           });
         }
         setSaved(message || '✅ Hoàn tất!');
@@ -341,6 +427,237 @@ export default function UploadPage() {
           message += `⚠️ Bỏ qua ${skipped} giáo trình (trùng lặp):\n`;
           skippedNames.forEach(name => {
             message += `   • ${name}\n`;
+          });
+        }
+        setSaved(message || '✅ Hoàn tất!');
+      } else if (result.type === "grammar") {
+        const collection = data.collection as Record<string, unknown>;
+        const collectionName = collection.name as string;
+        const grammarPoints = collection.grammarPoints as Record<string, unknown>[];
+        
+        // Check if collection with same name exists
+        const existingCollection = collections.find((c) => c.name.toLowerCase() === collectionName.toLowerCase());
+        
+        if (existingCollection) {
+          // Merge grammar points into existing collection
+          let added = 0;
+          let skipped = 0;
+          
+          for (const pointData of grammarPoints) {
+            const point = pointData as Record<string, unknown>;
+            // Check if point with same structure already exists
+            const isDuplicate = existingCollection.grammarPoints.some(
+              (p) => p.structure.toLowerCase() === (point.structure as string)?.toLowerCase()
+            );
+            
+            if (isDuplicate) {
+              skipped++;
+              continue;
+            }
+            
+            const examples = (point.examples as Record<string, unknown>[]) || [];
+            const newPoint = addGrammarPoint(
+              existingCollection.id,
+              {
+                structure: point.structure as string,
+                meaning: point.meaning as string,
+                explanation: point.explanation as string | undefined,
+                mnemonic: point.mnemonic as string | undefined,
+                level: point.level as string | undefined,
+                notes: point.notes as string | undefined,
+              }
+            );
+            
+            // Add examples to the newly added point
+            for (const ex of examples) {
+              addExample(
+                existingCollection.id,
+                newPoint.id,
+                {
+                  sentence: ex.sentence as string,
+                  meaning: ex.meaning as string,
+                  romaji: ex.romaji as string | undefined,
+                  breakdown: ex.breakdown as string | undefined,
+                }
+              );
+            }
+            added++;
+          }
+          
+          if (added > 0 && skipped > 0) {
+            setSaved(`✅ Bộ ngữ pháp "${collectionName}" đã tồn tại - Thêm ${added} điểm mới, bỏ qua ${skipped} điểm trùng`);
+          } else if (added > 0) {
+            setSaved(`✅ Bộ ngữ pháp "${collectionName}" đã tồn tại - Thêm ${added} điểm mới`);
+          } else {
+            setSaved(`⚠️ Bộ ngữ pháp "${collectionName}" đã tồn tại - Tất cả ${skipped} điểm đều bị trùng`);
+          }
+        } else {
+          // Create new collection
+          const newCollection = addCollection(collectionName, collection.description as string | undefined);
+          
+          let pointCount = 0;
+          for (const pointData of grammarPoints) {
+            const point = pointData as Record<string, unknown>;
+            const examples = (point.examples as Record<string, unknown>[]) || [];
+            
+            const newPoint = addGrammarPoint(
+              newCollection.id,
+              {
+                structure: point.structure as string,
+                meaning: point.meaning as string,
+                explanation: point.explanation as string | undefined,
+                mnemonic: point.mnemonic as string | undefined,
+                level: point.level as string | undefined,
+                notes: point.notes as string | undefined,
+              }
+            );
+            
+            // Add examples to the newly added point
+            for (const ex of examples) {
+              addExample(
+                newCollection.id,
+                newPoint.id,
+                {
+                  sentence: ex.sentence as string,
+                  meaning: ex.meaning as string,
+                  romaji: ex.romaji as string | undefined,
+                  breakdown: ex.breakdown as string | undefined,
+                }
+              );
+            }
+            pointCount++;
+          }
+          
+          setSaved(`✅ Tạo bộ ngữ pháp "${collectionName}" với ${pointCount} điểm!`);
+        }
+      } else if (result.type === "grammars") {
+        const grammarsData = data.collections as Record<string, unknown>[];
+        let created = 0;
+        let merged = 0;
+        const createdDetails: Array<{ name: string; pointCount: number }> = [];
+        const mergedDetails: Array<{ name: string; added: number; skipped: number }> = [];
+        
+        for (const coll of grammarsData) {
+          const collectionName = coll.name as string;
+          const grammarPoints = coll.grammarPoints as Record<string, unknown>[];
+          
+          // Check if collection with same name exists
+          const existingCollection = collections.find((c) => c.name.toLowerCase() === collectionName.toLowerCase());
+          
+          if (existingCollection) {
+            // Merge grammar points into existing collection
+            let added = 0;
+            let skipped = 0;
+            
+            for (const pointData of grammarPoints) {
+              const point = pointData as Record<string, unknown>;
+              // Check if point with same structure already exists
+              const isDuplicate = existingCollection.grammarPoints.some(
+                (p) => p.structure.toLowerCase() === (point.structure as string)?.toLowerCase()
+              );
+              
+              if (isDuplicate) {
+                skipped++;
+                continue;
+              }
+              
+              const examples = (point.examples as Record<string, unknown>[]) || [];
+              const newPoint = addGrammarPoint(
+                existingCollection.id,
+                {
+                  structure: point.structure as string,
+                  meaning: point.meaning as string,
+                  explanation: point.explanation as string | undefined,
+                  mnemonic: point.mnemonic as string | undefined,
+                  level: point.level as string | undefined,
+                  notes: point.notes as string | undefined,
+                }
+              );
+              
+              // Add examples to the newly added point
+              for (const ex of examples) {
+                addExample(
+                  existingCollection.id,
+                  newPoint.id,
+                  {
+                    sentence: ex.sentence as string,
+                    meaning: ex.meaning as string,
+                    romaji: ex.romaji as string | undefined,
+                    breakdown: ex.breakdown as string | undefined,
+                  }
+                );
+              }
+              added++;
+            }
+            
+            merged++;
+            mergedDetails.push({ name: collectionName, added, skipped });
+          } else {
+            // Create new collection
+            const newCollection = addCollection(collectionName, coll.description as string | undefined);
+            created++;
+            
+            let pointCount = 0;
+            for (const pointData of grammarPoints) {
+              const point = pointData as Record<string, unknown>;
+              const examples = (point.examples as Record<string, unknown>[]) || [];
+              
+              const newPoint = addGrammarPoint(
+                newCollection.id,
+                {
+                  structure: point.structure as string,
+                  meaning: point.meaning as string,
+                  explanation: point.explanation as string | undefined,
+                  mnemonic: point.mnemonic as string | undefined,
+                  level: point.level as string | undefined,
+                  notes: point.notes as string | undefined,
+                }
+              );
+              
+              // Add examples to the newly added point
+              for (const ex of examples) {
+                addExample(
+                  newCollection.id,
+                  newPoint.id,
+                  {
+                    sentence: ex.sentence as string,
+                    meaning: ex.meaning as string,
+                    romaji: ex.romaji as string | undefined,
+                    breakdown: ex.breakdown as string | undefined,
+                  }
+                );
+              }
+              pointCount++;
+            }
+            
+            createdDetails.push({ name: collectionName, pointCount });
+          }
+        }
+        
+        // Build detailed message
+        let message = '';
+        if (created > 0) {
+          const totalCreatedPoints = createdDetails.reduce((sum, d) => sum + d.pointCount, 0);
+          message += `✅ Tạo mới ${created} bộ ngữ pháp (${totalCreatedPoints} điểm):\n`;
+          createdDetails.forEach(detail => {
+            message += `   • ${detail.name} (${detail.pointCount} điểm)\n`;
+          });
+        }
+        if (merged > 0) {
+          if (message) message += '\n';
+          message += `🔄 Đồng bộ ${merged} bộ ngữ pháp:\n`;
+          mergedDetails.forEach(detail => {
+            message += `   • ${detail.name}`;
+            if (detail.added > 0) {
+              message += ` (+${detail.added} điểm mới)`;
+            }
+            if (detail.skipped > 0) {
+              message += ` (bỏ qua ${detail.skipped} điểm trùng)`;
+            }
+            if (detail.added === 0 && detail.skipped === 0) {
+              message += ` (không có thay đổi)`;
+            }
+            message += '\n';
           });
         }
         setSaved(message || '✅ Hoàn tất!');
@@ -450,6 +767,18 @@ export default function UploadPage() {
                   <p className="text-sm text-gray-700 mb-4">{result.data?.curriculumCount} giáo trình • {result.data?.lessonCount} bài học • {result.data?.vocabCount} từ vựng</p>
                 </>
               )}
+              {result.type === "grammar" && (
+                <>
+                  <p className="font-semibold text-emerald-700 mb-2">✓ Định dạng Ngữ pháp — {result.data?.grammarCollectionName}</p>
+                  <p className="text-sm text-gray-700 mb-4">{result.data?.grammarPointCount} điểm ngữ pháp</p>
+                </>
+              )}
+              {result.type === "grammars" && (
+                <>
+                  <p className="font-semibold text-emerald-700 mb-2">✓ Định dạng Nhiều bộ ngữ pháp</p>
+                  <p className="text-sm text-gray-700 mb-4">{result.data?.grammarCollectionCount} bộ ngữ pháp • {result.data?.grammarPointCount} điểm</p>
+                </>
+              )}
               <button
                 onClick={handleSave}
                 className="bg-emerald-600 text-white px-5 py-2 rounded-xl text-sm font-semibold hover:bg-emerald-700 transition-colors"
@@ -465,7 +794,7 @@ export default function UploadPage() {
 
       {saved && (
         <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-4">
-          <p className="text-emerald-700 font-semibold">{saved}</p>
+          <p className="text-emerald-700 font-semibold whitespace-pre-line">{saved}</p>
           <Link href="/" className="text-indigo-600 underline text-sm mt-1 inline-block">Xem danh sách →</Link>
         </div>
       )}
@@ -546,6 +875,78 @@ export default function UploadPage() {
           "kanji": "学生",
           "hiragana": "がくせい",
           "meaning": "Học sinh"
+        }
+      ]
+    }
+  ]
+}`}
+            </pre>
+          </details>
+
+          <details className="group">
+            <summary className="cursor-pointer font-medium text-gray-700 hover:text-indigo-600">
+              📖 Ngữ pháp (Grammar Collection)
+            </summary>
+            <pre className="mt-2 text-xs bg-gray-50 p-3 rounded-xl overflow-x-auto text-gray-700">
+{`{
+  "collection": {
+    "name": "N5 Ngữ pháp cơ bản",
+    "description": "Các điểm ngữ pháp quan trọng N5",
+    "grammarPoints": [
+      {
+        "structure": "～ている",
+        "meaning": "Đang làm, vừa làm xong",
+        "explanation": "Mô tả hành động đang diễn ra hoặc trạng thái kết quả",
+        "mnemonic": "Tư duy: 'ing form' trong tiếng Anh",
+        "level": "N5",
+        "examples": [
+          {
+            "sentence": "私は今、本を読んでいます。",
+            "romaji": "Watashi wa ima, hon wo yonde imasu.",
+            "meaning": "Tôi đang đọc sách lúc này.",
+            "breakdown": "読ん (yom - đọc) + でいます (ing form)"
+          }
+        ],
+        "notes": "Có thể diễn tả hành động hoặc trạng thái"
+      }
+    ]
+  }
+}`}
+            </pre>
+          </details>
+
+          <details className="group">
+            <summary className="cursor-pointer font-medium text-gray-700 hover:text-indigo-600">
+              📚 Nhiều bộ ngữ pháp (Multiple Grammar Collections)
+            </summary>
+            <pre className="mt-2 text-xs bg-gray-50 p-3 rounded-xl overflow-x-auto text-gray-700">
+{`{
+  "collections": [
+    {
+      "name": "N5 Ngữ pháp cơ bản",
+      "grammarPoints": [
+        {
+          "structure": "～です/～ます",
+          "meaning": "Hình thức lịch sự",
+          "level": "N5",
+          "examples": [
+            {
+              "sentence": "私は学生です。",
+              "meaning": "Tôi là học sinh.",
+              "breakdown": "です (to be - polite form)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "N4 Ngữ pháp nâng cao",
+      "grammarPoints": [
+        {
+          "structure": "～のに",
+          "meaning": "Mặc dù, bất chập, để làm",
+          "level": "N4",
+          "examples": []
         }
       ]
     }

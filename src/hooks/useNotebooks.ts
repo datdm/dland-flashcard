@@ -124,6 +124,32 @@ export function useNotebooks() {
     []
   );
 
+  const moveVocab = useCallback(
+    (fromNotebookId: string, toNotebookId: string, vocabId: string) => {
+      setNotebooks((prev) => {
+        // Find the vocab to move
+        const sourceNotebook = prev.find((nb) => nb.id === fromNotebookId);
+        const vocabToMove = sourceNotebook?.vocabulary.find((v) => v.id === vocabId);
+        
+        if (!vocabToMove) return prev;
+        
+        // Remove from source, add to target (prepend to maintain newest-first order)
+        const updated = prev.map((nb) => {
+          if (nb.id === fromNotebookId) {
+            return { ...nb, vocabulary: nb.vocabulary.filter((v) => v.id !== vocabId) };
+          } else if (nb.id === toNotebookId) {
+            return { ...nb, vocabulary: [vocabToMove, ...nb.vocabulary] };
+          }
+          return nb;
+        });
+        
+        setItem<NotebooksData>(StorageKeys.NOTEBOOKS, { notebooks: updated });
+        return updated;
+      });
+    },
+    []
+  );
+
   // --- Validation ---
 
   const checkDuplicate = useCallback(
@@ -175,6 +201,61 @@ export function useNotebooks() {
       return JSON.stringify({ notebooks }, null, 2);
     },
     [notebooks]
+  );
+
+  /**
+   * Merge vocabulary into an existing notebook, avoiding duplicates by kanji OR hiragana
+   * @returns { added: number, skipped: number }
+   */
+  const mergeVocabIntoNotebook = useCallback(
+    (notebookId: string, vocabularyToAdd: Array<Omit<Vocabulary, "id">>): { added: number; skipped: number } => {
+      let added = 0;
+      let skipped = 0;
+      
+      setNotebooks((prev) => {
+        const notebook = prev.find((nb) => nb.id === notebookId);
+        if (!notebook) return prev;
+        
+        const toAdd: Vocabulary[] = [];
+        
+        for (const vocab of vocabularyToAdd) {
+          // Check if kanji OR hiragana already exists
+          const isDuplicate = notebook.vocabulary.some((existing) => {
+            const kanjiMatch = vocab.kanji?.trim() && existing.kanji?.trim() === vocab.kanji.trim();
+            const hiraganaMatch = vocab.hiragana?.trim() && existing.hiragana?.trim() === vocab.hiragana.trim();
+            return kanjiMatch || hiraganaMatch;
+          });
+          
+          if (isDuplicate) {
+            skipped++;
+          } else {
+            const newVocab: Vocabulary = {
+              id: generateId("v"),
+              kanji: vocab.kanji,
+              hiragana: vocab.hiragana,
+              onyomi: vocab.onyomi,
+              meaning: vocab.meaning,
+              phonetic: vocab.phonetic,
+            };
+            toAdd.push(newVocab);
+            added++;
+          }
+        }
+        
+        // Prepend new vocabulary (newest first)
+        const updated = prev.map((nb) =>
+          nb.id === notebookId
+            ? { ...nb, vocabulary: [...toAdd, ...nb.vocabulary] }
+            : nb
+        );
+        
+        setItem<NotebooksData>(StorageKeys.NOTEBOOKS, { notebooks: updated });
+        return updated;
+      });
+      
+      return { added, skipped };
+    },
+    []
   );
 
   /** Import vocab entries from a notebook-export JSON string, appending to target notebook */
@@ -268,10 +349,12 @@ export function useNotebooks() {
     addVocab,
     updateVocab,
     deleteVocab,
+    moveVocab,
     checkDuplicate,
     exportNotebook,
     exportAllNotebooks,
     importVocabFromJson,
     importNotebook,
+    mergeVocabIntoNotebook,
   };
 }

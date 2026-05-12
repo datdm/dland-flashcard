@@ -58,6 +58,50 @@ export interface VocabProgress {
 
 export type ProgressMap = Record<string, VocabProgress>;
 
+// --- Grammar Types ---
+
+export interface GrammarExample {
+  id: string;
+  sentence: string;          // Câu tiếng Nhật
+  romaji?: string;           // Phiên âm
+  meaning: string;           // Nghĩa tiếng Việt
+  breakdown?: string;        // Phân tích câu
+}
+
+export interface GrammarPoint {
+  id: string;
+  structure: string;         // Cấu trúc: "～ている"
+  meaning: string;           // Nghĩa: "Đang làm gì"
+  explanation?: string;      // Giải thích chi tiết
+  mnemonic?: string;         // Mẹo ghi nhớ
+  level?: string;            // N5, N4, N3, N2, N1
+  examples: GrammarExample[];
+  notes?: string;            // Ghi chú thêm
+  relatedGrammar?: string[]; // IDs của ngữ pháp liên quan
+}
+
+export interface GrammarCollection {
+  id: string;
+  name: string;              // "Ngữ pháp N5 cơ bản", "Động từ thể て"
+  description?: string;
+  createdAt: string;
+  grammarPoints: GrammarPoint[];
+}
+
+export interface GrammarCollectionsData {
+  collections: GrammarCollection[];
+}
+
+export interface GrammarProgress {
+  learned: boolean;
+  favorite: boolean;
+  learnedAt?: string;
+  lastPracticedAt?: string;
+  masteryLevel?: number;     // 0-5 scale
+}
+
+export type GrammarProgressMap = Record<string, GrammarProgress>;
+
 export type VocabField = "kanji" | "hiragana" | "onyomi" | "meaning" | "phonetic";
 
 export interface CardSideSettings {

@@ -7,7 +7,8 @@ const NAV_ITEMS = [
   { href: "/", label: "Trang chủ", icon: "🏠" },
   { href: "/notebooks", label: "Sổ tay", icon: "📓" },
   { href: "/curriculums", label: "Giáo trình", icon: "📚" },
-  { href: "/vocabulary", label: "Từ vựng", icon: "📖" },
+  { href: "/grammar", label: "Ngữ pháp", icon: "📖" },
+  { href: "/vocabulary", label: "Từ vựng", icon: "📕" },
   { href: "/flashcard/all", label: "Ôn tập", icon: "🃏" },
   { href: "/upload", label: "Upload", icon: "📤" },
 ];

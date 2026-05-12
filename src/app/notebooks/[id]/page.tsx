@@ -28,7 +28,7 @@ const FIELD_LABELS: { key: keyof VocabFields; label: string; placeholder: string
 
 export default function NotebookDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
-  const { notebooks, addVocab, updateVocab, deleteVocab, exportNotebook, importVocabFromJson, checkDuplicate } = useNotebooks();
+  const { notebooks, addVocab, updateVocab, deleteVocab, moveVocab, exportNotebook, importVocabFromJson, checkDuplicate } = useNotebooks();
   const { getVocabProgress, toggleLearned, toggleFavorite, progress } = useProgress();
   
   const [form, setForm] = useState<VocabFields>(EMPTY_FIELDS);
@@ -36,6 +36,7 @@ export default function NotebookDetailPage({ params }: { params: Promise<{ id: s
   const [showEditModal, setShowEditModal] = useState(false);
   const [editingVocab, setEditingVocab] = useState<Vocabulary | null>(null);
   const [editFields, setEditFields] = useState<VocabFields>(EMPTY_FIELDS);
+  const [targetNotebookId, setTargetNotebookId] = useState<string>("");
   const [duplicateError, setDuplicateError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [importResult, setImportResult] = useState<{ msg: string; ok: boolean } | null>(null);
@@ -97,6 +98,7 @@ export default function NotebookDetailPage({ params }: { params: Promise<{ id: s
       meaning: v.meaning ?? "",
       phonetic: v.phonetic ?? "",
     });
+    setTargetNotebookId("");
     setDuplicateError(null);
     setShowEditModal(true);
   };
@@ -123,6 +125,16 @@ export default function NotebookDetailPage({ params }: { params: Promise<{ id: s
     setDuplicateError(null);
     setShowEditModal(false);
     setEditingVocab(null);
+  };
+
+  const handleMove = () => {
+    if (!editingVocab || !targetNotebookId) return;
+    
+    moveVocab(id, targetNotebookId, editingVocab.id);
+    setShowEditModal(false);
+    setEditingVocab(null);
+    setTargetNotebookId("");
+    setDuplicateError(null);
   };
 
   const handleExport = () => {
@@ -528,6 +540,37 @@ export default function NotebookDetailPage({ params }: { params: Promise<{ id: s
             >
               Lưu thay đổi
             </button>
+            
+            {/* Move to another notebook */}
+            {notebooks.length > 1 && (
+              <>
+                <div className="my-4 border-t border-gray-200"></div>
+                <div className="space-y-3">
+                  <label className="block text-xs text-gray-500">Di chuyển sang sổ tay khác</label>
+                  <select
+                    value={targetNotebookId}
+                    onChange={(e) => setTargetNotebookId(e.target.value)}
+                    className="w-full rounded-xl border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:border-indigo-400"
+                  >
+                    <option value="">-- Chọn sổ tay --</option>
+                    {notebooks
+                      .filter((nb) => nb.id !== id)
+                      .map((nb) => (
+                        <option key={nb.id} value={nb.id}>
+                          {nb.name} ({nb.vocabulary.length} từ)
+                        </option>
+                      ))}
+                  </select>
+                  <button
+                    onClick={handleMove}
+                    disabled={!targetNotebookId}
+                    className="w-full bg-emerald-600 text-white rounded-xl py-2.5 text-sm font-semibold hover:bg-emerald-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                  >
+                    Di chuyển →
+                  </button>
+                </div>
+              </>
+            )}
           </div>
         </div>
       )}
