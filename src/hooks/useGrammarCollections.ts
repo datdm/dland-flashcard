@@ -8,6 +8,14 @@ function generateId(prefix: string): string {
   return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
 }
 
+function sanitizeGrammarCollectionForExport(collection: GrammarCollection) {
+  return {
+    name: collection.name,
+    description: collection.description,
+    grammarPoints: collection.grammarPoints,
+  };
+}
+
 export function useGrammarCollections() {
   const [collections, setCollections] = useState<GrammarCollection[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -113,7 +121,7 @@ export function useGrammarCollections() {
       setCollections((prev) => {
         const updated = prev.map((c) =>
           c.id === collectionId
-            ? { ...c, grammarPoints: [...c.grammarPoints, grammarPoint] }
+            ? { ...c, grammarPoints: [grammarPoint, ...c.grammarPoints] }
             : c
         );
         setItem<GrammarCollectionsData>(StorageKeys.GRAMMAR_COLLECTIONS, { collections: updated });
@@ -282,11 +290,7 @@ export function useGrammarCollections() {
       const collection = collections.find((c) => c.id === collectionId);
       if (!collection) return "{}";
       const data = {
-        grammarCollection: {
-          name: collection.name,
-          description: collection.description,
-          grammarPoints: collection.grammarPoints,
-        },
+        collection: sanitizeGrammarCollectionForExport(collection),
       };
       return JSON.stringify(data, null, 2);
     },
@@ -296,11 +300,7 @@ export function useGrammarCollections() {
   const exportAllCollections = useCallback(
     (): string => {
       const data = {
-        grammarCollections: collections.map((c) => ({
-          name: c.name,
-          description: c.description,
-          grammarPoints: c.grammarPoints,
-        })),
+        collections: collections.map(sanitizeGrammarCollectionForExport),
       };
       return JSON.stringify(data, null, 2);
     },

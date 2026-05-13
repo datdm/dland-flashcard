@@ -154,6 +154,8 @@ export default function GrammarPracticePage({ params }: PracticePageProps) {
                 isFavorite={currentProgress.favorite}
                 onMarkLearned={handleMarkLearned}
                 onMarkFavorite={handleMarkFavorite}
+                onPrev={handlePrev}
+                onNext={handleNext}
               />
             )}
           </div>
@@ -235,24 +237,6 @@ export default function GrammarPracticePage({ params }: PracticePageProps) {
               🔀 {isShuffled ? 'Đã xáo' : 'Xáo trộn'}
             </button>
           </div>
-
-          {/* Navigation buttons */}
-          {displayPoints.length > 0 && (
-            <div className="flex gap-3 justify-center">
-              <button
-                onClick={handlePrev}
-                className="px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition font-medium"
-              >
-                ← Trước
-              </button>
-              <button
-                onClick={handleNext}
-                className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition font-medium"
-              >
-                Tiếp theo →
-              </button>
-            </div>
-          )}
         </div>
       </div>
     </div>

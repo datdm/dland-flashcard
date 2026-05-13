@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import { use } from "react";
 import Link from "next/link";
 import { useNotebooks } from "@/hooks/useNotebooks";
@@ -26,10 +26,17 @@ const FIELD_LABELS: { key: keyof VocabFields; label: string; placeholder: string
   { key: "phonetic", label: "Phiên âm", placeholder: "nihongo" },
 ];
 
+function insertDraggedAtIndex(ids: string[], draggedId: string, insertIndex: number) {
+  const baseIds = ids.filter((id) => id !== draggedId);
+  const boundedIndex = Math.max(0, Math.min(insertIndex, baseIds.length));
+  baseIds.splice(boundedIndex, 0, draggedId);
+  return baseIds;
+}
+
 export default function NotebookDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
-  const { notebooks, addVocab, updateVocab, deleteVocab, moveVocab, exportNotebook, importVocabFromJson, checkDuplicate } = useNotebooks();
-  const { getVocabProgress, toggleLearned, toggleFavorite, progress } = useProgress();
+  const { notebooks, save, addVocab, updateVocab, deleteVocab, moveVocab, exportNotebook, importVocabFromJson, checkDuplicate } = useNotebooks();
+  const { toggleLearned, toggleFavorite, progress } = useProgress();
   
   const [form, setForm] = useState<VocabFields>(EMPTY_FIELDS);
   const [showAddModal, setShowAddModal] = useState(false);
@@ -42,9 +49,25 @@ export default function NotebookDetailPage({ params }: { params: Promise<{ id: s
   const [importResult, setImportResult] = useState<{ msg: string; ok: boolean } | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [tab, setTab] = useState<FilterTab>("all");
+  const [draggingVocabId, setDraggingVocabId] = useState<string | null>(null);
+  const [previewVocabIds, setPreviewVocabIds] = useState<string[] | null>(null);
+  const [dropVocabIndex, setDropVocabIndex] = useState<number | null>(null);
+  const [dragVocabRect, setDragVocabRect] = useState<{ left: number; top: number; width: number; height: number; offsetX: number; offsetY: number } | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
+  const previewVocabIdsRef = useRef<string[] | null>(null);
+  const dropVocabIndexRef = useRef<number | null>(null);
+
+  const setVocabPreviewState = (ids: string[] | null, insertIndex: number | null) => {
+    previewVocabIdsRef.current = ids;
+    dropVocabIndexRef.current = insertIndex;
+    setPreviewVocabIds(ids);
+    setDropVocabIndex(insertIndex);
+  };
 
   const notebook = notebooks.find((nb) => nb.id === id);
+  const notebookName = notebook?.name ?? "";
+  const notebookVocabulary = notebook?.vocabulary ?? [];
 
     // Reset to page 1 when search or tab changes
   useEffect(() => {
@@ -53,15 +76,6 @@ export default function NotebookDetailPage({ params }: { params: Promise<{ id: s
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery, tab]);
-
-  if (!notebook) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-64 gap-4 p-4">
-        <p className="text-gray-500">Không tìm thấy sổ tay.</p>
-        <Link href="/notebooks" className="text-indigo-600 underline text-sm">← Sổ tay</Link>
-      </div>
-    );
-  }
 
   const isFormValid = Object.values(form).some((v) => v?.trim());
 
@@ -143,7 +157,7 @@ export default function NotebookDetailPage({ params }: { params: Promise<{ id: s
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `notebook-${notebook.name.replace(/\s+/g, "-")}.json`;
+    a.download = `notebook-${notebookName.replace(/\s+/g, "-")}.json`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -165,8 +179,7 @@ export default function NotebookDetailPage({ params }: { params: Promise<{ id: s
     reader.readAsText(file);
   };
 
-  // Filter vocabulary by search query
-  const filteredVocabulary = notebook.vocabulary.filter((v) => {
+  const filteredVocabulary = notebookVocabulary.filter((v) => {
     if (!searchQuery.trim()) return true;
     const query = searchQuery.toLowerCase();
     return (
@@ -200,6 +213,186 @@ export default function NotebookDetailPage({ params }: { params: Promise<{ id: s
   const startIdx = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIdx = startIdx + ITEMS_PER_PAGE;
   const paginatedVocabulary = tabFiltered.slice(startIdx, endIdx);
+
+  useEffect(() => {
+    if (!previewVocabIdsRef.current) return;
+    const validIds = previewVocabIdsRef.current.filter((id) => paginatedVocabulary.some((vocab) => vocab.id === id));
+    setVocabPreviewState(validIds, dropVocabIndexRef.current);
+  }, [paginatedVocabulary]);
+
+  const renderedVocabIds = useMemo(() => {
+    if (!draggingVocabId || !previewVocabIds) {
+      return paginatedVocabulary.map((vocab) => vocab.id);
+    }
+
+    return previewVocabIds.filter((vocabId) => vocabId !== draggingVocabId);
+  }, [draggingVocabId, paginatedVocabulary, previewVocabIds]);
+
+  const vocabMap = useMemo(
+    () => new Map(paginatedVocabulary.map((vocab) => [vocab.id, vocab])),
+    [paginatedVocabulary]
+  );
+
+  const updateVocabInsertIndex = useCallback((clientX: number, clientY: number) => {
+    if (!gridRef.current || !draggingVocabId || !previewVocabIdsRef.current) return;
+
+    const cards = Array.from(gridRef.current.querySelectorAll<HTMLElement>("[data-vocab-card='true']"));
+    if (cards.length === 0) {
+      setVocabPreviewState(previewVocabIdsRef.current, 0);
+      return;
+    }
+
+    const cardMetrics = cards.map((card, index) => {
+      const rect = card.getBoundingClientRect();
+      return {
+        index,
+        left: rect.left,
+        top: rect.top,
+        width: rect.width,
+        height: rect.height,
+        centerX: rect.left + rect.width / 2,
+        centerY: rect.top + rect.height / 2,
+      };
+    });
+
+    const rows: typeof cardMetrics[] = [];
+    const rowThreshold = 24;
+    for (const metric of cardMetrics) {
+      const lastRow = rows[rows.length - 1];
+      if (!lastRow || Math.abs(lastRow[0].top - metric.top) > rowThreshold) {
+        rows.push([metric]);
+      } else {
+        lastRow.push(metric);
+      }
+    }
+
+    let nextIndex = cardMetrics.length;
+    for (let rowIndex = 0; rowIndex < rows.length; rowIndex += 1) {
+      const row = rows[rowIndex];
+      const rowBottom = Math.max(...row.map((item) => item.top + item.height));
+      const isLastRow = rowIndex === rows.length - 1;
+
+      if (clientY <= rowBottom || isLastRow) {
+        nextIndex = row[row.length - 1].index + 1;
+
+        for (const item of row) {
+          if (clientX < item.centerX) {
+            nextIndex = item.index;
+            break;
+          }
+        }
+        break;
+      }
+    }
+
+    if (dropVocabIndexRef.current !== nextIndex) {
+      setVocabPreviewState(previewVocabIdsRef.current, nextIndex);
+    }
+  }, [draggingVocabId]);
+
+  const handleVocabMouseDown = (event: React.MouseEvent<HTMLButtonElement>, vocabId: string) => {
+    if (event.button !== 0) return;
+    const card = event.currentTarget.closest("[data-vocab-card='true']") as HTMLElement | null;
+    if (!card) return;
+
+    event.preventDefault();
+    const rect = card.getBoundingClientRect();
+    setDraggingVocabId(vocabId);
+    setVocabPreviewState(paginatedVocabulary.map((vocab) => vocab.id), paginatedVocabulary.findIndex((vocab) => vocab.id === vocabId));
+    setDragVocabRect({
+      left: rect.left,
+      top: rect.top,
+      width: rect.width,
+      height: rect.height,
+      offsetX: event.clientX - rect.left,
+      offsetY: event.clientY - rect.top,
+    });
+  };
+
+  const commitVocabDrop = useCallback(() => {
+    const previewIds = previewVocabIdsRef.current;
+    const insertIndex = dropVocabIndexRef.current;
+
+    if (!draggingVocabId || !previewIds || insertIndex === null) {
+      setDraggingVocabId(null);
+      setDragVocabRect(null);
+      return;
+    }
+
+    const nextPageOrder = insertDraggedAtIndex(previewIds, draggingVocabId, insertIndex);
+    const nextNotebookVocabulary = (() => {
+      const subsetIdSet = new Set(nextPageOrder);
+      const byId = new Map(notebookVocabulary.map((vocab) => [vocab.id, vocab]));
+      const orderedSubset = nextPageOrder
+        .map((vocabId) => byId.get(vocabId))
+        .filter((vocab): vocab is Vocabulary => Boolean(vocab));
+      let subsetIndex = 0;
+
+      return notebookVocabulary.map((vocab) => {
+        if (!subsetIdSet.has(vocab.id)) return vocab;
+        const nextVocab = orderedSubset[subsetIndex];
+        subsetIndex += 1;
+        return nextVocab ?? vocab;
+      });
+    })();
+
+    save(
+      notebooks.map((existingNotebook) =>
+        existingNotebook.id === id
+          ? { ...existingNotebook, vocabulary: nextNotebookVocabulary }
+          : existingNotebook
+      )
+    );
+    setDraggingVocabId(null);
+    setDragVocabRect(null);
+    setVocabPreviewState(null, null);
+  }, [draggingVocabId, id, notebookVocabulary, notebooks, save]);
+
+  const cancelVocabDrag = useCallback(() => {
+    setDraggingVocabId(null);
+    setDragVocabRect(null);
+    setVocabPreviewState(null, null);
+  }, []);
+
+  useEffect(() => {
+    if (!draggingVocabId || !dragVocabRect) return;
+
+    const handleMouseMove = (event: MouseEvent) => {
+      setDragVocabRect((current) =>
+        current
+          ? {
+              ...current,
+              left: event.clientX - current.offsetX,
+              top: event.clientY - current.offsetY,
+            }
+          : current
+      );
+      updateVocabInsertIndex(event.clientX, event.clientY);
+    };
+
+    const handleMouseUp = () => {
+      commitVocabDrop();
+    };
+
+    document.body.style.userSelect = "none";
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", handleMouseUp);
+
+    return () => {
+      document.body.style.userSelect = "";
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, [commitVocabDrop, dragVocabRect, draggingVocabId, updateVocabInsertIndex]);
+
+  if (!notebook) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-64 gap-4 p-4">
+        <p className="text-gray-500">Không tìm thấy sổ tay.</p>
+        <Link href="/notebooks" className="text-indigo-600 underline text-sm">← Sổ tay</Link>
+      </div>
+    );
+  }
 
 
   return (
@@ -251,7 +444,7 @@ export default function NotebookDetailPage({ params }: { params: Promise<{ id: s
       )}
 
       {/* Search input */}
-      {notebook.vocabulary.length > 0 && (
+      {notebookVocabulary.length > 0 && (
         <div className="mb-4 relative">
           <input
             type="text"
@@ -272,26 +465,32 @@ export default function NotebookDetailPage({ params }: { params: Promise<{ id: s
       )}
 
       {/* Filter tabs */}
-      {notebook.vocabulary.length > 0 && (
+      {notebookVocabulary.length > 0 && (
         <div className="mb-4">
           <FilterBar active={tab} onChange={setTab} counts={counts} />
         </div>
       )}
 
-      {searchQuery && notebook.vocabulary.length > 0 && (
+      {searchQuery && notebookVocabulary.length > 0 && (
         <div className="mb-3 text-xs text-gray-500">
-          Hiển thị {filteredVocabulary.length} / {notebook.vocabulary.length} từ
+          Hiển thị {filteredVocabulary.length} / {notebookVocabulary.length} từ
         </div>
       )}
 
-      {!searchQuery && notebook.vocabulary.length > 0 && totalPages > 1 && (
+      {!searchQuery && notebookVocabulary.length > 0 && totalPages > 1 && (
         <div className="mb-3 text-xs text-gray-500">
           Trang {currentPage} / {totalPages} • {filteredVocabulary.length} từ
         </div>
       )}
 
+      {tabFiltered.length > 1 && (
+        <div className="mb-3 text-xs text-gray-500">
+          Kéo thả thẻ từ để đổi vị trí trong sổ tay.
+        </div>
+      )}
+
       {/* Vocabulary list */}
-      {notebook.vocabulary.length === 0 ? (
+      {notebookVocabulary.length === 0 ? (
         <div className="text-center text-gray-400 py-12">
           <p>Chưa có từ nào. Thêm từ đầu tiên ở trên!</p>
         </div>
@@ -302,11 +501,24 @@ export default function NotebookDetailPage({ params }: { params: Promise<{ id: s
         </div>
       ) : (
         <>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-          {paginatedVocabulary.map((v) => (
-            <div key={v.id} className={`flex flex-col rounded-2xl border bg-white shadow-sm h-full transition-colors ${
-              progress[v.id]?.learned ? "border-emerald-200" : "border-gray-200"
-            }`}>
+        <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          {renderedVocabIds.map((vocabId, renderIndex) => {
+            const v = vocabMap.get(vocabId);
+            if (!v) return null;
+
+            return (
+            <div key={v.id} className="contents">
+              {draggingVocabId && dropVocabIndex === renderIndex && (
+                <div
+                  className="rounded-2xl border-2 border-dashed border-indigo-300 bg-indigo-50/80 transition-all"
+                  style={{ height: dragVocabRect?.height ?? 132 }}
+                />
+              )}
+              <div
+                data-vocab-card="true"
+                className={`flex flex-col rounded-2xl border bg-white shadow-sm h-full transition-all ${
+                progress[v.id]?.learned ? "border-emerald-200" : "border-gray-200"
+              }`}>
                 {/* Top: word + edit/delete */}
                 <div className="flex items-start justify-between gap-1 px-3 pt-3 pb-1">
                   <div className="min-w-0 flex-1">
@@ -320,6 +532,13 @@ export default function NotebookDetailPage({ params }: { params: Promise<{ id: s
                     </p>
                   </div>
                   <div className="flex items-center shrink-0">
+                    <button
+                      type="button"
+                      onMouseDown={(event) => handleVocabMouseDown(event, v.id)}
+                      className="w-7 h-7 flex items-center justify-center text-sm text-gray-300 cursor-grab active:cursor-grabbing select-none"
+                    >
+                      ⋮⋮
+                    </button>
                     <button
                       onClick={() => toggleFavorite(v.id)}
                       title="Yêu thích"
@@ -374,8 +593,64 @@ export default function NotebookDetailPage({ params }: { params: Promise<{ id: s
                   {v.onyomi || v.hiragana || "\u2013"}
                 </div>
               </div>
-            ))}
+            </div>
+            );
+          })}
+
+          {draggingVocabId && dropVocabIndex === renderedVocabIds.length && (
+            <div
+              className="rounded-2xl border-2 border-dashed border-indigo-300 bg-indigo-50/80 transition-all"
+              style={{ height: dragVocabRect?.height ?? 132 }}
+            />
+          )}
         </div>
+
+        {draggingVocabId && dragVocabRect && (() => {
+          const draggingVocab = vocabMap.get(draggingVocabId) ?? notebookVocabulary.find((vocab) => vocab.id === draggingVocabId);
+          if (!draggingVocab) return null;
+
+          return (
+            <div
+              className="pointer-events-none fixed z-50"
+              style={{
+                left: dragVocabRect.left,
+                top: dragVocabRect.top,
+                width: dragVocabRect.width,
+              }}
+            >
+              <div className={`flex flex-col rounded-2xl border bg-white/95 shadow-2xl ${
+                progress[draggingVocab.id]?.learned ? "border-emerald-200" : "border-indigo-300"
+              }`}>
+                <div className="flex items-start justify-between gap-1 px-3 pt-3 pb-1">
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-bold text-indigo-600 leading-snug break-words">
+                      {draggingVocab.kanji || draggingVocab.hiragana}
+                      {draggingVocab.kanji && (draggingVocab.hiragana || draggingVocab.onyomi) && (
+                        <span className="font-normal text-gray-500 text-xs">
+                          {"\u300c"}{[draggingVocab.hiragana, draggingVocab.onyomi].filter(Boolean).join(" ")}{"\u300d"}
+                        </span>
+                      )}
+                    </p>
+                  </div>
+                  <div className="w-7 h-7 flex items-center justify-center text-sm text-indigo-300 select-none">⋮⋮</div>
+                </div>
+                {draggingVocab.meaning && (
+                  <p className="px-3 pb-1 text-xs text-gray-700 leading-snug break-words">{draggingVocab.meaning}</p>
+                )}
+                {draggingVocab.phonetic && (
+                  <p className="px-3 pb-2 text-xs text-gray-400 italic leading-snug">{draggingVocab.phonetic}</p>
+                )}
+                <div className={`mt-auto px-3 py-1.5 rounded-b-2xl border-t text-xs ${
+                  progress[draggingVocab.id]?.learned
+                    ? "bg-emerald-50 border-emerald-100 text-emerald-600"
+                    : "bg-gray-50 border-gray-100 text-gray-400"
+                }`}>
+                  {draggingVocab.onyomi || draggingVocab.hiragana || "\u2013"}
+                </div>
+              </div>
+            </div>
+          );
+        })()}
 
         {/* Pagination controls */}
         {totalPages > 1 && !searchQuery && (

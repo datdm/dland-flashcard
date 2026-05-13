@@ -25,6 +25,19 @@ interface ParseResult {
   error?: string;
 }
 
+function getSingleGrammarCollection(data: Record<string, unknown>) {
+  const collection = (data.collection ?? data.grammarCollection) as Record<string, unknown> | undefined;
+  if (collection && typeof collection === "object") {
+    return collection;
+  }
+  return null;
+}
+
+function getMultipleGrammarCollections(data: Record<string, unknown>) {
+  const collections = (data.collections ?? data.grammarCollections) as unknown;
+  return Array.isArray(collections) ? (collections as Record<string, unknown>[]) : null;
+}
+
 function parseUploadedJson(text: string): ParseResult {
   let raw: unknown;
   try {
@@ -123,10 +136,11 @@ function parseUploadedJson(text: string): ParseResult {
   }
 
   // Check if single grammar collection format
-  if (data.collection && typeof data.collection === "object") {
-    const coll = data.collection as Record<string, unknown>;
+  const singleGrammarCollection = getSingleGrammarCollection(data);
+  if (singleGrammarCollection) {
+    const coll = singleGrammarCollection;
     if (coll.name && Array.isArray(coll.grammarPoints)) {
-      let pointCount = (coll.grammarPoints as unknown[]).length;
+      const pointCount = (coll.grammarPoints as unknown[]).length;
       let exampleCount = 0;
       for (const point of coll.grammarPoints as unknown[]) {
         const p = point as Record<string, unknown>;
@@ -146,9 +160,10 @@ function parseUploadedJson(text: string): ParseResult {
   }
 
   // Check if multiple grammar collections format
-  if (Array.isArray(data.collections)) {
+  const multipleGrammarCollections = getMultipleGrammarCollections(data);
+  if (multipleGrammarCollections) {
     let totalPoints = 0;
-    for (const coll of data.collections) {
+    for (const coll of multipleGrammarCollections) {
       const collection = coll as Record<string, unknown>;
       if (!collection.name || !Array.isArray(collection.grammarPoints)) {
         return { valid: false, error: "Mỗi bộ ngữ pháp phải có 'name' và 'grammarPoints'." };
@@ -159,7 +174,7 @@ function parseUploadedJson(text: string): ParseResult {
       valid: true,
       type: "grammars",
       data: {
-        grammarCollectionCount: data.collections.length,
+        grammarCollectionCount: multipleGrammarCollections.length,
         grammarPointCount: totalPoints,
       },
     };
@@ -431,7 +446,11 @@ export default function UploadPage() {
         }
         setSaved(message || '✅ Hoàn tất!');
       } else if (result.type === "grammar") {
-        const collection = data.collection as Record<string, unknown>;
+        const collection = getSingleGrammarCollection(data);
+        if (!collection) {
+          setSaved('❌ File ngữ pháp không hợp lệ');
+          return;
+        }
         const collectionName = collection.name as string;
         const grammarPoints = collection.grammarPoints as Record<string, unknown>[];
         
@@ -531,7 +550,11 @@ export default function UploadPage() {
           setSaved(`✅ Tạo bộ ngữ pháp "${collectionName}" với ${pointCount} điểm!`);
         }
       } else if (result.type === "grammars") {
-        const grammarsData = data.collections as Record<string, unknown>[];
+        const grammarsData = getMultipleGrammarCollections(data);
+        if (!grammarsData) {
+          setSaved('❌ File bộ ngữ pháp không hợp lệ');
+          return;
+        }
         let created = 0;
         let merged = 0;
         const createdDetails: Array<{ name: string; pointCount: number }> = [];

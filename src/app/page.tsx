@@ -4,6 +4,8 @@ import { useEffect } from "react";
 import { useNotebooks } from "@/hooks/useNotebooks";
 import { useCurriculums } from "@/hooks/useCurriculums";
 import { useProgress } from "@/hooks/useProgress";
+import { useGrammarCollections } from "@/hooks/useGrammarCollections";
+import { useGrammarProgress } from "@/hooks/useGrammarProgress";
 import { initializeSampleData } from "@/lib/storage";
 import CurriculumCard from "@/components/CurriculumCard";
 import Link from "next/link";
@@ -12,6 +14,8 @@ export default function HomePage() {
   const { notebooks } = useNotebooks();
   const { curriculums } = useCurriculums();
   const { progress } = useProgress();
+  const { collections } = useGrammarCollections();
+  const { getGrammarProgress } = useGrammarProgress();
 
   // Initialize sample data on first visit
   useEffect(() => {
@@ -41,12 +45,18 @@ export default function HomePage() {
     .filter((v) => !progress[v.id]?.learned).length;
   const notebookTotalVocab = notebooks.reduce((sum, n) => sum + n.vocabulary.length, 0);
 
+  // === Grammar ===
+  const grammarPoints = collections.flatMap((collection) => collection.grammarPoints);
+  const grammarLearnedCount = grammarPoints.filter((point) => getGrammarProgress(point.id).learned).length;
+  const grammarUnlearnedCount = grammarPoints.filter((point) => !getGrammarProgress(point.id).learned).length;
+  const grammarFavoriteCount = grammarPoints.filter((point) => getGrammarProgress(point.id).favorite).length;
+
   const totalVocabCount = curriculumTotalVocab + notebookTotalVocab;
   const totalLearnedCount = curriculumLearnedCount + notebookLearnedCount;
   const totalUnlearnedCount = curriculumUnlearnedCount + notebookUnlearnedCount;
 
   return (
-    <div className="p-4 max-w-2xl mx-auto">
+    <div className="p-4 max-w-2xl sm:max-w-7xl mx-auto sm:px-6 lg:px-8">
       <div className="mb-6">
         {/* Overview stats - 4 boxes */}
         {totalVocabCount > 0 && (
@@ -70,9 +80,30 @@ export default function HomePage() {
           </div>
         )}
 
+        {collections.length > 0 && (
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+            <div className="bg-gradient-to-br from-sky-50 to-sky-100 rounded-2xl p-4 border border-sky-200">
+              <p className="text-xs text-sky-600 font-medium">Bộ ngữ pháp</p>
+              <p className="text-3xl font-bold text-sky-700 mt-1">{collections.length}</p>
+            </div>
+            <div className="bg-gradient-to-br from-cyan-50 to-cyan-100 rounded-2xl p-4 border border-cyan-200">
+              <p className="text-xs text-cyan-600 font-medium">Điểm ngữ pháp</p>
+              <p className="text-3xl font-bold text-cyan-700 mt-1">{grammarPoints.length}</p>
+            </div>
+            <div className="bg-gradient-to-br from-teal-50 to-teal-100 rounded-2xl p-4 border border-teal-200">
+              <p className="text-xs text-teal-600 font-medium">Ngữ pháp đã học</p>
+              <p className="text-3xl font-bold text-teal-700 mt-1">{grammarLearnedCount}</p>
+            </div>
+            <div className="bg-gradient-to-br from-rose-50 to-rose-100 rounded-2xl p-4 border border-rose-200">
+              <p className="text-xs text-rose-600 font-medium">Ngữ pháp yêu thích</p>
+              <p className="text-3xl font-bold text-rose-700 mt-1">{grammarFavoriteCount}</p>
+            </div>
+          </div>
+        )}
+
         {/* Notebooks section */}
         {notebooks.length > 0 && (
-          <div>
+          <section className="mb-8">
             <div className="mb-3">
               <Link
                 href="/notebooks"
@@ -81,7 +112,7 @@ export default function HomePage() {
                 📓 Sổ tay ({notebooks.length})
               </Link>
             </div>
-            <div className="space-y-3 mb-4">
+            <div className="space-y-3 mb-4 sm:grid sm:grid-cols-2 xl:grid-cols-3 sm:gap-4 sm:space-y-0">
               {notebooks.map((notebook) => {
                 const totalVocab = notebook.vocabulary.length;
                 const totalLearned = notebook.vocabulary.filter((v) => progress[v.id]?.learned).length;
@@ -133,12 +164,12 @@ export default function HomePage() {
                 );
               })}
             </div>
-          </div>
+          </section>
         )}
 
         {/* Curriculums section (unified) */}
         {curriculums.length > 0 && (
-          <div>
+          <section className="mb-8">
             <div className="mb-3 flex items-center justify-between">
               <Link
                 href="/curriculums"
@@ -159,11 +190,86 @@ export default function HomePage() {
                 <CurriculumCard key={curriculum.id} curriculum={curriculum} progress={progress} />
               ))}
             </div>
-          </div>
+          </section>
+        )}
+
+        {/* Grammar section */}
+        {collections.length > 0 && (
+          <section className="mb-8">
+            <div className="mb-3 flex items-center justify-between">
+              <Link
+                href="/grammar"
+                className="text-sm text-indigo-600 hover:underline font-semibold"
+              >
+                📖 Ngữ pháp ({collections.length})
+              </Link>
+              <Link
+                href={collections[0] ? `/grammar/practice/${collections[0].id}` : "/grammar"}
+                className="text-xs bg-sky-600 text-white px-2 py-1 rounded-lg hover:bg-sky-700 transition-colors"
+              >
+                Luyện tập
+              </Link>
+            </div>
+
+            <div className="space-y-3 mb-4 sm:grid sm:grid-cols-2 xl:grid-cols-3 sm:gap-4 sm:space-y-0">
+              {collections.map((collection) => {
+                const learnedCount = collection.grammarPoints.filter((point) => getGrammarProgress(point.id).learned).length;
+                const totalCount = collection.grammarPoints.length;
+                const unlearnedCount = totalCount - learnedCount;
+                const progressPercentage = totalCount === 0 ? 0 : Math.round((learnedCount / totalCount) * 100);
+
+                return (
+                  <div key={collection.id} className="bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow p-5">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex-1 min-w-0">
+                        <h2 className="font-bold text-gray-800 truncate">{collection.name}</h2>
+                        {collection.description && (
+                          <p className="text-sm text-gray-500 mt-1 line-clamp-2">{collection.description}</p>
+                        )}
+                      </div>
+                      <span className="text-xs bg-sky-50 text-sky-600 rounded-full px-2.5 py-1 whitespace-nowrap font-medium">
+                        {totalCount} điểm
+                      </span>
+                    </div>
+
+                    <div className="mt-4">
+                      <div className="flex justify-between text-xs text-gray-400 mb-1">
+                        <span>
+                          {learnedCount}/{totalCount} đã học • {unlearnedCount} chưa học
+                        </span>
+                        <span>{progressPercentage}%</span>
+                      </div>
+                      <div className="w-full bg-gray-100 rounded-full h-2">
+                        <div
+                          className="bg-sky-500 h-2 rounded-full transition-all duration-500"
+                          style={{ width: `${progressPercentage}%` }}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex gap-2 mt-4">
+                      <Link
+                        href={`/grammar/${collection.id}`}
+                        className="flex-1 text-center py-2 rounded-xl border border-gray-300 text-sm text-gray-600 hover:border-sky-400 hover:text-sky-600 transition-colors"
+                      >
+                        Danh sách
+                      </Link>
+                      <Link
+                        href={`/grammar/practice/${collection.id}`}
+                        className="flex-1 text-center py-2 rounded-xl bg-sky-600 text-white text-sm font-medium hover:bg-sky-700 transition-colors"
+                      >
+                        Flashcard
+                      </Link>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </section>
         )}
       </div>
 
-      {(curriculums.length > 0 || notebooks.length > 0) && (
+      {(curriculums.length > 0 || notebooks.length > 0 || collections.length > 0) && (
         <div className="flex gap-2 mb-6">
           <Link
             href="/flashcard/all"
@@ -181,7 +287,7 @@ export default function HomePage() {
       )}
 
       <div>
-        {curriculums.length === 0 && notebooks.length === 0 ? (
+        {curriculums.length === 0 && notebooks.length === 0 && collections.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 gap-4">
             <p className="text-gray-400 text-lg">Chưa có bài học nào</p>
             <Link

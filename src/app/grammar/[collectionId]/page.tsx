@@ -4,7 +4,6 @@ import { use, useState, useCallback } from 'react';
 import { useGrammarCollections } from '@/hooks/useGrammarCollections';
 import { useGrammarProgress } from '@/hooks/useGrammarProgress';
 import Link from 'next/link';
-import { GrammarPoint, GrammarExample } from '@/types';
 
 interface CollectionDetailPageProps {
   params: Promise<{
@@ -14,7 +13,7 @@ interface CollectionDetailPageProps {
 
 export default function CollectionDetailPage({ params }: CollectionDetailPageProps) {
   const { collectionId } = use(params);
-  const { collections, isLoading, getCollectionById, addGrammarPoint, updateGrammarPoint, deleteGrammarPoint, addExample, updateExample, deleteExample } = useGrammarCollections();
+  const { isLoading, getCollectionById, addGrammarPoint, updateGrammarPoint, deleteGrammarPoint, addExample, deleteExample } = useGrammarCollections();
   const { getGrammarProgress } = useGrammarProgress();
 
   const [showAddPoint, setShowAddPoint] = useState(false);
@@ -42,21 +41,7 @@ export default function CollectionDetailPage({ params }: CollectionDetailPagePro
   });
   const [addingExampleTo, setAddingExampleTo] = useState<string | null>(null);
 
-  const handleAddPoint = useCallback(() => {
-    if (!pointForm.structure.trim() || !pointForm.meaning.trim()) return;
-    
-    addGrammarPoint(
-      collectionId,
-      {
-        structure: pointForm.structure,
-        meaning: pointForm.meaning,
-        explanation: pointForm.explanation || undefined,
-        mnemonic: pointForm.mnemonic || undefined,
-        level: pointForm.level || undefined,
-        notes: pointForm.notes || undefined,
-      }
-    );
-
+  const resetPointForm = useCallback(() => {
     setPointForm({
       structure: '',
       meaning: '',
@@ -65,8 +50,46 @@ export default function CollectionDetailPage({ params }: CollectionDetailPagePro
       level: 'N5',
       notes: '',
     });
+    setEditingPointId(null);
     setShowAddPoint(false);
-  }, [pointForm, collectionId, addGrammarPoint]);
+  }, []);
+
+  const handleSubmitPoint = useCallback(() => {
+    if (!pointForm.structure.trim() || !pointForm.meaning.trim()) return;
+
+    const payload = {
+        structure: pointForm.structure,
+        meaning: pointForm.meaning,
+        explanation: pointForm.explanation || undefined,
+        mnemonic: pointForm.mnemonic || undefined,
+        level: pointForm.level || undefined,
+        notes: pointForm.notes || undefined,
+      };
+
+    if (editingPointId) {
+      updateGrammarPoint(collectionId, editingPointId, payload);
+    } else {
+      addGrammarPoint(collectionId, payload);
+    }
+
+    resetPointForm();
+  }, [pointForm, collectionId, editingPointId, addGrammarPoint, updateGrammarPoint, resetPointForm]);
+
+  const handleStartEditPoint = useCallback((pointId: string) => {
+    const point = getCollectionById(collectionId)?.grammarPoints.find((item) => item.id === pointId);
+    if (!point) return;
+
+    setPointForm({
+      structure: point.structure,
+      meaning: point.meaning,
+      explanation: point.explanation || '',
+      mnemonic: point.mnemonic || '',
+      level: point.level || 'N5',
+      notes: point.notes || '',
+    });
+    setEditingPointId(point.id);
+    setShowAddPoint(true);
+  }, [collectionId, getCollectionById]);
 
   const handleAddExample = useCallback((pointId: string) => {
     if (!exampleForm.sentence.trim() || !exampleForm.meaning.trim()) return;
@@ -161,7 +184,10 @@ export default function CollectionDetailPage({ params }: CollectionDetailPagePro
         {/* Add new grammar point button */}
         {!showAddPoint && (
           <button
-            onClick={() => setShowAddPoint(true)}
+            onClick={() => {
+              setEditingPointId(null);
+              setShowAddPoint(true);
+            }}
             className="w-full mb-6 px-6 py-4 border-2 border-dashed border-indigo-300 rounded-2xl hover:border-indigo-500 hover:bg-indigo-50 transition text-indigo-600 font-medium flex items-center justify-center gap-2"
           >
             <span className="text-2xl">+</span> Thêm điểm ngữ pháp
@@ -171,7 +197,9 @@ export default function CollectionDetailPage({ params }: CollectionDetailPagePro
         {/* Add point form */}
         {showAddPoint && (
           <div className="bg-white rounded-2xl shadow-sm p-6 mb-6">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">Thêm điểm ngữ pháp mới</h2>
+            <h2 className="text-xl font-bold text-gray-900 mb-4">
+              {editingPointId ? 'Chỉnh sửa điểm ngữ pháp' : 'Thêm điểm ngữ pháp mới'}
+            </h2>
             <div className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -239,24 +267,14 @@ export default function CollectionDetailPage({ params }: CollectionDetailPagePro
               </div>
               <div className="flex gap-3">
                 <button
-                  onClick={handleAddPoint}
+                  onClick={handleSubmitPoint}
                   disabled={!pointForm.structure.trim() || !pointForm.meaning.trim()}
                   className="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Thêm
+                  {editingPointId ? 'Lưu thay đổi' : 'Thêm'}
                 </button>
                 <button
-                  onClick={() => {
-                    setShowAddPoint(false);
-                    setPointForm({
-                      structure: '',
-                      meaning: '',
-                      explanation: '',
-                      mnemonic: '',
-                      level: 'N5',
-                      notes: '',
-                    });
-                  }}
+                  onClick={resetPointForm}
                   className="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition font-medium"
                 >
                   Hủy
@@ -271,7 +289,10 @@ export default function CollectionDetailPage({ params }: CollectionDetailPagePro
           <div className="bg-white rounded-2xl shadow-sm p-12 text-center">
             <p className="text-gray-600 mb-4">Bộ ngữ pháp này chưa có điểm nào</p>
             <button
-              onClick={() => setShowAddPoint(true)}
+              onClick={() => {
+                setEditingPointId(null);
+                setShowAddPoint(true);
+              }}
               className="text-indigo-600 hover:underline font-medium"
             >
               Thêm điểm ngữ pháp đầu tiên
@@ -421,6 +442,12 @@ export default function CollectionDetailPage({ params }: CollectionDetailPagePro
 
                   {/* Action buttons */}
                   <div className="flex gap-2 pt-4 border-t border-gray-200">
+                    <button
+                      onClick={() => handleStartEditPoint(point.id)}
+                      className="px-3 py-2 bg-amber-50 text-amber-700 rounded-lg hover:bg-amber-100 transition font-medium text-sm"
+                    >
+                      📝 Sửa
+                    </button>
                     {deletingPointId === point.id ? (
                       <div className="flex gap-2 flex-1">
                         <button

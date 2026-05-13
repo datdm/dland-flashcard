@@ -9,6 +9,8 @@ interface GrammarFlashCardProps {
   isFavorite: boolean;
   onMarkLearned: (id: string) => void;
   onMarkFavorite: (id: string) => void;
+  onPrev: () => void;
+  onNext: () => void;
 }
 
 export default function GrammarFlashCard({
@@ -17,6 +19,8 @@ export default function GrammarFlashCard({
   isFavorite,
   onMarkLearned,
   onMarkFavorite,
+  onPrev,
+  onNext,
 }: GrammarFlashCardProps) {
   const [isFlipped, setIsFlipped] = useState(false);
   const [showExamples, setShowExamples] = useState(false);
@@ -180,6 +184,21 @@ export default function GrammarFlashCard({
             }`}
           >
             {isFavorite ? '❤️ Yêu thích' : '🤍 Thêm yêu thích'}
+          </button>
+        </div>
+
+        <div className="mt-4 flex gap-3 justify-center">
+          <button
+            onClick={onPrev}
+            className="px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition font-medium"
+          >
+            ← Trước
+          </button>
+          <button
+            onClick={onNext}
+            className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition font-medium"
+          >
+            Tiếp theo →
           </button>
         </div>
 

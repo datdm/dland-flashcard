@@ -48,19 +48,20 @@ export default function Navbar() {
       </header>
 
       {/* Mobile bottom nav */}
-      <nav className="sm:hidden fixed bottom-0 inset-x-0 z-40 bg-white border-t border-gray-200 flex">
+      <nav className="sm:hidden fixed bottom-0 inset-x-0 z-40 bg-white border-t border-gray-200 flex h-14">
         {NAV_ITEMS.map(({ href, label, icon }) => (
           <Link
             key={href}
             href={href}
-            className={`flex flex-1 flex-col items-center justify-center py-2 text-xs font-medium transition-colors ${
+            aria-label={label}
+            title={label}
+            className={`flex flex-1 items-center justify-center py-2 transition-colors ${
               pathname === href
                 ? "text-indigo-700"
                 : "text-gray-500 hover:text-indigo-600"
             }`}
           >
-            <span className="text-lg leading-none mb-0.5">{icon}</span>
-            {label}
+            <span className="text-xl leading-none">{icon}</span>
           </Link>
         ))}
       </nav>

@@ -8,6 +8,20 @@ function generateId(prefix: string): string {
   return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
 }
 
+function reorderByIds<T extends { id: string }>(items: T[], draggedId: string, targetId: string) {
+  if (draggedId === targetId) return items;
+
+  const fromIndex = items.findIndex((item) => item.id === draggedId);
+  const toIndex = items.findIndex((item) => item.id === targetId);
+
+  if (fromIndex === -1 || toIndex === -1) return items;
+
+  const updated = [...items];
+  const [movedItem] = updated.splice(fromIndex, 1);
+  updated.splice(toIndex, 0, movedItem);
+  return updated;
+}
+
 export function useNotebooks() {
   const [notebooks, setNotebooks] = useState<Notebook[]>([]);
 
@@ -58,6 +72,18 @@ export function useNotebooks() {
         const updated = prev.map((nb) =>
           nb.id === id ? { ...nb, name: name.trim() } : nb
         );
+        setItem<NotebooksData>(StorageKeys.NOTEBOOKS, { notebooks: updated });
+        return updated;
+      });
+    },
+    []
+  );
+
+  const reorderNotebooks = useCallback(
+    (draggedNotebookId: string, targetNotebookId: string) => {
+      setNotebooks((prev) => {
+        const updated = reorderByIds(prev, draggedNotebookId, targetNotebookId);
+        if (updated === prev) return prev;
         setItem<NotebooksData>(StorageKeys.NOTEBOOKS, { notebooks: updated });
         return updated;
       });
@@ -143,6 +169,21 @@ export function useNotebooks() {
           return nb;
         });
         
+        setItem<NotebooksData>(StorageKeys.NOTEBOOKS, { notebooks: updated });
+        return updated;
+      });
+    },
+    []
+  );
+
+  const reorderVocabInNotebook = useCallback(
+    (notebookId: string, draggedVocabId: string, targetVocabId: string) => {
+      setNotebooks((prev) => {
+        const updated = prev.map((nb) =>
+          nb.id === notebookId
+            ? { ...nb, vocabulary: reorderByIds(nb.vocabulary, draggedVocabId, targetVocabId) }
+            : nb
+        );
         setItem<NotebooksData>(StorageKeys.NOTEBOOKS, { notebooks: updated });
         return updated;
       });
@@ -345,11 +386,13 @@ export function useNotebooks() {
     createNotebook,
     deleteNotebook,
     renameNotebook,
+    reorderNotebooks,
     getNotebookById,
     addVocab,
     updateVocab,
     deleteVocab,
     moveVocab,
+    reorderVocabInNotebook,
     checkDuplicate,
     exportNotebook,
     exportAllNotebooks,
