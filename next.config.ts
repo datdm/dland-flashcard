@@ -7,6 +7,9 @@ const nextConfig: NextConfig = {
   outputFileTracingExcludes: {
     "*": ['./server/**/*', './server']
   },
+  experimental: {
+    serverComponentsExternalPackages: ['pg', 'bcrypt']
+  }
   // Turbopack is enabled by default in Next.js 16
   // turbopack: {},
 };
