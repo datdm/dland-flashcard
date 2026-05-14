@@ -1,16 +1,12 @@
 "use client";
 
-import { use } from "react";
+import { useParams } from "next/navigation";
 import { useCurriculums } from "@/hooks/useCurriculums";
 import FlashCardViewer from "@/components/FlashCardViewer";
 import Link from "next/link";
 
-export default function LessonFlashcardPage({
-  params,
-}: {
-  params: Promise<{ id: string; lessonId: string }>;
-}) {
-  const { id, lessonId } = use(params);
+export default function LessonFlashcardPage() {
+  const { id, lessonId } = useParams<{ id: string; lessonId: string }>();
   const { getCurriculumById, getLessonById } = useCurriculums();
   const curriculum = getCurriculumById(id);
   const lesson = curriculum ? getLessonById(id, lessonId) : null;

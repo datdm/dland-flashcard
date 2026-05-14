@@ -1,13 +1,13 @@
 ﻿"use client";
 
-import { use } from "react";
+import { useParams } from "next/navigation";
 import { useLessons } from "@/hooks/useLessons";
 import { useProgress } from "@/hooks/useProgress";
 import VocabularyListItem from "@/components/VocabularyListItem";
 import Link from "next/link";
 
-export default function LessonDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params);
+export default function LessonDetailPage() {
+  const { id } = useParams<{ id: string }>();
   const { getLessonById, lessons } = useLessons();
   const { getVocabProgress, toggleLearned, toggleFavorite } = useProgress();
 

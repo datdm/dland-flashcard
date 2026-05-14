@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useRef, useEffect, useMemo, useCallback } from "react";
-import { use } from "react";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import { useNotebooks } from "@/hooks/useNotebooks";
 import { useProgress } from "@/hooks/useProgress";
 import FilterBar, { FilterTab } from "@/components/FilterBar";
@@ -33,8 +33,8 @@ function insertDraggedAtIndex(ids: string[], draggedId: string, insertIndex: num
   return baseIds;
 }
 
-export default function NotebookDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params);
+export default function NotebookDetailPage() {
+  const { id } = useParams<{ id: string }>();
   const { notebooks, save, addVocab, updateVocab, deleteVocab, moveVocab, exportNotebook, importVocabFromJson, checkDuplicate } = useNotebooks();
   const { toggleLearned, toggleFavorite, progress } = useProgress();
   

@@ -1,18 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { use } from "react";
+import { useParams } from "next/navigation";
 import { useCurriculums } from "@/hooks/useCurriculums";
 import { useProgress } from "@/hooks/useProgress";
 import LessonListItem from "@/components/LessonListItem";
 import Link from "next/link";
 
-export default function CurriculumDetailPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = use(params);
+export default function CurriculumDetailPage() {
+  const { id } = useParams<{ id: string }>();
   const { getCurriculumById, addLesson, updateLesson, deleteLesson } = useCurriculums();
   const { progress } = useProgress();
   const curriculum = getCurriculumById(id);

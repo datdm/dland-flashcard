@@ -1,21 +1,16 @@
 'use client';
 
-import { use, useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useParams } from 'next/navigation';
 import { useGrammarCollections } from '@/hooks/useGrammarCollections';
 import { useGrammarProgress } from '@/hooks/useGrammarProgress';
 import GrammarFlashCard from '@/components/GrammarFlashCard';
 import Link from 'next/link';
 
-interface PracticePageProps {
-  params: Promise<{
-    collectionId: string;
-  }>;
-}
-
 type FilterType = 'all' | 'unlearned' | 'learned' | 'favorite';
 
-export default function GrammarPracticePage({ params }: PracticePageProps) {
-  const { collectionId } = use(params);
+export default function GrammarPracticePage() {
+  const { collectionId } = useParams<{ collectionId: string }>();
   const { isLoading, getCollectionById } = useGrammarCollections();
   const { toggleLearned, toggleFavorite, getGrammarProgress } = useGrammarProgress();
 

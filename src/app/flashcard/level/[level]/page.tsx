@@ -1,16 +1,12 @@
 "use client";
 
-import { use } from "react";
+import { useParams } from "next/navigation";
 import { useLessons } from "@/hooks/useLessons";
 import FlashCardViewer from "@/components/FlashCardViewer";
 import Link from "next/link";
 
-export default function FlashCardLevelPage({
-  params,
-}: {
-  params: Promise<{ level: string }>;
-}) {
-  const { level } = use(params);
+export default function FlashCardLevelPage() {
+  const { level } = useParams<{ level: string }>();
   const { lessons } = useLessons();
 
   const levelVocab = lessons

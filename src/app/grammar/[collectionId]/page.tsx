@@ -1,18 +1,13 @@
 'use client';
 
-import { use, useState, useCallback } from 'react';
+import { useState, useCallback } from 'react';
+import { useParams } from 'next/navigation';
 import { useGrammarCollections } from '@/hooks/useGrammarCollections';
 import { useGrammarProgress } from '@/hooks/useGrammarProgress';
 import Link from 'next/link';
 
-interface CollectionDetailPageProps {
-  params: Promise<{
-    collectionId: string;
-  }>;
-}
-
-export default function CollectionDetailPage({ params }: CollectionDetailPageProps) {
-  const { collectionId } = use(params);
+export default function CollectionDetailPage() {
+  const { collectionId } = useParams<{ collectionId: string }>();
   const { isLoading, getCollectionById, addGrammarPoint, updateGrammarPoint, deleteGrammarPoint, addExample, deleteExample } = useGrammarCollections();
   const { getGrammarProgress } = useGrammarProgress();
 

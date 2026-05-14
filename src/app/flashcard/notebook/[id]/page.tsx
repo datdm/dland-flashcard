@@ -1,12 +1,12 @@
 "use client";
 
-import { use } from "react";
+import { useParams } from "next/navigation";
 import { useNotebooks } from "@/hooks/useNotebooks";
 import FlashCardViewer from "@/components/FlashCardViewer";
 import Link from "next/link";
 
-export default function FlashCardNotebookPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params);
+export default function FlashCardNotebookPage() {
+  const { id } = useParams<{ id: string }>();
   const { notebooks } = useNotebooks();
   const notebook = notebooks.find((nb) => nb.id === id);
 

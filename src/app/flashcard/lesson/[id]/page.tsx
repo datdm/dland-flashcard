@@ -1,16 +1,12 @@
 "use client";
 
-import { use } from "react";
+import { useParams } from "next/navigation";
 import { useLessons } from "@/hooks/useLessons";
 import FlashCardViewer from "@/components/FlashCardViewer";
 import Link from "next/link";
 
-export default function FlashCardLessonPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = use(params);
+export default function FlashCardLessonPage() {
+  const { id } = useParams<{ id: string }>();
   const { getLessonById, lessons } = useLessons();
 
   // Wait for lessons to be loaded

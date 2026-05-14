@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { use } from "react";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import { useCurriculums } from "@/hooks/useCurriculums";
 import { useProgress } from "@/hooks/useProgress";
 import VocabularyListItem from "@/components/VocabularyListItem";
@@ -27,12 +27,8 @@ const FIELD_LABELS: { key: keyof VocabFields; label: string; placeholder: string
   { key: "phonetic", label: "Phiên âm", placeholder: "nihongo" },
 ];
 
-export default function LessonDetailPage({
-  params,
-}: {
-  params: Promise<{ id: string; lessonId: string }>;
-}) {
-  const { id, lessonId } = use(params);
+export default function LessonDetailPage() {
+  const { id, lessonId } = useParams<{ id: string; lessonId: string }>();
   const { getCurriculumById, getLessonById, addVocab, updateVocab, deleteVocab, checkDuplicate, exportLesson, importVocabFromJson } = useCurriculums();
   const { toggleLearned, toggleFavorite, progress } = useProgress();
   const curriculum = getCurriculumById(id);
