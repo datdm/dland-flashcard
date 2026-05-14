@@ -1,7 +1,0 @@
-{
-  "buildCommand": "next build",
-  "installCommand": "npm install",
-  "framework": "nextjs",
-  "ignoreCommand": "git diff --quiet HEAD^ HEAD ./src ./public",
-  "regions": ["sin1"]
-}
