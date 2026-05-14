@@ -1,18 +1,12 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Exclude server folder from Next.js compilation
+  // Exclude backend packages from Next.js bundling
   experimental: {
     serverComponentsExternalPackages: ['pg', 'bcrypt'],
   },
-  webpack: (config) => {
-    config.externals.push('./server')
-    return config
-  },
-  turbopack: {
-    // Empty config to acknowledge Turbopack usage
-    // The server folder is already external and won't be bundled
-  },
+  // Turbopack is enabled by default in Next.js 16
+  turbopack: {},
 };
 
 export default nextConfig;
