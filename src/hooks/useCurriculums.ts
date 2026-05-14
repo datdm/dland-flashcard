@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { Curriculum, CurriculumsData, Vocabulary, LessonInCurriculum } from "@/types";
 import { getItem, setItem, StorageKeys } from "@/lib/storage";
 import { DEFAULT_VOCABULARY } from "@/data";
+import { autoSync } from "@/lib/syncService";
 
 function generateId(prefix: string): string {
   return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
@@ -26,6 +27,7 @@ export function useCurriculums() {
   const save = useCallback((updated: Curriculum[]) => {
     setCurriculums(updated);
     setItem<CurriculumsData>(StorageKeys.CURRICULUMS, { curriculums: updated });
+    autoSync(); // Auto-sync after save
   }, []);
 
   // --- Curriculum CRUD ---
@@ -41,6 +43,7 @@ export function useCurriculums() {
       setCurriculums((prev) => {
         const updated = [...prev, curriculum];
         setItem<CurriculumsData>(StorageKeys.CURRICULUMS, { curriculums: updated });
+        autoSync();
         return updated;
       });
       return curriculum;
@@ -55,6 +58,7 @@ export function useCurriculums() {
           c.id === id ? { ...c, name: name.trim() } : c
         );
         setItem<CurriculumsData>(StorageKeys.CURRICULUMS, { curriculums: updated });
+        autoSync();
         return updated;
       });
     },
@@ -66,6 +70,7 @@ export function useCurriculums() {
       setCurriculums((prev) => {
         const updated = prev.filter((c) => c.id !== id);
         setItem<CurriculumsData>(StorageKeys.CURRICULUMS, { curriculums: updated });
+        autoSync();
         return updated;
       });
     },
@@ -93,6 +98,7 @@ export function useCurriculums() {
             : c
         );
         setItem<CurriculumsData>(StorageKeys.CURRICULUMS, { curriculums: updated });
+        autoSync();
         return updated;
       });
       return lesson;
@@ -139,6 +145,7 @@ export function useCurriculums() {
           return c;
         });
         setItem<CurriculumsData>(StorageKeys.CURRICULUMS, { curriculums: updated });
+        autoSync();
         return updated;
       });
 
@@ -161,6 +168,7 @@ export function useCurriculums() {
             : c
         );
         setItem<CurriculumsData>(StorageKeys.CURRICULUMS, { curriculums: updated });
+        autoSync();
         return updated;
       });
     },
@@ -179,6 +187,7 @@ export function useCurriculums() {
             : c
         );
         setItem<CurriculumsData>(StorageKeys.CURRICULUMS, { curriculums: updated });
+        autoSync();
         return updated;
       });
     },
@@ -212,6 +221,7 @@ export function useCurriculums() {
             : c
         );
         setItem<CurriculumsData>(StorageKeys.CURRICULUMS, { curriculums: updated });
+        autoSync();
         return updated;
       });
       return vocab;
@@ -240,6 +250,7 @@ export function useCurriculums() {
             : c
         );
         setItem<CurriculumsData>(StorageKeys.CURRICULUMS, { curriculums: updated });
+        autoSync();
         return updated;
       });
     },
@@ -265,6 +276,7 @@ export function useCurriculums() {
             : c
         );
         setItem<CurriculumsData>(StorageKeys.CURRICULUMS, { curriculums: updated });
+        autoSync();
         return updated;
       });
     },
@@ -360,6 +372,7 @@ export function useCurriculums() {
             : c
         );
         setItem<CurriculumsData>(StorageKeys.CURRICULUMS, { curriculums: updated });
+        autoSync();
         return updated;
       });
       return { imported: count };
@@ -441,6 +454,7 @@ export function useCurriculums() {
 
         const updated = [...prev, newCurriculum];
         setItem<CurriculumsData>(StorageKeys.CURRICULUMS, { curriculums: updated });
+        autoSync();
         return updated;
       });
 

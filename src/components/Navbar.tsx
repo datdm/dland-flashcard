@@ -2,6 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
+import SyncDialog from "./SyncDialog";
+import * as syncService from "@/lib/syncService";
 
 const NAV_ITEMS = [
   { href: "/", label: "Trang chủ", icon: "🏠" },
@@ -15,6 +18,21 @@ const NAV_ITEMS = [
 
 export default function Navbar() {
   const pathname = usePathname();
+  const [showSyncDialog, setShowSyncDialog] = useState(false);
+
+  const handleSyncClick = () => {
+    setShowSyncDialog(true);
+  };
+
+  const handleLogout = () => {
+    if (confirm("Bạn có chắc muốn đăng xuất?")) {
+      syncService.logout();
+      window.location.reload();
+    }
+  };
+
+  const isAuthenticated = syncService.checkAuthStatus();
+  const user = syncService.getUser();
 
   return (
     <>
@@ -38,13 +56,53 @@ export default function Navbar() {
             </Link>
           ))}
         </nav>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleSyncClick}
+            className="px-3 py-1.5 bg-emerald-50 text-emerald-700 rounded-lg hover:bg-emerald-100 transition text-sm font-medium flex items-center gap-1"
+            title="Đồng bộ dữ liệu"
+          >
+            <span>🔄</span>
+            <span className="hidden md:inline">Đồng bộ</span>
+          </button>
+          {isAuthenticated && user && (
+            <>
+              <span className="text-sm text-gray-600 px-2">👤 {user.username}</span>
+              <button
+                onClick={handleLogout}
+                className="px-3 py-1.5 bg-gray-50 text-gray-700 rounded-lg hover:bg-gray-100 transition text-sm"
+                title="Đăng xuất"
+              >
+                Đăng xuất
+              </button>
+            </>
+          )}
+        </div>
       </header>
 
       {/* Mobile top title */}
-      <header className="sm:hidden sticky top-0 z-40 flex items-center bg-white border-b border-gray-200 px-4 h-12 shadow-sm">
+      <header className="sm:hidden sticky top-0 z-40 flex items-center justify-between bg-white border-b border-gray-200 px-4 h-12 shadow-sm">
         <Link href="/" className="font-bold text-indigo-700">
           FlashCash
         </Link>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleSyncClick}
+            className="px-2 py-1 bg-emerald-50 text-emerald-700 rounded-lg text-sm"
+            title="Đồng bộ"
+          >
+            🔄
+          </button>
+          {isAuthenticated && user && (
+            <button
+              onClick={handleLogout}
+              className="px-2 py-1 bg-gray-50 text-gray-700 rounded-lg text-xs"
+              title="Đăng xuất"
+            >
+              👤 Đăng xuất
+            </button>
+          )}
+        </div>
       </header>
 
       {/* Mobile bottom nav */}
@@ -65,6 +123,13 @@ export default function Navbar() {
           </Link>
         ))}
       </nav>
+
+      {/* Sync Dialog */}
+      <SyncDialog 
+        isOpen={showSyncDialog}
+        onClose={() => setShowSyncDialog(false)}
+        onSyncComplete={() => window.location.reload()}
+      />
     </>
   );
 }

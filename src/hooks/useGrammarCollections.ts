@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { GrammarCollection, GrammarCollectionsData, GrammarPoint, GrammarExample } from "@/types";
 import { getItem, setItem, StorageKeys } from "@/lib/storage";
+import { autoSync } from "@/lib/syncService";
 
 function generateId(prefix: string): string {
   return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
@@ -34,6 +35,7 @@ export function useGrammarCollections() {
   const save = useCallback((updated: GrammarCollection[]) => {
     setCollections(updated);
     setItem<GrammarCollectionsData>(StorageKeys.GRAMMAR_COLLECTIONS, { collections: updated });
+    autoSync(); // Auto-sync after save
   }, []);
 
   // --- Collection CRUD ---

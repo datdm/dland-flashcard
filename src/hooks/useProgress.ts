@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { ProgressMap, VocabProgress } from "@/types";
 import { getItem, setItem, StorageKeys } from "@/lib/storage";
+import { autoSync } from "@/lib/syncService";
 
 const defaultProgress = (): VocabProgress => ({ learned: false, favorite: false });
 
@@ -22,6 +23,7 @@ export function useProgress() {
         [id]: { ...current, ...patch },
       };
       setItem(StorageKeys.PROGRESS, updated);
+      autoSync(); // Auto-sync after save
       return updated;
     });
   }, []);
@@ -40,6 +42,7 @@ export function useProgress() {
           },
         };
         setItem(StorageKeys.PROGRESS, updated);
+        autoSync(); // Auto-sync after save
         return updated;
       });
     },
@@ -54,6 +57,7 @@ export function useProgress() {
         [id]: { ...current, favorite: !current.favorite },
       };
       setItem(StorageKeys.PROGRESS, updated);
+      autoSync(); // Auto-sync after save
       return updated;
     });
   }, []);

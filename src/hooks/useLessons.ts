@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { Lesson, LessonsData } from "@/types";
 import { getItem, setItem, StorageKeys } from "@/lib/storage";
+import { autoSync } from "@/lib/syncService";
 
 export function useLessons() {
   const [lessons, setLessons] = useState<Lesson[]>([]);
@@ -17,6 +18,7 @@ export function useLessons() {
   const saveLessons = useCallback((newLessons: Lesson[]) => {
     setLessons(newLessons);
     setItem<LessonsData>(StorageKeys.LESSONS, { lessons: newLessons });
+    autoSync();
   }, []);
 
   const addLessons = useCallback(
@@ -32,6 +34,7 @@ export function useLessons() {
           }
         }
         setItem<LessonsData>(StorageKeys.LESSONS, { lessons: merged });
+        autoSync();
         return merged;
       });
     },
@@ -42,6 +45,7 @@ export function useLessons() {
     setLessons((prev) => {
       const next = prev.filter((l) => l.id !== id);
       setItem<LessonsData>(StorageKeys.LESSONS, { lessons: next });
+      autoSync();
       return next;
     });
   }, []);

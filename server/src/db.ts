@@ -21,10 +21,24 @@ export async function runMigrations() {
   try {
     const fs = require('fs');
     const path = require('path');
-    const migrationPath = path.join(__dirname, '../migrations/001_init.sql');
-    const sql = fs.readFileSync(migrationPath, 'utf8');
-    await client.query(sql);
-    console.log('✅ Database migrations completed');
+    const migrationsDir = path.join(__dirname, '../migrations');
+    
+    // Get all .sql files in migrations directory, sorted by filename
+    const migrationFiles = fs
+      .readdirSync(migrationsDir)
+      .filter((file: string) => file.endsWith('.sql'))
+      .sort();
+    
+    console.log(`Running ${migrationFiles.length} migration(s)...`);
+    
+    for (const file of migrationFiles) {
+      const migrationPath = path.join(migrationsDir, file);
+      const sql = fs.readFileSync(migrationPath, 'utf8');
+      await client.query(sql);
+      console.log(`✅ Migrated: ${file}`);
+    }
+    
+    console.log('✅ All database migrations completed');
   } catch (error) {
     console.error('❌ Error running migrations:', error);
     throw error;

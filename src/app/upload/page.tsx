@@ -5,8 +5,10 @@ import { useCurriculums } from "@/hooks/useCurriculums";
 import { useNotebooks } from "@/hooks/useNotebooks";
 import { useGrammarCollections } from "@/hooks/useGrammarCollections";
 import ExportImportPanel from "@/components/ExportImportPanel";
+import BackupHistoryPanel from "@/components/BackupHistoryPanel";
 import Link from "next/link";
 import { Vocabulary } from "@/types";
+import * as syncService from "@/lib/syncService";
 
 interface ParseResult {
   valid: boolean;
@@ -686,6 +688,18 @@ export default function UploadPage() {
         setSaved(message || '✅ Hoàn tất!');
       }
 
+      // Prompt for sync if logged in
+      if (syncService.checkAuthStatus()) {
+        const shouldSync = confirm('Bạn đã đăng nhập. Bạn có muốn đồng bộ dữ liệu lên server không?');
+        if (shouldSync) {
+          syncService.autoSync().then(() => {
+            console.log('Auto-sync completed after import');
+          }).catch(err => {
+            console.error('Auto-sync failed:', err);
+          });
+        }
+      }
+
       // Reset
       setResult(null);
       setRawData(null);
@@ -979,6 +993,9 @@ export default function UploadPage() {
           </details>
         </div>
       </div>
+
+      {/* Backup History */}
+      <BackupHistoryPanel />
 
       {/* Export/Import panel */}
       <ExportImportPanel />

@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { Notebook, NotebooksData, Vocabulary } from "@/types";
 import { getItem, setItem, StorageKeys } from "@/lib/storage";
+import { autoSync } from "@/lib/syncService";
 
 function generateId(prefix: string): string {
   return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
@@ -33,6 +34,7 @@ export function useNotebooks() {
   const save = useCallback((updated: Notebook[]) => {
     setNotebooks(updated);
     setItem<NotebooksData>(StorageKeys.NOTEBOOKS, { notebooks: updated });
+    autoSync(); // Auto-sync after save
   }, []);
 
   // --- Notebook CRUD ---
@@ -48,6 +50,7 @@ export function useNotebooks() {
       setNotebooks((prev) => {
         const updated = [...prev, notebook];
         setItem<NotebooksData>(StorageKeys.NOTEBOOKS, { notebooks: updated });
+        autoSync();
         return updated;
       });
       return notebook;
@@ -60,6 +63,7 @@ export function useNotebooks() {
       setNotebooks((prev) => {
         const updated = prev.filter((nb) => nb.id !== id);
         setItem<NotebooksData>(StorageKeys.NOTEBOOKS, { notebooks: updated });
+        autoSync();
         return updated;
       });
     },
@@ -73,6 +77,7 @@ export function useNotebooks() {
           nb.id === id ? { ...nb, name: name.trim() } : nb
         );
         setItem<NotebooksData>(StorageKeys.NOTEBOOKS, { notebooks: updated });
+        autoSync();
         return updated;
       });
     },
@@ -85,6 +90,7 @@ export function useNotebooks() {
         const updated = reorderByIds(prev, draggedNotebookId, targetNotebookId);
         if (updated === prev) return prev;
         setItem<NotebooksData>(StorageKeys.NOTEBOOKS, { notebooks: updated });
+        autoSync();
         return updated;
       });
     },
@@ -108,6 +114,7 @@ export function useNotebooks() {
             : nb
         );
         setItem<NotebooksData>(StorageKeys.NOTEBOOKS, { notebooks: updated });
+        autoSync();
         return updated;
       });
       return vocab;
@@ -129,6 +136,7 @@ export function useNotebooks() {
             : nb
         );
         setItem<NotebooksData>(StorageKeys.NOTEBOOKS, { notebooks: updated });
+        autoSync();
         return updated;
       });
     },
@@ -144,6 +152,7 @@ export function useNotebooks() {
             : nb
         );
         setItem<NotebooksData>(StorageKeys.NOTEBOOKS, { notebooks: updated });
+        autoSync();
         return updated;
       });
     },
@@ -170,6 +179,7 @@ export function useNotebooks() {
         });
         
         setItem<NotebooksData>(StorageKeys.NOTEBOOKS, { notebooks: updated });
+        autoSync();
         return updated;
       });
     },
@@ -185,6 +195,7 @@ export function useNotebooks() {
             : nb
         );
         setItem<NotebooksData>(StorageKeys.NOTEBOOKS, { notebooks: updated });
+        autoSync();
         return updated;
       });
     },
@@ -291,6 +302,7 @@ export function useNotebooks() {
         );
         
         setItem<NotebooksData>(StorageKeys.NOTEBOOKS, { notebooks: updated });
+        autoSync();
         return updated;
       });
       

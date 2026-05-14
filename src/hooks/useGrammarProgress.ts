@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { GrammarProgress, GrammarProgressMap } from "@/types";
 import { getItem, setItem, StorageKeys } from "@/lib/storage";
+import { autoSync } from "@/lib/syncService";
 
 const defaultGrammarProgress = (): GrammarProgress => ({
   learned: false,
@@ -32,6 +33,7 @@ export function useGrammarProgress() {
           [grammarId]: { ...current, ...patch },
         };
         setItem(StorageKeys.GRAMMAR_PROGRESS, updated);
+        autoSync(); // Auto-sync after save
         return updated;
       });
     },
@@ -52,6 +54,7 @@ export function useGrammarProgress() {
           },
         };
         setItem(StorageKeys.GRAMMAR_PROGRESS, updated);
+        autoSync(); // Auto-sync after save
         return updated;
       });
     },
@@ -67,6 +70,7 @@ export function useGrammarProgress() {
           [grammarId]: { ...current, favorite: !current.favorite },
         };
         setItem(StorageKeys.GRAMMAR_PROGRESS, updated);
+        autoSync(); // Auto-sync after save
         return updated;
       });
     },
@@ -85,6 +89,7 @@ export function useGrammarProgress() {
           },
         };
         setItem(StorageKeys.GRAMMAR_PROGRESS, updated);
+        autoSync(); // Auto-sync after save
         return updated;
       });
     },
@@ -103,6 +108,7 @@ export function useGrammarProgress() {
           },
         };
         setItem(StorageKeys.GRAMMAR_PROGRESS, updated);
+        autoSync(); // Auto-sync after save
         return updated;
       });
     },

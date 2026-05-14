@@ -4,6 +4,8 @@ import * as dotenv from 'dotenv';
 import { runMigrations } from './db';
 import authRoutes from './routes/auth';
 import syncRoutes from './routes/sync';
+import backupRoutes from './routes/backup';
+import vocabRoutes from './routes/vocab';
 
 dotenv.config();
 
@@ -25,6 +27,8 @@ app.get('/health', (req, res) => {
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/sync', syncRoutes);
+app.use('/api/backup', backupRoutes);
+app.use('/api/vocab', vocabRoutes);
 
 // Error handler
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {

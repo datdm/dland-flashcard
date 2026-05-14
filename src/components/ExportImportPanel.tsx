@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { exportAllData, importAllData } from "@/lib/storage";
+import * as syncService from "@/lib/syncService";
 
 interface ExportImportPanelProps {
   onImportSuccess?: () => void;
@@ -11,7 +12,19 @@ export default function ExportImportPanel({ onImportSuccess }: ExportImportPanel
   const [importError, setImportError] = useState<string | null>(null);
   const [importSuccess, setImportSuccess] = useState(false);
 
-  const handleExport = () => {
+  const handleExport = async () => {
+    // Sync before export if logged in
+    if (syncService.checkAuthStatus()) {
+      const shouldSync = confirm('Bạn đã đăng nhập. Bạn có muốn đồng bộ dữ liệu lên server trước khi export không?');
+      if (shouldSync) {
+        try {
+          await syncService.uploadToServer();
+        } catch (err) {
+          console.error('Sync before export failed:', err);
+        }
+      }
+    }
+
     const data = exportAllData();
     const blob = new Blob([data], { type: "application/json" });
     const url = URL.createObjectURL(blob);
@@ -28,12 +41,24 @@ export default function ExportImportPanel({ onImportSuccess }: ExportImportPanel
     const file = e.target.files?.[0];
     if (!file) return;
     const reader = new FileReader();
-    reader.onload = (ev) => {
+    reader.onload = async (ev) => {
       try {
         const text = ev.target?.result as string;
         importAllData(text);
         setImportSuccess(true);
         onImportSuccess?.();
+
+        // Sync after import if logged in
+        if (syncService.checkAuthStatus()) {
+          const shouldSync = confirm('Import thành công! Bạn có muốn đồng bộ dữ liệu lên server không?');
+          if (shouldSync) {
+            try {
+              await syncService.uploadToServer();
+            } catch (err) {
+              console.error('Sync after import failed:', err);
+            }
+          }
+        }
       } catch {
         setImportError("File không hợp lệ. Vui lòng chọn đúng file backup.");
       }

@@ -126,7 +126,7 @@ export default function CollectionDetailPage({ params }: CollectionDetailPagePro
   const collection = getCollectionById(collectionId);
 
   // Calculate paginated points
-  const totalPages = Math.ceil(collection?.grammarPoints.length || 0 / itemsPerPage);
+  const totalPages = Math.ceil((collection?.grammarPoints.length || 0) / itemsPerPage);
   const startIdx = (currentPage - 1) * itemsPerPage;
   const paginatedPoints = collection?.grammarPoints.slice(startIdx, startIdx + itemsPerPage) || [];
 

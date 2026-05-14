@@ -57,6 +57,37 @@ router.post('/upload', authenticate, async (req: AuthRequest, res: Response) => 
       'flashcash-grammar-progress',
     ];
 
+    // First, backup current data before overwriting
+    const currentDataResult = await client.query(
+      'SELECT data_key, data_value FROM user_data WHERE user_id = $1',
+      [req.userId]
+    );
+
+    if (currentDataResult.rows.length > 0) {
+      // Build backup data object
+      const backupData: Record<string, any> = {};
+      const dataKeys: string[] = [];
+      
+      currentDataResult.rows.forEach((row) => {
+        backupData[row.data_key] = row.data_value;
+        dataKeys.push(row.data_key);
+      });
+
+      // Save backup to backup_history
+      await client.query(
+        `INSERT INTO backup_history (user_id, backup_data, backup_type, data_keys, note)
+         VALUES ($1, $2, $3, $4, $5)`,
+        [
+          req.userId,
+          JSON.stringify(backupData),
+          'auto',
+          dataKeys,
+          'Auto backup before sync upload'
+        ]
+      );
+    }
+
+    // Now upload new data
     for (const [key, value] of Object.entries(data)) {
       if (!validKeys.includes(key)) {
         continue; // Skip invalid keys
