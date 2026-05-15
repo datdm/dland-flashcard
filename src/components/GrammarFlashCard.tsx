@@ -106,32 +106,30 @@ export default function GrammarFlashCard({
                 <div className="absolute -left-20 -bottom-20 w-40 h-40 bg-blue-600 rounded-full"></div>
               </div>
               {/* Inner wrapper to prevent text mirroring */}
-              <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-                <div className="relative z-10 text-center w-full">
-                  <p className="text-sm font-semibold text-emerald-600 uppercase tracking-wider mb-4">
-                    Ý Nghĩa
+              <div className="relative z-10 text-center w-full">
+                <p className="text-sm font-semibold text-emerald-600 uppercase tracking-wider mb-4">
+                  Ý Nghĩa
+                </p>
+                <p className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                  {point.meaning}
+                </p>
+                {point.mnemonic && (
+                  <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-4 text-sm text-amber-900">
+                    <p className="font-semibold mb-1">💡 Mẹo nhớ:</p>
+                    <p>{point.mnemonic}</p>
+                  </div>
+                )}
+                {point.explanation && (
+                  <p className="text-gray-700 text-sm leading-relaxed mb-4">
+                    {point.explanation}
                   </p>
-                  <p className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                    {point.meaning}
-                  </p>
-                  {point.mnemonic && (
-                    <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-4 text-sm text-amber-900">
-                      <p className="font-semibold mb-1">💡 Mẹo nhớ:</p>
-                      <p>{point.mnemonic}</p>
-                    </div>
-                  )}
-                  {point.explanation && (
-                    <p className="text-gray-700 text-sm leading-relaxed mb-4">
-                      {point.explanation}
-                    </p>
-                  )}
-                  <p className="text-gray-400 text-sm">Nhấn để xem cấu trúc</p>
-                </div>
+                )}
+                <p className="text-gray-400 text-sm">Nhấn để xem cấu trúc</p>
+              </div>
 
-                {/* Flip indicator */}
-                <div className="absolute top-4 right-4 text-gray-300 text-sm">
-                  ↻ Lật
-                </div>
+              {/* Flip indicator */}
+              <div className="absolute top-4 right-4 text-gray-300 text-sm">
+                ↻ Lật
               </div>
             </div>
           </div>
