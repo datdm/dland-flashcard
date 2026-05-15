@@ -100,14 +100,13 @@ export default function GrammarFlashCard({
               }}
               className="bg-white rounded-2xl shadow-lg p-8 md:p-12 flex flex-col justify-center items-center cursor-pointer hover:shadow-xl transition relative overflow-hidden"
             >
+              {/* Background pattern */}
+              <div className="absolute inset-0 opacity-5 pointer-events-none">
+                <div className="absolute -right-20 -top-20 w-40 h-40 bg-indigo-600 rounded-full"></div>
+                <div className="absolute -left-20 -bottom-20 w-40 h-40 bg-blue-600 rounded-full"></div>
+              </div>
               {/* Inner wrapper to prevent text mirroring */}
-              <div style={{ transform: 'scaleX(-1)', width: '100%', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-                {/* Background pattern */}
-                <div className="absolute inset-0 opacity-5 pointer-events-none">
-                  <div className="absolute -right-20 -top-20 w-40 h-40 bg-indigo-600 rounded-full"></div>
-                  <div className="absolute -left-20 -bottom-20 w-40 h-40 bg-blue-600 rounded-full"></div>
-                </div>
-
+              <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
                 <div className="relative z-10 text-center w-full">
                   <p className="text-sm font-semibold text-emerald-600 uppercase tracking-wider mb-4">
                     Ý Nghĩa
