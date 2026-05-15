@@ -101,7 +101,7 @@ export default function GrammarFlashCard({
               className="bg-white rounded-2xl shadow-lg p-8 md:p-12 flex flex-col justify-center items-center cursor-pointer hover:shadow-xl transition relative overflow-hidden"
             >
               {/* Inner wrapper to prevent text mirroring */}
-              <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+              <div style={{ transform: 'scaleX(-1)', width: '100%', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
                 {/* Background pattern */}
                 <div className="absolute inset-0 opacity-5 pointer-events-none">
                   <div className="absolute -right-20 -top-20 w-40 h-40 bg-indigo-600 rounded-full"></div>
