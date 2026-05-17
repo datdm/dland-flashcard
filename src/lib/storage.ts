@@ -185,3 +185,53 @@ export function initializeSampleData(): void {
       // Silent failure - sample data optional
     });
 }
+
+// Streak tracking
+export const STREAK_KEY = 'flashcash-streak';
+
+export interface StreakData {
+  currentStreak: number;
+  longestStreak: number;
+  lastStreakDate: string;
+}
+
+export function getStreak(): StreakData {
+  if (typeof window === 'undefined') {
+    return { currentStreak: 0, longestStreak: 0, lastStreakDate: '' };
+  }
+  const data = localStorage.getItem(STREAK_KEY);
+  if (!data) {
+    return { currentStreak: 0, longestStreak: 0, lastStreakDate: '' };
+  }
+  try {
+    return JSON.parse(data);
+  } catch {
+    return { currentStreak: 0, longestStreak: 0, lastStreakDate: '' };
+  }
+}
+
+export function updateStreak(): void {
+  if (typeof window === 'undefined') return;
+  const today = new Date().toISOString().split('T')[0];
+  const streak = getStreak();
+  if (streak.lastStreakDate === today) {
+    return;
+  }
+  if (streak.lastStreakDate) {
+    const lastDate = new Date(streak.lastStreakDate);
+    const currentDate = new Date(today);
+    const daysDiff = Math.floor((currentDate.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24));
+    if (daysDiff > 1) {
+      streak.currentStreak = 1;
+    } else if (daysDiff === 1) {
+      streak.currentStreak++;
+    }
+  } else {
+    streak.currentStreak = 1;
+  }
+  if (streak.currentStreak > streak.longestStreak) {
+    streak.longestStreak = streak.currentStreak;
+  }
+  streak.lastStreakDate = today;
+  localStorage.setItem(STREAK_KEY, JSON.stringify(streak));
+}

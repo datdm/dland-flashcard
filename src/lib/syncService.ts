@@ -165,7 +165,7 @@ export async function hasServerData(): Promise<{ hasData: boolean; lastSyncAt: s
 }
 
 // Upload local data to server
-export async function uploadToServer(): Promise<{ success: boolean; error?: string }> {
+export async function uploadToServer(skipBackup: boolean = false): Promise<{ success: boolean; error?: string }> {
   const token = getAuthToken();
   if (!token) return { success: false, error: 'Not authenticated' };
 
@@ -185,7 +185,8 @@ export async function uploadToServer(): Promise<{ success: boolean; error?: stri
       }
     }
 
-    const response = await fetch(`${API_URL}/api/sync/upload`, {
+    const url = skipBackup ? `${API_URL}/api/sync/upload?skipBackup=true` : `${API_URL}/api/sync/upload`;
+    const response = await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -304,10 +305,36 @@ export async function autoSync(): Promise<void> {
   if (!checkAuthStatus()) return;
   
   try {
-    await uploadToServer();
+    await uploadToServer(true); // Skip backup for auto-sync
   } catch (error) {
     console.error('Auto-sync error:', error);
     // Silently fail - don't disrupt user experience
+  }
+}
+
+// Delete all backups for current user
+export async function deleteAllBackups(): Promise<{ success: boolean; deletedCount: number; error?: string }> {
+  const token = getAuthToken();
+  if (!token) return { success: false, deletedCount: 0, error: 'Not authenticated' };
+
+  try {
+    const response = await fetch(`${API_URL}/api/backup/all`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      return { success: false, deletedCount: 0, error: errorData.error || 'Delete failed' };
+    }
+
+    const data = await response.json();
+    return { success: true, deletedCount: data.deletedCount };
+  } catch (error) {
+    console.error('Error deleting all backups:', error);
+    return { success: false, deletedCount: 0, error: String(error) };
   }
 }
 
@@ -451,6 +478,103 @@ export async function checkVocabDuplicate(
   } catch (error) {
     console.error('Check duplicate error:', error);
     return { isDuplicate: false, duplicates: [] };
+  }
+}
+
+// === Load individual sections from server ===
+
+// Load notebooks from server
+export async function loadNotebooksFromServer(): Promise<any[]> {
+  const token = getAuthToken();
+  if (!token) return [];
+
+  try {
+    const response = await fetch(`${API_URL}/api/data/notebooks`, {
+      headers: { 'Authorization': `Bearer ${token}` },
+    });
+
+    if (!response.ok) throw new Error('Failed to load notebooks');
+    const data = await response.json();
+    return data.data || [];
+  } catch (error) {
+    console.error('Load notebooks error:', error);
+    return [];
+  }
+}
+
+// Load curriculums from server
+export async function loadCurriculumsFromServer(): Promise<any[]> {
+  const token = getAuthToken();
+  if (!token) return [];
+
+  try {
+    const response = await fetch(`${API_URL}/api/data/curriculums`, {
+      headers: { 'Authorization': `Bearer ${token}` },
+    });
+
+    if (!response.ok) throw new Error('Failed to load curriculums');
+    const data = await response.json();
+    return data.data || [];
+  } catch (error) {
+    console.error('Load curriculums error:', error);
+    return [];
+  }
+}
+
+// Load grammar collections from server
+export async function loadGrammarCollectionsFromServer(): Promise<any[]> {
+  const token = getAuthToken();
+  if (!token) return [];
+
+  try {
+    const response = await fetch(`${API_URL}/api/data/grammar-collections`, {
+      headers: { 'Authorization': `Bearer ${token}` },
+    });
+
+    if (!response.ok) throw new Error('Failed to load grammar collections');
+    const data = await response.json();
+    return data.data || [];
+  } catch (error) {
+    console.error('Load grammar collections error:', error);
+    return [];
+  }
+}
+
+// Load progress data from server
+export async function loadProgressFromServer(): Promise<{ vocabulary: Record<string, any>; grammar: Record<string, any> }> {
+  const token = getAuthToken();
+  if (!token) return { vocabulary: {}, grammar: {} };
+
+  try {
+    const response = await fetch(`${API_URL}/api/data/progress`, {
+      headers: { 'Authorization': `Bearer ${token}` },
+    });
+
+    if (!response.ok) throw new Error('Failed to load progress');
+    const data = await response.json();
+    return data.data || { vocabulary: {}, grammar: {} };
+  } catch (error) {
+    console.error('Load progress error:', error);
+    return { vocabulary: {}, grammar: {} };
+  }
+}
+
+// Load settings from server
+export async function loadSettingsFromServer(): Promise<Record<string, any>> {
+  const token = getAuthToken();
+  if (!token) return {};
+
+  try {
+    const response = await fetch(`${API_URL}/api/data/settings`, {
+      headers: { 'Authorization': `Bearer ${token}` },
+    });
+
+    if (!response.ok) throw new Error('Failed to load settings');
+    const data = await response.json();
+    return data.data || {};
+  } catch (error) {
+    console.error('Load settings error:', error);
+    return {};
   }
 }
 

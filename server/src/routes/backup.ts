@@ -159,4 +159,27 @@ router.post('/:id/restore', authenticate, async (req: AuthRequest, res: Response
   }
 });
 
+// Delete all backups for current user
+router.delete('/all', authenticate, async (req: AuthRequest, res: Response) => {
+  try {
+    const userId = req.userId;
+    
+    const result = await pool.query(
+      `DELETE FROM backup_history 
+       WHERE user_id = $1
+       RETURNING id`,
+      [userId]
+    );
+
+    res.json({ 
+      success: true, 
+      deletedCount: result.rows.length,
+      message: `Đã xóa ${result.rows.length} backup` 
+    });
+  } catch (error) {
+    console.error('Error deleting all backups:', error);
+    res.status(500).json({ error: 'Lỗi khi xóa tất cả backup' });
+  }
+});
+
 export default router;

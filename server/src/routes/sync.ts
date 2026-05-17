@@ -43,6 +43,7 @@ router.post('/upload', authenticate, async (req: AuthRequest, res: Response) => 
   }
 
   const client = await pool.connect();
+  const skipBackup = req.query.skipBackup === 'true';
   
   try {
     await client.query('BEGIN');
@@ -57,13 +58,14 @@ router.post('/upload', authenticate, async (req: AuthRequest, res: Response) => 
       'flashcash-grammar-progress',
     ];
 
-    // First, backup current data before overwriting
-    const currentDataResult = await client.query(
-      'SELECT data_key, data_value FROM user_data WHERE user_id = $1',
-      [req.userId]
-    );
+    // First, backup current data before overwriting (skip if auto-sync)
+    if (!skipBackup) {
+      const currentDataResult = await client.query(
+        'SELECT data_key, data_value FROM user_data WHERE user_id = $1',
+        [req.userId]
+      );
 
-    if (currentDataResult.rows.length > 0) {
+      if (currentDataResult.rows.length > 0) {
       // Build backup data object
       const backupData: Record<string, any> = {};
       const dataKeys: string[] = [];
@@ -85,6 +87,7 @@ router.post('/upload', authenticate, async (req: AuthRequest, res: Response) => 
           'Auto backup before sync upload'
         ]
       );
+      }
     }
 
     // Now upload new data

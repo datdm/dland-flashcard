@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { GrammarPoint } from '@/types';
 
 interface GrammarFlashCardProps {
@@ -24,6 +24,28 @@ export default function GrammarFlashCard({
 }: GrammarFlashCardProps) {
   const [isFlipped, setIsFlipped] = useState(false);
   const [showExamples, setShowExamples] = useState(false);
+  const touchStartX = useRef(0);
+  const touchStartY = useRef(0);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    const touchEndX = e.changedTouches[0].clientX;
+    const touchEndY = e.changedTouches[0].clientY;
+    const deltaX = touchEndX - touchStartX.current;
+    const deltaY = Math.abs(touchEndY - touchStartY.current);
+    if (deltaY > Math.abs(deltaX)) return;
+    if (Math.abs(deltaX) > 80) {
+      if (deltaX > 0) {
+        onPrev();
+      } else {
+        onNext();
+      }
+    }
+  };
 
   return (
     <div className="w-full h-full flex items-center justify-center p-4">
@@ -36,6 +58,8 @@ export default function GrammarFlashCard({
             cursor: 'pointer',
           }}
           onClick={() => setIsFlipped(!isFlipped)}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
           className="mb-6 relative"
         >
           <div
@@ -105,7 +129,7 @@ export default function GrammarFlashCard({
                 <div className="absolute -right-20 -top-20 w-40 h-40 bg-indigo-600 rounded-full"></div>
                 <div className="absolute -left-20 -bottom-20 w-40 h-40 bg-blue-600 rounded-full"></div>
               </div>
-              {/* Inner wrapper to prevent text mirroring */}
+
               <div className="relative z-10 text-center w-full">
                 <p className="text-sm font-semibold text-emerald-600 uppercase tracking-wider mb-4">
                   Ý Nghĩa
@@ -170,19 +194,21 @@ export default function GrammarFlashCard({
         <div className="flex gap-3 justify-center flex-wrap">
           <button
             onClick={() => onMarkLearned(point.id)}
-            className={`px-6 py-3 rounded-lg transition font-medium ${isLearned
+            className={`px-6 py-3 rounded-lg transition font-medium ${
+              isLearned
                 ? 'bg-emerald-600 text-white hover:bg-emerald-700'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
+            }`}
           >
             {isLearned ? '✅ Đã học' : '⭕ Chưa học'}
           </button>
           <button
             onClick={() => onMarkFavorite(point.id)}
-            className={`px-6 py-3 rounded-lg transition font-medium ${isFavorite
+            className={`px-6 py-3 rounded-lg transition font-medium ${
+              isFavorite
                 ? 'bg-red-600 text-white hover:bg-red-700'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
+            }`}
           >
             {isFavorite ? '❤️ Yêu thích' : '🤍 Thêm yêu thích'}
           </button>

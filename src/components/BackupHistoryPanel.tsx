@@ -9,6 +9,7 @@ export default function BackupHistoryPanel() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [restoring, setRestoring] = useState<string | null>(null);
+  const [deletingAll, setDeletingAll] = useState(false);
 
   const loadBackups = async () => {
     if (!syncService.checkAuthStatus()) {
@@ -65,6 +66,28 @@ export default function BackupHistoryPanel() {
     }
   };
 
+  const handleDeleteAll = async () => {
+    if (!confirm("⚠️ Bạn có chắc muốn xóa TẤT CẢ backup? Hành động này không thể hoàn tác!")) {
+      return;
+    }
+
+    setDeletingAll(true);
+    try {
+      const result = await syncService.deleteAllBackups();
+      if (result.success) {
+        alert(`✅ Đã xóa ${result.deletedCount} backup`);
+        await loadBackups(); // Reload list
+      } else {
+        alert(`❌ ${result.error}`);
+      }
+    } catch (err) {
+      console.error("Failed to delete all backups:", err);
+      alert("❌ Lỗi khi xóa tất cả backup");
+    } finally {
+      setDeletingAll(false);
+    }
+  };
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleString("vi-VN", {
@@ -82,15 +105,26 @@ export default function BackupHistoryPanel() {
 
   return (
     <div className="border border-gray-200 rounded-2xl p-5 space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-2">
         <h2 className="font-bold text-gray-800">📦 Lịch sử Backup</h2>
-        <button
-          onClick={loadBackups}
-          disabled={loading}
-          className="text-xs px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg text-gray-600 transition-colors disabled:opacity-50"
-        >
-          {loading ? "⏳ Đang tải..." : "🔄 Tải lại"}
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={loadBackups}
+            disabled={loading}
+            className="text-xs px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg text-gray-600 transition-colors disabled:opacity-50"
+          >
+            {loading ? "⏳ Đang tải..." : "🔄 Tải lại"}
+          </button>
+          {backups.length > 0 && (
+            <button
+              onClick={handleDeleteAll}
+              disabled={loading || deletingAll}
+              className="text-xs px-3 py-1 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg transition-colors disabled:opacity-50 whitespace-nowrap"
+            >
+              {deletingAll ? "⏳" : "🗑️ Xóa tất cả"}
+            </button>
+          )}
+        </div>
       </div>
 
       <p className="text-sm text-gray-500">

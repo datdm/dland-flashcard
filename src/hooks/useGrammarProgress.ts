@@ -1,8 +1,8 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { GrammarProgress, GrammarProgressMap } from "@/types";
-import { getItem, setItem, StorageKeys } from "@/lib/storage";
+import { getItem, setItem, StorageKeys, updateStreak } from "@/lib/storage";
 import { autoSync } from "@/lib/syncService";
 
 const defaultGrammarProgress = (): GrammarProgress => ({
@@ -53,6 +53,9 @@ export function useGrammarProgress() {
             learnedAt: learned ? new Date().toISOString() : undefined,
           },
         };
+        if (learned) {
+          updateStreak();
+        }
         setItem(StorageKeys.GRAMMAR_PROGRESS, updated);
         autoSync(); // Auto-sync after save
         return updated;
@@ -132,3 +135,4 @@ export function useGrammarProgress() {
     getGrammarProgress,
   };
 }
+

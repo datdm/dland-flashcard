@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -11,9 +11,9 @@ const NAV_ITEMS = [
   { href: "/notebooks", label: "Sổ tay", icon: "📓" },
   { href: "/curriculums", label: "Giáo trình", icon: "📚" },
   { href: "/grammar", label: "Ngữ pháp", icon: "📖" },
-  { href: "/vocabulary", label: "Từ vựng", icon: "📕" },
-  { href: "/flashcard/all", label: "Ôn tập", icon: "🃏" },
-  { href: "/upload", label: "Upload", icon: "📤" },
+  { href: "/vocabulary", label: "Từ vựng", icon: "📝" },
+  { href: "/flashcard/all", label: "Ôn tập", icon: "🎴" },
+  { href: "/settings", label: "Cài đặt", icon: "⚙️" },
 ];
 
 export default function Navbar() {
@@ -63,11 +63,11 @@ export default function Navbar() {
             title="Đồng bộ dữ liệu"
           >
             <span>🔄</span>
-            <span className="hidden md:inline">Đồng bộ</span>
+            <span className="hidden md:inline">Đồng bộ dữ liệu</span>
           </button>
           {isAuthenticated && user && (
             <>
-              <span className="text-sm text-gray-600 px-2">👤 {user.username}</span>
+            <span className="text-sm text-gray-600 px-2">👤 {user.username}</span>
               <button
                 onClick={handleLogout}
                 className="px-3 py-1.5 bg-gray-50 text-gray-700 rounded-lg hover:bg-gray-100 transition text-sm"
@@ -133,3 +133,4 @@ export default function Navbar() {
     </>
   );
 }
+

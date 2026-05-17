@@ -52,6 +52,7 @@ export function useGrammarCollections() {
       setCollections((prev) => {
         const updated = [...prev, collection];
         setItem<GrammarCollectionsData>(StorageKeys.GRAMMAR_COLLECTIONS, { collections: updated });
+        autoSync();
         return updated;
       });
       return collection;
@@ -72,6 +73,7 @@ export function useGrammarCollections() {
             : c
         );
         setItem<GrammarCollectionsData>(StorageKeys.GRAMMAR_COLLECTIONS, { collections: updated });
+        autoSync();
         return updated;
       });
     },
@@ -83,6 +85,7 @@ export function useGrammarCollections() {
       setCollections((prev) => {
         const updated = prev.filter((c) => c.id !== id);
         setItem<GrammarCollectionsData>(StorageKeys.GRAMMAR_COLLECTIONS, { collections: updated });
+        autoSync();
         return updated;
       });
     },
@@ -127,6 +130,7 @@ export function useGrammarCollections() {
             : c
         );
         setItem<GrammarCollectionsData>(StorageKeys.GRAMMAR_COLLECTIONS, { collections: updated });
+        autoSync();
         return updated;
       });
 
@@ -153,6 +157,7 @@ export function useGrammarCollections() {
             : c
         );
         setItem<GrammarCollectionsData>(StorageKeys.GRAMMAR_COLLECTIONS, { collections: updated });
+        autoSync();
         return updated;
       });
     },
@@ -171,6 +176,7 @@ export function useGrammarCollections() {
             : c
         );
         setItem<GrammarCollectionsData>(StorageKeys.GRAMMAR_COLLECTIONS, { collections: updated });
+        autoSync();
         return updated;
       });
     },
@@ -220,6 +226,7 @@ export function useGrammarCollections() {
             : c
         );
         setItem<GrammarCollectionsData>(StorageKeys.GRAMMAR_COLLECTIONS, { collections: updated });
+        autoSync();
         return updated;
       });
 
@@ -254,6 +261,7 @@ export function useGrammarCollections() {
             : c
         );
         setItem<GrammarCollectionsData>(StorageKeys.GRAMMAR_COLLECTIONS, { collections: updated });
+        autoSync();
         return updated;
       });
     },
@@ -279,6 +287,7 @@ export function useGrammarCollections() {
             : c
         );
         setItem<GrammarCollectionsData>(StorageKeys.GRAMMAR_COLLECTIONS, { collections: updated });
+        autoSync();
         return updated;
       });
     },

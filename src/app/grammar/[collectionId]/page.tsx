@@ -321,9 +321,9 @@ export default function CollectionDetailPage() {
                     <div className="flex flex-col items-end gap-2">
                       <div className="text-right">
                         {progress.learned ? (
-                          <span className="text-lg">✅ Đã học</span>
+                          <span className="text-lg">✅ <span className="hidden sm:inline">Đã học</span></span>
                         ) : (
-                          <span className="text-lg text-gray-400">⭕ Chưa học</span>
+                          <span className="text-lg text-gray-400">⭕ <span className="hidden sm:inline">Chưa học</span></span>
                         )}
                       </div>
                       {progress.favorite && <span className="text-2xl">❤️</span>}

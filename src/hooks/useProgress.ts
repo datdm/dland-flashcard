@@ -1,8 +1,8 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { ProgressMap, VocabProgress } from "@/types";
-import { getItem, setItem, StorageKeys } from "@/lib/storage";
+import { getItem, setItem, StorageKeys, updateStreak } from "@/lib/storage";
 import { autoSync } from "@/lib/syncService";
 
 const defaultProgress = (): VocabProgress => ({ learned: false, favorite: false });
@@ -41,6 +41,9 @@ export function useProgress() {
             learnedAt: learned ? new Date().toISOString() : undefined,
           },
         };
+        if (learned) {
+          updateStreak();
+        }
         setItem(StorageKeys.PROGRESS, updated);
         autoSync(); // Auto-sync after save
         return updated;
@@ -69,3 +72,4 @@ export function useProgress() {
 
   return { progress, toggleLearned, toggleFavorite, updateProgress, getVocabProgress };
 }
+

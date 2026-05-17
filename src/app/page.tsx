@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect } from "react";
 import { useNotebooks } from "@/hooks/useNotebooks";
@@ -6,6 +6,7 @@ import { useCurriculums } from "@/hooks/useCurriculums";
 import { useProgress } from "@/hooks/useProgress";
 import { useGrammarCollections } from "@/hooks/useGrammarCollections";
 import { useGrammarProgress } from "@/hooks/useGrammarProgress";
+import { useStreak } from "@/hooks/useStreak";
 import { initializeSampleData } from "@/lib/storage";
 import CurriculumCard from "@/components/CurriculumCard";
 import Link from "next/link";
@@ -16,6 +17,7 @@ export default function HomePage() {
   const { progress } = useProgress();
   const { collections } = useGrammarCollections();
   const { getGrammarProgress } = useGrammarProgress();
+  const streak = useStreak();
 
   // Initialize sample data on first visit
   useEffect(() => {
@@ -101,6 +103,25 @@ export default function HomePage() {
           </div>
         )}
 
+        {/* Streak section */}
+        {streak.currentStreak > 0 && (
+          <div className="bg-gradient-to-r from-orange-400 to-red-500 rounded-2xl p-6 text-white shadow-lg mb-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm opacity-90">Chuỗi học tập</p>
+                <p className="text-4xl font-bold">🔥 {streak.currentStreak} ngày liên tiếp</p>
+                <p className="text-sm opacity-90 mt-1">Lần cuối: {new Date(streak.lastStreakDate).toLocaleDateString('vi-VN')}</p>
+              </div>
+              {streak.longestStreak > 0 && (
+                <div className="text-right">
+                  <p className="text-sm opacity-90">Kỷ lục</p>
+                  <p className="text-2xl font-bold">🏆 {streak.longestStreak}</p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
         {/* Notebooks section */}
         {notebooks.length > 0 && (
           <section className="mb-8">
@@ -133,7 +154,7 @@ export default function HomePage() {
                     <div className="mt-4">
                       <div className="flex justify-between text-xs text-gray-400 mb-1">
                         <span>
-                          {totalLearned}/{totalVocab} đã học
+                          {totalLearned}/{totalVocab} Đã học
                         </span>
                         <span>{pct}%</span>
                       </div>
@@ -201,7 +222,7 @@ export default function HomePage() {
                 href="/grammar"
                 className="text-sm text-indigo-600 hover:underline font-semibold"
               >
-                📖 Ngữ pháp ({collections.length})
+                🗂️ Ngữ pháp ({collections.length})
               </Link>
               <Link
                 href={collections[0] ? `/grammar/practice/${collections[0].id}` : "/grammar"}
@@ -228,14 +249,14 @@ export default function HomePage() {
                         )}
                       </div>
                       <span className="text-xs bg-sky-50 text-sky-600 rounded-full px-2.5 py-1 whitespace-nowrap font-medium">
-                        {totalCount} điểm
+                        {totalCount} Điểm
                       </span>
                     </div>
 
                     <div className="mt-4">
                       <div className="flex justify-between text-xs text-gray-400 mb-1">
                         <span>
-                          {learnedCount}/{totalCount} đã học • {unlearnedCount} chưa học
+                          {learnedCount}/{totalCount} Đã học – {unlearnedCount} chưa học
                         </span>
                         <span>{progressPercentage}%</span>
                       </div>
@@ -275,7 +296,7 @@ export default function HomePage() {
             href="/flashcard/all"
             className="flex-1 text-center bg-indigo-600 text-white rounded-2xl py-3 font-bold hover:bg-indigo-700 transition-colors"
           >
-            Ôn tập tổng hợp
+            Ôn tập tỏng hợp
           </Link>
           <Link
             href="/flashcard/favorites"

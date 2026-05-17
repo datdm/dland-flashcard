@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import * as syncService from '@/lib/syncService';
 
-type DialogState = 'closed' | 'login' | 'register' | 'choose-direction' | 'change-password' | 'syncing' | 'complete' | 'error';
+type DialogState = 'closed' | 'login' | 'register' | 'choose-direction' | 'syncing' | 'complete' | 'error';
 
 interface SyncDialogProps {
   isOpen: boolean;
@@ -15,9 +15,6 @@ export default function SyncDialog({ isOpen, onClose, onSyncComplete }: SyncDial
   const [state, setState] = useState<DialogState>('login');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [currentPassword, setCurrentPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [hasLocalData, setHasLocalData] = useState(false);
   const [hasServerData, setHasServerData] = useState(false);
@@ -124,41 +121,6 @@ export default function SyncDialog({ isOpen, onClose, onSyncComplete }: SyncDial
     } else {
       setError(result.error || 'Tải xuống thất bại');
       setState('error');
-    }
-  };
-
-  const handleChangePassword = async () => {
-    if (!currentPassword.trim() || !newPassword.trim() || !confirmPassword.trim()) {
-      setError('Vui lòng nhập đầy đủ thông tin');
-      return;
-    }
-
-    if (newPassword.length < 6) {
-      setError('Mật khẩu mới phải có ít nhất 6 ký tự');
-      return;
-    }
-
-    if (newPassword !== confirmPassword) {
-      setError('Mật khẩu xác nhận không khớp');
-      return;
-    }
-
-    setState('syncing');
-    setError('');
-
-    const result = await syncService.changePassword(currentPassword, newPassword);
-    
-    if (result.success) {
-      setState('complete');
-      setCurrentPassword('');
-      setNewPassword('');
-      setConfirmPassword('');
-      setTimeout(() => {
-        onClose();
-      }, 2000);
-    } else {
-      setError(result.error || 'Đổi mật khẩu thất bại');
-      setState('change-password');
     }
   };
 
@@ -349,87 +311,6 @@ export default function SyncDialog({ isOpen, onClose, onSyncComplete }: SyncDial
                 ⚠️ Lưu ý: Dữ liệu hiện tại sẽ bị ghi đè. Hãy chắc chắn trước khi thực hiện.
               </div>
             )}
-
-            <div className="mt-4 pt-4 border-t border-gray-200">
-              <button
-                onClick={() => setState('change-password')}
-                className="w-full px-4 py-2 bg-gray-50 text-gray-700 rounded-lg hover:bg-gray-100 transition font-medium text-sm flex items-center justify-center gap-2"
-              >
-                <span>🔑</span>
-                <span>Đổi mật khẩu</span>
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Change Password State */}
-        {state === 'change-password' && (
-          <div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Đổi mật khẩu</h2>
-            <p className="text-gray-600 mb-6">
-              Thay đổi mật khẩu tài khoản của bạn
-            </p>
-
-            <div className="space-y-4 mb-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Mật khẩu hiện tại
-                </label>
-                <input
-                  type="password"
-                  value={currentPassword}
-                  onChange={(e) => setCurrentPassword(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                  placeholder="••••••"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Mật khẩu mới (ít nhất 6 ký tự)
-                </label>
-                <input
-                  type="password"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                  placeholder="••••••"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Xác nhận mật khẩu mới
-                </label>
-                <input
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                  placeholder="••••••"
-                  onKeyPress={(e) => e.key === 'Enter' && handleChangePassword()}
-                />
-              </div>
-            </div>
-
-            {error && (
-              <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
-                {error}
-              </div>
-            )}
-
-            <div className="flex gap-3">
-              <button
-                onClick={handleChangePassword}
-                className="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition font-medium"
-              >
-                Đổi mật khẩu
-              </button>
-              <button
-                onClick={() => setState('choose-direction')}
-                className="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition font-medium"
-              >
-                Quay lại
-              </button>
-            </div>
           </div>
         )}
 
