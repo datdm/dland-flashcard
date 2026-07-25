@@ -1,0 +1,67 @@
+{
+  "level": "N4",
+  "title": "N4 - Sơ cấp 2 (Minna no Nihongo II)",
+  "description": "Nâng cao bài 26 - 50: Động từ thể khả năng, thể bị động, sai khiến, kính ngữ và câu điều kiện",
+  "lessons": [
+    {
+      "id": "minna-n4-26",
+      "name": "Bài 26: Thể Thông Dụng + んです",
+      "description": "Giải thích nguyên nhân, lý do, yêu cầu giải thích hoặc tạo sự thân mật với mẫu câu んです",
+      "level": "N4",
+      "curriculum": "Minna no Nihongo II",
+      "vocabulary": [
+        { "id": "n4-26-01", "kanji": "診ます", "hiragana": "みます", "onyomi": "CHẨN", "meaning": "Khám (bệnh)", "phonetic": "mimasu" },
+        { "id": "n4-26-02", "kanji": "探します", "hiragana": "さがします", "onyomi": "THÁM", "meaning": "Tìm kiếm", "phonetic": "sagashimasu" },
+        { "id": "n4-26-03", "kanji": "遅れます", "hiragana": "おくれます", "onyomi": "TRĨ", "meaning": "Muộn, trễ (cuộc hẹn, giờ)", "phonetic": "okuremasu" },
+        { "id": "n4-26-04", "kanji": "間に合います", "hiragana": "まにあいます", "onyomi": "GIAN HỢP", "meaning": "Kịp (giờ, thời hạn)", "phonetic": "maniaimasu" },
+        { "id": "n4-26-05", "kanji": "やります", "hiragana": "やります", "onyomi": "", "meaning": "Làm, thực hiện (văn nói)", "phonetic": "yarimasu" },
+        { "id": "n4-26-06", "kanji": "参加します", "hiragana": "さんかします", "onyomi": "THAM GIA", "meaning": "Tham gia (buổi tiệc, hội thảo)", "phonetic": "sankashimasu" },
+        { "id": "n4-26-07", "kanji": "申し込みます", "hiragana": "もうしこみます", "onyomi": "THÂN TRÔÙNG", "meaning": "Đăng ký", "phonetic": "moushikomimasu" },
+        { "id": "n4-26-08", "kanji": "都合がいい", "hiragana": "つごうがいい", "onyomi": "ĐÔ HỢP", "meaning": "Thận lợi (thời gian)", "phonetic": "tsugou ga ii" },
+        { "id": "n4-26-09", "kanji": "気分がいい", "hiragana": "きぶんがいい", "onyomi": "KHÍ PHÂN", "meaning": "Tâm trạng thoải mái, dẻo dai", "phonetic": "kibun ga ii" },
+        { "id": "n4-26-10", "kanji": "新聞社", "hiragana": "しんぶんしゃ", "onyomi": "TÂN VĂN XÃ", "meaning": "Tòa báo", "phonetic": "shinbunsha" }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-n4-01",
+          "structure": "V ( thể thông dụng ) + んです",
+          "meaning": "Dùng để nhấn mạnh nguyên nhân / lý do hoặc đề nghị giải thích",
+          "explanation": "Dùng khi người nói muốn giải thích nguyên nhân cho một tình huống hiện tại hoặc hỏi nguyên nhân khi thấy người nghe có điều gì khác lạ.",
+          "mnemonic": "Thay vì dùng から thông thường, んです mang sắc thái thân mật và nhấn mạnh cảm xúc hơn.",
+          "level": "N4",
+          "examples": [
+            { "id": "eg-n4-01-1", "sentence": "どうしたんですか。- あたまが いたいんです。", "meaning": "Bạn bị sao vậy? - Tôi bị đau đầu." },
+            { "id": "eg-n4-01-2", "sentence": "バスが 来なかったんです。", "meaning": "Là do xe buýt đã không tới." }
+          ]
+        },
+        {
+          "id": "g-n4-02",
+          "structure": "V ( thể て ) + いただけませんか",
+          "meaning": "Làm ơn... giúp tôi có được không?",
+          "explanation": "Mẫu câu nhờ vả lịch sự hơn rất nhiều so với Vてください.",
+          "level": "N4",
+          "examples": [
+            { "id": "eg-n4-02-1", "sentence": "日本語を おしえて いただけませんか。", "meaning": "Anh/chị có thể vui lòng dạy tiếng Nhật cho tôi được không?" }
+          ]
+        }
+      ],
+      "kanjiItems": [
+        {
+          "id": "k-n4-01",
+          "kanji": "探",
+          "hanViet": "THÁM",
+          "radical": "扌 (Thủ)",
+          "strokeCount": 11,
+          "onyomi": ["タン"],
+          "kunyomi": ["さが.す"],
+          "meaning": "Tìm kiếm, thám hiểm",
+          "level": "N4",
+          "compounds": [
+            { "kanji": "探偵", "hiragana": "たんてい", "meaning": "Thám tử" },
+            { "kanji": "探求", "hiragana": "たんきゅう", "meaning": "Mưu cầu, tìm kiếm" }
+          ]
+        }
+      ]
+    }
+  ]
+}

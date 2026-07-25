@@ -1,0 +1,60 @@
+{
+  "level": "N3",
+  "title": "N3 - Trung cấp 1 (Soumatome & Shinkanzen N3)",
+  "description": "Trung cấp tiếng Nhật: Ngữ pháp diễn đạt cảm xúc, điều kiện nâng cao, phán đoán và câu ghép",
+  "lessons": [
+    {
+      "id": "n3-lesson-01",
+      "name": "Bài 1: Diễn đạt Biến đổi & Kết quả (～ようになる / ～ことにする)",
+      "description": "Các cấu trúc ngữ pháp diễn tả sự thay đổi trạng thái, thói quen và quyết định cá nhân",
+      "level": "N3",
+      "curriculum": "Soumatome N3",
+      "vocabulary": [
+        { "id": "n3-01-01", "kanji": "変化", "hiragana": "へんか", "onyomi": "BIẾN HÓA", "meaning": "Sự thay đổi, biến đổi", "phonetic": "henka" },
+        { "id": "n3-01-02", "kanji": "習慣", "hiragana": "しゅうかん", "onyomi": "TẬP QUÁN", "meaning": "Thói quen, phong tục", "phonetic": "shuukan" },
+        { "id": "n3-01-03", "kanji": "決定", "hiragana": "けってい", "onyomi": "QUYẾT ĐỊNH", "meaning": "Quyết định", "phonetic": "kettei" },
+        { "id": "n3-01-04", "kanji": "努力", "hiragana": "どりょく", "onyomi": "NỖ LỰC", "meaning": "Nỗ lực, cố gắng", "phonetic": "doryoku" },
+        { "id": "n3-01-05", "kanji": "目標", "hiragana": "もくひょう", "onyomi": "MỤC TIÊU", "meaning": "Mục tiêu", "phonetic": "mokuhyou" }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-n3-01",
+          "structure": "V-る / V-ない + ようになる",
+          "meaning": "Trở nên (có thể) ... / Đã thay đổi thói quen thành ...",
+          "explanation": "Diễn tả sự thay đổi trạng thái từ không thể sang có thể, hoặc từ chưa có thói quen sang có thói quen.",
+          "level": "N3",
+          "examples": [
+            { "id": "eg-n3-01-1", "sentence": "日本語の ニュースが 理解できるようになりました。", "meaning": "Tôi đã có thể hiểu được tin tức tiếng Nhật." }
+          ]
+        },
+        {
+          "id": "g-n3-02",
+          "structure": "V-る / V-ない + ことにする",
+          "meaning": "Quyết định làm (hoặc không làm) ...",
+          "explanation": "Biểu thị sự quyết định do chính bản thân người nói đưa ra.",
+          "level": "N3",
+          "examples": [
+            { "id": "eg-n3-02-1", "sentence": "毎日 30分 日本語を 勉強することにしました。", "meaning": "Tôi đã quyết định mỗi ngày học tiếng Nhật 30 phút." }
+          ]
+        }
+      ],
+      "kanjiItems": [
+        {
+          "id": "k-n3-01",
+          "kanji": "変",
+          "hanViet": "BIẾN",
+          "radical": "夊 (Tuy)",
+          "strokeCount": 9,
+          "onyomi": ["ヘン"],
+          "kunyomi": ["か.わる", "か.える"],
+          "meaning": "Biến đổi, kỳ lạ",
+          "level": "N3",
+          "compounds": [
+            { "kanji": "変化", "hiragana": "へんか", "meaning": "Biến hóa, thay đổi" },
+            { "kanji": "大変", "hiragana": "たいへん", "meaning": "Vất vả, nghiêm trọng" }
+          ]
+        }
+      ]
+    }
+  ]
+}

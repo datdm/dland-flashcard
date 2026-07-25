@@ -1,50 +1,48 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
-import { getGrammarRepository } from "@/lib/repositories";
-import { JLPTLevel } from "@/lib/repositories/types";
-import { GrammarPoint } from "@/types";
-import GrammarCard from "@/components/GrammarCard";
+import { getKanjiRepository } from "@/lib/repositories";
+import { JLPTLevel, KanjiItem } from "@/lib/repositories/types";
+import KanjiStrokeViewer from "@/components/KanjiStrokeViewer";
 
-export default function GrammarHubPage() {
-  const [grammarList, setGrammarList] = useState<GrammarPoint[]>([]);
+export default function KanjiHubPage() {
+  const [kanjiList, setKanjiList] = useState<KanjiItem[]>([]);
   const [activeLevel, setActiveLevel] = useState<JLPTLevel | "ALL">("N5");
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function loadGrammar() {
+    async function loadKanji() {
       setLoading(true);
-      const repo = getGrammarRepository();
+      const repo = getKanjiRepository();
       const levelFilter = activeLevel === "ALL" ? undefined : activeLevel;
-      const data = await repo.getAllGrammar(levelFilter);
-      setGrammarList(data);
+      const data = await repo.getAllKanji(levelFilter);
+      setKanjiList(data);
       setLoading(false);
     }
-    loadGrammar();
+    loadKanji();
   }, [activeLevel]);
 
-  const filteredGrammar = grammarList.filter((g) => {
+  const filteredKanji = kanjiList.filter((k) => {
     if (!searchQuery.trim()) return true;
     const q = searchQuery.toLowerCase();
     return (
-      g.structure.toLowerCase().includes(q) ||
-      g.meaning.toLowerCase().includes(q) ||
-      g.explanation?.toLowerCase().includes(q)
+      k.kanji.includes(q) ||
+      k.hanViet.toLowerCase().includes(q) ||
+      k.meaning.toLowerCase().includes(q) ||
+      k.onyomi.some((o) => o.toLowerCase().includes(q)) ||
+      k.kunyomi.some((ku) => ku.toLowerCase().includes(q))
     );
   });
 
   return (
     <div className="p-4 max-w-5xl mx-auto min-h-screen pb-24">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Thư viện Ngữ Pháp Tiếng Nhật</h1>
-          <p className="text-xs text-gray-500 mt-1">
-            Tổng hợp cấu trúc, giải thích chi tiết & ví dụ mẫu từ N5 đến N2
-          </p>
-        </div>
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Thư viện Kanji & Nét Vẽ (N5 ➔ N2)</h1>
+        <p className="text-xs text-gray-500 mt-1">
+          Học âm Hán Việt, âm On/Kun, nét vẽ SVG động và từ ghép theo cấp độ JLPT
+        </p>
       </div>
 
       {/* Filter Tabs */}
@@ -70,7 +68,7 @@ export default function GrammarHubPage() {
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Tìm kiếm ngữ pháp (vd: ている, わけだ, nguyên nhân...)..."
+          placeholder="Tìm kiếm Kanji (vd: 日, NHẬT, Mặt trời, にほん...)..."
           className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 pr-10 text-sm focus:outline-none focus:border-indigo-500 shadow-2xs"
         />
         {searchQuery && (
@@ -83,17 +81,17 @@ export default function GrammarHubPage() {
         )}
       </div>
 
-      {/* Grammar Cards List */}
+      {/* Kanji Cards Grid */}
       {loading ? (
-        <div className="text-center py-20 text-indigo-600 font-medium">Đang tải kho ngữ pháp...</div>
-      ) : filteredGrammar.length === 0 ? (
+        <div className="text-center py-20 text-indigo-600 font-medium">Đang tải kho Kanji...</div>
+      ) : filteredKanji.length === 0 ? (
         <div className="bg-white rounded-3xl p-12 text-center text-gray-400 border border-gray-100">
-          Không tìm thấy cấu trúc ngữ pháp nào phù hợp
+          Không tìm thấy chữ Kanji nào phù hợp
         </div>
       ) : (
         <div className="space-y-4">
-          {filteredGrammar.map((grammar) => (
-            <GrammarCard key={grammar.id} grammar={grammar} />
+          {filteredKanji.map((kanji) => (
+            <KanjiStrokeViewer key={kanji.id} kanji={kanji} />
           ))}
         </div>
       )}

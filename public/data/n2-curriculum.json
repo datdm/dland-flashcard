@@ -1,0 +1,60 @@
+{
+  "level": "N2",
+  "title": "N2 - Trung cấp 2 (Shinkanzen Master N2)",
+  "description": "Trung cao cấp tiếng Nhật: Ngữ pháp trang trọng, báo chí, văn bản doanh nghiệp và thành ngữ",
+  "lessons": [
+    {
+      "id": "n2-lesson-01",
+      "name": "Bài 1: Diễn đạt Phạm vi & Giới hạn (～にわたって / ～にともなって)",
+      "description": "Cấu trúc trang trọng dùng trong văn bản báo chí, kinh doanh và phát biểu chính thức",
+      "level": "N2",
+      "curriculum": "Shinkanzen Master N2",
+      "vocabulary": [
+        { "id": "n2-01-01", "kanji": "範囲", "hiragana": "はんい", "onyomi": "PHẠM VI", "meaning": "Phạm vi, vùng", "phonetic": "han'i" },
+        { "id": "n2-01-02", "kanji": "伴う", "hiragana": "ともなう", "onyomi": "BẠN", "meaning": "Đi kèm, kéo theo", "phonetic": "tomonau" },
+        { "id": "n2-01-03", "kanji": "影響", "hiragana": "えいきょう", "onyomi": "ẢNH HƯỞNG", "meaning": "Ảnh hưởng, tác động", "phonetic": "eikyou" },
+        { "id": "n2-01-04", "kanji": "経済", "hiragana": "けいざい", "onyomi": "KINH TẾ", "meaning": "Kinh tế", "phonetic": "keizai" },
+        { "id": "n2-01-05", "kanji": "発展", "hiragana": "はってん", "onyomi": "PHÁT TRIỂN", "meaning": "Phát triển", "phonetic": "hatten" }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-n2-01",
+          "structure": "N + にわたって / にわたり",
+          "meaning": "Suốt / Trên toàn bộ (phạm vi thời gian hoặc không gian)",
+          "explanation": "Diễn tả một hành động, sự việc kéo dài suốt một khoảng thời gian hoặc trải rộng trên một vùng diện tích lớn.",
+          "level": "N2",
+          "examples": [
+            { "id": "eg-n2-01-1", "sentence": "会議は 3日間にわたって 行われました。", "meaning": "Cuộc họp đã được tiến hành suốt 3 ngày." }
+          ]
+        },
+        {
+          "id": "g-n2-02",
+          "structure": "N / V-る + にともなって / にともない",
+          "meaning": "Cùng với / Kéo theo...",
+          "explanation": "Diễn tả sự thay đổi A kéo theo sự thay đổi B đồng thời.",
+          "level": "N2",
+          "examples": [
+            { "id": "eg-n2-02-1", "sentence": "人口の増加に伴って、環境問題が 深刻化している。", "meaning": "Cùng với sự gia tăng dân số, các vấn đề môi trường đang trở nên nghiêm trọng." }
+          ]
+        }
+      ],
+      "kanjiItems": [
+        {
+          "id": "k-n2-01",
+          "kanji": "範",
+          "hanViet": "PHẠM",
+          "radical": "竹 (Trúc)",
+          "strokeCount": 15,
+          "onyomi": ["ハン"],
+          "kunyomi": [],
+          "meaning": "Khuôn mẫu, phạm vi",
+          "level": "N2",
+          "compounds": [
+            { "kanji": "範囲", "hiragana": "はんい", "meaning": "Phạm vi" },
+            { "kanji": "模範", "hiragana": "もはん", "meaning": "Mô phạm, làm mẫu" }
+          ]
+        }
+      ]
+    }
+  ]
+}

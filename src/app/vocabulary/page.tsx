@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useMemo, useEffect } from "react";
 import { useCurriculums } from "@/hooks/useCurriculums";
@@ -7,16 +7,24 @@ import { useProgress } from "@/hooks/useProgress";
 import VocabularyListItem from "@/components/VocabularyListItem";
 import FilterBar, { FilterTab } from "@/components/FilterBar";
 import Link from "next/link";
+import { Vocabulary } from "@/types";
 
 export default function VocabularyPage() {
   const { curriculums } = useCurriculums();
-  const { notebooks } = useNotebooks();
+  const { notebooks, addVocab } = useNotebooks();
   const { getVocabProgress, toggleLearned, toggleFavorite, progress } = useProgress();
+
   const [tab, setTab] = useState<FilterTab>("all");
   const [selectedCurriculum, setSelectedCurriculum] = useState<string>("all");
   const [selectedNotebook, setSelectedNotebook] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [viewMode, setViewMode] = useState<"card" | "list">("card");
+
+  // State for Add to Notebook modal
+  const [selectedWordForNotebook, setSelectedWordForNotebook] = useState<Vocabulary | null>(null);
+  const [targetNotebookId, setTargetNotebookId] = useState<string>("");
+
   const ITEMS_PER_PAGE = 30;
 
   // Get curriculum list
@@ -26,18 +34,23 @@ export default function VocabularyPage() {
 
   // Get all vocabulary with source info
   const allVocabWithSource = useMemo(() => {
-    const curriculumVocab = curriculums.flatMap((curr) => 
+    const curriculumVocab = curriculums.flatMap((curr) =>
       curr.lessons.flatMap((lesson) =>
-        lesson.vocabulary.map((v) => ({ 
-          ...v, 
-          source: "curriculum" as const, 
+        lesson.vocabulary.map((v) => ({
+          ...v,
+          source: "curriculum" as const,
           curriculumId: curr.id,
-          curriculumName: curr.name 
+          curriculumName: curr.name,
         }))
       )
     );
     const notebookVocab = notebooks.flatMap((nb) =>
-      nb.vocabulary.map((v) => ({ ...v, source: "notebook" as const, notebookId: nb.id, notebookName: nb.name }))
+      nb.vocabulary.map((v) => ({
+        ...v,
+        source: "notebook" as const,
+        notebookId: nb.id,
+        notebookName: nb.name,
+      }))
     );
     return [...curriculumVocab, ...notebookVocab];
   }, [curriculums, notebooks]);
@@ -50,9 +63,7 @@ export default function VocabularyPage() {
     if (selectedNotebook !== "all" && v.source === "notebook") {
       if (v.notebookId !== selectedNotebook) return false;
     }
-    // If curriculum filter is active, only show curriculum vocab
     if (selectedCurriculum !== "all" && v.source !== "curriculum") return false;
-    // If notebook filter is active, only show notebook vocab
     if (selectedNotebook !== "all" && v.source !== "notebook") return false;
     return true;
   });
@@ -93,31 +104,90 @@ export default function VocabularyPage() {
     setCurrentPage(1);
   }, [tab, searchQuery, selectedCurriculum, selectedNotebook]);
 
+  const handleSaveToNotebook = () => {
+    if (!selectedWordForNotebook || !targetNotebookId) return;
+
+    addVocab(targetNotebookId, {
+      kanji: selectedWordForNotebook.kanji,
+      hiragana: selectedWordForNotebook.hiragana,
+      onyomi: selectedWordForNotebook.onyomi,
+      meaning: selectedWordForNotebook.meaning,
+      phonetic: selectedWordForNotebook.phonetic,
+    });
+
+    setSelectedWordForNotebook(null);
+    setTargetNotebookId("");
+    alert("Đã thêm từ vào sổ tay thành công!");
+  };
+
   return (
-    <div className="p-4 max-w-5xl mx-auto">
-      <div className="flex items-center justify-between mb-4">
-        <h1 className="text-xl font-bold text-gray-800">Từ vựng</h1>
-        <Link href="/" className="text-sm text-indigo-600 hover:underline">← Trang chủ</Link>
+    <div className="p-4 max-w-5xl mx-auto min-h-screen pb-24">
+      {/* Header Banner */}
+      <div className="bg-gradient-to-r from-indigo-700 via-purple-700 to-indigo-800 rounded-3xl p-6 text-white shadow-lg mb-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-xs font-semibold tracking-wide">
+              KHO TỪ VỰNG TỔNG HỢP
+            </span>
+            <h1 className="text-2xl font-bold mt-2">Kho Từ Vựng & Sổ Tay</h1>
+            <p className="text-xs text-indigo-100 mt-1">
+              Quản lý từ vựng bài học Minna no Nihongo, Soumatome và các Sổ tay cá nhân
+            </p>
+          </div>
+
+          {/* Quick Action Links to Notebooks & Search */}
+          <div className="flex flex-wrap gap-2">
+            <Link
+              href="/notebooks"
+              className="px-4 py-2.5 bg-white text-indigo-700 font-bold rounded-2xl text-xs hover:bg-indigo-50 transition-colors shadow-sm flex items-center gap-1.5"
+            >
+              <span>📓 Quản lý Sổ tay</span>
+            </Link>
+            <Link
+              href="/search"
+              className="px-4 py-2.5 bg-white/10 hover:bg-white/20 backdrop-blur-md text-white font-bold rounded-2xl border border-white/20 text-xs transition-colors flex items-center gap-1.5"
+            >
+              <span>🔍 Tra từ mới</span>
+            </Link>
+          </div>
+        </div>
       </div>
+
       {allVocabWithSource.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-20 gap-4">
-          <p className="text-gray-400">Chưa có từ vựng nào</p>
-          <Link href="/upload" className="text-indigo-600 underline text-sm">Upload từ vựng</Link>
+        <div className="bg-white rounded-3xl p-12 text-center text-gray-400 border border-gray-100 shadow-2xs">
+          <div className="text-4xl mb-2">📝</div>
+          <p className="font-semibold text-gray-700">Chưa có từ vựng nào trong kho</p>
+          <p className="text-xs text-gray-400 mt-1 mb-4">Bạn có thể tạo sổ tay hoặc upload bài học JSON</p>
+          <div className="flex justify-center gap-3">
+            <Link
+              href="/notebooks"
+              className="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-bold hover:bg-indigo-700"
+            >
+              + Tạo Sổ tay mới
+            </Link>
+            <Link
+              href="/upload"
+              className="px-4 py-2 border border-gray-300 text-gray-700 rounded-xl text-xs font-semibold hover:bg-gray-50"
+            >
+              Upload file JSON
+            </Link>
+          </div>
         </div>
       ) : (
         <>
-          {/* Filters */}
-          <div className="mb-4 flex flex-col sm:flex-row gap-3">
-            <div className="flex-1">
+          {/* Source Dropdown Filters */}
+          <div className="mb-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs font-semibold text-gray-500 mb-1">Theo Giáo trình:</label>
               <select
                 value={selectedCurriculum}
                 onChange={(e) => {
                   setSelectedCurriculum(e.target.value);
                   if (e.target.value !== "all") setSelectedNotebook("all");
                 }}
-                className="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-400"
+                className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-2.5 text-xs font-semibold text-gray-800 focus:outline-none focus:border-indigo-500 shadow-2xs"
               >
-                <option value="all">Tất cả giáo trình</option>
+                <option value="all">Tất cả giáo trình (N5 ➔ N2)</option>
                 {curriculumList.map((c) => (
                   <option key={c.id} value={c.id}>
                     {c.name}
@@ -125,16 +195,17 @@ export default function VocabularyPage() {
                 ))}
               </select>
             </div>
-            <div className="flex-1">
+            <div>
+              <label className="block text-xs font-semibold text-gray-500 mb-1">Theo Sổ tay cá nhân:</label>
               <select
                 value={selectedNotebook}
                 onChange={(e) => {
                   setSelectedNotebook(e.target.value);
                   if (e.target.value !== "all") setSelectedCurriculum("all");
                 }}
-                className="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-400"
+                className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-2.5 text-xs font-semibold text-gray-800 focus:outline-none focus:border-indigo-500 shadow-2xs"
               >
-                <option value="all">Tất cả sổ tay</option>
+                <option value="all">Tất cả sổ tay ({notebooks.length})</option>
                 {notebooks.map((nb) => (
                   <option key={nb.id} value={nb.id}>
                     {nb.name} ({nb.vocabulary.length} từ)
@@ -144,92 +215,190 @@ export default function VocabularyPage() {
             </div>
           </div>
 
-          {/* Search */}
-          <div className="mb-4 relative">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Tìm kiếm từ vựng..."
-              className="w-full rounded-xl border border-gray-300 px-4 py-2.5 pr-10 text-sm focus:outline-none focus:border-indigo-400"
-            />
-            {searchQuery && (
-              <button
-                onClick={() => setSearchQuery("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-lg leading-none"
-              >
-                ✕
-              </button>
-            )}
-          </div>
-
-          <div className="mb-4">
-            <FilterBar active={tab} onChange={setTab} counts={counts} />
-          </div>
-      {filtered.length === 0 ? (
-        <div className="text-center py-8 text-gray-500">
-          Không tìm thấy từ vựng nào
-        </div>
-      ) : (
-        <>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-            {paginatedVocab.map((vocab) => (
-              <VocabularyListItem
-                key={vocab.id}
-                vocab={vocab}
-                progress={getVocabProgress(vocab.id)}
-                onToggleLearned={toggleLearned}
-                onToggleFavorite={toggleFavorite}
-                variant="card"
+          {/* Search Bar & View Mode Toggle */}
+          <div className="mb-4 flex gap-2 items-center">
+            <div className="flex-1 relative">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Tìm kiếm từ vựng (vd: 日本語, にほん, tieng nhat...)..."
+                className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-2.5 pr-10 text-xs focus:outline-none focus:border-indigo-500 shadow-2xs"
               />
-            ))}
-          </div>
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery("")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-sm"
+                >
+                  ✕
+                </button>
+              )}
+            </div>
 
-          {/* Pagination Controls */}
-          {totalPages > 1 && (
-            <div className="flex items-center justify-between mt-6 pt-4 border-t border-gray-200">
+            <div className="flex bg-white p-1 border border-gray-200 rounded-2xl">
               <button
-                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                disabled={currentPage === 1}
-                className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 disabled:opacity-50 font-medium"
+                onClick={() => setViewMode("card")}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-colors ${
+                  viewMode === "card" ? "bg-indigo-600 text-white" : "text-gray-500 hover:text-gray-700"
+                }`}
+                title="Dạng Thẻ (Grid Card)"
               >
-                ← Trang trước
+                🎴 Thẻ
               </button>
-
-              <div className="flex items-center gap-2 overflow-x-auto py-2">
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                  <button
-                    key={page}
-                    onClick={() => setCurrentPage(page)}
-                    className={`px-3 py-2 rounded-lg font-medium transition-colors ${
-                      currentPage === page
-                        ? 'bg-indigo-600 text-white'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                    }`}
-                  >
-                    {page}
-                  </button>
-                ))}
-              </div>
-
               <button
-                onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                disabled={currentPage === totalPages}
-                className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50 font-medium"
+                onClick={() => setViewMode("list")}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-colors ${
+                  viewMode === "list" ? "bg-indigo-600 text-white" : "text-gray-500 hover:text-gray-700"
+                }`}
+                title="Dạng Danh Sách (List)"
               >
-                Trang sau →
+                📄 Dòng
               </button>
             </div>
-          )}
-
-          <div className="text-sm text-gray-500 text-center mt-4">
-            Trang {currentPage} / {totalPages} • Tổng cộng: {filtered.length} từ
           </div>
+
+          {/* Status Tabs */}
+          <div className="mb-5">
+            <FilterBar active={tab} onChange={setTab} counts={counts} />
+          </div>
+
+          {filtered.length === 0 ? (
+            <div className="bg-white rounded-3xl p-10 text-center text-gray-400 border border-gray-100">
+              Không tìm thấy từ vựng nào phù hợp
+            </div>
+          ) : (
+            <>
+              {/* Vocab Items Grid / List */}
+              {viewMode === "card" ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {paginatedVocab.map((vocab) => {
+                    const nbInfo = vocab.source === "notebook"
+                      ? { id: vocab.notebookId, name: vocab.notebookName }
+                      : undefined;
+
+                    return (
+                      <VocabularyListItem
+                        key={vocab.id}
+                        vocab={vocab}
+                        progress={getVocabProgress(vocab.id)}
+                        onToggleLearned={toggleLearned}
+                        onToggleFavorite={toggleFavorite}
+                        onAddToNotebook={(v) => setSelectedWordForNotebook(v)}
+                        notebookInfo={nbInfo}
+                        variant="card"
+                      />
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {paginatedVocab.map((vocab) => {
+                    const nbInfo = vocab.source === "notebook"
+                      ? { id: vocab.notebookId, name: vocab.notebookName }
+                      : undefined;
+
+                    return (
+                      <VocabularyListItem
+                        key={vocab.id}
+                        vocab={vocab}
+                        progress={getVocabProgress(vocab.id)}
+                        onToggleLearned={toggleLearned}
+                        onToggleFavorite={toggleFavorite}
+                        onAddToNotebook={(v) => setSelectedWordForNotebook(v)}
+                        notebookInfo={nbInfo}
+                        variant="list"
+                      />
+                    );
+                  })}
+                </div>
+              )}
+
+              {/* Pagination Controls */}
+              {totalPages > 1 && (
+                <div className="flex items-center justify-between mt-8 pt-4 border-t border-gray-200">
+                  <button
+                    onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                    disabled={currentPage === 1}
+                    className="px-4 py-2 bg-white border border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 disabled:opacity-50 text-xs font-semibold shadow-2xs"
+                  >
+                    ← Trang trước
+                  </button>
+
+                  <div className="flex items-center gap-1 overflow-x-auto py-1">
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                      <button
+                        key={page}
+                        onClick={() => setCurrentPage(page)}
+                        className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-colors ${
+                          currentPage === page
+                            ? "bg-indigo-600 text-white shadow-xs"
+                            : "bg-white border border-gray-200 text-gray-600 hover:bg-gray-50"
+                        }`}
+                      >
+                        {page}
+                      </button>
+                    ))}
+                  </div>
+
+                  <button
+                    onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                    disabled={currentPage === totalPages}
+                    className="px-4 py-2 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 disabled:opacity-50 text-xs font-bold shadow-xs"
+                  >
+                    Trang sau →
+                  </button>
+                </div>
+              )}
+
+              <div className="text-xs text-gray-400 text-center mt-4 font-medium">
+                Trang {currentPage} / {totalPages} • Hiển thị {paginatedVocab.length} trong tổng số {filtered.length} từ
+              </div>
+            </>
+          )}
         </>
       )}
-        </>
+
+      {/* Add to Notebook Modal */}
+      {selectedWordForNotebook && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-3xl shadow-xl p-6 w-full max-w-sm">
+            <h3 className="font-bold text-base text-gray-900 mb-2">Thêm từ vào Sổ tay</h3>
+            <p className="text-xs text-gray-500 mb-4">
+              Từ: <span className="font-bold text-indigo-600">{selectedWordForNotebook.kanji || selectedWordForNotebook.hiragana}</span> ({selectedWordForNotebook.meaning})
+            </p>
+
+            <label className="block text-xs font-semibold text-gray-700 mb-2">Chọn Sổ tay:</label>
+            <select
+              value={targetNotebookId}
+              onChange={(e) => setTargetNotebookId(e.target.value)}
+              className="w-full rounded-2xl border border-gray-300 px-4 py-2.5 text-sm mb-6 focus:outline-none focus:border-indigo-500"
+            >
+              <option value="">-- Chọn sổ tay --</option>
+              {notebooks.map((nb) => (
+                <option key={nb.id} value={nb.id}>
+                  {nb.name} ({nb.vocabulary.length} từ)
+                </option>
+              ))}
+            </select>
+
+            <div className="flex gap-2 justify-end">
+              <button
+                onClick={() => setSelectedWordForNotebook(null)}
+                className="px-4 py-2 rounded-xl border border-gray-300 text-gray-600 hover:bg-gray-50 text-xs font-semibold"
+              >
+                Hủy
+              </button>
+              <button
+                onClick={handleSaveToNotebook}
+                disabled={!targetNotebookId}
+                className="px-4 py-2 rounded-xl bg-indigo-600 text-white text-xs font-bold hover:bg-indigo-700 disabled:opacity-50"
+              >
+                Lưu vào Sổ tay
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
 }
-

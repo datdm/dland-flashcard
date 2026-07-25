@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -8,11 +8,12 @@ import * as syncService from "@/lib/syncService";
 
 const NAV_ITEMS = [
   { href: "/", label: "Trang chủ", icon: "🏠" },
-  { href: "/notebooks", label: "Sổ tay", icon: "📓" },
-  { href: "/curriculums", label: "Giáo trình", icon: "📚" },
+  { href: "/search", label: "Tra cứu", icon: "🔍" },
+  { href: "/curriculum", label: "Giáo trình (N5-N2)", icon: "📚" },
   { href: "/grammar", label: "Ngữ pháp", icon: "📖" },
+  { href: "/kanji", label: "Kanji SVG", icon: "🉐" },
   { href: "/vocabulary", label: "Từ vựng", icon: "📝" },
-  { href: "/flashcard/all", label: "Ôn tập", icon: "🎴" },
+  { href: "/flashcard/all", label: "Ôn tập Flashcard", icon: "🎴" },
   { href: "/settings", label: "Cài đặt", icon: "⚙️" },
 ];
 
@@ -36,62 +37,91 @@ export default function Navbar() {
 
   return (
     <>
-      {/* Desktop top bar */}
-      <header className="hidden sm:flex sticky top-0 z-40 items-center justify-between bg-white border-b border-gray-200 px-6 h-14 shadow-sm">
-        <Link href="/" className="font-bold text-indigo-700 text-lg tracking-tight">
-          FlashCash
-        </Link>
-        <nav className="flex items-center gap-1">
-          {NAV_ITEMS.map(({ href, label }) => (
-            <Link
-              key={href}
-              href={href}
-              className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-                pathname === href
-                  ? "bg-indigo-50 text-indigo-700"
-                  : "text-gray-600 hover:text-indigo-600 hover:bg-gray-50"
-              }`}
-            >
-              {label}
-            </Link>
-          ))}
-        </nav>
-        <div className="flex items-center gap-2">
+      {/* Desktop Left Sidebar */}
+      <aside className="hidden md:flex fixed top-0 left-0 bottom-0 w-64 bg-white border-r border-gray-200 flex-col justify-between p-5 z-40 shadow-2xs">
+        <div>
+          {/* Brand Logo */}
+          <Link href="/" className="flex items-center gap-3 px-3 py-2 mb-6 group">
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center text-white text-xl font-bold shadow-md shadow-indigo-200 group-hover:scale-105 transition-transform">
+              🌸
+            </div>
+            <div>
+              <h1 className="font-extrabold text-gray-900 text-base tracking-tight group-hover:text-indigo-600 transition-colors">
+                FlashCash
+              </h1>
+              <p className="text-[10px] font-bold text-indigo-600 tracking-wider uppercase">JLPT N5 ➔ N2</p>
+            </div>
+          </Link>
+
+          {/* Navigation Links */}
+          <nav className="space-y-1">
+            <div className="px-3 mb-2 text-[11px] font-bold text-gray-400 uppercase tracking-wider">
+              Danh mục học
+            </div>
+            {NAV_ITEMS.map(({ href, label, icon }) => {
+              const isActive = pathname === href || (href !== "/" && pathname.startsWith(href));
+              return (
+                <Link
+                  key={href}
+                  href={href}
+                  className={`flex items-center gap-3 px-3 py-2 rounded-2xl text-xs font-semibold transition-all ${
+                    isActive
+                      ? "bg-indigo-600 text-white shadow-md shadow-indigo-200"
+                      : "text-gray-600 hover:text-indigo-600 hover:bg-gray-50"
+                  }`}
+                >
+                  <span className="text-base">{icon}</span>
+                  <span>{label}</span>
+                </Link>
+              );
+            })}
+          </nav>
+        </div>
+
+        {/* Desktop Sidebar Footer */}
+        <div className="pt-4 border-t border-gray-100 space-y-3">
           <button
             onClick={handleSyncClick}
-            className="px-3 py-1.5 bg-emerald-50 text-emerald-700 rounded-lg hover:bg-emerald-100 transition text-sm font-medium flex items-center gap-1"
+            className="w-full px-3 py-2.5 bg-emerald-50 text-emerald-700 rounded-2xl hover:bg-emerald-100 transition text-xs font-semibold flex items-center justify-center gap-2"
             title="Đồng bộ dữ liệu"
           >
-            <span>🔄</span>
-            <span className="hidden md:inline">Đồng bộ dữ liệu</span>
+            <span className="text-base">🔄</span>
+            <span>Đồng bộ dữ liệu</span>
           </button>
-          {isAuthenticated && user && (
-            <>
-            <span className="text-sm text-gray-600 px-2">👤 {user.username}</span>
+
+          {isAuthenticated && user ? (
+            <div className="p-3 bg-gray-50 rounded-2xl flex items-center justify-between">
+              <div className="truncate">
+                <p className="text-xs font-bold text-gray-800 truncate">👤 {user.username}</p>
+                <p className="text-[10px] text-gray-400">Đã đăng nhập</p>
+              </div>
               <button
                 onClick={handleLogout}
-                className="px-3 py-1.5 bg-gray-50 text-gray-700 rounded-lg hover:bg-gray-100 transition text-sm"
-                title="Đăng xuất"
+                className="text-xs text-red-500 hover:text-red-700 font-semibold underline ml-2 shrink-0"
               >
-                Đăng xuất
+                Thoát
               </button>
-            </>
+            </div>
+          ) : (
+            <div className="text-[11px] text-gray-400 text-center">
+              Lưu dữ liệu local & hỗ trợ Postgres
+            </div>
           )}
         </div>
-      </header>
+      </aside>
 
-      {/* Mobile top title */}
-      <header className="sm:hidden sticky top-0 z-40 flex items-center justify-between bg-white border-b border-gray-200 px-4 h-12 shadow-sm">
-        <Link href="/" className="font-bold text-indigo-700">
-          FlashCash
+      {/* Mobile Top Header */}
+      <header className="md:hidden sticky top-0 z-40 flex items-center justify-between bg-white border-b border-gray-200 px-4 h-12 shadow-2xs">
+        <Link href="/" className="font-bold text-indigo-700 text-sm flex items-center gap-2">
+          <span>🌸</span> FlashCash N5-N2
         </Link>
         <div className="flex items-center gap-2">
           <button
             onClick={handleSyncClick}
-            className="px-2 py-1 bg-emerald-50 text-emerald-700 rounded-lg text-sm"
+            className="px-2.5 py-1 bg-emerald-50 text-emerald-700 rounded-lg text-xs font-semibold flex items-center gap-1"
             title="Đồng bộ"
           >
-            🔄
+            <span>🔄</span>
           </button>
           {isAuthenticated && user && (
             <button
@@ -105,23 +135,27 @@ export default function Navbar() {
         </div>
       </header>
 
-      {/* Mobile bottom nav */}
-      <nav className="sm:hidden fixed bottom-0 inset-x-0 z-40 bg-white border-t border-gray-200 flex h-14">
-        {NAV_ITEMS.map(({ href, label, icon }) => (
-          <Link
-            key={href}
-            href={href}
-            aria-label={label}
-            title={label}
-            className={`flex flex-1 items-center justify-center py-2 transition-colors ${
-              pathname === href
-                ? "text-indigo-700"
-                : "text-gray-500 hover:text-indigo-600"
-            }`}
-          >
-            <span className="text-xl leading-none">{icon}</span>
-          </Link>
-        ))}
+      {/* Mobile Bottom Navigation Bar */}
+      <nav className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white border-t border-gray-200 flex h-14">
+        {NAV_ITEMS.map(({ href, label, icon }) => {
+          const isActive = pathname === href || (href !== "/" && pathname.startsWith(href));
+          return (
+            <Link
+              key={href}
+              href={href}
+              aria-label={label}
+              title={label}
+              className={`flex flex-1 flex-col items-center justify-center py-1 transition-colors ${
+                isActive
+                  ? "text-indigo-700 font-bold"
+                  : "text-gray-400 hover:text-indigo-600"
+              }`}
+            >
+              <span className="text-lg leading-none">{icon}</span>
+              <span className="text-[10px] mt-0.5">{label.split(" ")[0]}</span>
+            </Link>
+          );
+        })}
       </nav>
 
       {/* Sync Dialog */}
@@ -133,4 +167,3 @@ export default function Navbar() {
     </>
   );
 }
-

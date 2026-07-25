@@ -1,0 +1,142 @@
+{
+  "level": "N5",
+  "title": "N5 - Sơ cấp 1 (Minna no Nihongo I)",
+  "description": "Nhập môn Tiếng Nhật bài 1 - 25: Hiragana, Katakana, chào hỏi, từ vựng và ngữ pháp nền tảng",
+  "lessons": [
+    {
+      "id": "minna-n5-01",
+      "name": "Bài 1: Giới thiệu bản thân & Quốc tịch",
+      "description": "Học cách chào hỏi, tự giới thiệu tên, tuổi, quốc tịch và nghề nghiệp với mẫu câu N1 は N2 です",
+      "level": "N5",
+      "curriculum": "Minna no Nihongo I",
+      "vocabulary": [
+        { "id": "n5-01-01", "kanji": "私", "hiragana": "わたし", "onyomi": "TƯ", "meaning": "Tôi", "phonetic": "watashi" },
+        { "id": "n5-01-02", "kanji": "貴方", "hiragana": "あなた", "onyomi": "QUÝ PHƯƠNG", "meaning": "Bạn / Anh / Chị", "phonetic": "anata" },
+        { "id": "n5-01-03", "kanji": "人", "hiragana": "ひと", "onyomi": "NHÂN", "meaning": "Người", "phonetic": "hito" },
+        { "id": "n5-01-04", "kanji": "先生", "hiragana": "せんせい", "onyomi": "TIÊN SINH", "meaning": "Thầy cô giáo", "phonetic": "sensei" },
+        { "id": "n5-01-05", "kanji": "学生", "hiragana": "がくせい", "onyomi": "HỌC SINH", "meaning": "Học sinh / Sinh viên", "phonetic": "gakusei" },
+        { "id": "n5-01-06", "kanji": "会社員", "hiragana": "かいしゃいん", "onyomi": "HỘI XÃ VIÊN", "meaning": "Nhân viên công ty", "phonetic": "kaishain" },
+        { "id": "n5-01-07", "kanji": "銀行員", "hiragana": "ぎんこういん", "onyomi": "NGÂN HÀNG VIÊN", "meaning": "Nhân viên ngân hàng", "phonetic": "ginkouin" },
+        { "id": "n5-01-08", "kanji": "医者", "hiragana": "いしゃ", "onyomi": "Y GIẢ", "meaning": "Bác sĩ", "phonetic": "isha" },
+        { "id": "n5-01-09", "kanji": "研究者", "hiragana": "けんきゅうしゃ", "onyomi": "NGHIÊN CỨU GIẢ", "meaning": "Nhà nghiên cứu", "phonetic": "kenkyuusha" },
+        { "id": "n5-01-10", "kanji": "大学", "hiragana": "だいがく", "onyomi": "ĐẠI HỌC", "meaning": "Trường đại học", "phonetic": "daigaku" },
+        { "id": "n5-01-11", "kanji": "病院", "hiragana": "びょういん", "onyomi": "BỆNH VIỆN", "meaning": "Bệnh viện", "phonetic": "byouin" },
+        { "id": "n5-01-12", "kanji": "日本語", "hiragana": "にほんご", "onyomi": "NHẬT BẢN NGỮ", "meaning": "Tiếng Nhật", "phonetic": "nihongo" }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-n5-01",
+          "structure": "N1 は N2 です",
+          "meaning": "N1 là N2",
+          "explanation": "Dùng để khẳng định tên, tuổi, quốc tịch, nghề nghiệp của N1. Trợ từ は đọc là 'wa'.",
+          "mnemonic": "Nhớ rằng は đi sau chủ ngữ, です đứng cuối câu khẳng định lịch sự.",
+          "level": "N5",
+          "examples": [
+            { "id": "eg-n5-01-1", "sentence": "わたしは がくせいです。", "meaning": "Tôi là học sinh." },
+            { "id": "eg-n5-01-2", "sentence": "マイク・ミラーさんは かいしゃいんです。", "meaning": "Anh Mike Miller là nhân viên công ty." }
+          ]
+        },
+        {
+          "id": "g-n5-02",
+          "structure": "N1 は N2 じゃありません (ではありません)",
+          "meaning": "N1 không phải là N2",
+          "explanation": "Mẫu câu phủ định lịch sự của 'N1 は N2 です'. じゃありません thường dùng trong giao tiếp nói.",
+          "level": "N5",
+          "examples": [
+            { "id": "eg-n5-02-1", "sentence": "わたしは いしゃじゃありません。", "meaning": "Tôi không phải là bác sĩ." }
+          ]
+        },
+        {
+          "id": "g-n5-03",
+          "structure": "S + か",
+          "meaning": "Mẫu câu hỏi (Có ... không? / Ai? / Cái gì?)",
+          "explanation": "Thêm trợ từ か vào cuối câu khẳng định để biến câu thành câu hỏi.",
+          "level": "N5",
+          "examples": [
+            { "id": "eg-n5-03-1", "sentence": "ミラーさんは アメリカ人ですか。", "meaning": "Anh Miller có phải là người Mỹ không?" }
+          ]
+        }
+      ],
+      "kanjiItems": [
+        {
+          "id": "k-01",
+          "kanji": "私",
+          "hanViet": "TƯ",
+          "radical": "禾 (Hòa)",
+          "strokeCount": 7,
+          "onyomi": ["シ"],
+          "kunyomi": ["わたし", "わたくし"],
+          "meaning": "Cá nhân, bản thân, tôi",
+          "level": "N5",
+          "compounds": [
+            { "kanji": "私立", "hiragana": "しりつ", "meaning": "Tư lập, dân lập" },
+            { "kanji": "私生活", "hiragana": "しせいかつ", "meaning": "Đời sống riêng tư" }
+          ]
+        },
+        {
+          "id": "k-02",
+          "kanji": "人",
+          "hanViet": "NHÂN",
+          "radical": "人 (Nhân)",
+          "strokeCount": 2,
+          "onyomi": ["ジン", "ニン"],
+          "kunyomi": ["ひと"],
+          "meaning": "Con người",
+          "level": "N5",
+          "compounds": [
+            { "kanji": "日本人", "hiragana": "にほんじん", "meaning": "Người Nhật" },
+            { "kanji": "三人", "hiragana": "さんにん", "meaning": "3 người" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "minna-n5-02",
+      "name": "Bài 2: Chỉ định đồ vật (これ, それ, あれ)",
+      "description": "Cách hỏi và chỉ định đồ vật xung quanh với đại từ chỉ thị これ, それ, あれ, この, その, あの",
+      "level": "N5",
+      "curriculum": "Minna no Nihongo I",
+      "vocabulary": [
+        { "id": "n5-02-01", "kanji": "本", "hiragana": "ほん", "onyomi": "BỔN", "meaning": "Sách", "phonetic": "hon" },
+        { "id": "n5-02-02", "kanji": "辞書", "hiragana": "じしょ", "onyomi": "TỪ THƯ", "meaning": "Từ điển", "phonetic": "jisho" },
+        { "id": "n5-02-03", "kanji": "雑誌", "hiragana": "ざっし", "onyomi": "TẠP CHÍ", "meaning": "Tạp chí", "phonetic": "zasshi" },
+        { "id": "n5-02-04", "kanji": "新聞", "hiragana": "しんぶん", "onyomi": "TÂN VĂN", "meaning": "Tờ báo", "phonetic": "shinbun" },
+        { "id": "n5-02-05", "kanji": "ノート", "hiragana": "のーと", "onyomi": "", "meaning": "Vở, sổ tay", "phonetic": "nooto" },
+        { "id": "n5-02-06", "kanji": "手帳", "hiragana": "てちょう", "onyomi": "THỦ TRƯỜNG", "meaning": "Sổ tay cá nhân", "phonetic": "techou" },
+        { "id": "n5-02-07", "kanji": "名刺", "hiragana": "めいし", "onyomi": "DANH THỨ", "meaning": "Danh thiếp", "phonetic": "meishi" },
+        { "id": "n5-02-08", "kanji": "時計", "hiragana": "とけい", "onyomi": "THỜI KẾ", "meaning": "Đồng hồ", "phonetic": "tokei" },
+        { "id": "n5-02-09", "kanji": "傘", "hiragana": "かさ", "onyomi": "TẢN", "meaning": "Ô, chiếc dù", "phonetic": "kasa" },
+        { "id": "n5-02-10", "kanji": "車", "hiragana": "くるま", "onyomi": "XA", "meaning": "Xe ô tô", "phonetic": "kuruma" }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-n5-04",
+          "structure": "これ / それ / あれ は N です",
+          "meaning": "Cái này / Cái đó / Cái kia là N",
+          "explanation": "Đại từ chỉ thị vật. これ (gần người nói), それ (gần người nghe), あれ (xa cả hai).",
+          "level": "N5",
+          "examples": [
+            { "id": "eg-n5-04-1", "sentence": "これは ほんの じしょです。", "meaning": "Cái này là từ điển sách." }
+          ]
+        }
+      ],
+      "kanjiItems": [
+        {
+          "id": "k-03",
+          "kanji": "本",
+          "hanViet": "BỔN",
+          "radical": "木 (Mộc)",
+          "strokeCount": 5,
+          "onyomi": ["ホン"],
+          "kunyomi": ["moto"],
+          "meaning": "Sách, gốc rễ",
+          "level": "N5",
+          "compounds": [
+            { "kanji": "日本", "hiragana": "にほん", "meaning": "Nhật Bản" },
+            { "kanji": "山本さん", "hiragana": "やまもとさん", "meaning": "Anh/chị Yamamoto" }
+          ]
+        }
+      ]
+    }
+  ]
+}

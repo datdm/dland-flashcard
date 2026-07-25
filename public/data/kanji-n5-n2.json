@@ -1,0 +1,89 @@
+[
+  {
+    "id": "k-n5-01",
+    "kanji": "日",
+    "hanViet": "NHẬT",
+    "radical": "日 (Nhật)",
+    "strokeCount": 4,
+    "onyomi": ["ニチ", "ジツ"],
+    "kunyomi": ["ひ", "-び", "-か"],
+    "meaning": "Mặt trời, ngày",
+    "level": "N5",
+    "compounds": [
+      { "kanji": "日本", "hiragana": "にほん", "meaning": "Nhật Bản" },
+      { "kanji": "日曜日", "hiragana": "にちようび", "meaning": "Chủ nhật" }
+    ],
+    "svgStrokes": [
+      "M25,15 L25,85",
+      "M25,15 L75,15 L75,85",
+      "M25,50 L75,50",
+      "M25,85 L75,85"
+    ]
+  },
+  {
+    "id": "k-n5-02",
+    "kanji": "月",
+    "hanViet": "NGUYỆT",
+    "radical": "月 (Nguyệt)",
+    "strokeCount": 4,
+    "onyomi": ["ゲツ", "ガツ"],
+    "kunyomi": ["つき"],
+    "meaning": "Mặt trăng, tháng",
+    "level": "N5",
+    "compounds": [
+      { "kanji": "月曜日", "hiragana": "げつようび", "meaning": "Thứ hai" },
+      { "kanji": "一月", "hiragana": "いちがつ", "meaning": "Tháng một" }
+    ],
+    "svgStrokes": [
+      "M30,15 C30,40 25,70 15,85",
+      "M30,15 L70,15 L70,85 C65,80 60,75 55,75",
+      "M30,40 L70,40",
+      "M30,60 L70,60"
+    ]
+  },
+  {
+    "id": "k-n4-01",
+    "kanji": "空",
+    "hanViet": "KHÔNG",
+    "radical": "穴 (Huyệt)",
+    "strokeCount": 8,
+    "onyomi": ["クウ"],
+    "kunyomi": ["そら", "あ.く", "から"],
+    "meaning": "Bầu trời, trống rỗng",
+    "level": "N4",
+    "compounds": [
+      { "kanji": "空気", "hiragana": "くうき", "meaning": "Không khí" },
+      { "kanji": "空港", "hiragana": "くうこう", "meaning": "Sân bay" }
+    ]
+  },
+  {
+    "id": "k-n3-01",
+    "kanji": "経",
+    "hanViet": "KINH",
+    "radical": "糸 (Mịch)",
+    "strokeCount": 11,
+    "onyomi": ["ケイ", "キョウ"],
+    "kunyomi": ["へ.る"],
+    "meaning": "Trải qua, kinh tế, kinh tuyến",
+    "level": "N3",
+    "compounds": [
+      { "kanji": "経済", "hiragana": "けいざい", "meaning": "Kinh tế" },
+      { "kanji": "経験", "hiragana": "けいけん", "meaning": "Kinh nghiệm" }
+    ]
+  },
+  {
+    "id": "k-n2-01",
+    "kanji": "響",
+    "hanViet": "HƯỞNG",
+    "radical": "音 (Âm)",
+    "strokeCount": 20,
+    "onyomi": ["キョウ"],
+    "kunyomi": ["ひび.く"],
+    "meaning": "Vang vọng, ảnh hưởng",
+    "level": "N2",
+    "compounds": [
+      { "kanji": "影響", "hiragana": "えいきょう", "meaning": "Ảnh hưởng" },
+      { "kanji": "反響", "hiragana": "はんきょう", "meaning": "Phản hồi, tiếng vang" }
+    ]
+  }
+]
