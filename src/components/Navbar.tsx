@@ -5,21 +5,87 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import SyncDialog from "./SyncDialog";
 import * as syncService from "@/lib/syncService";
+import { useLanguageSetting } from "@/hooks/useLanguageSetting";
 
-const NAV_ITEMS = [
-  { href: "/", label: "Trang chủ", icon: "🏠" },
-  { href: "/search", label: "Tra cứu", icon: "🔍" },
-  { href: "/curriculum", label: "Giáo trình (N5-N2)", icon: "📚" },
-  { href: "/grammar", label: "Ngữ pháp", icon: "📖" },
-  { href: "/kanji", label: "Kanji SVG", icon: "🉐" },
-  { href: "/vocabulary", label: "Từ vựng", icon: "📝" },
-  { href: "/flashcard/all", label: "Ôn tập Flashcard", icon: "🎴" },
-  { href: "/settings", label: "Cài đặt", icon: "⚙️" },
-];
+interface NavItem {
+  href: string;
+  label: string;
+  icon: string;
+}
+
+function getNavItemsForLanguage(langCode: string): NavItem[] {
+  switch (langCode) {
+    case "en":
+      return [
+        { href: "/", label: "Trang chủ", icon: "🏠" },
+        { href: "/search", label: "Tra cứu từ điển", icon: "🔍" },
+        { href: "/curriculum", label: "Giáo trình (Oxford/IELTS)", icon: "📚" },
+        { href: "/grammar", label: "Ngữ pháp Tiếng Anh", icon: "📖" },
+        { href: "/vocabulary", label: "Từ vựng Oxford 3000", icon: "📝" },
+        { href: "/notebooks", label: "Sổ tay cá nhân", icon: "📓" },
+        { href: "/flashcard/all", label: "Ôn tập Flashcard", icon: "🎴" },
+        { href: "/settings", label: "Cài đặt & Ngôn ngữ", icon: "⚙️" },
+      ];
+
+    case "de":
+      return [
+        { href: "/", label: "Trang chủ", icon: "🏠" },
+        { href: "/search", label: "Tra cứu từ điển", icon: "🔍" },
+        { href: "/curriculum", label: "Giáo trình (Goethe A1-B2)", icon: "📚" },
+        { href: "/grammar", label: "Ngữ pháp Der/Die/Das", icon: "📖" },
+        { href: "/vocabulary", label: "Từ vựng Tiếng Đức", icon: "📝" },
+        { href: "/notebooks", label: "Sổ tay cá nhân", icon: "📓" },
+        { href: "/flashcard/all", label: "Ôn tập Flashcard", icon: "🎴" },
+        { href: "/settings", label: "Cài đặt & Ngôn ngữ", icon: "⚙️" },
+      ];
+
+    case "ko":
+      return [
+        { href: "/", label: "Trang chủ", icon: "🏠" },
+        { href: "/search", label: "Tra cứu từ điển", icon: "🔍" },
+        { href: "/curriculum", label: "Giáo trình (TOPIK)", icon: "📚" },
+        { href: "/grammar", label: "Ngữ pháp Hangul", icon: "📖" },
+        { href: "/vocabulary", label: "Từ vựng Tiếng Hàn", icon: "📝" },
+        { href: "/notebooks", label: "Sổ tay cá nhân", icon: "📓" },
+        { href: "/flashcard/all", label: "Ôn tập Flashcard", icon: "🎴" },
+        { href: "/settings", label: "Cài đặt & Ngôn ngữ", icon: "⚙️" },
+      ];
+
+    case "zh":
+      return [
+        { href: "/", label: "Trang chủ", icon: "🏠" },
+        { href: "/search", label: "Tra cứu từ điển", icon: "🔍" },
+        { href: "/curriculum", label: "Giáo trình (HSK 1-6)", icon: "📚" },
+        { href: "/grammar", label: "Ngữ pháp Pinyin", icon: "📖" },
+        { href: "/kanji", label: "Hán tự Hanzi", icon: "🉐" },
+        { href: "/vocabulary", label: "Từ vựng Tiếng Trung", icon: "📝" },
+        { href: "/notebooks", label: "Sổ tay cá nhân", icon: "📓" },
+        { href: "/flashcard/all", label: "Ôn tập Flashcard", icon: "🎴" },
+        { href: "/settings", label: "Cài đặt & Ngôn ngữ", icon: "⚙️" },
+      ];
+
+    case "ja":
+    default:
+      return [
+        { href: "/", label: "Trang chủ", icon: "🏠" },
+        { href: "/search", label: "Tra cứu từ điển", icon: "🔍" },
+        { href: "/curriculum", label: "Giáo trình (N5-N2)", icon: "📚" },
+        { href: "/grammar", label: "Ngữ pháp JLPT", icon: "📖" },
+        { href: "/kanji", label: "Kanji SVG", icon: "🉐" },
+        { href: "/vocabulary", label: "Từ vựng tiếng Nhật", icon: "📝" },
+        { href: "/notebooks", label: "Sổ tay cá nhân", icon: "📓" },
+        { href: "/flashcard/all", label: "Ôn tập Flashcard", icon: "🎴" },
+        { href: "/settings", label: "Cài đặt & Ngôn ngữ", icon: "⚙️" },
+      ];
+  }
+}
 
 export default function Navbar() {
   const pathname = usePathname();
   const [showSyncDialog, setShowSyncDialog] = useState(false);
+  const { activeLanguage } = useLanguageSetting();
+
+  const navItems = getNavItemsForLanguage(activeLanguage.code);
 
   const handleSyncClick = () => {
     setShowSyncDialog(true);
@@ -42,27 +108,32 @@ export default function Navbar() {
         <div>
           {/* Brand Logo */}
           <Link href="/" className="flex items-center gap-3 px-3 py-2 mb-6 group">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center text-white text-xl font-bold shadow-md shadow-indigo-200 group-hover:scale-105 transition-transform">
-              🌸
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-600 flex items-center justify-center text-white text-xl font-bold shadow-md shadow-indigo-200 group-hover:scale-105 transition-transform">
+              🌐
             </div>
             <div>
               <h1 className="font-extrabold text-gray-900 text-base tracking-tight group-hover:text-indigo-600 transition-colors">
-                FlashCash
+                Dland Language
               </h1>
-              <p className="text-[10px] font-bold text-indigo-600 tracking-wider uppercase">JLPT N5 ➔ N2</p>
+              <div className="flex items-center gap-1 mt-0.5">
+                <span className="text-xs">{activeLanguage.flag}</span>
+                <span className="text-[10px] font-bold text-indigo-600 tracking-wider uppercase">
+                  {activeLanguage.name}
+                </span>
+              </div>
             </div>
           </Link>
 
           {/* Navigation Links */}
           <nav className="space-y-1">
             <div className="px-3 mb-2 text-[11px] font-bold text-gray-400 uppercase tracking-wider">
-              Danh mục học
+              Danh mục {activeLanguage.name}
             </div>
-            {NAV_ITEMS.map(({ href, label, icon }) => {
+            {navItems.map(({ href, label, icon }) => {
               const isActive = pathname === href || (href !== "/" && pathname.startsWith(href));
               return (
                 <Link
-                  key={href}
+                  key={href + label}
                   href={href}
                   className={`flex items-center gap-3 px-3 py-2 rounded-2xl text-xs font-semibold transition-all ${
                     isActive
@@ -80,6 +151,17 @@ export default function Navbar() {
 
         {/* Desktop Sidebar Footer */}
         <div className="pt-4 border-t border-gray-100 space-y-3">
+          <Link
+            href="/settings"
+            className="w-full px-3 py-2 bg-indigo-50 text-indigo-700 rounded-2xl hover:bg-indigo-100 transition text-xs font-semibold flex items-center justify-between"
+          >
+            <div className="flex items-center gap-1.5">
+              <span>{activeLanguage.flag}</span>
+              <span className="truncate">{activeLanguage.name}</span>
+            </div>
+            <span className="text-[10px] bg-indigo-200 text-indigo-800 px-1.5 py-0.5 rounded-md font-bold">Đổi</span>
+          </Link>
+
           <button
             onClick={handleSyncClick}
             className="w-full px-3 py-2.5 bg-emerald-50 text-emerald-700 rounded-2xl hover:bg-emerald-100 transition text-xs font-semibold flex items-center justify-center gap-2"
@@ -112,8 +194,11 @@ export default function Navbar() {
 
       {/* Mobile Top Header */}
       <header className="md:hidden sticky top-0 z-40 flex items-center justify-between bg-white border-b border-gray-200 px-4 h-12 shadow-2xs">
-        <Link href="/" className="font-bold text-indigo-700 text-sm flex items-center gap-2">
-          <span>🌸</span> FlashCash N5-N2
+        <Link href="/" className="font-bold text-indigo-700 text-sm flex items-center gap-1.5">
+          <span>🌐</span> Dland Language
+          <span className="text-xs px-1.5 py-0.5 bg-indigo-50 rounded-md text-indigo-600 font-normal">
+            {activeLanguage.flag} {activeLanguage.name}
+          </span>
         </Link>
         <div className="flex items-center gap-2">
           <button
@@ -137,11 +222,11 @@ export default function Navbar() {
 
       {/* Mobile Bottom Navigation Bar */}
       <nav className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white border-t border-gray-200 flex h-14">
-        {NAV_ITEMS.map(({ href, label, icon }) => {
+        {navItems.slice(0, 5).map(({ href, label, icon }) => {
           const isActive = pathname === href || (href !== "/" && pathname.startsWith(href));
           return (
             <Link
-              key={href}
+              key={href + label}
               href={href}
               aria-label={label}
               title={label}

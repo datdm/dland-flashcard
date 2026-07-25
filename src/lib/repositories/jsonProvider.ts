@@ -10,13 +10,23 @@ import {
 } from "./types";
 import { Vocabulary, GrammarPoint } from "@/types";
 
-const LEVEL_FILES: Record<JLPTLevel, string> = {
+const LEVEL_FILES: Record<string, string> = {
   N5: "/data/n5-curriculum.json",
   N4: "/data/n4-curriculum.json",
   N3: "/data/n3-curriculum.json",
   N2: "/data/n2-curriculum.json",
-  N1: "/data/n5-curriculum.json" // Fallback to N5 structure for N1 until file added
+  N1: "/data/n5-curriculum.json",
+  EN: "/data/en-curriculum.json",
+  DE: "/data/de-curriculum.json"
 };
+
+function getActiveLanguageCode(): string {
+  if (typeof window !== "undefined") {
+    const saved = localStorage.getItem("dland_target_language");
+    if (saved) return JSON.parse(saved);
+  }
+  return "ja";
+}
 
 async function fetchJsonData<T>(url: string): Promise<T | null> {
   try {
@@ -25,7 +35,6 @@ async function fetchJsonData<T>(url: string): Promise<T | null> {
       if (!res.ok) return null;
       return (await res.json()) as T;
     } else {
-      // Node.js SSR / Build time
       const fs = require("fs");
       const path = require("path");
       const filePath = path.join(process.cwd(), "public", url);
@@ -41,8 +50,71 @@ async function fetchJsonData<T>(url: string): Promise<T | null> {
 
 export class JsonCurriculumRepository implements ICurriculumRepository {
   async getCurriculums(): Promise<CurriculumLevelGroup[]> {
-    const levels: JLPTLevel[] = ["N5", "N4", "N3", "N2", "N1"];
+    const langCode = getActiveLanguageCode();
     const groups: CurriculumLevelGroup[] = [];
+
+    if (langCode === "en") {
+      const data = await fetchJsonData<{
+        level: string;
+        title: string;
+        description: string;
+        lessons: DetailedLesson[];
+      }>(LEVEL_FILES.EN);
+
+      if (data) {
+        let totalVocab = 0;
+        let totalGrammar = 0;
+        data.lessons.forEach((l) => {
+          totalVocab += l.vocabulary?.length || 0;
+          totalGrammar += l.grammarPoints?.length || 0;
+        });
+
+        groups.push({
+          level: "N5", // Level slot
+          title: data.title,
+          description: data.description,
+          totalLessons: data.lessons.length,
+          totalVocab,
+          totalGrammar,
+          totalKanji: 0,
+          lessons: data.lessons
+        });
+      }
+      return groups;
+    }
+
+    if (langCode === "de") {
+      const data = await fetchJsonData<{
+        level: string;
+        title: string;
+        description: string;
+        lessons: DetailedLesson[];
+      }>(LEVEL_FILES.DE);
+
+      if (data) {
+        let totalVocab = 0;
+        let totalGrammar = 0;
+        data.lessons.forEach((l) => {
+          totalVocab += l.vocabulary?.length || 0;
+          totalGrammar += l.grammarPoints?.length || 0;
+        });
+
+        groups.push({
+          level: "N5",
+          title: data.title,
+          description: data.description,
+          totalLessons: data.lessons.length,
+          totalVocab,
+          totalGrammar,
+          totalKanji: 0,
+          lessons: data.lessons
+        });
+      }
+      return groups;
+    }
+
+    // Default Japanese N5 -> N1
+    const levels: JLPTLevel[] = ["N5", "N4", "N3", "N2", "N1"];
 
     for (const level of levels) {
       const data = await fetchJsonData<{
@@ -117,12 +189,13 @@ export class JsonVocabularyRepository implements IVocabularyRepository {
     const all = await this.getAllVocabulary();
     const q = query.toLowerCase().trim();
     if (!q) return all;
-    return all.filter((v) =>
-      v.kanji?.toLowerCase().includes(q) ||
-      v.hiragana?.toLowerCase().includes(q) ||
-      v.meaning?.toLowerCase().includes(q) ||
-      v.onyomi?.toLowerCase().includes(q) ||
-      v.phonetic?.toLowerCase().includes(q)
+    return all.filter(
+      (v) =>
+        v.kanji?.toLowerCase().includes(q) ||
+        v.hiragana?.toLowerCase().includes(q) ||
+        v.meaning?.toLowerCase().includes(q) ||
+        v.onyomi?.toLowerCase().includes(q) ||
+        v.phonetic?.toLowerCase().includes(q)
     );
   }
 }
@@ -155,10 +228,11 @@ export class JsonGrammarRepository implements IGrammarRepository {
     const all = await this.getAllGrammar();
     const q = query.toLowerCase().trim();
     if (!q) return all;
-    return all.filter((g) =>
-      g.structure.toLowerCase().includes(q) ||
-      g.meaning.toLowerCase().includes(q) ||
-      g.explanation?.toLowerCase().includes(q)
+    return all.filter(
+      (g) =>
+        g.structure.toLowerCase().includes(q) ||
+        g.meaning.toLowerCase().includes(q) ||
+        g.explanation?.toLowerCase().includes(q)
     );
   }
 }
@@ -180,12 +254,13 @@ export class JsonKanjiRepository implements IKanjiRepository {
     const all = await this.getAllKanji();
     const q = query.toLowerCase().trim();
     if (!q) return all;
-    return all.filter((k) =>
-      k.kanji.includes(q) ||
-      k.hanViet.toLowerCase().includes(q) ||
-      k.meaning.toLowerCase().includes(q) ||
-      k.onyomi.some((o) => o.toLowerCase().includes(q)) ||
-      k.kunyomi.some((ku) => ku.toLowerCase().includes(q))
+    return all.filter(
+      (k) =>
+        k.kanji.includes(q) ||
+        k.hanViet.toLowerCase().includes(q) ||
+        k.meaning.toLowerCase().includes(q) ||
+        k.onyomi.some((o) => o.toLowerCase().includes(q)) ||
+        k.kunyomi.some((ku) => ku.toLowerCase().includes(q))
     );
   }
 }

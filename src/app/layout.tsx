@@ -7,8 +7,8 @@ import AutoImport from "@/components/AutoImport";
 const geist = Geist({ subsets: ["latin"], variable: "--font-geist-sans" });
 
 export const metadata: Metadata = {
-  title: "FlashCash — Nền tảng học tiếng Nhật N5 - N2",
-  description: "Ứng dụng flashcard, ngữ pháp và Kanji học tiếng Nhật toàn diện",
+  title: "Dland Language — Nền tảng học ngôn ngữ đa năng",
+  description: "Hệ thống học ngôn ngữ đa năng (Tiếng Nhật, Tiếng Anh, Tiếng Đức...) với Flashcard SRS, Ngữ pháp và Tra cứu từ điển",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

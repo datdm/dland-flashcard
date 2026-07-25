@@ -1,0 +1,33 @@
+{
+  "level": "German",
+  "title": "🇩🇪 Deutsch - Goethe A1 & A2 Grundstufe",
+  "description": "Lộ trình học Tiếng Đức: Từ vựng Goethe A1-A2, Quán từ Der/Die/Das, Chia động từ & Cấu trúc câu",
+  "lessons": [
+    {
+      "id": "de-lesson-01",
+      "name": "Lektion 1: Begrüßung & Sich Vorstellen",
+      "description": "Chào hỏi, tự giới thiệu bản thân, quốc tịch và nghề nghiệp trong Tiếng Đức",
+      "level": "A1",
+      "curriculum": "Goethe A1",
+      "vocabulary": [
+        { "id": "de-01-01", "kanji": "Guten Tag", "hiragana": "gooten tahk", "meaning": "Xin chào (Ban ngày)", "phonetic": "greeting" },
+        { "id": "de-01-02", "kanji": "Der Name", "hiragana": "dair nah-mue", "meaning": "Tên (Giống đực - Der)", "phonetic": "noun (m)" },
+        { "id": "de-01-03", "kanji": "Die Sprache", "hiragana": "dee shprah-khue", "meaning": "Ngôn ngữ (Giống cái - Die)", "phonetic": "noun (f)" },
+        { "id": "de-01-04", "kanji": "Das Buch", "hiragana": "dahs bookh", "meaning": "Quyển sách (Giống trung - Das)", "phonetic": "noun (n)" },
+        { "id": "de-01-05", "kanji": "Deutschland", "hiragana": "doytch-lahnt", "meaning": "Nước Đức", "phonetic": "noun" }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-de-01",
+          "structure": "Bestimmter Artikel (Quán từ xác định Der / Die / Das)",
+          "meaning": "Der (Giống đực), Die (Giống cái), Das (Giống trung)",
+          "explanation": "Mọi danh từ trong tiếng Đức đều mang một trong ba giống: Der, Die hoặc Das.",
+          "level": "A1",
+          "examples": [
+            { "id": "eg-de-01-1", "sentence": "Das Buch ist sehr gut.", "meaning": "Quyển sách này rất hay." }
+          ]
+        }
+      ]
+    }
+  ]
+}

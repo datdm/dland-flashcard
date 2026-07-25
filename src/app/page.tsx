@@ -6,11 +6,13 @@ import { useNotebooks } from "@/hooks/useNotebooks";
 import { useProgress } from "@/hooks/useProgress";
 import { useStreak } from "@/hooks/useStreak";
 import { initializeSampleData } from "@/lib/storage";
+import { useLanguageSetting } from "@/hooks/useLanguageSetting";
 
 export default function HomePage() {
   const { notebooks } = useNotebooks();
   const { progress } = useProgress();
   const streak = useStreak();
+  const { activeLanguage } = useLanguageSetting();
 
   useEffect(() => {
     initializeSampleData();
@@ -26,18 +28,24 @@ export default function HomePage() {
   return (
     <div className="p-4 max-w-5xl mx-auto pb-24">
       {/* Hero Banner */}
-      <div className="bg-gradient-to-r from-indigo-700 via-indigo-600 to-purple-700 rounded-3xl p-6 sm:p-8 text-white shadow-xl mb-8">
+      <div className="bg-gradient-to-r from-indigo-700 via-purple-700 to-pink-700 rounded-3xl p-6 sm:p-8 text-white shadow-xl mb-8">
         <div className="max-w-xl">
-          <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-xs font-semibold tracking-wide">
-            HỆ THỐNG HỌC TIẾNG NHẬT N5 ➔ N2
-          </span>
-          <h1 className="text-2xl sm:text-4xl font-extrabold mt-3 tracking-tight leading-tight">
-            Chinh Phục JLPT Từ Sơ Cấp Đến Trung Nâng Cấp
+          <div className="flex items-center gap-2 mb-2">
+            <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-xs font-semibold tracking-wide">
+              🌐 Dland Language Platform
+            </span>
+            <span className="px-2.5 py-0.5 bg-white/30 backdrop-blur-md rounded-full text-xs font-bold">
+              {activeLanguage.flag} {activeLanguage.name}
+            </span>
+          </div>
+
+          <h1 className="text-2xl sm:text-4xl font-extrabold mt-2 tracking-tight leading-tight">
+            Nền Tảng Học Ngôn Ngữ Đa Năng Thông Minh
           </h1>
           <p className="text-xs sm:text-sm text-indigo-100 mt-2 leading-relaxed">
-            Học đầy đủ 3 thành tố: <span className="font-bold text-white">Từ vựng Flashcard</span>,{" "}
+            Học ngôn ngữ với 3 trụ cột vững chắc: <span className="font-bold text-white">Từ vựng Flashcard SRS</span>,{" "}
             <span className="font-bold text-white">Cấu trúc Ngữ pháp</span> và{" "}
-            <span className="font-bold text-white">Kanji Nét vẽ SVG</span>.
+            <span className="font-bold text-white">Tra cứu Từ điển Nhật-Việt</span>.
           </p>
 
           <div className="flex flex-wrap gap-3 mt-6">
@@ -48,10 +56,10 @@ export default function HomePage() {
               📚 Xem Lộ trình Bài học
             </Link>
             <Link
-              href="/flashcard/all"
+              href="/search"
               className="px-5 py-2.5 bg-white/10 hover:bg-white/20 backdrop-blur-md text-white font-bold rounded-2xl border border-white/20 transition-colors text-xs sm:text-sm"
             >
-              🎴 Ôn tập Flashcard SRS
+              🔍 Tra cứu Từ điển
             </Link>
           </div>
         </div>
@@ -75,7 +83,9 @@ export default function HomePage() {
 
       {/* JLPT Level Quick Cards Grid */}
       <div className="mb-10">
-        <h2 className="text-lg font-bold text-gray-900 mb-4">Lựa chọn Cấp độ JLPT</h2>
+        <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+          <span>{activeLanguage.flag}</span> Cấp độ Trình độ {activeLanguage.name}
+        </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {LEVEL_CARDS.map((card) => (
             <Link
@@ -84,7 +94,9 @@ export default function HomePage() {
               className="group relative overflow-hidden bg-white rounded-3xl p-5 border border-gray-100 shadow-sm hover:shadow-md hover:border-indigo-200 transition-all flex flex-col justify-between"
             >
               <div>
-                <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${card.color} flex items-center justify-center text-white font-extrabold text-xl shadow-md mb-3`}>
+                <div
+                  className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${card.color} flex items-center justify-center text-white font-extrabold text-xl shadow-md mb-3`}
+                >
                   {card.level}
                 </div>
                 <h3 className="font-bold text-gray-900 text-base group-hover:text-indigo-600 transition-colors">
@@ -109,7 +121,7 @@ export default function HomePage() {
         >
           <div className="text-3xl mb-3">📚</div>
           <h3 className="font-bold text-gray-900 text-lg group-hover:text-indigo-600 transition-colors">
-            Giáo trình N5 ➔ N2
+            Giáo trình Bài học
           </h3>
           <p className="text-xs text-gray-500 mt-1 leading-relaxed">
             Học theo từng bài từ Minna no Nihongo I & II cho đến Soumatome và Shinkanzen Master.

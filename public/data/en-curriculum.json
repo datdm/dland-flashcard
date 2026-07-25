@@ -1,0 +1,33 @@
+{
+  "level": "English",
+  "title": "🇬🇧 English - Oxford 3000 & IELTS Vocabulary",
+  "description": "Lộ trình học Tiếng Anh toàn diện: Từ vựng Oxford 3000, IELTS, Ngữ pháp Grammar & Flashcard SRS",
+  "lessons": [
+    {
+      "id": "en-lesson-01",
+      "name": "Unit 1: Daily Life & Communication",
+      "description": "Từ vựng & cấu trúc ngữ pháp giao tiếp hàng ngày trong Tiếng Anh",
+      "level": "A1",
+      "curriculum": "Oxford 3000",
+      "vocabulary": [
+        { "id": "en-01-01", "kanji": "Communication", "hiragana": "/kəˌmjuːnɪˈkeɪʃn/", "meaning": "Sự giao tiếp, liên lạc", "phonetic": "noun" },
+        { "id": "en-01-02", "kanji": "Achievement", "hiragana": "/əˈtʃiːvmənt/", "meaning": "Thành tựu, đạt được", "phonetic": "noun" },
+        { "id": "en-01-03", "kanji": "Opportunity", "hiragana": "/ˌɒpəˈtjuːnəti/", "meaning": "Cơ hội, thời cơ", "phonetic": "noun" },
+        { "id": "en-01-04", "kanji": "Perspective", "hiragana": "/pəˈspektɪv/", "meaning": "Góc nhìn, quan điểm", "phonetic": "noun" },
+        { "id": "en-01-05", "kanji": "Environment", "hiragana": "/ɪnˈvaɪrənmənt/", "meaning": "Môi trường xung quanh", "phonetic": "noun" }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-en-01",
+          "structure": "Present Perfect (Thì Hiện Tại Hoàn Thành)",
+          "meaning": "Subject + have/has + V3/ed (Diễn tả hành động xảy ra trong quá khứ kéo dài đến hiện tại)",
+          "explanation": "Dùng khi diễn tả kinh nghiệm, sự việc vừa xảy ra hoặc kết quả kéo dài tới hiện tại.",
+          "level": "A2",
+          "examples": [
+            { "id": "eg-en-01-1", "sentence": "I have studied English for 3 years.", "meaning": "Tôi đã học tiếng Anh được 3 năm rồi." }
+          ]
+        }
+      ]
+    }
+  ]
+}
