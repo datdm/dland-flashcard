@@ -14,10 +14,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="vi" className={`${geist.variable} antialiased h-full`}>
-      <body className="min-h-full flex flex-col bg-gray-50 text-gray-900">
+      <body className="min-h-full flex flex-col bg-gray-50 text-gray-900 overflow-x-hidden">
         <AutoImport />
         <Navbar />
-        <main className="flex-1 md:pl-64 pb-24 md:pb-8">{children}</main>
+        <main id="main-content" className="flex-1 md:pl-64 pb-24 md:pb-8 transition-all duration-300 ease-in-out">{children}</main>
       </body>
     </html>
   );
