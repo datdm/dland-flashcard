@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
 
   // 1. Try Mazii Japanese-Vietnamese API first
   try {
-    const maziiRes = await fetch("https://api.mazii.net/api/search", {
+    const maziiRes = await fetch("https://mazii.net/api/search", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

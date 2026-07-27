@@ -12,9 +12,10 @@ export default function DictionarySearchPage() {
   const [activeLevel, setActiveLevel] = useState<string>("ALL");
   const [selectedWordForNotebook, setSelectedWordForNotebook] = useState<DictionaryItem | null>(null);
   const [targetNotebookId, setTargetNotebookId] = useState<string>("");
+  const [duplicateError, setDuplicateError] = useState<string | null>(null);
 
   const { getVocabProgress, toggleLearned, toggleFavorite } = useProgress();
-  const { notebooks, addVocab } = useNotebooks();
+  const { notebooks, addVocab, checkDuplicate } = useNotebooks();
 
   useEffect(() => {
     if (!query.trim()) {
@@ -45,6 +46,18 @@ export default function DictionarySearchPage() {
   const handleAddToNotebook = () => {
     if (!selectedWordForNotebook || !targetNotebookId) return;
 
+    const duplicates = checkDuplicate(targetNotebookId, selectedWordForNotebook.kanji, selectedWordForNotebook.hiragana);
+    if (duplicates && duplicates.length > 0) {
+      const otherDuplicates = duplicates.filter((d) => d.notebookId !== targetNotebookId);
+      if (otherDuplicates.length > 0) {
+        const notebookNames = Array.from(new Set(otherDuplicates.map((d) => `"${d.notebookName}"`))).join(", ");
+        setDuplicateError(`Từ này đã có trong sổ tay: ${notebookNames}`);
+      } else {
+        setDuplicateError("Từ này đã có trong sổ tay này");
+      }
+      return;
+    }
+
     addVocab(targetNotebookId, {
       kanji: selectedWordForNotebook.kanji,
       hiragana: selectedWordForNotebook.hiragana,
@@ -55,6 +68,7 @@ export default function DictionarySearchPage() {
 
     setSelectedWordForNotebook(null);
     setTargetNotebookId("");
+    setDuplicateError(null);
     alert("Đã thêm từ vào sổ tay thành công!");
   };
 
@@ -215,7 +229,10 @@ export default function DictionarySearchPage() {
 
                     {notebooks.length > 0 && (
                       <button
-                        onClick={() => setSelectedWordForNotebook(item)}
+                        onClick={() => {
+                          setSelectedWordForNotebook(item);
+                          setDuplicateError(null);
+                        }}
                         className="px-2.5 py-1.5 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-700 text-xs font-semibold transition-colors"
                         title="Thêm vào sổ tay"
                       >
@@ -239,6 +256,12 @@ export default function DictionarySearchPage() {
               Từ: <span className="font-bold text-indigo-600">{selectedWordForNotebook.kanji || selectedWordForNotebook.hiragana}</span> ({selectedWordForNotebook.meaning})
             </p>
 
+            {duplicateError && (
+              <div className="mb-4 rounded-2xl border border-red-200 bg-red-50 p-3 text-xs font-semibold text-red-600">
+                ✕ {duplicateError}
+              </div>
+            )}
+
             <label className="block text-xs font-semibold text-gray-700 mb-2">Chọn Sổ tay:</label>
             <select
               value={targetNotebookId}
@@ -255,7 +278,10 @@ export default function DictionarySearchPage() {
 
             <div className="flex gap-2 justify-end">
               <button
-                onClick={() => setSelectedWordForNotebook(null)}
+                onClick={() => {
+                  setSelectedWordForNotebook(null);
+                  setDuplicateError(null);
+                }}
                 className="px-4 py-2 rounded-xl border border-gray-300 text-gray-600 hover:bg-gray-50 text-xs font-semibold"
               >
                 Hủy

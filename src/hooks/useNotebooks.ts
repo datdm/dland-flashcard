@@ -186,6 +186,34 @@ export function useNotebooks() {
     []
   );
 
+  const moveMultipleVocab = useCallback(
+    (fromNotebookId: string, toNotebookId: string, vocabIds: string[]) => {
+      setNotebooks((prev) => {
+        const sourceNotebook = prev.find((nb) => nb.id === fromNotebookId);
+        if (!sourceNotebook) return prev;
+        
+        const vocabSet = new Set(vocabIds);
+        const vocabToMove = sourceNotebook.vocabulary.filter((v) => vocabSet.has(v.id));
+        
+        if (vocabToMove.length === 0) return prev;
+        
+        const updated = prev.map((nb) => {
+          if (nb.id === fromNotebookId) {
+            return { ...nb, vocabulary: nb.vocabulary.filter((v) => !vocabSet.has(v.id)) };
+          } else if (nb.id === toNotebookId) {
+            return { ...nb, vocabulary: [...vocabToMove, ...nb.vocabulary] };
+          }
+          return nb;
+        });
+        
+        setItem<NotebooksData>(StorageKeys.NOTEBOOKS, { notebooks: updated });
+        autoSync();
+        return updated;
+      });
+    },
+    []
+  );
+
   const reorderVocabInNotebook = useCallback(
     (notebookId: string, draggedVocabId: string, targetVocabId: string) => {
       setNotebooks((prev) => {
@@ -404,6 +432,7 @@ export function useNotebooks() {
     updateVocab,
     deleteVocab,
     moveVocab,
+    moveMultipleVocab,
     reorderVocabInNotebook,
     checkDuplicate,
     exportNotebook,

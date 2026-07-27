@@ -35,7 +35,7 @@ function insertDraggedAtIndex(ids: string[], draggedId: string, insertIndex: num
 
 export default function NotebookDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const { notebooks, save, addVocab, updateVocab, deleteVocab, moveVocab, exportNotebook, importVocabFromJson, checkDuplicate } = useNotebooks();
+  const { notebooks, save, addVocab, updateVocab, deleteVocab, moveVocab, moveMultipleVocab, exportNotebook, importVocabFromJson, checkDuplicate } = useNotebooks();
   const { toggleLearned, toggleFavorite, progress } = useProgress();
 
   const [form, setForm] = useState<VocabFields>(EMPTY_FIELDS);
@@ -53,6 +53,8 @@ export default function NotebookDetailPage() {
   const [previewVocabIds, setPreviewVocabIds] = useState<string[] | null>(null);
   const [dropVocabIndex, setDropVocabIndex] = useState<number | null>(null);
   const [dragVocabRect, setDragVocabRect] = useState<{ left: number; top: number; width: number; height: number; offsetX: number; offsetY: number } | null>(null);
+  const [selectedVocabIds, setSelectedVocabIds] = useState<string[]>([]);
+  const [showBulkMoveModal, setShowBulkMoveModal] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
   const previewVocabIdsRef = useRef<string[] | null>(null);
@@ -206,6 +208,28 @@ export default function NotebookDetailPage() {
     if (tab === "favorite") return progress[v.id]?.favorite;
     return true;
   });
+
+  const toggleVocabSelection = (vocabId: string) => {
+    setSelectedVocabIds((prev) =>
+      prev.includes(vocabId) ? prev.filter((id) => id !== vocabId) : [...prev, vocabId]
+    );
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedVocabIds.length === filteredVocabulary.length) {
+      setSelectedVocabIds([]);
+    } else {
+      setSelectedVocabIds(filteredVocabulary.map((v) => v.id));
+    }
+  };
+
+  const handleBulkMove = () => {
+    if (selectedVocabIds.length === 0 || !targetNotebookId) return;
+    moveMultipleVocab(id, targetNotebookId, selectedVocabIds);
+    setShowBulkMoveModal(false);
+    setSelectedVocabIds([]);
+    setTargetNotebookId("");
+  };
 
   const ITEMS_PER_PAGE = 30;
   const totalPages = Math.ceil(tabFiltered.length / ITEMS_PER_PAGE);
@@ -482,8 +506,45 @@ export default function NotebookDetailPage() {
 
       {/* Filter Tabs */}
       {notebookVocabulary.length > 0 && (
-        <div className="mb-5">
+        <div className="mb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <FilterBar active={tab} onChange={setTab} counts={counts} />
+          
+          {filteredVocabulary.length > 0 && (
+            <label className="flex items-center gap-2 cursor-pointer bg-white px-3 py-2 rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors shrink-0">
+              <input
+                type="checkbox"
+                checked={selectedVocabIds.length === filteredVocabulary.length && filteredVocabulary.length > 0}
+                onChange={toggleSelectAll}
+                className="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
+              />
+              <span className="text-xs font-bold text-gray-600">Chọn tất cả</span>
+            </label>
+          )}
+        </div>
+      )}
+
+      {/* Bulk Actions Bar */}
+      {selectedVocabIds.length > 0 && (
+        <div className="mb-4 bg-indigo-50 border border-indigo-200 rounded-2xl p-3 flex flex-wrap items-center justify-between gap-3 shadow-xs animate-in fade-in slide-in-from-top-2">
+          <div className="flex items-center gap-3">
+            <span className="text-sm font-bold text-indigo-800">
+              Đã chọn {selectedVocabIds.length} từ vựng
+            </span>
+            <button
+              onClick={() => setSelectedVocabIds([])}
+              className="text-xs text-indigo-600 hover:underline font-semibold"
+            >
+              Bỏ chọn tất cả
+            </button>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setShowBulkMoveModal(true)}
+              className="px-4 py-2 bg-indigo-600 text-white text-xs font-bold rounded-xl hover:bg-indigo-700 transition-colors shadow-xs"
+            >
+              Chuyển sang sổ tay khác
+            </button>
+          </div>
         </div>
       )}
 
@@ -522,22 +583,30 @@ export default function NotebookDetailPage() {
                   >
                     <div>
                       <div className="flex items-start justify-between gap-1 mb-2">
-                        <div className="min-w-0 flex-1">
-                          <div className="flex items-center gap-1.5 flex-wrap">
-                            <span className="text-xl font-extrabold text-gray-900 leading-snug">
-                              {v.kanji || v.hiragana}
-                            </span>
-                            {v.kanji && v.hiragana && (
-                              <span className="text-xs font-semibold text-indigo-600 font-mono">
-                                ({v.hiragana})
+                        <div className="flex items-start gap-2 min-w-0 flex-1">
+                          <input
+                            type="checkbox"
+                            checked={selectedVocabIds.includes(v.id)}
+                            onChange={() => toggleVocabSelection(v.id)}
+                            className="mt-1.5 w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
+                          />
+                          <div className="min-w-0">
+                            <div className="flex items-center gap-1.5 flex-wrap">
+                              <span className="text-xl font-extrabold text-gray-900 leading-snug">
+                                {v.kanji || v.hiragana}
                               </span>
+                              {v.kanji && v.hiragana && (
+                                <span className="text-xs font-semibold text-indigo-600 font-mono">
+                                  ({v.hiragana})
+                                </span>
+                              )}
+                            </div>
+                            {v.onyomi && (
+                              <p className="text-[11px] text-purple-600 font-medium mt-0.5">
+                                Âm Hán: {v.onyomi}
+                              </p>
                             )}
                           </div>
-                          {v.onyomi && (
-                            <p className="text-[11px] text-purple-600 font-medium mt-0.5">
-                              Âm Hán: {v.onyomi}
-                            </p>
-                          )}
                         </div>
 
                         <div className="flex items-center gap-1 shrink-0">
@@ -792,6 +861,66 @@ export default function NotebookDetailPage() {
                   Lưu thay đổi
                 </button>
               )}
+            </div>
+          </div>
+        </div>
+      )}
+      {/* Bulk Move Modal */}
+      {showBulkMoveModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4 overflow-y-auto"
+          onClick={() => {
+            setShowBulkMoveModal(false);
+            setTargetNotebookId("");
+          }}
+        >
+          <div
+            className="w-full max-w-md bg-white rounded-3xl shadow-xl p-6 my-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-bold text-gray-900 text-base">Di chuyển {selectedVocabIds.length} từ vựng</h3>
+              <button
+                onClick={() => {
+                  setShowBulkMoveModal(false);
+                  setTargetNotebookId("");
+                }}
+                className="text-gray-400 hover:text-gray-600 text-lg leading-none"
+              >
+                ✕
+              </button>
+            </div>
+            
+            <div className="space-y-4 mb-6">
+              <div>
+                <label className="block text-xs font-semibold text-purple-700 mb-2">
+                  Chọn sổ tay đích để chuyển đến:
+                </label>
+                <select
+                  value={targetNotebookId}
+                  onChange={(e) => setTargetNotebookId(e.target.value)}
+                  className="w-full rounded-2xl border border-purple-200 bg-purple-50/50 px-4 py-2.5 text-xs font-semibold text-purple-900 focus:outline-none focus:border-purple-500"
+                >
+                  <option value="">-- Chọn sổ tay --</option>
+                  {notebooks
+                    .filter((nb) => nb.id !== id)
+                    .map((nb) => (
+                      <option key={nb.id} value={nb.id}>
+                        {nb.name}
+                      </option>
+                    ))}
+                </select>
+              </div>
+            </div>
+
+            <div className="flex gap-2 justify-end">
+              <button
+                onClick={handleBulkMove}
+                disabled={!targetNotebookId}
+                className="w-full bg-purple-600 text-white rounded-2xl py-3 text-xs font-bold hover:bg-purple-700 disabled:opacity-50 transition-colors shadow-2xs"
+              >
+                Chuyển từ vựng
+              </button>
             </div>
           </div>
         </div>
