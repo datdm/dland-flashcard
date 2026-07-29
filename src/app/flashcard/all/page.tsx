@@ -12,6 +12,7 @@ export default function FlashCardAllPage() {
   const { curriculums } = useCurriculums();
   const { notebooks } = useNotebooks();
   const [source, setSource] = useState<SourceFilter>("all");
+  const [isDaily50, setIsDaily50] = useState(false);
 
   // Get all vocabulary based on filter
   const allVocab = useMemo(() => {
@@ -71,9 +72,23 @@ export default function FlashCardAllPage() {
 
       {/* Filter Section */}
       <div className="bg-white rounded-3xl p-5 sm:p-6 border border-gray-100 shadow-2xs mb-8">
-        <h2 className="text-sm font-bold text-gray-900 mb-4 flex items-center gap-2">
-          <span>🎯</span> Chọn nguồn ôn tập
-        </h2>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+          <h2 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+            <span>🎯</span> Chọn nguồn ôn tập
+          </h2>
+          
+          <button 
+            onClick={() => setIsDaily50(!isDaily50)}
+            className={`flex items-center gap-2 px-4 py-2 rounded-2xl text-xs font-bold transition-all shadow-xs border ${
+              isDaily50 
+                ? "bg-amber-100 text-amber-700 border-amber-300" 
+                : "bg-gray-50 text-gray-500 border-gray-200 hover:bg-gray-100"
+            }`}
+          >
+            <span className="text-sm">{isDaily50 ? "✅" : "⬜"}</span>
+            Mỗi ngày 50 từ ngẫu nhiên
+          </button>
+        </div>
 
         <div className="space-y-5">
           {/* All button */}
@@ -162,6 +177,7 @@ export default function FlashCardAllPage() {
                 ? "Ôn tập tổng hợp" 
                 : curriculums.find(c => c.id === source)?.name || notebooks.find(nb => nb.id === source)?.name || "Ôn tập"
             } 
+            dailyLimit={isDaily50 ? 50 : undefined}
           />
         )}
       </div>

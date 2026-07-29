@@ -4,16 +4,17 @@ import { useState, useCallback, useEffect, useRef } from "react";
 import { Vocabulary } from "@/types";
 import { useProgress } from "@/hooks/useProgress";
 import { useFlashCardSettings } from "@/hooks/useFlashCardSettings";
-import { shuffle } from "@/lib/shuffle";
+import { shuffle, seededShuffle } from "@/lib/shuffle";
 import FlashCard from "./FlashCard";
 import FlashCardSettingsPanel from "./FlashCardSettingsPanel";
 
 interface FlashCardViewerProps {
   vocabulary: Vocabulary[];
   title?: string;
+  dailyLimit?: number;
 }
 
-export default function FlashCardViewer({ vocabulary, title }: FlashCardViewerProps) {
+export default function FlashCardViewer({ vocabulary, title, dailyLimit }: FlashCardViewerProps) {
   const { getVocabProgress, toggleLearned, toggleFavorite } = useProgress();
   const { settings, saveSettings } = useFlashCardSettings();
 
@@ -31,9 +32,16 @@ export default function FlashCardViewer({ vocabulary, title }: FlashCardViewerPr
       if (unlearnedOnly) {
         list = list.filter((v) => !getVocabProgress(v.id).learned);
       }
+      
+      if (dailyLimit && list.length > dailyLimit) {
+        const todayStr = new Date().toISOString().split("T")[0];
+        const seedStr = todayStr + (title || "daily");
+        list = seededShuffle(list, seedStr).slice(0, dailyLimit);
+      }
+      
       return isShuffled ? shuffle(list) : list;
     },
-    [vocabulary, getVocabProgress]
+    [vocabulary, getVocabProgress, dailyLimit, title]
   );
 
   useEffect(() => {
