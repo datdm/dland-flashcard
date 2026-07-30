@@ -29,7 +29,9 @@ export default function FlashCardViewer({ vocabulary, title, dailyLimit }: Flash
   const buildDeck = useCallback(
     (isShuffled: boolean, unlearnedOnly: boolean) => {
       let list = vocabulary;
-      if (unlearnedOnly) {
+      
+      // If dailyLimit is active, we always default to unlearned words only
+      if (unlearnedOnly || dailyLimit) {
         list = list.filter((v) => !getVocabProgress(v.id).learned);
       }
       
@@ -50,6 +52,27 @@ export default function FlashCardViewer({ vocabulary, title, dailyLimit }: Flash
     setFlipped(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [vocabulary]);
+
+  const handleToggleLearned = useCallback((id: string) => {
+    toggleLearned(id);
+    
+    // If the word was marked as learned, remove it from the current session deck
+    const isNowLearned = !getVocabProgress(id).learned;
+    if (isNowLearned) {
+      setDeck((prevDeck) => {
+        const newDeck = prevDeck.filter((v) => v.id !== id);
+        // Adjust index if it's now out of bounds
+        setIndex((prevIndex) => {
+          if (prevIndex >= newDeck.length) {
+            return Math.max(0, newDeck.length - 1);
+          }
+          return prevIndex;
+        });
+        setFlipped(false);
+        return newDeck;
+      });
+    }
+  }, [toggleLearned, getVocabProgress]);
 
   const current = deck[index];
 
@@ -230,7 +253,7 @@ export default function FlashCardViewer({ vocabulary, title, dailyLimit }: Flash
               </span>
             </button>
             <button
-              onClick={() => toggleLearned(current.id)}
+              onClick={() => handleToggleLearned(current.id)}
               className={`flex flex-col items-center justify-center gap-1 py-3 rounded-2xl border-2 transition-all ${
                 vocabProgress.learned
                   ? "bg-emerald-50 border-emerald-400 text-emerald-700"
