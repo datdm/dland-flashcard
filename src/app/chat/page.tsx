@@ -18,6 +18,7 @@ export default function ChatPage() {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const promptLoaded = useRef(false);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -88,6 +89,20 @@ export default function ChatPage() {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && !promptLoaded.current) {
+      const params = new URLSearchParams(window.location.search);
+      const promptParam = params.get("prompt");
+      if (promptParam) {
+        promptLoaded.current = true;
+        handleSend(promptParam);
+        // Clear query parameter to prevent resending on page refresh
+        const newUrl = window.location.pathname;
+        window.history.replaceState({}, document.title, newUrl);
+      }
+    }
+  }, [messages]);
 
   const SUGGESTIONS = [
     "📝 Phân tích Kanji: 勉強",

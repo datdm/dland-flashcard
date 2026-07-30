@@ -26,6 +26,7 @@ function getNavItemsForLanguage(langCode: string): NavItem[] {
         { href: "/vocabulary", label: "Từ vựng Oxford 3000", icon: "📝" },
         { href: "/notebooks", label: "Sổ tay cá nhân", icon: "📓" },
         { href: "/flashcard/all", label: "Ôn tập Flashcard", icon: "🎴" },
+        { href: "/history", label: "Lịch sử học tập", icon: "📊" },
         { href: "/settings", label: "Cài đặt & Ngôn ngữ", icon: "⚙️" },
       ];
 
@@ -40,6 +41,7 @@ function getNavItemsForLanguage(langCode: string): NavItem[] {
         { href: "/vocabulary", label: "Từ vựng Tiếng Đức", icon: "📝" },
         { href: "/notebooks", label: "Sổ tay cá nhân", icon: "📓" },
         { href: "/flashcard/all", label: "Ôn tập Flashcard", icon: "🎴" },
+        { href: "/history", label: "Lịch sử học tập", icon: "📊" },
         { href: "/settings", label: "Cài đặt & Ngôn ngữ", icon: "⚙️" },
       ];
 
@@ -54,6 +56,7 @@ function getNavItemsForLanguage(langCode: string): NavItem[] {
         { href: "/vocabulary", label: "Từ vựng Tiếng Hàn", icon: "📝" },
         { href: "/notebooks", label: "Sổ tay cá nhân", icon: "📓" },
         { href: "/flashcard/all", label: "Ôn tập Flashcard", icon: "🎴" },
+        { href: "/history", label: "Lịch sử học tập", icon: "📊" },
         { href: "/settings", label: "Cài đặt & Ngôn ngữ", icon: "⚙️" },
       ];
 
@@ -69,6 +72,7 @@ function getNavItemsForLanguage(langCode: string): NavItem[] {
         { href: "/vocabulary", label: "Từ vựng Tiếng Trung", icon: "📝" },
         { href: "/notebooks", label: "Sổ tay cá nhân", icon: "📓" },
         { href: "/flashcard/all", label: "Ôn tập Flashcard", icon: "🎴" },
+        { href: "/history", label: "Lịch sử học tập", icon: "📊" },
         { href: "/settings", label: "Cài đặt & Ngôn ngữ", icon: "⚙️" },
       ];
 
@@ -79,12 +83,14 @@ function getNavItemsForLanguage(langCode: string): NavItem[] {
         { href: "/search", label: "Tra cứu từ điển", icon: "🔍" },
         { href: "/translate", label: "Dịch văn bản", icon: "🌐" },
         { href: "/chat", label: "Gia Sư AI", icon: "🤖" },
+        { href: "/kaiwa", label: "Lộ trình Kaiwa", icon: "🗣️" },
         { href: "/curriculum", label: "Giáo trình (N5-N2)", icon: "📚" },
         { href: "/grammar", label: "Ngữ pháp JLPT", icon: "📖" },
         { href: "/kanji", label: "Kanji SVG", icon: "🉐" },
         { href: "/vocabulary", label: "Từ vựng tiếng Nhật", icon: "📝" },
         { href: "/notebooks", label: "Sổ tay cá nhân", icon: "📓" },
         { href: "/flashcard/all", label: "Ôn tập Flashcard", icon: "🎴" },
+        { href: "/history", label: "Lịch sử học tập", icon: "📊" },
         { href: "/settings", label: "Cài đặt & Ngôn ngữ", icon: "⚙️" },
       ];
   }

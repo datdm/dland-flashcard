@@ -65,21 +65,38 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Streak section */}
-      {streak.currentStreak > 0 && (
-        <div className="bg-gradient-to-r from-orange-400 to-red-500 rounded-2xl p-5 text-white shadow-md mb-8 flex items-center justify-between">
-          <div>
-            <p className="text-xs opacity-90">Chuỗi học tập hàng ngày</p>
-            <p className="text-2xl sm:text-3xl font-extrabold mt-0.5">🔥 {streak.currentStreak} ngày liên tiếp</p>
-          </div>
-          {streak.longestStreak > 0 && (
-            <div className="text-right">
-              <p className="text-xs opacity-90">Kỷ lục</p>
-              <p className="text-xl font-bold">🏆 {streak.longestStreak} ngày</p>
+      {/* Daily Actions Grid */}
+      <div className={`grid grid-cols-1 ${streak.currentStreak > 0 ? 'md:grid-cols-2' : 'md:grid-cols-1'} gap-4 mb-8`}>
+        {/* Streak section */}
+        {streak.currentStreak > 0 && (
+          <div className="bg-gradient-to-r from-orange-400 to-red-500 rounded-2xl p-5 text-white shadow-md flex items-center justify-between">
+            <div>
+              <p className="text-xs opacity-90">Chuỗi học tập hàng ngày</p>
+              <p className="text-2xl sm:text-3xl font-extrabold mt-0.5">🔥 {streak.currentStreak} ngày</p>
             </div>
-          )}
-        </div>
-      )}
+            {streak.longestStreak > 0 && (
+              <div className="text-right">
+                <p className="text-xs opacity-90">Kỷ lục</p>
+                <p className="text-xl font-bold">🏆 {streak.longestStreak}</p>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Daily 50 Card */}
+        <Link 
+          href="/flashcard/all?daily50=true"
+          className="bg-gradient-to-r from-emerald-500 to-teal-600 rounded-2xl p-5 text-white shadow-md flex items-center justify-between hover:scale-[1.02] transition-transform"
+        >
+          <div>
+            <p className="text-xs opacity-90 text-emerald-50 tracking-wide uppercase font-bold">Nhiệm vụ hàng ngày</p>
+            <p className="text-xl sm:text-2xl font-extrabold mt-0.5">🎲 50 Từ vựng ngẫu nhiên</p>
+          </div>
+          <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-teal-600 text-xl font-bold shrink-0 shadow-sm">
+            →
+          </div>
+        </Link>
+      </div>
 
       {/* JLPT Level Quick Cards Grid */}
       <div className="mb-10">
