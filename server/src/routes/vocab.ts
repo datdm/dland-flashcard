@@ -155,4 +155,105 @@ router.post('/check-duplicates-batch', authenticate, async (req: AuthRequest, re
   }
 });
 
+// Single vocabulary upload route (checks duplicate across all notebooks and appends to database)
+router.post('/upload', authenticate, async (req: AuthRequest, res: Response) => {
+  try {
+    const userId = req.userId;
+    const { id, kanji, hiragana, meaning, onyomi, phonetic, notebookId } = req.body;
+
+    if (!notebookId) {
+      return res.status(400).json({ error: 'Thiếu notebookId' });
+    }
+
+    if (!kanji?.trim() || !hiragana?.trim()) {
+      return res.status(400).json({ error: 'Từ vựng phải có Kanji và Hiragana' });
+    }
+
+    const normalizedKanji = kanji.trim();
+    const normalizedHiragana = hiragana.trim();
+
+    // 1. Fetch current notebooks from database
+    const result = await pool.query(
+      `SELECT data_value FROM user_data 
+       WHERE user_id = $1 AND data_key = $2`,
+      [userId, 'flashcash-notebooks']
+    );
+
+    let notebooks: any[] = [];
+    if (result.rows.length > 0 && result.rows[0].data_value) {
+      notebooks = result.rows[0].data_value.notebooks || [];
+    }
+
+    // 2. Check if notebookId exists in notebooks
+    const targetNotebook = notebooks.find((nb) => nb.id === notebookId);
+    if (!targetNotebook) {
+      return res.status(404).json({ error: 'Không tìm thấy sổ tay được chọn' });
+    }
+
+    // 3. Check duplicate across ALL notebooks
+    let duplicateFound = null;
+    for (const nb of notebooks) {
+      if (!nb.vocabulary || !Array.isArray(nb.vocabulary)) continue;
+
+      const dup = nb.vocabulary.find(
+        (v: any) => v.kanji?.trim() === normalizedKanji && v.hiragana?.trim() === normalizedHiragana
+      );
+
+      if (dup) {
+        duplicateFound = {
+          notebookName: nb.name,
+          vocab: dup,
+        };
+        break;
+      }
+    }
+
+    if (duplicateFound) {
+      return res.status(400).json({
+        error: `Từ vựng "${normalizedKanji} (${normalizedHiragana})" đã tồn tại trong sổ tay "${duplicateFound.notebookName}"!`
+      });
+    }
+
+    // 4. Create and append new vocabulary
+    const newVocab = {
+      id: id || `v-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+      kanji: normalizedKanji,
+      hiragana: normalizedHiragana,
+      meaning: meaning?.trim() || '',
+      onyomi: onyomi?.trim() || '',
+      phonetic: phonetic?.trim() || '',
+      createdAt: new Date().toISOString(),
+    };
+
+    if (!targetNotebook.vocabulary) {
+      targetNotebook.vocabulary = [];
+    }
+    targetNotebook.vocabulary.unshift(newVocab);
+
+    // 5. Update user_data back to database
+    await pool.query(
+      `INSERT INTO user_data (user_id, data_key, data_value, updated_at)
+       VALUES ($1, $2, $3, NOW())
+       ON CONFLICT (user_id, data_key)
+       DO UPDATE SET data_value = $3, updated_at = NOW()`,
+      [userId, 'flashcash-notebooks', JSON.stringify({ notebooks })]
+    );
+
+    // Update last sync time
+    await pool.query(
+      'UPDATE users SET last_sync_at = NOW() WHERE id = $1',
+      [userId]
+    );
+
+    res.json({
+      success: true,
+      message: 'Upload từ vựng thành công',
+      vocab: newVocab,
+    });
+  } catch (error) {
+    console.error('Upload vocabulary error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 export default router;

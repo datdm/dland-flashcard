@@ -1,57 +1,6011 @@
 {
   "level": "N2",
-  "title": "N2 - Trung cấp 2 (Shinkanzen Master N2)",
-  "description": "Trung cao cấp tiếng Nhật: Ngữ pháp trang trọng, báo chí, văn bản doanh nghiệp và thành ngữ",
+  "title": "N2 - Trung cấp 2 (Advanced N2 Course)",
+  "description": "Tổng hợp từ vựng, ngữ pháp và Hán tự N2 chuẩn JLPT: 15 chủ đề chuyên sâu về kinh tế, khoa học, tin tức và báo chí.",
   "lessons": [
     {
       "id": "n2-lesson-01",
-      "name": "Bài 1: Diễn đạt Phạm vi & Giới hạn (～にわたって / ～にともなって)",
-      "description": "Cấu trúc trang trọng dùng trong văn bản báo chí, kinh doanh và phát biểu chính thức",
+      "name": "Bài 01: Kinh tế & Sự thay đổi",
+      "description": "Các chủ đề xoay quanh sự biến đổi của nền kinh tế, xu hướng xã hội và các quyết định hành chính.",
       "level": "N2",
-      "curriculum": "Shinkanzen Master N2",
+      "curriculum": "N2 Upper-Intermediate Course",
       "vocabulary": [
-        { "id": "n2-01-01", "kanji": "範囲", "hiragana": "はんい", "onyomi": "PHẠM VI", "meaning": "Phạm vi, vùng", "phonetic": "han'i" },
-        { "id": "n2-01-02", "kanji": "伴う", "hiragana": "ともなう", "onyomi": "BẠN", "meaning": "Đi kèm, kéo theo", "phonetic": "tomonau" },
-        { "id": "n2-01-03", "kanji": "影響", "hiragana": "えいきょう", "onyomi": "ẢNH HƯỞNG", "meaning": "Ảnh hưởng, tác động", "phonetic": "eikyou" },
-        { "id": "n2-01-04", "kanji": "経済", "hiragana": "けいざい", "onyomi": "KINH TẾ", "meaning": "Kinh tế", "phonetic": "keizai" },
-        { "id": "n2-01-05", "kanji": "発展", "hiragana": "はってん", "onyomi": "PHÁT TRIỂN", "meaning": "Phát triển", "phonetic": "hatten" }
+        {
+          "id": "n2-01-01",
+          "kanji": "経済",
+          "hiragana": "けいざい",
+          "onyomi": "KINH TẾ",
+          "meaning": "Kinh tế",
+          "phonetic": "keizai"
+        },
+        {
+          "id": "n2-01-02",
+          "kanji": "変動",
+          "hiragana": "へんどう",
+          "onyomi": "BIẾN ĐỘNG",
+          "meaning": "Biến động",
+          "phonetic": "hendou"
+        },
+        {
+          "id": "n2-01-03",
+          "kanji": "改善",
+          "hiragana": "かいぜん",
+          "onyomi": "CẢI THIỆN",
+          "meaning": "Cải thiện",
+          "phonetic": "kaizen"
+        },
+        {
+          "id": "n2-01-04",
+          "kanji": "影響",
+          "hiragana": "えいきょう",
+          "onyomi": "ẢNH HƯỞNG",
+          "meaning": "Ảnh hưởng",
+          "phonetic": "eikyou"
+        },
+        {
+          "id": "n2-01-05",
+          "kanji": "予測",
+          "hiragana": "よそく",
+          "onyomi": "DỰ TRẮC",
+          "meaning": "Dự đoán",
+          "phonetic": "yosoku"
+        },
+        {
+          "id": "n2-01-06",
+          "kanji": "急激",
+          "hiragana": "きゅうげき",
+          "onyomi": "CẤP KÍCH",
+          "meaning": "Đột ngột",
+          "phonetic": "kyuugeki"
+        },
+        {
+          "id": "n2-01-07",
+          "kanji": "減少",
+          "hiragana": "げんしょう",
+          "onyomi": "GIẢM THIỂU",
+          "meaning": "Giảm sút",
+          "phonetic": "genshou"
+        },
+        {
+          "id": "n2-01-08",
+          "kanji": "拡大",
+          "hiragana": "かくだい",
+          "onyomi": "KHUẾCH ĐẠI",
+          "meaning": "Mở rộng",
+          "phonetic": "kakudai"
+        },
+        {
+          "id": "n2-01-09",
+          "kanji": "政府",
+          "hiragana": "せいふ",
+          "onyomi": "CHÍNH PHỦ",
+          "meaning": "Chính phủ",
+          "phonetic": "seifu"
+        },
+        {
+          "id": "n2-01-10",
+          "kanji": "政策",
+          "hiragana": "せいさく",
+          "onyomi": "CHÍNH SÁCH",
+          "meaning": "Chính sách",
+          "phonetic": "seisaku"
+        },
+        {
+          "id": "n2-01-11",
+          "kanji": "対策",
+          "hiragana": "たいさく",
+          "onyomi": "ĐỐI SÁCH",
+          "meaning": "Đối sách",
+          "phonetic": "taisaku"
+        },
+        {
+          "id": "n2-01-12",
+          "kanji": "物価",
+          "hiragana": "ぶっか",
+          "onyomi": "VẬT GIÁ",
+          "meaning": "Vật giá",
+          "phonetic": "bukka"
+        },
+        {
+          "id": "n2-01-13",
+          "kanji": "低迷",
+          "hiragana": "ていめい",
+          "onyomi": "ĐÊ MÊ",
+          "meaning": "Đình trệ/ảm đạm",
+          "phonetic": "teimei"
+        },
+        {
+          "id": "n2-01-14",
+          "kanji": "雇用",
+          "hiragana": "こよう",
+          "onyomi": "CỐ DỤNG",
+          "meaning": "Thuê mướn",
+          "phonetic": "koyou"
+        },
+        {
+          "id": "n2-01-15",
+          "kanji": "所得",
+          "hiragana": "しょとく",
+          "onyomi": "SỞ ĐẮC",
+          "meaning": "Thu nhập",
+          "phonetic": "shotoku"
+        },
+        {
+          "id": "n2-01-16",
+          "kanji": "格差",
+          "hiragana": "かくさ",
+          "onyomi": "CÁCH SAI",
+          "meaning": "Khoảng cách/Chênh lệch",
+          "phonetic": "kakusa"
+        },
+        {
+          "id": "n2-01-17",
+          "kanji": "発展",
+          "hiragana": "はってん",
+          "onyomi": "PHÁT TRIỂN",
+          "meaning": "Phát triển",
+          "phonetic": "hatten"
+        },
+        {
+          "id": "n2-01-18",
+          "kanji": "国際",
+          "hiragana": "こくさい",
+          "onyomi": "QUỐC TẾ",
+          "meaning": "Quốc tế",
+          "phonetic": "kokusai"
+        },
+        {
+          "id": "n2-01-19",
+          "kanji": "貿易",
+          "hiragana": "ぼうえき",
+          "onyomi": "MẬU DỊCH",
+          "meaning": "Thương mại",
+          "phonetic": "boueki"
+        },
+        {
+          "id": "n2-01-20",
+          "kanji": "関税",
+          "hiragana": "かんぜい",
+          "onyomi": "QUAN THUẾ",
+          "meaning": "Thuế quan",
+          "phonetic": "kanzei"
+        },
+        {
+          "id": "n2-01-21",
+          "kanji": "円高",
+          "hiragana": "えんだか",
+          "onyomi": "YÊN CAO",
+          "meaning": "Yên giá cao",
+          "phonetic": "endaka"
+        },
+        {
+          "id": "n2-01-22",
+          "kanji": "投資",
+          "hiragana": "とうし",
+          "onyomi": "ĐẦU TƯ",
+          "meaning": "Đầu tư",
+          "phonetic": "toushi"
+        },
+        {
+          "id": "n2-01-23",
+          "kanji": "企業",
+          "hiragana": "きぎょう",
+          "onyomi": "XÍ NGHIỆP",
+          "meaning": "Doanh nghiệp",
+          "phonetic": "kigyou"
+        },
+        {
+          "id": "n2-01-24",
+          "kanji": "破産",
+          "hiragana": "はさん",
+          "onyomi": "PHÁ SẢN",
+          "meaning": "Phá sản",
+          "phonetic": "hasan"
+        },
+        {
+          "id": "n2-01-25",
+          "kanji": "消費者",
+          "hiragana": "しょうひしゃ",
+          "onyomi": "TIÊU PHÍ GIẢ",
+          "meaning": "Người tiêu dùng",
+          "phonetic": "shouhisha"
+        },
+        {
+          "id": "n2-01-26",
+          "kanji": "需要",
+          "hiragana": "じゅよう",
+          "onyomi": "NHU YẾU",
+          "meaning": "Nhu cầu",
+          "phonetic": "juyou"
+        },
+        {
+          "id": "n2-01-27",
+          "kanji": "供給",
+          "hiragana": "きょうきゅう",
+          "onyomi": "CUNG CẤP",
+          "meaning": "Cung cấp",
+          "phonetic": "kyoukyuu"
+        },
+        {
+          "id": "n2-01-28",
+          "kanji": "株価",
+          "hiragana": "かぶか",
+          "onyomi": "CHU GIÁ",
+          "meaning": "Giá cổ phiếu",
+          "phonetic": "kabuka"
+        },
+        {
+          "id": "n2-01-29",
+          "kanji": "利益",
+          "hiragana": "りえき",
+          "onyomi": "LỢI ÍCH",
+          "meaning": "Lợi nhuận",
+          "phonetic": "rieki"
+        },
+        {
+          "id": "n2-01-30",
+          "kanji": "競争",
+          "hiragana": "きょうそう",
+          "onyomi": "CẠNH TRANH",
+          "meaning": "Cạnh tranh",
+          "phonetic": "kyousou"
+        }
       ],
       "grammarPoints": [
         {
-          "id": "g-n2-01",
-          "structure": "N + にわたって / にわたり",
-          "meaning": "Suốt / Trên toàn bộ (phạm vi thời gian hoặc không gian)",
-          "explanation": "Diễn tả một hành động, sự việc kéo dài suốt một khoảng thời gian hoặc trải rộng trên một vùng diện tích lớn.",
+          "id": "g-n2-01-01",
+          "structure": "～にともなって",
+          "meaning": "Cùng với, kéo theo",
+          "explanation": "Dùng khi một sự thay đổi xảy ra kéo theo sự thay đổi của một sự việc khác.",
+          "mnemonic": "Kèm theo cái gì thì cái đó thay đổi.",
           "level": "N2",
           "examples": [
-            { "id": "eg-n2-01-1", "sentence": "会議は 3日間にわたって 行われました。", "meaning": "Cuộc họp đã được tiến hành suốt 3 ngày." }
+            {
+              "id": "eg-n2-01-01-1",
+              "sentence": "時代の変化にともなって、人々の価値観も変わる。",
+              "meaning": "Cùng với sự thay đổi của thời đại, giá trị quan của con người cũng thay đổi."
+            }
           ]
         },
         {
-          "id": "g-n2-02",
-          "structure": "N / V-る + にともなって / にともない",
-          "meaning": "Cùng với / Kéo theo...",
-          "explanation": "Diễn tả sự thay đổi A kéo theo sự thay đổi B đồng thời.",
+          "id": "g-n2-01-02",
+          "structure": "～に反して",
+          "meaning": "Trái ngược với",
+          "explanation": "Dùng khi kết quả trái ngược với dự đoán hoặc kỳ vọng.",
+          "mnemonic": "Phản (phản đối) lại kết quả mong đợi.",
           "level": "N2",
           "examples": [
-            { "id": "eg-n2-02-1", "sentence": "人口の増加に伴って、環境問題が 深刻化している。", "meaning": "Cùng với sự gia tăng dân số, các vấn đề môi trường đang trở nên nghiêm trọng." }
+            {
+              "id": "eg-n2-01-01-2",
+              "sentence": "予想に反して、試験はとても簡単だった。",
+              "meaning": "Trái với dự đoán, bài thi rất dễ."
+            }
+          ]
+        },
+        {
+          "id": "g-n2-01-03",
+          "structure": "～をめぐって",
+          "meaning": "Xoay quanh (vấn đề gì)",
+          "explanation": "Dùng cho các cuộc thảo luận, tranh cãi, tranh chấp xoay quanh một vấn đề.",
+          "mnemonic": "Xoay quanh một vòng tròn vấn đề.",
+          "level": "N2",
+          "examples": [
+            {
+              "id": "eg-n2-01-01-3",
+              "sentence": "予算の使い方をめぐって、意見が対立している。",
+              "meaning": "Xoay quanh việc sử dụng ngân sách, các ý kiến đang đối lập nhau."
+            }
+          ]
+        },
+        {
+          "id": "g-n2-01-04",
+          "structure": "～に際して",
+          "meaning": "Nhân dịp, khi làm gì",
+          "explanation": "Dùng trong các dịp trang trọng, khi thực hiện một sự kiện quan trọng.",
+          "mnemonic": "Dịp đặc biệt (tế nhị, trang trọng).",
+          "level": "N2",
+          "examples": [
+            {
+              "id": "eg-n2-01-01-4",
+              "sentence": "新しい事業を開始するに際して、ご挨拶を申し上げます。",
+              "meaning": "Nhân dịp bắt đầu dự án mới, tôi xin gửi lời chào."
+            }
           ]
         }
       ],
       "kanjiItems": [
         {
-          "id": "k-n2-01",
-          "kanji": "範",
-          "hanViet": "PHẠM",
-          "radical": "竹 (Trúc)",
-          "strokeCount": 15,
-          "onyomi": ["ハン"],
-          "kunyomi": [],
-          "meaning": "Khuôn mẫu, phạm vi",
+          "id": "k-n2-01-01",
+          "kanji": "経",
+          "hanViet": "KINH",
+          "radical": "Mịch (糸)",
+          "strokeCount": 11,
+          "onyomi": [
+            "ケイ",
+            "キョウ"
+          ],
+          "kunyomi": [
+            "へ"
+          ],
+          "meaning": "Kinh tế, trải qua",
           "level": "N2",
           "compounds": [
-            { "kanji": "範囲", "hiragana": "はんい", "meaning": "Phạm vi" },
-            { "kanji": "模範", "hiragana": "もはん", "meaning": "Mô phạm, làm mẫu" }
+            {
+              "kanji": "経済",
+              "hiragana": "けいざい",
+              "meaning": "Kinh tế"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-01-02",
+          "kanji": "済",
+          "hanViet": "TẾ",
+          "radical": "Thủy (氵)",
+          "strokeCount": 11,
+          "onyomi": [
+            "サイ"
+          ],
+          "kunyomi": [
+            "す"
+          ],
+          "meaning": "Xong, kinh tế",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "返済",
+              "hiragana": "へんさい",
+              "meaning": "Hoàn trả"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-01-03",
+          "kanji": "拡",
+          "hanViet": "KHUẾCH",
+          "radical": "Thủ (扌)",
+          "strokeCount": 9,
+          "onyomi": [
+            "カク"
+          ],
+          "kunyomi": [
+            "ひろ"
+          ],
+          "meaning": "Mở rộng",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "拡大",
+              "hiragana": "かくだい",
+              "meaning": "Mở rộng"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-01-04",
+          "kanji": "易",
+          "hanViet": "DỊCH",
+          "radical": "Nhật (日)",
+          "strokeCount": 8,
+          "onyomi": [
+            "エキ",
+            "イ"
+          ],
+          "kunyomi": [
+            "やさ"
+          ],
+          "meaning": "Dễ dàng, thương mại",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "貿易",
+              "hiragana": "ぼうえき",
+              "meaning": "Thương mại"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "n2-lesson-02",
+      "name": "Bài 02: Khoa học & Công nghệ",
+      "description": "Các tiến bộ kỹ thuật, ảnh hưởng của internet và những phát minh hiện đại.",
+      "level": "N2",
+      "curriculum": "N2 Upper-Intermediate Course",
+      "vocabulary": [
+        {
+          "id": "n2-02-01",
+          "kanji": "技術",
+          "hiragana": "ぎじゅつ",
+          "onyomi": "KỸ THUẬT",
+          "meaning": "Kỹ thuật",
+          "phonetic": "gijutsu"
+        },
+        {
+          "id": "n2-02-02",
+          "kanji": "開発",
+          "hiragana": "かいはつ",
+          "onyomi": "KHAI PHÁT",
+          "meaning": "Phát triển",
+          "phonetic": "kaihatsu"
+        },
+        {
+          "id": "n2-02-03",
+          "kanji": "情報",
+          "hiragana": "じょうほう",
+          "onyomi": "TÌNH BÁO",
+          "meaning": "Thông tin",
+          "phonetic": "jouhou"
+        },
+        {
+          "id": "n2-02-04",
+          "kanji": "通信",
+          "hiragana": "つうしん",
+          "onyomi": "THÔNG TÍN",
+          "meaning": "Viễn thông",
+          "phonetic": "tsuushin"
+        },
+        {
+          "id": "n2-02-05",
+          "kanji": "発明",
+          "hiragana": "はつめい",
+          "onyomi": "PHÁT MINH",
+          "meaning": "Phát minh",
+          "phonetic": "hatsumei"
+        },
+        {
+          "id": "n2-02-06",
+          "kanji": "進化",
+          "hiragana": "しんか",
+          "onyomi": "TIẾN HÓA",
+          "meaning": "Tiến hóa",
+          "phonetic": "shinka"
+        },
+        {
+          "id": "n2-02-07",
+          "kanji": "普及",
+          "hiragana": "ふきゅう",
+          "onyomi": "PHỔ CẬP",
+          "meaning": "Phổ cập",
+          "phonetic": "fukyuu"
+        },
+        {
+          "id": "n2-02-08",
+          "kanji": "革新",
+          "hiragana": "かくしん",
+          "onyomi": "CÁCH TÂN",
+          "meaning": "Cách tân/Đổi mới",
+          "phonetic": "kakushin"
+        },
+        {
+          "id": "n2-02-09",
+          "kanji": "人工",
+          "hiragana": "じんこう",
+          "onyomi": "NHÂN CÔNG",
+          "meaning": "Nhân tạo",
+          "phonetic": "jinkou"
+        },
+        {
+          "id": "n2-02-10",
+          "kanji": "知能",
+          "hiragana": "ちのう",
+          "onyomi": "TRI NĂNG",
+          "meaning": "Trí tuệ",
+          "phonetic": "chinou"
+        },
+        {
+          "id": "n2-02-11",
+          "kanji": "効率",
+          "hiragana": "こうりつ",
+          "onyomi": "HIỆU SUẤT",
+          "meaning": "Hiệu suất",
+          "phonetic": "kouritsu"
+        },
+        {
+          "id": "n2-02-12",
+          "kanji": "自動",
+          "hiragana": "じどう",
+          "onyomi": "TỰ ĐỘNG",
+          "meaning": "Tự động",
+          "phonetic": "jidou"
+        },
+        {
+          "id": "n2-02-13",
+          "kanji": "分析",
+          "hiragana": "ぶんせき",
+          "onyomi": "PHÂN TÍCH",
+          "meaning": "Phân tích",
+          "phonetic": "bunseki"
+        },
+        {
+          "id": "n2-02-14",
+          "kanji": "検索",
+          "hiragana": "けんさく",
+          "onyomi": "KIỂM TÁC",
+          "meaning": "Tìm kiếm",
+          "phonetic": "kensaku"
+        },
+        {
+          "id": "n2-02-15",
+          "kanji": "接続",
+          "hiragana": "せつぞく",
+          "onyomi": "TIẾP TỤC",
+          "meaning": "Kết nối",
+          "phonetic": "setsuzoku"
+        },
+        {
+          "id": "n2-02-16",
+          "kanji": "画面",
+          "hiragana": "がめん",
+          "onyomi": "HỌA DIỆN",
+          "meaning": "Màn hình",
+          "phonetic": "gamen"
+        },
+        {
+          "id": "n2-02-17",
+          "kanji": "容量",
+          "hiragana": "ようりょう",
+          "onyomi": "DUNG LƯỢNG",
+          "meaning": "Dung lượng",
+          "phonetic": "youryou"
+        },
+        {
+          "id": "n2-02-18",
+          "kanji": "精密",
+          "hiragana": "せいみつ",
+          "onyomi": "TINH MẬT",
+          "meaning": "Tinh xảo/Chính xác",
+          "phonetic": "seimitsu"
+        },
+        {
+          "id": "n2-02-19",
+          "kanji": "専門",
+          "hiragana": "せんもん",
+          "onyomi": "CHUYÊN MÔN",
+          "meaning": "Chuyên môn",
+          "phonetic": "senmon"
+        },
+        {
+          "id": "n2-02-20",
+          "kanji": "分野",
+          "hiragana": "ぶんや",
+          "onyomi": "PHÂN DÃ",
+          "meaning": "Lĩnh vực",
+          "phonetic": "bunya"
+        },
+        {
+          "id": "n2-02-21",
+          "kanji": "現象",
+          "hiragana": "げんしょう",
+          "onyomi": "HIỆN TƯỢNG",
+          "meaning": "Hiện tượng",
+          "phonetic": "genshou"
+        },
+        {
+          "id": "n2-02-22",
+          "kanji": "実験",
+          "hiragana": "じっけん",
+          "onyomi": "THỰC NGHIỆM",
+          "meaning": "Thí nghiệm",
+          "phonetic": "jikken"
+        },
+        {
+          "id": "n2-02-23",
+          "kanji": "実証",
+          "hiragana": "じっしょう",
+          "onyomi": "THỰC CHỨNG",
+          "meaning": "Chứng minh thực tế",
+          "phonetic": "jisshou"
+        },
+        {
+          "id": "n2-02-24",
+          "kanji": "応用",
+          "hiragana": "おうよう",
+          "onyomi": "ỨNG DỤNG",
+          "meaning": "Ứng dụng",
+          "phonetic": "ouyou"
+        },
+        {
+          "id": "n2-02-25",
+          "kanji": "ロボット",
+          "hiragana": "ろぼっと",
+          "onyomi": "ROBOT",
+          "meaning": "Robot",
+          "phonetic": "robotto"
+        },
+        {
+          "id": "n2-02-26",
+          "kanji": "電子",
+          "hiragana": "でんし",
+          "onyomi": "ĐIỆN TỬ",
+          "meaning": "Điện tử",
+          "phonetic": "denshi"
+        },
+        {
+          "id": "n2-02-27",
+          "kanji": "機械",
+          "hiragana": "きかい",
+          "onyomi": "CƠ GIỚI",
+          "meaning": "Máy móc",
+          "phonetic": "kikai"
+        },
+        {
+          "id": "n2-02-28",
+          "kanji": "高度",
+          "hiragana": "こうど",
+          "onyomi": "CAO ĐỘ",
+          "meaning": "Trình độ cao",
+          "phonetic": "koudo"
+        },
+        {
+          "id": "n2-02-29",
+          "kanji": "複雑",
+          "hiragana": "ふくざつ",
+          "onyomi": "PHỨC TẠP",
+          "meaning": "Phức tạp",
+          "phonetic": "fukuzatsu"
+        },
+        {
+          "id": "n2-02-30",
+          "kanji": "維持",
+          "hiragana": "いじ",
+          "onyomi": "DUY TRÌ",
+          "meaning": "Duy trì",
+          "phonetic": "iji"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-n2-02-01",
+          "structure": "～ざるを得ない",
+          "meaning": "Không muốn nhưng buộc phải làm",
+          "explanation": "Dùng để diễn tả việc dù không muốn nhưng hoàn cảnh buộc phải hành động.",
+          "mnemonic": "Không (ざる) thể (得る) làm gì đó.",
+          "level": "N2",
+          "examples": [
+            {
+              "id": "eg-n2-02-01-1",
+              "sentence": "中止せざるを得ない。",
+              "meaning": "Buộc phải đình chỉ (dù không muốn)."
+            }
+          ]
+        },
+        {
+          "id": "g-n2-02-02",
+          "structure": "～にほかならない",
+          "meaning": "Không gì khác chính là",
+          "explanation": "Dùng để khẳng định mạnh mẽ đó là nguyên nhân hoặc lý do duy nhất.",
+          "mnemonic": "Không thể khác hơn.",
+          "level": "N2",
+          "examples": [
+            {
+              "id": "eg-n2-02-01-2",
+              "sentence": "成功したのは、努力の結果にほかならない。",
+              "meaning": "Thành công chính là kết quả của sự nỗ lực."
+            }
+          ]
+        },
+        {
+          "id": "g-n2-02-03",
+          "structure": "～をはじめ（として）",
+          "meaning": "Trước hết là, tiêu biểu là",
+          "explanation": "Dùng để đưa ra ví dụ điển hình nhất trong nhóm.",
+          "mnemonic": "Khởi đầu bằng thứ quan trọng nhất.",
+          "level": "N2",
+          "examples": [
+            {
+              "id": "eg-n2-02-01-3",
+              "sentence": "会議には、社長をはじめ多くの役員が参加した。",
+              "meaning": "Tại cuộc họp, trước hết là giám đốc, rất nhiều thành viên quản trị đã tham gia."
+            }
+          ]
+        },
+        {
+          "id": "g-n2-02-04",
+          "structure": "～にかかわらず",
+          "meaning": "Bất kể, không liên quan đến",
+          "explanation": "Dùng khi kết quả không bị ảnh hưởng bởi một yếu tố nào đó.",
+          "mnemonic": "Không quan tâm đến (bất kể).",
+          "level": "N2",
+          "examples": [
+            {
+              "id": "eg-n2-02-01-4",
+              "sentence": "経験の有無にかかわらず、誰でも応募できます。",
+              "meaning": "Bất kể có kinh nghiệm hay không, ai cũng có thể ứng tuyển."
+            }
+          ]
+        }
+      ],
+      "kanjiItems": [
+        {
+          "id": "k-n2-02-01",
+          "kanji": "技",
+          "hanViet": "KỸ",
+          "radical": "Thủ (扌)",
+          "strokeCount": 7,
+          "onyomi": [
+            "ギ"
+          ],
+          "kunyomi": [
+            "わざ"
+          ],
+          "meaning": "Kỹ thuật, kỹ năng",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "技術",
+              "hiragana": "ぎじゅつ",
+              "meaning": "Kỹ thuật"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-02-02",
+          "kanji": "開",
+          "hanViet": "KHAI",
+          "radical": "Môn (門)",
+          "strokeCount": 12,
+          "onyomi": [
+            "カイ"
+          ],
+          "kunyomi": [
+            "ひら",
+            "あ"
+          ],
+          "meaning": "Mở, phát triển",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "開発",
+              "hiragana": "かいはつ",
+              "meaning": "Phát triển"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-02-03",
+          "kanji": "査",
+          "hanViet": "TRA",
+          "radical": "Mộc (木)",
+          "strokeCount": 9,
+          "onyomi": [
+            "サ"
+          ],
+          "kunyomi": [],
+          "meaning": "Kiểm tra, điều tra",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "検査",
+              "hiragana": "けんさ",
+              "meaning": "Kiểm tra"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-02-04",
+          "kanji": "応",
+          "hanViet": "ỨNG",
+          "radical": "Quảng (广)",
+          "strokeCount": 7,
+          "onyomi": [
+            "オウ"
+          ],
+          "kunyomi": [
+            "こた"
+          ],
+          "meaning": "Đáp ứng, ứng dụng",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "応用",
+              "hiragana": "おうよう",
+              "meaning": "Ứng dụng"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "n2-lesson-03",
+      "name": "Bài 03: Xã hội & Văn hóa",
+      "description": "Các vấn đề về giáo dục, xu hướng lối sống và nét đẹp văn hóa truyền thống.",
+      "level": "N2",
+      "curriculum": "N2 Upper-Intermediate Course",
+      "vocabulary": [
+        {
+          "id": "n2-03-01",
+          "kanji": "教育",
+          "hiragana": "きょういく",
+          "onyomi": "GIÁO DỤC",
+          "meaning": "Giáo dục",
+          "phonetic": "kyouiku"
+        },
+        {
+          "id": "n2-03-02",
+          "kanji": "福祉",
+          "hiragana": "ふくし",
+          "onyomi": "PHÚC CHỈ",
+          "meaning": "Phúc lợi",
+          "phonetic": "fukushi"
+        },
+        {
+          "id": "n2-03-03",
+          "kanji": "文化",
+          "hiragana": "ぶんか",
+          "onyomi": "VĂN HÓA",
+          "meaning": "Văn hóa",
+          "phonetic": "bunka"
+        },
+        {
+          "id": "n2-03-04",
+          "kanji": "伝統",
+          "hiragana": "でんとう",
+          "onyomi": "TRUYỀN THỐNG",
+          "meaning": "Truyền thống",
+          "phonetic": "dentou"
+        },
+        {
+          "id": "n2-03-05",
+          "kanji": "習慣",
+          "hiragana": "しゅうかん",
+          "onyomi": "TẬP QUÁN",
+          "meaning": "Tập quán",
+          "phonetic": "shuukan"
+        },
+        {
+          "id": "n2-03-06",
+          "kanji": "社会",
+          "hiragana": "しゃかい",
+          "onyomi": "XÃ HỘI",
+          "meaning": "Xã hội",
+          "phonetic": "shakai"
+        },
+        {
+          "id": "n2-03-07",
+          "kanji": "高齢",
+          "hiragana": "こうれい",
+          "onyomi": "CAO LINH",
+          "meaning": "Tuổi cao",
+          "phonetic": "kourei"
+        },
+        {
+          "id": "n2-03-08",
+          "kanji": "過疎",
+          "hiragana": "かそ",
+          "onyomi": "QUÁ SƠ",
+          "meaning": "Dân cư thưa thớt",
+          "phonetic": "kaso"
+        },
+        {
+          "id": "n2-03-09",
+          "kanji": "環境",
+          "hiragana": "かんきょう",
+          "onyomi": "HOÀN CẢNH",
+          "meaning": "Môi trường",
+          "phonetic": "kankyou"
+        },
+        {
+          "id": "n2-03-10",
+          "kanji": "多様",
+          "hiragana": "たよう",
+          "onyomi": "ĐA DẠNG",
+          "meaning": "Đa dạng",
+          "phonetic": "tayou"
+        },
+        {
+          "id": "n2-03-11",
+          "kanji": "理解",
+          "hiragana": "りかい",
+          "onyomi": "LÝ GIẢI",
+          "meaning": "Hiểu biết",
+          "phonetic": "rikai"
+        },
+        {
+          "id": "n2-03-12",
+          "kanji": "尊重",
+          "hiragana": "そんちょう",
+          "onyomi": "TÔN TRỌNG",
+          "meaning": "Tôn trọng",
+          "phonetic": "sonchou"
+        },
+        {
+          "id": "n2-03-13",
+          "kanji": "差別",
+          "hiragana": "さべつ",
+          "onyomi": "SAI BIỆT",
+          "meaning": "Phân biệt",
+          "phonetic": "sabetsu"
+        },
+        {
+          "id": "n2-03-14",
+          "kanji": "市民",
+          "hiragana": "しみん",
+          "onyomi": "THỊ DÂN",
+          "meaning": "Thị dân/Công dân",
+          "phonetic": "shimin"
+        },
+        {
+          "id": "n2-03-15",
+          "kanji": "権利",
+          "hiragana": "けんり",
+          "onyomi": "QUYỀN LỢI",
+          "meaning": "Quyền lợi",
+          "phonetic": "kenri"
+        },
+        {
+          "id": "n2-03-16",
+          "kanji": "義務",
+          "hiragana": "ぎむ",
+          "onyomi": "NGHĨA VỤ",
+          "meaning": "Nghĩa vụ",
+          "phonetic": "gimu"
+        },
+        {
+          "id": "n2-03-17",
+          "kanji": "貢献",
+          "hiragana": "こうけん",
+          "onyomi": "CỐNG HIẾN",
+          "meaning": "Cống hiến",
+          "phonetic": "kouken"
+        },
+        {
+          "id": "n2-03-18",
+          "kanji": "支援",
+          "hiragana": "しえん",
+          "onyomi": "CHI VIỆN",
+          "meaning": "Hỗ trợ",
+          "phonetic": "shien"
+        },
+        {
+          "id": "n2-03-19",
+          "kanji": "格差",
+          "hiragana": "かくさ",
+          "onyomi": "CÁCH SAI",
+          "meaning": "Chênh lệch",
+          "phonetic": "kakusa"
+        },
+        {
+          "id": "n2-03-20",
+          "kanji": "価値観",
+          "hiragana": "かちかん",
+          "onyomi": "GIÁ TRỊ QUAN",
+          "meaning": "Quan niệm giá trị",
+          "phonetic": "kachikan"
+        },
+        {
+          "id": "n2-03-21",
+          "kanji": "共生",
+          "hiragana": "きょうせい",
+          "onyomi": "CỘNG SINH",
+          "meaning": "Cùng chung sống",
+          "phonetic": "kyousei"
+        },
+        {
+          "id": "n2-03-22",
+          "kanji": "課題",
+          "hiragana": "かだい",
+          "onyomi": "KHÓA ĐỀ",
+          "meaning": "Đề tài/Thách thức",
+          "phonetic": "kadai"
+        },
+        {
+          "id": "n2-03-23",
+          "kanji": "解決",
+          "hiragana": "かいけつ",
+          "onyomi": "GIẢI QUYẾT",
+          "meaning": "Giải quyết",
+          "phonetic": "kaiketsu"
+        },
+        {
+          "id": "n2-03-24",
+          "kanji": "進学",
+          "hiragana": "しんがく",
+          "onyomi": "TIẾN HỌC",
+          "meaning": "Học lên cấp",
+          "phonetic": "shingaku"
+        },
+        {
+          "id": "n2-03-25",
+          "kanji": "就職",
+          "hiragana": "しゅうしょく",
+          "onyomi": "TỰU CHỨC",
+          "meaning": "Đi làm",
+          "phonetic": "shuushoku"
+        },
+        {
+          "id": "n2-03-26",
+          "kanji": "定着",
+          "hiragana": "ていちゃく",
+          "onyomi": "ĐỊNH TRỨ",
+          "meaning": "Định hình/Cố định",
+          "phonetic": "teichaku"
+        },
+        {
+          "id": "n2-03-27",
+          "kanji": "調和",
+          "hiragana": "ちょうわ",
+          "onyomi": "ĐIỀU HÒA",
+          "meaning": "Hài hòa",
+          "phonetic": "chouwa"
+        },
+        {
+          "id": "n2-03-28",
+          "kanji": "改善",
+          "hiragana": "かいぜん",
+          "onyomi": "CẢI THIỆN",
+          "meaning": "Cải thiện",
+          "phonetic": "kaizen"
+        },
+        {
+          "id": "n2-03-29",
+          "kanji": "認識",
+          "hiragana": "にんしき",
+          "onyomi": "NHẬN THỨC",
+          "meaning": "Nhận thức",
+          "phonetic": "ninshiki"
+        },
+        {
+          "id": "n2-03-30",
+          "kanji": "交流",
+          "hiragana": "こうりゅう",
+          "onyomi": "GIAO LƯU",
+          "meaning": "Giao lưu",
+          "phonetic": "kouryuu"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-n2-03-01",
+          "structure": "～をめぐって",
+          "meaning": "Xoay quanh vấn đề gì",
+          "explanation": "Dùng trong bối cảnh các luồng ý kiến khác nhau cùng bàn luận về một sự việc.",
+          "mnemonic": "Bao quanh chủ đề.",
+          "level": "N2",
+          "examples": [
+            {
+              "id": "eg-n2-03-01-1",
+              "sentence": "憲法改正をめぐって、様々な意見が出ている。",
+              "meaning": "Xoay quanh việc sửa đổi hiến pháp, nhiều ý kiến trái chiều đã được đưa ra."
+            }
+          ]
+        },
+        {
+          "id": "g-n2-03-02",
+          "structure": "～（で）さえ",
+          "meaning": "Ngay cả... cũng",
+          "explanation": "Dùng để nhấn mạnh một ví dụ cực đoan.",
+          "mnemonic": "Ngay cả (những thứ đơn giản nhất) cũng.",
+          "level": "N2",
+          "examples": [
+            {
+              "id": "eg-n2-03-01-2",
+              "sentence": "忙しくて、食事をとる時間でさえ惜しい。",
+              "meaning": "Bận đến mức ngay cả thời gian ăn cơm cũng thấy tiếc."
+            }
+          ]
+        },
+        {
+          "id": "g-n2-03-03",
+          "structure": "～ことなしに",
+          "meaning": "Không làm... mà",
+          "explanation": "Dùng để diễn tả một hành động không đi kèm với hành động khác.",
+          "mnemonic": "Không có việc gì xảy ra.",
+          "level": "N2",
+          "examples": [
+            {
+              "id": "eg-n2-03-01-3",
+              "sentence": "断ることなしに、参加者を決めてしまった。",
+              "meaning": "Đã quyết định người tham gia mà không hề từ chối (hỏi ý kiến)."
+            }
+          ]
+        },
+        {
+          "id": "g-n2-03-04",
+          "structure": "～ものだ",
+          "meaning": "Đương nhiên là, vốn dĩ là",
+          "explanation": "Diễn tả chân lý, đạo lý hoặc cảm xúc hồi tưởng.",
+          "mnemonic": "Vốn dĩ là thế.",
+          "level": "N2",
+          "examples": [
+            {
+              "id": "eg-n2-03-01-4",
+              "sentence": "子供は遊ぶものだ。",
+              "meaning": "Trẻ con thì vốn dĩ là phải chơi."
+            }
+          ]
+        }
+      ],
+      "kanjiItems": [
+        {
+          "id": "k-n2-03-01",
+          "kanji": "教",
+          "hanViet": "GIÁO",
+          "radical": "Phộc (攵)",
+          "strokeCount": 11,
+          "onyomi": [
+            "キョウ"
+          ],
+          "kunyomi": [
+            "おし"
+          ],
+          "meaning": "Dạy, giáo dục",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "教育",
+              "hiragana": "きょういく",
+              "meaning": "Giáo dục"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-03-02",
+          "kanji": "福",
+          "hanViet": "PHÚC",
+          "radical": "Thị (示)",
+          "strokeCount": 13,
+          "onyomi": [
+            "フク"
+          ],
+          "kunyomi": [],
+          "meaning": "Hạnh phúc, phúc lợi",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "福祉",
+              "hiragana": "ふくし",
+              "meaning": "Phúc lợi"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-03-03",
+          "kanji": "尊",
+          "hanViet": "TÔN",
+          "radical": "Thốn (寸)",
+          "strokeCount": 12,
+          "onyomi": [
+            "ソン"
+          ],
+          "kunyomi": [
+            "たっと"
+          ],
+          "meaning": "Tôn trọng, quý giá",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "尊重",
+              "hiragana": "そんちょう",
+              "meaning": "Tôn trọng"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-03-04",
+          "kanji": "権",
+          "hanViet": "QUYỀN",
+          "radical": "Mộc (木)",
+          "strokeCount": 15,
+          "onyomi": [
+            "ケン"
+          ],
+          "kunyomi": [],
+          "meaning": "Quyền lực, quyền lợi",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "権利",
+              "hiragana": "けんり",
+              "meaning": "Quyền lợi"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "n2-lesson-04",
+      "name": "Bài 04: Kinh tế & Thương mại",
+      "description": "Các chủ đề xoay quanh môi trường kinh doanh, xu hướng thị trường và phát triển kinh tế.",
+      "level": "N2",
+      "curriculum": "N2 Upper-Intermediate Course",
+      "vocabulary": [
+        {
+          "id": "n2-04-01",
+          "kanji": "景気",
+          "hiragana": "けいき",
+          "onyomi": "CẢNH KHÍ",
+          "meaning": "Tình hình kinh tế",
+          "phonetic": "keiki"
+        },
+        {
+          "id": "n2-04-02",
+          "kanji": "株価",
+          "hiragana": "かぶか",
+          "onyomi": "CHU GIÁ",
+          "meaning": "Giá cổ phiếu",
+          "phonetic": "kabuka"
+        },
+        {
+          "id": "n2-04-03",
+          "kanji": "物価",
+          "hiragana": "ぶっか",
+          "onyomi": "VẬT GIÁ",
+          "meaning": "Vật giá",
+          "phonetic": "bukka"
+        },
+        {
+          "id": "n2-04-04",
+          "kanji": "倒産",
+          "hiragana": "とうさん",
+          "onyomi": "ĐẢO SẢN",
+          "meaning": "Phá sản",
+          "phonetic": "tousan"
+        },
+        {
+          "id": "n2-04-05",
+          "kanji": "利益",
+          "hiragana": "りえき",
+          "onyomi": "LỢI ÍCH",
+          "meaning": "Lợi nhuận",
+          "phonetic": "rieki"
+        },
+        {
+          "id": "n2-04-06",
+          "kanji": "赤字",
+          "hiragana": "あかじ",
+          "onyomi": "XÍCH TỰ",
+          "meaning": "Thâm hụt",
+          "phonetic": "akaji"
+        },
+        {
+          "id": "n2-04-07",
+          "kanji": "黒字",
+          "hiragana": "くろじ",
+          "onyomi": "HẮC TỰ",
+          "meaning": "Thặng dư",
+          "phonetic": "kuroji"
+        },
+        {
+          "id": "n2-04-08",
+          "kanji": "交渉",
+          "hiragana": "こうしょう",
+          "onyomi": "GIAO THƯƠNG",
+          "meaning": "Đàm phán",
+          "phonetic": "koushou"
+        },
+        {
+          "id": "n2-04-09",
+          "kanji": "取引",
+          "hiragana": "とりひき",
+          "onyomi": "THỦ DẪN",
+          "meaning": "Giao dịch",
+          "phonetic": "torihiki"
+        },
+        {
+          "id": "n2-04-10",
+          "kanji": "契約",
+          "hiragana": "けいやく",
+          "onyomi": "KHẾ ƯỚC",
+          "meaning": "Hợp đồng",
+          "phonetic": "keiyaku"
+        },
+        {
+          "id": "n2-04-11",
+          "kanji": "雇用",
+          "hiragana": "こよう",
+          "onyomi": "CỐ DỤNG",
+          "meaning": "Tuyển dụng",
+          "phonetic": "koyou"
+        },
+        {
+          "id": "n2-04-12",
+          "kanji": "賃金",
+          "hiragana": "ちんぎん",
+          "onyomi": "NHẪM KIM",
+          "meaning": "Tiền công",
+          "phonetic": "chingin"
+        },
+        {
+          "id": "n2-04-13",
+          "kanji": "増減",
+          "hiragana": "ぞうげん",
+          "onyomi": "TĂNG GIẢM",
+          "meaning": "Tăng giảm",
+          "phonetic": "zougen"
+        },
+        {
+          "id": "n2-04-14",
+          "kanji": "急騰",
+          "hiragana": "きゅうとう",
+          "onyomi": "CẤP ĐẰNG",
+          "meaning": "Tăng vọt",
+          "phonetic": "kyuutou"
+        },
+        {
+          "id": "n2-04-15",
+          "kanji": "改善",
+          "hiragana": "かいぜん",
+          "onyomi": "CẢI THIỆN",
+          "meaning": "Cải thiện",
+          "phonetic": "kaizen"
+        },
+        {
+          "id": "n2-04-16",
+          "kanji": "投資",
+          "hiragana": "とうし",
+          "onyomi": "ĐẦU TƯ",
+          "meaning": "Đầu tư",
+          "phonetic": "toushi"
+        },
+        {
+          "id": "n2-04-17",
+          "kanji": "破綻",
+          "hiragana": "はたん",
+          "onyomi": "PHÁ TRÁN",
+          "meaning": "Sụp đổ",
+          "phonetic": "hatan"
+        },
+        {
+          "id": "n2-04-18",
+          "kanji": "不況",
+          "hiragana": "ふきょう",
+          "onyomi": "BẤT HUỐNG",
+          "meaning": "Khủng hoảng",
+          "phonetic": "fukyou"
+        },
+        {
+          "id": "n2-04-19",
+          "kanji": "順調",
+          "hiragana": "じゅんちょう",
+          "onyomi": "THUẬN ĐIỀU",
+          "meaning": "Thuận lợi",
+          "phonetic": "junchou"
+        },
+        {
+          "id": "n2-04-20",
+          "kanji": "支給",
+          "hiragana": "しきゅう",
+          "onyomi": "CHI CẤP",
+          "meaning": "Chi trả",
+          "phonetic": "shikyuu"
+        },
+        {
+          "id": "n2-04-21",
+          "kanji": "所得",
+          "hiragana": "しょとく",
+          "onyomi": "SỞ ĐẮC",
+          "meaning": "Thu nhập",
+          "phonetic": "shotoku"
+        },
+        {
+          "id": "n2-04-22",
+          "kanji": "消費",
+          "hiragana": "しょうひ",
+          "onyomi": "TIÊU PHÍ",
+          "meaning": "Tiêu dùng",
+          "phonetic": "shouhi"
+        },
+        {
+          "id": "n2-04-23",
+          "kanji": "生産",
+          "hiragana": "せいさん",
+          "onyomi": "SINH SẢN",
+          "meaning": "Sản xuất",
+          "phonetic": "seisan"
+        },
+        {
+          "id": "n2-04-24",
+          "kanji": "輸出",
+          "hiragana": "ゆしゅつ",
+          "onyomi": "THÂU XUẤT",
+          "meaning": "Xuất khẩu",
+          "phonetic": "yushutsu"
+        },
+        {
+          "id": "n2-04-25",
+          "kanji": "輸入",
+          "hiragana": "ゆにゅう",
+          "onyomi": "THÂU NHẬP",
+          "meaning": "Nhập khẩu",
+          "phonetic": "yunyuu"
+        },
+        {
+          "id": "n2-04-26",
+          "kanji": "競争",
+          "hiragana": "きょうそう",
+          "onyomi": "CẠNH TRANH",
+          "meaning": "Cạnh tranh",
+          "phonetic": "kyousou"
+        },
+        {
+          "id": "n2-04-27",
+          "kanji": "成長",
+          "hiragana": "せいちょう",
+          "onyomi": "THÀNH TRƯỞNG",
+          "meaning": "Tăng trưởng",
+          "phonetic": "seichou"
+        },
+        {
+          "id": "n2-04-28",
+          "kanji": "活性化",
+          "hiragana": "かっせいか",
+          "onyomi": "HOẠT TÍNH HÓA",
+          "meaning": "Kích hoạt",
+          "phonetic": "kasseika"
+        },
+        {
+          "id": "n2-04-29",
+          "kanji": "格差",
+          "hiragana": "かくさ",
+          "onyomi": "CÁCH SAI",
+          "meaning": "Chênh lệch",
+          "phonetic": "kakusa"
+        },
+        {
+          "id": "n2-04-30",
+          "kanji": "公的",
+          "hiragana": "こうてき",
+          "onyomi": "CÔNG ĐÍCH",
+          "meaning": "Công cộng",
+          "phonetic": "kouteki"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-n2-04-01",
+          "structure": "～にともなって",
+          "meaning": "Cùng với việc...",
+          "explanation": "Dùng để diễn tả sự thay đổi xảy ra đồng thời với một sự thay đổi khác.",
+          "mnemonic": "Đi cùng (伴う) với sự thay đổi.",
+          "level": "N2",
+          "examples": [
+            {
+              "id": "eg-n2-04-01-1",
+              "sentence": "人口の増加にともなって、食料不足が深刻になっている。",
+              "meaning": "Cùng với việc tăng dân số, tình trạng thiếu lương thực đang trở nên nghiêm trọng."
+            }
+          ]
+        },
+        {
+          "id": "g-n2-04-02",
+          "structure": "～に反して",
+          "meaning": "Trái với...",
+          "explanation": "Dùng khi kết quả xảy ra khác với mong đợi hoặc dự tính.",
+          "mnemonic": "Phản (反) lại kỳ vọng.",
+          "level": "N2",
+          "examples": [
+            {
+              "id": "eg-n2-04-02-1",
+              "sentence": "予想に反して、試験はとても難しかった。",
+              "meaning": "Trái với dự đoán, bài thi rất khó."
+            }
+          ]
+        },
+        {
+          "id": "g-n2-04-03",
+          "structure": "～をめぐって",
+          "meaning": "Xung quanh vấn đề...",
+          "explanation": "Chủ đề tranh luận hoặc vấn đề xoay quanh một đối tượng.",
+          "mnemonic": "Đi vòng quanh (巡る) vấn đề.",
+          "level": "N2",
+          "examples": [
+            {
+              "id": "eg-n2-04-03-1",
+              "sentence": "その政策をめぐって、様々な意見が出された。",
+              "meaning": "Xung quanh chính sách đó, nhiều ý kiến khác nhau đã được đưa ra."
+            }
+          ]
+        },
+        {
+          "id": "g-n2-04-04",
+          "structure": "～に際して",
+          "meaning": "Nhân dịp, khi chuẩn bị...",
+          "explanation": "Dùng trong ngữ cảnh trang trọng khi làm điều gì đó đặc biệt.",
+          "mnemonic": "Tế (際) - Nhân dịp lễ tế.",
+          "level": "N2",
+          "examples": [
+            {
+              "id": "eg-n2-04-04-1",
+              "sentence": "開店に際して、特別なキャンペーンを行う。",
+              "meaning": "Nhân dịp khai trương, chúng tôi sẽ tổ chức chiến dịch đặc biệt."
+            }
+          ]
+        }
+      ],
+      "kanjiItems": [
+        {
+          "id": "k-n2-04-01",
+          "kanji": "株",
+          "hanViet": "CHU",
+          "radical": "Mộc",
+          "strokeCount": 10,
+          "onyomi": [
+            "シュ"
+          ],
+          "kunyomi": [
+            "かぶ"
+          ],
+          "meaning": "Cổ phiếu, gốc cây",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "株価",
+              "hiragana": "かぶか",
+              "meaning": "Giá cổ phiếu"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-04-02",
+          "kanji": "赤",
+          "hanViet": "XÍCH",
+          "radical": "Xích",
+          "strokeCount": 7,
+          "onyomi": [
+            "セキ",
+            "シャク"
+          ],
+          "kunyomi": [
+            "あか"
+          ],
+          "meaning": "Màu đỏ",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "赤字",
+              "hiragana": "あかじ",
+              "meaning": "Thâm hụt"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-04-03",
+          "kanji": "黒",
+          "hanViet": "HẮC",
+          "radical": "Hắc",
+          "strokeCount": 11,
+          "onyomi": [
+            "コク"
+          ],
+          "kunyomi": [
+            "くろ"
+          ],
+          "meaning": "Màu đen",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "黒字",
+              "hiragana": "くろじ",
+              "meaning": "Thặng dư"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-04-04",
+          "kanji": "賃",
+          "hanViet": "NHẪM",
+          "radical": "Bối",
+          "strokeCount": 13,
+          "onyomi": [
+            "チン"
+          ],
+          "kunyomi": [],
+          "meaning": "Tiền công",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "賃金",
+              "hiragana": "ちんぎん",
+              "meaning": "Tiền công"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "n2-lesson-05",
+      "name": "Bài 05: Giáo dục & Đào tạo",
+      "description": "Các vấn đề giáo dục, phương pháp học tập và xu hướng đào tạo hiện đại.",
+      "level": "N2",
+      "curriculum": "N2 Upper-Intermediate Course",
+      "vocabulary": [
+        {
+          "id": "n2-05-01",
+          "kanji": "教育",
+          "hiragana": "きょういく",
+          "onyomi": "GIÁO DỤC",
+          "meaning": "Giáo dục",
+          "phonetic": "kyouiku"
+        },
+        {
+          "id": "n2-05-02",
+          "kanji": "育成",
+          "hiragana": "いくせい",
+          "onyomi": "DỤC THÀNH",
+          "meaning": "Nuôi dưỡng",
+          "phonetic": "ikusei"
+        },
+        {
+          "id": "n2-05-03",
+          "kanji": "才能",
+          "hiragana": "さいのう",
+          "onyomi": "TÀI NĂNG",
+          "meaning": "Tài năng",
+          "phonetic": "sainou"
+        },
+        {
+          "id": "n2-05-04",
+          "kanji": "素質",
+          "hiragana": "そしつ",
+          "onyomi": "TỐ CHẤT",
+          "meaning": "Tố chất",
+          "phonetic": "soshitsu"
+        },
+        {
+          "id": "n2-05-05",
+          "kanji": "能力",
+          "hiragana": "のうりょく",
+          "onyomi": "NĂNG LỰC",
+          "meaning": "Năng lực",
+          "phonetic": "nouryoku"
+        },
+        {
+          "id": "n2-05-06",
+          "kanji": "知性",
+          "hiragana": "ちせい",
+          "onyomi": "TRI TÍNH",
+          "meaning": "Trí tuệ",
+          "phonetic": "chisei"
+        },
+        {
+          "id": "n2-05-07",
+          "kanji": "論理",
+          "hiragana": "ろんり",
+          "onyomi": "LUẬN LÍ",
+          "meaning": "Logic",
+          "phonetic": "ronri"
+        },
+        {
+          "id": "n2-05-08",
+          "kanji": "暗記",
+          "hiragana": "あんき",
+          "onyomi": "ÁM KÝ",
+          "meaning": "Ghi nhớ",
+          "phonetic": "anki"
+        },
+        {
+          "id": "n2-05-09",
+          "kanji": "集中",
+          "hiragana": "しゅうちゅう",
+          "onyomi": "TẬP TRUNG",
+          "meaning": "Tập trung",
+          "phonetic": "shuuchuu"
+        },
+        {
+          "id": "n2-05-10",
+          "kanji": "課題",
+          "hiragana": "かだい",
+          "onyomi": "KHÓA ĐỀ",
+          "meaning": "Bài tập, vấn đề",
+          "phonetic": "kadai"
+        },
+        {
+          "id": "n2-05-11",
+          "kanji": "科目",
+          "hiragana": "かもく",
+          "onyomi": "KHOA MỤC",
+          "meaning": "Môn học",
+          "phonetic": "kamoku"
+        },
+        {
+          "id": "n2-05-12",
+          "kanji": "専攻",
+          "hiragana": "せんこう",
+          "onyomi": "CHUYÊN CÔNG",
+          "meaning": "Chuyên ngành",
+          "phonetic": "senkou"
+        },
+        {
+          "id": "n2-05-13",
+          "kanji": "講義",
+          "hiragana": "こうぎ",
+          "onyomi": "GIẢNG NGHĨA",
+          "meaning": "Bài giảng",
+          "phonetic": "kougi"
+        },
+        {
+          "id": "n2-05-14",
+          "kanji": "研究",
+          "hiragana": "けんきゅう",
+          "onyomi": "NGHIÊN CỨU",
+          "meaning": "Nghiên cứu",
+          "phonetic": "kenkyuu"
+        },
+        {
+          "id": "n2-05-15",
+          "kanji": "学位",
+          "hiragana": "がくい",
+          "onyomi": "HỌC VỊ",
+          "meaning": "Học vị",
+          "phonetic": "gakui"
+        },
+        {
+          "id": "n2-05-16",
+          "kanji": "基礎",
+          "hiragana": "きそ",
+          "onyomi": "CƠ SỞ",
+          "meaning": "Cơ sở",
+          "phonetic": "kiso"
+        },
+        {
+          "id": "n2-05-17",
+          "kanji": "習得",
+          "hiragana": "しゅうとく",
+          "onyomi": "TẬP ĐẮC",
+          "meaning": "Thụ đắc",
+          "phonetic": "shuutoku"
+        },
+        {
+          "id": "n2-05-18",
+          "kanji": "合格",
+          "hiragana": "ごうかく",
+          "onyomi": "HỢP CÁCH",
+          "meaning": "Đỗ",
+          "phonetic": "goukaku"
+        },
+        {
+          "id": "n2-05-19",
+          "kanji": "推薦",
+          "hiragana": "すいせん",
+          "onyomi": "THÔI TIẾN",
+          "meaning": "Tiến cử",
+          "phonetic": "suisen"
+        },
+        {
+          "id": "n2-05-20",
+          "kanji": "自主",
+          "hiragana": "じしゅ",
+          "onyomi": "TỰ CHỦ",
+          "meaning": "Tự chủ",
+          "phonetic": "jishu"
+        },
+        {
+          "id": "n2-05-21",
+          "kanji": "学問",
+          "hiragana": "がくもん",
+          "onyomi": "HỌC VẤN",
+          "meaning": "Học vấn",
+          "phonetic": "gakumon"
+        },
+        {
+          "id": "n2-05-22",
+          "kanji": "指導",
+          "hiragana": "しどう",
+          "onyomi": "CHỈ ĐẠO",
+          "meaning": "Chỉ đạo",
+          "phonetic": "shidou"
+        },
+        {
+          "id": "n2-05-23",
+          "kanji": "教材",
+          "hiragana": "きょうざい",
+          "onyomi": "GIÁO TÀI",
+          "meaning": "Giáo trình",
+          "phonetic": "kyouzai"
+        },
+        {
+          "id": "n2-05-24",
+          "kanji": "評価",
+          "hiragana": "ひょうか",
+          "onyomi": "BÌNH GIÁ",
+          "meaning": "Đánh giá",
+          "phonetic": "hyouka"
+        },
+        {
+          "id": "n2-05-25",
+          "kanji": "向上",
+          "hiragana": "こうじょう",
+          "onyomi": "HƯỚNG THƯỢNG",
+          "meaning": "Nâng cao",
+          "phonetic": "koujou"
+        },
+        {
+          "id": "n2-05-26",
+          "kanji": "意欲",
+          "hiragana": "いよく",
+          "onyomi": "Ý DỤC",
+          "meaning": "Ý muốn",
+          "phonetic": "iyoku"
+        },
+        {
+          "id": "n2-05-27",
+          "kanji": "理解",
+          "hiragana": "りかい",
+          "onyomi": "LÝ GIẢI",
+          "meaning": "Hiểu",
+          "phonetic": "rikai"
+        },
+        {
+          "id": "n2-05-28",
+          "kanji": "応用",
+          "hiragana": "おうよう",
+          "onyomi": "ỨNG DỤNG",
+          "meaning": "Ứng dụng",
+          "phonetic": "ouyou"
+        },
+        {
+          "id": "n2-05-29",
+          "kanji": "反復",
+          "hiragana": "はんぷく",
+          "onyomi": "PHẢN PHỤC",
+          "meaning": "Lặp lại",
+          "phonetic": "hanpuku"
+        },
+        {
+          "id": "n2-05-30",
+          "kanji": "達成",
+          "hiragana": "たっせい",
+          "onyomi": "ĐẠT THÀNH",
+          "meaning": "Đạt được",
+          "phonetic": "tassei"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-n2-05-01",
+          "structure": "～ざるを得ない",
+          "meaning": "Đành phải, không thể không...",
+          "explanation": "Dùng khi nói về việc không muốn làm nhưng vì tình thế nên bắt buộc phải làm.",
+          "mnemonic": "Không thể (得ない) làm gì khác.",
+          "level": "N2",
+          "examples": [
+            {
+              "id": "eg-n2-05-01-1",
+              "sentence": "事実を認めざるを得ない。",
+              "meaning": "Đành phải chấp nhận sự thật."
+            }
+          ]
+        },
+        {
+          "id": "g-n2-05-02",
+          "structure": "～にかけては",
+          "meaning": "Nếu nói về...",
+          "explanation": "Dùng để khẳng định một người rất giỏi về một lĩnh vực nào đó.",
+          "mnemonic": "Trong phạm vi (にかけて) lĩnh vực này.",
+          "level": "N2",
+          "examples": [
+            {
+              "id": "eg-n2-05-02-1",
+              "sentence": "料理にかけては、誰にも負けない。",
+              "meaning": "Nếu nói về nấu ăn, tôi không thua ai cả."
+            }
+          ]
+        },
+        {
+          "id": "g-n2-05-03",
+          "structure": "～というものだ",
+          "meaning": "Đúng là...",
+          "explanation": "Dùng để nhấn mạnh cảm xúc của người nói, như một điều đương nhiên.",
+          "mnemonic": "Đó chính là (というもの) cái gọi là...",
+          "level": "N2",
+          "examples": [
+            {
+              "id": "eg-n2-05-03-1",
+              "sentence": "友情とは、助け合うものだ。",
+              "meaning": "Tình bạn là việc giúp đỡ lẫn nhau."
+            }
+          ]
+        },
+        {
+          "id": "g-n2-05-04",
+          "structure": "～からといって",
+          "meaning": "Cho dù là...",
+          "explanation": "Dùng để phủ định một lập luận thường thấy.",
+          "mnemonic": "Chỉ vì (から) mà đã (といって).",
+          "level": "N2",
+          "examples": [
+            {
+              "id": "eg-n2-05-04-1",
+              "sentence": "勉強ができるからといって、人間的に優れているとは限らない。",
+              "meaning": "Cho dù học giỏi, chưa chắc đã là người ưu tú về mặt nhân cách."
+            }
+          ]
+        }
+      ],
+      "kanjiItems": [
+        {
+          "id": "k-n2-05-01",
+          "kanji": "育",
+          "hanViet": "DỤC",
+          "radical": "Nhục",
+          "strokeCount": 8,
+          "onyomi": [
+            "イク"
+          ],
+          "kunyomi": [
+            "そだ・つ",
+            "はぐく・む"
+          ],
+          "meaning": "Nuôi dưỡng",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "教育",
+              "hiragana": "きょういく",
+              "meaning": "Giáo dục"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-05-02",
+          "kanji": "能",
+          "hanViet": "NĂNG",
+          "radical": "Nguyệt",
+          "strokeCount": 10,
+          "onyomi": [
+            "ノウ"
+          ],
+          "kunyomi": [],
+          "meaning": "Năng lực, khả năng",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "能力",
+              "hiragana": "のうりょく",
+              "meaning": "Năng lực"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-05-03",
+          "kanji": "講",
+          "hanViet": "GIẢNG",
+          "radical": "Ngôn",
+          "strokeCount": 17,
+          "onyomi": [
+            "コウ"
+          ],
+          "kunyomi": [],
+          "meaning": "Giảng giải",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "講義",
+              "hiragana": "こうぎ",
+              "meaning": "Bài giảng"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-05-04",
+          "kanji": "基",
+          "hanViet": "CƠ",
+          "radical": "Thổ",
+          "strokeCount": 11,
+          "onyomi": [
+            "キ"
+          ],
+          "kunyomi": [
+            "もと"
+          ],
+          "meaning": "Cơ bản, nền tảng",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "基礎",
+              "hiragana": "きそ",
+              "meaning": "Cơ sở"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "n2-lesson-06",
+      "name": "Bài 06: Môi trường & Sinh thái",
+      "description": "Các vấn đề về biến đổi khí hậu, bảo vệ môi trường và sinh thái học.",
+      "level": "N2",
+      "curriculum": "N2 Upper-Intermediate Course",
+      "vocabulary": [
+        {
+          "id": "n2-06-01",
+          "kanji": "環境",
+          "hiragana": "かんきょう",
+          "onyomi": "HOÀN CẢNH",
+          "meaning": "Môi trường",
+          "phonetic": "kankyou"
+        },
+        {
+          "id": "n2-06-02",
+          "kanji": "汚染",
+          "hiragana": "おせん",
+          "onyomi": "Ô NHIỄM",
+          "meaning": "Ô nhiễm",
+          "phonetic": "osen"
+        },
+        {
+          "id": "n2-06-03",
+          "kanji": "温暖化",
+          "hiragana": "おんだんか",
+          "onyomi": "ÔN NOÃN HÓA",
+          "meaning": "Ấm lên toàn cầu",
+          "phonetic": "ondanka"
+        },
+        {
+          "id": "n2-06-04",
+          "kanji": "破壊",
+          "hiragana": "はかい",
+          "onyomi": "PHÁ HOẠI",
+          "meaning": "Phá hoại",
+          "phonetic": "hakai"
+        },
+        {
+          "id": "n2-06-05",
+          "kanji": "資源",
+          "hiragana": "しげん",
+          "onyomi": "TƯ NGUYÊN",
+          "meaning": "Tài nguyên",
+          "phonetic": "shigen"
+        },
+        {
+          "id": "n2-06-06",
+          "kanji": "保護",
+          "hiragana": "ほご",
+          "onyomi": "BẢO HỘ",
+          "meaning": "Bảo vệ",
+          "phonetic": "hogo"
+        },
+        {
+          "id": "n2-06-07",
+          "kanji": "生態",
+          "hiragana": "せいたい",
+          "onyomi": "SINH THÁI",
+          "meaning": "Sinh thái",
+          "phonetic": "seitai"
+        },
+        {
+          "id": "n2-06-08",
+          "kanji": "絶滅",
+          "hiragana": "ぜつめつ",
+          "onyomi": "TUYỆT DIỆT",
+          "meaning": "Tuyệt chủng",
+          "phonetic": "zetsumetsu"
+        },
+        {
+          "id": "n2-06-09",
+          "kanji": "気候",
+          "hiragana": "きこう",
+          "onyomi": "KHÍ HẬU",
+          "meaning": "Khí hậu",
+          "phonetic": "kikou"
+        },
+        {
+          "id": "n2-06-10",
+          "kanji": "災害",
+          "hiragana": "さいがい",
+          "onyomi": "TAI HẠI",
+          "meaning": "Thảm họa",
+          "phonetic": "saigai"
+        },
+        {
+          "id": "n2-06-11",
+          "kanji": "廃棄物",
+          "hiragana": "はいきぶつ",
+          "onyomi": "PHẾ KHÍ VẬT",
+          "meaning": "Rác thải",
+          "phonetic": "haikibutsu"
+        },
+        {
+          "id": "n2-06-12",
+          "kanji": "リサイクル",
+          "hiragana": "りさいくる",
+          "onyomi": "TÁI TUẦN HOÀN",
+          "meaning": "Tái chế",
+          "phonetic": "risaikuru"
+        },
+        {
+          "id": "n2-06-13",
+          "kanji": "持続",
+          "hiragana": "じぞく",
+          "onyomi": "TRÌ TỤC",
+          "meaning": "Duy trì",
+          "phonetic": "jizoku"
+        },
+        {
+          "id": "n2-06-14",
+          "kanji": "危機",
+          "hiragana": "きき",
+          "onyomi": "NGUY CƠ",
+          "meaning": "Nguy cơ",
+          "phonetic": "kiki"
+        },
+        {
+          "id": "n2-06-15",
+          "kanji": "地球",
+          "hiragana": "ちきゅう",
+          "onyomi": "ĐỊA CẦU",
+          "meaning": "Trái đất",
+          "phonetic": "chikyuu"
+        },
+        {
+          "id": "n2-06-16",
+          "kanji": "深刻",
+          "hiragana": "しんこく",
+          "onyomi": "THÂM KHẮC",
+          "meaning": "Nghiêm trọng",
+          "phonetic": "shinkoku"
+        },
+        {
+          "id": "n2-06-17",
+          "kanji": "対策",
+          "hiragana": "たいさく",
+          "onyomi": "ĐỐI SÁCH",
+          "meaning": "Đối sách",
+          "phonetic": "taisaku"
+        },
+        {
+          "id": "n2-06-18",
+          "kanji": "浄化",
+          "hiragana": "じょうか",
+          "onyomi": "TỊNH HÓA",
+          "meaning": "Làm sạch",
+          "phonetic": "jouka"
+        },
+        {
+          "id": "n2-06-19",
+          "kanji": "燃焼",
+          "hiragana": "ねんしょう",
+          "onyomi": "NHIÊN THIÊU",
+          "meaning": "Đốt cháy",
+          "phonetic": "nenshou"
+        },
+        {
+          "id": "n2-06-20",
+          "kanji": "有害",
+          "hiragana": "ゆうがい",
+          "onyomi": "HỮU HẠI",
+          "meaning": "Có hại",
+          "phonetic": "yuugai"
+        },
+        {
+          "id": "n2-06-21",
+          "kanji": "汚染物質",
+          "hiragana": "おせんぶっしつ",
+          "onyomi": "Ô NHIỄM VẬT CHẤT",
+          "meaning": "Chất gây ô nhiễm",
+          "phonetic": "osenbusshitsu"
+        },
+        {
+          "id": "n2-06-22",
+          "kanji": "干ばつ",
+          "hiragana": "かんばつ",
+          "onyomi": "KIỀN",
+          "meaning": "Hạn hán",
+          "phonetic": "kanbatsu"
+        },
+        {
+          "id": "n2-06-23",
+          "kanji": "酸性雨",
+          "hiragana": "さんせいう",
+          "onyomi": "TOAN TÍNH VŨ",
+          "meaning": "Mưa axit",
+          "phonetic": "sanseiu"
+        },
+        {
+          "id": "n2-06-24",
+          "kanji": "再生",
+          "hiragana": "さいせい",
+          "onyomi": "TÁI SINH",
+          "meaning": "Tái sinh",
+          "phonetic": "saisei"
+        },
+        {
+          "id": "n2-06-25",
+          "kanji": "現状",
+          "hiragana": "げんじょう",
+          "onyomi": "HIỆN TRẠNG",
+          "meaning": "Hiện trạng",
+          "phonetic": "genjou"
+        },
+        {
+          "id": "n2-06-26",
+          "kanji": "温室",
+          "hiragana": "おんしつ",
+          "onyomi": "ÔN THẤT",
+          "meaning": "Nhà kính",
+          "phonetic": "onshitsu"
+        },
+        {
+          "id": "n2-06-27",
+          "kanji": "削減",
+          "hiragana": "さくげん",
+          "onyomi": "TƯỚC GIẢM",
+          "meaning": "Cắt giảm",
+          "phonetic": "sakugen"
+        },
+        {
+          "id": "n2-06-28",
+          "kanji": "生態系",
+          "hiragana": "せいたいけい",
+          "onyomi": "SINH THÁI HỆ",
+          "meaning": "Hệ sinh thái",
+          "phonetic": "seitaikei"
+        },
+        {
+          "id": "n2-06-29",
+          "kanji": "地球環境",
+          "hiragana": "ちきゅうかんきょう",
+          "onyomi": "ĐỊA CẦU HOÀN CẢNH",
+          "meaning": "Môi trường trái đất",
+          "phonetic": "chikyuukankyou"
+        },
+        {
+          "id": "n2-06-30",
+          "kanji": "取り組み",
+          "hiragana": "とりくみ",
+          "onyomi": "THỦ",
+          "meaning": "Nỗ lực",
+          "phonetic": "torikumi"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-n2-06-01",
+          "structure": "～ばかりか",
+          "meaning": "Không chỉ... mà còn...",
+          "explanation": "Dùng khi muốn nhấn mạnh một trạng thái vượt xa hơn bình thường.",
+          "mnemonic": "Không chỉ (ばかり) - mức độ còn hơn thế.",
+          "level": "N2",
+          "examples": [
+            {
+              "id": "eg-n2-06-01-1",
+              "sentence": "この本は面白いばかりか、勉強にもなる。",
+              "meaning": "Cuốn sách này không chỉ thú vị mà còn giúp ích cho việc học."
+            }
+          ]
+        },
+        {
+          "id": "g-n2-06-02",
+          "structure": "～をもとに",
+          "meaning": "Dựa trên...",
+          "explanation": "Dùng để nói về cơ sở hoặc nền tảng của một việc gì đó.",
+          "mnemonic": "Dựa trên cái gốc (本).",
+          "level": "N2",
+          "examples": [
+            {
+              "id": "eg-n2-06-02-1",
+              "sentence": "その映画は実話をもとに作られた。",
+              "meaning": "Bộ phim đó được làm dựa trên câu chuyện có thật."
+            }
+          ]
+        },
+        {
+          "id": "g-n2-06-03",
+          "structure": "～にあたって",
+          "meaning": "Vào lúc, nhân dịp...",
+          "explanation": "Tương tự ～に際して, dùng cho các dịp đặc biệt cần sự trang trọng.",
+          "mnemonic": "Tại (当たる) thời điểm này.",
+          "level": "N2",
+          "examples": [
+            {
+              "id": "eg-n2-06-03-1",
+              "sentence": "開会にあたって、挨拶をさせていただきます。",
+              "meaning": "Nhân dịp khai mạc, tôi xin phép được gửi lời chào."
+            }
+          ]
+        },
+        {
+          "id": "g-n2-06-04",
+          "structure": "～をきっかけに",
+          "meaning": "Lấy... làm khởi đầu.",
+          "explanation": "Dùng khi một sự kiện dẫn đến một sự thay đổi hoặc bước ngoặt mới.",
+          "mnemonic": "Lấy làm thời cơ (きっかけ).",
+          "level": "N2",
+          "examples": [
+            {
+              "id": "eg-n2-06-04-1",
+              "sentence": "留学をきっかけに、料理を始めた。",
+              "meaning": "Từ sau khi đi du học, tôi bắt đầu tự nấu ăn."
+            }
+          ]
+        }
+      ],
+      "kanjiItems": [
+        {
+          "id": "k-n2-06-01",
+          "kanji": "環",
+          "hanViet": "HOÀN",
+          "radical": "Ngọc",
+          "strokeCount": 17,
+          "onyomi": [
+            "カン"
+          ],
+          "kunyomi": [],
+          "meaning": "Môi trường",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "環境",
+              "hiragana": "かんきょう",
+              "meaning": "Môi trường"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-06-02",
+          "kanji": "源",
+          "hanViet": "NGUYÊN",
+          "radical": "Thủy",
+          "strokeCount": 13,
+          "onyomi": [
+            "ゲン"
+          ],
+          "kunyomi": [
+            "みなもと"
+          ],
+          "meaning": "Nguồn",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "資源",
+              "hiragana": "しげん",
+              "meaning": "Tài nguyên"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-06-03",
+          "kanji": "保",
+          "hanViet": "BẢO",
+          "radical": "Nhân",
+          "strokeCount": 9,
+          "onyomi": [
+            "ホ"
+          ],
+          "kunyomi": [
+            "たも・つ"
+          ],
+          "meaning": "Bảo vệ, duy trì",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "保護",
+              "hiragana": "ほご",
+              "meaning": "Bảo vệ"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-06-04",
+          "kanji": "滅",
+          "hanViet": "DIỆT",
+          "radical": "Thủy",
+          "strokeCount": 13,
+          "onyomi": [
+            "メツ"
+          ],
+          "kunyomi": [
+            "ほろ・びる"
+          ],
+          "meaning": "Tuyệt chủng, hủy diệt",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "絶滅",
+              "hiragana": "ぜつめつ",
+              "meaning": "Tuyệt chủng"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "n2-lesson-07",
+      "name": "Bài 07: Kinh tế & Phát triển",
+      "description": "Các chủ đề về kinh tế vĩ mô, quản lý doanh nghiệp và xu hướng thị trường.",
+      "level": "N2",
+      "curriculum": "N2 Upper-Intermediate Course",
+      "vocabulary": [
+        {
+          "id": "n2-07-01",
+          "kanji": "景気",
+          "hiragana": "けいき",
+          "onyomi": "CẢNH KHÍ",
+          "meaning": "Tình hình kinh tế",
+          "phonetic": "keiki"
+        },
+        {
+          "id": "n2-07-02",
+          "kanji": "急騰",
+          "hiragana": "きゅうとう",
+          "onyomi": "CẤP ĐẰNG",
+          "meaning": "Tăng vọt",
+          "phonetic": "kyuutou"
+        },
+        {
+          "id": "n2-07-03",
+          "kanji": "停滞",
+          "hiragana": "ていたい",
+          "onyomi": "ĐÌNH TRỆ",
+          "meaning": "Đình trệ, ngưng trệ",
+          "phonetic": "teitai"
+        },
+        {
+          "id": "n2-07-04",
+          "kanji": "物価",
+          "hiragana": "ぶっか",
+          "onyomi": "VẬT GIÁ",
+          "meaning": "Vật giá",
+          "phonetic": "bukka"
+        },
+        {
+          "id": "n2-07-05",
+          "kanji": "投資",
+          "hiragana": "とうし",
+          "onyomi": "ĐẦU TƯ",
+          "meaning": "Đầu tư",
+          "phonetic": "toushi"
+        },
+        {
+          "id": "n2-07-06",
+          "kanji": "倒産",
+          "hiragana": "とうさん",
+          "onyomi": "ĐẢO SẢN",
+          "meaning": "Phá sản",
+          "phonetic": "tousan"
+        },
+        {
+          "id": "n2-07-07",
+          "kanji": "利益",
+          "hiragana": "りえき",
+          "onyomi": "LỢI ÍCH",
+          "meaning": "Lợi nhuận",
+          "phonetic": "rieki"
+        },
+        {
+          "id": "n2-07-08",
+          "kanji": "赤字",
+          "hiragana": "あかじ",
+          "onyomi": "XÍCH TỰ",
+          "meaning": "Thâm hụt",
+          "phonetic": "akaji"
+        },
+        {
+          "id": "n2-07-09",
+          "kanji": "黒字",
+          "hiragana": "くろじ",
+          "onyomi": "HẮC TỰ",
+          "meaning": "Thặng dư",
+          "phonetic": "kuroji"
+        },
+        {
+          "id": "n2-07-10",
+          "kanji": "融資",
+          "hiragana": "ゆうし",
+          "onyomi": "DUNG TƯ",
+          "meaning": "Khoản vay, tài trợ",
+          "phonetic": "yuushi"
+        },
+        {
+          "id": "n2-07-11",
+          "kanji": "税金",
+          "hiragana": "ぜいきん",
+          "onyomi": "THUẾ KIM",
+          "meaning": "Thuế",
+          "phonetic": "zeikin"
+        },
+        {
+          "id": "n2-07-12",
+          "kanji": "格差",
+          "hiragana": "かくさ",
+          "onyomi": "CÁCH SAI",
+          "meaning": "Khoảng cách, chênh lệch",
+          "phonetic": "kakusa"
+        },
+        {
+          "id": "n2-07-13",
+          "kanji": "市場",
+          "hiragana": "しじょう",
+          "onyomi": "THỊ TRƯỜNG",
+          "meaning": "Thị trường",
+          "phonetic": "shijou"
+        },
+        {
+          "id": "n2-07-14",
+          "kanji": "取引",
+          "hiragana": "とりひき",
+          "onyomi": "THỦ DẪN",
+          "meaning": "Giao dịch",
+          "phonetic": "torihiki"
+        },
+        {
+          "id": "n2-07-15",
+          "kanji": "拡大",
+          "hiragana": "かくだい",
+          "onyomi": "KHUẾCH ĐẠI",
+          "meaning": "Mở rộng",
+          "phonetic": "kakudai"
+        },
+        {
+          "id": "n2-07-16",
+          "kanji": "縮小",
+          "hiragana": "しゅくしょう",
+          "onyomi": "SÚC TIỂU",
+          "meaning": "Thu nhỏ",
+          "phonetic": "shukushou"
+        },
+        {
+          "id": "n2-07-17",
+          "kanji": "需要",
+          "hiragana": "じゅよう",
+          "onyomi": "NHU YẾU",
+          "meaning": "Nhu cầu",
+          "phonetic": "juyou"
+        },
+        {
+          "id": "n2-07-18",
+          "kanji": "供給",
+          "hiragana": "きょうきゅう",
+          "onyomi": "CUNG CẤP",
+          "meaning": "Cung cấp",
+          "phonetic": "kyoukyuu"
+        },
+        {
+          "id": "n2-07-19",
+          "kanji": "雇用",
+          "hiragana": "こよう",
+          "onyomi": "CỐ DỤNG",
+          "meaning": "Tuyển dụng",
+          "phonetic": "koyou"
+        },
+        {
+          "id": "n2-07-20",
+          "kanji": "賃金",
+          "hiragana": "ちんぎん",
+          "onyomi": "NHẪM KIM",
+          "meaning": "Tiền lương",
+          "phonetic": "chingin"
+        },
+        {
+          "id": "n2-07-21",
+          "kanji": "物資",
+          "hiragana": "ぶっし",
+          "onyomi": "VẬT TƯ",
+          "meaning": "Vật tư",
+          "phonetic": "busshi"
+        },
+        {
+          "id": "n2-07-22",
+          "kanji": "在庫",
+          "hiragana": "ざいこ",
+          "onyomi": "TẠI KHỐ",
+          "meaning": "Tồn kho",
+          "phonetic": "zaiko"
+        },
+        {
+          "id": "n2-07-23",
+          "kanji": "経費",
+          "hiragana": "けいひ",
+          "onyomi": "KINH PHÍ",
+          "meaning": "Chi phí",
+          "phonetic": "keihi"
+        },
+        {
+          "id": "n2-07-24",
+          "kanji": "予算",
+          "hiragana": "よさん",
+          "onyomi": "DỰ TOÁN",
+          "meaning": "Ngân sách",
+          "phonetic": "yosan"
+        },
+        {
+          "id": "n2-07-25",
+          "kanji": "貨幣",
+          "hiragana": "かへい",
+          "onyomi": "HÓA TỆ",
+          "meaning": "Tiền tệ",
+          "phonetic": "kahei"
+        },
+        {
+          "id": "n2-07-26",
+          "kanji": "外貨",
+          "hiragana": "がいか",
+          "onyomi": "NGOẠI HÓA",
+          "meaning": "Ngoại tệ",
+          "phonetic": "gaika"
+        },
+        {
+          "id": "n2-07-27",
+          "kanji": "円高",
+          "hiragana": "えんだか",
+          "onyomi": "YÊN CAO",
+          "meaning": "Yên lên giá",
+          "phonetic": "endaka"
+        },
+        {
+          "id": "n2-07-28",
+          "kanji": "円安",
+          "hiragana": "えんやす",
+          "onyomi": "YÊN THẤP",
+          "meaning": "Yên xuống giá",
+          "phonetic": "enyasu"
+        },
+        {
+          "id": "n2-07-29",
+          "kanji": "金融",
+          "hiragana": "きんゆう",
+          "onyomi": "KIM DUNG",
+          "meaning": "Tài chính",
+          "phonetic": "kinyuu"
+        },
+        {
+          "id": "n2-07-30",
+          "kanji": "収益",
+          "hiragana": "しゅうえき",
+          "onyomi": "THU ÍCH",
+          "meaning": "Thu nhập",
+          "phonetic": "shuueki"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-n2-07-01",
+          "structure": "～にともなって",
+          "meaning": "Cùng với, kéo theo",
+          "explanation": "Khi một sự việc thay đổi, kéo theo sự thay đổi của sự việc khác.",
+          "mnemonic": "To mo natt (Cùng với)",
+          "level": "N2",
+          "examples": [
+            {
+              "id": "eg-n2-07-01-1",
+              "sentence": "人口の増加にともなって、食料不足が深刻化している。",
+              "meaning": "Cùng với sự gia tăng dân số, sự thiếu hụt lương thực đang ngày càng nghiêm trọng."
+            }
+          ]
+        },
+        {
+          "id": "g-n2-07-02",
+          "structure": "～に反して",
+          "meaning": "Trái ngược với",
+          "explanation": "Diễn tả sự trái ngược với dự đoán, mong đợi hoặc kỳ vọng.",
+          "mnemonic": "Han (phản) - trái với",
+          "level": "N2",
+          "examples": [
+            {
+              "id": "eg-n2-07-02-1",
+              "sentence": "予想に反して、不景気が続いている。",
+              "meaning": "Trái ngược với dự đoán, tình trạng kinh tế trì trệ vẫn tiếp diễn."
+            }
+          ]
+        },
+        {
+          "id": "g-n2-07-03",
+          "structure": "～をめぐって",
+          "meaning": "Xoay quanh, về việc",
+          "explanation": "Dùng khi có tranh luận hoặc bàn thảo về một chủ đề/vấn đề.",
+          "mnemonic": "Quanh quẩn một vấn đề",
+          "level": "N2",
+          "examples": [
+            {
+              "id": "eg-n2-07-03-1",
+              "sentence": "新しい政策をめぐって、議論が続いている。",
+              "meaning": "Cuộc thảo luận đang tiếp diễn xoay quanh chính sách mới."
+            }
+          ]
+        },
+        {
+          "id": "g-n2-07-04",
+          "structure": "～に際して",
+          "meaning": "Nhân dịp, khi làm gì",
+          "explanation": "Sử dụng trong tình huống trang trọng, khi thực hiện một sự kiện đặc biệt.",
+          "mnemonic": "Sai (lúc) - Nhân dịp",
+          "level": "N2",
+          "examples": [
+            {
+              "id": "eg-n2-07-04-1",
+              "sentence": "開店に際して、特別なキャンペーンを行う。",
+              "meaning": "Nhân dịp khai trương, chúng tôi sẽ thực hiện chiến dịch đặc biệt."
+            }
+          ]
+        }
+      ],
+      "kanjiItems": [
+        {
+          "id": "k-n2-07-01",
+          "kanji": "景",
+          "hanViet": "CẢNH",
+          "radical": "Nhật",
+          "strokeCount": 12,
+          "onyomi": [
+            "ケイ"
+          ],
+          "kunyomi": [
+            "けしき"
+          ],
+          "meaning": "Phong cảnh, kinh tế",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "景気",
+              "hiragana": "けいき",
+              "meaning": "Tình hình kinh tế"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-07-02",
+          "kanji": "騰",
+          "hanViet": "ĐẰNG",
+          "radical": "Mã",
+          "strokeCount": 20,
+          "onyomi": [
+            "トウ"
+          ],
+          "kunyomi": [
+            "あがる"
+          ],
+          "meaning": "Tăng vọt, bay lên",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "急騰",
+              "hiragana": "きゅうとう",
+              "meaning": "Tăng vọt"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-07-03",
+          "kanji": "滞",
+          "hanViet": "TRỆ",
+          "radical": "Thủy",
+          "strokeCount": 13,
+          "onyomi": [
+            "タイ"
+          ],
+          "kunyomi": [
+            "とどこおる"
+          ],
+          "meaning": "Ngưng trệ, tắc nghẽn",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "停滞",
+              "hiragana": "ていたい",
+              "meaning": "Đình trệ"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-07-04",
+          "kanji": "融",
+          "hanViet": "DUNG",
+          "radical": "Miên",
+          "strokeCount": 16,
+          "onyomi": [
+            "ユウ"
+          ],
+          "kunyomi": [
+            "とける"
+          ],
+          "meaning": "Tài chính, hòa tan",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "融資",
+              "hiragana": "ゆうし",
+              "meaning": "Tài trợ, vay vốn"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "n2-lesson-08",
+      "name": "Bài 08: Khoa học & Công nghệ",
+      "description": "Các từ vựng về công nghệ, phát minh và tác động của khoa học đến đời sống.",
+      "level": "N2",
+      "curriculum": "N2 Upper-Intermediate Course",
+      "vocabulary": [
+        {
+          "id": "n2-08-01",
+          "kanji": "革新",
+          "hiragana": "かくしん",
+          "onyomi": "CÁCH TÂN",
+          "meaning": "Đổi mới, cải cách",
+          "phonetic": "kakushin"
+        },
+        {
+          "id": "n2-08-02",
+          "kanji": "発明",
+          "hiragana": "はつめい",
+          "onyomi": "PHÁT MINH",
+          "meaning": "Phát minh",
+          "phonetic": "hatsumei"
+        },
+        {
+          "id": "n2-08-03",
+          "kanji": "解析",
+          "hiragana": "かいせき",
+          "onyomi": "GIẢI TÍCH",
+          "meaning": "Phân tích",
+          "phonetic": "kaiseki"
+        },
+        {
+          "id": "n2-08-04",
+          "kanji": "技術",
+          "hiragana": "ぎじゅつ",
+          "onyomi": "KỸ THUẬT",
+          "meaning": "Kỹ thuật",
+          "phonetic": "gijutsu"
+        },
+        {
+          "id": "n2-08-05",
+          "kanji": "開発",
+          "hiragana": "かいはつ",
+          "onyomi": "KHAI PHÁT",
+          "meaning": "Phát triển",
+          "phonetic": "kaihatsu"
+        },
+        {
+          "id": "n2-08-06",
+          "kanji": "人工",
+          "hiragana": "じんこう",
+          "onyomi": "NHÂN CÔNG",
+          "meaning": "Nhân tạo",
+          "phonetic": "jinkou"
+        },
+        {
+          "id": "n2-08-07",
+          "kanji": "実験",
+          "hiragana": "じっけん",
+          "onyomi": "THỰC NGHIỆM",
+          "meaning": "Thí nghiệm",
+          "phonetic": "jikken"
+        },
+        {
+          "id": "n2-08-08",
+          "kanji": "検証",
+          "hiragana": "けんしょう",
+          "onyomi": "KIỂM CHỨNG",
+          "meaning": "Kiểm chứng",
+          "phonetic": "kenshou"
+        },
+        {
+          "id": "n2-08-09",
+          "kanji": "普及",
+          "hiragana": "ふきゅう",
+          "onyomi": "PHỔ CẬP",
+          "meaning": "Phổ cập",
+          "phonetic": "fukyuu"
+        },
+        {
+          "id": "n2-08-10",
+          "kanji": "自動化",
+          "hiragana": "じどうか",
+          "onyomi": "TỰ ĐỘNG HÓA",
+          "meaning": "Tự động hóa",
+          "phonetic": "jidouka"
+        },
+        {
+          "id": "n2-08-11",
+          "kanji": "最新",
+          "hiragana": "さいしん",
+          "onyomi": "TỐI TÂN",
+          "meaning": "Mới nhất",
+          "phonetic": "saishin"
+        },
+        {
+          "id": "n2-08-12",
+          "kanji": "装置",
+          "hiragana": "そうち",
+          "onyomi": "TRANG TRÍ",
+          "meaning": "Thiết bị",
+          "phonetic": "souchi"
+        },
+        {
+          "id": "n2-08-13",
+          "kanji": "電子",
+          "hiragana": "でんし",
+          "onyomi": "ĐIỆN TỬ",
+          "meaning": "Điện tử",
+          "phonetic": "denshi"
+        },
+        {
+          "id": "n2-08-14",
+          "kanji": "信号",
+          "hiragana": "しんごう",
+          "onyomi": "TÍN HÀO",
+          "meaning": "Tín hiệu",
+          "phonetic": "shingou"
+        },
+        {
+          "id": "n2-08-15",
+          "kanji": "通信",
+          "hiragana": "つうしん",
+          "onyomi": "THÔNG TÍN",
+          "meaning": "Truyền thông",
+          "phonetic": "tsuushin"
+        },
+        {
+          "id": "n2-08-16",
+          "kanji": "接続",
+          "hiragana": "せつぞく",
+          "onyomi": "TIẾP TỤC",
+          "meaning": "Kết nối",
+          "phonetic": "setsuzoku"
+        },
+        {
+          "id": "n2-08-17",
+          "kanji": "性能",
+          "hiragana": "せいのう",
+          "onyomi": "TÍNH NĂNG",
+          "meaning": "Tính năng",
+          "phonetic": "seinou"
+        },
+        {
+          "id": "n2-08-18",
+          "kanji": "機能",
+          "hiragana": "きのう",
+          "onyomi": "CƠ NĂNG",
+          "meaning": "Chức năng",
+          "phonetic": "kinou"
+        },
+        {
+          "id": "n2-08-19",
+          "kanji": "精密",
+          "hiragana": "せいみつ",
+          "onyomi": "TINH MẬT",
+          "meaning": "Chính xác, tinh vi",
+          "phonetic": "seimitsu"
+        },
+        {
+          "id": "n2-08-20",
+          "kanji": "製造",
+          "hiragana": "せいぞう",
+          "onyomi": "CHẾ TẠO",
+          "meaning": "Chế tạo",
+          "phonetic": "seizou"
+        },
+        {
+          "id": "n2-08-21",
+          "kanji": "特許",
+          "hiragana": "とっきょ",
+          "onyomi": "ĐẶC HỨA",
+          "meaning": "Bằng sáng chế",
+          "phonetic": "tokkyo"
+        },
+        {
+          "id": "n2-08-22",
+          "kanji": "資源",
+          "hiragana": "しげん",
+          "onyomi": "TƯ NGUYÊN",
+          "meaning": "Tài nguyên",
+          "phonetic": "shigen"
+        },
+        {
+          "id": "n2-08-23",
+          "kanji": "効率",
+          "hiragana": "こうりつ",
+          "onyomi": "HIỆU SUẤT",
+          "meaning": "Hiệu suất",
+          "phonetic": "kouritsu"
+        },
+        {
+          "id": "n2-08-24",
+          "kanji": "基盤",
+          "hiragana": "きばん",
+          "onyomi": "CƠ BÀN",
+          "meaning": "Nền tảng, cơ sở",
+          "phonetic": "kiban"
+        },
+        {
+          "id": "n2-08-25",
+          "kanji": "適応",
+          "hiragana": "てきおう",
+          "onyomi": "THÍCH ỨNG",
+          "meaning": "Thích ứng",
+          "phonetic": "tekiou"
+        },
+        {
+          "id": "n2-08-26",
+          "kanji": "効率化",
+          "hiragana": "こうりつか",
+          "onyomi": "HIỆU SUẤT HÓA",
+          "meaning": "Tối ưu hóa hiệu suất",
+          "phonetic": "kouritsuka"
+        },
+        {
+          "id": "n2-08-27",
+          "kanji": "試作",
+          "hiragana": "しさく",
+          "onyomi": "THÍ TÁC",
+          "meaning": "Chế tạo thử nghiệm",
+          "phonetic": "shisaku"
+        },
+        {
+          "id": "n2-08-28",
+          "kanji": "構造",
+          "hiragana": "こうぞう",
+          "onyomi": "CẤU TẠO",
+          "meaning": "Cấu trúc",
+          "phonetic": "kouzou"
+        },
+        {
+          "id": "n2-08-29",
+          "kanji": "演算",
+          "hiragana": "えんざん",
+          "onyomi": "DIỄN TOÁN",
+          "meaning": "Phép tính",
+          "phonetic": "enzan"
+        },
+        {
+          "id": "n2-08-30",
+          "kanji": "回路",
+          "hiragana": "かいろ",
+          "onyomi": "HỒI LỘ",
+          "meaning": "Mạch điện",
+          "phonetic": "kairo"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-n2-08-01",
+          "structure": "～ざるを得ない",
+          "meaning": "Đành phải, không thể không",
+          "explanation": "Dùng khi người nói phải làm một việc dù không muốn do tình thế ép buộc.",
+          "mnemonic": "Zaru (không) + eru (có thể) -> Không thể không",
+          "level": "N2",
+          "examples": [
+            {
+              "id": "eg-n2-08-01-1",
+              "sentence": "この計画には問題が多いので、中止せざるを得ない。",
+              "meaning": "Vì kế hoạch này có quá nhiều vấn đề, chúng tôi đành phải hủy bỏ."
+            }
+          ]
+        },
+        {
+          "id": "g-n2-08-02",
+          "structure": "～に限らず",
+          "meaning": "Không chỉ riêng...",
+          "explanation": "Dùng để nói rằng phạm vi không chỉ dừng lại ở một đối tượng mà còn mở rộng ra hơn.",
+          "mnemonic": "Giới hạn (Kagiri) -> Không giới hạn ở",
+          "level": "N2",
+          "examples": [
+            {
+              "id": "eg-n2-08-02-1",
+              "sentence": "この技術は専門家のみならず、一般の人々にも役立つ。",
+              "meaning": "Công nghệ này không chỉ hữu ích với chuyên gia mà còn với người bình thường."
+            }
+          ]
+        },
+        {
+          "id": "g-n2-08-03",
+          "structure": "～かわりに",
+          "meaning": "Thay vì, thay cho",
+          "explanation": "Dùng khi làm việc này thay cho việc kia, hoặc sự bù đắp.",
+          "mnemonic": "Thay đổi (Kawari)",
+          "level": "N2",
+          "examples": [
+            {
+              "id": "eg-n2-08-03-1",
+              "sentence": "現金で払うかわりに、カードで支払います。",
+              "meaning": "Thay vì trả tiền mặt, tôi sẽ trả bằng thẻ."
+            }
+          ]
+        },
+        {
+          "id": "g-n2-08-04",
+          "structure": "～にあたって",
+          "meaning": "Khi làm gì (trang trọng)",
+          "explanation": "Dùng trong các dịp đặc biệt, chuẩn bị làm việc quan trọng.",
+          "mnemonic": "Đúng lúc (Atatte)",
+          "level": "N2",
+          "examples": [
+            {
+              "id": "eg-n2-08-04-1",
+              "sentence": "開発にあたって、多くの資金が必要だ。",
+              "meaning": "Khi tiến hành phát triển, cần rất nhiều vốn."
+            }
+          ]
+        }
+      ],
+      "kanjiItems": [
+        {
+          "id": "k-n2-08-01",
+          "kanji": "革",
+          "hanViet": "CÁCH",
+          "radical": "Vi",
+          "strokeCount": 9,
+          "onyomi": [
+            "カク"
+          ],
+          "kunyomi": [
+            "かわ"
+          ],
+          "meaning": "Cải cách, da",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "革新",
+              "hiragana": "かくしん",
+              "meaning": "Đổi mới"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-08-02",
+          "kanji": "検",
+          "hanViet": "KIỂM",
+          "radical": "Mộc",
+          "strokeCount": 13,
+          "onyomi": [
+            "ケン"
+          ],
+          "kunyomi": [
+            "しらべる"
+          ],
+          "meaning": "Kiểm tra, xét nghiệm",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "検証",
+              "hiragana": "けんしょう",
+              "meaning": "Kiểm chứng"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-08-03",
+          "kanji": "技",
+          "hanViet": "KỸ",
+          "radical": "Thủ",
+          "strokeCount": 7,
+          "onyomi": [
+            "ギ"
+          ],
+          "kunyomi": [
+            "わざ"
+          ],
+          "meaning": "Kỹ thuật, kỹ năng",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "技術",
+              "hiragana": "ぎじゅつ",
+              "meaning": "Kỹ thuật"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-08-04",
+          "kanji": "製",
+          "hanViet": "CHẾ",
+          "radical": "Y",
+          "strokeCount": 11,
+          "onyomi": [
+            "セイ"
+          ],
+          "kunyomi": [
+            "つくる"
+          ],
+          "meaning": "Chế tạo, sản xuất",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "製造",
+              "hiragana": "せいぞう",
+              "meaning": "Sản xuất"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "n2-lesson-09",
+      "name": "Bài 09: Xã hội & Văn hóa",
+      "description": "Các vấn đề về xã hội, lối sống hiện đại và văn hóa truyền thống.",
+      "level": "N2",
+      "curriculum": "N2 Upper-Intermediate Course",
+      "vocabulary": [
+        {
+          "id": "n2-09-01",
+          "kanji": "社会",
+          "hiragana": "しゃかい",
+          "onyomi": "XÃ HỘI",
+          "meaning": "Xã hội",
+          "phonetic": "shakai"
+        },
+        {
+          "id": "n2-09-02",
+          "kanji": "高齢化",
+          "hiragana": "こうれいか",
+          "onyomi": "CAO LINH HÓA",
+          "meaning": "Già hóa dân số",
+          "phonetic": "koureika"
+        },
+        {
+          "id": "n2-09-03",
+          "kanji": "伝統",
+          "hiragana": "でんとう",
+          "onyomi": "TRUYỀN THỐNG",
+          "meaning": "Truyền thống",
+          "phonetic": "dentou"
+        },
+        {
+          "id": "n2-09-04",
+          "kanji": "共生",
+          "hiragana": "きょうせい",
+          "onyomi": "CỘNG SINH",
+          "meaning": "Cùng chung sống",
+          "phonetic": "kyousei"
+        },
+        {
+          "id": "n2-09-05",
+          "kanji": "人権",
+          "hiragana": "じんけん",
+          "onyomi": "NHÂN QUYỀN",
+          "meaning": "Nhân quyền",
+          "phonetic": "jinken"
+        },
+        {
+          "id": "n2-09-06",
+          "kanji": "福祉",
+          "hiragana": "ふくし",
+          "onyomi": "PHÚC CHỈ",
+          "meaning": "Phúc lợi",
+          "phonetic": "fukushi"
+        },
+        {
+          "id": "n2-09-07",
+          "kanji": "地域",
+          "hiragana": "ちいき",
+          "onyomi": "ĐỊA VỰC",
+          "meaning": "Khu vực",
+          "phonetic": "chiiki"
+        },
+        {
+          "id": "n2-09-08",
+          "kanji": "意識",
+          "hiragana": "いしき",
+          "onyomi": "Ý THỨC",
+          "meaning": "Ý thức",
+          "phonetic": "ishiki"
+        },
+        {
+          "id": "n2-09-09",
+          "kanji": "変容",
+          "hiragana": "へんよう",
+          "onyomi": "BIẾN DUNG",
+          "meaning": "Biến đổi, biến dung",
+          "phonetic": "henyou"
+        },
+        {
+          "id": "n2-09-10",
+          "kanji": "多様性",
+          "hiragana": "たようせい",
+          "onyomi": "ĐA DẠNG TÍNH",
+          "meaning": "Tính đa dạng",
+          "phonetic": "tayousei"
+        },
+        {
+          "id": "n2-09-11",
+          "kanji": "価値観",
+          "hiragana": "かちかん",
+          "onyomi": "GIÁ TRỊ QUAN",
+          "meaning": "Giá trị quan",
+          "phonetic": "kachikan"
+        },
+        {
+          "id": "n2-09-12",
+          "kanji": "格差",
+          "hiragana": "かくさ",
+          "onyomi": "CÁCH SAI",
+          "meaning": "Khoảng cách xã hội",
+          "phonetic": "kakusa"
+        },
+        {
+          "id": "n2-09-13",
+          "kanji": "環境",
+          "hiragana": "かんきょう",
+          "onyomi": "HOÀN CẢNH",
+          "meaning": "Môi trường",
+          "phonetic": "kankyou"
+        },
+        {
+          "id": "n2-09-14",
+          "kanji": "対策",
+          "hiragana": "たいさく",
+          "onyomi": "ĐỐI SÁCH",
+          "meaning": "Đối sách",
+          "phonetic": "taisaku"
+        },
+        {
+          "id": "n2-09-15",
+          "kanji": "雇用",
+          "hiragana": "こよう",
+          "onyomi": "CỐ DỤNG",
+          "meaning": "Việc làm",
+          "phonetic": "koyou"
+        },
+        {
+          "id": "n2-09-16",
+          "kanji": "差別",
+          "hiragana": "さべつ",
+          "onyomi": "SAI BIỆT",
+          "meaning": "Phân biệt",
+          "phonetic": "sabetsu"
+        },
+        {
+          "id": "n2-09-17",
+          "kanji": "偏見",
+          "hiragana": "へんけん",
+          "onyomi": "THIÊN KIẾN",
+          "meaning": "Thành kiến",
+          "phonetic": "henken"
+        },
+        {
+          "id": "n2-09-18",
+          "kanji": "交流",
+          "hiragana": "こうりゅう",
+          "onyomi": "GIAO LƯU",
+          "meaning": "Giao lưu",
+          "phonetic": "kouryuu"
+        },
+        {
+          "id": "n2-09-19",
+          "kanji": "活性化",
+          "hiragana": "かっせいか",
+          "onyomi": "HOẠT TÍNH HÓA",
+          "meaning": "Kích hoạt, làm sôi động",
+          "phonetic": "kasseika"
+        },
+        {
+          "id": "n2-09-20",
+          "kanji": "発展",
+          "hiragana": "はってん",
+          "onyomi": "PHÁT TRIỂN",
+          "meaning": "Phát triển",
+          "phonetic": "hatten"
+        },
+        {
+          "id": "n2-09-21",
+          "kanji": "教育",
+          "hiragana": "きょういく",
+          "onyomi": "GIÁO DỤC",
+          "meaning": "Giáo dục",
+          "phonetic": "kyouiku"
+        },
+        {
+          "id": "n2-09-22",
+          "kanji": "家庭",
+          "hiragana": "かてい",
+          "onyomi": "GIA ĐÌNH",
+          "meaning": "Gia đình",
+          "phonetic": "katei"
+        },
+        {
+          "id": "n2-09-23",
+          "kanji": "公共",
+          "hiragana": "こうきょう",
+          "onyomi": "CÔNG CỘNG",
+          "meaning": "Công cộng",
+          "phonetic": "koukyou"
+        },
+        {
+          "id": "n2-09-24",
+          "kanji": "自立",
+          "hiragana": "じりつ",
+          "onyomi": "TỰ LẬP",
+          "meaning": "Tự lập",
+          "phonetic": "jiritsu"
+        },
+        {
+          "id": "n2-09-25",
+          "kanji": "貢献",
+          "hiragana": "こうけん",
+          "onyomi": "CỐNG HIẾN",
+          "meaning": "Cống hiến",
+          "phonetic": "kouken"
+        },
+        {
+          "id": "n2-09-26",
+          "kanji": "世論",
+          "hiragana": "よろん",
+          "onyomi": "THẾ LUẬN",
+          "meaning": "Dư luận",
+          "phonetic": "yoron"
+        },
+        {
+          "id": "n2-09-27",
+          "kanji": "共感",
+          "hiragana": "きょうかん",
+          "onyomi": "CỘNG CẢM",
+          "meaning": "Đồng cảm",
+          "phonetic": "kyoukan"
+        },
+        {
+          "id": "n2-09-28",
+          "kanji": "規範",
+          "hiragana": "きはん",
+          "onyomi": "QUY PHẠM",
+          "meaning": "Quy phạm",
+          "phonetic": "kihan"
+        },
+        {
+          "id": "n2-09-29",
+          "kanji": "風習",
+          "hiragana": "ふうしゅう",
+          "onyomi": "PHONG TẬP",
+          "meaning": "Phong tục",
+          "phonetic": "fuushuu"
+        },
+        {
+          "id": "n2-09-30",
+          "kanji": "文明",
+          "hiragana": "ぶんめい",
+          "onyomi": "VĂN MINH",
+          "meaning": "Văn minh",
+          "phonetic": "bunmei"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-n2-09-01",
+          "structure": "～をめぐって",
+          "meaning": "Xoay quanh vấn đề",
+          "explanation": "Dùng khi nói về các cuộc tranh luận hoặc thảo luận xoay quanh một chủ đề xã hội.",
+          "mnemonic": "Quanh quẩn",
+          "level": "N2",
+          "examples": [
+            {
+              "id": "eg-n2-09-01-1",
+              "sentence": "教育問題をめぐって、活発な議論が行われた。",
+              "meaning": "Xoay quanh vấn đề giáo dục, những cuộc thảo luận sôi nổi đã diễn ra."
+            }
+          ]
+        },
+        {
+          "id": "g-n2-09-02",
+          "structure": "～にかわって",
+          "meaning": "Thay cho, đại diện cho",
+          "explanation": "Sử dụng khi một người/vật thay thế vị trí cho một người/vật khác.",
+          "mnemonic": "Thay cho (Kawari)",
+          "level": "N2",
+          "examples": [
+            {
+              "id": "eg-n2-09-02-1",
+              "sentence": "社長にかわって、部長が出席した。",
+              "meaning": "Thay cho giám đốc, trưởng phòng đã tham dự."
+            }
+          ]
+        },
+        {
+          "id": "g-n2-09-03",
+          "structure": "～はもちろん",
+          "meaning": "Đương nhiên là..., không chỉ...",
+          "explanation": "Nhấn mạnh vế đầu là hiển nhiên, và vế sau cũng thế.",
+          "mnemonic": "Dĩ nhiên",
+          "level": "N2",
+          "examples": [
+            {
+              "id": "eg-n2-09-03-1",
+              "sentence": "彼は日本語はもちろん、英語も上手です。",
+              "meaning": "Anh ấy không chỉ giỏi tiếng Nhật, mà tiếng Anh cũng giỏi."
+            }
+          ]
+        },
+        {
+          "id": "g-n2-09-04",
+          "structure": "～をきっかけに",
+          "meaning": "Nhân cơ hội, bắt đầu từ việc",
+          "explanation": "Dùng khi một sự kiện trở thành khởi đầu cho sự thay đổi.",
+          "mnemonic": "Kikkake (Khởi đầu)",
+          "level": "N2",
+          "examples": [
+            {
+              "id": "eg-n2-09-04-1",
+              "sentence": "留学をきっかけに、考え方が変わった。",
+              "meaning": "Bắt đầu từ việc đi du học, tư duy của tôi đã thay đổi."
+            }
+          ]
+        }
+      ],
+      "kanjiItems": [
+        {
+          "id": "k-n2-09-01",
+          "kanji": "祉",
+          "hanViet": "PHÚC",
+          "radical": "Thị",
+          "strokeCount": 8,
+          "onyomi": [
+            "シ"
+          ],
+          "kunyomi": [],
+          "meaning": "Phúc lợi, hạnh phúc",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "福祉",
+              "hiragana": "ふくし",
+              "meaning": "Phúc lợi"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-09-02",
+          "kanji": "貢",
+          "hanViet": "CỐNG",
+          "radical": "Bối",
+          "strokeCount": 10,
+          "onyomi": [
+            "コウ"
+          ],
+          "kunyomi": [
+            "みつぐ"
+          ],
+          "meaning": "Cống hiến",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "貢献",
+              "hiragana": "こうけん",
+              "meaning": "Cống hiến"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-09-03",
+          "kanji": "域",
+          "hanViet": "VỰC",
+          "radical": "Thổ",
+          "strokeCount": 11,
+          "onyomi": [
+            "イキ"
+          ],
+          "kunyomi": [],
+          "meaning": "Khu vực, vùng",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "地域",
+              "hiragana": "ちいき",
+              "meaning": "Khu vực"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-09-04",
+          "kanji": "態",
+          "hanViet": "THÁI",
+          "radical": "Tâm",
+          "strokeCount": 14,
+          "onyomi": [
+            "タイ"
+          ],
+          "kunyomi": [
+            "わざと"
+          ],
+          "meaning": "Trạng thái, thái độ",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "状態",
+              "hiragana": "じょうたい",
+              "meaning": "Trạng thái"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "n2-lesson-10",
+      "name": "Bài 10: Xã hội & Đô thị hóa",
+      "description": "Các chủ đề về thay đổi xã hội, lối sống hiện đại và quy hoạch đô thị.",
+      "level": "N2",
+      "curriculum": "N2 Upper-Intermediate Course",
+      "vocabulary": [
+        {
+          "id": "n2-10-01",
+          "kanji": "過疎",
+          "hiragana": "かそ",
+          "onyomi": "QUÁ SƠ",
+          "meaning": "Sự thưa thớt dân cư",
+          "phonetic": "kaso"
+        },
+        {
+          "id": "n2-10-02",
+          "kanji": "都市",
+          "hiragana": "とし",
+          "onyomi": "ĐÔ THỊ",
+          "meaning": "Đô thị, thành phố",
+          "phonetic": "toshi"
+        },
+        {
+          "id": "n2-10-03",
+          "kanji": "移住",
+          "hiragana": "いじゅう",
+          "onyomi": "DI TRÚ",
+          "meaning": "Di cư, chuyển nhà",
+          "phonetic": "ijuu"
+        },
+        {
+          "id": "n2-10-04",
+          "kanji": "促進",
+          "hiragana": "そくしん",
+          "onyomi": "XÚC TIẾN",
+          "meaning": "Thúc đẩy",
+          "phonetic": "sokushin"
+        },
+        {
+          "id": "n2-10-05",
+          "kanji": "高齢化",
+          "hiragana": "こうれいか",
+          "onyomi": "CAO LINH HÓA",
+          "meaning": "Sự già hóa dân số",
+          "phonetic": "koureika"
+        },
+        {
+          "id": "n2-10-06",
+          "kanji": "利便性",
+          "hiragana": "りべんせい",
+          "onyomi": "LỢI TIỆN TÍNH",
+          "meaning": "Sự tiện lợi",
+          "phonetic": "ribensei"
+        },
+        {
+          "id": "n2-10-07",
+          "kanji": "過密",
+          "hiragana": "かみつ",
+          "onyomi": "QUÁ MẬT",
+          "meaning": "Quá đông đúc",
+          "phonetic": "kamitsu"
+        },
+        {
+          "id": "n2-10-08",
+          "kanji": "周辺",
+          "hiragana": "しゅうへん",
+          "onyomi": "CHU BIÊN",
+          "meaning": "Vùng xung quanh",
+          "phonetic": "shuuhen"
+        },
+        {
+          "id": "n2-10-09",
+          "kanji": "整備",
+          "hiragana": "せいび",
+          "onyomi": "CHỈNH BỊ",
+          "meaning": "Hoàn thiện, điều chỉnh",
+          "phonetic": "seibi"
+        },
+        {
+          "id": "n2-10-10",
+          "kanji": "活性化",
+          "hiragana": "かっせいか",
+          "onyomi": "HOẠT TÍNH HÓA",
+          "meaning": "Sự làm sống động",
+          "phonetic": "kasseika"
+        },
+        {
+          "id": "n2-10-11",
+          "kanji": "依存",
+          "hiragana": "いぞん",
+          "onyomi": "Y TỒN",
+          "meaning": "Phụ thuộc",
+          "phonetic": "izon"
+        },
+        {
+          "id": "n2-10-12",
+          "kanji": "対策",
+          "hiragana": "たいさく",
+          "onyomi": "ĐỐI SÁCH",
+          "meaning": "Đối sách",
+          "phonetic": "taisaku"
+        },
+        {
+          "id": "n2-10-13",
+          "kanji": "環境",
+          "hiragana": "かんきょう",
+          "onyomi": "HOÀN CẢNH",
+          "meaning": "Môi trường",
+          "phonetic": "kankyou"
+        },
+        {
+          "id": "n2-10-14",
+          "kanji": "普及",
+          "hiragana": "ふきゅう",
+          "onyomi": "PHỔ CẬP",
+          "meaning": "Phổ cập, phổ biến",
+          "phonetic": "fukyuu"
+        },
+        {
+          "id": "n2-10-15",
+          "kanji": "格差",
+          "hiragana": "かくさ",
+          "onyomi": "CÁCH SAI",
+          "meaning": "Cách biệt",
+          "phonetic": "kakusa"
+        },
+        {
+          "id": "n2-10-16",
+          "kanji": "住民",
+          "hiragana": "じゅうみん",
+          "onyomi": "TRÚ DÂN",
+          "meaning": "Cư dân",
+          "phonetic": "juumin"
+        },
+        {
+          "id": "n2-10-17",
+          "kanji": "公共",
+          "hiragana": "こうきょう",
+          "onyomi": "CÔNG CỘNG",
+          "meaning": "Công cộng",
+          "phonetic": "koukyou"
+        },
+        {
+          "id": "n2-10-18",
+          "kanji": "施策",
+          "hiragana": "しさく",
+          "onyomi": "THI SÁCH",
+          "meaning": "Chính sách",
+          "phonetic": "shisaku"
+        },
+        {
+          "id": "n2-10-19",
+          "kanji": "維持",
+          "hiragana": "いじ",
+          "onyomi": "DUY TRÌ",
+          "meaning": "Duy trì",
+          "phonetic": "iji"
+        },
+        {
+          "id": "n2-10-20",
+          "kanji": "定住",
+          "hiragana": "ていじゅう",
+          "onyomi": "ĐỊNH TRÚ",
+          "meaning": "Định cư",
+          "phonetic": "teijuu"
+        },
+        {
+          "id": "n2-10-21",
+          "kanji": "需要",
+          "hiragana": "じゅよう",
+          "onyomi": "NHU YẾU",
+          "meaning": "Nhu cầu",
+          "phonetic": "juyou"
+        },
+        {
+          "id": "n2-10-22",
+          "kanji": "供給",
+          "hiragana": "きょうきゅう",
+          "onyomi": "CUNG CẤP",
+          "meaning": "Cung cấp",
+          "phonetic": "kyoukyuu"
+        },
+        {
+          "id": "n2-10-23",
+          "kanji": "衰退",
+          "hiragana": "すいたい",
+          "onyomi": "SUY THOÁI",
+          "meaning": "Suy thoái, tàn tạ",
+          "phonetic": "suitai"
+        },
+        {
+          "id": "n2-10-24",
+          "kanji": "共生",
+          "hiragana": "きょうせい",
+          "onyomi": "CỘNG SINH",
+          "meaning": "Cùng chung sống",
+          "phonetic": "kyousei"
+        },
+        {
+          "id": "n2-10-25",
+          "kanji": "多様性",
+          "hiragana": "たようせい",
+          "onyomi": "ĐA DẠNG TÍNH",
+          "meaning": "Tính đa dạng",
+          "phonetic": "tayousei"
+        },
+        {
+          "id": "n2-10-26",
+          "kanji": "改善",
+          "hiragana": "かいぜん",
+          "onyomi": "CẢI THIỆN",
+          "meaning": "Cải thiện",
+          "phonetic": "kaizen"
+        },
+        {
+          "id": "n2-10-27",
+          "kanji": "発展",
+          "hiragana": "はってん",
+          "onyomi": "PHÁT TRIỂN",
+          "meaning": "Phát triển",
+          "phonetic": "hatten"
+        },
+        {
+          "id": "n2-10-28",
+          "kanji": "懸念",
+          "hiragana": "けねん",
+          "onyomi": "HUYỀN NIỆM",
+          "meaning": "Mối lo ngại",
+          "phonetic": "kenen"
+        },
+        {
+          "id": "n2-10-29",
+          "kanji": "促進",
+          "hiragana": "そくしん",
+          "onyomi": "XÚC TIẾN",
+          "meaning": "Thúc đẩy",
+          "phonetic": "sokushin"
+        },
+        {
+          "id": "n2-10-30",
+          "kanji": "自治体",
+          "hiragana": "じちたい",
+          "onyomi": "TỰ TRỊ THỂ",
+          "meaning": "Chính quyền địa phương",
+          "phonetic": "jichitai"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-n2-10-01",
+          "structure": "～にともなって",
+          "meaning": "Cùng với, đi kèm với...",
+          "explanation": "Dùng khi một sự thay đổi xảy ra kéo theo sự thay đổi khác.",
+          "mnemonic": "Đi cùng với (kèm theo) sự thay đổi.",
+          "level": "N2",
+          "examples": [
+            {
+              "id": "eg-n2-10-01-1",
+              "sentence": "人口の増加にともなって、ゴミの問題が深刻化している。",
+              "meaning": "Cùng với sự gia tăng dân số, vấn đề rác thải đang trở nên nghiêm trọng."
+            }
+          ]
+        },
+        {
+          "id": "g-n2-10-02",
+          "structure": "～に反して",
+          "meaning": "Trái ngược với, ngược lại với...",
+          "explanation": "Dùng để diễn tả một kết quả trái với dự đoán, mong đợi hoặc quy định.",
+          "mnemonic": "Phản (反) lại với những gì đã định.",
+          "level": "N2",
+          "examples": [
+            {
+              "id": "eg-n2-10-02-1",
+              "sentence": "予想に反して、試験はとても簡単だった。",
+              "meaning": "Trái với dự đoán, bài thi rất dễ."
+            }
+          ]
+        },
+        {
+          "id": "g-n2-10-03",
+          "structure": "～をめぐって",
+          "meaning": "Xoay quanh vấn đề...",
+          "explanation": "Dùng khi có nhiều ý kiến, tranh luận xoay quanh một chủ đề.",
+          "mnemonic": "Quanh (めぐ) một vấn đề tâm điểm.",
+          "level": "N2",
+          "examples": [
+            {
+              "id": "eg-n2-10-03-1",
+              "sentence": "その計画をめぐって、住民から反対の声が上がった。",
+              "meaning": "Xoay quanh kế hoạch đó, đã có những tiếng nói phản đối từ cư dân."
+            }
+          ]
+        },
+        {
+          "id": "g-n2-10-04",
+          "structure": "～に際して",
+          "meaning": "Khi, vào lúc, nhân dịp...",
+          "explanation": "Dùng trong các tình huống trang trọng, mang ý nghĩa thời điểm bắt đầu một sự kiện.",
+          "mnemonic": "Khi có sự kiện (tế - 際) xảy ra.",
+          "level": "N2",
+          "examples": [
+            {
+              "id": "eg-n2-10-04-1",
+              "sentence": "帰国に際して、お世話になった方々にあいさつをした。",
+              "meaning": "Khi chuẩn bị về nước, tôi đã chào tạm biệt những người đã giúp đỡ mình."
+            }
+          ]
+        }
+      ],
+      "kanjiItems": [
+        {
+          "id": "k-n2-10-01",
+          "kanji": "過",
+          "hanViet": "QUÁ",
+          "radical": "Sước (辶)",
+          "strokeCount": 12,
+          "onyomi": [
+            "カ"
+          ],
+          "kunyomi": [
+            "す.ぎる",
+            "す.ごす",
+            "あやま.ち"
+          ],
+          "meaning": "Quá mức, quá khứ",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "過剰",
+              "hiragana": "かじょう",
+              "meaning": "Vượt quá, dư thừa"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-10-02",
+          "kanji": "疎",
+          "hanViet": "SƠ",
+          "radical": "Nhĩ (疋)",
+          "strokeCount": 13,
+          "onyomi": [
+            "ソ"
+          ],
+          "kunyomi": [
+            "うと.い",
+            "うと.む"
+          ],
+          "meaning": "Thưa thớt, sơ sài",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "疎遠",
+              "hiragana": "そえん",
+              "meaning": "Xa cách, ít liên lạc"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-10-03",
+          "kanji": "移",
+          "hanViet": "DI",
+          "radical": "Hòa (禾)",
+          "strokeCount": 11,
+          "onyomi": [
+            "イ"
+          ],
+          "kunyomi": [
+            "うつ.る",
+            "うつ.す"
+          ],
+          "meaning": "Di chuyển",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "移動",
+              "hiragana": "いどう",
+              "meaning": "Sự di động"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-10-04",
+          "kanji": "促",
+          "hanViet": "XÚC",
+          "radical": "Nhân (亻)",
+          "strokeCount": 9,
+          "onyomi": [
+            "ソク"
+          ],
+          "kunyomi": [
+            "うなが.す"
+          ],
+          "meaning": "Thúc đẩy",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "促進",
+              "hiragana": "そくしん",
+              "meaning": "Sự thúc đẩy"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "n2-lesson-11",
+      "name": "Bài 11: Môi trường & Thiên nhiên",
+      "description": "Các chủ đề về bảo vệ môi trường, biến đổi khí hậu và ý thức sinh thái.",
+      "level": "N2",
+      "curriculum": "N2 Upper-Intermediate Course",
+      "vocabulary": [
+        {
+          "id": "n2-11-01",
+          "kanji": "温暖化",
+          "hiragana": "おんだんか",
+          "onyomi": "ÔN NOÃN HÓA",
+          "meaning": "Sự nóng lên (toàn cầu)",
+          "phonetic": "ondanka"
+        },
+        {
+          "id": "n2-11-02",
+          "kanji": "汚染",
+          "hiragana": "おせん",
+          "onyomi": "Ô NHIỄM",
+          "meaning": "Sự ô nhiễm",
+          "phonetic": "osen"
+        },
+        {
+          "id": "n2-11-03",
+          "kanji": "絶滅",
+          "hiragana": "ぜつめつ",
+          "onyomi": "TUYỆT DIỆT",
+          "meaning": "Sự tuyệt chủng",
+          "phonetic": "zetsumetsu"
+        },
+        {
+          "id": "n2-11-04",
+          "kanji": "資源",
+          "hiragana": "しげん",
+          "onyomi": "TƯ NGUYÊN",
+          "meaning": "Tài nguyên",
+          "phonetic": "shigen"
+        },
+        {
+          "id": "n2-11-05",
+          "kanji": "再利用",
+          "hiragana": "さいりよう",
+          "onyomi": "TÁI LỢI DỤNG",
+          "meaning": "Tái sử dụng",
+          "phonetic": "sairiyou"
+        },
+        {
+          "id": "n2-11-06",
+          "kanji": "排気",
+          "hiragana": "はいき",
+          "onyomi": "BÀI KHÍ",
+          "meaning": "Khí thải",
+          "phonetic": "haiki"
+        },
+        {
+          "id": "n2-11-07",
+          "kanji": "自然",
+          "hiragana": "しぜん",
+          "onyomi": "TỰ NHIÊN",
+          "meaning": "Thiên nhiên",
+          "phonetic": "shizen"
+        },
+        {
+          "id": "n2-11-08",
+          "kanji": "保護",
+          "hiragana": "ほご",
+          "onyomi": "BẢO HỘ",
+          "meaning": "Bảo vệ, bảo tồn",
+          "phonetic": "hogo"
+        },
+        {
+          "id": "n2-11-09",
+          "kanji": "削減",
+          "hiragana": "さくげん",
+          "onyomi": "TƯỚC GIẢM",
+          "meaning": "Cắt giảm",
+          "phonetic": "sakugen"
+        },
+        {
+          "id": "n2-11-10",
+          "kanji": "生態系",
+          "hiragana": "せいたいけい",
+          "onyomi": "SINH THÁI HỆ",
+          "meaning": "Hệ sinh thái",
+          "phonetic": "seitaikei"
+        },
+        {
+          "id": "n2-11-11",
+          "kanji": "廃棄物",
+          "hiragana": "はいきぶつ",
+          "onyomi": "PHẾ KHÍ VẬT",
+          "meaning": "Chất thải",
+          "phonetic": "haikibutsu"
+        },
+        {
+          "id": "n2-11-12",
+          "kanji": "循環",
+          "hiragana": "じゅんかん",
+          "onyomi": "TUẦN HOÀN",
+          "meaning": "Tuần hoàn",
+          "phonetic": "junkan"
+        },
+        {
+          "id": "n2-11-13",
+          "kanji": "分解",
+          "hiragana": "ぶんかい",
+          "onyomi": "PHÂN GIẢI",
+          "meaning": "Phân hủy",
+          "phonetic": "bunkai"
+        },
+        {
+          "id": "n2-11-14",
+          "kanji": "持続可能",
+          "hiragana": "じぞくかのう",
+          "onyomi": "TRÌ TỤC KHẢ NĂNG",
+          "meaning": "Bền vững",
+          "phonetic": "jizokukanou"
+        },
+        {
+          "id": "n2-11-15",
+          "kanji": "温暖",
+          "hiragana": "おんだん",
+          "onyomi": "ÔN NOÃN",
+          "meaning": "Ấm áp",
+          "phonetic": "ondan"
+        },
+        {
+          "id": "n2-11-16",
+          "kanji": "干ばつ",
+          "hiragana": "かんばつ",
+          "onyomi": "CAN",
+          "meaning": "Hạn hán",
+          "phonetic": "kanbatsu"
+        },
+        {
+          "id": "n2-11-17",
+          "kanji": "被害",
+          "hiragana": "ひがい",
+          "onyomi": "BỊ HẠI",
+          "meaning": "Thiệt hại",
+          "phonetic": "higai"
+        },
+        {
+          "id": "n2-11-18",
+          "kanji": "対策",
+          "hiragana": "たいさく",
+          "onyomi": "ĐỐI SÁCH",
+          "meaning": "Đối sách",
+          "phonetic": "taisaku"
+        },
+        {
+          "id": "n2-11-19",
+          "kanji": "再生",
+          "hiragana": "さいせい",
+          "onyomi": "TÁI SINH",
+          "meaning": "Tái tạo",
+          "phonetic": "saisei"
+        },
+        {
+          "id": "n2-11-20",
+          "kanji": "意識",
+          "hiragana": "いしき",
+          "onyomi": "Ý THỨC",
+          "meaning": "Ý thức",
+          "phonetic": "ishiki"
+        },
+        {
+          "id": "n2-11-21",
+          "kanji": "削減",
+          "hiragana": "さくげん",
+          "onyomi": "TƯỚC GIẢM",
+          "meaning": "Cắt giảm",
+          "phonetic": "sakugen"
+        },
+        {
+          "id": "n2-11-22",
+          "kanji": "開発",
+          "hiragana": "かいはつ",
+          "onyomi": "KHAI PHÁT",
+          "meaning": "Khai thác, phát triển",
+          "phonetic": "kaihatsu"
+        },
+        {
+          "id": "n2-11-23",
+          "kanji": "枯渇",
+          "hiragana": "こかつ",
+          "onyomi": "KHÔ KIỆT",
+          "meaning": "Cạn kiệt",
+          "phonetic": "kokatsu"
+        },
+        {
+          "id": "n2-11-24",
+          "kanji": "保護区",
+          "hiragana": "ほごく",
+          "onyomi": "BẢO HỘ KHU",
+          "meaning": "Khu bảo tồn",
+          "phonetic": "hogoku"
+        },
+        {
+          "id": "n2-11-25",
+          "kanji": "生態",
+          "hiragana": "せいたい",
+          "onyomi": "SINH THÁI",
+          "meaning": "Sinh thái",
+          "phonetic": "seitai"
+        },
+        {
+          "id": "n2-11-26",
+          "kanji": "破壊",
+          "hiragana": "はかい",
+          "onyomi": "PHÁ HOẠI",
+          "meaning": "Phá hoại",
+          "phonetic": "hakai"
+        },
+        {
+          "id": "n2-11-27",
+          "kanji": "環境",
+          "hiragana": "かんきょう",
+          "onyomi": "HOÀN CẢNH",
+          "meaning": "Môi trường",
+          "phonetic": "kankyou"
+        },
+        {
+          "id": "n2-11-28",
+          "kanji": "浄化",
+          "hiragana": "じょうか",
+          "onyomi": "TỊNH HÓA",
+          "meaning": "Làm sạch",
+          "phonetic": "jouka"
+        },
+        {
+          "id": "n2-11-29",
+          "kanji": "共存",
+          "hiragana": "きょうぞん",
+          "onyomi": "CỘNG TỒN",
+          "meaning": "Cùng tồn tại",
+          "phonetic": "kyouzon"
+        },
+        {
+          "id": "n2-11-30",
+          "kanji": "配慮",
+          "hiragana": "はいりょ",
+          "onyomi": "PHỐI LỰ",
+          "meaning": "Sự quan tâm, cân nhắc",
+          "phonetic": "hairyo"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-n2-11-01",
+          "structure": "～ざるを得ない",
+          "meaning": "Đành phải, buộc phải...",
+          "explanation": "Dùng để diễn tả tâm trạng không muốn nhưng buộc phải làm do tình thế ép buộc.",
+          "mnemonic": "Không thể không làm (tự nhiên cảm thấy như vậy).",
+          "level": "N2",
+          "examples": [
+            {
+              "id": "eg-n2-11-01-1",
+              "sentence": "環境破壊が進む今、私たちは対策を考えざるを得ない。",
+              "meaning": "Trước sự phá hoại môi trường đang tiến triển như hiện nay, chúng ta buộc phải suy nghĩ về đối sách."
+            }
+          ]
+        },
+        {
+          "id": "g-n2-11-02",
+          "structure": "～ということだ",
+          "meaning": "Có nghĩa là, tóm lại là...",
+          "explanation": "Dùng để giải thích hoặc tóm tắt lại nội dung, sự việc đã đề cập trước đó.",
+          "mnemonic": "Nghĩa của việc này là...",
+          "level": "N2",
+          "examples": [
+            {
+              "id": "eg-n2-11-02-1",
+              "sentence": "彼は来ないということだ。",
+              "meaning": "Điều đó có nghĩa là anh ấy sẽ không đến."
+            }
+          ]
+        },
+        {
+          "id": "g-n2-11-03",
+          "structure": "～に限って",
+          "meaning": "Chỉ riêng, đặc biệt là...",
+          "explanation": "Nhấn mạnh một đối tượng đặc biệt hoặc một thời điểm xui xẻo/đặc biệt.",
+          "mnemonic": "Giới hạn (限) trong cái này thôi.",
+          "level": "N2",
+          "examples": [
+            {
+              "id": "eg-n2-11-03-1",
+              "sentence": "今日に限って、傘を忘れてしまった。",
+              "meaning": "Chỉ riêng hôm nay thì tôi lại quên mất ô."
+            }
+          ]
+        },
+        {
+          "id": "g-n2-11-04",
+          "structure": "～に比べて",
+          "meaning": "So với...",
+          "explanation": "Sử dụng để so sánh giữa hai đối tượng.",
+          "mnemonic": "So với (比) người này/vật này.",
+          "level": "N2",
+          "examples": [
+            {
+              "id": "eg-n2-11-04-1",
+              "sentence": "去年（きょねん）に比べて、今年の夏は暑い。",
+              "meaning": "So với năm ngoái, mùa hè năm nay nóng hơn."
+            }
+          ]
+        }
+      ],
+      "kanjiItems": [
+        {
+          "id": "k-n2-11-01",
+          "kanji": "温",
+          "hanViet": "ÔN",
+          "radical": "Thủy (氵)",
+          "strokeCount": 12,
+          "onyomi": [
+            "オン"
+          ],
+          "kunyomi": [
+            "あたた.かい"
+          ],
+          "meaning": "Ấm áp",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "温暖",
+              "hiragana": "おんだん",
+              "meaning": "Ấm áp"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-11-02",
+          "kanji": "染",
+          "hanViet": "NHIỄM",
+          "radical": "Thủy (氵)",
+          "strokeCount": 9,
+          "onyomi": [
+            "セン"
+          ],
+          "kunyomi": [
+            "そ.める",
+            "そ.まる"
+          ],
+          "meaning": "Nhiễm, nhuộm",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "汚染",
+              "hiragana": "おせん",
+              "meaning": "Ô nhiễm"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-11-03",
+          "kanji": "絶",
+          "hanViet": "TUYỆT",
+          "radical": "Mịch (纟)",
+          "strokeCount": 12,
+          "onyomi": [
+            "ゼツ"
+          ],
+          "kunyomi": [
+            "た.える",
+            "た.やす"
+          ],
+          "meaning": "Cắt đứt, tuyệt diệt",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "絶滅",
+              "hiragana": "ぜつめつ",
+              "meaning": "Tuyệt chủng"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-11-04",
+          "kanji": "資",
+          "hanViet": "TƯ",
+          "radical": "Bối (貝)",
+          "strokeCount": 13,
+          "onyomi": [
+            "シ"
+          ],
+          "kunyomi": [],
+          "meaning": "Tài sản, tư liệu",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "資源",
+              "hiragana": "しげん",
+              "meaning": "Tài nguyên"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "n2-lesson-12",
+      "name": "Bài 12: Khoa học & Công nghệ",
+      "description": "Các chủ đề về đổi mới sáng tạo, trí tuệ nhân tạo và tiến bộ công nghệ.",
+      "level": "N2",
+      "curriculum": "N2 Upper-Intermediate Course",
+      "vocabulary": [
+        {
+          "id": "n2-12-01",
+          "kanji": "革新",
+          "hiragana": "かくしん",
+          "onyomi": "CÁCH TÂN",
+          "meaning": "Sự cải cách, đổi mới",
+          "phonetic": "kakushin"
+        },
+        {
+          "id": "n2-12-02",
+          "kanji": "技術",
+          "hiragana": "ぎじゅつ",
+          "onyomi": "KỸ THUẬT",
+          "meaning": "Kỹ thuật, công nghệ",
+          "phonetic": "gijutsu"
+        },
+        {
+          "id": "n2-12-03",
+          "kanji": "発展",
+          "hiragana": "はってん",
+          "onyomi": "PHÁT TRIỂN",
+          "meaning": "Phát triển",
+          "phonetic": "hatten"
+        },
+        {
+          "id": "n2-12-04",
+          "kanji": "人工知能",
+          "hiragana": "じんこうちのう",
+          "onyomi": "NHÂN CÔNG TRI NĂNG",
+          "meaning": "Trí tuệ nhân tạo (AI)",
+          "phonetic": "jinkouchinou"
+        },
+        {
+          "id": "n2-12-05",
+          "kanji": "分析",
+          "hiragana": "ぶんせき",
+          "onyomi": "PHÂN TÍCH",
+          "meaning": "Phân tích",
+          "phonetic": "bunseki"
+        },
+        {
+          "id": "n2-12-06",
+          "kanji": "開発",
+          "hiragana": "かいはつ",
+          "onyomi": "KHAI PHÁT",
+          "meaning": "Phát triển (sản phẩm/ứng dụng)",
+          "phonetic": "kaihatsu"
+        },
+        {
+          "id": "n2-12-07",
+          "kanji": "実験",
+          "hiragana": "じっけん",
+          "onyomi": "THỰC NGHIỆM",
+          "meaning": "Thực nghiệm",
+          "phonetic": "jikken"
+        },
+        {
+          "id": "n2-12-08",
+          "kanji": "検証",
+          "hiragana": "けんしょう",
+          "onyomi": "KIỂM CHỨNG",
+          "meaning": "Kiểm chứng",
+          "phonetic": "kenshou"
+        },
+        {
+          "id": "n2-12-09",
+          "kanji": "導入",
+          "hiragana": "どうにゅう",
+          "onyomi": "ĐẠO NHẬP",
+          "meaning": "Áp dụng, đưa vào sử dụng",
+          "phonetic": "dounyuu"
+        },
+        {
+          "id": "n2-12-10",
+          "kanji": "効率化",
+          "hiragana": "こうりつか",
+          "onyomi": "HIỆU SUẤT HÓA",
+          "meaning": "Sự tối ưu hóa hiệu suất",
+          "phonetic": "kouritsuka"
+        },
+        {
+          "id": "n2-12-11",
+          "kanji": "ロボット",
+          "hiragana": "ろぼっと",
+          "onyomi": "ROBOT",
+          "meaning": "Robot",
+          "phonetic": "robotto"
+        },
+        {
+          "id": "n2-12-12",
+          "kanji": "自動化",
+          "hiragana": "じどうか",
+          "onyomi": "TỰ ĐỘNG HÓA",
+          "meaning": "Tự động hóa",
+          "phonetic": "jidouka"
+        },
+        {
+          "id": "n2-12-13",
+          "kanji": "進化",
+          "hiragana": "しんか",
+          "onyomi": "TIẾN HÓA",
+          "meaning": "Tiến hóa",
+          "phonetic": "shinka"
+        },
+        {
+          "id": "n2-12-14",
+          "kanji": "通信",
+          "hiragana": "つうしん",
+          "onyomi": "THÔNG TÍN",
+          "meaning": "Viễn thông",
+          "phonetic": "tsuushin"
+        },
+        {
+          "id": "n2-12-15",
+          "kanji": "情報",
+          "hiragana": "じょうほう",
+          "onyomi": "TÌNH BÁO",
+          "meaning": "Thông tin",
+          "phonetic": "jouhou"
+        },
+        {
+          "id": "n2-12-16",
+          "kanji": "デジタル",
+          "hiragana": "でじたる",
+          "onyomi": "KỸ THUẬT SỐ",
+          "meaning": "Kỹ thuật số",
+          "phonetic": "dejitaru"
+        },
+        {
+          "id": "n2-12-17",
+          "kanji": "革命",
+          "hiragana": "かくめい",
+          "onyomi": "CÁCH MỆNH",
+          "meaning": "Cách mạng",
+          "phonetic": "kakumei"
+        },
+        {
+          "id": "n2-12-18",
+          "kanji": "倫理",
+          "hiragana": "りんり",
+          "onyomi": "LUÂN LÝ",
+          "meaning": "Luân lý",
+          "phonetic": "rinri"
+        },
+        {
+          "id": "n2-12-19",
+          "kanji": "利用",
+          "hiragana": "りよう",
+          "onyomi": "LỢI DỤNG",
+          "meaning": "Sử dụng",
+          "phonetic": "riyou"
+        },
+        {
+          "id": "n2-12-20",
+          "kanji": "課題",
+          "hiragana": "かだい",
+          "onyomi": "KHÓA ĐỀ",
+          "meaning": "Vấn đề cần giải quyết",
+          "phonetic": "kadai"
+        },
+        {
+          "id": "n2-12-21",
+          "kanji": "解決",
+          "hiragana": "かいけつ",
+          "onyomi": "GIẢI QUYẾT",
+          "meaning": "Giải quyết",
+          "phonetic": "kaiketsu"
+        },
+        {
+          "id": "n2-12-22",
+          "kanji": "普及",
+          "hiragana": "ふきゅう",
+          "onyomi": "PHỔ CẬP",
+          "meaning": "Phổ biến",
+          "phonetic": "fukyuu"
+        },
+        {
+          "id": "n2-12-23",
+          "kanji": "創造",
+          "hiragana": "そうぞう",
+          "onyomi": "SANG TẠO",
+          "meaning": "Sáng tạo",
+          "phonetic": "souzou"
+        },
+        {
+          "id": "n2-12-24",
+          "kanji": "精密",
+          "hiragana": "せいみつ",
+          "onyomi": "TINH MẬT",
+          "meaning": "Tinh xảo, chính xác",
+          "phonetic": "seimitsu"
+        },
+        {
+          "id": "n2-12-25",
+          "kanji": "画期的",
+          "hiragana": "かっきてき",
+          "onyomi": "HỌA KỲ ĐÍCH",
+          "meaning": "Tính đột phá",
+          "phonetic": "kakkiteki"
+        },
+        {
+          "id": "n2-12-26",
+          "kanji": "実用",
+          "hiragana": "じつよう",
+          "onyomi": "THỰC DỤNG",
+          "meaning": "Thực dụng, ứng dụng thực tế",
+          "phonetic": "jitsuyou"
+        },
+        {
+          "id": "n2-12-27",
+          "kanji": "促進",
+          "hiragana": "そくしん",
+          "onyomi": "XÚC TIẾN",
+          "meaning": "Thúc đẩy",
+          "phonetic": "sokushin"
+        },
+        {
+          "id": "n2-12-28",
+          "kanji": "応用",
+          "hiragana": "おうよう",
+          "onyomi": "ỨNG DỤNG",
+          "meaning": "Ứng dụng",
+          "phonetic": "ouyou"
+        },
+        {
+          "id": "n2-12-29",
+          "kanji": "飛躍",
+          "hiragana": "ひやく",
+          "onyomi": "PHI DƯỢC",
+          "meaning": "Sự nhảy vọt",
+          "phonetic": "hiyaku"
+        },
+        {
+          "id": "n2-12-30",
+          "kanji": "普及",
+          "hiragana": "ふきゅう",
+          "onyomi": "PHỔ CẬP",
+          "meaning": "Phổ cập",
+          "phonetic": "fukyuu"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-n2-12-01",
+          "structure": "～をもとに",
+          "meaning": "Dựa trên, dựa vào...",
+          "explanation": "Dùng để nói về việc sử dụng một tài liệu, thông tin hoặc nguồn gốc làm cơ sở.",
+          "mnemonic": "Nguyên (基) gốc là...",
+          "level": "N2",
+          "examples": [
+            {
+              "id": "eg-n2-12-01-1",
+              "sentence": "このデータをもとに報告書を作成した。",
+              "meaning": "Dựa trên dữ liệu này, tôi đã làm báo cáo."
+            }
+          ]
+        },
+        {
+          "id": "g-n2-12-02",
+          "structure": "～ばかりか",
+          "meaning": "Không chỉ... mà còn...",
+          "explanation": "Dùng để nhấn mạnh không những A mà B cũng vậy (thường mang ý tiêu cực hoặc bất ngờ).",
+          "mnemonic": "Không chỉ (vừa mới xong) mà còn thêm cái khác.",
+          "level": "N2",
+          "examples": [
+            {
+              "id": "eg-n2-12-02-1",
+              "sentence": "この新技術は便利であるばかりか、安全だ。",
+              "meaning": "Công nghệ mới này không chỉ tiện lợi mà còn an toàn."
+            }
+          ]
+        },
+        {
+          "id": "g-n2-12-03",
+          "structure": "～にかわって",
+          "meaning": "Thay cho, thay thế cho...",
+          "explanation": "Diễn tả sự thay thế đối tượng này bằng đối tượng khác.",
+          "mnemonic": "Thay (代) thế bằng cái khác.",
+          "level": "N2",
+          "examples": [
+            {
+              "id": "eg-n2-12-03-1",
+              "sentence": "ロボットが人間にかわって作業を行う。",
+              "meaning": "Robot thực hiện công việc thay cho con người."
+            }
+          ]
+        },
+        {
+          "id": "g-n2-12-04",
+          "structure": "～をめぐって",
+          "meaning": "Xoay quanh...",
+          "explanation": "Xoay quanh một sự việc, vấn đề.",
+          "mnemonic": "Quanh (巡) vấn đề.",
+          "level": "N2",
+          "examples": [
+            {
+              "id": "eg-n2-12-04-1",
+              "sentence": "AIの導入をめぐって専門家の意見が割れている。",
+              "meaning": "Xoay quanh việc áp dụng AI, các chuyên gia đang có ý kiến trái chiều."
+            }
+          ]
+        }
+      ],
+      "kanjiItems": [
+        {
+          "id": "k-n2-12-01",
+          "kanji": "革",
+          "hanViet": "CÁCH",
+          "radical": "Cách (革)",
+          "strokeCount": 9,
+          "onyomi": [
+            "カク"
+          ],
+          "kunyomi": [
+            "かわ"
+          ],
+          "meaning": "Da, cách tân",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "改革",
+              "hiragana": "かいかく",
+              "meaning": "Cải cách"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-12-02",
+          "kanji": "技",
+          "hanViet": "KỸ",
+          "radical": "Thủ (手)",
+          "strokeCount": 7,
+          "onyomi": [
+            "ギ"
+          ],
+          "kunyomi": [
+            "わざ"
+          ],
+          "meaning": "Kỹ thuật, tài nghệ",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "技術",
+              "hiragana": "ぎじゅつ",
+              "meaning": "Kỹ thuật"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-12-03",
+          "kanji": "術",
+          "hanViet": "THUẬT",
+          "radical": "Hành (行)",
+          "strokeCount": 11,
+          "onyomi": [
+            "ジュツ"
+          ],
+          "kunyomi": [
+            "すべ"
+          ],
+          "meaning": "Thuật, phương pháp",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "芸術",
+              "hiragana": "げいじゅつ",
+              "meaning": "Nghệ thuật"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-12-04",
+          "kanji": "基",
+          "hanViet": "CƠ",
+          "radical": "Thổ (土)",
+          "strokeCount": 11,
+          "onyomi": [
+            "キ"
+          ],
+          "kunyomi": [
+            "もと",
+            "もとい"
+          ],
+          "meaning": "Cơ bản, nền tảng",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "基礎",
+              "hiragana": "きそ",
+              "meaning": "Cơ sở"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "n2-lesson-13",
+      "name": "Bài 13: Xã hội hiện đại và các vấn đề",
+      "description": "Thảo luận về các thay đổi trong lối sống, vấn đề đô thị hóa và sự tác động của truyền thông.",
+      "level": "N2",
+      "curriculum": "N2 Upper-Intermediate Course",
+      "vocabulary": [
+        {
+          "id": "n2-13-01",
+          "kanji": "過密",
+          "hiragana": "かみつ",
+          "onyomi": "QUÁ MẬT",
+          "meaning": "Đông đúc, quá tải",
+          "phonetic": "kamitsu"
+        },
+        {
+          "id": "n2-13-02",
+          "kanji": "過疎",
+          "hiragana": "かそ",
+          "onyomi": "QUÁ SƠ",
+          "meaning": "Thưa thớt, suy giảm dân số",
+          "phonetic": "kaso"
+        },
+        {
+          "id": "n2-13-03",
+          "kanji": "急増",
+          "hiragana": "きゅうぞう",
+          "onyomi": "CẤP TĂNG",
+          "meaning": "Tăng đột ngột",
+          "phonetic": "kyuuzou"
+        },
+        {
+          "id": "n2-13-04",
+          "kanji": "共存",
+          "hiragana": "きょうぞん",
+          "onyomi": "CỘNG TỒN",
+          "meaning": "Cùng tồn tại",
+          "phonetic": "kyouzon"
+        },
+        {
+          "id": "n2-13-05",
+          "kanji": "依存",
+          "hiragana": "いぞん",
+          "onyomi": "Y TỒN",
+          "meaning": "Phụ thuộc",
+          "phonetic": "izon"
+        },
+        {
+          "id": "n2-13-06",
+          "kanji": "解消",
+          "hiragana": "かいしょう",
+          "onyomi": "GIẢI TIÊU",
+          "meaning": "Giải tỏa, xóa bỏ",
+          "phonetic": "kaishou"
+        },
+        {
+          "id": "n2-13-07",
+          "kanji": "促進",
+          "hiragana": "そくしん",
+          "onyomi": "XÚC TIẾN",
+          "meaning": "Thúc đẩy",
+          "phonetic": "sokushin"
+        },
+        {
+          "id": "n2-13-08",
+          "kanji": "懸念",
+          "hiragana": "けねん",
+          "onyomi": "HUYỀN NIỆM",
+          "meaning": "Lo ngại",
+          "phonetic": "kenen"
+        },
+        {
+          "id": "n2-13-09",
+          "kanji": "連携",
+          "hiragana": "れんけい",
+          "onyomi": "LIÊN HUỀ",
+          "meaning": "Hợp tác",
+          "phonetic": "renkei"
+        },
+        {
+          "id": "n2-13-10",
+          "kanji": "格差",
+          "hiragana": "かくさ",
+          "onyomi": "CÁCH SAI",
+          "meaning": "Khoảng cách, chênh lệch",
+          "phonetic": "kakusa"
+        },
+        {
+          "id": "n2-13-11",
+          "kanji": "普及",
+          "hiragana": "ふきゅう",
+          "onyomi": "PHỔ CẬP",
+          "meaning": "Phổ cập",
+          "phonetic": "fukyuu"
+        },
+        {
+          "id": "n2-13-12",
+          "kanji": "整備",
+          "hiragana": "せいび",
+          "onyomi": "CHỈNH BỊ",
+          "meaning": "Hoàn thiện, chuẩn bị",
+          "phonetic": "seibi"
+        },
+        {
+          "id": "n2-13-13",
+          "kanji": "改定",
+          "hiragana": "かいてい",
+          "onyomi": "CẢI ĐỊNH",
+          "meaning": "Sửa đổi (luật/quy định)",
+          "phonetic": "kaitei"
+        },
+        {
+          "id": "n2-13-14",
+          "kanji": "保障",
+          "hiragana": "ほしょう",
+          "onyomi": "BẢO CHƯỚNG",
+          "meaning": "Bảo đảm",
+          "phonetic": "hoshou"
+        },
+        {
+          "id": "n2-13-15",
+          "kanji": "抑制",
+          "hiragana": "よくせい",
+          "onyomi": "ỨC CHẾ",
+          "meaning": "Kiềm chế",
+          "phonetic": "yokusei"
+        },
+        {
+          "id": "n2-13-16",
+          "kanji": "反映",
+          "hiragana": "はんえい",
+          "onyomi": "PHẢN ẢNH",
+          "meaning": "Phản ánh",
+          "phonetic": "han'ei"
+        },
+        {
+          "id": "n2-13-17",
+          "kanji": "要請",
+          "hiragana": "ようせい",
+          "onyomi": "YÊU THỈNH",
+          "meaning": "Yêu cầu khẩn thiết",
+          "phonetic": "yousei"
+        },
+        {
+          "id": "n2-13-18",
+          "kanji": "提携",
+          "hiragana": "ていけい",
+          "onyomi": "ĐỀ HUỀ",
+          "meaning": "Liên kết",
+          "phonetic": "teikei"
+        },
+        {
+          "id": "n2-13-19",
+          "kanji": "導入",
+          "hiragana": "どうにゅう",
+          "onyomi": "ĐẠO NHẬP",
+          "meaning": "Đưa vào, áp dụng",
+          "phonetic": "dounyuu"
+        },
+        {
+          "id": "n2-13-20",
+          "kanji": "対策",
+          "hiragana": "たいさく",
+          "onyomi": "ĐỐI SÁCH",
+          "meaning": "Đối sách",
+          "phonetic": "taisaku"
+        },
+        {
+          "id": "n2-13-21",
+          "kanji": "実態",
+          "hiragana": "じったい",
+          "onyomi": "THỰC THÁI",
+          "meaning": "Tình hình thực tế",
+          "phonetic": "jittai"
+        },
+        {
+          "id": "n2-13-22",
+          "kanji": "過剰",
+          "hiragana": "かじょう",
+          "onyomi": "QUÁ THẶNG",
+          "meaning": "Vượt quá, dư thừa",
+          "phonetic": "kajou"
+        },
+        {
+          "id": "n2-13-23",
+          "kanji": "画一的",
+          "hiragana": "かくいつてき",
+          "onyomi": "HỌA NHẤT ĐÍCH",
+          "meaning": "Rập khuôn",
+          "phonetic": "kakuitsuteki"
+        },
+        {
+          "id": "n2-13-24",
+          "kanji": "普遍",
+          "hiragana": "ふへん",
+          "onyomi": "PHỔ BIẾN",
+          "meaning": "Phổ biến, phổ quát",
+          "phonetic": "fuhen"
+        },
+        {
+          "id": "n2-13-25",
+          "kanji": "孤立",
+          "hiragana": "こりつ",
+          "onyomi": "CÔ LẬP",
+          "meaning": "Cô lập",
+          "phonetic": "koritsu"
+        },
+        {
+          "id": "n2-13-26",
+          "kanji": "排除",
+          "hiragana": "はいじょ",
+          "onyomi": "BÀI TRỪ",
+          "meaning": "Loại trừ",
+          "phonetic": "haijo"
+        },
+        {
+          "id": "n2-13-27",
+          "kanji": "摩擦",
+          "hiragana": "まさつ",
+          "onyomi": "MA SÁT",
+          "meaning": "Ma sát, xung đột",
+          "phonetic": "masatsu"
+        },
+        {
+          "id": "n2-13-28",
+          "kanji": "紛争",
+          "hiragana": "ふんそう",
+          "onyomi": "PHÂN TRANH",
+          "meaning": "Tranh chấp",
+          "phonetic": "funsou"
+        },
+        {
+          "id": "n2-13-29",
+          "kanji": "格差",
+          "hiragana": "かくさ",
+          "onyomi": "CÁCH SAI",
+          "meaning": "Cách biệt",
+          "phonetic": "kakusa"
+        },
+        {
+          "id": "n2-13-30",
+          "kanji": "不況",
+          "hiragana": "ふきょう",
+          "onyomi": "BẤT HUỐNG",
+          "meaning": "Khủng hoảng kinh tế",
+          "phonetic": "fukyou"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-n2-13-01",
+          "structure": "～にともなって / ～にともない",
+          "meaning": "Cùng với, theo đó",
+          "explanation": "Khi một sự việc thay đổi, kéo theo một sự việc khác thay đổi theo.",
+          "mnemonic": "Đi kèm (tomonau) với thay đổi.",
+          "level": "N2",
+          "examples": [
+            {
+              "id": "eg-n2-13-01-1",
+              "sentence": "人口の増加にともなって、食料不足が深刻になっている。",
+              "meaning": "Cùng với việc tăng dân số, tình trạng thiếu lương thực trở nên nghiêm trọng."
+            }
+          ]
+        },
+        {
+          "id": "g-n2-13-02",
+          "structure": "～をめぐって",
+          "meaning": "Xoay quanh, xoay quanh vấn đề",
+          "explanation": "Dùng khi nói về một vấn đề có nhiều ý kiến trái chiều xoay quanh nó.",
+          "mnemonic": "Đi vòng quanh (meguru) một chủ đề.",
+          "level": "N2",
+          "examples": [
+            {
+              "id": "eg-n2-13-02-1",
+              "sentence": "その計画をめぐって、様々な意見が出された。",
+              "meaning": "Xoay quanh kế hoạch đó, nhiều ý kiến khác nhau đã được đưa ra."
+            }
+          ]
+        },
+        {
+          "id": "g-n2-13-03",
+          "structure": "～に反して",
+          "meaning": "Trái với...",
+          "explanation": "Dùng để diễn tả kết quả ngược lại với dự đoán, mong đợi hoặc kỳ vọng.",
+          "mnemonic": "Phản (han) lại điều mong đợi.",
+          "level": "N2",
+          "examples": [
+            {
+              "id": "eg-n2-13-03-1",
+              "sentence": "予想に反して、試験はとても簡単だった。",
+              "meaning": "Trái với dự đoán, kỳ thi rất dễ."
+            }
+          ]
+        },
+        {
+          "id": "g-n2-13-04",
+          "structure": "～に際して",
+          "meaning": "Khi, nhân dịp",
+          "explanation": "Sử dụng trong các trường hợp trang trọng, chuẩn bị làm việc gì đó quan trọng.",
+          "mnemonic": "Khi chuẩn bị (sai) hành động.",
+          "level": "N2",
+          "examples": [
+            {
+              "id": "eg-n2-13-04-1",
+              "sentence": "帰国に際して、お世話になった先生に挨拶に行った。",
+              "meaning": "Khi chuẩn bị về nước, tôi đã đi chào hỏi thầy giáo đã chăm sóc mình."
+            }
+          ]
+        }
+      ],
+      "kanjiItems": [
+        {
+          "id": "k-n2-13-01",
+          "kanji": "過",
+          "hanViet": "QUÁ",
+          "radical": "xước",
+          "strokeCount": 12,
+          "onyomi": [
+            "カ"
+          ],
+          "kunyomi": [
+            "す.ぎる",
+            "あやま.つ"
+          ],
+          "meaning": "Quá, lỗi, vượt quá",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "過剰",
+              "hiragana": "かじょう",
+              "meaning": "Quá mức"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-13-02",
+          "kanji": "密",
+          "hanViet": "MẬT",
+          "radical": "miên",
+          "strokeCount": 11,
+          "onyomi": [
+            "ミツ"
+          ],
+          "kunyomi": [
+            "ひそ.か"
+          ],
+          "meaning": "Mật, dày đặc",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "過密",
+              "hiragana": "かみつ",
+              "meaning": "Đông đúc"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-13-03",
+          "kanji": "促",
+          "hanViet": "XÚC",
+          "radical": "nhân",
+          "strokeCount": 9,
+          "onyomi": [
+            "ソク"
+          ],
+          "kunyomi": [
+            "うなが.す"
+          ],
+          "meaning": "Thúc giục, thúc đẩy",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "促進",
+              "hiragana": "そくしん",
+              "meaning": "Thúc đẩy"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-13-04",
+          "kanji": "懸",
+          "hanViet": "HUYỀN",
+          "radical": "tâm",
+          "strokeCount": 20,
+          "onyomi": [
+            "ケン"
+          ],
+          "kunyomi": [
+            "か.ける"
+          ],
+          "meaning": "Treo, lo ngại",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "懸念",
+              "hiragana": "けねん",
+              "meaning": "Lo ngại"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "n2-lesson-14",
+      "name": "Bài 14: Khoa học & Công nghệ",
+      "description": "Các tiến bộ công nghệ, vai trò của AI, năng lượng tái tạo và đổi mới sáng tạo.",
+      "level": "N2",
+      "curriculum": "N2 Upper-Intermediate Course",
+      "vocabulary": [
+        {
+          "id": "n2-14-01",
+          "kanji": "革新",
+          "hiragana": "かくしん",
+          "onyomi": "CÁCH TÂN",
+          "meaning": "Cải cách, đổi mới",
+          "phonetic": "kakushin"
+        },
+        {
+          "id": "n2-14-02",
+          "kanji": "模索",
+          "hiragana": "もさく",
+          "onyomi": "MÔ TÁC",
+          "meaning": "Dò dẫm, tìm kiếm",
+          "phonetic": "mosaku"
+        },
+        {
+          "id": "n2-14-03",
+          "kanji": "飛躍",
+          "hiragana": "ひやく",
+          "onyomi": "PHI DƯỢC",
+          "meaning": "Nhảy vọt",
+          "phonetic": "hiyaku"
+        },
+        {
+          "id": "n2-14-04",
+          "kanji": "基盤",
+          "hiragana": "きばん",
+          "onyomi": "CƠ BÀN",
+          "meaning": "Nền tảng, cơ sở",
+          "phonetic": "kiban"
+        },
+        {
+          "id": "n2-14-05",
+          "kanji": "構築",
+          "hiragana": "こうちく",
+          "onyomi": "CẤU TRÚC",
+          "meaning": "Xây dựng",
+          "phonetic": "kouchiku"
+        },
+        {
+          "id": "n2-14-06",
+          "kanji": "精密",
+          "hiragana": "せいみつ",
+          "onyomi": "TỊNH MẬT",
+          "meaning": "Chính xác, tinh vi",
+          "phonetic": "seimitsu"
+        },
+        {
+          "id": "n2-14-07",
+          "kanji": "駆動",
+          "hiragana": "くどう",
+          "onyomi": "KHU ĐỘNG",
+          "meaning": "Truyền động, vận hành",
+          "phonetic": "kudou"
+        },
+        {
+          "id": "n2-14-08",
+          "kanji": "稼働",
+          "hiragana": "かどう",
+          "onyomi": "GIÁ ĐỘNG",
+          "meaning": "Hoạt động (máy móc)",
+          "phonetic": "kadou"
+        },
+        {
+          "id": "n2-14-09",
+          "kanji": "探査",
+          "hiragana": "たんさ",
+          "onyomi": "THÁM TRA",
+          "meaning": "Thăm dò",
+          "phonetic": "tansa"
+        },
+        {
+          "id": "n2-14-10",
+          "kanji": "最適化",
+          "hiragana": "さいてきか",
+          "onyomi": "TỐI THÍCH HÓA",
+          "meaning": "Tối ưu hóa",
+          "phonetic": "saitekika"
+        },
+        {
+          "id": "n2-14-11",
+          "kanji": "効率",
+          "hiragana": "こうりつ",
+          "onyomi": "HIỆU SUẤT",
+          "meaning": "Hiệu suất",
+          "phonetic": "kouritsu"
+        },
+        {
+          "id": "n2-14-12",
+          "kanji": "自動化",
+          "hiragana": "じどうか",
+          "onyomi": "TỰ ĐỘNG HÓA",
+          "meaning": "Tự động hóa",
+          "phonetic": "jidouka"
+        },
+        {
+          "id": "n2-14-13",
+          "kanji": "先端",
+          "hiragana": "せんたん",
+          "onyomi": "TIÊN ĐOAN",
+          "meaning": "Tiên tiến, mũi nhọn",
+          "phonetic": "sentan"
+        },
+        {
+          "id": "n2-14-14",
+          "kanji": "蓄積",
+          "hiragana": "ちくせき",
+          "onyomi": "SÚC TÍCH",
+          "meaning": "Tích lũy",
+          "phonetic": "chikuseki"
+        },
+        {
+          "id": "n2-14-15",
+          "kanji": "高度",
+          "hiragana": "こうど",
+          "onyomi": "CAO ĐỘ",
+          "meaning": "Cao độ, mức độ cao",
+          "phonetic": "koudo"
+        },
+        {
+          "id": "n2-14-16",
+          "kanji": "検証",
+          "hiragana": "けんしょう",
+          "onyomi": "KIỂM CHỨNG",
+          "meaning": "Kiểm chứng",
+          "phonetic": "kenshou"
+        },
+        {
+          "id": "n2-14-17",
+          "kanji": "究明",
+          "hiragana": "きゅうめい",
+          "onyomi": "CỨU MINH",
+          "meaning": "Làm sáng tỏ",
+          "phonetic": "kyuumei"
+        },
+        {
+          "id": "n2-14-18",
+          "kanji": "特許",
+          "hiragana": "とっきょ",
+          "onyomi": "ĐẶC HỨA",
+          "meaning": "Bằng sáng chế",
+          "phonetic": "tokkyo"
+        },
+        {
+          "id": "n2-14-19",
+          "kanji": "実証",
+          "hiragana": "じっしょう",
+          "onyomi": "THỰC CHỨNG",
+          "meaning": "Chứng minh thực tế",
+          "phonetic": "jisshou"
+        },
+        {
+          "id": "n2-14-20",
+          "kanji": "革新",
+          "hiragana": "かくしん",
+          "onyomi": "CÁCH TÂN",
+          "meaning": "Đổi mới",
+          "phonetic": "kakushin"
+        },
+        {
+          "id": "n2-14-21",
+          "kanji": "解析",
+          "hiragana": "かいせき",
+          "onyomi": "GIẢI TÍCH",
+          "meaning": "Phân tích",
+          "phonetic": "kaiseki"
+        },
+        {
+          "id": "n2-14-22",
+          "kanji": "応用",
+          "hiragana": "おうよう",
+          "onyomi": "ỨNG DỤNG",
+          "meaning": "Ứng dụng",
+          "phonetic": "ouyou"
+        },
+        {
+          "id": "n2-14-23",
+          "kanji": "開発",
+          "hiragana": "かいはつ",
+          "onyomi": "KHAI PHÁT",
+          "meaning": "Phát triển",
+          "phonetic": "kaihatsu"
+        },
+        {
+          "id": "n2-14-24",
+          "kanji": "融合",
+          "hiragana": "ゆうごう",
+          "onyomi": "DUNG HỢP",
+          "meaning": "Dung hợp, kết hợp",
+          "phonetic": "yuugou"
+        },
+        {
+          "id": "n2-14-25",
+          "kanji": "変換",
+          "hiragana": "へんかん",
+          "onyomi": "BIẾN HOÁN",
+          "meaning": "Chuyển đổi",
+          "phonetic": "henkan"
+        },
+        {
+          "id": "n2-14-26",
+          "kanji": "予測",
+          "hiragana": "よそく",
+          "onyomi": "DỰ TRẮC",
+          "meaning": "Dự đoán",
+          "phonetic": "yosoku"
+        },
+        {
+          "id": "n2-14-27",
+          "kanji": "精密",
+          "hiragana": "せいみつ",
+          "onyomi": "TỊNH MẬT",
+          "meaning": "Chính xác cao",
+          "phonetic": "seimitsu"
+        },
+        {
+          "id": "n2-14-28",
+          "kanji": "進化",
+          "hiragana": "しんか",
+          "onyomi": "TIẾN HÓA",
+          "meaning": "Tiến hóa",
+          "phonetic": "shinka"
+        },
+        {
+          "id": "n2-14-29",
+          "kanji": "性能",
+          "hiragana": "せいのう",
+          "onyomi": "TÍNH NĂNG",
+          "meaning": "Tính năng",
+          "phonetic": "seinou"
+        },
+        {
+          "id": "n2-14-30",
+          "kanji": "実装",
+          "hiragana": "じっそう",
+          "onyomi": "THỰC TRANG",
+          "meaning": "Triển khai, lắp đặt",
+          "phonetic": "jissou"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-n2-14-01",
+          "structure": "～ざるを得ない",
+          "meaning": "Không thể không làm",
+          "explanation": "Dùng để biểu thị tình huống bắt buộc phải làm dù không muốn.",
+          "mnemonic": "Không thể (zaru) mà không làm.",
+          "level": "N2",
+          "examples": [
+            {
+              "id": "eg-n2-14-01-1",
+              "sentence": "この計画の問題点を認めざるを得ない。",
+              "meaning": "Tôi không thể không thừa nhận các vấn đề của kế hoạch này."
+            }
+          ]
+        },
+        {
+          "id": "g-n2-14-02",
+          "structure": "～かたわら",
+          "meaning": "Vừa làm cái này, vừa làm cái kia",
+          "explanation": "Dùng cho việc thực hiện song song hai công việc chính.",
+          "mnemonic": "Bên cạnh (katawara) công việc chính.",
+          "level": "N2",
+          "examples": [
+            {
+              "id": "eg-n2-14-02-1",
+              "sentence": "彼は教師の仕事をするかたわら、小説を書いている。",
+              "meaning": "Anh ấy vừa làm giáo viên, vừa viết tiểu thuyết."
+            }
+          ]
+        },
+        {
+          "id": "g-n2-14-03",
+          "structure": "～といわず～といわず",
+          "meaning": "Bất kể là... hay là...",
+          "explanation": "Dùng để liệt kê, mang nghĩa tất cả mọi thứ đều giống nhau.",
+          "mnemonic": "Không nói (iwanai) đến A, không nói đến B (tất cả đều thế).",
+          "level": "N2",
+          "examples": [
+            {
+              "id": "eg-n2-14-03-1",
+              "sentence": "手といわず足といわず、泥だらけだ。",
+              "meaning": "Bất kể tay hay chân, tất cả đều dính bùn."
+            }
+          ]
+        },
+        {
+          "id": "g-n2-14-04",
+          "structure": "～にかたくない",
+          "meaning": "Không khó để (làm gì đó)",
+          "explanation": "Thường đi với các động từ suy nghĩ/cảm nhận.",
+          "mnemonic": "Không cứng nhắc, dễ hiểu.",
+          "level": "N2",
+          "examples": [
+            {
+              "id": "eg-n2-14-04-1",
+              "sentence": "失敗した時の悔しさは、想像するにかたくない。",
+              "meaning": "Sự hối hận khi thất bại, không khó để hình dung."
+            }
+          ]
+        }
+      ],
+      "kanjiItems": [
+        {
+          "id": "k-n2-14-01",
+          "kanji": "革",
+          "hanViet": "CÁCH",
+          "radical": "vi",
+          "strokeCount": 9,
+          "onyomi": [
+            "カク"
+          ],
+          "kunyomi": [
+            "かわ"
+          ],
+          "meaning": "Cách, da, đổi mới",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "改革",
+              "hiragana": "かいかく",
+              "meaning": "Cải cách"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-14-02",
+          "kanji": "基",
+          "hanViet": "CƠ",
+          "radical": "thổ",
+          "strokeCount": 11,
+          "onyomi": [
+            "キ"
+          ],
+          "kunyomi": [
+            "もと",
+            "もとい"
+          ],
+          "meaning": "Cơ, nền tảng",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "基本",
+              "hiragana": "きほん",
+              "meaning": "Cơ bản"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-14-03",
+          "kanji": "蓄",
+          "hanViet": "SÚC",
+          "radical": "thảo",
+          "strokeCount": 16,
+          "onyomi": [
+            "チク"
+          ],
+          "kunyomi": [
+            "たくわ.える"
+          ],
+          "meaning": "Tích lũy, lưu trữ",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "蓄積",
+              "hiragana": "ちくせき",
+              "meaning": "Tích lũy"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-14-04",
+          "kanji": "究",
+          "hanViet": "CỨU",
+          "radical": "miên",
+          "strokeCount": 7,
+          "onyomi": [
+            "キュウ"
+          ],
+          "kunyomi": [
+            "きわ.める"
+          ],
+          "meaning": "Nghiên cứu, tận cùng",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "研究",
+              "hiragana": "けんきゅう",
+              "meaning": "Nghiên cứu"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "n2-lesson-15",
+      "name": "Bài 15: Văn hóa & Nhân văn",
+      "description": "Các khía cạnh văn hóa truyền thống và đương đại, tâm lý học và giáo dục.",
+      "level": "N2",
+      "curriculum": "N2 Upper-Intermediate Course",
+      "vocabulary": [
+        {
+          "id": "n2-15-01",
+          "kanji": "伝統",
+          "hiragana": "でんとう",
+          "onyomi": "TRUYỀN THỐNG",
+          "meaning": "Truyền thống",
+          "phonetic": "dentou"
+        },
+        {
+          "id": "n2-15-02",
+          "kanji": "継承",
+          "hiragana": "けいしょう",
+          "onyomi": "KẾ THỪA",
+          "meaning": "Kế thừa",
+          "phonetic": "keishou"
+        },
+        {
+          "id": "n2-15-03",
+          "kanji": "独創的",
+          "hiragana": "どくそうてき",
+          "onyomi": "ĐỘC SÁNG ĐÍCH",
+          "meaning": "Độc đáo, sáng tạo",
+          "phonetic": "dokusouteki"
+        },
+        {
+          "id": "n2-15-04",
+          "kanji": "美意識",
+          "hiragana": "びいしき",
+          "onyomi": "MỸ Ý THỨC",
+          "meaning": "Ý thức thẩm mỹ",
+          "phonetic": "biishiki"
+        },
+        {
+          "id": "n2-15-05",
+          "kanji": "価値観",
+          "hiragana": "かちかん",
+          "onyomi": "GIÁ TRỊ QUAN",
+          "meaning": "Quan điểm giá trị",
+          "phonetic": "kachikan"
+        },
+        {
+          "id": "n2-15-06",
+          "kanji": "感性",
+          "hiragana": "かんせい",
+          "onyomi": "CẢM TÍNH",
+          "meaning": "Cảm tính, nhạy cảm",
+          "phonetic": "kansei"
+        },
+        {
+          "id": "n2-15-07",
+          "kanji": "洗練",
+          "hiragana": "せんれん",
+          "onyomi": "TẨY LUYỆN",
+          "meaning": "Tinh luyện, tao nhã",
+          "phonetic": "senren"
+        },
+        {
+          "id": "n2-15-08",
+          "kanji": "教養",
+          "hiragana": "きょうよう",
+          "onyomi": "GIÁO DƯỠNG",
+          "meaning": "Học vấn, giáo dục",
+          "phonetic": "kyouyou"
+        },
+        {
+          "id": "n2-15-09",
+          "kanji": "人間性",
+          "hiragana": "にんげんせい",
+          "onyomi": "NHÂN GIAN TÍNH",
+          "meaning": "Nhân tính",
+          "phonetic": "ningensei"
+        },
+        {
+          "id": "n2-15-10",
+          "kanji": "倫理",
+          "hiragana": "りんり",
+          "onyomi": "LUÂN LÝ",
+          "meaning": "Đạo đức, luân lý",
+          "phonetic": "rinri"
+        },
+        {
+          "id": "n2-15-11",
+          "kanji": "偏見",
+          "hiragana": "へんけん",
+          "onyomi": "THIÊN KIẾN",
+          "meaning": "Thành kiến",
+          "phonetic": "henken"
+        },
+        {
+          "id": "n2-15-12",
+          "kanji": "固定観念",
+          "hiragana": "こていかんねん",
+          "onyomi": "CỐ ĐỊNH QUAN NIỆM",
+          "meaning": "Định kiến",
+          "phonetic": "koteikannen"
+        },
+        {
+          "id": "n2-15-13",
+          "kanji": "多様性",
+          "hiragana": "たようせい",
+          "onyomi": "ĐA DẠNG TÍNH",
+          "meaning": "Sự đa dạng",
+          "phonetic": "tayousei"
+        },
+        {
+          "id": "n2-15-14",
+          "kanji": "寛容",
+          "hiragana": "かんよう",
+          "onyomi": "KHOAN DUNG",
+          "meaning": "Khoan dung",
+          "phonetic": "kanyou"
+        },
+        {
+          "id": "n2-15-15",
+          "kanji": "共感",
+          "hiragana": "きょうかん",
+          "onyomi": "CỘNG CẢM",
+          "meaning": "Đồng cảm",
+          "phonetic": "kyoukan"
+        },
+        {
+          "id": "n2-15-16",
+          "kanji": "人格",
+          "hiragana": "じんかく",
+          "onyomi": "NHÂN CÁCH",
+          "meaning": "Nhân cách",
+          "phonetic": "jinkaku"
+        },
+        {
+          "id": "n2-15-17",
+          "kanji": "心理",
+          "hiragana": "しんり",
+          "onyomi": "TÂM LÝ",
+          "meaning": "Tâm lý",
+          "phonetic": "shinri"
+        },
+        {
+          "id": "n2-15-18",
+          "kanji": "情操",
+          "hiragana": "じょうそう",
+          "onyomi": "TÌNH THAO",
+          "meaning": "Tình cảm, tâm hồn",
+          "phonetic": "jousou"
+        },
+        {
+          "id": "n2-15-19",
+          "kanji": "育成",
+          "hiragana": "いくせい",
+          "onyomi": "DỤC THÀNH",
+          "meaning": "Nuôi dưỡng",
+          "phonetic": "ikusei"
+        },
+        {
+          "id": "n2-15-20",
+          "kanji": "陶酔",
+          "hiragana": "とうすい",
+          "onyomi": "ĐÀO TÚY",
+          "meaning": "Say mê, đắm say",
+          "phonetic": "tousui"
+        },
+        {
+          "id": "n2-15-21",
+          "kanji": "象徴",
+          "hiragana": "しょうちょう",
+          "onyomi": "TƯỢNG TRƯNG",
+          "meaning": "Biểu tượng",
+          "phonetic": "shouchou"
+        },
+        {
+          "id": "n2-15-22",
+          "kanji": "風俗",
+          "hiragana": "ふうぞく",
+          "onyomi": "PHONG TỤC",
+          "meaning": "Phong tục",
+          "phonetic": "fuuzoku"
+        },
+        {
+          "id": "n2-15-23",
+          "kanji": "異文化",
+          "hiragana": "いぶんか",
+          "onyomi": "DỊ VĂN HÓA",
+          "meaning": "Văn hóa khác biệt",
+          "phonetic": "ibunka"
+        },
+        {
+          "id": "n2-15-24",
+          "kanji": "尊重",
+          "hiragana": "そんちょう",
+          "onyomi": "TÔN TRỌNG",
+          "meaning": "Tôn trọng",
+          "phonetic": "sonchou"
+        },
+        {
+          "id": "n2-15-25",
+          "kanji": "普遍",
+          "hiragana": "ふへん",
+          "onyomi": "PHỔ BIẾN",
+          "meaning": "Phổ quát",
+          "phonetic": "fuhen"
+        },
+        {
+          "id": "n2-15-26",
+          "kanji": "素養",
+          "hiragana": "そよう",
+          "onyomi": "TỐ DƯỠNG",
+          "meaning": "Kiến thức cơ bản",
+          "phonetic": "soyou"
+        },
+        {
+          "id": "n2-15-27",
+          "kanji": "感銘",
+          "hiragana": "かんめい",
+          "onyomi": "CẢM MINH",
+          "meaning": "Ấn tượng sâu sắc",
+          "phonetic": "kanmei"
+        },
+        {
+          "id": "n2-15-28",
+          "kanji": "独創",
+          "hiragana": "どくそう",
+          "onyomi": "ĐỘC SÁNG",
+          "meaning": "Tự sáng tạo",
+          "phonetic": "dokusou"
+        },
+        {
+          "id": "n2-15-29",
+          "kanji": "気質",
+          "hiragana": "きしつ",
+          "onyomi": "KHÍ CHẤT",
+          "meaning": "Khí chất",
+          "phonetic": "kishitsu"
+        },
+        {
+          "id": "n2-15-30",
+          "kanji": "概念",
+          "hiragana": "がいねん",
+          "onyomi": "KHÁI NIỆM",
+          "meaning": "Khái niệm",
+          "phonetic": "gainen"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-n2-15-01",
+          "structure": "～のみならず",
+          "meaning": "Không chỉ A mà còn cả B",
+          "explanation": "Dùng trong văn viết, trang trọng hơn 'dake de naku'.",
+          "mnemonic": "Chỉ (nomi) không thôi là chưa đủ.",
+          "level": "N2",
+          "examples": [
+            {
+              "id": "eg-n2-15-01-1",
+              "sentence": "彼女は英語のみならず、フランス語も話せる。",
+              "meaning": "Cô ấy không chỉ nói được tiếng Anh mà còn nói được tiếng Pháp."
+            }
+          ]
+        },
+        {
+          "id": "g-n2-15-02",
+          "structure": "～ものがある",
+          "meaning": "Có một cảm giác/yếu tố gì đó...",
+          "explanation": "Dùng để biểu thị cảm xúc hoặc đánh giá cá nhân khách quan.",
+          "mnemonic": "Có cái gì đó (tồn tại trong sự việc).",
+          "level": "N2",
+          "examples": [
+            {
+              "id": "eg-n2-15-02-1",
+              "sentence": "彼の話にはどこか納得できるものがある。",
+              "meaning": "Trong câu chuyện của anh ấy, có điều gì đó khiến người ta thấy thuyết phục."
+            }
+          ]
+        },
+        {
+          "id": "g-n2-15-03",
+          "structure": "～にいたるまで",
+          "meaning": "Đến tận cả...",
+          "explanation": "Nhấn mạnh phạm vi rộng lớn hoặc chi tiết.",
+          "mnemonic": "Đi đến (itaru) tận cùng.",
+          "level": "N2",
+          "examples": [
+            {
+              "id": "eg-n2-15-03-1",
+              "sentence": "服装から髪型にいたるまで、彼女は完璧だ。",
+              "meaning": "Từ trang phục cho đến kiểu tóc, cô ấy đều hoàn hảo."
+            }
+          ]
+        },
+        {
+          "id": "g-n2-15-04",
+          "structure": "～を機に",
+          "meaning": "Nhân cơ hội, lấy đó làm dịp",
+          "explanation": "Dùng để diễn tả thời điểm bắt đầu một hành động mới.",
+          "mnemonic": "Lấy cơ hội (ki) để bắt đầu.",
+          "level": "N2",
+          "examples": [
+            {
+              "id": "eg-n2-15-04-1",
+              "sentence": "これを機に、生活習慣を見直したい。",
+              "meaning": "Nhân cơ hội này, tôi muốn nhìn nhận lại thói quen sinh hoạt."
+            }
+          ]
+        }
+      ],
+      "kanjiItems": [
+        {
+          "id": "k-n2-15-01",
+          "kanji": "倫",
+          "hanViet": "LUÂN",
+          "radical": "nhân",
+          "strokeCount": 10,
+          "onyomi": [
+            "リン"
+          ],
+          "kunyomi": [],
+          "meaning": "Luân lý, đạo đức",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "倫理",
+              "hiragana": "りんり",
+              "meaning": "Đạo đức"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-15-02",
+          "kanji": "偏",
+          "hanViet": "THIÊN",
+          "radical": "nhân",
+          "strokeCount": 11,
+          "onyomi": [
+            "ヘン"
+          ],
+          "kunyomi": [
+            "かたよ.る"
+          ],
+          "meaning": "Lệch, thành kiến",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "偏見",
+              "hiragana": "へんけん",
+              "meaning": "Thành kiến"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-15-03",
+          "kanji": "寛",
+          "hanViet": "KHOAN",
+          "radical": "miên",
+          "strokeCount": 13,
+          "onyomi": [
+            "カン"
+          ],
+          "kunyomi": [
+            "ひろ.い"
+          ],
+          "meaning": "Khoan dung, rộng rãi",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "寛容",
+              "hiragana": "かんよう",
+              "meaning": "Khoan dung"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-15-04",
+          "kanji": "徴",
+          "hanViet": "TRƯNG",
+          "radical": "xích",
+          "strokeCount": 15,
+          "onyomi": [
+            "チョウ"
+          ],
+          "kunyomi": [
+            "しるし"
+          ],
+          "meaning": "Biểu trưng, dấu hiệu",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "象徴",
+              "hiragana": "しょうちょう",
+              "meaning": "Biểu tượng"
+            }
           ]
         }
       ]

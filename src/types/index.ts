@@ -5,6 +5,7 @@ export interface Vocabulary {
   onyomi?: string;
   meaning?: string;
   phonetic?: string;
+  createdAt?: string;
 }
 
 export interface Lesson {

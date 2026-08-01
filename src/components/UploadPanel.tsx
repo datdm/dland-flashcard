@@ -227,7 +227,7 @@ export default function UploadPanel() {
     if (file) processFile(file);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!result?.valid || !result.type || !rawData) return;
 
     try {
@@ -289,17 +289,20 @@ export default function UploadPanel() {
           const newNotebook = createNotebook(notebookName);
           
           for (const vocab of vocabulary) {
-            addVocab(newNotebook.id, {
+            await addVocab(newNotebook.id, {
               kanji: vocab.kanji as string | undefined,
               hiragana: vocab.hiragana as string | undefined,
               onyomi: vocab.onyomi as string | undefined,
               meaning: vocab.meaning as string | undefined,
               phonetic: vocab.phonetic as string | undefined,
-            });
+            }, true);
           }
           
           setSaved(`✅ Tạo sổ tay "${notebookName}" với ${vocabulary.length} từ vựng!`);
         }
+        
+        // Auto sync once after notebook import
+        syncService.autoSync();
         
       } else if (result.type === "notebooks") {
         const notebooksData = data.notebooks as Record<string, unknown>[];
@@ -332,16 +335,19 @@ export default function UploadPanel() {
             createdDetails.push({ name: notebookName, vocabCount: vocabulary.length });
             
             for (const vocab of vocabulary) {
-              addVocab(newNotebook.id, {
+              await addVocab(newNotebook.id, {
                 kanji: vocab.kanji as string | undefined,
                 hiragana: vocab.hiragana as string | undefined,
                 onyomi: vocab.onyomi as string | undefined,
                 meaning: vocab.meaning as string | undefined,
                 phonetic: vocab.phonetic as string | undefined,
-              });
+              }, true);
             }
           }
         }
+        
+        // Auto sync once after notebooks import
+        syncService.autoSync();
         
         let message = '';
         if (created > 0) {

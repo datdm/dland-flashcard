@@ -43,7 +43,7 @@ export default function DictionarySearchPage() {
     }
   };
 
-  const handleAddToNotebook = () => {
+  const handleAddToNotebook = async () => {
     if (!selectedWordForNotebook || !targetNotebookId) return;
 
     const duplicates = checkDuplicate(targetNotebookId, selectedWordForNotebook.kanji, selectedWordForNotebook.hiragana);
@@ -58,7 +58,7 @@ export default function DictionarySearchPage() {
       return;
     }
 
-    addVocab(targetNotebookId, {
+    const vocab = await addVocab(targetNotebookId, {
       kanji: selectedWordForNotebook.kanji,
       hiragana: selectedWordForNotebook.hiragana,
       onyomi: selectedWordForNotebook.onyomi,
@@ -66,10 +66,11 @@ export default function DictionarySearchPage() {
       phonetic: selectedWordForNotebook.phonetic
     });
 
-    setSelectedWordForNotebook(null);
-    setTargetNotebookId("");
-    setDuplicateError(null);
-    alert("Đã thêm từ vào sổ tay thành công!");
+    if (vocab) {
+      setSelectedWordForNotebook(null);
+      setTargetNotebookId("");
+      setDuplicateError(null);
+    }
   };
 
   const filteredResults = results.filter((item) => {

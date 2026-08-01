@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { Notebook, NotebooksData, Vocabulary } from "@/types";
 import { getItem, setItem, StorageKeys } from "@/lib/storage";
-import { autoSync, checkAuthStatus, loadNotebooksFromServer } from "@/lib/syncService";
+import { autoSync, checkAuthStatus, loadNotebooksFromServer, uploadSingleVocab } from "@/lib/syncService";
 
 function generateId(prefix: string): string {
   return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
@@ -128,8 +128,80 @@ export function useNotebooks() {
   // --- Vocabulary CRUD within a notebook ---
 
   const addVocab = useCallback(
-    (notebookId: string, fields: Omit<Vocabulary, "id">): Vocabulary => {
-      const vocab: Vocabulary = { id: generateId("v"), ...fields };
+    async (
+      notebookId: string,
+      fields: Omit<Vocabulary, "id">,
+      skipSync: boolean = false
+    ): Promise<Vocabulary | null> => {
+      const vocabId = generateId("v");
+      const vocab: Vocabulary = { id: vocabId, ...fields };
+
+      if (skipSync) {
+        setNotebooks((prev) => {
+          const updated = prev.map((nb) =>
+            nb.id === notebookId
+              ? { ...nb, vocabulary: [vocab, ...nb.vocabulary] }
+              : nb
+          );
+          setItem<NotebooksData>(StorageKeys.NOTEBOOKS, { notebooks: updated });
+          return updated;
+        });
+        return vocab;
+      }
+
+      const toastId = Date.now();
+      window.dispatchEvent(
+        new CustomEvent("show-toast", {
+          detail: { id: toastId, message: "Đang tải lên...", type: "loading" },
+        })
+      );
+
+      // Check duplicate locally first (prevents double submits or obvious duplicates)
+      const normalizedKanji = fields.kanji?.trim();
+      const normalizedHiragana = fields.hiragana?.trim();
+      let localDup = null;
+      for (const nb of notebooks) {
+        const found = nb.vocabulary.find(
+          (v) => v.kanji?.trim() === normalizedKanji && v.hiragana?.trim() === normalizedHiragana
+        );
+        if (found) {
+          localDup = { notebookName: nb.name };
+          break;
+        }
+      }
+
+      if (localDup) {
+        window.dispatchEvent(
+          new CustomEvent("show-toast", {
+            detail: {
+              id: toastId,
+              message: `Từ vựng "${fields.kanji} (${fields.hiragana})" đã tồn tại trong sổ tay "${localDup.notebookName}"!`,
+              type: "error",
+            },
+          })
+        );
+        return null;
+      }
+
+      if (checkAuthStatus()) {
+        const result = await uploadSingleVocab(notebookId, vocab);
+        if (!result.success) {
+          window.dispatchEvent(
+            new CustomEvent("show-toast", {
+              detail: { id: toastId, message: result.error || "Thêm từ vựng thất bại", type: "error" },
+            })
+          );
+          return null;
+        }
+        
+        if (result.vocab) {
+          vocab.id = result.vocab.id;
+          if (result.vocab.createdAt) {
+            vocab.createdAt = result.vocab.createdAt;
+          }
+        }
+      }
+
       setNotebooks((prev) => {
         const updated = prev.map((nb) =>
           nb.id === notebookId
@@ -137,12 +209,18 @@ export function useNotebooks() {
             : nb
         );
         setItem<NotebooksData>(StorageKeys.NOTEBOOKS, { notebooks: updated });
-        autoSync();
         return updated;
       });
+
+      window.dispatchEvent(
+        new CustomEvent("show-toast", {
+          detail: { id: toastId, message: "Done", type: "success" },
+        })
+      );
+
       return vocab;
     },
-    []
+    [notebooks]
   );
 
   const updateVocab = useCallback(

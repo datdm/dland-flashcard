@@ -1,4 +1,5 @@
 import { StorageKeys } from './storage';
+import { Vocabulary } from '@/types';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 const AUTH_TOKEN_KEY = 'flashcash-auth-token';
@@ -530,6 +531,39 @@ export async function checkVocabDuplicate(
   } catch (error) {
     console.error('Check duplicate error:', error);
     return { isDuplicate: false, duplicates: [] };
+  }
+}
+
+// Upload a single vocabulary item to the server
+export async function uploadSingleVocab(
+  notebookId: string,
+  vocab: Omit<Vocabulary, 'id'> & { id?: string }
+): Promise<{ success: boolean; vocab?: any; error?: string }> {
+  const token = getAuthToken();
+  if (!token) {
+    // If not authenticated, we return success so local code proceeds
+    return { success: true };
+  }
+
+  try {
+    const response = await fetch(`${API_URL}/api/vocab/upload`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify({ ...vocab, notebookId }),
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      return { success: false, error: data.error || 'Thêm từ vựng thất bại' };
+    }
+
+    return { success: true, vocab: data.vocab };
+  } catch (error) {
+    console.error('Upload single vocab error:', error);
+    return { success: false, error: 'Không thể kết nối máy chủ' };
   }
 }
 

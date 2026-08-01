@@ -15,10 +15,27 @@ export default function FlashCardAllPage() {
   const [isDaily50, setIsDaily50] = useState(false);
 
   useEffect(() => {
-    if (typeof window !== "undefined" && window.location.search.includes("daily50=true")) {
-      setIsDaily50(true);
+    if (typeof window !== "undefined") {
+      const searchParams = new URLSearchParams(window.location.search);
+      if (searchParams.get("daily50") === "true") {
+        setIsDaily50(true);
+        localStorage.setItem("flashcash-is-daily-50", "true");
+      } else {
+        const stored = localStorage.getItem("flashcash-is-daily-50");
+        if (stored !== null) {
+          setIsDaily50(stored === "true");
+        }
+      }
     }
   }, []);
+
+  const handleToggleDaily50 = () => {
+    const nextVal = !isDaily50;
+    setIsDaily50(nextVal);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("flashcash-is-daily-50", nextVal ? "true" : "false");
+    }
+  };
 
   // Get all vocabulary based on filter
   const allVocab = useMemo(() => {
@@ -89,7 +106,7 @@ export default function FlashCardAllPage() {
         </div>
         
         <button
-          onClick={() => setIsDaily50(!isDaily50)}
+          onClick={handleToggleDaily50}
           className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-hidden ${
             isDaily50 ? "bg-amber-500" : "bg-gray-200"
           }`}

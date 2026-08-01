@@ -104,10 +104,10 @@ export default function VocabularyPage() {
     setCurrentPage(1);
   }, [tab, searchQuery, selectedCurriculum, selectedNotebook]);
 
-  const handleSaveToNotebook = () => {
+  const handleSaveToNotebook = async () => {
     if (!selectedWordForNotebook || !targetNotebookId) return;
 
-    addVocab(targetNotebookId, {
+    const vocab = await addVocab(targetNotebookId, {
       kanji: selectedWordForNotebook.kanji,
       hiragana: selectedWordForNotebook.hiragana,
       onyomi: selectedWordForNotebook.onyomi,
@@ -115,9 +115,10 @@ export default function VocabularyPage() {
       phonetic: selectedWordForNotebook.phonetic,
     });
 
-    setSelectedWordForNotebook(null);
-    setTargetNotebookId("");
-    alert("Đã thêm từ vào sổ tay thành công!");
+    if (vocab) {
+      setSelectedWordForNotebook(null);
+      setTargetNotebookId("");
+    }
   };
 
   return (

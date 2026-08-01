@@ -89,7 +89,7 @@ export default function NotebookDetailPage() {
     }
   };
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     if (!isFormValid) return;
 
     const duplicates = checkDuplicate(id, form.kanji, form.hiragana);
@@ -104,10 +104,12 @@ export default function NotebookDetailPage() {
       return;
     }
 
-    addVocab(id, form);
-    setForm(EMPTY_FIELDS);
-    setDuplicateError(null);
-    setShowAddModal(false);
+    const vocab = await addVocab(id, form);
+    if (vocab) {
+      setForm(EMPTY_FIELDS);
+      setDuplicateError(null);
+      setShowAddModal(false);
+    }
   };
 
   const startEdit = (v: Vocabulary) => {
