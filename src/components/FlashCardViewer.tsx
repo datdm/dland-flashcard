@@ -24,6 +24,8 @@ export default function FlashCardViewer({ vocabulary, title, dailyLimit }: Flash
   const [shuffled, setShuffled] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [filterUnlearned, setFilterUnlearned] = useState(false);
+  const [sessionOffset, setSessionOffset] = useState(0);
+  const [originalSessionWords, setOriginalSessionWords] = useState<Vocabulary[]>([]);
   const touchStartRef = useRef<{ x: number; y: number } | null>(null);
 
   const buildDeck = useCallback(
@@ -37,21 +39,23 @@ export default function FlashCardViewer({ vocabulary, title, dailyLimit }: Flash
       
       if (dailyLimit && list.length > dailyLimit) {
         const todayStr = new Date().toISOString().split("T")[0];
-        const seedStr = todayStr + (title || "daily");
+        const seedStr = todayStr + (title || "daily") + (sessionOffset > 0 ? `-session-${sessionOffset}` : "");
         list = seededShuffle(list, seedStr).slice(0, dailyLimit);
       }
       
       return isShuffled ? shuffle(list) : list;
     },
-    [vocabulary, getVocabProgress, dailyLimit, title]
+    [vocabulary, getVocabProgress, dailyLimit, title, sessionOffset]
   );
 
   useEffect(() => {
-    setDeck(buildDeck(shuffled, filterUnlearned));
+    const initialDeck = buildDeck(shuffled, filterUnlearned);
+    setDeck(initialDeck);
+    setOriginalSessionWords(initialDeck);
     setIndex(0);
     setFlipped(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [vocabulary]);
+  }, [vocabulary, sessionOffset]);
 
   const handleToggleLearned = useCallback((id: string) => {
     toggleLearned(id);
@@ -130,20 +134,53 @@ export default function FlashCardViewer({ vocabulary, title, dailyLimit }: Flash
     return (
       <div className="flex flex-col items-center justify-center min-h-[300px] bg-white rounded-3xl border border-gray-100 shadow-2xs p-8 text-center max-w-xl mx-auto">
         <div className="text-5xl mb-4">🎉</div>
-        <h3 className="font-extrabold text-gray-900 text-xl mb-2">Tuyệt vời!</h3>
-        <p className="text-sm text-gray-500 mb-6">Tất cả từ vựng đã được học thuộc.</p>
-        <button
-          onClick={toggleFilter}
-          className="px-6 py-3 bg-indigo-600 text-white rounded-2xl font-bold text-sm shadow-md hover:bg-indigo-700 transition-colors"
-        >
-          Ôn tập lại tất cả
-        </button>
+        <h3 className="font-extrabold text-gray-900 text-xl mb-2">Hoàn thành mục tiêu!</h3>
+        <p className="text-sm text-gray-500 mb-6">
+          {dailyLimit 
+            ? "Bạn đã hoàn thành việc ôn tập 50 từ vựng của phiên học này." 
+            : "Tất cả từ vựng đã được học thuộc."}
+        </p>
+        
+        <div className="flex flex-col sm:flex-row gap-3 w-full justify-center">
+          {dailyLimit ? (
+            <>
+              <button
+                onClick={() => {
+                  setDeck(originalSessionWords);
+                  setIndex(0);
+                  setFlipped(false);
+                }}
+                className="px-5 py-3 bg-white border border-gray-200 text-gray-700 rounded-2xl font-bold text-sm shadow-xs hover:bg-gray-50 transition-colors"
+              >
+                🔄 Ôn lại 50 từ vừa học
+              </button>
+              
+              <button
+                onClick={() => {
+                  setSessionOffset((prev) => prev + 1);
+                }}
+                className="px-5 py-3 bg-indigo-600 text-white rounded-2xl font-bold text-sm shadow-md hover:bg-indigo-700 transition-colors"
+              >
+                ⏭️ Luyện tiếp 50 từ mới
+              </button>
+            </>
+          ) : (
+            <button
+              onClick={toggleFilter}
+              className="px-6 py-3 bg-indigo-600 text-white rounded-2xl font-bold text-sm shadow-md hover:bg-indigo-700 transition-colors"
+            >
+              Ôn tập lại tất cả
+            </button>
+          )}
+        </div>
       </div>
     );
   }
 
   const vocabProgress = current ? getVocabProgress(current.id) : null;
-  const progressPercent = deck.length > 0 ? ((index + 1) / deck.length) * 100 : 0;
+  const progressPercent = dailyLimit 
+    ? (originalSessionWords.length > 0 ? ((originalSessionWords.length - deck.length) / originalSessionWords.length) * 100 : 0)
+    : (deck.length > 0 ? ((index + 1) / deck.length) * 100 : 0);
 
   return (
     <div className="flex flex-col w-full max-w-2xl mx-auto pb-8">
@@ -152,7 +189,7 @@ export default function FlashCardViewer({ vocabulary, title, dailyLimit }: Flash
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1.5">
             <span className="px-2.5 py-0.5 bg-indigo-50 text-indigo-700 rounded-full text-[10px] font-bold uppercase tracking-wider">
-              Phiên ôn tập
+              {dailyLimit ? "Mục tiêu 50 từ mỗi ngày" : "Phiên ôn tập"}
             </span>
           </div>
           {title && <h1 className="text-xl font-bold text-gray-900 truncate" title={title}>{title}</h1>}
@@ -195,10 +232,10 @@ export default function FlashCardViewer({ vocabulary, title, dailyLimit }: Flash
       <div className="mb-8 px-2">
         <div className="flex justify-between items-end mb-2">
           <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">
-            Tiến độ
+            {dailyLimit ? "Số từ cần học hôm nay" : "Tiến độ"}
           </span>
           <span className="text-sm font-bold text-indigo-600">
-            {index + 1} <span className="text-gray-400">/ {deck.length}</span>
+            {dailyLimit ? `Còn lại: ${deck.length} từ` : `${index + 1} / ${deck.length}`}
           </span>
         </div>
         <div className="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden">
