@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { GrammarCollection, GrammarCollectionsData, GrammarPoint, GrammarExample } from "@/types";
 import { getItem, setItem, StorageKeys } from "@/lib/storage";
-import { autoSync } from "@/lib/syncService";
+import { autoSync, checkAuthStatus, loadGrammarCollectionsFromServer } from "@/lib/syncService";
 
 function generateId(prefix: string): string {
   return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
@@ -22,6 +22,7 @@ export function useGrammarCollections() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    // Load local data first
     try {
       const data = getItem<GrammarCollectionsData>(StorageKeys.GRAMMAR_COLLECTIONS);
       if (data?.collections) {
@@ -30,6 +31,27 @@ export function useGrammarCollections() {
     } finally {
       setIsLoading(false);
     }
+
+    // Sync from database if logged in
+    const syncGrammarCollections = async () => {
+      if (checkAuthStatus()) {
+        try {
+          const serverData = await loadGrammarCollectionsFromServer() as any;
+          const collectionsList = Array.isArray(serverData)
+            ? serverData
+            : (serverData?.collections || []);
+          
+          if (collectionsList.length > 0) {
+            setCollections(collectionsList);
+            setItem<GrammarCollectionsData>(StorageKeys.GRAMMAR_COLLECTIONS, { collections: collectionsList });
+          }
+        } catch (error) {
+          console.error("Failed to load grammar collections from server:", error);
+        }
+      }
+    };
+
+    syncGrammarCollections();
   }, []);
 
   const save = useCallback((updated: GrammarCollection[]) => {

@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { Notebook, NotebooksData, Vocabulary } from "@/types";
 import { getItem, setItem, StorageKeys } from "@/lib/storage";
-import { autoSync } from "@/lib/syncService";
+import { autoSync, checkAuthStatus, loadNotebooksFromServer } from "@/lib/syncService";
 
 function generateId(prefix: string): string {
   return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
@@ -27,8 +27,31 @@ export function useNotebooks() {
   const [notebooks, setNotebooks] = useState<Notebook[]>([]);
 
   useEffect(() => {
+    // Load local data first
     const data = getItem<NotebooksData>(StorageKeys.NOTEBOOKS);
     if (data?.notebooks) setNotebooks(data.notebooks);
+
+    // Sync from database if logged in
+    const syncNotebooks = async () => {
+      if (checkAuthStatus()) {
+        try {
+          const serverData = await loadNotebooksFromServer() as any;
+          // serverData can be { notebooks: Notebook[] } or Notebook[] depending on backend response
+          const notebooksList = Array.isArray(serverData) 
+            ? serverData 
+            : (serverData?.notebooks || []);
+          
+          if (notebooksList.length > 0) {
+            setNotebooks(notebooksList);
+            setItem<NotebooksData>(StorageKeys.NOTEBOOKS, { notebooks: notebooksList });
+          }
+        } catch (error) {
+          console.error("Failed to load notebooks from server:", error);
+        }
+      }
+    };
+    
+    syncNotebooks();
   }, []);
 
   const save = useCallback((updated: Notebook[]) => {

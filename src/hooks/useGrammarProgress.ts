@@ -1,9 +1,9 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { GrammarProgress, GrammarProgressMap } from "@/types";
 import { getItem, setItem, StorageKeys, updateStreak } from "@/lib/storage";
-import { autoSync } from "@/lib/syncService";
+import { autoSync, checkAuthStatus, loadProgressFromServer } from "@/lib/syncService";
 
 const defaultGrammarProgress = (): GrammarProgress => ({
   learned: false,
@@ -16,12 +16,31 @@ export function useGrammarProgress() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    // Load local data first
     try {
       const data = getItem<GrammarProgressMap>(StorageKeys.GRAMMAR_PROGRESS);
       if (data) setProgress(data);
     } finally {
       setIsLoading(false);
     }
+
+    // Sync from database if logged in
+    const syncGrammarProgress = async () => {
+      if (checkAuthStatus()) {
+        try {
+          const serverData = await loadProgressFromServer();
+          const grammarProgressData = serverData?.grammar || {};
+          if (Object.keys(grammarProgressData).length > 0) {
+            setProgress(grammarProgressData);
+            setItem(StorageKeys.GRAMMAR_PROGRESS, grammarProgressData);
+          }
+        } catch (error) {
+          console.error("Failed to load grammar progress from server:", error);
+        }
+      }
+    };
+
+    syncGrammarProgress();
   }, []);
 
   const updateProgress = useCallback(

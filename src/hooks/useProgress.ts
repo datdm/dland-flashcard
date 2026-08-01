@@ -1,9 +1,9 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { ProgressMap, VocabProgress } from "@/types";
 import { getItem, setItem, StorageKeys, updateStreak } from "@/lib/storage";
-import { autoSync } from "@/lib/syncService";
+import { autoSync, checkAuthStatus, loadProgressFromServer } from "@/lib/syncService";
 
 const defaultProgress = (): VocabProgress => ({ learned: false, favorite: false });
 
@@ -11,8 +11,27 @@ export function useProgress() {
   const [progress, setProgress] = useState<ProgressMap>({});
 
   useEffect(() => {
+    // Load local data first
     const data = getItem<ProgressMap>(StorageKeys.PROGRESS);
     if (data) setProgress(data);
+
+    // Sync from database if logged in
+    const syncProgress = async () => {
+      if (checkAuthStatus()) {
+        try {
+          const serverData = await loadProgressFromServer();
+          const vocabProgress = serverData?.vocabulary || {};
+          if (Object.keys(vocabProgress).length > 0) {
+            setProgress(vocabProgress);
+            setItem(StorageKeys.PROGRESS, vocabProgress);
+          }
+        } catch (error) {
+          console.error("Failed to load progress from server:", error);
+        }
+      }
+    };
+
+    syncProgress();
   }, []);
 
   const updateProgress = useCallback((id: string, patch: Partial<VocabProgress>) => {

@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { Curriculum, CurriculumsData, Vocabulary, LessonInCurriculum } from "@/types";
 import { getItem, setItem, StorageKeys } from "@/lib/storage";
 import { DEFAULT_VOCABULARY } from "@/data";
-import { autoSync } from "@/lib/syncService";
+import { autoSync, checkAuthStatus, loadCurriculumsFromServer } from "@/lib/syncService";
 
 function generateId(prefix: string): string {
   return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
@@ -14,15 +14,36 @@ export function useCurriculums() {
   const [curriculums, setCurriculums] = useState<Curriculum[]>([]);
 
   useEffect(() => {
+    // Load local data first
     const data = getItem<CurriculumsData>(StorageKeys.CURRICULUMS);
-    // Fallback to DEFAULT_VOCABULARY if localStorage is empty
     if (data?.curriculums && data.curriculums.length > 0) {
-        setCurriculums(data.curriculums);
+      setCurriculums(data.curriculums);
     } else if (DEFAULT_VOCABULARY?.curriculums) {
-        setCurriculums(DEFAULT_VOCABULARY.curriculums);
-        setItem<CurriculumsData>(StorageKeys.CURRICULUMS, DEFAULT_VOCABULARY);
+      setCurriculums(DEFAULT_VOCABULARY.curriculums);
+      setItem<CurriculumsData>(StorageKeys.CURRICULUMS, DEFAULT_VOCABULARY);
     }
-    }, []);
+
+    // Sync from database if logged in
+    const syncCurriculums = async () => {
+      if (checkAuthStatus()) {
+        try {
+          const serverData = await loadCurriculumsFromServer() as any;
+          const curriculumsList = Array.isArray(serverData)
+            ? serverData
+            : (serverData?.curriculums || []);
+          
+          if (curriculumsList.length > 0) {
+            setCurriculums(curriculumsList);
+            setItem<CurriculumsData>(StorageKeys.CURRICULUMS, { curriculums: curriculumsList });
+          }
+        } catch (error) {
+          console.error("Failed to load curriculums from server:", error);
+        }
+      }
+    };
+
+    syncCurriculums();
+  }, []);
 
   const save = useCallback((updated: Curriculum[]) => {
     setCurriculums(updated);

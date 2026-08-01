@@ -1,4 +1,4 @@
-import { StorageKeys, exportAllData } from './storage';
+import { StorageKeys } from './storage';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 const AUTH_TOKEN_KEY = 'flashcash-auth-token';
@@ -29,6 +29,58 @@ interface DataResponse {
   timestamp: string;
 }
 
+// Global active request tracking for loading indicator
+let activeRequestsCount = 0;
+let loadingTimeout: NodeJS.Timeout | null = null;
+
+function startTrackingRequest() {
+  if (typeof window === 'undefined') return;
+  activeRequestsCount++;
+  if (activeRequestsCount === 1) {
+    loadingTimeout = setTimeout(() => {
+      window.dispatchEvent(new CustomEvent('sync-loading-start'));
+    }, 5000);
+  }
+}
+
+function stopTrackingRequest() {
+  if (typeof window === 'undefined') return;
+  activeRequestsCount = Math.max(0, activeRequestsCount - 1);
+  if (activeRequestsCount === 0) {
+    if (loadingTimeout) {
+      clearTimeout(loadingTimeout);
+      loadingTimeout = null;
+    }
+    window.dispatchEvent(new CustomEvent('sync-loading-stop'));
+  }
+}
+
+function triggerErrorNotification(message: string) {
+  if (typeof window === 'undefined') return;
+  window.dispatchEvent(new CustomEvent('sync-error', { detail: { message } }));
+}
+
+async function trackedFetch(input: RequestInfo | URL, init?: RequestInit): Promise<Response> {
+  startTrackingRequest();
+  try {
+    const response = await fetch(input, init);
+    if (!response.ok) {
+      let errMsg = 'Có lỗi xảy ra khi kết nối server';
+      try {
+        const data = await response.clone().json();
+        errMsg = data.error || errMsg;
+      } catch {}
+      triggerErrorNotification(errMsg);
+    }
+    return response;
+  } catch (error) {
+    triggerErrorNotification('Không thể kết nối tới máy chủ. Vui lòng kiểm tra mạng.');
+    throw error;
+  } finally {
+    stopTrackingRequest();
+  }
+}
+
 // Get stored JWT token
 export function getAuthToken(): string | null {
   if (typeof window === 'undefined') return null;
@@ -55,7 +107,7 @@ export function checkAuthStatus(): boolean {
 // Register new user
 export async function register(username: string, password: string): Promise<{ success: boolean; error?: string }> {
   try {
-    const response = await fetch(`${API_URL}/api/auth/register`, {
+    const response = await trackedFetch(`${API_URL}/api/auth/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, password }),
@@ -81,7 +133,7 @@ export async function register(username: string, password: string): Promise<{ su
 // Login user
 export async function login(username: string, password: string): Promise<{ success: boolean; error?: string }> {
   try {
-    const response = await fetch(`${API_URL}/api/auth/login`, {
+    const response = await trackedFetch(`${API_URL}/api/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, password }),
@@ -118,7 +170,7 @@ export async function verifyToken(): Promise<boolean> {
   if (!token) return false;
 
   try {
-    const response = await fetch(`${API_URL}/api/auth/verify`, {
+    const response = await trackedFetch(`${API_URL}/api/auth/verify`, {
       headers: { 'Authorization': `Bearer ${token}` },
     });
 
@@ -148,7 +200,7 @@ export async function hasServerData(): Promise<{ hasData: boolean; lastSyncAt: s
   if (!token) return { hasData: false, lastSyncAt: null };
 
   try {
-    const response = await fetch(`${API_URL}/api/sync/status`, {
+    const response = await trackedFetch(`${API_URL}/api/sync/status`, {
       headers: { 'Authorization': `Bearer ${token}` },
     });
 
@@ -186,7 +238,7 @@ export async function uploadToServer(skipBackup: boolean = false): Promise<{ suc
     }
 
     const url = skipBackup ? `${API_URL}/api/sync/upload?skipBackup=true` : `${API_URL}/api/sync/upload`;
-    const response = await fetch(url, {
+    const response = await trackedFetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -216,7 +268,7 @@ export async function downloadFromServer(): Promise<{ success: boolean; error?: 
   if (!token) return { success: false, error: 'Not authenticated' };
 
   try {
-    const response = await fetch(`${API_URL}/api/sync/data`, {
+    const response = await trackedFetch(`${API_URL}/api/sync/data`, {
       headers: { 'Authorization': `Bearer ${token}` },
     });
 
@@ -278,7 +330,7 @@ export async function changePassword(currentPassword: string, newPassword: strin
   if (!token) return { success: false, error: 'Not authenticated' };
 
   try {
-    const response = await fetch(`${API_URL}/api/auth/change-password`, {
+    const response = await trackedFetch(`${API_URL}/api/auth/change-password`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -318,7 +370,7 @@ export async function deleteAllBackups(): Promise<{ success: boolean; deletedCou
   if (!token) return { success: false, deletedCount: 0, error: 'Not authenticated' };
 
   try {
-    const response = await fetch(`${API_URL}/api/backup/all`, {
+    const response = await trackedFetch(`${API_URL}/api/backup/all`, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -362,7 +414,7 @@ export async function getBackupHistory(): Promise<BackupHistoryItem[]> {
   const token = getAuthToken();
   if (!token) throw new Error('Not authenticated');
 
-  const response = await fetch(`${API_URL}/api/backup/history`, {
+  const response = await trackedFetch(`${API_URL}/api/backup/history`, {
     headers: {
       'Authorization': `Bearer ${token}`,
     },
@@ -381,7 +433,7 @@ export async function getBackupDetail(backupId: string): Promise<BackupDetail> {
   const token = getAuthToken();
   if (!token) throw new Error('Not authenticated');
 
-  const response = await fetch(`${API_URL}/api/backup/${backupId}`, {
+  const response = await trackedFetch(`${API_URL}/api/backup/${backupId}`, {
     headers: {
       'Authorization': `Bearer ${token}`,
     },
@@ -400,7 +452,7 @@ export async function deleteBackup(backupId: string): Promise<void> {
   const token = getAuthToken();
   if (!token) throw new Error('Not authenticated');
 
-  const response = await fetch(`${API_URL}/api/backup/${backupId}`, {
+  const response = await trackedFetch(`${API_URL}/api/backup/${backupId}`, {
     method: 'DELETE',
     headers: {
       'Authorization': `Bearer ${token}`,
@@ -417,7 +469,7 @@ export async function restoreFromBackup(backupId: string): Promise<void> {
   const token = getAuthToken();
   if (!token) throw new Error('Not authenticated');
 
-  const response = await fetch(`${API_URL}/api/backup/${backupId}/restore`, {
+  const response = await trackedFetch(`${API_URL}/api/backup/${backupId}/restore`, {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${token}`,
@@ -461,7 +513,7 @@ export async function checkVocabDuplicate(
   }
 
   try {
-    const response = await fetch(`${API_URL}/api/vocab/check-duplicate`, {
+    const response = await trackedFetch(`${API_URL}/api/vocab/check-duplicate`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -489,7 +541,7 @@ export async function loadNotebooksFromServer(): Promise<any[]> {
   if (!token) return [];
 
   try {
-    const response = await fetch(`${API_URL}/api/data/notebooks`, {
+    const response = await trackedFetch(`${API_URL}/api/data/notebooks`, {
       headers: { 'Authorization': `Bearer ${token}` },
     });
 
@@ -508,7 +560,7 @@ export async function loadCurriculumsFromServer(): Promise<any[]> {
   if (!token) return [];
 
   try {
-    const response = await fetch(`${API_URL}/api/data/curriculums`, {
+    const response = await trackedFetch(`${API_URL}/api/data/curriculums`, {
       headers: { 'Authorization': `Bearer ${token}` },
     });
 
@@ -527,7 +579,7 @@ export async function loadGrammarCollectionsFromServer(): Promise<any[]> {
   if (!token) return [];
 
   try {
-    const response = await fetch(`${API_URL}/api/data/grammar-collections`, {
+    const response = await trackedFetch(`${API_URL}/api/data/grammar-collections`, {
       headers: { 'Authorization': `Bearer ${token}` },
     });
 
@@ -546,7 +598,7 @@ export async function loadProgressFromServer(): Promise<{ vocabulary: Record<str
   if (!token) return { vocabulary: {}, grammar: {} };
 
   try {
-    const response = await fetch(`${API_URL}/api/data/progress`, {
+    const response = await trackedFetch(`${API_URL}/api/data/progress`, {
       headers: { 'Authorization': `Bearer ${token}` },
     });
 
@@ -565,7 +617,7 @@ export async function loadSettingsFromServer(): Promise<Record<string, any>> {
   if (!token) return {};
 
   try {
-    const response = await fetch(`${API_URL}/api/data/settings`, {
+    const response = await trackedFetch(`${API_URL}/api/data/settings`, {
       headers: { 'Authorization': `Bearer ${token}` },
     });
 
@@ -577,4 +629,3 @@ export async function loadSettingsFromServer(): Promise<Record<string, any>> {
     return {};
   }
 }
-
