@@ -15,7 +15,7 @@ interface FlashCardViewerProps {
 }
 
 export default function FlashCardViewer({ vocabulary, title, dailyLimit }: FlashCardViewerProps) {
-  const { getVocabProgress, toggleLearned, toggleFavorite } = useProgress();
+  const { progress, getVocabProgress, toggleLearned, toggleFavorite } = useProgress();
   const { settings, saveSettings } = useFlashCardSettings();
 
   const [deck, setDeck] = useState<Vocabulary[]>([]);
@@ -37,15 +37,24 @@ export default function FlashCardViewer({ vocabulary, title, dailyLimit }: Flash
         list = list.filter((v) => !getVocabProgress(v.id).learned);
       }
       
-      if (dailyLimit && list.length > dailyLimit) {
+      if (dailyLimit) {
+        const todayDateStr = new Date().toDateString();
+        const learnedTodayCount = Object.values(progress).filter(
+          (p) => p.learned && p.learnedAt && new Date(p.learnedAt).toDateString() === todayDateStr
+        ).length;
+
+        const remainingLimit = sessionOffset === 0
+          ? Math.max(0, dailyLimit - learnedTodayCount)
+          : dailyLimit;
+
         const todayStr = new Date().toISOString().split("T")[0];
         const seedStr = todayStr + (title || "daily") + (sessionOffset > 0 ? `-session-${sessionOffset}` : "");
-        list = seededShuffle(list, seedStr).slice(0, dailyLimit);
+        list = seededShuffle(list, seedStr).slice(0, remainingLimit);
       }
       
       return isShuffled ? shuffle(list) : list;
     },
-    [vocabulary, getVocabProgress, dailyLimit, title, sessionOffset]
+    [vocabulary, getVocabProgress, dailyLimit, title, sessionOffset, progress]
   );
 
   useEffect(() => {
