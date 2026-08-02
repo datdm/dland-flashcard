@@ -256,4 +256,112 @@ router.post('/upload', authenticate, async (req: AuthRequest, res: Response) => 
   }
 });
 
+// Delete a vocabulary item from a notebook (delta operation)
+router.delete('/:vocabId', authenticate, async (req: AuthRequest, res: Response) => {
+  try {
+    const userId = req.userId;
+    const { vocabId } = req.params;
+    const { notebookId } = req.body;
+
+    if (!notebookId) {
+      return res.status(400).json({ error: 'Thiếu notebookId' });
+    }
+
+    const result = await pool.query(
+      `SELECT data_value FROM user_data WHERE user_id = $1 AND data_key = $2`,
+      [userId, 'flashcash-notebooks']
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Không tìm thấy dữ liệu sổ tay' });
+    }
+
+    let notebooks: any[] = result.rows[0].data_value?.notebooks || [];
+    const targetNb = notebooks.find((nb: any) => nb.id === notebookId);
+    if (!targetNb) {
+      return res.status(404).json({ error: 'Không tìm thấy sổ tay được chọn' });
+    }
+
+    const before = targetNb.vocabulary?.length || 0;
+    targetNb.vocabulary = (targetNb.vocabulary || []).filter((v: any) => v.id !== vocabId);
+    const after = targetNb.vocabulary.length;
+
+    if (before === after) {
+      return res.status(404).json({ error: 'Không tìm thấy từ vựng để xóa' });
+    }
+
+    await pool.query(
+      `INSERT INTO user_data (user_id, data_key, data_value, updated_at)
+       VALUES ($1, $2, $3, NOW())
+       ON CONFLICT (user_id, data_key)
+       DO UPDATE SET data_value = $3, updated_at = NOW()`,
+      [userId, 'flashcash-notebooks', JSON.stringify({ notebooks })]
+    );
+
+    await pool.query('UPDATE users SET last_sync_at = NOW() WHERE id = $1', [userId]);
+
+    res.json({ success: true, message: 'Xóa từ vựng thành công' });
+  } catch (error) {
+    console.error('Delete vocab error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Update (patch) a vocabulary item in a notebook (delta operation – used for favorite, edit)
+router.patch('/:vocabId', authenticate, async (req: AuthRequest, res: Response) => {
+  try {
+    const userId = req.userId;
+    const { vocabId } = req.params;
+    const { notebookId, patch } = req.body;
+
+    if (!notebookId || !patch || typeof patch !== 'object') {
+      return res.status(400).json({ error: 'Thiếu notebookId hoặc patch' });
+    }
+
+    const result = await pool.query(
+      `SELECT data_value FROM user_data WHERE user_id = $1 AND data_key = $2`,
+      [userId, 'flashcash-notebooks']
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Không tìm thấy dữ liệu sổ tay' });
+    }
+
+    let notebooks: any[] = result.rows[0].data_value?.notebooks || [];
+    const targetNb = notebooks.find((nb: any) => nb.id === notebookId);
+    if (!targetNb) {
+      return res.status(404).json({ error: 'Không tìm thấy sổ tay được chọn' });
+    }
+
+    const vocabIndex = (targetNb.vocabulary || []).findIndex((v: any) => v.id === vocabId);
+    if (vocabIndex === -1) {
+      return res.status(404).json({ error: 'Không tìm thấy từ vựng' });
+    }
+
+    // Apply patch (only allow safe fields: no id changes)
+    const allowedPatchFields = ['kanji', 'hiragana', 'meaning', 'onyomi', 'phonetic', 'isFavorite', 'note'];
+    const safePatch: any = {};
+    for (const field of allowedPatchFields) {
+      if (field in patch) safePatch[field] = patch[field];
+    }
+
+    targetNb.vocabulary[vocabIndex] = { ...targetNb.vocabulary[vocabIndex], ...safePatch };
+
+    await pool.query(
+      `INSERT INTO user_data (user_id, data_key, data_value, updated_at)
+       VALUES ($1, $2, $3, NOW())
+       ON CONFLICT (user_id, data_key)
+       DO UPDATE SET data_value = $3, updated_at = NOW()`,
+      [userId, 'flashcash-notebooks', JSON.stringify({ notebooks })]
+    );
+
+    await pool.query('UPDATE users SET last_sync_at = NOW() WHERE id = $1', [userId]);
+
+    res.json({ success: true, vocab: targetNb.vocabulary[vocabIndex] });
+  } catch (error) {
+    console.error('Patch vocab error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 export default router;

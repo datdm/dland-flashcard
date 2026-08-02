@@ -7,6 +7,45 @@ import PasswordChangeDialog from "@/components/PasswordChangeDialog";
 import UploadPanel from "@/components/UploadPanel";
 import * as syncService from "@/lib/syncService";
 import { useLanguageSetting } from "@/hooks/useLanguageSetting";
+import { useFlashCardSettings } from "@/hooks/useFlashCardSettings";
+
+function CurriculumDisplaySettings() {
+  const { settings, saveSettings } = useFlashCardSettings();
+
+  return (
+    <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-2xs">
+      <h2 className="text-base font-bold text-gray-900 mb-1 flex items-center gap-2">
+        <span>🙈</span> Quản Lý Hiển Thị Giáo Trình Mẫu
+      </h2>
+      <p className="text-xs text-gray-500 mb-4">
+        Tùy chỉnh ẩn/hiện các bộ dữ liệu mẫu mặc định để giao diện gọn gàng hơn.
+      </p>
+
+      <div className="bg-gray-50 rounded-2xl p-4 flex items-center justify-between gap-4 border border-gray-100">
+        <div>
+          <h3 className="text-xs font-bold text-gray-900">Ẩn bộ từ vựng "N5 Super Master 語彙"</h3>
+          <p className="text-[11px] text-gray-500 mt-0.5">
+            Tạm thời ẩn bộ giáo trình N5 Super Master khỏi trang Ôn tập Flashcard, Giáo trình và Tra cứu.
+          </p>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => saveSettings({ ...settings, hideSuperMasterN5: !settings.hideSuperMasterN5 })}
+          className={`relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out ${
+            settings.hideSuperMasterN5 ? "bg-indigo-600" : "bg-gray-200"
+          }`}
+        >
+          <span
+            className={`pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out ${
+              settings.hideSuperMasterN5 ? "translate-x-5" : "translate-x-0"
+            }`}
+          />
+        </button>
+      </div>
+    </div>
+  );
+}
 
 export default function SettingsPage() {
   const isAuthenticated = syncService.checkAuthStatus();
@@ -144,6 +183,9 @@ export default function SettingsPage() {
             </button>
           </div>
         </div>
+
+        {/* Sample Curriculum Display Settings Section */}
+        <CurriculumDisplaySettings />
 
         {/* Account Info Section */}
         {isAuthenticated && user && (

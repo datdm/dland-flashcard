@@ -16,6 +16,9 @@ export function useFlashCardSettings() {
   const saveSettings = useCallback((next: FlashCardSettings) => {
     setSettings(next);
     setItem(StorageKeys.SETTINGS, next);
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new Event("settings-updated"));
+    }
     autoSync(); // Auto-sync after save
   }, []);
 

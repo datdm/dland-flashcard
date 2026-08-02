@@ -116,6 +116,7 @@ export interface CardSideSettings {
 export interface FlashCardSettings {
   front: CardSideSettings;
   back: CardSideSettings;
+  hideSuperMasterN5?: boolean;
 }
 
 export const FIELD_LABELS: Record<VocabField, string> = {
@@ -143,4 +144,5 @@ export const DEFAULT_SETTINGS: FlashCardSettings = {
     meaning: true,
     phonetic: true,
   },
+  hideSuperMasterN5: false,
 };

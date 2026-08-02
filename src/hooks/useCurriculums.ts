@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import { Curriculum, CurriculumsData, Vocabulary, LessonInCurriculum } from "@/types";
+import { useState, useEffect, useCallback, useMemo } from "react";
+import { Curriculum, CurriculumsData, Vocabulary, LessonInCurriculum, FlashCardSettings } from "@/types";
 import { getItem, setItem, StorageKeys } from "@/lib/storage";
 import { DEFAULT_VOCABULARY } from "@/data";
 import { autoSync, checkAuthStatus, loadCurriculumsFromServer } from "@/lib/syncService";
@@ -12,6 +12,7 @@ function generateId(prefix: string): string {
 
 export function useCurriculums() {
   const [curriculums, setCurriculums] = useState<Curriculum[]>([]);
+  const [hideSuperMaster, setHideSuperMaster] = useState(false);
 
   useEffect(() => {
     // Load local data first
@@ -44,6 +45,28 @@ export function useCurriculums() {
 
     syncCurriculums();
   }, []);
+
+  useEffect(() => {
+    const checkHideSetting = () => {
+      const saved = getItem<FlashCardSettings>(StorageKeys.SETTINGS);
+      setHideSuperMaster(!!saved?.hideSuperMasterN5);
+    };
+
+    checkHideSetting();
+    window.addEventListener("storage", checkHideSetting);
+    window.addEventListener("settings-updated", checkHideSetting);
+    return () => {
+      window.removeEventListener("storage", checkHideSetting);
+      window.removeEventListener("settings-updated", checkHideSetting);
+    };
+  }, []);
+
+  const visibleCurriculums = useMemo(() => {
+    if (!hideSuperMaster) return curriculums;
+    return curriculums.filter(
+      (c) => c.id !== "default-n5-super-master-tango" && !c.name.toLowerCase().includes("super master")
+    );
+  }, [curriculums, hideSuperMaster]);
 
   const save = useCallback((updated: Curriculum[]) => {
     setCurriculums(updated);
@@ -492,7 +515,8 @@ export function useCurriculums() {
   );
 
   return {
-    curriculums,
+    curriculums: visibleCurriculums,
+    rawCurriculums: curriculums,
     save,
     addCurriculum,
     updateCurriculum,

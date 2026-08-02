@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { Notebook, NotebooksData, Vocabulary } from "@/types";
 import { getItem, setItem, StorageKeys } from "@/lib/storage";
-import { autoSync, checkAuthStatus, loadNotebooksFromServer, uploadSingleVocab } from "@/lib/syncService";
+import { autoSync, checkAuthStatus, loadNotebooksFromServer, uploadSingleVocab, deleteVocabOnServer, patchVocabOnServer } from "@/lib/syncService";
 
 function generateId(prefix: string): string {
   return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
@@ -209,12 +209,13 @@ export function useNotebooks() {
             : nb
         );
         setItem<NotebooksData>(StorageKeys.NOTEBOOKS, { notebooks: updated });
+        autoSync(); // Ensure full sync runs as fallback
         return updated;
       });
 
       window.dispatchEvent(
         new CustomEvent("show-toast", {
-          detail: { id: toastId, message: "Done", type: "success" },
+          detail: { id: toastId, message: "Đã thêm từ vựng thành công!", type: "success" },
         })
       );
 
@@ -224,7 +225,8 @@ export function useNotebooks() {
   );
 
   const updateVocab = useCallback(
-    (notebookId: string, vocabId: string, patch: Partial<Omit<Vocabulary, "id">>) => {
+    async (notebookId: string, vocabId: string, patch: Partial<Omit<Vocabulary, "id">>) => {
+      // 1. Update locally first (optimistic)
       setNotebooks((prev) => {
         const updated = prev.map((nb) =>
           nb.id === notebookId
@@ -237,15 +239,27 @@ export function useNotebooks() {
             : nb
         );
         setItem<NotebooksData>(StorageKeys.NOTEBOOKS, { notebooks: updated });
-        autoSync();
         return updated;
       });
+
+      // 2. Delta sync to server
+      if (checkAuthStatus()) {
+        const result = await patchVocabOnServer(notebookId, vocabId, patch);
+        if (!result.success) {
+          console.error('Patch vocab on server failed:', result.error);
+          // Fallback: full sync to keep server consistent
+          autoSync();
+        }
+      } else {
+        autoSync();
+      }
     },
     []
   );
 
   const deleteVocab = useCallback(
-    (notebookId: string, vocabId: string) => {
+    async (notebookId: string, vocabId: string) => {
+      // 1. Remove locally first (optimistic)
       setNotebooks((prev) => {
         const updated = prev.map((nb) =>
           nb.id === notebookId
@@ -253,9 +267,20 @@ export function useNotebooks() {
             : nb
         );
         setItem<NotebooksData>(StorageKeys.NOTEBOOKS, { notebooks: updated });
-        autoSync();
         return updated;
       });
+
+      // 2. Delta delete on server
+      if (checkAuthStatus()) {
+        const result = await deleteVocabOnServer(notebookId, vocabId);
+        if (!result.success) {
+          console.error('Delete vocab on server failed:', result.error);
+          // Fallback: full sync to keep server consistent
+          autoSync();
+        }
+      } else {
+        autoSync();
+      }
     },
     []
   );

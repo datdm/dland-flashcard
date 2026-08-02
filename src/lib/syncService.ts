@@ -541,7 +541,7 @@ export async function uploadSingleVocab(
 ): Promise<{ success: boolean; vocab?: any; error?: string }> {
   const token = getAuthToken();
   if (!token) {
-    // If not authenticated, we return success so local code proceeds
+    // If not authenticated, return success so local addition proceeds
     return { success: true };
   }
 
@@ -555,14 +555,76 @@ export async function uploadSingleVocab(
       body: JSON.stringify({ ...vocab, notebookId }),
     });
 
-    const data = await response.json();
+    const data = await response.json().catch(() => ({}));
     if (!response.ok) {
-      return { success: false, error: data.error || 'Thêm từ vựng thất bại' };
+      return { 
+        success: false, 
+        error: data.error || `Lỗi máy chủ (${response.status}: ${response.statusText})` 
+      };
     }
 
     return { success: true, vocab: data.vocab };
   } catch (error) {
     console.error('Upload single vocab error:', error);
+    return { success: false, error: 'Không thể kết nối máy chủ' };
+  }
+}
+
+// Delete a vocabulary item on the server (delta – no full sync needed)
+export async function deleteVocabOnServer(
+  notebookId: string,
+  vocabId: string
+): Promise<{ success: boolean; error?: string }> {
+  const token = getAuthToken();
+  if (!token) return { success: true }; // Not logged in → local-only is fine
+
+  try {
+    const response = await fetch(`${API_URL}/api/vocab/${vocabId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify({ notebookId }),
+    });
+
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      return { success: false, error: data.error || `Lỗi máy chủ (${response.status})` };
+    }
+    return { success: true };
+  } catch (error) {
+    console.error('Delete vocab on server error:', error);
+    return { success: false, error: 'Không thể kết nối máy chủ' };
+  }
+}
+
+// Patch (update) a vocabulary item on the server (delta – used for favorite, edit)
+export async function patchVocabOnServer(
+  notebookId: string,
+  vocabId: string,
+  patch: Partial<Omit<Vocabulary, 'id'>>
+): Promise<{ success: boolean; vocab?: any; error?: string }> {
+  const token = getAuthToken();
+  if (!token) return { success: true }; // Not logged in → local-only is fine
+
+  try {
+    const response = await fetch(`${API_URL}/api/vocab/${vocabId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify({ notebookId, patch }),
+    });
+
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      return { success: false, error: data.error || `Lỗi máy chủ (${response.status})` };
+    }
+    return { success: true, vocab: data.vocab };
+  } catch (error) {
+    console.error('Patch vocab on server error:', error);
     return { success: false, error: 'Không thể kết nối máy chủ' };
   }
 }

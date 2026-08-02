@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import SyncDialog from "./SyncDialog";
 import * as syncService from "@/lib/syncService";
 import { useLanguageSetting } from "@/hooks/useLanguageSetting";
@@ -101,6 +101,80 @@ export default function Navbar() {
   const [showSyncDialog, setShowSyncDialog] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const { activeLanguage } = useLanguageSetting();
+  const mobileNavRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = mobileNavRef.current;
+    if (!el) return;
+
+    let isDown = false;
+    let startX: number;
+    let scrollLeft: number;
+
+    const onMouseDown = (e: MouseEvent) => {
+      isDown = true;
+      startX = e.pageX - el.offsetLeft;
+      scrollLeft = el.scrollLeft;
+    };
+
+    const onMouseLeave = () => {
+      isDown = false;
+    };
+
+    const onMouseUp = () => {
+      isDown = false;
+    };
+
+    const onMouseMove = (e: MouseEvent) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - el.offsetLeft;
+      const walk = (x - startX) * 1.5;
+      el.scrollLeft = scrollLeft - walk;
+    };
+
+    // Touch drag scroll support
+    let isTouchDown = false;
+    let startTouchX: number;
+    let touchScrollLeft: number;
+
+    const onTouchStart = (e: TouchEvent) => {
+      isTouchDown = true;
+      startTouchX = e.touches[0].pageX - el.offsetLeft;
+      touchScrollLeft = el.scrollLeft;
+    };
+
+    const onTouchEnd = () => {
+      isTouchDown = false;
+    };
+
+    const onTouchMove = (e: TouchEvent) => {
+      if (!isTouchDown) return;
+      const x = e.touches[0].pageX - el.offsetLeft;
+      const walk = (x - startTouchX) * 1.2;
+      el.scrollLeft = touchScrollLeft - walk;
+    };
+
+    el.addEventListener("mousedown", onMouseDown);
+    el.addEventListener("mouseleave", onMouseLeave);
+    el.addEventListener("mouseup", onMouseUp);
+    el.addEventListener("mousemove", onMouseMove);
+
+    el.addEventListener("touchstart", onTouchStart, { passive: true });
+    el.addEventListener("touchend", onTouchEnd, { passive: true });
+    el.addEventListener("touchmove", onTouchMove, { passive: true });
+
+    return () => {
+      el.removeEventListener("mousedown", onMouseDown);
+      el.removeEventListener("mouseleave", onMouseLeave);
+      el.removeEventListener("mouseup", onMouseUp);
+      el.removeEventListener("mousemove", onMouseMove);
+
+      el.removeEventListener("touchstart", onTouchStart);
+      el.removeEventListener("touchend", onTouchEnd);
+      el.removeEventListener("touchmove", onTouchMove);
+    };
+  }, []);
 
   useEffect(() => {
     const saved = localStorage.getItem("sidebar_collapsed");
@@ -299,7 +373,10 @@ export default function Navbar() {
       </header>
 
       {/* Mobile Bottom Navigation Bar */}
-      <nav className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white border-t border-gray-200 flex flex-nowrap h-14 overflow-x-auto scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden px-2">
+      <nav 
+        ref={mobileNavRef}
+        className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white border-t border-gray-200 flex flex-nowrap h-14 overflow-x-auto scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden px-2 touch-pan-x [webkit-overflow-scrolling:touch] cursor-grab active:cursor-grabbing select-none"
+      >
         {navItems.map(({ href, label, icon }) => {
           const isActive = pathname === href || (href !== "/" && pathname.startsWith(href));
           return (
