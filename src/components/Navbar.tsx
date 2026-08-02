@@ -299,8 +299,8 @@ export default function Navbar() {
       </header>
 
       {/* Mobile Bottom Navigation Bar */}
-      <nav className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white border-t border-gray-200 flex h-14">
-        {navItems.slice(0, 5).map(({ href, label, icon }) => {
+      <nav className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white border-t border-gray-200 flex flex-nowrap h-14 overflow-x-auto scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden px-2">
+        {navItems.map(({ href, label, icon }) => {
           const isActive = pathname === href || (href !== "/" && pathname.startsWith(href));
           return (
             <Link
@@ -308,14 +308,14 @@ export default function Navbar() {
               href={href}
               aria-label={label}
               title={label}
-              className={`flex flex-1 flex-col items-center justify-center py-1 transition-colors ${
+              className={`flex flex-col items-center justify-center py-1 px-3 shrink-0 min-w-[68px] transition-colors ${
                 isActive
                   ? "text-indigo-700 font-bold"
                   : "text-gray-400 hover:text-indigo-600"
               }`}
             >
               <span className="text-lg leading-none">{icon}</span>
-              <span className="text-[10px] mt-0.5">{label.split(" ")[0]}</span>
+              <span className="text-[10px] mt-0.5 whitespace-nowrap">{label.split(" ")[0]}</span>
             </Link>
           );
         })}
