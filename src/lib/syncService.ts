@@ -725,3 +725,32 @@ export async function loadSettingsFromServer(): Promise<Record<string, any>> {
     return {};
   }
 }
+
+// Delta-patch a single vocab's progress on server (learned / favorite)
+export async function patchProgressOnServer(
+  vocabId: string,
+  patch: { learned?: boolean; learnedAt?: string; favorite?: boolean }
+): Promise<{ success: boolean; error?: string }> {
+  const token = getAuthToken();
+  if (!token) return { success: true }; // Not logged in → local-only
+
+  try {
+    const response = await fetch(`${API_URL}/api/data/progress/${vocabId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify(patch),
+    });
+
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      return { success: false, error: data.error || `Lỗi máy chủ (${response.status})` };
+    }
+    return { success: true };
+  } catch (error) {
+    console.error('Patch progress on server error:', error);
+    return { success: false, error: 'Không thể kết nối máy chủ' };
+  }
+}

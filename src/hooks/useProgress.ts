@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { ProgressMap, VocabProgress } from "@/types";
 import { getItem, setItem, StorageKeys, updateStreak } from "@/lib/storage";
-import { autoSync, checkAuthStatus, loadProgressFromServer } from "@/lib/syncService";
+import { autoSync, checkAuthStatus, loadProgressFromServer, patchProgressOnServer } from "@/lib/syncService";
 
 const defaultProgress = (): VocabProgress => ({ learned: false, favorite: false });
 
@@ -48,40 +48,65 @@ export function useProgress() {
   }, []);
 
   const toggleLearned = useCallback(
-    (id: string) => {
+    async (id: string) => {
+      let newPatch: { learned: boolean; learnedAt?: string } = { learned: false };
+
+      // 1. Update locally first (optimistic)
       setProgress((prev) => {
         const current = prev[id] ?? defaultProgress();
         const learned = !current.learned;
+        newPatch = {
+          learned,
+          learnedAt: learned ? new Date().toISOString() : undefined,
+        };
         const updated: ProgressMap = {
           ...prev,
-          [id]: {
-            ...current,
-            learned,
-            learnedAt: learned ? new Date().toISOString() : undefined,
-          },
+          [id]: { ...current, ...newPatch },
         };
-        if (learned) {
-          updateStreak();
-        }
+        if (learned) updateStreak();
         setItem(StorageKeys.PROGRESS, updated);
-        autoSync(); // Auto-sync after save
         return updated;
       });
+
+      // 2. Delta sync to server
+      if (checkAuthStatus()) {
+        const result = await patchProgressOnServer(id, newPatch);
+        if (!result.success) {
+          console.error("Patch progress (learned) failed:", result.error);
+          autoSync(); // Fallback full sync
+        }
+      } else {
+        autoSync();
+      }
     },
     []
   );
 
-  const toggleFavorite = useCallback((id: string) => {
+  const toggleFavorite = useCallback(async (id: string) => {
+    let newPatch: { favorite: boolean } = { favorite: false };
+
+    // 1. Update locally first (optimistic)
     setProgress((prev) => {
       const current = prev[id] ?? defaultProgress();
+      newPatch = { favorite: !current.favorite };
       const updated: ProgressMap = {
         ...prev,
-        [id]: { ...current, favorite: !current.favorite },
+        [id]: { ...current, ...newPatch },
       };
       setItem(StorageKeys.PROGRESS, updated);
-      autoSync(); // Auto-sync after save
       return updated;
     });
+
+    // 2. Delta sync to server
+    if (checkAuthStatus()) {
+      const result = await patchProgressOnServer(id, newPatch);
+      if (!result.success) {
+        console.error("Patch progress (favorite) failed:", result.error);
+        autoSync(); // Fallback full sync
+      }
+    } else {
+      autoSync();
+    }
   }, []);
 
   const getVocabProgress = useCallback(
@@ -91,4 +116,3 @@ export function useProgress() {
 
   return { progress, toggleLearned, toggleFavorite, updateProgress, getVocabProgress };
 }
-
