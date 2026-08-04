@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { KanjiItem } from "@/lib/repositories/types";
 
 interface Props {
@@ -9,6 +9,49 @@ interface Props {
 
 export default function KanjiStrokeViewer({ kanji }: Props) {
   const [activeTab, setActiveTab] = useState<"info" | "strokes">("info");
+  const [svgStrokes, setSvgStrokes] = useState<string[]>(kanji.svgStrokes || []);
+  const [fetchingStrokes, setFetchingStrokes] = useState(false);
+
+  useEffect(() => {
+    if (kanji.svgStrokes && kanji.svgStrokes.length > 0) {
+      setSvgStrokes(kanji.svgStrokes);
+      return;
+    }
+
+    let active = true;
+    async function fetchStrokes() {
+      setFetchingStrokes(true);
+      try {
+        const char = kanji.kanji;
+        if (!char) return;
+        const codePoint = char.charCodeAt(0).toString(16).padStart(5, '0');
+        const url = `https://raw.githubusercontent.com/KanjiVG/kanjivg/master/kanji/${codePoint}.svg`;
+        const res = await fetch(url);
+        if (!res.ok) throw new Error("Not found");
+        const svgText = await res.text();
+        
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(svgText, "image/svg+xml");
+        const paths = Array.from(doc.getElementsByTagName("path"))
+          .filter(p => p.id && p.id.includes("-s"))
+          .map(p => p.getAttribute("d") || "")
+          .filter(Boolean);
+
+        if (active && paths.length > 0) {
+          setSvgStrokes(paths);
+        }
+      } catch (err) {
+        console.error("Failed to load SVG strokes for:", kanji.kanji, err);
+      } finally {
+        if (active) setFetchingStrokes(false);
+      }
+    }
+
+    fetchStrokes();
+    return () => {
+      active = false;
+    };
+  }, [kanji.kanji, kanji.svgStrokes]);
 
   return (
     <div className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
@@ -40,14 +83,14 @@ export default function KanjiStrokeViewer({ kanji }: Props) {
           >
             Đọc & Từ ghép
           </button>
-          {kanji.svgStrokes && kanji.svgStrokes.length > 0 && (
+          {(svgStrokes.length > 0 || fetchingStrokes) && (
             <button
               onClick={() => setActiveTab("strokes")}
               className={`px-3 py-1 rounded-lg transition-colors ${
                 activeTab === "strokes" ? "bg-white text-indigo-700 shadow-xs font-semibold" : "text-gray-500 hover:text-gray-700"
               }`}
             >
-              Nét vẽ SVG
+              {fetchingStrokes ? "Đang tải nét..." : "Nét vẽ SVG"}
             </button>
           )}
         </div>
@@ -89,27 +132,33 @@ export default function KanjiStrokeViewer({ kanji }: Props) {
       ) : (
         <div className="mt-4 pt-4 border-t border-gray-100">
           <h4 className="font-semibold text-gray-500 text-xs mb-2">Thứ tự các nét vẽ (Stroke Order)</h4>
-          <div className="flex flex-wrap gap-3">
-            {kanji.svgStrokes?.map((strokeD, idx) => (
-              <div key={idx} className="flex flex-col items-center">
-                <svg
-                  viewBox="0 0 100 100"
-                  className="w-14 h-14 border border-indigo-200 bg-indigo-50/50 rounded-xl p-1 shadow-2xs"
-                >
-                  {/* Grid background */}
-                  <line x1="50" y1="0" x2="50" y2="100" stroke="#e5e7eb" strokeDasharray="3 3" />
-                  <line x1="0" y1="50" x2="100" y2="50" stroke="#e5e7eb" strokeDasharray="3 3" />
-                  {/* Previous strokes */}
-                  {kanji.svgStrokes?.slice(0, idx).map((prev, pIdx) => (
-                    <path key={pIdx} d={prev} fill="none" stroke="#9ca3af" strokeWidth="4" strokeLinecap="round" />
-                  ))}
-                  {/* Active stroke */}
-                  <path d={strokeD} fill="none" stroke="#4f46e5" strokeWidth="6" strokeLinecap="round" />
-                </svg>
-                <span className="text-[10px] text-gray-400 mt-1">Nét {idx + 1}</span>
-              </div>
-            ))}
-          </div>
+          {fetchingStrokes ? (
+            <div className="text-xs text-indigo-600 animate-pulse py-2">
+              Đang tải nét vẽ động từ KanjiVG...
+            </div>
+          ) : (
+            <div className="flex flex-wrap gap-3">
+              {svgStrokes.map((strokeD, idx) => (
+                <div key={idx} className="flex flex-col items-center">
+                  <svg
+                    viewBox="0 0 100 100"
+                    className="w-14 h-14 border border-indigo-200 bg-indigo-50/50 rounded-xl p-1 shadow-2xs"
+                  >
+                    {/* Grid background */}
+                    <line x1="50" y1="0" x2="50" y2="100" stroke="#e5e7eb" strokeDasharray="3 3" />
+                    <line x1="0" y1="50" x2="100" y2="50" stroke="#e5e7eb" strokeDasharray="3 3" />
+                    {/* Previous strokes */}
+                    {svgStrokes.slice(0, idx).map((prev, pIdx) => (
+                      <path key={pIdx} d={prev} fill="none" stroke="#9ca3af" strokeWidth="4" strokeLinecap="round" />
+                    ))}
+                    {/* Active stroke */}
+                    <path d={strokeD} fill="none" stroke="#4f46e5" strokeWidth="6" strokeLinecap="round" />
+                  </svg>
+                  <span className="text-[10px] text-gray-400 mt-1">Nét {idx + 1}</span>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
     </div>
