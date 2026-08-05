@@ -85,6 +85,7 @@ function getNavItemsForLanguage(langCode: string): NavItem[] {
         { href: "/kaiwa", label: "Lộ trình Kaiwa", icon: "🗣️" },
         { href: "/curriculum", label: "Giáo trình (N5-N2)", icon: "📚" },
         { href: "/grammar", label: "Ngữ pháp JLPT", icon: "📖" },
+        { href: "/practice", label: "Luyện chuyên sâu", icon: "🏆" },
         { href: "/vocabulary", label: "Từ vựng tiếng Nhật", icon: "📝" },
         { href: "/notebooks", label: "Sổ tay cá nhân", icon: "📓" },
         { href: "/flashcard/all", label: "Ôn tập Flashcard", icon: "🎴" },
