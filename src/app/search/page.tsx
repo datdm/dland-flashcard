@@ -46,25 +46,28 @@ export default function DictionarySearchPage() {
   const handleAddToNotebook = async () => {
     if (!selectedWordForNotebook || !targetNotebookId) return;
 
-    const duplicates = checkDuplicate(targetNotebookId, selectedWordForNotebook.kanji, selectedWordForNotebook.hiragana);
-    if (duplicates && duplicates.length > 0) {
-      const otherDuplicates = duplicates.filter((d) => d.notebookId !== targetNotebookId);
-      if (otherDuplicates.length > 0) {
-        const notebookNames = Array.from(new Set(otherDuplicates.map((d) => `"${d.notebookName}"`))).join(", ");
-        setDuplicateError(`Từ này đã có trong sổ tay: ${notebookNames}`);
-      } else {
-        setDuplicateError("Từ này đã có trong sổ tay này");
+    // Only check duplicates if both kanji and hiragana exist
+    if (selectedWordForNotebook.kanji && selectedWordForNotebook.hiragana) {
+      const duplicates = checkDuplicate(targetNotebookId, selectedWordForNotebook.kanji, selectedWordForNotebook.hiragana);
+      if (duplicates && duplicates.length > 0) {
+        const otherDuplicates = duplicates.filter((d) => d.notebookId !== targetNotebookId);
+        if (otherDuplicates.length > 0) {
+          const notebookNames = Array.from(new Set(otherDuplicates.map((d) => `"${d.notebookName}"`))).join(", ");
+          setDuplicateError(`Từ này đã có trong sổ tay: ${notebookNames}`);
+        } else {
+          setDuplicateError("Từ này đã có trong sổ tay này");
+        }
+        return;
       }
-      return;
     }
 
     const vocab = await addVocab(targetNotebookId, {
-      kanji: selectedWordForNotebook.kanji,
-      hiragana: selectedWordForNotebook.hiragana,
-      onyomi: selectedWordForNotebook.onyomi,
-      meaning: selectedWordForNotebook.meaning,
-      phonetic: selectedWordForNotebook.phonetic
-    });
+      kanji: selectedWordForNotebook.kanji || "",
+      hiragana: selectedWordForNotebook.hiragana || "",
+      onyomi: selectedWordForNotebook.onyomi || "",
+      meaning: selectedWordForNotebook.meaning || "",
+      phonetic: selectedWordForNotebook.phonetic || ""
+    }, true); // skipSync = true bypasses uploadSingleVocab and local duplicate block
 
     if (vocab) {
       setSelectedWordForNotebook(null);

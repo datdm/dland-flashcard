@@ -76,7 +76,7 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
     }
 
     const model = genAI.getGenerativeModel({
-      model: "gemini-1.5-flash",
+      model: "gemini-3.1-flash-lite",
       generationConfig: {
         responseMimeType: "application/json"
       }
@@ -88,6 +88,11 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
     let cleaned = text.trim();
     if (cleaned.startsWith("```")) {
       cleaned = cleaned.replace(/^```[a-z]*\n?/, "").replace(/\n?```$/, "").trim();
+    }
+    const startIdx = cleaned.indexOf("{");
+    const endIdx = cleaned.lastIndexOf("}");
+    if (startIdx !== -1 && endIdx !== -1 && endIdx > startIdx) {
+      cleaned = cleaned.substring(startIdx, endIdx + 1);
     }
     const data = JSON.parse(cleaned);
 
