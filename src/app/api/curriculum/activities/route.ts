@@ -77,7 +77,7 @@ Chú ý:
 - Dữ liệu trả về PHẢI là chuỗi JSON hợp lệ.`;
 
     const model = genAI.getGenerativeModel({
-      model: "gemini-1.5-flash",
+      model: "gemini-3.1-flash-lite",
       generationConfig: {
         responseMimeType: "application/json"
       }
