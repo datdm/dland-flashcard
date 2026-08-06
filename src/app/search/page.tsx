@@ -67,7 +67,7 @@ export default function DictionarySearchPage() {
       onyomi: selectedWordForNotebook.onyomi || "",
       meaning: selectedWordForNotebook.meaning || "",
       phonetic: selectedWordForNotebook.phonetic || ""
-    }, true); // skipSync = true bypasses uploadSingleVocab and local duplicate block
+    }); // Send single word upload API to server
 
     if (vocab) {
       setSelectedWordForNotebook(null);

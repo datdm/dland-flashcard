@@ -130,11 +130,11 @@ router.post('/upload', auth_1.authenticate, async (req, res) => {
         if (!notebookId) {
             return res.status(400).json({ error: 'Thiếu notebookId' });
         }
-        if (!kanji?.trim() || !hiragana?.trim()) {
-            return res.status(400).json({ error: 'Từ vựng phải có Kanji và Hiragana' });
+        const normalizedKanji = (kanji || '').trim();
+        const normalizedHiragana = (hiragana || '').trim();
+        if (!normalizedKanji && !normalizedHiragana) {
+            return res.status(400).json({ error: 'Từ vựng phải có ít nhất Kanji hoặc Hiragana/Katakana' });
         }
-        const normalizedKanji = kanji.trim();
-        const normalizedHiragana = hiragana.trim();
         // 1. Fetch current notebooks from database
         const result = await db_1.default.query(`SELECT data_value FROM user_data 
        WHERE user_id = $1 AND data_key = $2`, [userId, 'flashcash-notebooks']);
@@ -152,7 +152,16 @@ router.post('/upload', auth_1.authenticate, async (req, res) => {
         for (const nb of notebooks) {
             if (!nb.vocabulary || !Array.isArray(nb.vocabulary))
                 continue;
-            const dup = nb.vocabulary.find((v) => v.kanji?.trim() === normalizedKanji && v.hiragana?.trim() === normalizedHiragana);
+            const dup = nb.vocabulary.find((v) => {
+                const vKanji = (v.kanji || '').trim();
+                const vHiragana = (v.hiragana || '').trim();
+                if (normalizedKanji && vKanji) {
+                    return vKanji === normalizedKanji && vHiragana === normalizedHiragana;
+                }
+                else {
+                    return vHiragana === normalizedHiragana;
+                }
+            });
             if (dup) {
                 duplicateFound = {
                     notebookName: nb.name,

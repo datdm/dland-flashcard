@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useNotebooks } from "@/hooks/useNotebooks";
 
 interface ShadowingItem {
   id: string;
@@ -31,9 +32,15 @@ interface ReadingOption {
 interface ReadingItem {
   passage: string;
   passage_ruby: string;
+  passage_translation: string;
   question: string;
   options: ReadingOption[];
   explanation: string;
+  vocabulary?: {
+    kanji: string;
+    hiragana: string;
+    meaning: string;
+  }[];
 }
 
 const POPULAR_TOPICS = [
@@ -45,6 +52,8 @@ const POPULAR_TOPICS = [
 ];
 
 export default function PracticeHubPage() {
+  const { notebooks, addVocab, checkDuplicate } = useNotebooks();
+
   // Config states
   const [selectedType, setSelectedType] = useState<"shadowing" | "translation" | "reading">("shadowing");
   const [selectedTopic, setSelectedTopic] = useState("Sinh hoạt & Đời sống");
@@ -64,6 +73,13 @@ export default function PracticeHubPage() {
   const [showAnswerIdx, setShowAnswerIdx] = useState<Record<number, boolean>>({});
   const [translationInputs, setTranslationInputs] = useState<Record<number, string>>({});
   const [selectedOptionId, setSelectedOptionId] = useState<string | null>(null);
+  const [showPassageTranslation, setShowPassageTranslation] = useState(false);
+
+  // Notebook modal states
+  const [selectedWordForNotebook, setSelectedWordForNotebook] = useState<any | null>(null);
+  const [targetNotebookId, setTargetNotebookId] = useState<string>("");
+  const [duplicateError, setDuplicateError] = useState<string | null>(null);
+  const [saveSuccessMsg, setSaveSuccessMsg] = useState<string | null>(null);
 
   const activeTopic = customTopic.trim() || selectedTopic;
 
@@ -73,6 +89,7 @@ export default function PracticeHubPage() {
     setSelectedOptionId(null);
     setShowAnswerIdx({});
     setTranslationInputs({});
+    setShowPassageTranslation(false);
 
     try {
       const res = await fetch("/api/practice/generate", {
@@ -157,6 +174,37 @@ export default function PracticeHubPage() {
     };
 
     recognition.start();
+  };
+
+  const handleAddToNotebook = async () => {
+    if (!selectedWordForNotebook || !targetNotebookId) return;
+
+    // Check duplicate
+    if (selectedWordForNotebook.kanji && selectedWordForNotebook.hiragana) {
+      const duplicates = checkDuplicate(targetNotebookId, selectedWordForNotebook.kanji, selectedWordForNotebook.hiragana);
+      if (duplicates && duplicates.length > 0) {
+        setDuplicateError("Từ này đã có trong sổ tay");
+        return;
+      }
+    }
+
+    const vocab = await addVocab(targetNotebookId, {
+      kanji: selectedWordForNotebook.kanji || "",
+      hiragana: selectedWordForNotebook.hiragana || "",
+      meaning: selectedWordForNotebook.meaning || "",
+      onyomi: "",
+      phonetic: ""
+    });
+
+    if (vocab) {
+      setSelectedWordForNotebook(null);
+      setTargetNotebookId("");
+      setDuplicateError(null);
+      setSaveSuccessMsg(`Đã thêm thành công "${selectedWordForNotebook.kanji || selectedWordForNotebook.hiragana}" vào sổ tay!`);
+      setTimeout(() => {
+        setSaveSuccessMsg(null);
+      }, 2000);
+    }
   };
 
   return (
@@ -453,12 +501,24 @@ export default function PracticeHubPage() {
                     <span className="px-3 py-1 bg-purple-100 text-purple-800 text-[10px] font-bold rounded-lg uppercase tracking-wider">
                       Bài đọc hiểu N2
                     </span>
-                    <button
-                      onClick={() => playSentence(readingData.passage)}
-                      className="text-xs text-teal-600 hover:text-teal-800 font-bold flex items-center gap-1"
-                    >
-                      🔊 Nghe bài đọc
-                    </button>
+                    <div className="flex gap-3">
+                      <button
+                        onClick={() => playSentence(readingData.passage)}
+                        className="text-xs text-teal-600 hover:text-teal-800 font-bold flex items-center gap-1"
+                      >
+                        🔊 Nghe bài đọc
+                      </button>
+                      <button
+                        onClick={() => setShowPassageTranslation((prev) => !prev)}
+                        className={`text-xs font-bold flex items-center gap-1 px-2 py-0.5 rounded-lg transition-colors ${
+                          showPassageTranslation
+                            ? "bg-teal-100 text-teal-800"
+                            : "text-teal-600 hover:text-teal-800"
+                        }`}
+                      >
+                        🌐 {showPassageTranslation ? "Ẩn dịch" : "Dịch nghĩa"}
+                      </button>
+                    </div>
                   </div>
 
                   {/* Reading Passage with soft paper style and Ruby text */}
@@ -468,7 +528,48 @@ export default function PracticeHubPage() {
                       className="whitespace-pre-line text-gray-900 leading-loose ruby-box"
                       dangerouslySetInnerHTML={{ __html: readingData.passage_ruby }}
                     />
+
+                    {/* Passage Vietnamese Translation Toggle */}
+                    {showPassageTranslation && (
+                      <div className="mt-4 pt-3 border-t border-amber-200/50 text-xs text-gray-700 leading-relaxed italic">
+                        <span className="font-extrabold text-teal-800 not-italic block mb-1">Bản dịch tiếng Việt:</span>
+                        {readingData.passage_translation}
+                      </div>
+                    )}
                   </div>
+
+                  {/* Vocabulary Extracted List */}
+                  {readingData.vocabulary && readingData.vocabulary.length > 0 && (
+                    <div className="bg-gray-50/60 p-4 rounded-2xl border border-gray-100/80">
+                      <div className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-2">
+                        Từ vựng trong bài đọc:
+                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        {readingData.vocabulary.map((vocabItem: any, vIdx: number) => (
+                          <div key={vIdx} className="bg-white p-3 rounded-xl border border-gray-100/60 flex items-center justify-between gap-2 shadow-3xs">
+                            <div>
+                              <div className="flex items-baseline gap-1.5 flex-wrap">
+                                <span className="text-xs font-bold text-gray-900">{vocabItem.kanji}</span>
+                                {vocabItem.kanji !== vocabItem.hiragana && (
+                                  <span className="text-[10px] text-indigo-600 font-semibold font-mono">({vocabItem.hiragana})</span>
+                                )}
+                              </div>
+                              <div className="text-[10px] text-emerald-700 font-medium mt-0.5">{vocabItem.meaning}</div>
+                            </div>
+                            <button
+                              onClick={() => {
+                                setSelectedWordForNotebook(vocabItem);
+                                setDuplicateError(null);
+                              }}
+                              className="px-2 py-1 bg-purple-50 hover:bg-purple-100 text-purple-700 text-[10px] font-bold rounded-lg transition-all shrink-0"
+                            >
+                              + Sổ tay
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
 
                   {/* Question */}
                   <div className="text-xs font-extrabold text-gray-900 bg-gray-50 p-3 rounded-xl border border-gray-100">
@@ -533,6 +634,64 @@ export default function PracticeHubPage() {
           )}
         </div>
       </div>
+
+      {/* Add to Notebook Modal */}
+      {selectedWordForNotebook && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-3xl shadow-xl p-6 w-full max-w-sm">
+            <h3 className="font-bold text-base text-gray-900 mb-2">Thêm từ vào Sổ tay</h3>
+            <p className="text-xs text-gray-500 mb-4">
+              Từ: <span className="font-bold text-indigo-600">{selectedWordForNotebook.kanji || selectedWordForNotebook.hiragana}</span> ({selectedWordForNotebook.meaning})
+            </p>
+
+            {duplicateError && (
+              <div className="mb-4 rounded-2xl border border-red-200 bg-red-50 p-3 text-xs font-semibold text-red-600">
+                ✕ {duplicateError}
+              </div>
+            )}
+
+            <label className="block text-xs font-semibold text-gray-700 mb-2">Chọn Sổ tay:</label>
+            <select
+              value={targetNotebookId}
+              onChange={(e) => setTargetNotebookId(e.target.value)}
+              className="w-full rounded-2xl border border-gray-300 px-4 py-2.5 text-sm mb-6 focus:outline-none focus:border-indigo-500"
+            >
+              <option value="">-- Chọn sổ tay --</option>
+              {notebooks.map((nb) => (
+                <option key={nb.id} value={nb.id}>
+                  {nb.name} ({nb.vocabulary.length} từ)
+                </option>
+              ))}
+            </select>
+
+            <div className="flex gap-2 justify-end">
+              <button
+                onClick={() => {
+                  setSelectedWordForNotebook(null);
+                  setDuplicateError(null);
+                }}
+                className="px-4 py-2 rounded-xl border border-gray-300 text-gray-600 hover:bg-gray-50 text-xs font-semibold"
+              >
+                Hủy
+              </button>
+              <button
+                onClick={handleAddToNotebook}
+                disabled={!targetNotebookId}
+                className="px-4 py-2 rounded-xl bg-indigo-600 text-white text-xs font-bold hover:bg-indigo-700 disabled:opacity-50"
+              >
+                Lưu vào Sổ tay
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Success Notification */}
+      {saveSuccessMsg && (
+        <div className="fixed bottom-4 right-4 bg-emerald-600 text-white text-xs font-bold px-5 py-3 rounded-2xl shadow-lg z-50 animate-bounce">
+          ✓ {saveSuccessMsg}
+        </div>
+      )}
 
       {/* Ruby text style tweaks */}
       <style jsx global>{`

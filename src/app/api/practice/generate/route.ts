@@ -14,12 +14,14 @@ export async function POST(req: NextRequest) {
 
   try {
     const { type, topic, level = "N2" } = await req.json();
+    const randomSeed = Math.random().toString(36).substring(2, 7) + "-" + Date.now();
 
     let prompt = "";
 
     if (type === "shadowing") {
       prompt = `Bạn là chuyên gia giáo trình tiếng Nhật.
 Hãy tạo 3 câu luyện nói đuổi (Shadowing) cấp độ ${level} thuộc chủ đề "${topic}".
+(Buổi học ID ngẫu nhiên: ${randomSeed} - Hãy tạo câu độc đáo, khác biệt so với các lần trước).
 Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc trong markdown block, không có bất kỳ chữ nào nằm ngoài cặp ngoặc nhọn JSON, phải là JSON hợp lệ):
 {
   "shadowing": [
@@ -37,6 +39,7 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
       prompt = `Bạn là chuyên gia dịch thuật tiếng Nhật.
 Hãy tạo 3 câu bài tập Luyện dịch 2 chiều cấp độ ${level} thuộc chủ đề "${topic}".
 Trong đó có ít nhất 1 câu dịch từ Nhật sang Việt (ja-vi) và ít nhất 1 câu dịch từ Việt sang Nhật (vi-ja).
+(Buổi học ID ngẫu nhiên: ${randomSeed} - Hãy tạo câu độc đáo, khác biệt so với các lần trước).
 Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc trong markdown block, không có bất kỳ chữ nào nằm ngoài cặp ngoặc nhọn JSON, phải là JSON hợp lệ):
 {
   "translation": [
@@ -56,13 +59,15 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
     } else {
       // reading N2
       prompt = `Bạn là chuyên gia ôn luyện đọc hiểu JLPT N2.
-Hãy tạo 1 bài đọc hiểu đọc hiểu trình độ N2 (đáp ứng đúng tiêu chuẩn kỳ thi JLPT N2) thuộc chủ đề "${topic}".
-Bài đọc hiểu phải bao gồm một đoạn văn tiếng Nhật (khoảng 6-8 câu dài) kèm câu hỏi và 4 đáp án lựa chọn.
+Hãy tạo 1 bài đọc hiểu trình độ N2 (đáp ứng đúng tiêu chuẩn kỳ thi JLPT N2) thuộc chủ đề "${topic}".
+Bài đọc hiểu phải bao gồm một đoạn văn tiếng Nhật (khoảng 6-8 câu dài) kèm câu hỏi, 4 đáp án lựa chọn, bản dịch tiếng Việt của đoạn văn, và danh sách các từ vựng chính xuất hiện trong bài đọc.
+(Buổi học ID ngẫu nhiên: ${randomSeed} - Hãy tạo bài đọc độc đáo, khác biệt so với các lần trước).
 Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc trong markdown block, không có bất kỳ chữ nào nằm ngoài cặp ngoặc nhọn JSON, phải là JSON hợp lệ):
 {
   "reading": {
     "passage": "đoạn văn tiếng Nhật chuẩn N2 không có thẻ HTML",
-    "passage_ruby": "đoạn văn tiếng Nhật N2 bọc thẻ <ruby> và <rt> hiển thị Furigana trên đầu mọi chữ Kanji để người dùng dễ tra cứu học tập, ví dụ: <ruby>東京<rt>とうきょう</rt></ruby>にある...",
+    "passage_ruby": "đoạn văn tiếng Nhật N2 bọc thẻ <ruby> và <rt> hiển thị Furigana trên đầu mọi chữ Kanji để người dùng dễ đọc, ví dụ: <ruby>東京<rt>とうきょう</rt></ruby>にある...",
+    "passage_translation": "Bản dịch nghĩa tiếng Việt trọn vẹn và tự nhiên của đoạn văn trên",
     "question": "câu hỏi đọc hiểu bằng tiếng Việt về đoạn văn trên",
     "options": [
       { "id": "opt_1", "text": "lựa chọn 1 (đúng)", "isCorrect": true },
@@ -70,7 +75,15 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
       { "id": "opt_3", "text": "lựa chọn 3 (sai)", "isCorrect": false },
       { "id": "opt_4", "text": "lựa chọn 4 (sai)", "isCorrect": false }
     ],
-    "explanation": "giải thích chi tiết ý nghĩa đoạn văn, cấu trúc ngữ pháp N2 dùng trong bài và lý do đúng/sai bằng tiếng Việt"
+    "explanation": "giải thích chi tiết ý nghĩa đoạn văn, cấu trúc ngữ pháp N2 dùng trong bài và lý do đúng/sai bằng tiếng Việt",
+    "vocabulary": [
+      {
+        "kanji": "chữ Hán tự chính được trích xuất từ bài đọc (ví dụ: 医師)",
+        "hiragana": "cách đọc chữ Hán tự đó (ví dụ: いし)",
+        "meaning": "nghĩa của từ đó bằng tiếng Việt (ví dụ: Bác sĩ)"
+      },
+      ... (trích xuất khoảng 4 đến 6 từ vựng hữu ích trong đoạn văn trên)
+    ]
   }
 }`;
     }
@@ -78,7 +91,8 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
     const model = genAI.getGenerativeModel({
       model: "gemini-3.1-flash-lite",
       generationConfig: {
-        responseMimeType: "application/json"
+        responseMimeType: "application/json",
+        temperature: 0.95
       }
     });
 

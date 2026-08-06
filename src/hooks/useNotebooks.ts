@@ -144,6 +144,10 @@ export function useNotebooks() {
               : nb
           );
           setItem<NotebooksData>(StorageKeys.NOTEBOOKS, { notebooks: updated });
+          // Call autoSync after the state is set and stored to upload changes to server
+          setTimeout(() => {
+            autoSync();
+          }, 0);
           return updated;
         });
         return vocab;

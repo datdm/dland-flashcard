@@ -165,12 +165,12 @@ router.post('/upload', authenticate, async (req: AuthRequest, res: Response) => 
       return res.status(400).json({ error: 'Thiếu notebookId' });
     }
 
-    if (!kanji?.trim() || !hiragana?.trim()) {
-      return res.status(400).json({ error: 'Từ vựng phải có Kanji và Hiragana' });
-    }
+    const normalizedKanji = (kanji || '').trim();
+    const normalizedHiragana = (hiragana || '').trim();
 
-    const normalizedKanji = kanji.trim();
-    const normalizedHiragana = hiragana.trim();
+    if (!normalizedKanji && !normalizedHiragana) {
+      return res.status(400).json({ error: 'Từ vựng phải có ít nhất Kanji hoặc Hiragana/Katakana' });
+    }
 
     // 1. Fetch current notebooks from database
     const result = await pool.query(
@@ -195,9 +195,16 @@ router.post('/upload', authenticate, async (req: AuthRequest, res: Response) => 
     for (const nb of notebooks) {
       if (!nb.vocabulary || !Array.isArray(nb.vocabulary)) continue;
 
-      const dup = nb.vocabulary.find(
-        (v: any) => v.kanji?.trim() === normalizedKanji && v.hiragana?.trim() === normalizedHiragana
-      );
+      const dup = nb.vocabulary.find((v: any) => {
+        const vKanji = (v.kanji || '').trim();
+        const vHiragana = (v.hiragana || '').trim();
+
+        if (normalizedKanji && vKanji) {
+          return vKanji === normalizedKanji && vHiragana === normalizedHiragana;
+        } else {
+          return vHiragana === normalizedHiragana;
+        }
+      });
 
       if (dup) {
         duplicateFound = {

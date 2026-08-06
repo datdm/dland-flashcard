@@ -67,11 +67,13 @@ export default function FlashCardViewer({ vocabulary, title, dailyLimit }: Flash
   }, [vocabulary, sessionOffset]);
 
   const handleToggleLearned = useCallback((id: string) => {
+    const currentProgress = getVocabProgress(id);
+    const willBeLearned = !currentProgress.learned;
+
     toggleLearned(id);
     
     // If the word was marked as learned, remove it from the current session deck
-    const isNowLearned = !getVocabProgress(id).learned;
-    if (isNowLearned) {
+    if (willBeLearned) {
       setDeck((prevDeck) => {
         const newDeck = prevDeck.filter((v) => v.id !== id);
         // Adjust index if it's now out of bounds

@@ -49,26 +49,29 @@ export function useProgress() {
 
   const toggleLearned = useCallback(
     async (id: string) => {
-      let newPatch: { learned: boolean; learnedAt?: string } = { learned: false };
+      // 1. Calculate values synchronously first
+      const current = progress[id] ?? defaultProgress();
+      const learned = !current.learned;
+      const newPatch = {
+        learned,
+        learnedAt: learned ? new Date().toISOString() : undefined,
+      };
 
-      // 1. Update locally first (optimistic)
+      // 2. Update locally first (optimistic)
       setProgress((prev) => {
-        const current = prev[id] ?? defaultProgress();
-        const learned = !current.learned;
-        newPatch = {
-          learned,
-          learnedAt: learned ? new Date().toISOString() : undefined,
-        };
         const updated: ProgressMap = {
           ...prev,
-          [id]: { ...current, ...newPatch },
+          [id]: { ...(prev[id] ?? defaultProgress()), ...newPatch },
         };
-        if (learned) updateStreak();
         setItem(StorageKeys.PROGRESS, updated);
         return updated;
       });
 
-      // 2. Delta sync to server
+      if (learned) {
+        updateStreak();
+      }
+
+      // 3. Delta sync to server
       if (checkAuthStatus()) {
         const result = await patchProgressOnServer(id, newPatch);
         if (!result.success) {
@@ -79,25 +82,25 @@ export function useProgress() {
         autoSync();
       }
     },
-    []
+    [progress]
   );
 
   const toggleFavorite = useCallback(async (id: string) => {
-    let newPatch: { favorite: boolean } = { favorite: false };
+    // 1. Calculate values synchronously first
+    const current = progress[id] ?? defaultProgress();
+    const newPatch = { favorite: !current.favorite };
 
-    // 1. Update locally first (optimistic)
+    // 2. Update locally first (optimistic)
     setProgress((prev) => {
-      const current = prev[id] ?? defaultProgress();
-      newPatch = { favorite: !current.favorite };
       const updated: ProgressMap = {
         ...prev,
-        [id]: { ...current, ...newPatch },
+        [id]: { ...(prev[id] ?? defaultProgress()), ...newPatch },
       };
       setItem(StorageKeys.PROGRESS, updated);
       return updated;
     });
 
-    // 2. Delta sync to server
+    // 3. Delta sync to server
     if (checkAuthStatus()) {
       const result = await patchProgressOnServer(id, newPatch);
       if (!result.success) {
@@ -107,7 +110,7 @@ export function useProgress() {
     } else {
       autoSync();
     }
-  }, []);
+  }, [progress]);
 
   const getVocabProgress = useCallback(
     (id: string): VocabProgress => progress[id] ?? defaultProgress(),
