@@ -5,9 +5,12 @@ import { KanjiItem } from "@/lib/repositories/types";
 
 interface Props {
   kanji: KanjiItem;
+  progress?: { learned: boolean; favorite: boolean };
+  onToggleLearned?: (id: string) => void;
+  onToggleFavorite?: (id: string) => void;
 }
 
-export default function KanjiStrokeViewer({ kanji }: Props) {
+export default function KanjiStrokeViewer({ kanji, progress, onToggleLearned, onToggleFavorite }: Props) {
   const [activeTab, setActiveTab] = useState<"info" | "strokes">("info");
   const [svgStrokes, setSvgStrokes] = useState<string[]>(kanji.svgStrokes || []);
   const [fetchingStrokes, setFetchingStrokes] = useState(false);
@@ -55,9 +58,9 @@ export default function KanjiStrokeViewer({ kanji }: Props) {
 
   return (
     <div className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
-      <div className="flex items-start justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
         <div className="flex items-center gap-4">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-3xl font-extrabold shadow-md">
+          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-3xl font-extrabold shadow-md shrink-0">
             {kanji.kanji}
           </div>
           <div>
@@ -74,25 +77,55 @@ export default function KanjiStrokeViewer({ kanji }: Props) {
           </div>
         </div>
 
-        <div className="flex bg-gray-100 p-1 rounded-xl text-xs font-medium">
-          <button
-            onClick={() => setActiveTab("info")}
-            className={`px-3 py-1 rounded-lg transition-colors ${
-              activeTab === "info" ? "bg-white text-indigo-700 shadow-xs font-semibold" : "text-gray-500 hover:text-gray-700"
-            }`}
-          >
-            Đọc & Từ ghép
-          </button>
-          {(svgStrokes.length > 0 || fetchingStrokes) && (
+        <div className="flex items-center gap-1.5 shrink-0 self-end sm:self-start">
+          {onToggleFavorite && (
             <button
-              onClick={() => setActiveTab("strokes")}
-              className={`px-3 py-1 rounded-lg transition-colors ${
-                activeTab === "strokes" ? "bg-white text-indigo-700 shadow-xs font-semibold" : "text-gray-500 hover:text-gray-700"
+              onClick={() => onToggleFavorite(kanji.id)}
+              className={`w-7 h-7 flex items-center justify-center rounded-lg border text-sm transition-all ${
+                progress?.favorite
+                  ? "bg-yellow-50 border-yellow-300 text-yellow-500 shadow-3xs"
+                  : "bg-white border-gray-100 text-gray-300 hover:border-yellow-200 hover:text-yellow-400"
               }`}
+              title="Yêu thích"
             >
-              {fetchingStrokes ? "Đang tải nét..." : "Nét vẽ SVG"}
+              ★
             </button>
           )}
+
+          {onToggleLearned && (
+            <button
+              onClick={() => onToggleLearned(kanji.id)}
+              className={`w-7 h-7 flex items-center justify-center rounded-lg border text-xs font-bold transition-all ${
+                progress?.learned
+                  ? "bg-emerald-50 border-emerald-300 text-emerald-600 shadow-3xs"
+                  : "bg-white border-gray-100 text-gray-300 hover:border-emerald-200 hover:text-emerald-500"
+              }`}
+              title="Đã học"
+            >
+              ✓
+            </button>
+          )}
+
+          <div className="flex bg-gray-100 p-1 rounded-xl text-xs font-medium">
+            <button
+              onClick={() => setActiveTab("info")}
+              className={`px-3 py-1 rounded-lg transition-colors ${
+                activeTab === "info" ? "bg-white text-indigo-700 shadow-xs font-semibold" : "text-gray-500 hover:text-gray-700"
+              }`}
+            >
+              Đọc & Từ ghép
+            </button>
+            {(svgStrokes.length > 0 || fetchingStrokes) && (
+              <button
+                onClick={() => setActiveTab("strokes")}
+                className={`px-3 py-1 rounded-lg transition-colors ${
+                  activeTab === "strokes" ? "bg-white text-indigo-700 shadow-xs font-semibold" : "text-gray-500 hover:text-gray-700"
+                }`}
+              >
+                {fetchingStrokes ? "Đang tải nét..." : "Nét vẽ SVG"}
+              </button>
+            )}
+          </div>
         </div>
       </div>
 

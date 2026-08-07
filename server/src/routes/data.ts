@@ -70,7 +70,7 @@ router.get('/grammar-collections', authenticate, async (req: AuthRequest, res: R
   }
 });
 
-// Get progress data (vocabulary + grammar)
+// Get progress data (vocabulary + grammar + kanji)
 router.get('/progress', authenticate, async (req: AuthRequest, res: Response) => {
   try {
     const vocabResult = await pool.query(
@@ -85,11 +85,18 @@ router.get('/progress', authenticate, async (req: AuthRequest, res: Response) =>
       [req.userId, 'flashcash-grammar-progress']
     );
 
+    const kanjiResult = await pool.query(
+      `SELECT data_value FROM user_data 
+       WHERE user_id = $1 AND data_key = $2`,
+      [req.userId, 'flashcash-kanji-progress']
+    );
+
     res.json({
       success: true,
       data: {
         vocabulary: vocabResult.rows[0]?.data_value || {},
         grammar: grammarResult.rows[0]?.data_value || {},
+        kanji: kanjiResult.rows[0]?.data_value || {},
       },
       timestamp: new Date().toISOString(),
     });

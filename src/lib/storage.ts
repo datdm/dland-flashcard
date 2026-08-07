@@ -7,6 +7,7 @@ const NOTEBOOKS_KEY = "flashcash-notebooks";
 const CURRICULUMS_KEY = "flashcash-curriculums";
 const GRAMMAR_COLLECTIONS_KEY = "flashcash-grammar-collections";
 const GRAMMAR_PROGRESS_KEY = "flashcash-grammar-progress";
+const KANJI_PROGRESS_KEY = "flashcash-kanji-progress";
 
 export const StorageKeys = {
   LESSONS: LESSONS_KEY,
@@ -16,6 +17,7 @@ export const StorageKeys = {
   CURRICULUMS: CURRICULUMS_KEY,
   GRAMMAR_COLLECTIONS: GRAMMAR_COLLECTIONS_KEY,
   GRAMMAR_PROGRESS: GRAMMAR_PROGRESS_KEY,
+  KANJI_PROGRESS: KANJI_PROGRESS_KEY,
 } as const;
 
 export function getItem<T>(key: string): T | null {
@@ -42,7 +44,16 @@ export function removeItem(key: string): void {
 export function exportAllData(): string {
   if (typeof window === "undefined") return "{}";
   const data: Record<string, unknown> = {};
-  const keys = [LESSONS_KEY, PROGRESS_KEY, SETTINGS_KEY, NOTEBOOKS_KEY, CURRICULUMS_KEY, GRAMMAR_COLLECTIONS_KEY, GRAMMAR_PROGRESS_KEY];
+  const keys = [
+    LESSONS_KEY,
+    PROGRESS_KEY,
+    SETTINGS_KEY,
+    NOTEBOOKS_KEY,
+    CURRICULUMS_KEY,
+    GRAMMAR_COLLECTIONS_KEY,
+    GRAMMAR_PROGRESS_KEY,
+    KANJI_PROGRESS_KEY,
+  ];
   for (const key of keys) {
     const raw = localStorage.getItem(key);
     if (raw) {
@@ -59,7 +70,16 @@ export function exportAllData(): string {
 export function importAllData(jsonString: string): void {
   if (typeof window === "undefined") return;
   const data = JSON.parse(jsonString) as Record<string, unknown>;
-  const keys = [LESSONS_KEY, PROGRESS_KEY, SETTINGS_KEY, NOTEBOOKS_KEY, CURRICULUMS_KEY, GRAMMAR_COLLECTIONS_KEY, GRAMMAR_PROGRESS_KEY];
+  const keys = [
+    LESSONS_KEY,
+    PROGRESS_KEY,
+    SETTINGS_KEY,
+    NOTEBOOKS_KEY,
+    CURRICULUMS_KEY,
+    GRAMMAR_COLLECTIONS_KEY,
+    GRAMMAR_PROGRESS_KEY,
+    KANJI_PROGRESS_KEY,
+  ];
   for (const key of keys) {
     if (data[key] !== undefined) {
       localStorage.setItem(key, JSON.stringify(data[key]));
@@ -105,7 +125,6 @@ export function importCurriculumJson(jsonString: string): { lessonCount: number;
   // Import into Lessons system
   const lessonData = getItem<Record<string, unknown>>(LESSONS_KEY) || {};
   const lessons = (lessonData.lessons as unknown[]) || [];
-  const seenIds = new Set<string>();
 
   for (const lesson of data.lessons) {
     if (!lesson.name || !Array.isArray(lesson.vocabulary)) continue;

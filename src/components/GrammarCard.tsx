@@ -1,13 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { GrammarPoint } from "@/types";
+import { GrammarPoint, GrammarProgress } from "@/types";
 
 interface Props {
   grammar: GrammarPoint;
+  progress?: GrammarProgress;
+  onToggleLearned?: (id: string) => void;
+  onToggleFavorite?: (id: string) => void;
 }
 
-export default function GrammarCard({ grammar }: Props) {
+export default function GrammarCard({ grammar, progress, onToggleLearned, onToggleFavorite }: Props) {
   const [showExamples, setShowExamples] = useState(true);
 
   const speakText = (text: string) => {
@@ -22,25 +25,55 @@ export default function GrammarCard({ grammar }: Props) {
 
   return (
     <div className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
-      <div className="flex items-start justify-between">
+      <div className="flex items-start justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <h3 className="text-lg font-bold text-indigo-700 font-mono">{grammar.structure}</h3>
+            <h3 className="text-base sm:text-lg font-bold text-indigo-700 font-mono">{grammar.structure}</h3>
             {grammar.level && (
               <span className="px-2 py-0.5 text-xs font-semibold rounded-md bg-purple-100 text-purple-700">
                 {grammar.level}
               </span>
             )}
           </div>
-          <p className="text-sm font-semibold text-gray-800 mt-1">{grammar.meaning}</p>
+          <p className="text-xs sm:text-sm font-semibold text-gray-800 mt-1">{grammar.meaning}</p>
         </div>
 
-        <button
-          onClick={() => setShowExamples(!showExamples)}
-          className="text-xs text-indigo-600 hover:text-indigo-800 font-medium px-3 py-1 bg-indigo-50 rounded-lg transition-colors"
-        >
-          {showExamples ? "Ẩn ví dụ" : "Hiện ví dụ"} ({grammar.examples.length})
-        </button>
+        <div className="flex items-center gap-1.5 shrink-0">
+          {onToggleFavorite && (
+            <button
+              onClick={() => onToggleFavorite(grammar.id)}
+              className={`w-7 h-7 flex items-center justify-center rounded-lg border text-sm transition-all ${
+                progress?.favorite
+                  ? "bg-yellow-50 border-yellow-300 text-yellow-500 shadow-3xs"
+                  : "bg-white border-gray-100 text-gray-300 hover:border-yellow-200 hover:text-yellow-400"
+              }`}
+              title="Yêu thích"
+            >
+              ★
+            </button>
+          )}
+
+          {onToggleLearned && (
+            <button
+              onClick={() => onToggleLearned(grammar.id)}
+              className={`w-7 h-7 flex items-center justify-center rounded-lg border text-xs font-bold transition-all ${
+                progress?.learned
+                  ? "bg-emerald-50 border-emerald-300 text-emerald-600 shadow-3xs"
+                  : "bg-white border-gray-100 text-gray-300 hover:border-emerald-200 hover:text-emerald-500"
+              }`}
+              title="Đã học"
+            >
+              ✓
+            </button>
+          )}
+
+          <button
+            onClick={() => setShowExamples(!showExamples)}
+            className="text-xs text-indigo-600 hover:text-indigo-800 font-medium px-2.5 py-1 bg-indigo-50 rounded-lg transition-colors"
+          >
+            {showExamples ? "Ẩn ví dụ" : "Hiện ví dụ"} ({grammar.examples.length})
+          </button>
+        </div>
       </div>
 
       {grammar.explanation && (

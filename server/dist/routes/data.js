@@ -58,18 +58,21 @@ router.get('/grammar-collections', auth_1.authenticate, async (req, res) => {
         res.status(500).json({ error: 'Failed to load grammar collections' });
     }
 });
-// Get progress data (vocabulary + grammar)
+// Get progress data (vocabulary + grammar + kanji)
 router.get('/progress', auth_1.authenticate, async (req, res) => {
     try {
         const vocabResult = await db_1.default.query(`SELECT data_value FROM user_data 
        WHERE user_id = $1 AND data_key = $2`, [req.userId, 'flashcash-progress']);
         const grammarResult = await db_1.default.query(`SELECT data_value FROM user_data 
        WHERE user_id = $1 AND data_key = $2`, [req.userId, 'flashcash-grammar-progress']);
+        const kanjiResult = await db_1.default.query(`SELECT data_value FROM user_data 
+       WHERE user_id = $1 AND data_key = $2`, [req.userId, 'flashcash-kanji-progress']);
         res.json({
             success: true,
             data: {
                 vocabulary: vocabResult.rows[0]?.data_value || {},
                 grammar: grammarResult.rows[0]?.data_value || {},
+                kanji: kanjiResult.rows[0]?.data_value || {},
             },
             timestamp: new Date().toISOString(),
         });

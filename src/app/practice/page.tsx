@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Link from "next/link";
 import { useNotebooks } from "@/hooks/useNotebooks";
 
@@ -82,6 +82,7 @@ const POPULAR_TOPICS = [
 
 export default function PracticeHubPage() {
   const { notebooks, addVocab, checkDuplicate } = useNotebooks();
+  const recognitionRef = useRef<any>(null);
 
   // Config states
   const [selectedType, setSelectedType] = useState<"shadowing" | "translation" | "reading" | "presentation">("shadowing");
@@ -199,12 +200,16 @@ export default function PracticeHubPage() {
       return;
     }
 
-    if (recognizingIndex === index) {
+    if (recognizingIndex !== null) {
+      if (recognitionRef.current) {
+        try { recognitionRef.current.stop(); } catch (e) {}
+      }
       setRecognizingIndex(null);
       return;
     }
 
     const recognition = new SpeechRecognition();
+    recognitionRef.current = recognition;
     recognition.lang = "ja-JP";
     recognition.interimResults = false;
 
@@ -214,6 +219,8 @@ export default function PracticeHubPage() {
     recognition.onresult = (event: any) => {
       const text = event.results[0][0].transcript;
       setRecognitionTranscript(text);
+      // Auto turn off / stop the mic UI immediately when speech is detected and transcribed
+      setRecognizingIndex(null);
     };
 
     recognition.onerror = () => {
@@ -237,12 +244,16 @@ export default function PracticeHubPage() {
       return;
     }
 
-    if (recognizingIndex === slideIdx) {
+    if (recognizingIndex !== null) {
+      if (recognitionRef.current) {
+        try { recognitionRef.current.stop(); } catch (e) {}
+      }
       setRecognizingIndex(null);
       return;
     }
 
     const recognition = new SpeechRecognition();
+    recognitionRef.current = recognition;
     recognition.lang = "ja-JP";
     recognition.interimResults = false;
 
@@ -264,6 +275,9 @@ export default function PracticeHubPage() {
           [slideIdx]: newText
         };
       });
+      
+      // Auto turn off / stop the mic UI immediately when speech is detected and transcribed
+      setRecognizingIndex(null);
     };
 
     recognition.onerror = (e: any) => {
@@ -398,9 +412,9 @@ export default function PracticeHubPage() {
               <div className="grid grid-cols-1 gap-2">
                 {[
                   { id: "shadowing", name: "🗣️ Shadowing JP", desc: "Luyện nghe nói đuổi" },
-                  { id: "translation", name: "✍️ Luyện dịch 2 chiều (4 câu)", desc: "Xen kẽ dịch Nhật-Việt & Việt-Nhật" },
+                  { id: "translation", name: "✍️ Luyện dịch 2 chiều", desc: "Xen kẽ dịch Nhật-Việt & Việt-Nhật" },
                   { id: "reading", name: "📚 Đọc hiểu JLPT N2", desc: "Đọc hiểu tiếng Nhật Furigana" },
-                  { id: "presentation", name: "🎤 Luyện thuyết trình (2 Slide)", desc: "Nói qua micro, AI sửa câu & chấm điểm" },
+                  { id: "presentation", name: "🎤 Luyện thuyết trình", desc: "Nói qua micro, AI sửa câu & chấm điểm" },
                 ].map((item) => (
                   <button
                     key={item.id}

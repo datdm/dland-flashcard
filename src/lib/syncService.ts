@@ -689,9 +689,9 @@ export async function loadGrammarCollectionsFromServer(): Promise<any[]> {
 }
 
 // Load progress data from server
-export async function loadProgressFromServer(): Promise<{ vocabulary: Record<string, any>; grammar: Record<string, any> }> {
+export async function loadProgressFromServer(): Promise<{ vocabulary: Record<string, any>; grammar: Record<string, any>; kanji?: Record<string, any> }> {
   const token = getAuthToken();
-  if (!token) return { vocabulary: {}, grammar: {} };
+  if (!token) return { vocabulary: {}, grammar: {}, kanji: {} };
 
   try {
     const response = await trackedFetch(`${API_URL}/api/data/progress`, {
@@ -700,10 +700,10 @@ export async function loadProgressFromServer(): Promise<{ vocabulary: Record<str
 
     if (!response.ok) throw new Error('Failed to load progress');
     const data = await response.json();
-    return data.data || { vocabulary: {}, grammar: {} };
+    return data.data || { vocabulary: {}, grammar: {}, kanji: {} };
   } catch (error) {
     console.error('Load progress error:', error);
-    return { vocabulary: {}, grammar: {} };
+    return { vocabulary: {}, grammar: {}, kanji: {} };
   }
 }
 

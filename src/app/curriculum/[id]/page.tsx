@@ -9,6 +9,9 @@ import VocabularyListItem from "@/components/VocabularyListItem";
 import GrammarCard from "@/components/GrammarCard";
 import KanjiStrokeViewer from "@/components/KanjiStrokeViewer";
 
+import { useGrammarProgress } from "@/hooks/useGrammarProgress";
+import { useKanjiProgress } from "@/hooks/useKanjiProgress";
+
 interface Props {
   params: Promise<{ id: string }>;
 }
@@ -19,6 +22,8 @@ export default function CurriculumLessonDetailPage({ params }: Props) {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<"vocab" | "grammar" | "kanji" | "shadowing" | "translation" | "reading">("vocab");
   const { getVocabProgress, toggleLearned, toggleFavorite } = useProgress();
+  const { getGrammarProgress, toggleLearned: toggleGrammarLearned, toggleFavorite: toggleGrammarFavorite } = useGrammarProgress();
+  const { getKanjiProgress, toggleLearned: toggleKanjiLearned, toggleFavorite: toggleKanjiFavorite } = useKanjiProgress();
 
   // AI-generated activities states
   const [activities, setActivities] = useState<{
@@ -226,6 +231,10 @@ export default function CurriculumLessonDetailPage({ params }: Props) {
   const grammarCount = lesson.grammarPoints?.length || 0;
   const kanjiCount = lesson.kanjiItems?.length || 0;
 
+  const learnedVocabCount = lesson.vocabulary ? lesson.vocabulary.filter(v => getVocabProgress(v.id).learned).length : 0;
+  const learnedGrammarCount = lesson.grammarPoints ? lesson.grammarPoints.filter(g => getGrammarProgress(g.id).learned).length : 0;
+  const learnedKanjiCount = lesson.kanjiItems ? lesson.kanjiItems.filter(k => getKanjiProgress(k.id).learned).length : 0;
+
   return (
     <div className="p-4 max-w-5xl mx-auto pb-24">
       {/* Back Link */}
@@ -274,38 +283,89 @@ export default function CurriculumLessonDetailPage({ params }: Props) {
           </div>
         </div>
 
-        {/* Content Tabs */}
-        <div className="flex border-b border-gray-100 mt-6 gap-6 overflow-x-auto no-scrollbar pb-1">
-          <button
-            onClick={() => setActiveTab("vocab")}
-            className={`pb-3 font-bold text-sm transition-colors border-b-2 whitespace-nowrap ${
-              activeTab === "vocab"
-                ? "border-indigo-600 text-indigo-600"
-                : "border-transparent text-gray-400 hover:text-gray-600"
-            }`}
-          >
-            📝 Từ vựng ({vocabCount})
-          </button>
-          <button
-            onClick={() => setActiveTab("grammar")}
-            className={`pb-3 font-bold text-sm transition-colors border-b-2 whitespace-nowrap ${
-              activeTab === "grammar"
-                ? "border-indigo-600 text-indigo-600"
-                : "border-transparent text-gray-400 hover:text-gray-600"
-            }`}
-          >
-            📖 Ngữ pháp ({grammarCount})
-          </button>
-          <button
-            onClick={() => setActiveTab("kanji")}
-            className={`pb-3 font-bold text-sm transition-colors border-b-2 whitespace-nowrap ${
-              activeTab === "kanji"
-                ? "border-indigo-600 text-indigo-600"
-                : "border-transparent text-gray-400 hover:text-gray-600"
-            }`}
-          >
-            🉐 Kanji ({kanjiCount})
-          </button>
+        {/* Lesson Progress Tracking Bar */}
+        <div className="bg-indigo-50/40 rounded-2xl p-4 border border-indigo-50/50 flex flex-col md:flex-row md:items-center justify-between gap-4 mt-5">
+          <div className="space-y-1">
+            <h4 className="text-xs font-extrabold text-indigo-900 flex items-center gap-1.5">
+              📈 TIẾN ĐỘ CHI TIẾT
+            </h4>
+            <p className="text-[11px] text-gray-500 font-medium">
+              Theo dõi tiến trình học từng từ vựng, ngữ pháp và chữ Hán
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-5 text-xs font-semibold">
+            {vocabCount > 0 && (
+              <div className="flex items-center gap-2">
+                <span className="text-gray-400">📝 Từ vựng:</span>
+                <span className="text-gray-800 font-bold bg-white px-2 py-0.5 rounded-lg border border-gray-100 shadow-3xs">
+                  {learnedVocabCount}/{vocabCount}
+                </span>
+                <span className="text-[10px] text-teal-600">
+                  ({Math.round((learnedVocabCount / vocabCount) * 100)}%)
+                </span>
+              </div>
+            )}
+
+            {grammarCount > 0 && (
+              <div className="flex items-center gap-2">
+                <span className="text-gray-400">📖 Ngữ pháp:</span>
+                <span className="text-gray-800 font-bold bg-white px-2 py-0.5 rounded-lg border border-gray-100 shadow-3xs">
+                  {learnedGrammarCount}/{grammarCount}
+                </span>
+                <span className="text-[10px] text-indigo-600">
+                  ({Math.round((learnedGrammarCount / grammarCount) * 100)}%)
+                </span>
+              </div>
+            )}
+
+            {kanjiCount > 0 && (
+              <div className="flex items-center gap-2">
+                <span className="text-gray-400">📚 Hán tự:</span>
+                <span className="text-gray-800 font-bold bg-white px-2 py-0.5 rounded-lg border border-gray-100 shadow-3xs">
+                  {learnedKanjiCount}/{kanjiCount}
+                </span>
+                <span className="text-[10px] text-purple-600">
+                  ({Math.round((learnedKanjiCount / kanjiCount) * 100)}%)
+                </span>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Content Tabs */}
+      <div className="flex border-b border-gray-100 mt-6 gap-6 overflow-x-auto no-scrollbar pb-1">
+        <button
+          onClick={() => setActiveTab("vocab")}
+          className={`pb-3 font-bold text-sm transition-colors border-b-2 whitespace-nowrap ${
+            activeTab === "vocab"
+              ? "border-indigo-600 text-indigo-600"
+              : "border-transparent text-gray-400 hover:text-gray-600"
+          }`}
+        >
+          📝 Từ vựng ({learnedVocabCount}/{vocabCount})
+        </button>
+        <button
+          onClick={() => setActiveTab("grammar")}
+          className={`pb-3 font-bold text-sm transition-colors border-b-2 whitespace-nowrap ${
+            activeTab === "grammar"
+              ? "border-indigo-600 text-indigo-600"
+              : "border-transparent text-gray-400 hover:text-gray-600"
+          }`}
+        >
+          📖 Ngữ pháp ({learnedGrammarCount}/{grammarCount})
+        </button>
+        <button
+          onClick={() => setActiveTab("kanji")}
+          className={`pb-3 font-bold text-sm transition-colors border-b-2 whitespace-nowrap ${
+            activeTab === "kanji"
+              ? "border-indigo-600 text-indigo-600"
+              : "border-transparent text-gray-400 hover:text-gray-600"
+          }`}
+        >
+          🉐 Kanji ({learnedKanjiCount}/{kanjiCount})
+        </button>
           <button
             onClick={() => setActiveTab("shadowing")}
             className={`pb-3 font-bold text-sm transition-colors border-b-2 whitespace-nowrap ${
@@ -337,7 +397,6 @@ export default function CurriculumLessonDetailPage({ params }: Props) {
             📚 Đọc hiểu
           </button>
         </div>
-      </div>
 
       {/* Tab Content */}
       {activeTab === "vocab" && (
@@ -364,7 +423,13 @@ export default function CurriculumLessonDetailPage({ params }: Props) {
             <div className="text-center py-12 text-gray-400">Không có mục ngữ pháp nào trong bài học này</div>
           ) : (
             lesson.grammarPoints?.map((grammar) => (
-              <GrammarCard key={grammar.id} grammar={grammar} />
+              <GrammarCard
+                key={grammar.id}
+                grammar={grammar}
+                progress={getGrammarProgress(grammar.id)}
+                onToggleLearned={toggleGrammarLearned}
+                onToggleFavorite={toggleGrammarFavorite}
+              />
             ))
           )}
         </div>
@@ -376,7 +441,13 @@ export default function CurriculumLessonDetailPage({ params }: Props) {
             <div className="text-center py-12 text-gray-400">Không có chữ Hán nào trong bài học này</div>
           ) : (
             lesson.kanjiItems?.map((kanji) => (
-              <KanjiStrokeViewer key={kanji.id} kanji={kanji} />
+              <KanjiStrokeViewer
+                key={kanji.id}
+                kanji={kanji}
+                progress={getKanjiProgress(kanji.id)}
+                onToggleLearned={toggleKanjiLearned}
+                onToggleFavorite={toggleKanjiFavorite}
+              />
             ))
           )}
         </div>
