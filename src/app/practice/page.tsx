@@ -200,27 +200,37 @@ export default function PracticeHubPage() {
       return;
     }
 
+    const wasSame = recognizingIndex === index;
     if (recognizingIndex !== null) {
       if (recognitionRef.current) {
         try { recognitionRef.current.stop(); } catch (e) {}
       }
       setRecognizingIndex(null);
-      return;
+      if (wasSame) return;
     }
 
     const recognition = new SpeechRecognition();
     recognitionRef.current = recognition;
     recognition.lang = "ja-JP";
+    recognition.continuous = true;
     recognition.interimResults = false;
 
     setRecognizingIndex(index);
     setRecognitionTranscript("Đang lắng nghe...");
 
     recognition.onresult = (event: any) => {
-      const text = event.results[0][0].transcript;
-      setRecognitionTranscript(text);
-      // Auto turn off / stop the mic UI immediately when speech is detected and transcribed
-      setRecognizingIndex(null);
+      let finalTranscript = "";
+      for (let i = event.resultIndex; i < event.results.length; ++i) {
+        if (event.results[i].isFinal) {
+          finalTranscript += event.results[i][0].transcript;
+        }
+      }
+      if (finalTranscript) {
+        setRecognitionTranscript((prev) => {
+          const currentText = prev === "Đang lắng nghe..." || prev === "Không nhận diện được. Thử lại!" ? "" : prev;
+          return currentText ? `${currentText} ${finalTranscript}` : finalTranscript;
+        });
+      }
     };
 
     recognition.onerror = () => {
@@ -244,17 +254,19 @@ export default function PracticeHubPage() {
       return;
     }
 
+    const wasSame = recognizingIndex === slideIdx;
     if (recognizingIndex !== null) {
       if (recognitionRef.current) {
         try { recognitionRef.current.stop(); } catch (e) {}
       }
       setRecognizingIndex(null);
-      return;
+      if (wasSame) return;
     }
 
     const recognition = new SpeechRecognition();
     recognitionRef.current = recognition;
     recognition.lang = "ja-JP";
+    recognition.continuous = true;
     recognition.interimResults = false;
 
     setRecognizingIndex(slideIdx);
@@ -266,18 +278,22 @@ export default function PracticeHubPage() {
     }));
 
     recognition.onresult = (event: any) => {
-      const text = event.results[0][0].transcript;
-      setPresentationTranscripts((prev) => {
-        const currentText = prev[slideIdx] === "Đang ghi âm giọng nói..." ? "" : prev[slideIdx];
-        const newText = currentText ? `${currentText} ${text}` : text;
-        return {
-          ...prev,
-          [slideIdx]: newText
-        };
-      });
-      
-      // Auto turn off / stop the mic UI immediately when speech is detected and transcribed
-      setRecognizingIndex(null);
+      let finalTranscript = "";
+      for (let i = event.resultIndex; i < event.results.length; ++i) {
+        if (event.results[i].isFinal) {
+          finalTranscript += event.results[i][0].transcript;
+        }
+      }
+      if (finalTranscript) {
+        setPresentationTranscripts((prev) => {
+          const currentText = prev[slideIdx] === "Đang ghi âm giọng nói..." ? "" : prev[slideIdx];
+          const newText = currentText ? `${currentText} ${finalTranscript}` : finalTranscript;
+          return {
+            ...prev,
+            [slideIdx]: newText
+          };
+        });
+      }
     };
 
     recognition.onerror = (e: any) => {
