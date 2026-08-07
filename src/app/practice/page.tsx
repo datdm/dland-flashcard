@@ -43,6 +43,35 @@ interface ReadingItem {
   }[];
 }
 
+interface SlideItem {
+  slide_number: number;
+  title: string;
+  title_vietnamese: string;
+  bullets: string[];
+  bullets_vietnamese: string[];
+}
+
+interface PresentationCorrection {
+  original: string;
+  corrected: string;
+  corrected_ruby: string;
+  reason: string;
+}
+
+interface PresentationExercise {
+  question: string;
+  options: string[];
+  correct_answer: string;
+  explanation: string;
+}
+
+interface PresentationEvaluation {
+  comprehensibility_score: number;
+  feedback_general: string;
+  corrections: PresentationCorrection[];
+  exercises: PresentationExercise[];
+}
+
 const POPULAR_TOPICS = [
   { id: "daily", name: "Sinh hoạt & Đời sống", icon: "🏡" },
   { id: "business", name: "Kinh doanh & Công sở", icon: "💼" },
@@ -55,7 +84,7 @@ export default function PracticeHubPage() {
   const { notebooks, addVocab, checkDuplicate } = useNotebooks();
 
   // Config states
-  const [selectedType, setSelectedType] = useState<"shadowing" | "translation" | "reading">("shadowing");
+  const [selectedType, setSelectedType] = useState<"shadowing" | "translation" | "reading" | "presentation">("shadowing");
   const [selectedTopic, setSelectedTopic] = useState("Sinh hoạt & Đời sống");
   const [customTopic, setCustomTopic] = useState("");
   const [generating, setGenerating] = useState(false);
@@ -65,6 +94,17 @@ export default function PracticeHubPage() {
   const [shadowingData, setShadowingData] = useState<ShadowingItem[]>([]);
   const [translationData, setTranslationData] = useState<TranslationItem[]>([]);
   const [readingData, setReadingData] = useState<ReadingItem | null>(null);
+  
+  // Presentation States
+  const [slides, setSlides] = useState<SlideItem[]>([]);
+  const [presentationTranscripts, setPresentationTranscripts] = useState<Record<number, string>>({ 0: "", 1: "" });
+  const [isEvaluating, setIsEvaluating] = useState(false);
+  const [evaluation, setEvaluation] = useState<PresentationEvaluation | null>(null);
+  const [isSecondCheck, setIsSecondCheck] = useState(false);
+  const [previousEvaluation, setPreviousEvaluation] = useState<PresentationEvaluation | null>(null);
+  const [exerciseAnswers, setExerciseAnswers] = useState<Record<number, string>>({});
+  const [exerciseChecked, setExerciseChecked] = useState(false);
+  const [activeSlideTab, setActiveSlideTab] = useState<number>(0);
 
   // Interaction states
   const [playbackRate, setPlaybackRate] = useState<number>(1.0);
@@ -91,6 +131,16 @@ export default function PracticeHubPage() {
     setTranslationInputs({});
     setShowPassageTranslation(false);
 
+    // Reset presentation states
+    setSlides([]);
+    setPresentationTranscripts({ 0: "", 1: "" });
+    setEvaluation(null);
+    setIsSecondCheck(false);
+    setPreviousEvaluation(null);
+    setExerciseAnswers({});
+    setExerciseChecked(false);
+    setActiveSlideTab(0);
+
     try {
       const res = await fetch("/api/practice/generate", {
         method: "POST",
@@ -98,7 +148,7 @@ export default function PracticeHubPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          type: selectedType,
+          type: selectedType === "presentation" ? "presentation_slides" : selectedType,
           topic: activeTopic,
           level: selectedType === "reading" ? "N2" : "N3", // N2 level reading by default, others N3
         }),
@@ -114,8 +164,10 @@ export default function PracticeHubPage() {
           setShadowingData(resData.data.shadowing || []);
         } else if (selectedType === "translation") {
           setTranslationData(resData.data.translation || []);
-        } else {
+        } else if (selectedType === "reading") {
           setReadingData(resData.data.reading || null);
+        } else if (selectedType === "presentation") {
+          setSlides(resData.data.slides || []);
         }
       } else {
         throw new Error(resData.error || "Không thể tạo bài tập. Thử lại sau!");
@@ -176,6 +228,114 @@ export default function PracticeHubPage() {
     recognition.start();
   };
 
+  // Speech recognition for Presentation Slides
+  const startPresentationMic = (slideIdx: number) => {
+    if (typeof window === "undefined") return;
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert("Trình duyệt không hỗ trợ micro nhận dạng giọng nói. Hãy dùng Chrome hoặc Edge.");
+      return;
+    }
+
+    if (recognizingIndex === slideIdx) {
+      setRecognizingIndex(null);
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.lang = "ja-JP";
+    recognition.interimResults = false;
+
+    setRecognizingIndex(slideIdx);
+    
+    // Set a placeholder while listening
+    setPresentationTranscripts((prev) => ({
+      ...prev,
+      [slideIdx]: (prev[slideIdx] || "") ? prev[slideIdx] : "Đang ghi âm giọng nói..."
+    }));
+
+    recognition.onresult = (event: any) => {
+      const text = event.results[0][0].transcript;
+      setPresentationTranscripts((prev) => {
+        const currentText = prev[slideIdx] === "Đang ghi âm giọng nói..." ? "" : prev[slideIdx];
+        const newText = currentText ? `${currentText} ${text}` : text;
+        return {
+          ...prev,
+          [slideIdx]: newText
+        };
+      });
+    };
+
+    recognition.onerror = (e: any) => {
+      console.error(e);
+      if (presentationTranscripts[slideIdx] === "Đang ghi âm giọng nói...") {
+        setPresentationTranscripts((prev) => ({
+          ...prev,
+          [slideIdx]: ""
+        }));
+      }
+      setRecognizingIndex(null);
+    };
+
+    recognition.onend = () => {
+      setRecognizingIndex(null);
+    };
+
+    recognition.start();
+  };
+
+  // Submit presentation to AI for evaluation
+  const handleEvaluatePresentation = async () => {
+    setIsEvaluating(true);
+    setError(null);
+    setExerciseAnswers({});
+    setExerciseChecked(false);
+
+    try {
+      const res = await fetch("/api/practice/presentation/evaluate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          topic: activeTopic,
+          slides: slides,
+          speechTranscripts: [presentationTranscripts[0] || "", presentationTranscripts[1] || ""],
+          isSecondCheck: isSecondCheck,
+          previousEvaluation: previousEvaluation
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Không thể kết nối với máy chủ AI. Vui lòng thử lại!");
+      }
+
+      const resData = await res.json();
+      if (resData.success && resData.data) {
+        setEvaluation(resData.data);
+        if (!isSecondCheck) {
+          setPreviousEvaluation(resData.data);
+        }
+      } else {
+        throw new Error(resData.error || "Không thể nhận xét bài thuyết trình. Thử lại sau!");
+      }
+    } catch (err: any) {
+      console.error(err);
+      setError(err.message || "Đã xảy ra lỗi khi đánh giá.");
+    } finally {
+      setIsEvaluating(false);
+    }
+  };
+
+  const handleRetakePresentation = () => {
+    setPresentationTranscripts({ 0: "", 1: "" });
+    setEvaluation(null);
+    setIsSecondCheck(true);
+    setExerciseAnswers({});
+    setExerciseChecked(false);
+    setActiveSlideTab(0);
+  };
+
   const handleAddToNotebook = async () => {
     if (!selectedWordForNotebook || !targetNotebookId) return;
 
@@ -219,7 +379,7 @@ export default function PracticeHubPage() {
             Trung Tâm Luyện Kỹ Năng Chuyên Sâu
           </h1>
           <p className="text-xs sm:text-sm text-teal-100 mt-2 leading-relaxed">
-            Luyện Shadowing phát âm chuẩn, dịch thuật 2 chiều phản xạ nhanh, và luyện đọc hiểu N2 học thuật với Furigana trực quan trên chữ Hán tự.
+            Luyện Shadowing phát âm chuẩn, dịch thuật 2 chiều phản xạ nhanh, và luyện thuyết trình slide nhờ AI chỉnh sửa lỗi sai ngữ pháp, gợi ý diễn đạt tự nhiên như người Nhật.
           </p>
         </div>
       </div>
@@ -238,8 +398,9 @@ export default function PracticeHubPage() {
               <div className="grid grid-cols-1 gap-2">
                 {[
                   { id: "shadowing", name: "🗣️ Shadowing JP", desc: "Luyện nghe nói đuổi" },
-                  { id: "translation", name: "✍️ Luyện dịch 2 chiều", desc: "Dịch Việt - Nhật phản xạ" },
-                  { id: "reading", name: "📚 Đọc hiểu JLPT N2", desc: "Đoạn văn dài có Furigana" },
+                  { id: "translation", name: "✍️ Luyện dịch 2 chiều (4 câu)", desc: "Xen kẽ dịch Nhật-Việt & Việt-Nhật" },
+                  { id: "reading", name: "📚 Đọc hiểu JLPT N2", desc: "Đọc hiểu tiếng Nhật Furigana" },
+                  { id: "presentation", name: "🎤 Luyện thuyết trình (2 Slide)", desc: "Nói qua micro, AI sửa câu & chấm điểm" },
                 ].map((item) => (
                   <button
                     key={item.id}
@@ -405,7 +566,7 @@ export default function PracticeHubPage() {
                 </div>
               )}
 
-              {/* TRANSLATION 2-WAY DISPLAY */}
+              {/* TRANSLATION 2-WAY DISPLAY (4 sentences) */}
               {selectedType === "translation" && translationData.length > 0 && (
                 <div className="space-y-4">
                   {translationData.map((item, idx) => {
@@ -620,8 +781,253 @@ export default function PracticeHubPage() {
                 </div>
               )}
 
+              {/* PRESENTATION TRAINING DISPLAY */}
+              {selectedType === "presentation" && slides.length > 0 && (
+                <div className="space-y-5">
+                  <div className="bg-white rounded-3xl p-5 border border-gray-100 shadow-2xs space-y-4">
+                    <div className="flex border-b border-gray-100 gap-4 overflow-x-auto pb-1">
+                      {slides.map((s, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => setActiveSlideTab(idx)}
+                          className={`pb-2.5 font-bold text-xs border-b-2 whitespace-nowrap transition-colors ${
+                            activeSlideTab === idx
+                              ? "border-teal-600 text-teal-600"
+                              : "border-transparent text-gray-400 hover:text-gray-600"
+                          }`}
+                        >
+                          📋 Slide {s.slide_number}
+                        </button>
+                      ))}
+                    </div>
+
+                    {/* Active Slide Bullet Points */}
+                    <div className="bg-gradient-to-br from-indigo-900 to-slate-900 text-white rounded-2xl p-5 shadow-inner min-h-[160px] flex flex-col justify-between">
+                      <div>
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="px-2 py-0.5 bg-teal-500 text-white text-[9px] font-bold rounded">
+                            Slide {slides[activeSlideTab].slide_number}
+                          </span>
+                          <span className="text-[10px] text-indigo-200">
+                            {slides[activeSlideTab].title_vietnamese}
+                          </span>
+                        </div>
+                        <h3 className="text-base font-extrabold text-teal-400">
+                          {slides[activeSlideTab].title}
+                        </h3>
+                        <ul className="mt-3.5 space-y-2 text-xs text-indigo-100 list-disc list-inside">
+                          {slides[activeSlideTab].bullets.map((bullet, bIdx) => (
+                            <li key={bIdx} className="leading-relaxed">
+                              <span className="font-bold text-white">{bullet}</span>
+                              <span className="block text-[10px] text-gray-400 pl-4 font-normal italic">
+                                ({slides[activeSlideTab].bullets_vietnamese[bIdx]})
+                              </span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+
+                    {/* Micro Recording for Active Slide */}
+                    <div className="bg-gray-50 p-4 rounded-2xl border border-gray-100 space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">
+                          Nói tiếng Nhật thuyết trình Slide {activeSlideTab + 1}:
+                        </span>
+                        <button
+                          onClick={() => startPresentationMic(activeSlideTab)}
+                          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all shadow-3xs ${
+                            recognizingIndex === activeSlideTab
+                              ? "bg-red-500 text-white animate-pulse"
+                              : "bg-teal-50 hover:bg-teal-100 text-teal-700 border border-teal-200"
+                          }`}
+                        >
+                          🎙️ {recognizingIndex === activeSlideTab ? "Đang lắng nghe..." : "Nhấn để Nói"}
+                        </button>
+                      </div>
+
+                      <textarea
+                        rows={3}
+                        value={presentationTranscripts[activeSlideTab] || ""}
+                        onChange={(e) =>
+                          setPresentationTranscripts((prev) => ({
+                            ...prev,
+                            [activeSlideTab]: e.target.value
+                          }))
+                        }
+                        placeholder="Hãy nhấp 'Nhấn để Nói' rồi nói bằng tiếng Nhật hoặc tự chỉnh sửa nhập bài thuyết trình tại đây..."
+                        className="w-full rounded-xl border border-gray-200 p-3 text-xs focus:outline-none focus:border-teal-500 bg-white"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Submission triggers evaluation */}
+                  <div className="flex justify-center pt-2">
+                    <button
+                      onClick={handleEvaluatePresentation}
+                      disabled={isEvaluating || (!presentationTranscripts[0] && !presentationTranscripts[1])}
+                      className="px-8 py-4 bg-gradient-to-r from-teal-600 to-indigo-600 hover:opacity-95 text-white font-bold rounded-2xl text-xs shadow-md shadow-teal-100 disabled:opacity-50"
+                    >
+                      {isEvaluating ? "🤖 AI Đang chấm điểm và phân tích câu..." : "🔍 Gửi AI nhận xét & Đánh giá"}
+                    </button>
+                  </div>
+
+                  {/* AI Presentation Feedback Evaluation */}
+                  {evaluation && (
+                    <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-2xs space-y-6">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-100 pb-4">
+                        <div>
+                          <span className="px-3.5 py-1 bg-teal-100 text-teal-800 text-[10px] font-bold rounded-full uppercase tracking-wider">
+                            Chấm điểm thuyết trình {isSecondCheck ? "(Lần 2)" : "(Lần 1)"}
+                          </span>
+                          <h3 className="font-extrabold text-gray-900 text-base mt-2">Kết quả đánh giá AI</h3>
+                        </div>
+
+                        {/* Score Circle */}
+                        <div className="flex items-center gap-3">
+                          <div className="text-right">
+                            <span className="text-[10px] text-gray-400 font-bold block">ĐỘ HIỂU ĐỐI VỚI</span>
+                            <span className="text-xs font-bold text-gray-800">Người Nhật Bản</span>
+                          </div>
+                          <div className="w-16 h-16 rounded-full bg-gradient-to-br from-teal-500 to-indigo-600 flex flex-col items-center justify-center text-white shadow-md">
+                            <span className="text-lg font-extrabold">{evaluation.comprehensibility_score}%</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* General feedback */}
+                      <div className="space-y-1.5">
+                        <h4 className="text-xs font-bold text-gray-900">📝 Nhận xét tổng quan:</h4>
+                        <p className="text-xs text-gray-600 leading-relaxed bg-gray-50 p-4 rounded-2xl border border-gray-100">
+                          {evaluation.feedback_general}
+                        </p>
+                      </div>
+
+                      {/* Corrections */}
+                      {evaluation.corrections && evaluation.corrections.length > 0 && (
+                        <div className="space-y-3">
+                          <h4 className="text-xs font-bold text-gray-900">✨ Chỉnh sửa & Tối ưu câu:</h4>
+                          <div className="space-y-3.5">
+                            {evaluation.corrections.map((corr, cIdx) => (
+                              <div key={cIdx} className="p-4 rounded-2xl border border-rose-100 bg-rose-50/20 space-y-2">
+                                <div className="text-xs text-rose-800 font-medium">
+                                  ❌ <span className="font-bold">Bạn nói:</span> "{corr.original}"
+                                </div>
+                                <div className="text-xs text-emerald-800 font-bold leading-loose flex items-baseline flex-wrap">
+                                  <span>✅ Sửa thành:</span>
+                                  <span 
+                                    className="ruby-box ml-1 inline-block"
+                                    dangerouslySetInnerHTML={{ __html: corr.corrected_ruby }}
+                                  />
+                                </div>
+                                <div className="text-[10px] text-gray-500 pl-4 border-l-2 border-indigo-200">
+                                  💡 {corr.reason}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* AI Generated Exercises */}
+                      {evaluation.exercises && evaluation.exercises.length > 0 && (
+                        <div className="space-y-4 border-t border-gray-100 pt-4">
+                          <div>
+                            <span className="px-2 py-0.5 bg-indigo-50 text-indigo-700 text-[9px] font-bold rounded uppercase">
+                              Bài tập thực hành
+                            </span>
+                            <h4 className="text-xs font-extrabold text-gray-900 mt-1">💪 Luyện tập khắc phục lỗi sai:</h4>
+                          </div>
+
+                          <div className="space-y-4">
+                            {evaluation.exercises.map((ex, exIdx) => {
+                              const selectedAns = exerciseAnswers[exIdx];
+                              const isCorrect = selectedAns === ex.correct_answer;
+
+                              return (
+                                <div key={exIdx} className="bg-gray-50/50 p-4 rounded-2xl border border-gray-100 space-y-3">
+                                  <div className="text-xs font-bold text-gray-900">
+                                    {exIdx + 1}. {ex.question}
+                                  </div>
+
+                                  <div className="grid grid-cols-1 gap-2">
+                                    {ex.options.map((option, oIdx) => {
+                                      let optStyle = "border-gray-200 bg-white text-gray-700";
+                                      if (selectedAns === option) {
+                                        optStyle = "border-teal-500 bg-teal-50 text-teal-800 font-bold ring-2 ring-teal-200";
+                                      }
+
+                                      if (exerciseChecked) {
+                                        if (option === ex.correct_answer) {
+                                          optStyle = "border-emerald-500 bg-emerald-50 text-emerald-800 font-bold";
+                                        } else if (selectedAns === option) {
+                                          optStyle = "border-red-500 bg-red-50 text-red-800 font-bold";
+                                        } else {
+                                          optStyle = "border-gray-100 bg-gray-50 text-gray-300 opacity-60";
+                                        }
+                                      }
+
+                                      return (
+                                        <button
+                                          key={oIdx}
+                                          disabled={exerciseChecked}
+                                          onClick={() =>
+                                            setExerciseAnswers((prev) => ({ ...prev, [exIdx]: option }))
+                                          }
+                                          className={`p-3 rounded-xl border text-left text-xs transition-all ${optStyle}`}
+                                        >
+                                          {option}
+                                        </button>
+                                      );
+                                    })}
+                                  </div>
+
+                                  {exerciseChecked && (
+                                    <div className="p-3 bg-emerald-50/50 rounded-xl border border-emerald-100 text-[10px] text-gray-700 leading-relaxed">
+                                      <span className={`font-bold ${isCorrect ? "text-emerald-700" : "text-red-600"} block mb-1`}>
+                                        {isCorrect ? "✓ Chính xác!" : "✕ Chưa chính xác"}
+                                      </span>
+                                      {ex.explanation}
+                                    </div>
+                                  )}
+                                </div>
+                              );
+                            })}
+                          </div>
+
+                          {!exerciseChecked && (
+                            <button
+                              onClick={() => setExerciseChecked(true)}
+                              disabled={Object.keys(exerciseAnswers).length < evaluation.exercises.length}
+                              className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white rounded-xl text-xs font-bold transition-all shadow-xs"
+                            >
+                              Nộp đáp án bài tập
+                            </button>
+                          )}
+                        </div>
+                      )}
+
+                      {/* Presentation Retake 2nd check trigger */}
+                      <div className="border-t border-gray-100 pt-4 flex flex-col sm:flex-row gap-3 justify-between items-center">
+                        <div className="text-[10px] text-gray-400 italic">
+                          {isSecondCheck 
+                            ? "Bạn đang xem đánh giá lần 2. Bạn có thể thuyết trình lại tiếp tục." 
+                            : "Hãy xem kỹ lỗi sai, thực hành bài tập và thuyết trình lần 2 để nâng điểm!"}
+                        </div>
+                        <button
+                          onClick={handleRetakePresentation}
+                          className="px-5 py-3 bg-teal-600 hover:bg-teal-700 text-white rounded-2xl font-bold text-xs shadow-md transition-colors whitespace-nowrap"
+                        >
+                          🎙️ Trình bày lại (Lần 2)
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
               {/* EMPTY VIEW STATE */}
-              {!shadowingData.length && !translationData.length && !readingData && (
+              {!shadowingData.length && !translationData.length && !readingData && !slides.length && (
                 <div className="bg-white rounded-3xl p-12 border border-gray-100 text-center text-gray-400 flex flex-col items-center justify-center gap-2">
                   <div className="text-4xl">🏆</div>
                   <h3 className="font-bold text-gray-900 text-sm mt-2">Chưa chọn nội dung học</h3>

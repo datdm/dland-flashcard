@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useProgress } from "@/hooks/useProgress";
 import { useGrammarProgress } from "@/hooks/useGrammarProgress";
 import { useCurriculums } from "@/hooks/useCurriculums";
@@ -19,6 +19,13 @@ interface TimelineItem {
   source: string;
 }
 
+interface CompletedLesson {
+  lessonId: string;
+  lessonName: string;
+  curriculumName: string;
+  completedAt: string;
+}
+
 export default function HistoryPage() {
   const { progress } = useProgress();
   const { progress: grammarProgress } = useGrammarProgress();
@@ -26,6 +33,17 @@ export default function HistoryPage() {
   const { notebooks } = useNotebooks();
   const { collections: grammarCollections } = useGrammarCollections();
   const streak = useStreak();
+
+  const [completedLessons, setCompletedLessons] = useState<CompletedLesson[]>([]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const stored = localStorage.getItem("flashcash-curriculum-history");
+      if (stored) {
+        setCompletedLessons(JSON.parse(stored));
+      }
+    }
+  }, []);
 
   // 1. Build lookup tables for vocabulary and grammar
   const vocabLookup = useMemo(() => {
@@ -310,6 +328,47 @@ export default function HistoryPage() {
             </div>
           )}
         </div>
+      </div>
+
+      {/* Completed Curriculum Lessons */}
+      <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-2xs mb-6">
+        <h2 className="text-base font-bold text-gray-900 mb-4 flex items-center gap-2">
+          <span>🎓</span> Bài học giáo trình đã hoàn thành ({completedLessons.length})
+        </h2>
+        {completedLessons.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-8 text-center text-gray-400">
+            <span className="text-3xl mb-2">📖</span>
+            <p className="text-xs font-semibold">Chưa có bài học nào được đánh dấu hoàn thành.</p>
+            <p className="text-[10px] text-gray-400 mt-0.5">Vào lộ trình bài học và nhấn "Đánh dấu hoàn thành" khi học xong!</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {completedLessons.map((item, idx) => {
+              const dateStr = new Date(item.completedAt).toLocaleDateString("vi-VN", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit"
+              });
+              return (
+                <div key={idx} className="p-4 rounded-2xl bg-emerald-50/30 border border-emerald-100 flex items-center justify-between shadow-3xs">
+                  <div>
+                    <h4 className="font-bold text-sm text-gray-800">{item.lessonName}</h4>
+                    <p className="text-[10px] text-emerald-700 font-semibold mt-0.5">{item.curriculumName}</p>
+                    <p className="text-[9px] text-gray-400 mt-1">✓ Hoàn thành lúc: {dateStr}</p>
+                  </div>
+                  <Link
+                    href={`/curriculum/${item.lessonId}`}
+                    className="text-xs text-indigo-600 font-semibold hover:underline bg-white px-3 py-1.5 rounded-xl border border-gray-100 shadow-3xs"
+                  >
+                    Xem lại →
+                  </Link>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
 
       {/* Activity Timeline */}

@@ -36,6 +36,36 @@ export default function CurriculumLessonDetailPage({ params }: Props) {
   const [translationInputs, setTranslationInputs] = useState<Record<string, string>>({});
   const [showAnswers, setShowAnswers] = useState<Record<string, boolean>>({});
   const [selectedOptions, setSelectedOptions] = useState<Record<string, string>>({});
+  const [isCompleted, setIsCompleted] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && lesson) {
+      const stored = localStorage.getItem("flashcash-curriculum-history");
+      const list = stored ? JSON.parse(stored) : [];
+      setIsCompleted(list.some((item: any) => item.lessonId === lesson.id));
+    }
+  }, [lesson]);
+
+  const handleToggleComplete = () => {
+    if (!lesson) return;
+    const stored = localStorage.getItem("flashcash-curriculum-history");
+    let list = stored ? JSON.parse(stored) : [];
+    const exists = list.some((item: any) => item.lessonId === lesson.id);
+
+    if (exists) {
+      list = list.filter((item: any) => item.lessonId !== lesson.id);
+      setIsCompleted(false);
+    } else {
+      list.push({
+        lessonId: lesson.id,
+        lessonName: lesson.name,
+        curriculumName: lesson.curriculum || "Giáo trình",
+        completedAt: new Date().toISOString()
+      });
+      setIsCompleted(true);
+    }
+    localStorage.setItem("flashcash-curriculum-history", JSON.stringify(list));
+  };
 
   useEffect(() => {
     async function loadLesson() {
@@ -223,12 +253,25 @@ export default function CurriculumLessonDetailPage({ params }: Props) {
             )}
           </div>
 
-          <Link
-            href={`/flashcard/lesson/${lesson.id}`}
-            className="px-5 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold rounded-2xl shadow-md shadow-indigo-200 hover:opacity-95 transition-opacity text-center flex items-center justify-center gap-2"
-          >
-            <span>🎴 Flashcard Ôn tập</span>
-          </Link>
+          <div className="flex gap-2 flex-col sm:flex-row shrink-0">
+            <button
+              onClick={handleToggleComplete}
+              className={`px-5 py-3 font-bold rounded-2xl border transition-all text-xs flex items-center justify-center gap-1.5 ${
+                isCompleted
+                  ? "bg-emerald-50 border-emerald-300 text-emerald-700 hover:bg-emerald-100"
+                  : "bg-white border-gray-200 text-gray-700 hover:bg-gray-50"
+              }`}
+            >
+              <span>{isCompleted ? "✅ Đã học xong" : "⭕ Đánh dấu hoàn thành"}</span>
+            </button>
+
+            <Link
+              href={`/flashcard/lesson/${lesson.id}`}
+              className="px-5 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold rounded-2xl shadow-md shadow-indigo-200 hover:opacity-95 transition-opacity text-center flex items-center justify-center gap-2 text-xs"
+            >
+              <span>🎴 Flashcard Ôn tập</span>
+            </Link>
+          </div>
         </div>
 
         {/* Content Tabs */}
