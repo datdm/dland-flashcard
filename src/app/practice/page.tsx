@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useNotebooks } from "@/hooks/useNotebooks";
 
@@ -121,6 +121,21 @@ export default function PracticeHubPage() {
   const [targetNotebookId, setTargetNotebookId] = useState<string>("");
   const [duplicateError, setDuplicateError] = useState<string | null>(null);
   const [saveSuccessMsg, setSaveSuccessMsg] = useState<string | null>(null);
+  const [modalKanji, setModalKanji] = useState("");
+  const [modalHiragana, setModalHiragana] = useState("");
+  const [modalMeaning, setModalMeaning] = useState("");
+
+  useEffect(() => {
+    if (selectedWordForNotebook) {
+      setModalKanji(selectedWordForNotebook.kanji || "");
+      setModalHiragana(selectedWordForNotebook.hiragana || "");
+      setModalMeaning(selectedWordForNotebook.meaning || "");
+    } else {
+      setModalKanji("");
+      setModalHiragana("");
+      setModalMeaning("");
+    }
+  }, [selectedWordForNotebook]);
 
   const activeTopic = customTopic.trim() || selectedTopic;
 
@@ -369,19 +384,31 @@ export default function PracticeHubPage() {
   const handleAddToNotebook = async () => {
     if (!selectedWordForNotebook || !targetNotebookId) return;
 
+    const kanjiVal = modalKanji.trim();
+    const hiraganaVal = modalHiragana.trim();
+    const meaningVal = modalMeaning.trim();
+
+    if (!kanjiVal && !hiraganaVal) {
+      setDuplicateError("Vui lòng nhập chữ Hán (Kanji) hoặc cách đọc (Hiragana)");
+      return;
+    }
+
+    if (!meaningVal) {
+      setDuplicateError("Vui lòng nhập ý nghĩa của từ");
+      return;
+    }
+
     // Check duplicate
-    if (selectedWordForNotebook.kanji && selectedWordForNotebook.hiragana) {
-      const duplicates = checkDuplicate(targetNotebookId, selectedWordForNotebook.kanji, selectedWordForNotebook.hiragana);
-      if (duplicates && duplicates.length > 0) {
-        setDuplicateError("Từ này đã có trong sổ tay");
-        return;
-      }
+    const duplicates = checkDuplicate(targetNotebookId, kanjiVal || undefined, hiraganaVal || undefined);
+    if (duplicates && duplicates.length > 0) {
+      setDuplicateError("Từ này đã có trong sổ tay");
+      return;
     }
 
     const vocab = await addVocab(targetNotebookId, {
-      kanji: selectedWordForNotebook.kanji || "",
-      hiragana: selectedWordForNotebook.hiragana || "",
-      meaning: selectedWordForNotebook.meaning || "",
+      kanji: kanjiVal,
+      hiragana: hiraganaVal,
+      meaning: meaningVal,
       onyomi: "",
       phonetic: ""
     });
@@ -390,11 +417,50 @@ export default function PracticeHubPage() {
       setSelectedWordForNotebook(null);
       setTargetNotebookId("");
       setDuplicateError(null);
-      setSaveSuccessMsg(`Đã thêm thành công "${selectedWordForNotebook.kanji || selectedWordForNotebook.hiragana}" vào sổ tay!`);
+      setSaveSuccessMsg(`Đã thêm thành công "${kanjiVal || hiraganaVal}" vào sổ tay!`);
       setTimeout(() => {
         setSaveSuccessMsg(null);
       }, 2000);
     }
+  };
+
+  const handlePassageClick = (e: React.MouseEvent) => {
+    const target = e.target as HTMLElement;
+    const rubyElement = target.closest("ruby");
+    if (!rubyElement) return;
+
+    // Clone ruby element to strip <rt> tags and get the clean kanji text
+    const clone = rubyElement.cloneNode(true) as HTMLElement;
+    const rts = clone.querySelectorAll("rt");
+    rts.forEach((rt) => rt.remove());
+    const kanji = clone.textContent?.trim() || "";
+
+    // Get the hiragana/furigana text from <rt> tag
+    const rtElement = rubyElement.querySelector("rt");
+    const hiragana = rtElement?.textContent?.trim() || "";
+
+    if (!kanji && !hiragana) return;
+
+    // Search in readingData.vocabulary for a matching item
+    let meaning = "";
+    if (readingData && readingData.vocabulary) {
+      const match = readingData.vocabulary.find(
+        (v: any) =>
+          (kanji && v.kanji === kanji) ||
+          (hiragana && v.hiragana === hiragana)
+      );
+      if (match) {
+        meaning = match.meaning || "";
+      }
+    }
+
+    // Open the notebook modal with this word
+    setSelectedWordForNotebook({
+      kanji,
+      hiragana,
+      meaning
+    });
+    setDuplicateError(null);
   };
 
   return (
@@ -718,6 +784,7 @@ export default function PracticeHubPage() {
                     <div 
                       className="whitespace-pre-line text-gray-900 leading-loose ruby-box"
                       dangerouslySetInnerHTML={{ __html: readingData.passage_ruby }}
+                      onClick={handlePassageClick}
                     />
 
                     {/* Passage Vietnamese Translation Toggle */}
@@ -1076,9 +1143,40 @@ export default function PracticeHubPage() {
         <div className="fixed inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-3xl shadow-xl p-6 w-full max-w-sm">
             <h3 className="font-bold text-base text-gray-900 mb-2">Thêm từ vào Sổ tay</h3>
-            <p className="text-xs text-gray-500 mb-4">
-              Từ: <span className="font-bold text-indigo-600">{selectedWordForNotebook.kanji || selectedWordForNotebook.hiragana}</span> ({selectedWordForNotebook.meaning})
-            </p>
+            <div className="space-y-3 mb-4">
+              <div>
+                <label className="block text-[10px] uppercase font-bold text-gray-400 mb-1">Chữ Hán (Kanji):</label>
+                <input
+                  type="text"
+                  value={modalKanji}
+                  onChange={(e) => setModalKanji(e.target.value)}
+                  placeholder="Ví dụ: 勉強"
+                  className="w-full text-xs border border-gray-200 rounded-xl px-3 py-2 focus:outline-none focus:border-indigo-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[10px] uppercase font-bold text-gray-400 mb-1">Cách đọc (Hiragana/Katakana):</label>
+                <input
+                  type="text"
+                  value={modalHiragana}
+                  onChange={(e) => setModalHiragana(e.target.value)}
+                  placeholder="Ví dụ: べんきょう"
+                  className="w-full text-xs border border-gray-200 rounded-xl px-3 py-2 focus:outline-none focus:border-indigo-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[10px] uppercase font-bold text-gray-400 mb-1">Ý nghĩa (Meaning):</label>
+                <input
+                  type="text"
+                  value={modalMeaning}
+                  onChange={(e) => setModalMeaning(e.target.value)}
+                  placeholder="Ví dụ: Học tập"
+                  className="w-full text-xs border border-gray-200 rounded-xl px-3 py-2 focus:outline-none focus:border-indigo-500"
+                />
+              </div>
+            </div>
 
             {duplicateError && (
               <div className="mb-4 rounded-2xl border border-red-200 bg-red-50 p-3 text-xs font-semibold text-red-600">
@@ -1134,6 +1232,13 @@ export default function PracticeHubPage() {
         .ruby-box ruby {
           ruby-position: over;
           margin: 0 0.05em;
+          cursor: pointer;
+          transition: background-color 0.2s ease;
+          border-radius: 4px;
+          padding: 1px 2px;
+        }
+        .ruby-box ruby:hover {
+          background-color: rgba(79, 70, 229, 0.15);
         }
         .ruby-box rt {
           font-size: 0.55em;

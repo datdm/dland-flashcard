@@ -243,12 +243,23 @@ export default function HistoryPage() {
       {/* Grid Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
         <div className="bg-white rounded-3xl p-5 border border-gray-100 shadow-2xs flex flex-col justify-between">
-          <div className="text-gray-400 text-xs font-semibold uppercase tracking-wider">Từ vựng đã thuộc</div>
-          <div className="flex items-baseline gap-2 mt-2">
-            <span className="text-3xl font-extrabold text-indigo-600">{totalVocabLearned}</span>
-            <span className="text-gray-400 text-xs font-medium">từ vựng</span>
+          <div>
+            <div className="text-gray-400 text-xs font-semibold uppercase tracking-wider">Từ vựng đã thuộc</div>
+            <div className="flex items-baseline gap-2 mt-2">
+              <span className="text-3xl font-extrabold text-indigo-600">{totalVocabLearned}</span>
+              <span className="text-gray-400 text-xs font-medium">từ vựng</span>
+            </div>
           </div>
-          <div className="text-[10px] text-gray-400 mt-2">Được lưu trên thiết bị của bạn</div>
+          {totalVocabLearned > 0 ? (
+            <Link
+              href="/flashcard/learned"
+              className="mt-3.5 w-full text-center px-4 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold rounded-xl transition-colors text-xs flex items-center justify-center gap-1.5 shadow-3xs"
+            >
+              🎴 Ôn tập Flashcard
+            </Link>
+          ) : (
+            <div className="text-[10px] text-gray-400 mt-2">Được lưu trên thiết bị của bạn</div>
+          )}
         </div>
 
         <div className="bg-white rounded-3xl p-5 border border-gray-100 shadow-2xs flex flex-col justify-between">
