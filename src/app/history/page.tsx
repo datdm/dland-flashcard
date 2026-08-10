@@ -35,6 +35,7 @@ export default function HistoryPage() {
   const streak = useStreak();
 
   const [completedLessons, setCompletedLessons] = useState<CompletedLesson[]>([]);
+  const [timeFilter, setTimeFilter] = useState<"all" | "1day" | "3days" | "1month" | "3months" | "1year" | "thisYear" | number>("all");
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -191,13 +192,48 @@ export default function HistoryPage() {
     return items.sort((a, b) => new Date(b.learnedAt).getTime() - new Date(a.learnedAt).getTime());
   }, [progress, grammarProgress, vocabLookup, grammarLookup]);
 
+  // Extract all unique years present in the study history
+  const availableYears = useMemo(() => {
+    const years = new Set<number>();
+    timelineItems.forEach((item) => {
+      const yr = new Date(item.learnedAt).getFullYear();
+      if (!isNaN(yr)) years.add(yr);
+    });
+    return Array.from(years).sort((a, b) => b - a);
+  }, [timelineItems]);
+
+  // Filter timeline items based on the active timeFilter
+  const filteredTimelineItems = useMemo(() => {
+    const now = Date.now();
+    const oneDayMs = 24 * 60 * 60 * 1000;
+    
+    return timelineItems.filter((item) => {
+      const learnedTime = new Date(item.learnedAt).getTime();
+      const learnedDateObj = new Date(item.learnedAt);
+      
+      if (timeFilter === "all") return true;
+      if (timeFilter === "1day") return (now - learnedTime) <= oneDayMs;
+      if (timeFilter === "3days") return (now - learnedTime) <= 3 * oneDayMs;
+      if (timeFilter === "1month") return (now - learnedTime) <= 30 * oneDayMs;
+      if (timeFilter === "3months") return (now - learnedTime) <= 90 * oneDayMs;
+      if (timeFilter === "1year") return (now - learnedTime) <= 365 * oneDayMs;
+      if (timeFilter === "thisYear") {
+        return learnedDateObj.getFullYear() === new Date().getFullYear();
+      }
+      if (typeof timeFilter === "number") {
+        return learnedDateObj.getFullYear() === timeFilter;
+      }
+      return true;
+    });
+  }, [timelineItems, timeFilter]);
+
   // Group timeline by date (e.g. "Hôm nay", "Hôm qua", "DD/MM/YYYY")
   const groupedTimeline = useMemo(() => {
     const groups: { [key: string]: TimelineItem[] } = {};
     const today = new Date().toDateString();
     const yesterday = new Date(Date.now() - 86400000).toDateString();
 
-    timelineItems.forEach((item) => {
+    filteredTimelineItems.forEach((item) => {
       const dateObj = new Date(item.learnedAt);
       const dateStr = dateObj.toDateString();
       let label = "";
@@ -221,7 +257,7 @@ export default function HistoryPage() {
     });
 
     return Object.entries(groups);
-  }, [timelineItems]);
+  }, [filteredTimelineItems]);
 
   return (
     <div className="p-4 max-w-4xl mx-auto min-h-screen pb-24">
@@ -384,9 +420,63 @@ export default function HistoryPage() {
 
       {/* Activity Timeline */}
       <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-2xs">
-        <h2 className="text-base font-bold text-gray-900 mb-6 flex items-center gap-2">
-          <span>⏱️</span> Nhật ký hoạt động gần đây
-        </h2>
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+          <h2 className="text-base font-bold text-gray-900 flex items-center gap-2">
+            <span>⏱️</span> Nhật ký hoạt động gần đây
+          </h2>
+
+          {/* Time Filter Controls */}
+          <div className="flex flex-wrap gap-1.5 items-center">
+            {[
+              { id: "all", label: "Tất cả" },
+              { id: "1day", label: "1 ngày" },
+              { id: "3days", label: "3 ngày" },
+              { id: "1month", label: "1 tháng" },
+              { id: "3months", label: "3 tháng" },
+              { id: "1year", label: "1 năm" },
+              { id: "thisYear", label: "Năm nay" },
+            ].map((f) => (
+              <button
+                key={f.id}
+                onClick={() => setTimeFilter(f.id as any)}
+                className={`px-2.5 py-1 rounded-xl text-[10px] font-bold transition-all border ${
+                  timeFilter === f.id
+                    ? "bg-indigo-600 text-white border-indigo-600 shadow-3xs"
+                    : "bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100"
+                }`}
+              >
+                {f.label}
+              </button>
+            ))}
+
+            {/* Year Dropdown */}
+            {availableYears.length > 0 && (
+              <select
+                value={typeof timeFilter === "number" ? timeFilter : ""}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  if (val) {
+                    setTimeFilter(parseInt(val));
+                  } else {
+                    setTimeFilter("all");
+                  }
+                }}
+                className={`px-2.5 py-1.5 rounded-xl text-[10px] font-bold transition-all border outline-none cursor-pointer ${
+                  typeof timeFilter === "number"
+                    ? "bg-indigo-600 text-white border-indigo-600 shadow-3xs"
+                    : "bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100"
+                }`}
+              >
+                <option value="" className="text-gray-700 bg-white">Theo năm</option>
+                {availableYears.map((yr) => (
+                  <option key={yr} value={yr} className="text-gray-700 bg-white">
+                    Năm {yr}
+                  </option>
+                ))}
+              </select>
+            )}
+          </div>
+        </div>
 
         {groupedTimeline.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-10 text-center">

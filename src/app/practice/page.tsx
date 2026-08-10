@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useNotebooks } from "@/hooks/useNotebooks";
+import { searchJapaneseDictionary } from "@/lib/services/dictionaryService";
 
 interface ShadowingItem {
   id: string;
@@ -124,16 +125,47 @@ export default function PracticeHubPage() {
   const [modalKanji, setModalKanji] = useState("");
   const [modalHiragana, setModalHiragana] = useState("");
   const [modalMeaning, setModalMeaning] = useState("");
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [searchLoading, setSearchLoading] = useState(false);
 
   useEffect(() => {
     if (selectedWordForNotebook) {
       setModalKanji(selectedWordForNotebook.kanji || "");
       setModalHiragana(selectedWordForNotebook.hiragana || "");
       setModalMeaning(selectedWordForNotebook.meaning || "");
+      
+      const triggerSearch = async () => {
+        setSearchLoading(true);
+        setSearchResults([]);
+        try {
+          const query = selectedWordForNotebook.kanji || selectedWordForNotebook.hiragana;
+          if (query) {
+            const dictResults = await searchJapaneseDictionary(query);
+            setSearchResults(dictResults);
+            // If we have search results and meaning is empty, auto-populate with the first result
+            if (dictResults.length > 0 && !selectedWordForNotebook.meaning) {
+              setModalMeaning(dictResults[0].meaning);
+              if (dictResults[0].kanji) {
+                setModalKanji(dictResults[0].kanji);
+              }
+              if (dictResults[0].hiragana) {
+                setModalHiragana(dictResults[0].hiragana);
+              }
+            }
+          }
+        } catch (err) {
+          console.error("Error searching dictionary in modal:", err);
+        } finally {
+          setSearchLoading(false);
+        }
+      };
+      triggerSearch();
     } else {
       setModalKanji("");
       setModalHiragana("");
       setModalMeaning("");
+      setSearchResults([]);
+      setSearchLoading(false);
     }
   }, [selectedWordForNotebook]);
 
@@ -1176,6 +1208,54 @@ export default function PracticeHubPage() {
                   className="w-full text-xs border border-gray-200 rounded-xl px-3 py-2 focus:outline-none focus:border-indigo-500"
                 />
               </div>
+            </div>
+
+            {/* Search results like Mazii */}
+            <div className="mb-4 pt-3 border-t border-gray-100">
+              <span className="block text-[10px] uppercase font-bold text-gray-400 mb-2">
+                Kết quả tra cứu từ điển (Mazii / Jisho):
+              </span>
+
+              {searchLoading ? (
+                <div className="flex items-center justify-center py-4 gap-2 text-xs text-gray-500 font-medium animate-pulse">
+                  <span className="w-3.5 h-3.5 rounded-full border-2 border-indigo-500 border-t-transparent animate-spin"></span>
+                  Đang tra từ điển...
+                </div>
+              ) : searchResults.length > 0 ? (
+                <div className="max-h-36 overflow-y-auto space-y-2 pr-1 no-scrollbar mb-2">
+                  {searchResults.slice(0, 5).map((res, rIdx) => (
+                    <button
+                      key={rIdx}
+                      type="button"
+                      onClick={() => {
+                        setModalKanji(res.kanji || "");
+                        setModalHiragana(res.hiragana || "");
+                        setModalMeaning(res.meaning || "");
+                      }}
+                      className="w-full text-left p-2 rounded-xl bg-gray-50 hover:bg-indigo-50/50 hover:border-indigo-200 border border-transparent transition-all flex flex-col gap-0.5"
+                    >
+                      <div className="flex items-baseline gap-1.5 flex-wrap">
+                        <span className="text-xs font-bold text-gray-900">{res.kanji || res.hiragana}</span>
+                        {res.kanji && res.hiragana && res.kanji !== res.hiragana && (
+                          <span className="text-[10px] text-indigo-600 font-semibold font-mono">({res.hiragana})</span>
+                        )}
+                        {res.level && (
+                          <span className="px-1 py-0.2 bg-purple-50 text-purple-700 text-[8px] font-bold rounded">
+                            {res.level}
+                          </span>
+                        )}
+                      </div>
+                      <div className="text-[10px] text-gray-600 font-medium line-clamp-2">
+                        {res.meaning}
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-[10px] text-gray-400 italic text-center py-2 mb-2">
+                  Không tìm thấy nghĩa trong từ điển. Bạn tự nhập nghĩa nhé!
+                </div>
+              )}
             </div>
 
             {duplicateError && (
