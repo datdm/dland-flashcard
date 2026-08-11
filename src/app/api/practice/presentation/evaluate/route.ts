@@ -13,10 +13,17 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const { topic, slides, speechTranscripts, isSecondCheck, previousEvaluation } = await req.json();
+    const { topic, slides, speechTranscripts, isSecondCheck, previousEvaluation, lang = "ja" } = await req.json();
 
-    const prompt = `Bạn là một chuyên gia đào tạo thuyết trình tiếng Nhật chuyên nghiệp.
-Bối cảnh: Học viên vừa thực hiện thuyết trình 2 slide về chủ đề "${topic}".
+    const targetLangName = lang === "de" ? "tiếng Đức" : lang === "en" ? "tiếng Anh" : "tiếng Nhật";
+    const nativeSpeakerDesc = lang === "de" ? "người bản xứ nói tiếng Đức (Đức/Áo/Thụy Sĩ)" : lang === "en" ? "người bản xứ nói tiếng Anh" : "người bản xứ Nhật Bản";
+
+    const rubyNote = lang === "ja"
+      ? `"corrected_ruby": "câu đã được chỉnh sửa tương ứng nhưng bọc thẻ <ruby> và <rt> để hiển thị Furigana, ví dụ: <ruby>発表<rt>はっぴょう</rt></ruby>いたします...",`
+      : `"corrected_ruby": "câu tương tự trường corrected (không dùng thẻ ruby vì đây là ${targetLangName})",`;
+
+    const prompt = `Bạn là một chuyên gia đào tạo thuyết trình ${targetLangName} chuyên nghiệp.
+Bối cảnh: Học viên vừa thực hiện thuyết trình 2 slide về chủ đề "${topic}" bằng ${targetLangName}.
 
 Thông tin 2 Slide đã chuẩn bị:
 Slide 1:
@@ -42,18 +49,18 @@ Hãy so sánh nội dung nói lần này với lần trước để thấy đư�
 Hãy đánh giá bài thuyết trình và trả về kết quả dưới dạng JSON duy nhất khớp chính xác với định dạng sau (không bọc trong markdown block, không có ký tự thừa):
 {
   "comprehensibility_score": 85,
-  "feedback_general": "Nhận xét tổng quát bằng tiếng Việt về khả năng phát âm, ngữ pháp, độ trôi chảy và mức độ dễ hiểu đối với người bản xứ Nhật Bản.",
+  "feedback_general": "Nhận xét tổng quát bằng tiếng Việt về khả năng phát âm, ngữ pháp, độ trôi chảy và mức độ dễ hiểu đối với ${nativeSpeakerDesc}.",
   "corrections": [
     {
-      "original": "câu gốc tiếng Nhật chứa lỗi sai của học viên",
-      "corrected": "câu đã được chỉnh sửa chuẩn xác, tự nhiên theo văn phong thuyết trình tiếng Nhật",
-      "corrected_ruby": "câu đã được chỉnh sửa tương ứng nhưng bọc thẻ <ruby> và <rt> để hiển thị Furigana, ví dụ: <ruby>発表<rt>はっぴょう</rt></ruby>いたします...",
-      "reason": "Giải thích chi tiết lỗi sai (ngữ pháp, từ vựng, kính ngữ...) bằng tiếng Việt"
+      "original": "câu gốc ${targetLangName} chứa lỗi sai của học viên",
+      "corrected": "câu đã được chỉnh sửa chuẩn xác, tự nhiên theo văn phong thuyết trình ${targetLangName}",
+      ${rubyNote}
+      "reason": "Giải thích chi tiết lỗi sai (ngữ pháp, từ vựng, cách dùng...) bằng tiếng Việt"
     }
   ],
   "exercises": [
     {
-      "question": "Câu hỏi trắc nghiệm tiếng Việt hoặc điền từ tiếng Nhật giúp ôn tập lại chính lỗi sai ngữ pháp/từ vựng học viên vừa mắc phải",
+      "question": "Câu hỏi trắc nghiệm tiếng Việt hoặc điền từ ${targetLangName} giúp ôn tập lại chính lỗi sai ngữ pháp/từ vựng học viên vừa mắc phải",
       "options": [
         "Đáp án A",
         "Đáp án B",

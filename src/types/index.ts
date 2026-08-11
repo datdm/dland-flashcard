@@ -41,6 +41,7 @@ export interface Notebook {
   name: string;
   createdAt: string;
   vocabulary: Vocabulary[];
+  lang?: string;
 }
 
 export interface NotebooksData {

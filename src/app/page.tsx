@@ -18,7 +18,17 @@ export default function HomePage() {
     initializeSampleData();
   }, []);
 
-  const LEVEL_CARDS = [
+  const LEVEL_CARDS = activeLanguage.code === "de" ? [
+    { level: "A1", title: "Goethe A1", desc: "Từ vựng Sơ cấp A1, Quán từ Der/Die/Das, Chia động từ hiện tại", color: "from-emerald-500 to-teal-600" },
+    { level: "A2", title: "Goethe A2", desc: "Từ vựng A2, Mệnh đề phụ weil/dass, Động từ tình thái quá khứ", color: "from-blue-500 to-indigo-600" },
+    { level: "B1", title: "Goethe B1", desc: "Từ vựng B1, Động từ giả định Konjunktiv II, Thụ động Passiv", color: "from-amber-500 to-orange-600" },
+    { level: "B2", title: "Goethe B2", desc: "Từ vựng B2 nâng cao, Cấu trúc câu kép phức hợp", color: "from-rose-500 to-red-600" },
+  ] : activeLanguage.code === "en" ? [
+    { level: "A1", title: "Beginner A1", desc: "Từ vựng & Cấu trúc cơ bản nhất của Oxford 3000", color: "from-emerald-500 to-teal-600" },
+    { level: "A2", title: "Elementary A2", desc: "Giao tiếp hàng ngày cơ bản, thì Quá khứ đơn & Tương lai", color: "from-blue-500 to-indigo-600" },
+    { level: "B1", title: "Intermediate B1", desc: "Từ vựng học thuật trung cấp, thì Hiện tại hoàn thành", color: "from-amber-500 to-orange-600" },
+    { level: "B2", title: "Upper-Int B2", desc: "Từ vựng IELTS/TOEIC phổ thông, câu điều kiện phức tạp", color: "from-rose-500 to-red-600" },
+  ] : [
     { level: "N5", title: "Sơ cấp 1", desc: "Minna no Nihongo I (Bài 1-25) & 100 Kanji sơ cấp", color: "from-emerald-500 to-teal-600" },
     { level: "N4", title: "Sơ cấp 2", desc: "Minna no Nihongo II (Bài 26-50) & 300 Kanji sơ cấp", color: "from-blue-500 to-indigo-600" },
     { level: "N3", title: "Trung cấp 1", desc: "Soumatome / Shinkanzen N3 & 650 Kanji trung cấp", color: "from-amber-500 to-orange-600" },

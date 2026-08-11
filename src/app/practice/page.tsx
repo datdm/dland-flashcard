@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useNotebooks } from "@/hooks/useNotebooks";
 import { searchJapaneseDictionary } from "@/lib/services/dictionaryService";
+import { useLanguageSetting } from "@/hooks/useLanguageSetting";
 
 interface ShadowingItem {
   id: string;
@@ -84,6 +85,7 @@ const POPULAR_TOPICS = [
 export default function PracticeHubPage() {
   const { notebooks, addVocab, checkDuplicate } = useNotebooks();
   const recognitionRef = useRef<any>(null);
+  const { activeLanguage } = useLanguageSetting();
 
   // Config states
   const [selectedType, setSelectedType] = useState<"shadowing" | "translation" | "reading" | "presentation">("shadowing");
@@ -199,6 +201,7 @@ export default function PracticeHubPage() {
           type: selectedType === "presentation" ? "presentation_slides" : selectedType,
           topic: activeTopic,
           level: selectedType === "reading" ? "N2" : "N3", // N2 level reading by default, others N3
+          lang: activeLanguage.code,
         }),
       });
 
@@ -258,7 +261,7 @@ export default function PracticeHubPage() {
 
     const recognition = new SpeechRecognition();
     recognitionRef.current = recognition;
-    recognition.lang = "ja-JP";
+    recognition.lang = activeLanguage.code === "de" ? "de-DE" : activeLanguage.code === "en" ? "en-US" : "ja-JP";
     recognition.continuous = true;
     recognition.interimResults = false;
 
@@ -312,7 +315,7 @@ export default function PracticeHubPage() {
 
     const recognition = new SpeechRecognition();
     recognitionRef.current = recognition;
-    recognition.lang = "ja-JP";
+    recognition.lang = activeLanguage.code === "de" ? "de-DE" : activeLanguage.code === "en" ? "en-US" : "ja-JP";
     recognition.continuous = true;
     recognition.interimResults = false;
 
@@ -379,7 +382,8 @@ export default function PracticeHubPage() {
           slides: slides,
           speechTranscripts: [presentationTranscripts[0] || "", presentationTranscripts[1] || ""],
           isSecondCheck: isSecondCheck,
-          previousEvaluation: previousEvaluation
+          previousEvaluation: previousEvaluation,
+          lang: activeLanguage.code,
         }),
       });
 

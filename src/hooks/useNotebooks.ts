@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { Notebook, NotebooksData, Vocabulary } from "@/types";
 import { getItem, setItem, StorageKeys } from "@/lib/storage";
 import { autoSync, checkAuthStatus, loadNotebooksFromServer, uploadSingleVocab, deleteVocabOnServer, patchVocabOnServer } from "@/lib/syncService";
@@ -23,13 +23,33 @@ function reorderByIds<T extends { id: string }>(items: T[], draggedId: string, t
   return updated;
 }
 
+function getActiveLanguageCode(): string {
+  if (typeof window !== "undefined") {
+    const saved = localStorage.getItem("dland_target_language");
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch {
+        return saved;
+      }
+    }
+  }
+  return "ja";
+}
+
 export function useNotebooks() {
-  const [notebooks, setNotebooks] = useState<Notebook[]>([]);
+  const [allNotebooks, setAllNotebooks] = useState<Notebook[]>([]);
+
+  const activeLang = getActiveLanguageCode();
+
+  const notebooks = useMemo(() => {
+    return allNotebooks.filter((nb) => (nb.lang || "ja") === activeLang);
+  }, [allNotebooks, activeLang]);
 
   useEffect(() => {
     // Load local data first
     const data = getItem<NotebooksData>(StorageKeys.NOTEBOOKS);
-    if (data?.notebooks) setNotebooks(data.notebooks);
+    if (data?.notebooks) setAllNotebooks(data.notebooks);
 
     // Sync from database if logged in
     const syncNotebooks = async () => {
@@ -42,7 +62,7 @@ export function useNotebooks() {
             : (serverData?.notebooks || []);
           
           if (notebooksList.length > 0) {
-            setNotebooks(notebooksList);
+            setAllNotebooks(notebooksList);
             setItem<NotebooksData>(StorageKeys.NOTEBOOKS, { notebooks: notebooksList });
           }
         } catch (error) {
@@ -55,25 +75,33 @@ export function useNotebooks() {
   }, []);
 
   const save = useCallback((updated: Notebook[]) => {
-    setNotebooks(updated);
-    setItem<NotebooksData>(StorageKeys.NOTEBOOKS, { notebooks: updated });
-    autoSync(); // Auto-sync after save
+    setAllNotebooks((prev) => {
+      const activeLang = getActiveLanguageCode();
+      const others = prev.filter((nb) => (nb.lang || "ja") !== activeLang);
+      const updatedWithLang = updated.map(nb => ({ ...nb, lang: nb.lang || activeLang }));
+      const merged = [...others, ...updatedWithLang];
+      setItem<NotebooksData>(StorageKeys.NOTEBOOKS, { notebooks: merged });
+      setTimeout(() => autoSync(), 0);
+      return merged;
+    });
   }, []);
 
   // --- Notebook CRUD ---
 
   const createNotebook = useCallback(
     (name: string): Notebook => {
+      const activeLang = getActiveLanguageCode();
       const notebook: Notebook = {
         id: generateId("nb"),
         name: name.trim(),
         createdAt: new Date().toISOString(),
         vocabulary: [],
+        lang: activeLang,
       };
-      setNotebooks((prev) => {
+      setAllNotebooks((prev) => {
         const updated = [...prev, notebook];
         setItem<NotebooksData>(StorageKeys.NOTEBOOKS, { notebooks: updated });
-        autoSync();
+        setTimeout(() => autoSync(), 0);
         return updated;
       });
       return notebook;
@@ -83,10 +111,10 @@ export function useNotebooks() {
 
   const deleteNotebook = useCallback(
     (id: string) => {
-      setNotebooks((prev) => {
+      setAllNotebooks((prev) => {
         const updated = prev.filter((nb) => nb.id !== id);
         setItem<NotebooksData>(StorageKeys.NOTEBOOKS, { notebooks: updated });
-        autoSync();
+        setTimeout(() => autoSync(), 0);
         return updated;
       });
     },
@@ -95,12 +123,12 @@ export function useNotebooks() {
 
   const renameNotebook = useCallback(
     (id: string, name: string) => {
-      setNotebooks((prev) => {
+      setAllNotebooks((prev) => {
         const updated = prev.map((nb) =>
           nb.id === id ? { ...nb, name: name.trim() } : nb
         );
         setItem<NotebooksData>(StorageKeys.NOTEBOOKS, { notebooks: updated });
-        autoSync();
+        setTimeout(() => autoSync(), 0);
         return updated;
       });
     },
@@ -109,11 +137,15 @@ export function useNotebooks() {
 
   const reorderNotebooks = useCallback(
     (draggedNotebookId: string, targetNotebookId: string) => {
-      setNotebooks((prev) => {
-        const updated = reorderByIds(prev, draggedNotebookId, targetNotebookId);
-        if (updated === prev) return prev;
+      setAllNotebooks((prev) => {
+        const activeLang = getActiveLanguageCode();
+        const activeList = prev.filter((nb) => (nb.lang || "ja") === activeLang);
+        const otherList = prev.filter((nb) => (nb.lang || "ja") !== activeLang);
+        const reorderedActive = reorderByIds(activeList, draggedNotebookId, targetNotebookId);
+        if (reorderedActive === activeList) return prev;
+        const updated = [...otherList, ...reorderedActive];
         setItem<NotebooksData>(StorageKeys.NOTEBOOKS, { notebooks: updated });
-        autoSync();
+        setTimeout(() => autoSync(), 0);
         return updated;
       });
     },
@@ -137,14 +169,13 @@ export function useNotebooks() {
       const vocab: Vocabulary = { id: vocabId, ...fields };
 
       if (skipSync) {
-        setNotebooks((prev) => {
+        setAllNotebooks((prev) => {
           const updated = prev.map((nb) =>
             nb.id === notebookId
               ? { ...nb, vocabulary: [vocab, ...nb.vocabulary] }
               : nb
           );
           setItem<NotebooksData>(StorageKeys.NOTEBOOKS, { notebooks: updated });
-          // Call autoSync after the state is set and stored to upload changes to server
           setTimeout(() => {
             autoSync();
           }, 0);
@@ -206,14 +237,14 @@ export function useNotebooks() {
         }
       }
 
-      setNotebooks((prev) => {
+      setAllNotebooks((prev) => {
         const updated = prev.map((nb) =>
           nb.id === notebookId
             ? { ...nb, vocabulary: [vocab, ...nb.vocabulary] }
             : nb
         );
         setItem<NotebooksData>(StorageKeys.NOTEBOOKS, { notebooks: updated });
-        autoSync(); // Ensure full sync runs as fallback
+        setTimeout(() => autoSync(), 0);
         return updated;
       });
 
@@ -231,7 +262,7 @@ export function useNotebooks() {
   const updateVocab = useCallback(
     async (notebookId: string, vocabId: string, patch: Partial<Omit<Vocabulary, "id">>) => {
       // 1. Update locally first (optimistic)
-      setNotebooks((prev) => {
+      setAllNotebooks((prev) => {
         const updated = prev.map((nb) =>
           nb.id === notebookId
             ? {
@@ -251,7 +282,6 @@ export function useNotebooks() {
         const result = await patchVocabOnServer(notebookId, vocabId, patch);
         if (!result.success) {
           console.error('Patch vocab on server failed:', result.error);
-          // Fallback: full sync to keep server consistent
           autoSync();
         }
       } else {
@@ -264,7 +294,7 @@ export function useNotebooks() {
   const deleteVocab = useCallback(
     async (notebookId: string, vocabId: string) => {
       // 1. Remove locally first (optimistic)
-      setNotebooks((prev) => {
+      setAllNotebooks((prev) => {
         const updated = prev.map((nb) =>
           nb.id === notebookId
             ? { ...nb, vocabulary: nb.vocabulary.filter((v) => v.id !== vocabId) }
@@ -279,7 +309,6 @@ export function useNotebooks() {
         const result = await deleteVocabOnServer(notebookId, vocabId);
         if (!result.success) {
           console.error('Delete vocab on server failed:', result.error);
-          // Fallback: full sync to keep server consistent
           autoSync();
         }
       } else {
@@ -291,14 +320,12 @@ export function useNotebooks() {
 
   const moveVocab = useCallback(
     (fromNotebookId: string, toNotebookId: string, vocabId: string) => {
-      setNotebooks((prev) => {
-        // Find the vocab to move
+      setAllNotebooks((prev) => {
         const sourceNotebook = prev.find((nb) => nb.id === fromNotebookId);
         const vocabToMove = sourceNotebook?.vocabulary.find((v) => v.id === vocabId);
         
         if (!vocabToMove) return prev;
         
-        // Remove from source, add to target (prepend to maintain newest-first order)
         const updated = prev.map((nb) => {
           if (nb.id === fromNotebookId) {
             return { ...nb, vocabulary: nb.vocabulary.filter((v) => v.id !== vocabId) };
@@ -309,7 +336,7 @@ export function useNotebooks() {
         });
         
         setItem<NotebooksData>(StorageKeys.NOTEBOOKS, { notebooks: updated });
-        autoSync();
+        setTimeout(() => autoSync(), 0);
         return updated;
       });
     },
@@ -318,7 +345,7 @@ export function useNotebooks() {
 
   const moveMultipleVocab = useCallback(
     (fromNotebookId: string, toNotebookId: string, vocabIds: string[]) => {
-      setNotebooks((prev) => {
+      setAllNotebooks((prev) => {
         const sourceNotebook = prev.find((nb) => nb.id === fromNotebookId);
         if (!sourceNotebook) return prev;
         
@@ -337,7 +364,7 @@ export function useNotebooks() {
         });
         
         setItem<NotebooksData>(StorageKeys.NOTEBOOKS, { notebooks: updated });
-        autoSync();
+        setTimeout(() => autoSync(), 0);
         return updated;
       });
     },
@@ -346,14 +373,14 @@ export function useNotebooks() {
 
   const reorderVocabInNotebook = useCallback(
     (notebookId: string, draggedVocabId: string, targetVocabId: string) => {
-      setNotebooks((prev) => {
+      setAllNotebooks((prev) => {
         const updated = prev.map((nb) =>
           nb.id === notebookId
             ? { ...nb, vocabulary: reorderByIds(nb.vocabulary, draggedVocabId, targetVocabId) }
             : nb
         );
         setItem<NotebooksData>(StorageKeys.NOTEBOOKS, { notebooks: updated });
-        autoSync();
+        setTimeout(() => autoSync(), 0);
         return updated;
       });
     },
@@ -364,7 +391,6 @@ export function useNotebooks() {
 
   const checkDuplicate = useCallback(
     (notebookId: string, kanji?: string, hiragana?: string, excludeVocabId?: string): Array<{ notebookId: string; notebookName: string; vocab: Vocabulary }> | null => {
-      // Only check if both kanji and hiragana are provided and non-empty
       if (!kanji?.trim() || !hiragana?.trim()) return null;
       
       const normalizedKanji = kanji.trim();
@@ -372,7 +398,6 @@ export function useNotebooks() {
       
       const duplicates: Array<{ notebookId: string; notebookName: string; vocab: Vocabulary }> = [];
       
-      // Search across ALL notebooks for duplicates
       for (const nb of notebooks) {
         const duplicate = nb.vocabulary.find(
           (v) =>
@@ -413,23 +438,18 @@ export function useNotebooks() {
     [notebooks]
   );
 
-  /**
-   * Merge vocabulary into an existing notebook, avoiding duplicates by kanji OR hiragana
-   * @returns { added: number, skipped: number }
-   */
   const mergeVocabIntoNotebook = useCallback(
     (notebookId: string, vocabularyToAdd: Array<Omit<Vocabulary, "id">>): { added: number; skipped: number } => {
       let added = 0;
       let skipped = 0;
       
-      setNotebooks((prev) => {
+      setAllNotebooks((prev) => {
         const notebook = prev.find((nb) => nb.id === notebookId);
         if (!notebook) return prev;
         
         const toAdd: Vocabulary[] = [];
         
         for (const vocab of vocabularyToAdd) {
-          // Check if kanji OR hiragana already exists
           const isDuplicate = notebook.vocabulary.some((existing) => {
             const kanjiMatch = vocab.kanji?.trim() && existing.kanji?.trim() === vocab.kanji.trim();
             const hiraganaMatch = vocab.hiragana?.trim() && existing.hiragana?.trim() === vocab.hiragana.trim();
@@ -452,7 +472,6 @@ export function useNotebooks() {
           }
         }
         
-        // Prepend new vocabulary (newest first)
         const updated = prev.map((nb) =>
           nb.id === notebookId
             ? { ...nb, vocabulary: [...toAdd, ...nb.vocabulary] }
@@ -460,7 +479,7 @@ export function useNotebooks() {
         );
         
         setItem<NotebooksData>(StorageKeys.NOTEBOOKS, { notebooks: updated });
-        autoSync();
+        setTimeout(() => autoSync(), 0);
         return updated;
       });
       
@@ -469,7 +488,6 @@ export function useNotebooks() {
     []
   );
 
-  /** Import vocab entries from a notebook-export JSON string, appending to target notebook */
   const importVocabFromJson = useCallback(
     (notebookId: string, jsonString: string): { imported: number; error?: string } => {
       let parsed: unknown;
@@ -484,7 +502,7 @@ export function useNotebooks() {
         return { imported: 0, error: 'JSON phải có trường "notebook.vocabulary".' };
       }
       let count = 0;
-      setNotebooks((prev) => {
+      setAllNotebooks((prev) => {
         const nb = prev.find((n) => n.id === notebookId);
         if (!nb) return prev;
         const existingIds = new Set(nb.vocabulary.map((v) => v.id));
@@ -509,6 +527,7 @@ export function useNotebooks() {
             : n
         );
         setItem<NotebooksData>(StorageKeys.NOTEBOOKS, { notebooks: updated });
+        setTimeout(() => autoSync(), 0);
         return updated;
       });
       return { imported: count };
@@ -516,7 +535,6 @@ export function useNotebooks() {
     []
   );
 
-  /** Import a whole notebook from JSON, creating new if id not found */
   const importNotebook = useCallback(
     (jsonString: string): { name: string; error?: string } => {
       let parsed: unknown;
@@ -530,19 +548,22 @@ export function useNotebooks() {
       if (!nb?.name) {
         return { name: "", error: 'JSON phải có trường "notebook.name".' };
       }
-      setNotebooks((prev) => {
+      setAllNotebooks((prev) => {
+        const activeLang = getActiveLanguageCode();
         const existingIdx = prev.findIndex((n) => n.id === nb.id);
         const imported: Notebook = {
           id: nb.id ?? generateId("nb"),
           name: nb.name!,
           createdAt: nb.createdAt ?? new Date().toISOString(),
           vocabulary: Array.isArray(nb.vocabulary) ? nb.vocabulary : [],
+          lang: nb.lang ?? activeLang,
         };
         const updated =
           existingIdx >= 0
             ? prev.map((n, i) => (i === existingIdx ? imported : n))
             : [...prev, imported];
         setItem<NotebooksData>(StorageKeys.NOTEBOOKS, { notebooks: updated });
+        setTimeout(() => autoSync(), 0);
         return updated;
       });
       return { name: nb.name };
