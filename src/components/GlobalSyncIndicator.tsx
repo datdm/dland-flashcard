@@ -76,7 +76,7 @@ export default function GlobalSyncIndicator() {
     <>
       {/* Full-screen Loading Overlay */}
       {isLoading && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex flex-col items-center justify-center z-50 transition-opacity duration-300">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex flex-col items-center justify-center z-[9999] transition-opacity duration-300">
           <div className="bg-white/10 p-6 rounded-3xl backdrop-blur-md border border-white/10 flex flex-col items-center">
             <div className="w-12 h-12 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
             <p className="text-white text-xs font-bold mt-4 tracking-wider uppercase">Đang đồng bộ dữ liệu...</p>
@@ -86,7 +86,7 @@ export default function GlobalSyncIndicator() {
       )}
 
       {/* Toast Notification Container in Top-Right */}
-      <div className="fixed top-4 right-4 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none">
+      <div className="fixed top-4 right-4 z-[9999] flex flex-col gap-2 max-w-sm w-full pointer-events-none">
         {toasts.map((toast) => {
           let bgClass = "bg-rose-50 border-rose-200 text-rose-800";
           let icon = "⚠️";
