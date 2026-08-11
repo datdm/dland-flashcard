@@ -10,6 +10,7 @@ interface User {
   id: string;
   username: string;
   createdAt: string;
+  isAdmin?: boolean;
 }
 
 interface AuthResponse {

@@ -77,7 +77,7 @@ router.post('/login', async (req: Request, res: Response) => {
   try {
     // Find user
     const result = await pool.query(
-      'SELECT id, username, password_hash, created_at FROM users WHERE username = $1',
+      'SELECT id, username, password_hash, created_at, is_admin FROM users WHERE username = $1',
       [username]
     );
 
@@ -108,6 +108,7 @@ router.post('/login', async (req: Request, res: Response) => {
         id: user.id,
         username: user.username,
         createdAt: user.created_at,
+        isAdmin: !!user.is_admin,
       },
     });
   } catch (error) {
@@ -120,7 +121,7 @@ router.post('/login', async (req: Request, res: Response) => {
 router.get('/verify', authenticate, async (req: AuthRequest, res: Response) => {
   try {
     const result = await pool.query(
-      'SELECT id, username, created_at FROM users WHERE id = $1',
+      'SELECT id, username, created_at, is_admin FROM users WHERE id = $1',
       [req.userId]
     );
 
@@ -136,6 +137,7 @@ router.get('/verify', authenticate, async (req: AuthRequest, res: Response) => {
         id: user.id,
         username: user.username,
         createdAt: user.created_at,
+        isAdmin: !!user.is_admin,
       },
     });
   } catch (error) {

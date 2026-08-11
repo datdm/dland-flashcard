@@ -8,6 +8,7 @@ const CURRICULUMS_KEY = "flashcash-curriculums";
 const GRAMMAR_COLLECTIONS_KEY = "flashcash-grammar-collections";
 const GRAMMAR_PROGRESS_KEY = "flashcash-grammar-progress";
 const KANJI_PROGRESS_KEY = "flashcash-kanji-progress";
+const CURRICULUM_HISTORY_KEY = "flashcash-curriculum-history";
 
 export const StorageKeys = {
   LESSONS: LESSONS_KEY,
@@ -18,6 +19,7 @@ export const StorageKeys = {
   GRAMMAR_COLLECTIONS: GRAMMAR_COLLECTIONS_KEY,
   GRAMMAR_PROGRESS: GRAMMAR_PROGRESS_KEY,
   KANJI_PROGRESS: KANJI_PROGRESS_KEY,
+  CURRICULUM_HISTORY: CURRICULUM_HISTORY_KEY,
 } as const;
 
 export function getItem<T>(key: string): T | null {
@@ -53,6 +55,7 @@ export function exportAllData(): string {
     GRAMMAR_COLLECTIONS_KEY,
     GRAMMAR_PROGRESS_KEY,
     KANJI_PROGRESS_KEY,
+    CURRICULUM_HISTORY_KEY,
   ];
   for (const key of keys) {
     const raw = localStorage.getItem(key);
@@ -79,6 +82,7 @@ export function importAllData(jsonString: string): void {
     GRAMMAR_COLLECTIONS_KEY,
     GRAMMAR_PROGRESS_KEY,
     KANJI_PROGRESS_KEY,
+    CURRICULUM_HISTORY_KEY,
   ];
   for (const key of keys) {
     if (data[key] !== undefined) {

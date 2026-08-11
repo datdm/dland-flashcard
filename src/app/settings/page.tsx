@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import ExportImportPanel from "@/components/ExportImportPanel";
 import BackupHistoryPanel from "@/components/BackupHistoryPanel";
 import PasswordChangeDialog from "@/components/PasswordChangeDialog";
@@ -189,8 +190,8 @@ export default function SettingsPage() {
 
         {/* Account Info Section */}
         {isAuthenticated && user && (
-          <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-2xs">
-            <h2 className="text-base font-bold text-gray-900 mb-3 flex items-center gap-2">
+          <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-2xs space-y-4">
+            <h2 className="text-base font-bold text-gray-900 flex items-center gap-2">
               <span>👤</span> Thông tin tài khoản Dland
             </h2>
             <div className="bg-gray-50 rounded-2xl p-4 flex items-center justify-between">
@@ -205,6 +206,22 @@ export default function SettingsPage() {
                 🔐 Đổi mật khẩu
               </button>
             </div>
+            {user.isAdmin && (
+              <div className="p-4 rounded-2xl bg-indigo-50/50 border border-indigo-100 flex items-center justify-between gap-4">
+                <div>
+                  <h3 className="text-xs font-bold text-indigo-900">🛡️ Quyền Quản trị viên (Admin)</h3>
+                  <p className="text-[10px] text-indigo-700 mt-0.5">
+                    Bạn có quyền truy cập vào bảng điều khiển quản trị viên để theo dõi tiến trình học tập của người dùng.
+                  </p>
+                </div>
+                <Link
+                  href="/admin"
+                  className="px-4 py-2 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition text-xs shadow-3xs shrink-0"
+                >
+                  Vào Dashboard →
+                </Link>
+              </div>
+            )}
           </div>
         )}
 

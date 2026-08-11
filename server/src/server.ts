@@ -7,6 +7,7 @@ import syncRoutes from './routes/sync';
 import backupRoutes from './routes/backup';
 import vocabRoutes from './routes/vocab';
 import dataRoutes from './routes/data';
+import adminRoutes from './routes/admin';
 
 dotenv.config();
 
@@ -31,6 +32,7 @@ app.use('/api/sync', syncRoutes);
 app.use('/api/backup', backupRoutes);
 app.use('/api/vocab', vocabRoutes);
 app.use('/api/data', dataRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Error handler
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
