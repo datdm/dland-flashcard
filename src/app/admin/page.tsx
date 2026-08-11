@@ -78,11 +78,12 @@ export default function AdminDashboardPage() {
     }
   };
 
-  // Filter users based on search term
+  // Filter users based on search term and exclude admins
   const filteredUsers = useMemo(() => {
-    if (!searchTerm.trim()) return users;
+    const nonAdmins = users.filter(u => !u.isAdmin);
+    if (!searchTerm.trim()) return nonAdmins;
     const term = searchTerm.toLowerCase();
-    return users.filter(u => 
+    return nonAdmins.filter(u => 
       u.username.toLowerCase().includes(term) || 
       u.id.toLowerCase().includes(term)
     );
