@@ -21,6 +21,7 @@ router.get('/users', authenticate, requireAdmin, async (req: AuthRequest, res: R
         (SELECT data_value FROM user_data WHERE user_id = u.id AND data_key = 'flashcash-kanji-progress') as kanji_progress,
         (SELECT data_value FROM user_data WHERE user_id = u.id AND data_key = 'flashcash-notebooks') as notebooks
       FROM users u
+      WHERE u.is_admin = FALSE OR u.is_admin IS NULL
       ORDER BY u.created_at DESC`
     );
 

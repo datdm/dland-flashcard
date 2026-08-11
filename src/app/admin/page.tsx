@@ -64,9 +64,9 @@ export default function AdminDashboardPage() {
       setUserDetail(detail);
       
       // Auto select first curriculum if available
-      const userCurriculums = detail.data.curriculums.length > 0
+      const userCurriculums = (detail.data && Array.isArray(detail.data.curriculums)) && detail.data.curriculums.length > 0
         ? detail.data.curriculums
-        : DEFAULT_VOCABULARY.curriculums;
+        : (DEFAULT_VOCABULARY?.curriculums || []);
       
       if (userCurriculums.length > 0) {
         setSelectedCurriculumId(userCurriculums[0].id);
@@ -115,9 +115,9 @@ export default function AdminDashboardPage() {
   // User Curriculums List (including fallback default)
   const userCurriculums = useMemo(() => {
     if (!userDetail) return [];
-    return userDetail.data.curriculums.length > 0
+    return (userDetail.data && Array.isArray(userDetail.data.curriculums)) && userDetail.data.curriculums.length > 0
       ? userDetail.data.curriculums
-      : DEFAULT_VOCABULARY.curriculums;
+      : (DEFAULT_VOCABULARY?.curriculums || []);
   }, [userDetail]);
 
   // Map of active curriculum
@@ -135,7 +135,7 @@ export default function AdminDashboardPage() {
       let totalVocab = 0;
       let learnedVocab = 0;
 
-      c.lessons.forEach((l: any) => {
+      (c.lessons || []).forEach((l: any) => {
         (l.vocabulary || []).forEach((v: any) => {
           totalVocab++;
           if (progress[v.id]?.learned) {
@@ -181,7 +181,7 @@ export default function AdminDashboardPage() {
     // Local lookup maps inside user context to display details
     const vocabLookup = new Map<string, { kanji?: string; hiragana?: string; meaning?: string; source: string }>();
     userCurriculums.forEach(c => {
-      c.lessons.forEach((l: any) => {
+      (c.lessons || []).forEach((l: any) => {
         (l.vocabulary || []).forEach((v: any) => {
           vocabLookup.set(v.id, {
             kanji: v.kanji,
@@ -192,7 +192,7 @@ export default function AdminDashboardPage() {
         });
       });
     });
-    userDetail.data.notebooks.forEach((nb: any) => {
+    (userDetail.data.notebooks && Array.isArray(userDetail.data.notebooks) ? userDetail.data.notebooks : []).forEach((nb: any) => {
       (nb.vocabulary || []).forEach((v: any) => {
         vocabLookup.set(v.id, {
           kanji: v.kanji,
@@ -550,11 +550,11 @@ export default function AdminDashboardPage() {
                           <span className="text-[9px] px-2 py-0.5 bg-indigo-50 text-indigo-700 font-bold rounded-lg uppercase">Từ vựng giáo trình</span>
                         </div>
 
-                        {activeCurriculum.lessons.length === 0 ? (
+                        {(!activeCurriculum.lessons || activeCurriculum.lessons.length === 0) ? (
                           <div className="text-center py-12 text-xs text-gray-400 italic">Giáo trình này không chứa bài học nào.</div>
                         ) : (
                           <div className="space-y-4 max-h-[400px] overflow-y-auto pr-1 no-scrollbar">
-                            {activeCurriculum.lessons.map((lesson: any) => {
+                            {(activeCurriculum.lessons || []).map((lesson: any) => {
                               const lessonVocab = lesson.vocabulary || [];
                               const learnedCountInLesson = lessonVocab.filter((v: any) => userDetail.data.progress[v.id]?.learned).length;
                               const lessonPercentage = lessonVocab.length > 0 ? Math.round((learnedCountInLesson / lessonVocab.length) * 100) : 0;
@@ -678,7 +678,7 @@ export default function AdminDashboardPage() {
               {activeDetailTab === "notebook" && (
                 <div className="bg-white rounded-3xl p-5 border border-gray-100 shadow-2xs space-y-4">
                   <h3 className="font-extrabold text-xs text-gray-400 uppercase tracking-wider">Danh sách Sổ tay của User</h3>
-                  {userDetail.data.notebooks.length === 0 ? (
+                  {(!userDetail.data.notebooks || !Array.isArray(userDetail.data.notebooks) || userDetail.data.notebooks.length === 0) ? (
                     <div className="text-center py-12 text-xs text-gray-400 italic">User chưa tạo sổ tay cá nhân nào.</div>
                   ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[400px] overflow-y-auto pr-1 no-scrollbar">
