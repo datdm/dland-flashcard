@@ -30,7 +30,8 @@ router.get('/users', authenticate, requireAdmin, async (req: AuthRequest, res: R
       const progress = row.progress || {};
       const grammarProgress = row.grammar_progress || {};
       const kanjiProgress = row.kanji_progress || {};
-      const notebooks = row.notebooks || [];
+      const notebooksData = row.notebooks || {};
+      const notebooksList = Array.isArray(notebooksData.notebooks) ? notebooksData.notebooks : [];
 
       // Calculate counts
       const vocabLearnedCount = Object.values(progress).filter((p: any) => p && p.learned).length;
@@ -47,7 +48,7 @@ router.get('/users', authenticate, requireAdmin, async (req: AuthRequest, res: R
         vocabLearnedCount,
         grammarLearnedCount,
         kanjiLearnedCount,
-        notebookCount: notebooks.length,
+        notebookCount: notebooksList.length,
       };
     });
 
@@ -100,7 +101,7 @@ router.get('/users/:userId', authenticate, requireAdmin, async (req: AuthRequest
       },
       data: {
         curriculums: data['flashcash-curriculums']?.curriculums || [],
-        notebooks: data['flashcash-notebooks'] || [],
+        notebooks: data['flashcash-notebooks']?.notebooks || [],
         progress: data['flashcash-progress'] || {},
         grammarProgress: data['flashcash-grammar-progress'] || {},
         kanjiProgress: data['flashcash-kanji-progress'] || {},
