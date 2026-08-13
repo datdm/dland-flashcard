@@ -36,6 +36,8 @@ export default function HistoryPage() {
 
   const [completedLessons, setCompletedLessons] = useState<CompletedLesson[]>([]);
   const [timeFilter, setTimeFilter] = useState<"all" | "1day" | "3days" | "1month" | "3months" | "1year" | "thisYear" | number>("all");
+  const [systemVocabList, setSystemVocabList] = useState<any[]>([]);
+  const [systemGrammarList, setSystemGrammarList] = useState<any[]>([]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -44,6 +46,59 @@ export default function HistoryPage() {
         setCompletedLessons(JSON.parse(stored));
       }
     }
+  }, []);
+
+  // Fetch all system curriculums to populate lookup tables for all languages
+  useEffect(() => {
+    async function loadAllSystemData() {
+      try {
+        const urls = [
+          { url: "/data/n5-curriculum.json", name: "N5" },
+          { url: "/data/n4-curriculum.json", name: "N4" },
+          { url: "/data/n3-curriculum.json", name: "N3" },
+          { url: "/data/n2-curriculum.json", name: "N2" },
+          { url: "/data/de-curriculum.json", name: "Tiếng Đức (A1)" },
+          { url: "/data/en-curriculum.json", name: "Tiếng Anh (A1)" }
+        ];
+
+        const allVocab: any[] = [];
+        const allGrammar: any[] = [];
+
+        await Promise.all(
+          urls.map(async ({ url, name }) => {
+            const res = await fetch(url);
+            if (!res.ok) return;
+            const data = await res.json();
+            const lessons = data.lessons || [];
+            
+            lessons.forEach((lesson: any) => {
+              if (lesson.vocabulary) {
+                lesson.vocabulary.forEach((v: any) => {
+                  allVocab.push({
+                    ...v,
+                    sourceName: `${data.title || name} • ${lesson.name}`
+                  });
+                });
+              }
+              if (lesson.grammarPoints) {
+                lesson.grammarPoints.forEach((g: any) => {
+                  allGrammar.push({
+                    ...g,
+                    sourceName: `${data.title || name} • ${lesson.name}`
+                  });
+                });
+              }
+            });
+          })
+        );
+
+        setSystemVocabList(allVocab);
+        setSystemGrammarList(allGrammar);
+      } catch (err) {
+        console.error("Error loading system curriculum data for history lookup:", err);
+      }
+    }
+    loadAllSystemData();
   }, []);
 
   // 1. Build lookup tables for vocabulary and grammar
@@ -74,8 +129,17 @@ export default function HistoryPage() {
       });
     });
 
+    systemVocabList.forEach((v) => {
+      map.set(v.id, {
+        kanji: v.kanji || v.word,
+        hiragana: v.hiragana || v.type || "",
+        meaning: v.meaning,
+        source: v.sourceName
+      });
+    });
+
     return map;
-  }, [curriculums, notebooks]);
+  }, [curriculums, notebooks, systemVocabList]);
 
   const grammarLookup = useMemo(() => {
     const map = new Map<string, { structure: string; meaning: string; source: string }>();
@@ -90,17 +154,18 @@ export default function HistoryPage() {
       });
     });
 
+    systemGrammarList.forEach((g) => {
+      map.set(g.id, {
+        structure: g.structure,
+        meaning: g.meaning,
+        source: g.sourceName
+      });
+    });
+
     return map;
-  }, [grammarCollections]);
+  }, [grammarCollections, systemGrammarList]);
 
-  // 2. Count Total Stats
-  const totalVocabLearned = useMemo(() => {
-    return Object.values(progress).filter((p) => p.learned).length;
-  }, [progress]);
 
-  const totalGrammarLearned = useMemo(() => {
-    return Object.values(grammarProgress).filter((p) => p.learned).length;
-  }, [grammarProgress]);
 
   // 3. Compute Curriculum progress
   const curriculumProgresses = useMemo(() => {
@@ -191,6 +256,15 @@ export default function HistoryPage() {
     // Sort by learnedAt descending
     return items.sort((a, b) => new Date(b.learnedAt).getTime() - new Date(a.learnedAt).getTime());
   }, [progress, grammarProgress, vocabLookup, grammarLookup]);
+
+  // 2. Count Total Stats from matched timeline items to ensure counts are fully synchronized
+  const totalVocabLearned = useMemo(() => {
+    return timelineItems.filter((item) => item.type === "vocab").length;
+  }, [timelineItems]);
+
+  const totalGrammarLearned = useMemo(() => {
+    return timelineItems.filter((item) => item.type === "grammar").length;
+  }, [timelineItems]);
 
   // Extract all unique years present in the study history
   const availableYears = useMemo(() => {

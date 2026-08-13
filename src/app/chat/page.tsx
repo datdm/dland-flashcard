@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
+import { useLanguageSetting } from "@/hooks/useLanguageSetting";
 
 type Message = {
   role: "user" | "model";
@@ -9,16 +10,27 @@ type Message = {
 };
 
 export default function ChatPage() {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      role: "model",
-      parts: [{ text: "Chào bạn! Mình là Gia sư AI Tiếng Nhật của Dland Language. Mình có thể giúp bạn giải thích từ vựng, phân tích Hán tự, luyện ngữ pháp hoặc giao tiếp. Bạn cần mình giúp gì hôm nay?" }]
-    }
-  ]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const promptLoaded = useRef(false);
+  const { activeLanguage } = useLanguageSetting();
+
+  useEffect(() => {
+    const greetingText = activeLanguage.code === "de"
+      ? "Hallo! Mình là Gia sư AI Tiếng Đức của Dland Language. Mình có thể giúp bạn giải thích từ vựng, ngữ pháp, chia động từ hoặc cùng bạn luyện nói giao tiếp. Bạn cần mình giúp gì hôm nay?"
+      : activeLanguage.code === "en"
+      ? "Hello! Mình là Gia sư AI Tiếng Anh của Dland Language. Mình có thể giúp bạn giải thích từ vựng, các điểm ngữ pháp, hội thoại hoặc giao tiếp tiếng Anh. Bạn cần mình giúp gì hôm nay?"
+      : "Chào bạn! Mình là Gia sư AI Tiếng Nhật của Dland Language. Mình có thể giúp bạn giải thích từ vựng, phân tích Hán tự, luyện ngữ pháp hoặc giao tiếp. Bạn cần mình giúp gì hôm nay?";
+      
+    setMessages([
+      {
+        role: "model",
+        parts: [{ text: greetingText }]
+      }
+    ]);
+  }, [activeLanguage.code]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -50,6 +62,7 @@ export default function ChatPage() {
         body: JSON.stringify({
           history: historyToSend,
           message: text,
+          lang: activeLanguage.code,
         }),
       });
 

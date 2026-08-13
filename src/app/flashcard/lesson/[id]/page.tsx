@@ -2,43 +2,77 @@
 
 import { useParams } from "next/navigation";
 import { useLessons } from "@/hooks/useLessons";
+import { getCurriculumRepository } from "@/lib/repositories";
 import FlashCardViewer from "@/components/FlashCardViewer";
 import Link from "next/link";
+import { useState, useEffect } from "react";
 
 export default function FlashCardLessonPage() {
   const { id } = useParams<{ id: string }>();
-  const { getLessonById, lessons } = useLessons();
+  const { getLessonById: getCustomLessonById } = useLessons();
+  const [lesson, setLesson] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
-  // Wait for lessons to be loaded
-  if (lessons.length === 0) {
+  useEffect(() => {
+    async function loadLesson() {
+      if (!id) return;
+      setLoading(true);
+
+      // 1. Try finding in custom user-uploaded lessons
+      const customLesson = getCustomLessonById(id);
+      if (customLesson) {
+        setLesson(customLesson);
+        setLoading(false);
+        return;
+      }
+
+      // 2. Try finding in default system curriculums
+      try {
+        const repo = getCurriculumRepository();
+        const systemLesson = await repo.getLessonById(id);
+        if (systemLesson) {
+          setLesson(systemLesson);
+        }
+      } catch (err) {
+        console.error("Error loading system lesson in flashcard viewer:", err);
+      }
+      setLoading(false);
+    }
+    loadLesson();
+  }, [id, getCustomLessonById]);
+
+  if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-64 gap-4">
-        <p className="text-gray-500">Chưa có dữ liệu. Hãy upload từ vựng trước.</p>
-        <Link href="/upload" className="text-indigo-600 underline text-sm">
-          Đến trang Upload
-        </Link>
+      <div className="flex items-center justify-center min-h-64 text-indigo-600 font-medium">
+        Đang tải bài học...
       </div>
     );
   }
-
-  const lesson = getLessonById(id);
 
   if (!lesson) {
     return (
       <div className="flex flex-col items-center justify-center min-h-64 gap-4">
-        <p className="text-gray-500">Không tìm thấy bài học.</p>
-        <Link href="/" className="text-indigo-600 underline text-sm">
-          Về trang chủ
-        </Link>
+        <p className="text-gray-500">Không tìm thấy bài học hoặc chưa có dữ liệu.</p>
+        <div className="flex gap-4">
+          <Link href="/upload" className="text-indigo-600 underline text-sm">
+            Đến trang Upload
+          </Link>
+          <Link href="/curriculum" className="text-indigo-600 underline text-sm">
+            Xem Lộ trình
+          </Link>
+        </div>
       </div>
     );
   }
 
+  const isSystemCurriculum = id.includes("minna") || id.startsWith("de-") || id.startsWith("en-");
+  const backLink = isSystemCurriculum ? `/curriculum/${id}` : `/lessons/${id}`;
+
   return (
     <div className="p-4">
       <div className="mb-4">
-        <Link href={`/lessons/${id}`} className="text-sm text-indigo-600 hover:underline">
-          ← {lesson.name}
+        <Link href={backLink} className="text-sm text-indigo-600 hover:underline">
+          ← Quay lại bài học: {lesson.name}
         </Link>
       </div>
       <FlashCardViewer vocabulary={lesson.vocabulary} title={lesson.name} />

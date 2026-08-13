@@ -141,45 +141,95 @@ export default function HomePage() {
       </div>
 
       {/* Main Core Modules */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-10">
+      <div className={`grid grid-cols-1 ${activeLanguage.code === "ja" ? "sm:grid-cols-2 lg:grid-cols-4" : "md:grid-cols-3"} gap-5 mb-10`}>
         <Link
           href="/curriculum"
-          className="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-all group"
+          className="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-all group flex flex-col justify-between"
         >
-          <div className="text-3xl mb-3">📚</div>
-          <h3 className="font-bold text-gray-900 text-lg group-hover:text-indigo-600 transition-colors">
-            Giáo trình Bài học
-          </h3>
-          <p className="text-xs text-gray-500 mt-1 leading-relaxed">
-            Học theo từng bài từ Minna no Nihongo I & II cho đến Soumatome và Shinkanzen Master.
-          </p>
+          <div>
+            <div className="text-3xl mb-3">📚</div>
+            <h3 className="font-bold text-gray-900 text-lg group-hover:text-indigo-600 transition-colors">
+              Giáo trình Bài học
+            </h3>
+            <p className="text-xs text-gray-500 mt-1 leading-relaxed">
+              {activeLanguage.code === "de"
+                ? "Lộ trình học Tiếng Đức trình độ A1 bám sát giáo trình Netzwerk neu."
+                : activeLanguage.code === "en"
+                ? "Lộ trình từ vựng Oxford 3000 và các điểm ngữ pháp Tiếng Anh cốt lõi."
+                : "Học theo từng bài từ Minna no Nihongo I & II cho đến Soumatome và Shinkanzen Master."}
+            </p>
+          </div>
         </Link>
 
         <Link
           href="/grammar"
-          className="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-all group"
+          className="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-all group flex flex-col justify-between"
         >
-          <div className="text-3xl mb-3">📖</div>
-          <h3 className="font-bold text-gray-900 text-lg group-hover:text-purple-600 transition-colors">
-            Thư viện Ngữ pháp
-          </h3>
-          <p className="text-xs text-gray-500 mt-1 leading-relaxed">
-            Tra cứu cấu trúc, công thức chia thể, giải thích chi tiết & ví dụ kèm phát âm audio.
-          </p>
+          <div>
+            <div className="text-3xl mb-3">📖</div>
+            <h3 className="font-bold text-gray-900 text-lg group-hover:text-purple-600 transition-colors">
+              Thư viện Ngữ pháp
+            </h3>
+            <p className="text-xs text-gray-500 mt-1 leading-relaxed">
+              {activeLanguage.code === "de"
+                ? "Tra cứu các cấu trúc ngữ pháp Tiếng Đức, chia động từ và cách dùng mạo từ."
+                : activeLanguage.code === "en"
+                ? "Tổng hợp công thức cấu trúc câu, các thì và ngữ pháp Tiếng Anh thông dụng."
+                : "Tra cứu cấu trúc, công thức chia thể, giải thích chi tiết & ví dụ kèm phát âm audio."}
+            </p>
+          </div>
         </Link>
 
-        <Link
-          href="/kanji"
-          className="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-all group"
-        >
-          <div className="text-3xl mb-3">🉐</div>
-          <h3 className="font-bold text-gray-900 text-lg group-hover:text-emerald-600 transition-colors">
-            Thư viện Kanji SVG
-          </h3>
-          <p className="text-xs text-gray-500 mt-1 leading-relaxed">
-            Học 1,000+ chữ Hán từ N5 đến N2, xem nét vẽ SVG thứ tự từng bước & âm Hán Việt.
-          </p>
-        </Link>
+        {activeLanguage.code === "ja" ? (
+          <>
+            <Link
+              href="/kanji"
+              className="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-all group flex flex-col justify-between"
+            >
+              <div>
+                <div className="text-3xl mb-3">🉐</div>
+                <h3 className="font-bold text-gray-900 text-lg group-hover:text-emerald-600 transition-colors">
+                  Thư viện Kanji SVG
+                </h3>
+                <p className="text-xs text-gray-500 mt-1 leading-relaxed">
+                  Học 1,000+ chữ Hán từ N5 đến N2, xem nét vẽ SVG thứ tự từng bước & âm Hán Việt.
+                </p>
+              </div>
+            </Link>
+
+            <Link
+              href="/kaiwa"
+              className="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-all group flex flex-col justify-between"
+            >
+              <div>
+                <div className="text-3xl mb-3">🗣️</div>
+                <h3 className="font-bold text-gray-900 text-lg group-hover:text-rose-600 transition-colors">
+                  Hội thoại Kaiwa
+                </h3>
+                <p className="text-xs text-gray-500 mt-1 leading-relaxed">
+                  Lộ trình 3 tháng luyện phản xạ giao tiếp tự nhiên và nhập vai đối thoại cùng Gia sư AI.
+                </p>
+              </div>
+            </Link>
+          </>
+        ) : (
+          <Link
+            href="/chat"
+            className="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-all group flex flex-col justify-between"
+          >
+            <div>
+              <div className="text-3xl mb-3">🤖</div>
+              <h3 className="font-bold text-gray-900 text-lg group-hover:text-rose-600 transition-colors">
+                Gia sư AI Đàm thoại
+              </h3>
+              <p className="text-xs text-gray-500 mt-1 leading-relaxed">
+                {activeLanguage.code === "de"
+                  ? "Thực hành đàm thoại, luyện nói tự do và sửa lỗi giao tiếp Tiếng Đức cùng AI."
+                  : "Thực hành phản xạ đàm thoại tiếng Anh giao tiếp tự do 24/7 cùng Gia sư AI."}
+              </p>
+            </div>
+          </Link>
+        )}
       </div>
 
       {/* Notebooks section if any */}

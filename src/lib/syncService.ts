@@ -354,17 +354,27 @@ export async function changePassword(currentPassword: string, newPassword: strin
   }
 }
 
-// Auto-sync helper - silently sync data to server if authenticated
+// Debounce timer for auto-sync to avoid spamming the database
+let autoSyncTimeout: any = null;
+
+// Auto-sync helper - silently sync data to server if authenticated with debouncing
 export async function autoSync(): Promise<void> {
   if (!checkAuthStatus()) return;
   
-  try {
-    await uploadToServer(true); // Skip backup for auto-sync
-  } catch (error) {
-    console.error('Auto-sync error:', error);
-    // Silently fail - don't disrupt user experience
+  if (autoSyncTimeout) {
+    clearTimeout(autoSyncTimeout);
   }
+
+  autoSyncTimeout = setTimeout(async () => {
+    try {
+      await uploadToServer(true); // Skip backup for auto-sync
+    } catch (error) {
+      console.error('Auto-sync error:', error);
+      // Silently fail - don't disrupt user experience
+    }
+  }, 2000);
 }
+
 
 // Delete all backups for current user
 export async function deleteAllBackups(): Promise<{ success: boolean; deletedCount: number; error?: string }> {

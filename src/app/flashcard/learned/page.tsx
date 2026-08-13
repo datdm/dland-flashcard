@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useCurriculums } from "@/hooks/useCurriculums";
 import { useNotebooks } from "@/hooks/useNotebooks";
 import { useProgress } from "@/hooks/useProgress";
@@ -11,15 +11,53 @@ export default function FlashCardLearnedPage() {
   const { curriculums } = useCurriculums();
   const { notebooks } = useNotebooks();
   const { progress } = useProgress();
+  const [systemVocabList, setSystemVocabList] = useState<any[]>([]);
+
+  useEffect(() => {
+    async function loadAllSystemData() {
+      try {
+        const urls = [
+          "/data/n5-curriculum.json",
+          "/data/n4-curriculum.json",
+          "/data/n3-curriculum.json",
+          "/data/n2-curriculum.json",
+          "/data/de-curriculum.json",
+          "/data/en-curriculum.json"
+        ];
+
+        let allVocab: any[] = [];
+
+        await Promise.all(
+          urls.map(async (url) => {
+            const res = await fetch(url);
+            if (!res.ok) return;
+            const data = await res.json();
+            const lessons = data.lessons || [];
+            
+            lessons.forEach((lesson: any) => {
+              if (lesson.vocabulary) {
+                allVocab = allVocab.concat(lesson.vocabulary);
+              }
+            });
+          })
+        );
+
+        setSystemVocabList(allVocab);
+      } catch (err) {
+        console.error("Error loading system curriculum data for learned flashcards:", err);
+      }
+    }
+    loadAllSystemData();
+  }, []);
 
   const learnedWords = useMemo(() => {
-    // Collect all vocabulary words across curriculums and notebooks
+    // Collect all vocabulary words across curriculums, notebooks, and system curriculums
     const curriculumVocab = curriculums.flatMap((c) => c.lessons.flatMap((l) => l.vocabulary || []));
     const notebookVocab = notebooks.flatMap((nb) => nb.vocabulary || []);
     
     // De-duplicate vocabulary words by ID to prevent duplicates if they appear in both systems
     const seen = new Set<string>();
-    const allVocab = [...curriculumVocab, ...notebookVocab].filter((v) => {
+    const allVocab = [...curriculumVocab, ...notebookVocab, ...systemVocabList].filter((v) => {
       if (!v || !v.id) return false;
       if (seen.has(v.id)) return false;
       seen.add(v.id);
@@ -27,7 +65,7 @@ export default function FlashCardLearnedPage() {
     });
 
     return allVocab.filter((v) => progress[v.id]?.learned);
-  }, [curriculums, notebooks, progress]);
+  }, [curriculums, notebooks, systemVocabList, progress]);
 
   if (learnedWords.length === 0) {
     return (

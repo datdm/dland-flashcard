@@ -11,6 +11,7 @@ import KanjiStrokeViewer from "@/components/KanjiStrokeViewer";
 
 import { useGrammarProgress } from "@/hooks/useGrammarProgress";
 import { useKanjiProgress } from "@/hooks/useKanjiProgress";
+import { useLanguageSetting } from "@/hooks/useLanguageSetting";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -18,6 +19,8 @@ interface Props {
 
 export default function CurriculumLessonDetailPage({ params }: Props) {
   const { id } = use(params);
+  const { activeLanguage } = useLanguageSetting();
+  const langCode = activeLanguage.code;
   const [lesson, setLesson] = useState<DetailedLesson | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<"vocab" | "grammar" | "kanji" | "shadowing" | "translation" | "reading">("vocab");
@@ -162,7 +165,7 @@ export default function CurriculumLessonDetailPage({ params }: Props) {
     if (typeof window === "undefined") return;
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = "ja-JP";
+    utterance.lang = langCode === "de" ? "de-DE" : langCode === "en" ? "en-US" : "ja-JP";
     utterance.rate = playbackRate;
     window.speechSynthesis.speak(utterance);
   };
@@ -182,7 +185,7 @@ export default function CurriculumLessonDetailPage({ params }: Props) {
     }
 
     const recognition = new SpeechRecognition();
-    recognition.lang = "ja-JP";
+    recognition.lang = langCode === "de" ? "de-DE" : langCode === "en" ? "en-US" : "ja-JP";
     recognition.interimResults = false;
     recognition.maxAlternatives = 1;
 
@@ -356,16 +359,18 @@ export default function CurriculumLessonDetailPage({ params }: Props) {
         >
           📖 Ngữ pháp ({learnedGrammarCount}/{grammarCount})
         </button>
-        <button
-          onClick={() => setActiveTab("kanji")}
-          className={`pb-3 font-bold text-sm transition-colors border-b-2 whitespace-nowrap ${
-            activeTab === "kanji"
-              ? "border-indigo-600 text-indigo-600"
-              : "border-transparent text-gray-400 hover:text-gray-600"
-          }`}
-        >
-          🉐 Kanji ({learnedKanjiCount}/{kanjiCount})
-        </button>
+        {kanjiCount > 0 && (
+          <button
+            onClick={() => setActiveTab("kanji")}
+            className={`pb-3 font-bold text-sm transition-colors border-b-2 whitespace-nowrap ${
+              activeTab === "kanji"
+                ? "border-indigo-600 text-indigo-600"
+                : "border-transparent text-gray-400 hover:text-gray-600"
+            }`}
+          >
+            🉐 Kanji ({learnedKanjiCount}/{kanjiCount})
+          </button>
+        )}
           <button
             onClick={() => setActiveTab("shadowing")}
             className={`pb-3 font-bold text-sm transition-colors border-b-2 whitespace-nowrap ${
@@ -582,7 +587,7 @@ export default function CurriculumLessonDetailPage({ params }: Props) {
                         onClick={() => playSentence(item.japanese)}
                         className="text-xs text-indigo-600 hover:text-indigo-800 font-semibold flex items-center gap-1"
                       >
-                        🔊 Nghe tiếng Nhật
+                        🔊 Nghe phát âm
                       </button>
                     </div>
 
