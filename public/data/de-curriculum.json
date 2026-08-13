@@ -15,12 +15,12 @@
         { "id": "de-01-03", "kanji": "Guten Abend", "hiragana": "goo-ten ah-bent", "meaning": "Chào buổi tối", "phonetic": "greeting" },
         { "id": "de-01-04", "kanji": "Auf Wiedersehen", "hiragana": "owf vee-der-zeen", "meaning": "Tạm biệt (trang trọng)", "phonetic": "farewell" },
         { "id": "de-01-05", "kanji": "Tschüss", "hiragana": "chüss", "meaning": "Tạm biệt (thân mật)", "phonetic": "farewell" },
-        { "id": "de-01-06", "kanji": "Der Name", "hiragana": "dair nah-me", "meaning": "Tên (giống đực)", "phonetic": "noun (m)" },
-        { "id": "de-01-07", "kanji": "Die Sprache", "hiragana": "dee shprah-khe", "meaning": "Ngôn ngữ (giống cái)", "phonetic": "noun (f)" },
-        { "id": "de-01-08", "kanji": "Das Land", "hiragana": "dahs lahnt", "meaning": "Đất nước (giống trung)", "phonetic": "noun (n)" },
+        { "id": "de-01-06", "kanji": "Der Name", "hiragana": "dair nah-me", "meaning": "Tên", "phonetic": "noun (m)" },
+        { "id": "de-01-07", "kanji": "Die Sprache", "hiragana": "dee shprah-khe", "meaning": "Ngôn ngữ", "phonetic": "noun (f)" },
+        { "id": "de-01-08", "kanji": "Das Land", "hiragana": "dahs lahnt", "meaning": "Đất nước", "phonetic": "noun (n)" },
         { "id": "de-01-09", "kanji": "Deutschland", "hiragana": "doytch-lahnt", "meaning": "Nước Đức", "phonetic": "proper noun" },
         { "id": "de-01-10", "kanji": "Ich heiße ...", "hiragana": "ikh hei-se", "meaning": "Tôi tên là ...", "phonetic": "phrase" },
-        { "id": "de-01-11", "kanji": "Wie heißen Sie?", "hiragana": "vee hei-sen zee", "meaning": "Bạn/Ông/Bà tên là gì? (trang trọng)", "phonetic": "question" },
+        { "id": "de-01-11", "kanji": "Wie heißen Sie?", "hiragana": "vee hei-sen zee", "meaning": "Bạn tên là gì? (trang trọng)", "phonetic": "question" },
         { "id": "de-01-12", "kanji": "Woher kommen Sie?", "hiragana": "vo-hair kom-men zee", "meaning": "Bạn đến từ đâu?", "phonetic": "question" },
         { "id": "de-01-13", "kanji": "Ich komme aus ...", "hiragana": "ikh kom-me ows", "meaning": "Tôi đến từ ...", "phonetic": "phrase" },
         { "id": "de-01-14", "kanji": "Bitte", "hiragana": "bit-te", "meaning": "Làm ơn / Xin mời", "phonetic": "adverb" },
@@ -31,7 +31,7 @@
           "id": "g-de-01-01",
           "structure": "Personalpronomen (Đại từ nhân xưng): ich, Sie, du",
           "meaning": "ich = tôi, Sie = Bạn/Ông/Bà (trang trọng), du = bạn (thân mật)",
-          "explanation": "Tiếng Đức phân biệt rõ giữa 'Sie' (trang trọng) và 'du' (thân mật). Dùng 'Sie' khi gặp người lạ hoặc trong môi trường công sở.",
+          "explanation": "Tiếng Đức phân biệt rõ giữa 'Sie' (trang trọng) và 'du' (thân mật).",
           "level": "A1",
           "examples": [
             { "id": "eg-de-01-01", "sentence": "Ich heiße Anna. Wie heißen Sie?", "meaning": "Tôi tên là Anna. Bạn tên là gì?" },
@@ -42,11 +42,11 @@
           "id": "g-de-01-02",
           "structure": "Verb 'sein' (Động từ 'là'): ich bin, Sie sind, du bist",
           "meaning": "Chia động từ 'sein' ở ngôi thứ nhất và thứ hai số ít",
-          "explanation": "Động từ 'sein' là động từ bất quy tắc cực kỳ quan trọng. Cần nhớ thuộc lòng cách chia.",
+          "explanation": "Động từ 'sein' là động từ bất quy tắc quan trọng nhất.",
           "level": "A1",
           "examples": [
             { "id": "eg-de-01-03", "sentence": "Ich bin Lehrerin.", "meaning": "Tôi là giáo viên (nữ)." },
-            { "id": "eg-de-01-04", "sentence": "Sie sind aus Vietnam.", "meaning": "Bạn/Bà đến từ Việt Nam." }
+            { "id": "eg-de-01-04", "sentence": "Sie sind aus Vietnam.", "meaning": "Bạn đến từ Việt Nam." }
           ]
         }
       ]
@@ -79,7 +79,7 @@
           "id": "g-de-02-01",
           "structure": "Verb 'kommen' - Chia động từ nhóm đều ở số ít",
           "meaning": "ich komme, du kommst, er/sie/es kommt, Sie kommen",
-          "explanation": "Động từ có quy tắc (Regelverben) chia theo khuôn: bỏ đuôi -en, thêm: -e / -st / -t / -en tương ứng với mỗi ngôi.",
+          "explanation": "Động từ có quy tắc (Regelverben) chia theo khuôn: bỏ đuôi -en, thêm: -e / -st / -t / -en.",
           "level": "A1",
           "examples": [
             { "id": "eg-de-02-01", "sentence": "Sie kommt aus Japan.", "meaning": "Cô ấy đến từ Nhật Bản." },
@@ -90,7 +90,7 @@
           "id": "g-de-02-02",
           "structure": "Zahlen 1-100 (Số đếm từ 1 đến 100)",
           "meaning": "Cách đọc và viết các con số trong tiếng Đức",
-          "explanation": "Số từ 21 trở đi đọc hàng đơn vị trước rồi mới đến hàng chục: 21 = einundzwanzig (một và hai mươi).",
+          "explanation": "Số từ 21 trở đi đọc hàng đơn vị trước rồi mới đến hàng chục: 21 = einundzwanzig.",
           "level": "A1",
           "examples": [
             { "id": "eg-de-02-03", "sentence": "Ich bin dreißig Jahre alt.", "meaning": "Tôi 30 tuổi." },
@@ -127,7 +127,7 @@
           "id": "g-de-03-01",
           "structure": "Unbestimmter Artikel: ein / eine / ein",
           "meaning": "ein (giống đực/trung), eine (giống cái)",
-          "explanation": "Dùng quán từ không xác định khi nhắc đến sự vật lần đầu tiên hoặc chưa xác định cụ thể. Câu phủ định dùng kein/keine.",
+          "explanation": "Dùng quán từ không xác định khi nhắc đến sự vật lần đầu tiên.",
           "level": "A1",
           "examples": [
             { "id": "eg-de-03-01", "sentence": "Gibt es hier einen Bahnhof?", "meaning": "Ở đây có nhà ga không?" },
@@ -175,7 +175,7 @@
           "id": "g-de-04-01",
           "structure": "Negationsartikel: kein / keine / kein",
           "meaning": "Phủ định danh từ: kein (giống đực/trung), keine (giống cái và số nhiều)",
-          "explanation": "Dùng kein/keine để phủ định danh từ có quán từ nicht bestimmter Artikel hoặc không có quán từ. Khác với 'nicht' dùng để phủ định động từ, tính từ.",
+          "explanation": "Dùng kein/keine để phủ định danh từ có quán từ không xác định.",
           "level": "A1",
           "examples": [
             { "id": "eg-de-04-01", "sentence": "Ich habe keine Zeit.", "meaning": "Tôi không có thời gian." },
@@ -186,7 +186,7 @@
           "id": "g-de-04-02",
           "structure": "Verb 'möchten' (muốn) - Động từ tình thái Konjunktiv II",
           "meaning": "ich möchte, du möchtest, er/sie möchte, Sie möchten",
-          "explanation": "'Möchten' là dạng lịch sự của 'wollen'. Dùng để đặt hàng, mua sắm và yêu cầu lịch sự.",
+          "explanation": "'Möchten' là dạng lịch sự của 'wollen'. Dùng để đặt hàng, mua sắm.",
           "level": "A1",
           "examples": [
             { "id": "eg-de-04-03", "sentence": "Ich möchte einen Kaffee, bitte.", "meaning": "Tôi muốn một ly cà phê, làm ơn." },
@@ -234,7 +234,7 @@
           "id": "g-de-05-02",
           "structure": "Zeitangaben: um, von...bis, am",
           "meaning": "um (lúc) + giờ cụ thể, am (vào ngày), von...bis (từ...đến)",
-          "explanation": "Các giới từ thời gian quan trọng: 'um' chỉ giờ cụ thể, 'am' đứng trước các thứ và buổi (am Montag, am Morgen), 'im' đứng trước tháng và mùa.",
+          "explanation": "Các giới từ thời gian quan trọng: 'um' chỉ giờ cụ thể, 'am' đứng trước các thứ và buổi.",
           "level": "A1",
           "examples": [
             { "id": "eg-de-05-03", "sentence": "Am Montag arbeite ich von 9 bis 17 Uhr.", "meaning": "Thứ Hai tôi làm việc từ 9 giờ đến 17 giờ." },
@@ -271,7 +271,7 @@
           "id": "g-de-06-01",
           "structure": "Modalverben: können, wollen (Động từ tình thái)",
           "meaning": "Chia: ich kann/will, du kannst/willst, er kann/will, wir können/wollen",
-          "explanation": "Động từ tình thái đứng ở vị trí số 2 trong câu, động từ chính (infinitiv) đứng cuối câu. Động từ tình thái thường bất quy tắc.",
+          "explanation": "Động từ tình thái đứng ở vị trí số 2 trong câu, động từ chính (infinitiv) đứng cuối câu.",
           "level": "A1",
           "examples": [
             { "id": "eg-de-06-01", "sentence": "Ich kann gut schwimmen.", "meaning": "Tôi bơi giỏi." },
@@ -282,7 +282,7 @@
           "id": "g-de-06-02",
           "structure": "Verbklammer (Khung động từ) trong câu với động từ tình thái",
           "meaning": "Động từ tình thái ở vị trí 2, động từ chính ở cuối câu tạo thành 'khung'",
-          "explanation": "Đây là cấu trúc đặc trưng của tiếng Đức: [Chủ ngữ] + [Động từ tình thái] + ... + [Động từ chính - Infinitiv]",
+          "explanation": "Cấu trúc: [Chủ ngữ] + [Động từ tình thái] + ... + [Động từ chính - Infinitiv]",
           "level": "A1",
           "examples": [
             { "id": "eg-de-06-03", "sentence": "Er will am Wochenende Freunde besuchen.", "meaning": "Anh ấy muốn thăm bạn bè vào cuối tuần." },
@@ -319,7 +319,7 @@
           "id": "g-de-07-01",
           "structure": "Perfekt mit 'haben' (Thì quá khứ hoàn thành với 'haben')",
           "meaning": "Cấu trúc: haben (chia) + Partizip II (ge-...-(e)t / ge-...-(e)n)",
-          "explanation": "Đây là thì quá khứ dùng trong hội thoại và văn viết không chính thức. Hầu hết động từ dùng 'haben'. Partizip II của động từ có quy tắc: ge + Stamm + t (z.B. gemacht).",
+          "explanation": "Đây là thì quá khứ dùng trong hội thoại. Hầu hết động từ dùng 'haben'.",
           "level": "A1",
           "examples": [
             { "id": "eg-de-07-01", "sentence": "Ich habe gestern eine E-Mail geschrieben.", "meaning": "Hôm qua tôi đã viết một email." },
@@ -367,7 +367,7 @@
           "id": "g-de-08-01",
           "structure": "Zwei-Wege-Präpositionen + Dativ (Wo?) vs Akkusativ (Wohin?)",
           "meaning": "in, an, auf, über, unter, neben, zwischen, vor, hinter + Dativ (vị trí) hoặc Akkusativ (hướng đến)",
-          "explanation": "Câu hỏi 'Wo?' (Ở đâu?) → Dativ. Câu hỏi 'Wohin?' (Đến đâu?) → Akkusativ. Đây là điểm ngữ pháp cốt lõi của tiếng Đức.",
+          "explanation": "Câu hỏi 'Wo?' (Ở đâu?) → Dativ. Câu hỏi 'Wohin?' (Đến đâu?) → Akkusativ.",
           "level": "A1",
           "examples": [
             { "id": "eg-de-08-01", "sentence": "Das Buch liegt auf dem Tisch. (Wo?)", "meaning": "Quyển sách ở trên bàn. (Dativ)" },
@@ -378,7 +378,7 @@
           "id": "g-de-08-02",
           "structure": "Adjektivdeklination (Biến cách tính từ) - Vị ngữ (predikativ)",
           "meaning": "Khi tính từ đứng sau động từ sein, dùng dạng gốc không biến đổi",
-          "explanation": "Tính từ trong tiếng Đức có 2 vị trí: vị ngữ (sau sein: Die Wohnung ist groß) và bổ ngữ (trước danh từ: eine große Wohnung). Ở vị ngữ, tính từ không biến đổi theo giống.",
+          "explanation": "Ở vị ngữ, tính từ không biến đổi theo giống.",
           "level": "A1",
           "examples": [
             { "id": "eg-de-08-03", "sentence": "Das Zimmer ist sehr schön.", "meaning": "Căn phòng này rất đẹp." },
@@ -415,7 +415,7 @@
           "id": "g-de-09-01",
           "structure": "W-Fragen (Câu hỏi với từ để hỏi W-)",
           "meaning": "wer, was, wo, woher, wohin, wann, wie, warum, wie viel, wie lange",
-          "explanation": "Từ để hỏi luôn đứng đầu câu. Sau đó là động từ (chia), tiếp theo là chủ ngữ nếu không phải là từ để hỏi về chủ ngữ.",
+          "explanation": "Từ để hỏi luôn đứng đầu câu. Sau đó là động từ (chia).",
           "level": "A1",
           "examples": [
             { "id": "eg-de-09-01", "sentence": "Warum lernst du Deutsch?", "meaning": "Tại sao bạn học tiếng Đức?" },
@@ -426,7 +426,7 @@
           "id": "g-de-09-02",
           "structure": "Temporale Präpositionen: in, seit, vor, nach, ab",
           "meaning": "Giới từ chỉ thời gian quan trọng khi nói về lịch trình và thời điểm",
-          "explanation": "in + Dativ (trong tương lai hoặc khoảng thời gian), seit + Dativ (từ quá khứ đến hiện tại - dùng với Präsens!), vor + Dativ (trước đây), nach + Dativ (sau khi).",
+          "explanation": "in + Dativ (trong tương lai), seit + Dativ (từ quá khứ đến hiện tại - dùng với Präsens!), vor + Dativ (trước đây), nach + Dativ (sau khi).",
           "level": "A1",
           "examples": [
             { "id": "eg-de-09-03", "sentence": "Ich lerne seit zwei Jahren Deutsch.", "meaning": "Tôi học tiếng Đức được hai năm rồi." },
@@ -463,7 +463,7 @@
           "id": "g-de-10-01",
           "structure": "Modalverben: müssen, dürfen, sollen",
           "meaning": "müssen (phải - nội tại), dürfen (được phép), sollen (phải - theo lệnh người khác)",
-          "explanation": "müssen: bắt buộc do hoàn cảnh. dürfen: có/không có quyền làm gì. sollen: nhiệm vụ được giao từ bên ngoài. Đều theo cấu trúc khung động từ.",
+          "explanation": "müssen: bắt buộc do hoàn cảnh. dürfen: có/không có quyền làm gì.",
           "level": "A1",
           "examples": [
             { "id": "eg-de-10-01", "sentence": "Ich muss morgen früh aufstehen.", "meaning": "Ngày mai tôi phải dậy sớm." },
@@ -474,7 +474,7 @@
           "id": "g-de-10-02",
           "structure": "Akkusativ nach mögen / Adjektivdeklination",
           "meaning": "Sau các động từ tình thái, danh từ đứng ở cách Akkusativ",
-          "explanation": "Cách Akkusativ: Chỉ giống đực (maskulin) thay đổi quán từ: der → den, ein → einen. Giống cái và giống trung giữ nguyên trong Akkusativ.",
+          "explanation": "Cách Akkusativ: Chỉ giống đực (maskulin) thay đổi quán từ: der → den, ein → einen.",
           "level": "A1",
           "examples": [
             { "id": "eg-de-10-03", "sentence": "Ich kaufe den roten Mantel.", "meaning": "Tôi mua chiếc áo khoác đỏ đó." },
@@ -511,18 +511,18 @@
           "id": "g-de-11-01",
           "structure": "Dativpronomen: mir, dir, ihm, ihr",
           "meaning": "Đại từ nhân xưng cách Dativ để diễn đạt cảm giác, cảm xúc",
-          "explanation": "Cấu trúc 'Mir geht es...' hay 'Wie geht es Ihnen/dir?' dùng Dativ. Bảng Dativ: mir (tôi), dir (bạn), ihm (anh/nó), ihr (cô).",
+          "explanation": "Cấu trúc 'Mir geht es...' hay 'Wie geht es Ihnen/dir?' dùng Dativ.",
           "level": "A1",
           "examples": [
-            { "id": "eg-de-11-01", "sentence": "Wie geht es Ihnen?", "meaning": "Bạn/Ông/Bà có khỏe không?" },
+            { "id": "eg-de-11-01", "sentence": "Wie geht es Ihnen?", "meaning": "Bạn có khỏe không?" },
             { "id": "eg-de-11-02", "sentence": "Mir geht es nicht gut, ich bin krank.", "meaning": "Tôi không khỏe, tôi bị bệnh." }
           ]
         },
         {
           "id": "g-de-11-02",
-          "structure": "Ratschläge mit 'sollten' (Lời khuyên bằng 'sollten')",
+          "structure": "Ratschläge với 'sollten' (Lời khuyên bằng 'sollten')",
           "meaning": "Du solltest..., Sie sollten... = Bạn nên...",
-          "explanation": "'Sollten' là dạng lịch sự hơn của 'sollen', dùng để đưa ra lời khuyên mang tính đề xuất nhẹ nhàng (khác với 'müssen' - bắt buộc).",
+          "explanation": "'Sollten' là dạng lịch sự hơn của 'sollen', dùng để đưa ra lời khuyên.",
           "level": "A1",
           "examples": [
             { "id": "eg-de-11-03", "sentence": "Du solltest viel Wasser trinken.", "meaning": "Bạn nên uống nhiều nước." },
@@ -557,9 +557,9 @@
       "grammarPoints": [
         {
           "id": "g-de-12-01",
-          "structure": "Zukunft mit 'werden' + Infinitiv (Tương lai với werden)",
+          "structure": "Zukunft với 'werden' + Infinitiv (Tương lai với werden)",
           "meaning": "Cấu trúc: werden (chia) + Infinitiv cuối câu",
-          "explanation": "Để diễn đạt dự định hoặc dự đoán trong tương lai, dùng: ich werde, du wirst, er/sie/es wird, wir werden + Infinitiv. Ngoài ra có thể dùng Präsens + trạng từ thời gian.",
+          "explanation": "Để diễn đạt dự định hoặc dự đoán trong tương lai.",
           "level": "A1",
           "examples": [
             { "id": "eg-de-12-01", "sentence": "Nächsten Sommer werde ich nach Deutschland reisen.", "meaning": "Mùa hè tới tôi sẽ đi Đức." },
@@ -570,7 +570,7 @@
           "id": "g-de-12-02",
           "structure": "Ôn tập A1: Satzstellung (Trật tự từ trong câu tiếng Đức)",
           "meaning": "Động từ luôn ở vị trí thứ hai trong câu kể (V2-Regel)",
-          "explanation": "Nguyên tắc V2 là xương sống của cú pháp tiếng Đức: [Thành phần bất kỳ] + [Động từ chia (vị trí 2)] + [Chủ ngữ nếu chưa đứng đầu] + ... Khi có 2 động từ: động từ chính ở cuối câu.",
+          "explanation": "Nguyên tắc V2 là xương sống của cú pháp tiếng Đức.",
           "level": "A1",
           "examples": [
             { "id": "eg-de-12-03", "sentence": "Morgen fahren wir an den Strand.", "meaning": "Ngày mai chúng tôi đi ra bãi biển." },
