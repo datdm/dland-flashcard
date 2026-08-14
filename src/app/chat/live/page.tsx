@@ -47,12 +47,20 @@ Deine Aufgaben:
 3. Korrigiere die Fehler des Nutzers auf eine sehr freundliche Weise.`
 };
 
+const LIVE_MODELS = [
+  { id: "models/gemini-2.0-flash-exp", label: "Gemini 2.0 Flash Live" },
+  { id: "models/gemini-2.5-flash-native-audio-dialog", label: "Gemini 2.5 Flash Native Audio" },
+  { id: "models/gemini-3-flash-live", label: "Gemini 3 Flash Live" },
+  { id: "models/gemini-3.5-live-translate-preview", label: "Gemini 3.5 Live Translate" }
+];
+
 export default function GeminiLivePage() {
   const { activeLanguage } = useLanguageSetting();
   const [connected, setConnected] = useState(false);
   const [statusText, setStatusText] = useState("Sẵn sàng đàm thoại");
   const [lastTranscript, setLastTranscript] = useState("");
   const [aiState, setAiState] = useState<"idle" | "listening" | "speaking">("idle");
+  const [selectedModel, setSelectedModel] = useState<string>("models/gemini-2.0-flash-exp");
   const [mounted, setMounted] = useState(false);
 
   const wsRef = useRef<WebSocket | null>(null);
@@ -152,7 +160,7 @@ export default function GeminiLivePage() {
 
     const setupMsg = {
       setup: {
-        model: "models/gemini-2.0-flash-exp",
+        model: selectedModel,
         generationConfig: {
           responseModalities: ["AUDIO"],
           speechConfig: {
@@ -220,7 +228,7 @@ export default function GeminiLivePage() {
             realtimeInput: {
               mediaChunks: [
                 {
-                  mimeType: "audio/pcm",
+                  mimeType: "audio/pcm;rate=16000",
                   data: base64Data
                 }
               ]
@@ -348,13 +356,28 @@ export default function GeminiLivePage() {
   return (
     <div className="min-h-screen bg-slate-950 text-white flex flex-col justify-between p-4 md:p-6 pb-20">
       {/* Top Navbar */}
-      <div className="flex items-center justify-between border-b border-white/10 pb-4">
+      <div className="flex flex-wrap items-center justify-between border-b border-white/10 pb-4 gap-2">
         <Link href="/chat" className="text-sm font-semibold text-indigo-400 hover:text-indigo-300">
           ← Quay lại Chat thường
         </Link>
-        <div className="flex items-center gap-2 bg-white/5 border border-white/10 px-3.5 py-1.5 rounded-full text-xs font-semibold">
-          <span>{flagEmoji}</span>
-          <span>Tutor: {langName}</span>
+        <div className="flex items-center gap-2">
+          <select
+            value={selectedModel}
+            onChange={(e) => setSelectedModel(e.target.value)}
+            disabled={connected}
+            className="bg-slate-900 border border-white/15 rounded-full px-3 py-1 text-xs font-medium text-slate-300 focus:outline-none focus:border-indigo-500 cursor-pointer disabled:opacity-50"
+            title="Chọn Gemini Live Model"
+          >
+            {LIVE_MODELS.map((m) => (
+              <option key={m.id} value={m.id}>
+                {m.label}
+              </option>
+            ))}
+          </select>
+          <div className="flex items-center gap-2 bg-white/5 border border-white/10 px-3.5 py-1.5 rounded-full text-xs font-semibold">
+            <span>{flagEmoji}</span>
+            <span>Tutor: {langName}</span>
+          </div>
         </div>
       </div>
 
