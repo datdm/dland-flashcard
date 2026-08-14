@@ -118,16 +118,27 @@ async function start() {
                 return;
             }
             console.log('🔌 Client WebSocket connected. Establishing connection to Gemini Live...');
-            // Connect to Gemini Multimodal Live API (v1alpha version)
-            const geminiUrl = `wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent?key=${apiKey}`;
+            // Connect to Gemini Multimodal Live API (v1beta version)
+            const geminiUrl = `wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent?key=${apiKey}`;
             const geminiWs = new ws_1.WebSocket(geminiUrl);
+            const messageQueue = [];
             geminiWs.on('open', () => {
-                console.log('✅ Connected to Gemini Live API');
+                console.log('✅ Connected to Gemini Live API (v1beta)');
+                // Flush buffered messages (including initial setup message)
+                while (messageQueue.length > 0) {
+                    const item = messageQueue.shift();
+                    if (item && geminiWs.readyState === ws_1.WebSocket.OPEN) {
+                        geminiWs.send(item.message, { binary: item.isBinary });
+                    }
+                }
             });
-            // Forward client message to Gemini
+            // Forward client message to Gemini (or buffer if connection is not open yet)
             ws.on('message', (message, isBinary) => {
                 if (geminiWs.readyState === ws_1.WebSocket.OPEN) {
                     geminiWs.send(message, { binary: isBinary });
+                }
+                else {
+                    messageQueue.push({ message, isBinary });
                 }
             });
             // Forward Gemini message back to client
