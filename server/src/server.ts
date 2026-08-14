@@ -2,6 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import * as dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
+import http from 'http';
+import { WebSocketServer, WebSocket } from 'ws';
 import pool, { runMigrations } from './db';
 import authRoutes from './routes/auth';
 import syncRoutes from './routes/sync';
@@ -82,9 +84,77 @@ async function start() {
     console.log('👤 Ensuring default admin user...');
     await ensureDefaultAdmin();
 
-    app.listen(PORT, () => {
+    const server = app.listen(PORT, () => {
       console.log(`🚀 Server is running on port ${PORT}`);
       console.log(`📊 Health check: http://localhost:${PORT}/health`);
+    });
+
+    // Initialize WebSocket server for Gemini Multimodal Live API proxy
+    const wss = new WebSocketServer({ noServer: true });
+
+    wss.on('connection', (ws: any, request: http.IncomingMessage) => {
+      const apiKey = process.env.GEMINI_API_KEY;
+      if (!apiKey) {
+        console.error('❌ GEMINI_API_KEY is not defined in environment variables');
+        ws.close(1011, 'GEMINI_API_KEY is not configured on the server');
+        return;
+      }
+
+      console.log('🔌 Client WebSocket connected. Establishing connection to Gemini Live...');
+
+      // Connect to Gemini Multimodal Live API (v1alpha version)
+      const geminiUrl = `wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent?key=${apiKey}`;
+      const geminiWs = new WebSocket(geminiUrl);
+
+      geminiWs.on('open', () => {
+        console.log('✅ Connected to Gemini Live API');
+      });
+
+      // Forward client message to Gemini
+      ws.on('message', (message: any, isBinary: boolean) => {
+        if (geminiWs.readyState === WebSocket.OPEN) {
+          geminiWs.send(message, { binary: isBinary });
+        }
+      });
+
+      // Forward Gemini message back to client
+      geminiWs.on('message', (message: any, isBinary: boolean) => {
+        if (ws.readyState === WebSocket.OPEN) {
+          ws.send(message, { binary: isBinary });
+        }
+      });
+
+      ws.on('close', () => {
+        console.log('🔌 Client WebSocket disconnected');
+        geminiWs.close();
+      });
+
+      geminiWs.on('close', (code, reason) => {
+        console.log(`🔌 Gemini Live API disconnected. Code: ${code}, Reason: ${reason}`);
+        ws.close(1000, 'Gemini connection closed');
+      });
+
+      ws.on('error', (error: any) => {
+        console.error('❌ Client WS error:', error);
+        geminiWs.close();
+      });
+
+      geminiWs.on('error', (error: any) => {
+        console.error('❌ Gemini WS error:', error);
+        ws.close();
+      });
+    });
+
+    // Hook server upgrade event to capture /api/live WebSocket requests
+    server.on('upgrade', (request, socket, head) => {
+      const url = new URL(request.url || '', `http://${request.headers.host}`);
+      if (url.pathname === '/api/live') {
+        wss.handleUpgrade(request, socket, head, (ws) => {
+          wss.emit('connection', ws, request);
+        });
+      } else {
+        socket.destroy();
+      }
     });
   } catch (error) {
     console.error('Failed to start server:', error);

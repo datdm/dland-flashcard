@@ -207,6 +207,66 @@ router.post('/upload', auth_1.authenticate, async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
+// Move vocabulary items between notebooks (delta operation)
+router.post('/move', auth_1.authenticate, async (req, res) => {
+    try {
+        const userId = req.userId;
+        const { vocabIds, toNotebookId } = req.body;
+        if (!vocabIds || !Array.isArray(vocabIds) || vocabIds.length === 0 || !toNotebookId) {
+            return res.status(400).json({ error: 'Thiếu vocabIds hoặc toNotebookId' });
+        }
+        const result = await db_1.default.query(`SELECT data_value FROM user_data WHERE user_id = $1 AND data_key = $2`, [userId, 'flashcash-notebooks']);
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'Không tìm thấy dữ liệu sổ tay' });
+        }
+        let notebooks = result.rows[0].data_value?.notebooks || [];
+        const targetNb = notebooks.find((nb) => nb.id === toNotebookId);
+        if (!targetNb) {
+            return res.status(404).json({ error: 'Không tìm thấy sổ tay đích' });
+        }
+        if (!targetNb.vocabulary) {
+            targetNb.vocabulary = [];
+        }
+        const vocabSet = new Set(vocabIds);
+        const movedVocabs = [];
+        // Filter out the vocabularies from their source notebooks and collect them
+        notebooks = notebooks.map((nb) => {
+            if (nb.id === toNotebookId)
+                return nb; // We will add the moved ones here
+            if (!nb.vocabulary)
+                return nb;
+            const toKeep = [];
+            nb.vocabulary.forEach((v) => {
+                if (vocabSet.has(v.id)) {
+                    movedVocabs.push(v);
+                }
+                else {
+                    toKeep.push(v);
+                }
+            });
+            return { ...nb, vocabulary: toKeep };
+        });
+        if (movedVocabs.length === 0) {
+            return res.status(404).json({ error: 'Không tìm thấy từ vựng nào để di chuyển' });
+        }
+        // Prepend to target notebook
+        targetNb.vocabulary = [...movedVocabs, ...targetNb.vocabulary];
+        await db_1.default.query(`INSERT INTO user_data (user_id, data_key, data_value, updated_at)
+       VALUES ($1, $2, $3, NOW())
+       ON CONFLICT (user_id, data_key)
+       DO UPDATE SET data_value = $3, updated_at = NOW()`, [userId, 'flashcash-notebooks', JSON.stringify({ notebooks })]);
+        await db_1.default.query('UPDATE users SET last_sync_at = NOW() WHERE id = $1', [userId]);
+        res.json({
+            success: true,
+            message: `Đã di chuyển ${movedVocabs.length} từ vựng thành công`,
+            notebooks
+        });
+    }
+    catch (error) {
+        console.error('Move vocabulary error:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
 // Delete a vocabulary item from a notebook (delta operation)
 router.delete('/:vocabId', auth_1.authenticate, async (req, res) => {
     try {

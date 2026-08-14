@@ -57,7 +57,7 @@ router.post('/login', async (req, res) => {
     }
     try {
         // Find user
-        const result = await db_1.default.query('SELECT id, username, password_hash, created_at FROM users WHERE username = $1', [username]);
+        const result = await db_1.default.query('SELECT id, username, password_hash, created_at, is_admin FROM users WHERE username = $1', [username]);
         if (result.rows.length === 0) {
             return res.status(401).json({ error: 'Invalid username or password' });
         }
@@ -76,6 +76,7 @@ router.post('/login', async (req, res) => {
                 id: user.id,
                 username: user.username,
                 createdAt: user.created_at,
+                isAdmin: !!user.is_admin,
             },
         });
     }
@@ -87,7 +88,7 @@ router.post('/login', async (req, res) => {
 // Verify token
 router.get('/verify', auth_1.authenticate, async (req, res) => {
     try {
-        const result = await db_1.default.query('SELECT id, username, created_at FROM users WHERE id = $1', [req.userId]);
+        const result = await db_1.default.query('SELECT id, username, created_at, is_admin FROM users WHERE id = $1', [req.userId]);
         if (result.rows.length === 0) {
             return res.status(404).json({ error: 'User not found' });
         }
@@ -98,6 +99,7 @@ router.get('/verify', auth_1.authenticate, async (req, res) => {
                 id: user.id,
                 username: user.username,
                 createdAt: user.created_at,
+                isAdmin: !!user.is_admin,
             },
         });
     }

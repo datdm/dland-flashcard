@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
+import Link from "next/link";
 import { useLanguageSetting } from "@/hooks/useLanguageSetting";
 
 type Message = {
@@ -218,8 +219,15 @@ export default function ChatPage() {
           </div>
         </div>
 
-        {/* Gemini Live Voice Toggle */}
-        <div className="flex items-center">
+        {/* Gemini Live Voice Toggle & Live Page Link */}
+        <div className="flex items-center gap-2">
+          <Link
+            href="/chat/live"
+            className="text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white transition-all px-3 py-1.5 rounded-full shadow-sm flex items-center gap-1"
+            title="Đàm thoại hai chiều thời gian thực bằng giọng nói"
+          >
+            🎙️ Gemini Live
+          </Link>
           <button
             onClick={() => setAutoSpeak(!autoSpeak)}
             className={`text-xs font-bold transition-all flex items-center gap-1.5 px-3 py-1.5 rounded-full border ${
@@ -229,7 +237,7 @@ export default function ChatPage() {
             }`}
             title="Tự động phát âm thanh phản hồi từ AI"
           >
-            <span>{autoSpeak ? "🔊 Live: Bật" : "🔇 Live: Tắt"}</span>
+            <span>{autoSpeak ? "🔊 Auto: Bật" : "🔇 Auto: Tắt"}</span>
           </button>
         </div>
       </div>

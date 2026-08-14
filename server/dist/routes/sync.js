@@ -46,6 +46,8 @@ router.post('/upload', auth_1.authenticate, async (req, res) => {
             'flashcash-curriculums',
             'flashcash-grammar-collections',
             'flashcash-grammar-progress',
+            'flashcash-kanji-progress',
+            'flashcash-curriculum-history',
         ];
         // First, backup current data before overwriting (skip if auto-sync)
         if (!skipBackup) {
