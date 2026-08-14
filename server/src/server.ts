@@ -130,8 +130,11 @@ async function start() {
       });
 
       geminiWs.on('close', (code, reason) => {
-        console.log(`🔌 Gemini Live API disconnected. Code: ${code}, Reason: ${reason}`);
-        ws.close(1000, 'Gemini connection closed');
+        const reasonStr = reason ? reason.toString('utf-8') : '';
+        console.log(`🔌 Gemini Live API disconnected. Code: ${code}, Reason: ${reasonStr}`);
+        if (ws.readyState === WebSocket.OPEN) {
+          ws.close(code || 1000, reasonStr || 'Gemini connection closed');
+        }
       });
 
       ws.on('error', (error: any) => {

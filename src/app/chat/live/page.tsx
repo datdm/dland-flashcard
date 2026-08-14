@@ -128,13 +128,13 @@ export default function GeminiLivePage() {
       ws.onerror = (err) => {
         console.error("WebSocket error:", err);
         setStatusText("Lỗi kết nối máy chủ");
-        disconnect();
       };
 
-      ws.onclose = () => {
+      ws.onclose = (event: CloseEvent) => {
         setConnected(false);
-        setStatusText("Kết nối đã đóng");
-        disconnect();
+        const reasonText = event.reason ? `: ${event.reason}` : "";
+        setStatusText(`Kết nối đã ngắt${reasonText}`);
+        cleanupAudio();
       };
 
     } catch (error) {
@@ -286,15 +286,8 @@ export default function GeminiLivePage() {
     }
   };
 
-  const disconnect = () => {
-    setConnected(false);
+  const cleanupAudio = () => {
     setAiState("idle");
-
-    // Close WS
-    if (wsRef.current) {
-      wsRef.current.close();
-      wsRef.current = null;
-    }
 
     // Stop mic stream
     if (micStreamRef.current) {
@@ -318,6 +311,18 @@ export default function GeminiLivePage() {
       playContextRef.current.close();
       playContextRef.current = null;
     }
+  };
+
+  const disconnect = () => {
+    setConnected(false);
+
+    // Close WS
+    if (wsRef.current) {
+      wsRef.current.close();
+      wsRef.current = null;
+    }
+
+    cleanupAudio();
   };
 
   const handleToggle = () => {
@@ -358,17 +363,17 @@ export default function GeminiLivePage() {
         {/* Pulsing Visualizer Waves */}
         <div className="relative w-48 h-48 flex items-center justify-center mb-6">
           <div
-            className={`absolute inset-0 rounded-full bg-indigo-500/20 border border-indigo-500/30 transition-transform duration-500 scale-110 \${
+            className={`absolute inset-0 rounded-full bg-indigo-500/20 border border-indigo-500/30 transition-transform duration-500 scale-110 ${
               aiState === "speaking" ? "animate-ping opacity-75" : ""
             }`}
           />
           <div
-            className={`absolute inset-4 rounded-full bg-pink-500/20 border border-pink-500/30 transition-transform duration-500 scale-105 \${
+            className={`absolute inset-4 rounded-full bg-pink-500/20 border border-pink-500/30 transition-transform duration-500 scale-105 ${
               aiState === "listening" ? "animate-pulse" : ""
             }`}
           />
           <div
-            className={`w-32 h-32 rounded-full flex items-center justify-center text-4xl shadow-xl transition-all duration-500 \${
+            className={`w-32 h-32 rounded-full flex items-center justify-center text-4xl shadow-xl transition-all duration-500 ${
               aiState === "speaking"
                 ? "bg-gradient-to-tr from-indigo-600 to-purple-600 scale-110 border border-indigo-400/50"
                 : aiState === "listening"
@@ -411,7 +416,7 @@ export default function GeminiLivePage() {
       <div className="flex flex-col items-center gap-3">
         <button
           onClick={handleToggle}
-          className={`w-full sm:max-w-xs py-4 rounded-2xl font-bold tracking-wide shadow-lg transition-all duration-300 transform active:scale-95 \${
+          className={`w-full sm:max-w-xs py-4 rounded-2xl font-bold tracking-wide shadow-lg transition-all duration-300 transform active:scale-95 ${
             connected
               ? "bg-red-500 hover:bg-red-600 text-white shadow-red-500/20"
               : "bg-indigo-600 hover:bg-indigo-700 text-white shadow-indigo-500/20"
