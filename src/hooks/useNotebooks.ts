@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { Notebook, NotebooksData, Vocabulary } from "@/types";
 import { getItem, setItem, StorageKeys } from "@/lib/storage";
-import { autoSync, checkAuthStatus, loadNotebooksFromServer, uploadSingleVocab, deleteVocabOnServer, patchVocabOnServer } from "@/lib/syncService";
+import { autoSync, checkAuthStatus, loadNotebooksFromServer, uploadSingleVocab, deleteVocabOnServer, patchVocabOnServer, moveVocabOnServer } from "@/lib/syncService";
 
 function generateId(prefix: string): string {
   return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
@@ -319,7 +319,8 @@ export function useNotebooks() {
   );
 
   const moveVocab = useCallback(
-    (fromNotebookId: string, toNotebookId: string, vocabId: string) => {
+    async (fromNotebookId: string, toNotebookId: string, vocabId: string) => {
+      // 1. Update locally first (optimistic)
       setAllNotebooks((prev) => {
         const sourceNotebook = prev.find((nb) => nb.id === fromNotebookId);
         const vocabToMove = sourceNotebook?.vocabulary.find((v) => v.id === vocabId);
@@ -336,15 +337,26 @@ export function useNotebooks() {
         });
         
         setItem<NotebooksData>(StorageKeys.NOTEBOOKS, { notebooks: updated });
-        setTimeout(() => autoSync(), 0);
         return updated;
       });
+
+      // 2. Delta move on server
+      if (checkAuthStatus()) {
+        const result = await moveVocabOnServer([vocabId], toNotebookId);
+        if (!result.success) {
+          console.error('Move vocab on server failed:', result.error);
+          autoSync();
+        }
+      } else {
+        autoSync();
+      }
     },
     []
   );
 
   const moveMultipleVocab = useCallback(
-    (fromNotebookId: string, toNotebookId: string, vocabIds: string[]) => {
+    async (fromNotebookId: string, toNotebookId: string, vocabIds: string[]) => {
+      // 1. Update locally first (optimistic)
       setAllNotebooks((prev) => {
         const sourceNotebook = prev.find((nb) => nb.id === fromNotebookId);
         if (!sourceNotebook) return prev;
@@ -364,9 +376,19 @@ export function useNotebooks() {
         });
         
         setItem<NotebooksData>(StorageKeys.NOTEBOOKS, { notebooks: updated });
-        setTimeout(() => autoSync(), 0);
         return updated;
       });
+
+      // 2. Delta move on server
+      if (checkAuthStatus()) {
+        const result = await moveVocabOnServer(vocabIds, toNotebookId);
+        if (!result.success) {
+          console.error('Move multiple vocab on server failed:', result.error);
+          autoSync();
+        }
+      } else {
+        autoSync();
+      }
     },
     []
   );

@@ -640,6 +640,35 @@ export async function patchVocabOnServer(
   }
 }
 
+// Move vocabulary items between notebooks on the server
+export async function moveVocabOnServer(
+  vocabIds: string[],
+  toNotebookId: string
+): Promise<{ success: boolean; error?: string }> {
+  const token = getAuthToken();
+  if (!token) return { success: true }; // Not logged in -> local-only is fine
+
+  try {
+    const response = await fetch(`${API_URL}/api/vocab/move`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify({ vocabIds, toNotebookId }),
+    });
+
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      return { success: false, error: data.error || `Lỗi máy chủ (${response.status})` };
+    }
+    return { success: true };
+  } catch (error) {
+    console.error('Move vocab on server error:', error);
+    return { success: false, error: 'Không thể kết nối máy chủ' };
+  }
+}
+
 // === Load individual sections from server ===
 
 // Load notebooks from server

@@ -17,6 +17,18 @@ export default function ChatPage() {
   const promptLoaded = useRef(false);
   const { activeLanguage } = useLanguageSetting();
 
+  // Audio Voice Chat parameters (Gemini Live Mode)
+  const [autoSpeak, setAutoSpeak] = useState(false);
+  const autoSpeakRef = useRef(false);
+  const [isListening, setIsListening] = useState(false);
+  const [recognition, setRecognition] = useState<any>(null);
+
+  const ttsLang = activeLanguage.code === "de" ? "de-DE" : activeLanguage.code === "en" ? "en-US" : "ja-JP";
+
+  useEffect(() => {
+    autoSpeakRef.current = autoSpeak;
+  }, [autoSpeak]);
+
   useEffect(() => {
     const greetingText = activeLanguage.code === "de"
       ? "Hallo! Mình là Gia sư AI Tiếng Đức của Dland Language. Mình có thể giúp bạn giải thích từ vựng, ngữ pháp, chia động từ hoặc cùng bạn luyện nói giao tiếp. Bạn cần mình giúp gì hôm nay?"
@@ -32,6 +44,57 @@ export default function ChatPage() {
     ]);
   }, [activeLanguage.code]);
 
+  // STT initialization
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      if (SpeechRecognition) {
+        const rec = new SpeechRecognition();
+        rec.continuous = false;
+        rec.interimResults = false;
+        rec.lang = activeLanguage.code === "de" ? "de-DE" : activeLanguage.code === "en" ? "en-US" : "ja-JP";
+
+        rec.onstart = () => {
+          setIsListening(true);
+        };
+
+        rec.onend = () => {
+          setIsListening(false);
+        };
+
+        rec.onresult = (event: any) => {
+          const transcript = event.results[0][0].transcript;
+          setInput((prev) => prev ? `${prev} ${transcript}` : transcript);
+        };
+
+        setRecognition(rec);
+      }
+    }
+  }, [activeLanguage.code]);
+
+  const toggleListening = () => {
+    if (!recognition) {
+      alert("Trình duyệt của bạn không hỗ trợ nhận diện giọng nói (Vui lòng sử dụng Chrome/Safari/Edge).");
+      return;
+    }
+
+    if (isListening) {
+      recognition.stop();
+    } else {
+      recognition.start();
+    }
+  };
+
+  const speak = (text: string) => {
+    if (typeof window === "undefined") return;
+    window.speechSynthesis.cancel();
+    // Clean markdown before speaking
+    const cleanText = text.replace(/[*_#`~>\[\]()-]/g, "");
+    const utterance = new SpeechSynthesisUtterance(cleanText);
+    utterance.lang = ttsLang;
+    window.speechSynthesis.speak(utterance);
+  };
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -42,6 +105,11 @@ export default function ChatPage() {
 
   const handleSend = async (text: string) => {
     if (!text.trim() || isLoading) return;
+
+    // Stop speaking when user sends a new message
+    if (typeof window !== "undefined") {
+      window.speechSynthesis.cancel();
+    }
 
     const userMsg: Message = { role: "user", parts: [{ text }] };
     const modelMsg: Message = { role: "model", parts: [{ text: "" }] };
@@ -74,12 +142,14 @@ export default function ChatPage() {
 
       const reader = res.body.getReader();
       const decoder = new TextDecoder("utf-8");
+      let fullResponseText = "";
 
       while (true) {
         const { value, done } = await reader.read();
         if (done) break;
         
         const chunk = decoder.decode(value, { stream: true });
+        fullResponseText += chunk;
         
         setMessages((prev) => {
           const newMessages = [...prev];
@@ -89,6 +159,10 @@ export default function ChatPage() {
           newMessages[lastIndex] = lastMsg;
           return newMessages;
         });
+      }
+
+      if (autoSpeakRef.current) {
+        speak(fullResponseText);
       }
     } catch (err: any) {
       console.error(err);
@@ -124,16 +198,39 @@ export default function ChatPage() {
     "🗣️ Luyện giao tiếp chủ đề mua sắm"
   ];
 
+  const headerTitle = activeLanguage.code === "de"
+    ? "Gia Sư AI Tiếng Đức"
+    : activeLanguage.code === "en"
+    ? "Gia Sư AI Tiếng Anh"
+    : "Gia Sư AI Tiếng Nhật";
+
   return (
     <div className="max-w-4xl mx-auto h-[calc(100vh-110px)] md:h-[calc(100vh-40px)] flex flex-col px-4 pt-4">
       {/* Header */}
-      <div className="bg-white rounded-t-3xl border-b border-gray-100 p-4 shadow-xs z-10 flex items-center gap-3">
-        <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-600 flex items-center justify-center text-white text-xl shadow-md">
-          🤖
+      <div className="bg-white rounded-t-3xl border-b border-gray-100 p-4 shadow-xs z-10 flex items-center justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-600 flex items-center justify-center text-white text-xl shadow-md">
+            🤖
+          </div>
+          <div>
+            <h1 className="text-lg font-bold text-gray-900">{headerTitle}</h1>
+            <p className="text-xs text-gray-500">Được cung cấp bởi Google Gemini</p>
+          </div>
         </div>
-        <div>
-          <h1 className="text-lg font-bold text-gray-900">Gia Sư AI Tiếng Nhật</h1>
-          <p className="text-xs text-gray-500">Được cung cấp bởi Google Gemini</p>
+
+        {/* Gemini Live Voice Toggle */}
+        <div className="flex items-center">
+          <button
+            onClick={() => setAutoSpeak(!autoSpeak)}
+            className={`text-xs font-bold transition-all flex items-center gap-1.5 px-3 py-1.5 rounded-full border ${
+              autoSpeak
+                ? "bg-indigo-50 border-indigo-200 text-indigo-600 font-extrabold"
+                : "bg-gray-50 border-gray-200 text-gray-400"
+            }`}
+            title="Tự động phát âm thanh phản hồi từ AI"
+          >
+            <span>{autoSpeak ? "🔊 Live: Bật" : "🔇 Live: Tắt"}</span>
+          </button>
         </div>
       </div>
 
@@ -151,8 +248,21 @@ export default function ChatPage() {
               {msg.role === "user" ? (
                 <div className="whitespace-pre-wrap">{msg.parts[0].text}</div>
               ) : (
-                <div className="prose prose-sm md:prose-base max-w-none prose-p:leading-relaxed prose-pre:bg-gray-800 prose-pre:text-gray-100 prose-a:text-indigo-600 prose-li:my-0.5 prose-ul:my-2 prose-ol:my-2 prose-headings:mb-2 prose-headings:mt-4 first:prose-headings:mt-0 marker:text-indigo-500">
-                  <ReactMarkdown>{msg.parts[0].text}</ReactMarkdown>
+                <div>
+                  <div className="prose prose-sm md:prose-base max-w-none prose-p:leading-relaxed prose-pre:bg-gray-800 prose-pre:text-gray-100 prose-a:text-indigo-600 prose-li:my-0.5 prose-ul:my-2 prose-ol:my-2 prose-headings:mb-2 prose-headings:mt-4 first:prose-headings:mt-0 marker:text-indigo-500">
+                    <ReactMarkdown>{msg.parts[0].text}</ReactMarkdown>
+                  </div>
+                  {msg.parts[0].text && (
+                    <div className="mt-2 pt-2 border-t border-gray-50 flex justify-end">
+                      <button
+                        onClick={() => speak(msg.parts[0].text)}
+                        className="text-xs text-indigo-500 hover:text-indigo-700 font-semibold flex items-center gap-1 bg-indigo-50/50 hover:bg-indigo-50 px-2.5 py-1 rounded-lg transition-all"
+                        title="Nghe phát âm phản hồi này"
+                      >
+                        🔊 Nghe đàm thoại
+                      </button>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -194,14 +304,26 @@ export default function ChatPage() {
             e.preventDefault();
             handleSend(input);
           }}
-          className="flex gap-2"
+          className="flex gap-2 items-center"
         >
+          <button
+            type="button"
+            onClick={toggleListening}
+            className={`w-12 h-12 shrink-0 rounded-2xl flex items-center justify-center transition-all ${
+              isListening
+                ? "bg-red-500 text-white animate-pulse shadow-md shadow-red-200"
+                : "bg-gray-100 text-gray-500 hover:bg-gray-200 border border-gray-200"
+            }`}
+            title={isListening ? "Đang lắng nghe... Nhấn để dừng" : "Nói để nhập văn bản (STT)"}
+          >
+            {isListening ? "🛑" : "🎙️"}
+          </button>
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             disabled={isLoading}
-            placeholder="Hỏi gia sư AI về từ vựng, ngữ pháp..."
+            placeholder={isListening ? "Đang lắng nghe giọng nói của bạn..." : "Hỏi gia sư AI hoặc yêu cầu nhập vai..."}
             className="flex-1 bg-gray-50 border border-gray-200 rounded-2xl px-5 py-3 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all"
           />
           <button
