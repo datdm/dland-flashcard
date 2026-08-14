@@ -53,6 +53,7 @@ export default function GeminiLivePage() {
   const [statusText, setStatusText] = useState("Sẵn sàng đàm thoại");
   const [lastTranscript, setLastTranscript] = useState("");
   const [aiState, setAiState] = useState<"idle" | "listening" | "speaking">("idle");
+  const [mounted, setMounted] = useState(false);
 
   const wsRef = useRef<WebSocket | null>(null);
   const micContextRef = useRef<AudioContext | null>(null);
@@ -62,6 +63,11 @@ export default function GeminiLivePage() {
 
   // Playback scheduler
   const nextPlayTimeRef = useRef<number>(0);
+
+  // Set mounted state on client mount to avoid hydration mismatch
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Auto clean audio synthesis when exiting
   useEffect(() => {
@@ -75,10 +81,9 @@ export default function GeminiLivePage() {
       setStatusText("Đang kết nối WebSocket...");
       setAiState("idle");
 
-      // 1. Establish WebSocket connection to backend proxy
-      const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-      const host = window.location.hostname === "localhost" ? "localhost:3001" : window.location.host;
-      const wsUrl = `${protocol}//${host}/api/live`;
+      // 1. Establish WebSocket connection to backend proxy (using process.env.NEXT_PUBLIC_API_URL)
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+      const wsUrl = apiUrl.replace(/^http/, "ws") + "/api/live";
 
       const ws = new WebSocket(wsUrl);
       wsRef.current = ws;
@@ -326,6 +331,14 @@ export default function GeminiLivePage() {
 
   const flagEmoji = activeLanguage.code === "de" ? "🇩🇪" : activeLanguage.code === "en" ? "🇬🇧" : "🇯🇵";
   const langName = activeLanguage.code === "de" ? "Tiếng Đức" : activeLanguage.code === "en" ? "Tiếng Anh" : "Tiếng Nhật";
+
+  if (!mounted) {
+    return (
+      <div className="min-h-screen bg-slate-950 text-white flex items-center justify-center font-semibold">
+        Đang khởi động chế độ Live Voice...
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-slate-950 text-white flex flex-col justify-between p-4 md:p-6 pb-20">
