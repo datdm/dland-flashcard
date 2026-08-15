@@ -32,13 +32,14 @@ export async function searchMultilingualDictionary(query: string, langCode: stri
       
       if (langCode === "en") {
         if (v.id.startsWith("en-w")) {
-          const wNum = parseInt(v.id.split("-w")[1] || "0", 10);
-          if (wNum <= 12) lvl = "GĐ 1";
-          else if (wNum <= 26) lvl = "GĐ 2";
-          else if (wNum <= 39) lvl = "GĐ 3";
-          else lvl = "GĐ 4";
+          const parts = v.id.split("-w");
+          const wNum = parseInt(parts[1] ? parts[1].split("-")[0] : "0", 10);
+          if (wNum <= 12) lvl = "Band 4.0-4.5";
+          else if (wNum <= 26) lvl = "Band 5.0-5.5";
+          else if (wNum <= 39) lvl = "Band 6.0-6.5";
+          else lvl = "Band 7.0+";
         } else {
-          lvl = "IELTS";
+          lvl = "IELTS 7.0";
         }
       } else if (langCode === "de") {
         lvl = "A1";

@@ -89,7 +89,7 @@ export default function DictionarySearchPage() {
   });
 
   const levelOptions = langCode === "en"
-    ? ["ALL", "GĐ 1", "GĐ 2", "GĐ 3", "GĐ 4"]
+    ? ["ALL", "Band 4.0-4.5", "Band 5.0-5.5", "Band 6.0-6.5", "Band 7.0+"]
     : langCode === "de"
     ? ["ALL", "A1", "A2", "B1", "B2"]
     : ["ALL", "N5", "N4", "N3", "N2", "N1"];
@@ -212,7 +212,11 @@ export default function DictionarySearchPage() {
                         </span>
                       )}
                       {item.level && (
-                        <span className="px-2 py-0.5 text-[10px] font-bold rounded-md bg-indigo-100 text-indigo-700">
+                        <span className={`px-2.5 py-0.5 text-[10px] font-bold rounded-md ${
+                          item.level.includes("Band") || item.level.includes("IELTS")
+                            ? "bg-gradient-to-r from-amber-500 to-indigo-600 text-white shadow-3xs"
+                            : "bg-indigo-100 text-indigo-700"
+                        }`}>
                           {item.level}
                         </span>
                       )}
