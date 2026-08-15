@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { GrammarPoint, GrammarProgress } from "@/types";
+import { useLanguageSetting } from "@/hooks/useLanguageSetting";
 
 interface Props {
   grammar: GrammarPoint;
@@ -12,12 +13,14 @@ interface Props {
 
 export default function GrammarCard({ grammar, progress, onToggleLearned, onToggleFavorite }: Props) {
   const [showExamples, setShowExamples] = useState(true);
+  const { activeLanguage } = useLanguageSetting();
+  const langCode = activeLanguage.code;
 
   const speakText = (text: string) => {
     if (typeof window !== "undefined" && "speechSynthesis" in window) {
       window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = "ja-JP";
+      utterance.lang = langCode === "de" ? "de-DE" : langCode === "en" ? "en-US" : "ja-JP";
       utterance.rate = 0.9;
       window.speechSynthesis.speak(utterance);
     }

@@ -274,18 +274,21 @@ export default function DictionarySearchPage() {
                       {prog.learned ? "✓" : "○"}
                     </button>
 
-                    {notebooks.length > 0 && (
-                      <button
-                        onClick={() => {
-                          setSelectedWordForNotebook(item);
-                          setDuplicateError(null);
-                        }}
-                        className="px-2.5 py-1.5 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-700 text-xs font-semibold transition-colors"
-                        title="Thêm vào sổ tay"
-                      >
-                        + Sổ tay
-                      </button>
-                    )}
+                    <button
+                      onClick={() => {
+                        setSelectedWordForNotebook(item);
+                        setDuplicateError(null);
+                        if (notebooks.length > 0) {
+                          setTargetNotebookId(notebooks[0].id);
+                        } else {
+                          setTargetNotebookId("NEW");
+                        }
+                      }}
+                      className="px-2.5 py-1.5 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-700 text-xs font-semibold transition-colors"
+                      title="Thêm vào sổ tay"
+                    >
+                      + Sổ tay
+                    </button>
                   </div>
                 </div>
               </div>
@@ -294,56 +297,199 @@ export default function DictionarySearchPage() {
         </div>
       )}
 
-      {/* Add to Notebook Modal */}
+      {/* Add to Notebook Modal with inline notebook creation */}
       {selectedWordForNotebook && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-3xl shadow-xl p-6 w-full max-w-sm">
-            <h3 className="font-bold text-base text-gray-900 mb-2">Thêm từ vào Sổ tay</h3>
-            <p className="text-xs text-gray-500 mb-4">
-              Từ: <span className="font-bold text-indigo-600">{selectedWordForNotebook.kanji || selectedWordForNotebook.hiragana}</span> ({selectedWordForNotebook.meaning})
-            </p>
+        <AddToNotebookModal
+          selectedWord={selectedWordForNotebook}
+          notebooks={notebooks}
+          targetNotebookId={targetNotebookId}
+          setTargetNotebookId={setTargetNotebookId}
+          duplicateError={duplicateError}
+          onClose={() => {
+            setSelectedWordForNotebook(null);
+            setDuplicateError(null);
+          }}
+          onSuccess={() => {
+            setSelectedWordForNotebook(null);
+            setTargetNotebookId("");
+            setDuplicateError(null);
+          }}
+        />
+      )}
+    </div>
+  );
+}
 
-            {duplicateError && (
-              <div className="mb-4 rounded-2xl border border-red-200 bg-red-50 p-3 text-xs font-semibold text-red-600">
-                ✕ {duplicateError}
-              </div>
-            )}
+function AddToNotebookModal({
+  selectedWord,
+  notebooks,
+  targetNotebookId,
+  setTargetNotebookId,
+  duplicateError,
+  onClose,
+  onSuccess
+}: {
+  selectedWord: DictionaryItem;
+  notebooks: any[];
+  targetNotebookId: string;
+  setTargetNotebookId: (id: string) => void;
+  duplicateError: string | null;
+  onClose: () => void;
+  onSuccess: () => void;
+}) {
+  const { createNotebook, addVocab, checkDuplicate } = useNotebooks();
+  const { activeLanguage } = useLanguageSetting();
+  const [isCreatingNew, setIsCreatingNew] = useState(notebooks.length === 0 || targetNotebookId === "NEW");
+  const [newNotebookName, setNewNotebookName] = useState(
+    activeLanguage.code === "en"
+      ? "Sổ tay Từ vựng Tiếng Anh"
+      : activeLanguage.code === "de"
+      ? "Sổ tay Tiếng Đức"
+      : "Sổ tay Tiếng Nhật"
+  );
+  const [error, setError] = useState<string | null>(duplicateError);
+  const [submitting, setSubmitting] = useState(false);
 
-            <label className="block text-xs font-semibold text-gray-700 mb-2">Chọn Sổ tay:</label>
+  const handleSubmit = async () => {
+    setError(null);
+    setSubmitting(true);
+
+    try {
+      let finalNotebookId = targetNotebookId;
+
+      if (isCreatingNew || targetNotebookId === "NEW" || notebooks.length === 0) {
+        if (!newNotebookName.trim()) {
+          setError("Vui lòng nhập tên sổ tay mới");
+          setSubmitting(false);
+          return;
+        }
+        const newNb = createNotebook(newNotebookName.trim());
+        finalNotebookId = newNb.id;
+      }
+
+      if (!finalNotebookId) {
+        setError("Vui lòng chọn hoặc tạo sổ tay");
+        setSubmitting(false);
+        return;
+      }
+
+      const wordTitle = selectedWord.kanji || selectedWord.hiragana || "";
+      const wordPhonetic = selectedWord.hiragana || selectedWord.phonetic || "";
+
+      if (wordTitle && wordPhonetic) {
+        const duplicates = checkDuplicate(finalNotebookId, wordTitle, wordPhonetic);
+        if (duplicates && duplicates.length > 0) {
+          setError(`Từ "${wordTitle}" đã có trong sổ tay`);
+          setSubmitting(false);
+          return;
+        }
+      }
+
+      const vocab = await addVocab(finalNotebookId, {
+        kanji: wordTitle,
+        hiragana: wordPhonetic,
+        onyomi: selectedWord.onyomi || "",
+        meaning: selectedWord.meaning || "",
+        phonetic: selectedWord.phonetic || ""
+      });
+
+      if (vocab) {
+        onSuccess();
+      } else {
+        setError("Không thể lưu từ vựng vào sổ tay");
+      }
+    } catch (err: any) {
+      console.error("Failed to add to notebook:", err);
+      setError(err.message || "Đã xảy ra lỗi");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 z-50">
+      <div className="bg-white rounded-3xl shadow-xl p-6 w-full max-w-sm">
+        <h3 className="font-bold text-base text-gray-900 mb-1">Thêm vào Sổ tay</h3>
+        <p className="text-xs text-gray-500 mb-4">
+          Từ: <span className="font-bold text-indigo-600">{selectedWord.kanji || selectedWord.hiragana}</span> ({selectedWord.meaning})
+        </p>
+
+        {error && (
+          <div className="mb-4 rounded-2xl border border-red-200 bg-red-50 p-3 text-xs font-semibold text-red-600">
+            ✕ {error}
+          </div>
+        )}
+
+        {/* Option 1: Choose existing notebook */}
+        {notebooks.length > 0 && !isCreatingNew ? (
+          <div className="space-y-3 mb-6">
+            <label className="block text-xs font-semibold text-gray-700">Chọn Sổ tay hiện có:</label>
             <select
               value={targetNotebookId}
-              onChange={(e) => setTargetNotebookId(e.target.value)}
-              className="w-full rounded-2xl border border-gray-300 px-4 py-2.5 text-sm mb-6 focus:outline-none focus:border-indigo-500"
+              onChange={(e) => {
+                if (e.target.value === "NEW") {
+                  setIsCreatingNew(true);
+                } else {
+                  setTargetNotebookId(e.target.value);
+                }
+              }}
+              className="w-full rounded-2xl border border-gray-300 px-4 py-2.5 text-xs font-semibold focus:outline-none focus:border-indigo-500"
             >
-              <option value="">-- Chọn sổ tay --</option>
               {notebooks.map((nb) => (
                 <option key={nb.id} value={nb.id}>
-                  {nb.name} ({nb.vocabulary.length} từ)
+                  📓 {nb.name} ({nb.vocabulary.length} từ)
                 </option>
               ))}
+              <option value="NEW">➕ + Tạo sổ tay mới...</option>
             </select>
-
-            <div className="flex gap-2 justify-end">
-              <button
-                onClick={() => {
-                  setSelectedWordForNotebook(null);
-                  setDuplicateError(null);
-                }}
-                className="px-4 py-2 rounded-xl border border-gray-300 text-gray-600 hover:bg-gray-50 text-xs font-semibold"
-              >
-                Hủy
-              </button>
-              <button
-                onClick={handleAddToNotebook}
-                disabled={!targetNotebookId}
-                className="px-4 py-2 rounded-xl bg-indigo-600 text-white text-xs font-bold hover:bg-indigo-700 disabled:opacity-50"
-              >
-                Lưu vào Sổ tay
-              </button>
-            </div>
+            <button
+              onClick={() => setIsCreatingNew(true)}
+              className="text-xs text-indigo-600 font-bold hover:underline"
+            >
+              + Tạo sổ tay mới cho {activeLanguage.name}
+            </button>
           </div>
+        ) : (
+          /* Option 2: Inline create notebook */
+          <div className="space-y-3 mb-6">
+            <div className="flex items-center justify-between">
+              <label className="block text-xs font-semibold text-gray-700">Tạo Sổ tay mới ({activeLanguage.name}):</label>
+              {notebooks.length > 0 && (
+                <button
+                  onClick={() => setIsCreatingNew(false)}
+                  className="text-xs text-gray-500 hover:text-gray-700"
+                >
+                  ← Chọn sổ tay sẵn có
+                </button>
+              )}
+            </div>
+            <input
+              type="text"
+              value={newNotebookName}
+              onChange={(e) => setNewNotebookName(e.target.value)}
+              placeholder="Nhập tên sổ tay..."
+              autoFocus
+              className="w-full rounded-2xl border border-indigo-300 px-4 py-2.5 text-xs font-semibold focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100"
+            />
+          </div>
+        )}
+
+        <div className="flex gap-2 justify-end">
+          <button
+            onClick={onClose}
+            className="px-4 py-2 rounded-xl border border-gray-300 text-gray-600 hover:bg-gray-50 text-xs font-semibold"
+          >
+            Hủy
+          </button>
+          <button
+            onClick={handleSubmit}
+            disabled={submitting}
+            className="px-4 py-2 rounded-xl bg-indigo-600 text-white text-xs font-bold hover:bg-indigo-700 disabled:opacity-50"
+          >
+            {submitting ? "Đang lưu..." : "Lưu vào Sổ tay"}
+          </button>
         </div>
-      )}
+      </div>
     </div>
   );
 }
