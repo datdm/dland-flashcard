@@ -32,31 +32,16 @@ export async function GET(request: NextRequest) {
 
   // ================= ENGLISH DICTIONARY API (SEPARATE PER API SOURCE) =================
   if (lang === "en") {
-    // 1. Google Translate API (Anh - Việt)
-    try {
-      const viMeaning = await translateToVietnamese(query, "en");
-      if (viMeaning && viMeaning.toLowerCase() !== query.toLowerCase()) {
-        results.push({
-          kanji: query,
-          hiragana: "Anh - Việt",
-          meaning: viMeaning,
-          phonetic: "Dịch nghĩa Tiếng Việt trực tuyến",
-          level: "Anh-Việt",
-          source: "Google Translate API"
-        });
-      }
-    } catch (err) {
-      console.error("Google Translate error:", err);
-    }
-
-    // 2. FreeDictionaryAPI (IPA, Part of speech, English Definition & Example)
+    // Fetch FreeDictionaryAPI (IPA, Part of speech, English Definition & Example)
+    let globalIpa = "";
+    let freeDictItems: any[] = [];
     try {
       const freeDictRes = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(query)}`);
       if (freeDictRes.ok) {
         const freeDictData = await freeDictRes.json();
         if (Array.isArray(freeDictData) && freeDictData.length > 0) {
           const entry = freeDictData[0];
-          const phoneticsStr = entry.phonetic || entry.phonetics?.find((p: any) => p.text)?.text || "";
+          globalIpa = entry.phonetic || entry.phonetics?.find((p: any) => p.text)?.text || "";
           
           if (entry.meanings && entry.meanings.length > 0) {
             entry.meanings.slice(0, 2).forEach((m: any) => {
@@ -65,9 +50,9 @@ export async function GET(request: NextRequest) {
               const example = m.definitions?.[0]?.example || "";
 
               if (def) {
-                results.push({
+                freeDictItems.push({
                   kanji: query,
-                  hiragana: `${phoneticsStr ? phoneticsStr + " • " : ""}${pos}`,
+                  hiragana: globalIpa ? `${globalIpa} (${pos})` : pos,
                   meaning: def,
                   phonetic: example ? `💬 Example: "${example}"` : "Định nghĩa Tiếng Anh học thuật",
                   level: "IELTS",
@@ -81,6 +66,26 @@ export async function GET(request: NextRequest) {
     } catch (err) {
       console.error("FreeDictionaryAPI error:", err);
     }
+
+    // 1. Google Translate API (Anh - Việt)
+    try {
+      const viMeaning = await translateToVietnamese(query, "en");
+      if (viMeaning && viMeaning.toLowerCase() !== query.toLowerCase()) {
+        results.push({
+          kanji: query,
+          hiragana: globalIpa || "Anh - Việt",
+          meaning: viMeaning,
+          phonetic: "Dịch nghĩa Tiếng Việt trực tuyến",
+          level: "Anh-Việt",
+          source: "Google Translate API"
+        });
+      }
+    } catch (err) {
+      console.error("Google Translate error:", err);
+    }
+
+    // Add FreeDictionary items
+    results.push(...freeDictItems);
 
     // 3. Datamuse API (IELTS Synonyms / Lexical Resource)
     try {

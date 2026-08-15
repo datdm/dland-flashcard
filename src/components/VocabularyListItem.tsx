@@ -54,8 +54,8 @@ export default function VocabularyListItem({
                   {vocab.kanji || vocab.hiragana}
                 </span>
                 {vocab.kanji && vocab.hiragana && (
-                  <span className="text-xs font-semibold text-indigo-600 font-mono">
-                    ({vocab.hiragana})
+                  <span className="text-xs font-bold text-indigo-700 bg-indigo-50 border border-indigo-100 px-2 py-0.5 rounded-md font-mono">
+                    🗣️ {vocab.hiragana}
                   </span>
                 )}
               </div>

@@ -48,10 +48,9 @@ Deine Aufgaben:
 };
 
 const LIVE_MODELS = [
-  { id: "models/gemini-2.0-flash-exp", label: "Gemini 2.0 Flash Live" },
-  { id: "models/gemini-2.5-flash-native-audio-dialog", label: "Gemini 2.5 Flash Native Audio" },
-  { id: "models/gemini-3-flash-live", label: "Gemini 3 Flash Live" },
-  { id: "models/gemini-3.5-live-translate-preview", label: "Gemini 3.5 Live Translate" }
+  { id: "models/gemini-2.0-flash-exp", label: "Gemini 2.0 Flash Live (Default)" },
+  { id: "models/gemini-2.0-flash-realtime-exp", label: "Gemini 2.0 Flash Realtime" },
+  { id: "models/gemini-1.5-flash", label: "Gemini 1.5 Flash Live" }
 ];
 
 export default function GeminiLivePage() {
@@ -68,6 +67,7 @@ export default function GeminiLivePage() {
   const playContextRef = useRef<AudioContext | null>(null);
   const micStreamRef = useRef<MediaStream | null>(null);
   const processorRef = useRef<ScriptProcessorNode | null>(null);
+  const recordingStartedRef = useRef<boolean>(false);
 
   // Playback scheduler
   const nextPlayTimeRef = useRef<number>(0);
@@ -88,6 +88,7 @@ export default function GeminiLivePage() {
     try {
       setStatusText("Đang kết nối WebSocket...");
       setAiState("idle");
+      recordingStartedRef.current = false;
 
       // 1. Establish WebSocket connection to backend proxy (using process.env.NEXT_PUBLIC_API_URL)
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
@@ -106,6 +107,17 @@ export default function GeminiLivePage() {
         try {
           const message = JSON.parse(event.data);
           
+          // Handle setupComplete confirmation from Gemini
+          if (message.setupComplete || message.setup_complete) {
+            console.log("✅ Received setupComplete from Gemini Live API!");
+            if (!recordingStartedRef.current) {
+              recordingStartedRef.current = true;
+              setStatusText("Đã sẵn sàng! Hãy bắt đầu nói 🎙️");
+              await startRecording();
+            }
+            return;
+          }
+
           // Handle incoming text transcript (if any)
           if (message.serverContent?.modelTurn?.parts) {
             setAiState("speaking");
@@ -141,7 +153,7 @@ export default function GeminiLivePage() {
       ws.onclose = (event: CloseEvent) => {
         setConnected(false);
         const reasonText = event.reason ? `: ${event.reason}` : "";
-        setStatusText(`Kết nối đã ngắt${reasonText}`);
+        setStatusText(`Kết nối đã ngắt (${event.code}${reasonText})`);
         cleanupAudio();
       };
 
@@ -166,7 +178,7 @@ export default function GeminiLivePage() {
           speechConfig: {
             voiceConfig: {
               prebuiltVoiceConfig: {
-                voiceName: "Aoede" // Female high-quality voice
+                voiceName: "Aoede"
               }
             }
           }
@@ -178,8 +190,16 @@ export default function GeminiLivePage() {
     };
 
     ws.send(JSON.stringify(setupMsg));
-    setStatusText("Kết nối Live thành công! Hãy bắt đầu nói.");
-    startRecording();
+    setStatusText("Đã gửi cấu hình, đang chờ Gemini phản hồi...");
+
+    // Fallback: If setupComplete is delayed, start recording after 1200ms
+    setTimeout(async () => {
+      if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN && !recordingStartedRef.current) {
+        recordingStartedRef.current = true;
+        setStatusText("Kết nối Live thành công! Hãy bắt đầu nói.");
+        await startRecording();
+      }
+    }, 1200);
   };
 
   const startRecording = async () => {

@@ -207,8 +207,8 @@ export default function DictionarySearchPage() {
                         </span>
                       )}
                       {item.hiragana && langCode !== "ja" && (
-                        <span className="text-xs font-medium text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-md">
-                          {item.hiragana}
+                        <span className="text-xs font-bold text-indigo-700 bg-indigo-50 border border-indigo-100 px-2.5 py-0.5 rounded-md font-mono">
+                          🗣️ {item.hiragana}
                         </span>
                       )}
                       {item.level && (
