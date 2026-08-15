@@ -79,9 +79,7 @@ export async function searchMultilingualDictionary(query: string, langCode: stri
         const itemHiragana = item.hiragana;
 
         const alreadyExists = results.some(
-          (r) =>
-            (itemKanji && r.kanji?.toLowerCase() === itemKanji.toLowerCase()) ||
-            (itemHiragana && r.hiragana?.toLowerCase() === itemHiragana.toLowerCase())
+          (r) => r.source === item.source && r.meaning === item.meaning
         );
 
         if (!alreadyExists && (itemKanji || itemHiragana || item.meaning)) {

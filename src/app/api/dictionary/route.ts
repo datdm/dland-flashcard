@@ -30,71 +30,81 @@ export async function GET(request: NextRequest) {
   const query = keyword.trim();
   let results: any[] = [];
 
-  // ================= ENGLISH DICTIONARY API =================
+  // ================= ENGLISH DICTIONARY API (SEPARATE PER API SOURCE) =================
   if (lang === "en") {
+    // 1. Google Translate API (Anh - Việt)
     try {
-      // 1. Fetch FreeDictionaryAPI (IPA, Audio, Part of speech, English definition)
-      const freeDictRes = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(query)}`);
-      let phoneticsStr = "";
-      let partOfSpeech = "";
-      let englishDef = "";
-      let exampleSentence = "";
+      const viMeaning = await translateToVietnamese(query, "en");
+      if (viMeaning && viMeaning.toLowerCase() !== query.toLowerCase()) {
+        results.push({
+          kanji: query,
+          hiragana: "Anh - Việt",
+          meaning: viMeaning,
+          phonetic: "Dịch nghĩa Tiếng Việt trực tuyến",
+          level: "Anh-Việt",
+          source: "Google Translate API"
+        });
+      }
+    } catch (err) {
+      console.error("Google Translate error:", err);
+    }
 
+    // 2. FreeDictionaryAPI (IPA, Part of speech, English Definition & Example)
+    try {
+      const freeDictRes = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(query)}`);
       if (freeDictRes.ok) {
         const freeDictData = await freeDictRes.json();
         if (Array.isArray(freeDictData) && freeDictData.length > 0) {
           const entry = freeDictData[0];
-          phoneticsStr = entry.phonetic || entry.phonetics?.find((p: any) => p.text)?.text || "";
+          const phoneticsStr = entry.phonetic || entry.phonetics?.find((p: any) => p.text)?.text || "";
           
           if (entry.meanings && entry.meanings.length > 0) {
-            const m = entry.meanings[0];
-            partOfSpeech = m.partOfSpeech || "";
-            if (m.definitions && m.definitions.length > 0) {
-              englishDef = m.definitions[0].definition || "";
-              exampleSentence = m.definitions[0].example || "";
-            }
+            entry.meanings.slice(0, 2).forEach((m: any) => {
+              const pos = m.partOfSpeech || "";
+              const def = m.definitions?.[0]?.definition || "";
+              const example = m.definitions?.[0]?.example || "";
+
+              if (def) {
+                results.push({
+                  kanji: query,
+                  hiragana: `${phoneticsStr ? phoneticsStr + " • " : ""}${pos}`,
+                  meaning: def,
+                  phonetic: example ? `💬 Example: "${example}"` : "Định nghĩa Tiếng Anh học thuật",
+                  level: "IELTS",
+                  source: "Free Dictionary API"
+                });
+              }
+            });
           }
         }
       }
-
-      // 2. Fetch Datamuse API (Free IELTS Synonyms / Related Words)
-      let synonymsList: string[] = [];
-      try {
-        const datamuseRes = await fetch(`https://api.datamuse.com/words?rel_syn=${encodeURIComponent(query)}&max=5`);
-        if (datamuseRes.ok) {
-          const datamuseData = await datamuseRes.json();
-          if (Array.isArray(datamuseData)) {
-            synonymsList = datamuseData.map((w: any) => w.word).filter(Boolean);
-          }
-        }
-      } catch (e) {
-        console.error("Datamuse API error:", e);
-      }
-
-      // 3. Translate word & example to Vietnamese
-      const viMeaning = await translateToVietnamese(query, "en");
-      const viExample = exampleSentence ? await translateToVietnamese(exampleSentence, "en") : "";
-
-      const phoneticCombined = [
-        phoneticsStr,
-        partOfSpeech ? `(${partOfSpeech})` : "",
-        englishDef ? `[EN: ${englishDef}]` : ""
-      ].filter(Boolean).join(" ");
-
-      const synonymsText = synonymsList.length > 0 ? ` • 🔄 Synonyms (IELTS Lexical Resource): ${synonymsList.join(", ")}` : "";
-      const exampleText = viExample ? ` • 💬 Example: "${exampleSentence}" (${viExample})` : "";
-
-      results.push({
-        kanji: query,
-        hiragana: phoneticsStr || partOfSpeech,
-        meaning: viMeaning !== query ? viMeaning : (englishDef || viMeaning),
-        phonetic: phoneticCombined + synonymsText + exampleText,
-        level: "IELTS",
-        source: "FreeDictionary + Datamuse + Google Dịch"
-      });
     } catch (err) {
-      console.error("English dictionary error:", err);
+      console.error("FreeDictionaryAPI error:", err);
     }
+
+    // 3. Datamuse API (IELTS Synonyms / Lexical Resource)
+    try {
+      const datamuseRes = await fetch(`https://api.datamuse.com/words?rel_syn=${encodeURIComponent(query)}&max=6`);
+      if (datamuseRes.ok) {
+        const datamuseData = await datamuseRes.json();
+        if (Array.isArray(datamuseData) && datamuseData.length > 0) {
+          const synonymsList = datamuseData.map((w: any) => w.word).filter(Boolean);
+          if (synonymsList.length > 0) {
+            results.push({
+              kanji: query,
+              hiragana: "Từ đồng nghĩa (Synonyms)",
+              meaning: synonymsList.join(", "),
+              phonetic: "🔄 IELTS Lexical Resource (Dùng cho Writing & Speaking)",
+              level: "IELTS Synonyms",
+              source: "Datamuse API"
+            });
+          }
+        }
+      }
+    } catch (e) {
+      console.error("Datamuse API error:", e);
+    }
+
     return NextResponse.json({ data: results });
   }
 
@@ -108,7 +118,7 @@ export async function GET(request: NextRequest) {
         meaning: viMeaning,
         phonetic: "Từ điển Đức-Việt",
         level: "A1-B2",
-        source: "Google Dịch (Đức-Việt)"
+        source: "Google Dịch API"
       });
     } catch (err) {
       console.error("German dictionary error:", err);
@@ -148,7 +158,7 @@ export async function GET(request: NextRequest) {
               onyomi: item.hb,
               meaning: meaningsStr,
               level: item.jlpt ? `N${item.jlpt}` : undefined,
-              source: "Mazii (Nhật-Việt)",
+              source: "Mazii API",
             });
           }
         });
@@ -184,7 +194,7 @@ export async function GET(request: NextRequest) {
               hiragana: japanese.reading,
               meaning: translatedMeaning || englishMeanings,
               level: jlpt,
-              source: "Jisho (Dịch Tiếng Việt)",
+              source: "Jisho API",
             });
           }
         }
