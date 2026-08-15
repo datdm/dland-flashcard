@@ -66,41 +66,40 @@ export async function searchMultilingualDictionary(query: string, langCode: stri
     console.error("Local dictionary search error:", err);
   }
 
-  // 2. Fetch Online API (For Japanese or fallback translation)
-  if (langCode === "ja") {
-    try {
-      const res = await fetch(`/api/dictionary?keyword=${encodeURIComponent(q)}`);
-      if (res.ok) {
-        const json = await res.json();
-        const onlineData = json.data || [];
+  // 2. Fetch Online API for active language
+  try {
+    const res = await fetch(`/api/dictionary?keyword=${encodeURIComponent(q)}&lang=${langCode}`);
+    if (res.ok) {
+      const json = await res.json();
+      const onlineData = json.data || [];
 
-        onlineData.forEach((item: any, idx: number) => {
-          const itemKanji = item.kanji;
-          const itemHiragana = item.hiragana;
+      onlineData.forEach((item: any, idx: number) => {
+        const itemKanji = item.kanji;
+        const itemHiragana = item.hiragana;
 
-          const alreadyExists = results.some(
-            (r) =>
-              (itemKanji && r.kanji === itemKanji) ||
-              (itemHiragana && r.hiragana === itemHiragana)
-          );
+        const alreadyExists = results.some(
+          (r) =>
+            (itemKanji && r.kanji?.toLowerCase() === itemKanji.toLowerCase()) ||
+            (itemHiragana && r.hiragana?.toLowerCase() === itemHiragana.toLowerCase())
+        );
 
-          if (!alreadyExists && (itemKanji || itemHiragana)) {
-            results.push({
-              id: `online-${idx}-${Date.now()}`,
-              kanji: itemKanji,
-              hiragana: itemHiragana,
-              onyomi: item.onyomi,
-              meaning: item.meaning,
-              level: item.level,
-              isOnline: true,
-              source: item.source || "Trực tuyến (Nhật-Việt)"
-            });
-          }
-        });
-      }
-    } catch (err) {
-      console.error("Online dictionary search error:", err);
+        if (!alreadyExists && (itemKanji || itemHiragana || item.meaning)) {
+          results.push({
+            id: `online-${idx}-${Date.now()}`,
+            kanji: itemKanji,
+            hiragana: itemHiragana,
+            onyomi: item.onyomi,
+            meaning: item.meaning,
+            phonetic: item.phonetic,
+            level: item.level,
+            isOnline: true,
+            source: item.source || "Trực tuyến"
+          });
+        }
+      });
     }
+  } catch (err) {
+    console.error("Online dictionary search error:", err);
   }
 
   return results;

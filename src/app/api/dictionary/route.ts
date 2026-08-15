@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 
-// Function to translate English text to Vietnamese using free Google Translate endpoint
-async function translateToVietnamese(text: string): Promise<string> {
+// Free Google Translate endpoint (English/German -> Vietnamese)
+async function translateToVietnamese(text: string, sourceLang: string = "en"): Promise<string> {
   if (!text) return "";
   try {
-    const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=vi&dt=t&q=${encodeURIComponent(text)}`;
+    const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sourceLang}&tl=vi&dt=t&q=${encodeURIComponent(text)}`;
     const res = await fetch(url);
     if (res.ok) {
       const data = await res.json();
@@ -15,12 +15,13 @@ async function translateToVietnamese(text: string): Promise<string> {
   } catch (err) {
     console.error("Translation error:", err);
   }
-  return text; // Fallback to original
+  return text;
 }
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const keyword = searchParams.get("keyword");
+  const lang = searchParams.get("lang") || "ja";
 
   if (!keyword || !keyword.trim()) {
     return NextResponse.json({ data: [] });
@@ -29,6 +30,76 @@ export async function GET(request: NextRequest) {
   const query = keyword.trim();
   let results: any[] = [];
 
+  // ================= ENGLISH DICTIONARY API =================
+  if (lang === "en") {
+    try {
+      // 1. Fetch FreeDictionaryAPI (IPA, Audio, Part of speech, English definition)
+      const freeDictRes = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(query)}`);
+      let phoneticsStr = "";
+      let partOfSpeech = "";
+      let englishDef = "";
+      let exampleSentence = "";
+
+      if (freeDictRes.ok) {
+        const freeDictData = await freeDictRes.json();
+        if (Array.isArray(freeDictData) && freeDictData.length > 0) {
+          const entry = freeDictData[0];
+          phoneticsStr = entry.phonetic || entry.phonetics?.find((p: any) => p.text)?.text || "";
+          
+          if (entry.meanings && entry.meanings.length > 0) {
+            const m = entry.meanings[0];
+            partOfSpeech = m.partOfSpeech || "";
+            if (m.definitions && m.definitions.length > 0) {
+              englishDef = m.definitions[0].definition || "";
+              exampleSentence = m.definitions[0].example || "";
+            }
+          }
+        }
+      }
+
+      // 2. Translate word & example to Vietnamese
+      const viMeaning = await translateToVietnamese(query, "en");
+      const viExample = exampleSentence ? await translateToVietnamese(exampleSentence, "en") : "";
+
+      const phoneticCombined = [
+        phoneticsStr,
+        partOfSpeech ? `(${partOfSpeech})` : "",
+        englishDef ? `[EN: ${englishDef}]` : ""
+      ].filter(Boolean).join(" ");
+
+      results.push({
+        kanji: query,
+        hiragana: phoneticsStr || partOfSpeech,
+        meaning: viMeaning !== query ? viMeaning : (englishDef || viMeaning),
+        phonetic: phoneticCombined + (viExample ? ` • Example: "${exampleSentence}" (${viExample})` : ""),
+        level: "English",
+        source: "FreeDictionary + Google Dịch (Anh-Việt)"
+      });
+    } catch (err) {
+      console.error("English dictionary error:", err);
+    }
+    return NextResponse.json({ data: results });
+  }
+
+  // ================= GERMAN DICTIONARY API =================
+  if (lang === "de") {
+    try {
+      const viMeaning = await translateToVietnamese(query, "de");
+      results.push({
+        kanji: query,
+        hiragana: "Deutsch",
+        meaning: viMeaning,
+        phonetic: "Từ điển Đức-Việt",
+        level: "A1-B2",
+        source: "Google Dịch (Đức-Việt)"
+      });
+    } catch (err) {
+      console.error("German dictionary error:", err);
+    }
+    return NextResponse.json({ data: results });
+  }
+
+  // ================= JAPANESE DICTIONARY API (MAZII & JISHO) =================
   // 1. Try Mazii Japanese-Vietnamese API first
   try {
     const maziiRes = await fetch("https://mazii.net/api/search", {
@@ -57,8 +128,8 @@ export async function GET(request: NextRequest) {
             results.push({
               kanji: item.word !== item.phonetic ? item.word : undefined,
               hiragana: item.phonetic || item.word,
-              onyomi: item.hb, // Âm Hán Việt từ Mazii
-              meaning: meaningsStr, // Nghĩa tiếng Việt 100%
+              onyomi: item.hb,
+              meaning: meaningsStr,
               level: item.jlpt ? `N${item.jlpt}` : undefined,
               source: "Mazii (Nhật-Việt)",
             });
@@ -70,7 +141,7 @@ export async function GET(request: NextRequest) {
     console.error("Mazii API error:", err);
   }
 
-  // 2. If Mazii yields no results, fallback to Jisho + Auto Translation to Vietnamese
+  // 2. Fallback to Jisho + Auto Translation to Vietnamese
   if (results.length === 0) {
     try {
       const jishoRes = await fetch(
@@ -88,7 +159,7 @@ export async function GET(request: NextRequest) {
           const englishMeanings = senses.english_definitions?.join("; ") || "";
           const jlpt = item.jlpt?.[0]?.replace("jlpt-", "").toUpperCase();
 
-          const translatedMeaning = await translateToVietnamese(englishMeanings);
+          const translatedMeaning = await translateToVietnamese(englishMeanings, "en");
 
           if (japanese.word || japanese.reading) {
             results.push({
