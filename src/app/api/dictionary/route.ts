@@ -57,7 +57,21 @@ export async function GET(request: NextRequest) {
         }
       }
 
-      // 2. Translate word & example to Vietnamese
+      // 2. Fetch Datamuse API (Free IELTS Synonyms / Related Words)
+      let synonymsList: string[] = [];
+      try {
+        const datamuseRes = await fetch(`https://api.datamuse.com/words?rel_syn=${encodeURIComponent(query)}&max=5`);
+        if (datamuseRes.ok) {
+          const datamuseData = await datamuseRes.json();
+          if (Array.isArray(datamuseData)) {
+            synonymsList = datamuseData.map((w: any) => w.word).filter(Boolean);
+          }
+        }
+      } catch (e) {
+        console.error("Datamuse API error:", e);
+      }
+
+      // 3. Translate word & example to Vietnamese
       const viMeaning = await translateToVietnamese(query, "en");
       const viExample = exampleSentence ? await translateToVietnamese(exampleSentence, "en") : "";
 
@@ -67,13 +81,16 @@ export async function GET(request: NextRequest) {
         englishDef ? `[EN: ${englishDef}]` : ""
       ].filter(Boolean).join(" ");
 
+      const synonymsText = synonymsList.length > 0 ? ` • 🔄 Synonyms (IELTS Lexical Resource): ${synonymsList.join(", ")}` : "";
+      const exampleText = viExample ? ` • 💬 Example: "${exampleSentence}" (${viExample})` : "";
+
       results.push({
         kanji: query,
         hiragana: phoneticsStr || partOfSpeech,
         meaning: viMeaning !== query ? viMeaning : (englishDef || viMeaning),
-        phonetic: phoneticCombined + (viExample ? ` • Example: "${exampleSentence}" (${viExample})` : ""),
-        level: "English",
-        source: "FreeDictionary + Google Dịch (Anh-Việt)"
+        phonetic: phoneticCombined + synonymsText + exampleText,
+        level: "IELTS",
+        source: "FreeDictionary + Datamuse + Google Dịch"
       });
     } catch (err) {
       console.error("English dictionary error:", err);
