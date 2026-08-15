@@ -28,9 +28,9 @@ export const SUPPORTED_LANGUAGES: LanguageOption[] = [
     name: "Tiếng Anh",
     nativeName: "English",
     flag: "🇬🇧",
-    description: "Từ vựng Oxford 3000, IELTS, TOEIC, Ngữ pháp & Flashcard SRS",
+    description: "Lộ trình IELTS 7.0 (12 Tháng / 52 Tuần): Foundation ➔ Format ➔ Advanced ➔ Target 7.0+",
     status: "active",
-    levels: ["A1", "A2", "B1", "B2", "C1"],
+    levels: ["GĐ 1", "GĐ 2", "GĐ 3", "GĐ 4"],
   },
   {
     code: "de",

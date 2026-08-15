@@ -7,12 +7,15 @@ import { useProgress } from "@/hooks/useProgress";
 import VocabularyListItem from "@/components/VocabularyListItem";
 import FilterBar, { FilterTab } from "@/components/FilterBar";
 import Link from "next/link";
+import { useLanguageSetting } from "@/hooks/useLanguageSetting";
 import { Vocabulary } from "@/types";
 
 export default function VocabularyPage() {
   const { curriculums } = useCurriculums();
   const { notebooks, addVocab } = useNotebooks();
   const { getVocabProgress, toggleLearned, toggleFavorite, progress } = useProgress();
+  const { activeLanguage } = useLanguageSetting();
+  const langCode = activeLanguage.code;
 
   const [tab, setTab] = useState<FilterTab>("all");
   const [selectedCurriculum, setSelectedCurriculum] = useState<string>("all");
@@ -127,12 +130,18 @@ export default function VocabularyPage() {
       <div className="bg-gradient-to-r from-indigo-700 via-purple-700 to-indigo-800 rounded-3xl p-6 text-white shadow-lg mb-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-xs font-semibold tracking-wide">
-              KHO TỪ VỰNG TỔNG HỢP
-            </span>
-            <h1 className="text-2xl font-bold mt-2">Kho Từ Vựng & Sổ Tay</h1>
+            <div className="flex items-center gap-2 mb-1">
+              <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-xs font-semibold tracking-wide">
+                KHO TỪ VỰNG {activeLanguage.name.toUpperCase()} ({activeLanguage.code.toUpperCase()})
+              </span>
+            </div>
+            <h1 className="text-2xl font-bold mt-1">Kho Từ Vựng & Sổ Tay</h1>
             <p className="text-xs text-indigo-100 mt-1">
-              Quản lý từ vựng bài học Minna no Nihongo, Soumatome và các Sổ tay cá nhân
+              {langCode === "en"
+                ? "Quản lý từ vựng bài học IELTS 7.0 (52 Tuần) và các Sổ tay cá nhân"
+                : langCode === "de"
+                ? "Quản lý từ vựng bài học Goethe A1 (Netzwerk neu) và các Sổ tay cá nhân"
+                : "Quản lý từ vựng bài học Minna no Nihongo, Soumatome và các Sổ tay cá nhân"}
             </p>
           </div>
 
@@ -188,7 +197,13 @@ export default function VocabularyPage() {
                 }}
                 className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-2.5 text-xs font-semibold text-gray-800 focus:outline-none focus:border-indigo-500 shadow-2xs"
               >
-                <option value="all">Tất cả giáo trình (N5 ➔ N2)</option>
+                <option value="all">
+                  {langCode === "en"
+                    ? "Tất cả giáo trình (IELTS 52 Tuần)"
+                    : langCode === "de"
+                    ? "Tất cả giáo trình (Netzwerk neu A1)"
+                    : "Tất cả giáo trình (N5 ➔ N2)"}
+                </option>
                 {curriculumList.map((c) => (
                   <option key={c.id} value={c.id}>
                     {c.name}
@@ -223,7 +238,13 @@ export default function VocabularyPage() {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Tìm kiếm từ vựng (vd: 日本語, にほん, tieng nhat...)..."
+                placeholder={
+                  langCode === "en"
+                    ? "Tìm kiếm từ vựng (vd: Routine, Schedule, Thói quen...)..."
+                    : langCode === "de"
+                    ? "Tìm kiếm từ vựng (vd: Hallo, Danke, Xin chào...)..."
+                    : "Tìm kiếm từ vựng (vd: 日本語, にほん, tieng nhat...)..."
+                }
                 className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-2.5 pr-10 text-xs focus:outline-none focus:border-indigo-500 shadow-2xs"
               />
               {searchQuery && (

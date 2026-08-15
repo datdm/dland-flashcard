@@ -1,9 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { searchJapaneseDictionary, DictionaryItem } from "@/lib/services/dictionaryService";
+import { searchMultilingualDictionary, DictionaryItem } from "@/lib/services/dictionaryService";
 import { useProgress } from "@/hooks/useProgress";
 import { useNotebooks } from "@/hooks/useNotebooks";
+import { useLanguageSetting } from "@/hooks/useLanguageSetting";
 
 export default function DictionarySearchPage() {
   const [query, setQuery] = useState("");
@@ -14,8 +15,15 @@ export default function DictionarySearchPage() {
   const [targetNotebookId, setTargetNotebookId] = useState<string>("");
   const [duplicateError, setDuplicateError] = useState<string | null>(null);
 
+  const { activeLanguage } = useLanguageSetting();
+  const langCode = activeLanguage.code;
+
   const { getVocabProgress, toggleLearned, toggleFavorite } = useProgress();
   const { notebooks, addVocab, checkDuplicate } = useNotebooks();
+
+  useEffect(() => {
+    setActiveLevel("ALL");
+  }, [langCode]);
 
   useEffect(() => {
     if (!query.trim()) {
@@ -25,19 +33,19 @@ export default function DictionarySearchPage() {
 
     const timer = setTimeout(async () => {
       setLoading(true);
-      const data = await searchJapaneseDictionary(query);
+      const data = await searchMultilingualDictionary(query, langCode);
       setResults(data);
       setLoading(false);
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [query]);
+  }, [query, langCode]);
 
   const speakText = (text: string) => {
     if (typeof window !== "undefined" && "speechSynthesis" in window) {
       window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = "ja-JP";
+      utterance.lang = langCode === "de" ? "de-DE" : langCode === "en" ? "en-US" : "ja-JP";
       utterance.rate = 0.9;
       window.speechSynthesis.speak(utterance);
     }
@@ -46,7 +54,6 @@ export default function DictionarySearchPage() {
   const handleAddToNotebook = async () => {
     if (!selectedWordForNotebook || !targetNotebookId) return;
 
-    // Only check duplicates if both kanji and hiragana exist
     if (selectedWordForNotebook.kanji && selectedWordForNotebook.hiragana) {
       const duplicates = checkDuplicate(targetNotebookId, selectedWordForNotebook.kanji, selectedWordForNotebook.hiragana);
       if (duplicates && duplicates.length > 0) {
@@ -67,7 +74,7 @@ export default function DictionarySearchPage() {
       onyomi: selectedWordForNotebook.onyomi || "",
       meaning: selectedWordForNotebook.meaning || "",
       phonetic: selectedWordForNotebook.phonetic || ""
-    }); // Send single word upload API to server
+    });
 
     if (vocab) {
       setSelectedWordForNotebook(null);
@@ -81,14 +88,41 @@ export default function DictionarySearchPage() {
     return item.level === activeLevel;
   });
 
+  const levelOptions = langCode === "en"
+    ? ["ALL", "GĐ 1", "GĐ 2", "GĐ 3", "GĐ 4"]
+    : langCode === "de"
+    ? ["ALL", "A1", "A2", "B1", "B2"]
+    : ["ALL", "N5", "N4", "N3", "N2", "N1"];
+
+  const headerTitle = langCode === "en"
+    ? "Tra Cứu Từ Điển Anh - Việt 🇬🇧"
+    : langCode === "de"
+    ? "Tra Cứu Từ Điển Đức - Việt 🇩🇪"
+    : "Tra Cứu Từ Điển Nhật - Việt 🇯🇵";
+
+  const headerSubtitle = langCode === "en"
+    ? "Tra cứu Từ vựng IELTS 7.0 (52 Tuần), Oxford 3000 & Ngữ pháp Tiếng Anh"
+    : langCode === "de"
+    ? "Tra cứu Từ vựng Goethe A1 & Giáo trình Netzwerk neu A1"
+    : "Tra cứu nghĩa Tiếng Việt 100% (Kho N5-N2, Mazii & Jisho Auto-Translate)";
+
+  const searchPlaceholder = langCode === "en"
+    ? "Nhập từ tiếng Anh hoặc tiếng Việt (vd: Routine, Schedule, Thói quen)..."
+    : langCode === "de"
+    ? "Nhập từ tiếng Đức hoặc tiếng Việt (vd: Hallo, Danke, Xin chào)..."
+    : "Nhập từ cần tìm (vd: 日本語, にほんご, nihongo, tiếng nhật)...";
+
   return (
     <div className="p-4 max-w-4xl mx-auto min-h-screen pb-24">
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Tra Cứu Từ Điển Nhật - Việt</h1>
-        <p className="text-xs text-gray-500 mt-1">
-          Tra cứu nghĩa Tiếng Việt 100% (Tự động kết hợp Kho N5-N2, Mazii & Jisho Auto-Translate)
-        </p>
+        <div className="flex items-center gap-2 mb-1">
+          <span className="px-2.5 py-0.5 rounded-full bg-indigo-100 text-indigo-700 text-xs font-bold">
+            {activeLanguage.name} ({activeLanguage.code.toUpperCase()})
+          </span>
+        </div>
+        <h1 className="text-2xl font-bold text-gray-900 tracking-tight">{headerTitle}</h1>
+        <p className="text-xs text-gray-500 mt-1">{headerSubtitle}</p>
       </div>
 
       {/* Search Input Box */}
@@ -97,7 +131,7 @@ export default function DictionarySearchPage() {
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Nhập từ cần tìm (vd: 日本語, にほんご, nihongo, tiếng nhật)..."
+          placeholder={searchPlaceholder}
           autoFocus
           className="w-full rounded-2xl border border-indigo-200 bg-white px-5 py-4 text-base focus:outline-none focus:border-indigo-600 focus:ring-4 focus:ring-indigo-100 shadow-sm"
         />
@@ -115,7 +149,7 @@ export default function DictionarySearchPage() {
 
       {/* Level Filters */}
       <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-2 mb-6">
-        {(["ALL", "N5", "N4", "N3", "N2", "N1"] as const).map((lvl) => (
+        {levelOptions.map((lvl) => (
           <button
             key={lvl}
             onClick={() => setActiveLevel(lvl)}
@@ -139,7 +173,7 @@ export default function DictionarySearchPage() {
         <div className="bg-white rounded-3xl p-10 text-center text-gray-400 border border-gray-100 shadow-2xs">
           <div className="text-4xl mb-2">🔍</div>
           <p className="font-semibold text-gray-700">Hãy nhập từ vựng để bắt đầu tra cứu</p>
-          <p className="text-xs text-gray-400 mt-1">Hỗ trợ tra chữ Kanji, Hiragana, Romaji hoặc nghĩa Tiếng Việt</p>
+          <p className="text-xs text-gray-400 mt-1">Tra cứu từ vựng học thuật & nghĩa Tiếng Việt chuẩn xác</p>
         </div>
       ) : filteredResults.length === 0 ? (
         <div className="bg-white rounded-3xl p-10 text-center text-gray-400 border border-gray-100">
@@ -167,9 +201,14 @@ export default function DictionarySearchPage() {
                       <span className="text-2xl font-extrabold text-gray-900">
                         {item.kanji || item.hiragana}
                       </span>
-                      {item.kanji && item.hiragana && (
+                      {item.kanji && item.hiragana && langCode === "ja" && (
                         <span className="text-sm font-semibold text-indigo-600 font-mono">
                           ({item.hiragana})
+                        </span>
+                      )}
+                      {item.hiragana && langCode !== "ja" && (
+                        <span className="text-xs font-medium text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-md">
+                          {item.hiragana}
                         </span>
                       )}
                       {item.level && (

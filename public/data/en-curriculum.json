@@ -1,30 +1,4193 @@
 {
   "level": "English",
-  "title": "🇬🇧 English - Oxford 3000 & IELTS Vocabulary",
-  "description": "Lộ trình học Tiếng Anh toàn diện: Từ vựng Oxford 3000, IELTS, Ngữ pháp Grammar & Flashcard SRS",
+  "title": "🇬🇧 English - IELTS 7.0 Roadmap (12 Months / 52 Weeks)",
+  "description": "Lộ trình luyện thi IELTS 7.0 toàn diện 12 Tháng / 52 Tuần: Foundation ➔ Format ➔ Advanced ➔ Target 7.0+",
+  "totalWeeks": 52,
+  "targetScore": {
+    "overall": 7,
+    "listening": 7.5,
+    "reading": 7.5,
+    "writing": 6.5,
+    "speaking": 6.5
+  },
+  "materials": [
+    {
+      "phase": "Giai đoạn 1 (Tháng 1-3)",
+      "name": "English Grammar in Use (Raymond Murphy)",
+      "type": "Ngữ pháp cốt lõi",
+      "description": "Ôn 6 thì cơ bản, câu bị động, mệnh đề quan hệ, câu điều kiện",
+      "source": "Nhà sách / PDF",
+      "importance": "Bắt buộc",
+      "status": "Chưa có"
+    },
+    {
+      "phase": "Giai đoạn 1 (Tháng 1-3)",
+      "name": "Oxford Word Skills (Basic)",
+      "type": "Từ vựng đời sống",
+      "description": "Nạp 1.500 từ vựng theo chủ đề đời sống hàng ngày",
+      "source": "Nhà sách / PDF",
+      "importance": "Bắt buộc",
+      "status": "Chưa có"
+    },
+    {
+      "phase": "Giai đoạn 1 (Tháng 1-3)",
+      "name": "Spotlight English & BBC 6 Minute English",
+      "type": "Nghe & Chép chính tả",
+      "description": "Luyện nghe chép chính tả 15 phút mỗi ngày tăng phản xạ nhận diện âm",
+      "source": "Website / App / Youtube",
+      "importance": "Khuyên dùng",
+      "status": "Đang dùng"
+    },
+    {
+      "phase": "Giai đoạn 2 (Tháng 4-6)",
+      "name": "Complete IELTS Band 4.0 - 5.0 (Cambridge)",
+      "type": "4 Kỹ năng cơ bản",
+      "description": "Làm quen cấu trúc đề thi, các dạng bài cơ bản và từ vựng học thuật",
+      "source": "Nhà sách Cambridge",
+      "importance": "Bắt buộc",
+      "status": "Chưa có"
+    },
+    {
+      "phase": "Giai đoạn 2 (Tháng 4-6)",
+      "name": "Get Ready for IELTS (Listening, Reading, Writing, Speaking)",
+      "type": "Kỹ năng chi tiết",
+      "description": "Phân rã từng dạng bài nhỏ và mẹo làm bài không bị bẫy",
+      "source": "Collins Series",
+      "importance": "Khuyên dùng",
+      "status": "Chưa có"
+    },
+    {
+      "phase": "Giai đoạn 2 (Tháng 4-6)",
+      "name": "Basic IELTS Reading & Listening",
+      "type": "Bổ trợ Nghe / Đọc",
+      "description": "Luyện tập bổ trợ cho Section 1, 2 và Passage 1",
+      "source": "Nhà sách",
+      "importance": "Tùy chọn",
+      "status": "Chưa có"
+    },
+    {
+      "phase": "Giai đoạn 3 (Tháng 7-9)",
+      "name": "Complete IELTS Band 5.0 - 6.5 & 6.5 - 7.5",
+      "type": "4 Kỹ năng nâng cao",
+      "description": "Học sâu tư duy bài học thuật, phát triển ý Writing và Speaking",
+      "source": "Cambridge",
+      "importance": "Bắt buộc",
+      "status": "Chưa có"
+    },
+    {
+      "phase": "Giai đoạn 3 (Tháng 7-9)",
+      "name": "Collins Writing for IELTS & Collins Speaking for IELTS",
+      "type": "Writing & Speaking",
+      "description": "Học Collocations và cấu trúc ăn điểm C1 cho kỹ năng Output",
+      "source": "Collins Series",
+      "importance": "Bắt buộc",
+      "status": "Chưa có"
+    },
+    {
+      "phase": "Giai đoạn 3 (Tháng 7-9)",
+      "name": "Cambridge IELTS Practice Tests 11 đến 15",
+      "type": "Luyện đề phân đoạn",
+      "description": "Luyện đề theo từng Section và phân tích kỹ Keyword Table",
+      "source": "Cambridge",
+      "importance": "Bắt buộc",
+      "status": "Chưa có"
+    },
+    {
+      "phase": "Giai đoạn 4 (Tháng 10-12)",
+      "name": "Cambridge IELTS Practice Tests 16 đến 19",
+      "type": "Luyện đề thực chiến",
+      "description": "Giải full test dưới áp lực thời gian thực tế",
+      "source": "Cambridge",
+      "importance": "Bắt buộc",
+      "status": "Chưa có"
+    },
+    {
+      "phase": "Giai đoạn 4 (Tháng 10-12)",
+      "name": "IELTS Trainer 1 & 2 (Cambridge)",
+      "type": "Luyện đề & Mẹo thi",
+      "description": "Luyện đề thi thử có hướng dẫn giải chi tiết",
+      "source": "Cambridge",
+      "importance": "Khuyên dùng",
+      "status": "Chưa có"
+    },
+    {
+      "phase": "Giai đoạn 4 (Tháng 10-12)",
+      "name": "Bộ đề Forecast Speaking theo Quý thi",
+      "type": "Speaking thực chiến",
+      "description": "Luyện phản xạ toàn bộ 50+ chủ đề Part 1 & Part 2 chuẩn bị thi",
+      "source": "IELTS Community / Online",
+      "importance": "Bắt buộc",
+      "status": "Chưa có"
+    }
+  ],
+  "weeklyTimetable": [
+    {
+      "day": "Thứ 2",
+      "time": "19:30 - 21:15",
+      "duration": "1h 45p",
+      "skill": "Listening + Vocab",
+      "content": "1. Làm 1-2 Section Listening (30p)\n2. Nghe lại & dò Transcript gạch chân từ khóa (30p)\n3. Nạp 15 từ vựng mới vào Flashcard/Anki (30p)\n4. Nghe nhại lại 15p",
+      "tools": "Cambridge Audio / Anki / Sổ từ vựng",
+      "status": "Chưa"
+    },
+    {
+      "day": "Thứ 3",
+      "time": "19:30 - 21:15",
+      "duration": "1h 45p",
+      "skill": "Reading + Grammar",
+      "content": "1. Bấm giờ làm 1 bài Reading Passage (20p)\n2. Dò đáp án, lập Bảng từ đồng nghĩa Keyword Table (40p)\n3. Học 1 chủ điểm ngữ pháp nâng cao (30p)",
+      "tools": "Cambridge Reading / Grammar in Use",
+      "status": "Chưa"
+    },
+    {
+      "day": "Thứ 4",
+      "time": "19:30 - 21:30",
+      "duration": "2h 00p",
+      "skill": "Writing (Task 1 hoặc Task 2)",
+      "content": "1. Lập dàn ý Task 1/2 (10p) & Viết bài (40p)\n2. Đọc bài mẫu band 8.0+, ghi chép cụm Collocations hay (40p)\n3. Viết lại câu tối ưu hơn (30p)",
+      "tools": "Simon IELTS / IELTS Advantage",
+      "status": "Chưa"
+    },
+    {
+      "day": "Thứ 5",
+      "time": "19:30 - 21:15",
+      "duration": "1h 45p",
+      "skill": "Speaking Part 1 & 2",
+      "content": "1. Luyện nói 5 câu hỏi Part 1 (20p)\n2. Chuẩn bị 1 phút & nói 2 phút Part 2 theo Cue card (30p)\n3. Thu âm, nghe lại và ghi chú lỗi phát âm, ngắc ngứ (30p)\n4. Luyện Shadowing 15p",
+      "tools": "Ghi âm điện thoại / Elsa Speak",
+      "status": "Chưa"
+    },
+    {
+      "day": "Thứ 6",
+      "time": "19:30 - 21:15",
+      "duration": "1h 45p",
+      "skill": "Listening + Sửa Writing",
+      "content": "1. Luyện thêm 1 Section nghe khó (Sec 3 hoặc 4) (35p)\n2. Lấy lại bài viết của Thứ 4 để tự sửa hoặc đọc nhận xét của giáo viên/AI (40p)\n3. Viết lại bài hoàn chỉnh (30p)",
+      "tools": "Cambridge Audio / ChatGPT sửa lỗi",
+      "status": "Chưa"
+    },
+    {
+      "day": "Thứ 7",
+      "time": "19:30 - 21:30",
+      "duration": "2h 00p",
+      "skill": "Reading + Speaking Part 3",
+      "content": "1. Bấm giờ làm 1 Passage Reading nâng cao (25p)\n2. Phân tích chi tiết câu sai (35p)\n3. Luyện 4 câu Speaking Part 3 theo mô hình P.E.E.L (40p)\n4. Ghi chép từ vựng phản biện xã hội (20p)",
+      "tools": "Forecast Speaking / Collins Speaking",
+      "status": "Chưa"
+    },
+    {
+      "day": "Chủ Nhật",
+      "time": "09:00 - 10:30 (hoặc tối)",
+      "duration": "1h 30p",
+      "skill": "Tổng kết tuần & Giải trí",
+      "content": "1. Ôn tập toàn bộ 80-100 từ vựng đã nạp trong tuần qua Flashcard (45p)\n2. Nghe Podcast TED Talks / Xem phim tiếng Anh có Engsub (45p)\n3. Thư giãn, tái tạo năng lượng cho tuần mới",
+      "tools": "Anki / TED Talks / Netflix",
+      "status": "Chưa"
+    }
+  ],
+  "mockTests": [
+    {
+      "id": "mock-1",
+      "testName": "Test 1 (Đầu vào)",
+      "timing": "Đầu Tháng 1",
+      "source": "Diagnostic Test",
+      "listening": 4,
+      "reading": 4,
+      "writing": 4,
+      "speaking": 4,
+      "overall": 4,
+      "targetBand": "Band 4.0",
+      "evaluation": "Xác định điểm xuất phát, xây lại toàn bộ ngữ pháp & phát âm"
+    },
+    {
+      "id": "mock-2",
+      "testName": "Test 2 (Cuối GĐ 1)",
+      "timing": "Cuối Tháng 3 (W12)",
+      "source": "Foundation Test",
+      "listening": 4.5,
+      "reading": 4.5,
+      "writing": 4.5,
+      "speaking": 4.5,
+      "overall": 4.5,
+      "targetBand": "Band 4.5",
+      "evaluation": "Ngữ pháp vững, phát âm chuẩn, sẵn sàng vào format IELTS"
+    },
+    {
+      "id": "mock-3",
+      "testName": "Test 3 (Giữa GĐ 2)",
+      "timing": "Cuối Tháng 5 (W20)",
+      "source": "Cam 11 Test 1",
+      "listening": 5.5,
+      "reading": 5.5,
+      "writing": 5,
+      "speaking": 5,
+      "overall": 5.5,
+      "targetBand": "Band 5.0 - 5.5",
+      "evaluation": "Listening Sec 1 tốt, Reading bắt đầu quen dạng T/F/NG"
+    },
+    {
+      "id": "mock-4",
+      "testName": "Test 4 (Cuối GĐ 2)",
+      "timing": "Cuối Tháng 6 (W26)",
+      "source": "Cam 12 Test 2",
+      "listening": 6,
+      "reading": 6,
+      "writing": 5.5,
+      "speaking": 5.5,
+      "overall": 6,
+      "targetBand": "Band 5.5 - 6.0",
+      "evaluation": "Đạt mốc giữa kỳ! Hoàn thiện cả Task 1 & Task 2 đúng giờ"
+    },
+    {
+      "id": "mock-5",
+      "testName": "Test 5 (Giữa GĐ 3)",
+      "timing": "Cuối Tháng 8 (W34)",
+      "source": "Cam 14 Test 2",
+      "listening": 6.5,
+      "reading": 7,
+      "writing": 6,
+      "speaking": 6,
+      "overall": 6.5,
+      "targetBand": "Band 6.0 - 6.5",
+      "evaluation": "Reading bứt phá, Speaking Part 2 trôi chảy"
+    },
+    {
+      "id": "mock-6",
+      "testName": "Test 6 (Cuối GĐ 3)",
+      "timing": "Cuối Tháng 9 (W39)",
+      "source": "Cam 16 Test 2",
+      "listening": 7,
+      "reading": 7.5,
+      "writing": 6.5,
+      "speaking": 6.5,
+      "overall": 7,
+      "targetBand": "Band 6.5 - 7.0",
+      "evaluation": "Đạt chính thức 6.5 Overall, chuẩn bị luyện đề thực chiến"
+    },
+    {
+      "id": "mock-7",
+      "testName": "Test 7 (GĐ 4 - W44)",
+      "timing": "Giữa Tháng 11",
+      "source": "Cam 18 Test 2",
+      "listening": 7.5,
+      "reading": 8,
+      "writing": 6.5,
+      "speaking": 6.5,
+      "overall": 7,
+      "targetBand": "Band 7.0+",
+      "evaluation": "Listening & Reading ổn định 7.5 - 8.0"
+    },
+    {
+      "id": "mock-8",
+      "testName": "Test 8 (Tổng duyệt W50)",
+      "timing": "Đầu Tháng 12",
+      "source": "Cam 19 Test 2",
+      "listening": 8,
+      "reading": 8,
+      "writing": 6.5,
+      "speaking": 6.5,
+      "overall": 7.5,
+      "targetBand": "Band 7.0 - 7.5",
+      "evaluation": "Sẵn sàng 100% phong độ bước vào phòng thi thật!"
+    }
+  ],
   "lessons": [
     {
-      "id": "en-lesson-01",
-      "name": "Unit 1: Daily Life & Communication",
-      "description": "Từ vựng & cấu trúc ngữ pháp giao tiếp hàng ngày trong Tiếng Anh",
-      "level": "A1",
-      "curriculum": "Oxford 3000",
+      "id": "en-week-1",
+      "weekNumber": 1,
+      "month": "Tháng 1",
+      "name": "Tuần 1: GĐ 1: Chuẩn hóa 20 Nguyên âm IPA & 3 Thì cơ bản",
+      "description": "GĐ 1 (Band 4.0 - 4.5) • KPI: Phát âm chuẩn 20 nguyên âm; viết câu đơn không sai thì",
+      "level": "Band 4.0 - 4.5",
+      "phase": "Giai đoạn 1 (Tháng 1-3)",
+      "phaseCode": "GĐ 1",
+      "curriculum": "IELTS 7.0 Roadmap (52 Weeks)",
+      "duration": "8 - 10h/tuần",
+      "kpi": "Phát âm chuẩn 20 nguyên âm; viết câu đơn không sai thì",
+      "status": "Đang học",
+      "skills": {
+        "listening": "Nhận diện 20 nguyên âm IPA; Nghe BBC 6 Minute English (tốc độ 0.8x)",
+        "reading": "Đọc hiểu 2 bài báo ngắn (Spotlight English / VOA); tra từ điển Oxford",
+        "writing": "Luyện viết 10 câu đơn hoàn chỉnh; phân biệt các cấu trúc S-V-O, S-V-Adj",
+        "speaking": "Luyện phát âm chuẩn 20 nguyên âm đơn & đôi trước gương",
+        "grammarVocab": "3 thì cơ bản: HTĐ, HTTD, QKĐ; 50 từ vựng chủ đề Daily Routine",
+        "kpi": "Phát âm chuẩn 20 nguyên âm; viết câu đơn không sai thì"
+      },
       "vocabulary": [
-        { "id": "en-01-01", "kanji": "Communication", "hiragana": "/kəˌmjuːnɪˈkeɪʃn/", "meaning": "Sự giao tiếp, liên lạc", "phonetic": "noun" },
-        { "id": "en-01-02", "kanji": "Achievement", "hiragana": "/əˈtʃiːvmənt/", "meaning": "Thành tựu, đạt được", "phonetic": "noun" },
-        { "id": "en-01-03", "kanji": "Opportunity", "hiragana": "/ˌɒpəˈtjuːnəti/", "meaning": "Cơ hội, thời cơ", "phonetic": "noun" },
-        { "id": "en-01-04", "kanji": "Perspective", "hiragana": "/pəˈspektɪv/", "meaning": "Góc nhìn, quan điểm", "phonetic": "noun" },
-        { "id": "en-01-05", "kanji": "Environment", "hiragana": "/ɪnˈvaɪrənmənt/", "meaning": "Môi trường xung quanh", "phonetic": "noun" }
+        {
+          "id": "en-w1-1",
+          "kanji": "Routine",
+          "hiragana": "/ruːˈtiːn/",
+          "meaning": "Thói quen hàng ngày",
+          "phonetic": "noun"
+        },
+        {
+          "id": "en-w1-2",
+          "kanji": "Schedule",
+          "hiragana": "/ˈʃedjuːl/",
+          "meaning": "Lịch trình, thời khóa biểu",
+          "phonetic": "noun"
+        },
+        {
+          "id": "en-w1-3",
+          "kanji": "Punctual",
+          "hiragana": "/ˈpʌŋktʃuəl/",
+          "meaning": "Đúng giờ",
+          "phonetic": "adjective"
+        },
+        {
+          "id": "en-w1-4",
+          "kanji": "Allocate",
+          "hiragana": "/ˈæləkeɪt/",
+          "meaning": "Phân bổ (thời gian, tiền bạc)",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w1-5",
+          "kanji": "Priority",
+          "hiragana": "/praɪˈɒrəti/",
+          "meaning": "Sự ưu tiên hàng đầu",
+          "phonetic": "noun"
+        }
       ],
       "grammarPoints": [
         {
-          "id": "g-en-01",
-          "structure": "Present Perfect (Thì Hiện Tại Hoàn Thành)",
-          "meaning": "Subject + have/has + V3/ed (Diễn tả hành động xảy ra trong quá khứ kéo dài đến hiện tại)",
-          "explanation": "Dùng khi diễn tả kinh nghiệm, sự việc vừa xảy ra hoặc kết quả kéo dài tới hiện tại.",
-          "level": "A2",
+          "id": "g-en-w1",
+          "structure": "3 thì cơ bản: HTĐ, HTTD, QKĐ; 50 từ vựng chủ đề Daily Routine",
+          "meaning": "Phát âm chuẩn 20 nguyên âm; viết câu đơn không sai thì",
+          "explanation": "• Listening: Nhận diện 20 nguyên âm IPA; Nghe BBC 6 Minute English (tốc độ 0.8x)\n• Reading: Đọc hiểu 2 bài báo ngắn (Spotlight English / VOA); tra từ điển Oxford\n• Writing: Luyện viết 10 câu đơn hoàn chỉnh; phân biệt các cấu trúc S-V-O, S-V-Adj\n• Speaking: Luyện phát âm chuẩn 20 nguyên âm đơn & đôi trước gương",
+          "level": "Band 4.0 - 4.5",
           "examples": [
-            { "id": "eg-en-01-1", "sentence": "I have studied English for 3 years.", "meaning": "Tôi đã học tiếng Anh được 3 năm rồi." }
+            {
+              "id": "eg-en-w1-1",
+              "sentence": "IELTS Target Week 1: Phát âm chuẩn 20 nguyên âm; viết câu đơn không sai thì",
+              "meaning": "Mục tiêu hoàn thành KPI Tuần 1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-week-2",
+      "weekNumber": 2,
+      "month": "Tháng 1",
+      "name": "Tuần 2: GĐ 1: 24 Phụ âm IPA & Các thì hoàn thành",
+      "description": "GĐ 1 (Band 4.0 - 4.5) • KPI: Nắm trọn 44 âm IPA; phát âm có ending sounds rõ ràng",
+      "level": "Band 4.0 - 4.5",
+      "phase": "Giai đoạn 1 (Tháng 1-3)",
+      "phaseCode": "GĐ 1",
+      "curriculum": "IELTS 7.0 Roadmap (52 Weeks)",
+      "duration": "8 - 10h/tuần",
+      "kpi": "Nắm trọn 44 âm IPA; phát âm có ending sounds rõ ràng",
+      "status": "Chưa học",
+      "skills": {
+        "listening": "Luyện 24 phụ âm IPA (chú ý cặp âm /s/ - /ʃ/, /θ/ - /ð/); nghe chép 2 đoạn ngắn",
+        "reading": "Đọc 2 bài VOA Learning English Level 1; gạch chân danh từ & động từ chính",
+        "writing": "Luyện viết câu sử dụng liên từ kết hợp (and, but, so, because)",
+        "speaking": "Luyện phát âm 24 phụ âm; tập nói 5 câu giới thiệu bản thân chuẩn ngữ điệu",
+        "grammarVocab": "Thì HTHT, QKTD, TLĐ; 50 từ vựng chủ đề Family & Relationships",
+        "kpi": "Nắm trọn 44 âm IPA; phát âm có ending sounds rõ ràng"
+      },
+      "vocabulary": [
+        {
+          "id": "en-w2-1",
+          "kanji": "Sibling",
+          "hiragana": "/ˈsɪblɪŋ/",
+          "meaning": "Anh chị em ruột",
+          "phonetic": "noun"
+        },
+        {
+          "id": "en-w2-2",
+          "kanji": "Upbringing",
+          "hiragana": "/ˈʌpbrɪŋɪŋ/",
+          "meaning": "Sự nuôi nấng, dạy dỗ",
+          "phonetic": "noun"
+        },
+        {
+          "id": "en-w2-3",
+          "kanji": "Offspring",
+          "hiragana": "/ˈɒfsprɪŋ/",
+          "meaning": "Con cái, thế hệ sau",
+          "phonetic": "noun"
+        },
+        {
+          "id": "en-w2-4",
+          "kanji": "Acquaintance",
+          "hiragana": "/əˈkweɪntəns/",
+          "meaning": "Người quen biết",
+          "phonetic": "noun"
+        },
+        {
+          "id": "en-w2-5",
+          "kanji": "Foster",
+          "hiragana": "/ˈfɒstə(r)/",
+          "meaning": "Nuôi dưỡng, bồi đắp (mối quan hệ)",
+          "phonetic": "verb"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-en-w2",
+          "structure": "Thì HTHT, QKTD, TLĐ; 50 từ vựng chủ đề Family & Relationships",
+          "meaning": "Nắm trọn 44 âm IPA; phát âm có ending sounds rõ ràng",
+          "explanation": "• Listening: Luyện 24 phụ âm IPA (chú ý cặp âm /s/ - /ʃ/, /θ/ - /ð/); nghe chép 2 đoạn ngắn\n• Reading: Đọc 2 bài VOA Learning English Level 1; gạch chân danh từ & động từ chính\n• Writing: Luyện viết câu sử dụng liên từ kết hợp (and, but, so, because)\n• Speaking: Luyện phát âm 24 phụ âm; tập nói 5 câu giới thiệu bản thân chuẩn ngữ điệu",
+          "level": "Band 4.0 - 4.5",
+          "examples": [
+            {
+              "id": "eg-en-w2-1",
+              "sentence": "IELTS Target Week 2: Nắm trọn 44 âm IPA; phát âm có ending sounds rõ ràng",
+              "meaning": "Mục tiêu hoàn thành KPI Tuần 2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-week-3",
+      "weekNumber": 3,
+      "month": "Tháng 1",
+      "name": "Tuần 3: GĐ 1: Trọng âm từ, Ngữ điệu & Câu ghép",
+      "description": "GĐ 1 (Band 4.0 - 4.5) • KPI: Viết được câu ghép chuẩn ngữ pháp; nói đúng trọng âm từ",
+      "level": "Band 4.0 - 4.5",
+      "phase": "Giai đoạn 1 (Tháng 1-3)",
+      "phaseCode": "GĐ 1",
+      "curriculum": "IELTS 7.0 Roadmap (52 Weeks)",
+      "duration": "8 - 10h/tuần",
+      "kpi": "Viết được câu ghép chuẩn ngữ pháp; nói đúng trọng âm từ",
+      "status": "Chưa học",
+      "skills": {
+        "listening": "Nghe chép chính tả 3 bài VOA ngắn; chú ý cách ngắt cụm (chunking)",
+        "reading": "Đọc bài 250 từ; tập tóm tắt ý chính của từng đoạn văn ngắn",
+        "writing": "Cấu trúc câu ghép (Compound Sentences) với FANBOYS; tránh lỗi phẩy nối câu",
+        "speaking": "Quy tắc trọng âm từ 2 & 3 âm tiết; luyện nói giới thiệu sở thích (Hobbies)",
+        "grammarVocab": "Từ loại (Word Formation: N, V, Adj, Adv); 50 từ chủ đề Work & Study",
+        "kpi": "Viết được câu ghép chuẩn ngữ pháp; nói đúng trọng âm từ"
+      },
+      "vocabulary": [
+        {
+          "id": "en-w3-1",
+          "kanji": "Competence",
+          "hiragana": "/ˈkɒmpɪtəns/",
+          "meaning": "Năng lực, khả năng chuyên môn",
+          "phonetic": "noun"
+        },
+        {
+          "id": "en-w3-2",
+          "kanji": "Curriculum",
+          "hiragana": "/kəˈrɪkjələm/",
+          "meaning": "Chương trình học",
+          "phonetic": "noun"
+        },
+        {
+          "id": "en-w3-3",
+          "kanji": "Qualification",
+          "hiragana": "/ˌkwɒlɪfɪˈkeɪʃn/",
+          "meaning": "Bằng cấp, chứng chỉ",
+          "phonetic": "noun"
+        },
+        {
+          "id": "en-w3-4",
+          "kanji": "Expertise",
+          "hiragana": "/ˌekspɜːˈtiːz/",
+          "meaning": "Kiến thức chuyên sâu",
+          "phonetic": "noun"
+        },
+        {
+          "id": "en-w3-5",
+          "kanji": "Vocation",
+          "hiragana": "/vəʊˈkeɪʃn/",
+          "meaning": "Nghề nghiệp, thiên chức",
+          "phonetic": "noun"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-en-w3",
+          "structure": "Từ loại (Word Formation: N, V, Adj, Adv); 50 từ chủ đề Work & Study",
+          "meaning": "Viết được câu ghép chuẩn ngữ pháp; nói đúng trọng âm từ",
+          "explanation": "• Listening: Nghe chép chính tả 3 bài VOA ngắn; chú ý cách ngắt cụm (chunking)\n• Reading: Đọc bài 250 từ; tập tóm tắt ý chính của từng đoạn văn ngắn\n• Writing: Cấu trúc câu ghép (Compound Sentences) với FANBOYS; tránh lỗi phẩy nối câu\n• Speaking: Quy tắc trọng âm từ 2 & 3 âm tiết; luyện nói giới thiệu sở thích (Hobbies)",
+          "level": "Band 4.0 - 4.5",
+          "examples": [
+            {
+              "id": "eg-en-w3-1",
+              "sentence": "IELTS Target Week 3: Viết được câu ghép chuẩn ngữ pháp; nói đúng trọng âm từ",
+              "meaning": "Mục tiêu hoàn thành KPI Tuần 3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-week-4",
+      "weekNumber": 4,
+      "month": "Tháng 1",
+      "name": "Tuần 4: GĐ 1: Câu phức & Tổng kết Tháng 1",
+      "description": "GĐ 1 (Band 4.0 - 4.5) • KPI: Làm Mini-test Ngữ pháp & Từ vựng đạt >= 80% điểm",
+      "level": "Band 4.0 - 4.5",
+      "phase": "Giai đoạn 1 (Tháng 1-3)",
+      "phaseCode": "GĐ 1",
+      "curriculum": "IELTS 7.0 Roadmap (52 Weeks)",
+      "duration": "8 - 10h/tuần",
+      "kpi": "Làm Mini-test Ngữ pháp & Từ vựng đạt >= 80% điểm",
+      "status": "Chưa học",
+      "skills": {
+        "listening": "Nghe 3 bài podcast VOA; tập ghi chú từ khóa chính (Keyword note-taking)",
+        "reading": "Đọc 3 bài báo ngắn; phân tích mệnh đề chính và mệnh đề phụ thuộc",
+        "writing": "Cấu trúc câu phức (Complex Sentences) với Although, Since, While, If",
+        "speaking": "Luyện trả lời 5 câu hỏi giao tiếp thông thường trôi chảy, tự nhiên",
+        "grammarVocab": "Tổng ôn 200 từ vựng Tháng 1 qua Flashcard/Anki; ôn tập 6 thì cơ bản",
+        "kpi": "Làm Mini-test Ngữ pháp & Từ vựng đạt >= 80% điểm"
+      },
+      "vocabulary": [
+        {
+          "id": "en-w4-1",
+          "kanji": "Furthermore",
+          "hiragana": "/ˌfɜːðəˈmɔː(r)/",
+          "meaning": "Hơn thế nữa, ngoài ra",
+          "phonetic": "adverb"
+        },
+        {
+          "id": "en-w4-2",
+          "kanji": "Consequently",
+          "hiragana": "/ˈkɒnsɪkwəntli/",
+          "meaning": "Kết quả là, do đó",
+          "phonetic": "adverb"
+        },
+        {
+          "id": "en-w4-3",
+          "kanji": "Whereas",
+          "hiragana": "/ˌweərˈæz/",
+          "meaning": "Trong khi ngược lại",
+          "phonetic": "conjunction"
+        },
+        {
+          "id": "en-w4-4",
+          "kanji": "Nevertheless",
+          "hiragana": "/ˌnevəðəˈles/",
+          "meaning": "Tuy nhiên, mặc dù vậy",
+          "phonetic": "adverb"
+        },
+        {
+          "id": "en-w4-5",
+          "kanji": "In contrast",
+          "hiragana": "/ɪn ˈkɒntrɑːst/",
+          "meaning": "Trái ngược lại với",
+          "phonetic": "phrase"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-en-w4",
+          "structure": "Tổng ôn 200 từ vựng Tháng 1 qua Flashcard/Anki; ôn tập 6 thì cơ bản",
+          "meaning": "Làm Mini-test Ngữ pháp & Từ vựng đạt >= 80% điểm",
+          "explanation": "• Listening: Nghe 3 bài podcast VOA; tập ghi chú từ khóa chính (Keyword note-taking)\n• Reading: Đọc 3 bài báo ngắn; phân tích mệnh đề chính và mệnh đề phụ thuộc\n• Writing: Cấu trúc câu phức (Complex Sentences) với Although, Since, While, If\n• Speaking: Luyện trả lời 5 câu hỏi giao tiếp thông thường trôi chảy, tự nhiên",
+          "level": "Band 4.0 - 4.5",
+          "examples": [
+            {
+              "id": "eg-en-w4-1",
+              "sentence": "IELTS Target Week 4: Làm Mini-test Ngữ pháp & Từ vựng đạt >= 80% điểm",
+              "meaning": "Mục tiêu hoàn thành KPI Tuần 4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-week-5",
+      "weekNumber": 5,
+      "month": "Tháng 2",
+      "name": "Tuần 5: GĐ 1: Mệnh đề quan hệ & Nghe chép chính tả nâng cao",
+      "description": "GĐ 1 (Band 4.0 - 4.5) • KPI: Ứng dụng mượt mà who/which/that vào câu viết và câu nói",
+      "level": "Band 4.0 - 4.5",
+      "phase": "Giai đoạn 1 (Tháng 1-3)",
+      "phaseCode": "GĐ 1",
+      "curriculum": "IELTS 7.0 Roadmap (52 Weeks)",
+      "duration": "8 - 10h/tuần",
+      "kpi": "Ứng dụng mượt mà who/which/that vào câu viết và câu nói",
+      "status": "Chưa học",
+      "skills": {
+        "listening": "Nghe chép chính tả 3 bài BBC 6 Minute English (mục tiêu đúng >= 80% từ)",
+        "reading": "Đọc 2 bài báo The Guardian/BBC trung cấp; ghi chép cụm Collocations",
+        "writing": "Mệnh đề quan hệ xác định (Defining) & không xác định (Non-defining)",
+        "speaking": "Tập nói đoạn văn 1 phút về một ngày làm việc/học tập (ghi âm và nghe lại)",
+        "grammarVocab": "Mệnh đề quan hệ (who, which, that, where); 60 từ chủ đề Education",
+        "kpi": "Ứng dụng mượt mà who/which/that vào câu viết và câu nói"
+      },
+      "vocabulary": [
+        {
+          "id": "en-w5-1",
+          "kanji": "Pedagogy",
+          "hiragana": "/ˈpedəɡɒdʒi/",
+          "meaning": "Phương pháp giảng dạy",
+          "phonetic": "noun"
+        },
+        {
+          "id": "en-w5-2",
+          "kanji": "Compulsory",
+          "hiragana": "/kəmˈpʌlsəri/",
+          "meaning": "Bắt buộc (bởi luật/quy định)",
+          "phonetic": "adjective"
+        },
+        {
+          "id": "en-w5-3",
+          "kanji": "Tertiary",
+          "hiragana": "/ˈtɜːʃəri/",
+          "meaning": "Bậc đại học/cao đẳng",
+          "phonetic": "adjective"
+        },
+        {
+          "id": "en-w5-4",
+          "kanji": "Tuition",
+          "hiragana": "/tjuˈɪʃn/",
+          "meaning": "Học phí",
+          "phonetic": "noun"
+        },
+        {
+          "id": "en-w5-5",
+          "kanji": "Discipline",
+          "hiragana": "/ˈdɪsəplɪn/",
+          "meaning": "Kỷ luật / Chuyên ngành",
+          "phonetic": "noun"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-en-w5",
+          "structure": "Mệnh đề quan hệ (who, which, that, where); 60 từ chủ đề Education",
+          "meaning": "Ứng dụng mượt mà who/which/that vào câu viết và câu nói",
+          "explanation": "• Listening: Nghe chép chính tả 3 bài BBC 6 Minute English (mục tiêu đúng >= 80% từ)\n• Reading: Đọc 2 bài báo The Guardian/BBC trung cấp; ghi chép cụm Collocations\n• Writing: Mệnh đề quan hệ xác định (Defining) & không xác định (Non-defining)\n• Speaking: Tập nói đoạn văn 1 phút về một ngày làm việc/học tập (ghi âm và nghe lại)",
+          "level": "Band 4.0 - 4.5",
+          "examples": [
+            {
+              "id": "eg-en-w5-1",
+              "sentence": "IELTS Target Week 5: Ứng dụng mượt mà who/which/that vào câu viết và câu nói",
+              "meaning": "Mục tiêu hoàn thành KPI Tuần 5"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-week-6",
+      "weekNumber": 6,
+      "month": "Tháng 2",
+      "name": "Tuần 6: GĐ 1: Thể bị động & Nhại giọng (Shadowing)",
+      "description": "GĐ 1 (Band 4.0 - 4.5) • KPI: Nghe đúng 10/10 câu đánh vần tên & số điện thoại",
+      "level": "Band 4.0 - 4.5",
+      "phase": "Giai đoạn 1 (Tháng 1-3)",
+      "phaseCode": "GĐ 1",
+      "curriculum": "IELTS 7.0 Roadmap (52 Weeks)",
+      "duration": "8 - 10h/tuần",
+      "kpi": "Nghe đúng 10/10 câu đánh vần tên & số điện thoại",
+      "status": "Chưa học",
+      "skills": {
+        "listening": "Luyện nghe số, ngày tháng, đánh vần tên riêng (chuẩn bị cho IELTS Sec 1)",
+        "reading": "Đọc có bấm giờ: Đọc bài 350 từ trong 3 phút và trả lời 3 câu hỏi ý chính",
+        "writing": "Thể bị động (Passive Voice) các thì cơ bản; ứng dụng trong văn miêu tả",
+        "speaking": "Phương pháp Shadowing (Nhại giọng) theo video BBC 15 phút mỗi ngày",
+        "grammarVocab": "Câu điều kiện loại 1 & loại 2; 60 từ vựng chủ đề Technology & Media",
+        "kpi": "Nghe đúng 10/10 câu đánh vần tên & số điện thoại"
+      },
+      "vocabulary": [
+        {
+          "id": "en-w6-1",
+          "kanji": "Innovation",
+          "hiragana": "/ˌɪnəˈveɪʃn/",
+          "meaning": "Sự đổi mới, sáng tạo",
+          "phonetic": "noun"
+        },
+        {
+          "id": "en-w6-2",
+          "kanji": "Automation",
+          "hiragana": "/ˌɔːtəˈmeɪʃn/",
+          "meaning": "Sự tự động hóa",
+          "phonetic": "noun"
+        },
+        {
+          "id": "en-w6-3",
+          "kanji": "Algorithm",
+          "hiragana": "/ˈælɡərɪðəm/",
+          "meaning": "Thuật toán",
+          "phonetic": "noun"
+        },
+        {
+          "id": "en-w6-4",
+          "kanji": "Artificial",
+          "hiragana": "/ˌɑːtɪˈfɪʃl/",
+          "meaning": "Nhân tạo (AI)",
+          "phonetic": "adjective"
+        },
+        {
+          "id": "en-w6-5",
+          "kanji": "Broadcasting",
+          "hiragana": "/ˈbrɔːdkɑːstɪŋ/",
+          "meaning": "Ngành phát thanh truyền hình",
+          "phonetic": "noun"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-en-w6",
+          "structure": "Câu điều kiện loại 1 & loại 2; 60 từ vựng chủ đề Technology & Media",
+          "meaning": "Nghe đúng 10/10 câu đánh vần tên & số điện thoại",
+          "explanation": "• Listening: Luyện nghe số, ngày tháng, đánh vần tên riêng (chuẩn bị cho IELTS Sec 1)\n• Reading: Đọc có bấm giờ: Đọc bài 350 từ trong 3 phút và trả lời 3 câu hỏi ý chính\n• Writing: Thể bị động (Passive Voice) các thì cơ bản; ứng dụng trong văn miêu tả\n• Speaking: Phương pháp Shadowing (Nhại giọng) theo video BBC 15 phút mỗi ngày",
+          "level": "Band 4.0 - 4.5",
+          "examples": [
+            {
+              "id": "eg-en-w6-1",
+              "sentence": "IELTS Target Week 6: Nghe đúng 10/10 câu đánh vần tên & số điện thoại",
+              "meaning": "Mục tiêu hoàn thành KPI Tuần 6"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-week-7",
+      "weekNumber": 7,
+      "month": "Tháng 2",
+      "name": "Tuần 7: GĐ 1: Mệnh đề phân từ rút gọn & Collocations",
+      "description": "GĐ 1 (Band 4.0 - 4.5) • KPI: Viết được câu có sử dụng mệnh đề phân từ rút gọn V-ing",
+      "level": "Band 4.0 - 4.5",
+      "phase": "Giai đoạn 1 (Tháng 1-3)",
+      "phaseCode": "GĐ 1",
+      "curriculum": "IELTS 7.0 Roadmap (52 Weeks)",
+      "duration": "8 - 10h/tuần",
+      "kpi": "Viết được câu có sử dụng mệnh đề phân từ rút gọn V-ing",
+      "status": "Chưa học",
+      "skills": {
+        "listening": "Nghe chép đoạn hội thoại 2 người về đặt phòng khách sạn / mua hàng",
+        "reading": "Đọc bài báo khoa học đơn giản; phân tích cách liên kết giữa các đoạn",
+        "writing": "Mệnh đề phân từ rút gọn (V-ing / V-ed); tránh lỗi sai chủ ngữ",
+        "speaking": "Luyện trả lời trôi chảy 5 chủ đề quen thuộc (Food, Travel, Weather, Hometown)",
+        "grammarVocab": "Collocations cơ bản (Make/Do/Take/Have); 60 từ chủ đề Environment",
+        "kpi": "Viết được câu có sử dụng mệnh đề phân từ rút gọn V-ing"
+      },
+      "vocabulary": [
+        {
+          "id": "en-w7-1",
+          "kanji": "Ecosystem",
+          "hiragana": "/ˈiːkəʊsɪstəm/",
+          "meaning": "Hệ sinh thái",
+          "phonetic": "noun"
+        },
+        {
+          "id": "en-w7-2",
+          "kanji": "Biodiversity",
+          "hiragana": "/ˌbaɪəʊdaɪˈvɜːsəti/",
+          "meaning": "Đa dạng sinh học",
+          "phonetic": "noun"
+        },
+        {
+          "id": "en-w7-3",
+          "kanji": "Sustainability",
+          "hiragana": "/səˌsteɪnəˈbɪləti/",
+          "meaning": "Sự phát triển bền vững",
+          "phonetic": "noun"
+        },
+        {
+          "id": "en-w7-4",
+          "kanji": "Deforestation",
+          "hiragana": "/diːˌfɒrɪˈsteɪʃn/",
+          "meaning": "Nạn phá rừng",
+          "phonetic": "noun"
+        },
+        {
+          "id": "en-w7-5",
+          "kanji": "Emission",
+          "hiragana": "/ɪˈmɪʃn/",
+          "meaning": "Khí thải xả ra",
+          "phonetic": "noun"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-en-w7",
+          "structure": "Collocations cơ bản (Make/Do/Take/Have); 60 từ chủ đề Environment",
+          "meaning": "Viết được câu có sử dụng mệnh đề phân từ rút gọn V-ing",
+          "explanation": "• Listening: Nghe chép đoạn hội thoại 2 người về đặt phòng khách sạn / mua hàng\n• Reading: Đọc bài báo khoa học đơn giản; phân tích cách liên kết giữa các đoạn\n• Writing: Mệnh đề phân từ rút gọn (V-ing / V-ed); tránh lỗi sai chủ ngữ\n• Speaking: Luyện trả lời trôi chảy 5 chủ đề quen thuộc (Food, Travel, Weather, Hometown)",
+          "level": "Band 4.0 - 4.5",
+          "examples": [
+            {
+              "id": "eg-en-w7-1",
+              "sentence": "IELTS Target Week 7: Viết được câu có sử dụng mệnh đề phân từ rút gọn V-ing",
+              "meaning": "Mục tiêu hoàn thành KPI Tuần 7"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-week-8",
+      "weekNumber": 8,
+      "month": "Tháng 2",
+      "name": "Tuần 8: GĐ 1: Đọc hiểu chuyên sâu & Đoạn văn mô tả",
+      "description": "GĐ 1 (Band 4.0 - 4.5) • KPI: Viết đoạn văn mạch lạc 120 từ không mắc lỗi ngữ pháp cơ bản",
+      "level": "Band 4.0 - 4.5",
+      "phase": "Giai đoạn 1 (Tháng 1-3)",
+      "phaseCode": "GĐ 1",
+      "curriculum": "IELTS 7.0 Roadmap (52 Weeks)",
+      "duration": "8 - 10h/tuần",
+      "kpi": "Viết đoạn văn mạch lạc 120 từ không mắc lỗi ngữ pháp cơ bản",
+      "status": "Chưa học",
+      "skills": {
+        "listening": "Nghe podcast Spotlight English tốc độ tự nhiên; tập tóm tắt lại nội dung",
+        "reading": "Đọc bài đọc 400 từ; luyện kỹ năng đoán nghĩa từ mới dựa vào văn cảnh",
+        "writing": "Viết đoạn văn 120 từ mô tả một địa điểm yêu thích có dùng câu phức & bị động",
+        "speaking": "Luyện nói 2 phút về chủ đề 'A memorable trip' (ghi âm tự sửa lỗi)",
+        "grammarVocab": "Cụm động từ (Phrasal Verbs) thông dụng trong giao tiếp hàng ngày; 50 từ",
+        "kpi": "Viết đoạn văn mạch lạc 120 từ không mắc lỗi ngữ pháp cơ bản"
+      },
+      "vocabulary": [
+        {
+          "id": "en-w8-1",
+          "kanji": "Destination",
+          "hiragana": "/ˌdestɪˈneɪʃn/",
+          "meaning": "Điểm đến du lịch",
+          "phonetic": "noun"
+        },
+        {
+          "id": "en-w8-2",
+          "kanji": "Itinerary",
+          "hiragana": "/aɪˈtɪnərəri/",
+          "meaning": "Lịch trình chuyến đi",
+          "phonetic": "noun"
+        },
+        {
+          "id": "en-w8-3",
+          "kanji": "Hospitality",
+          "hiragana": "/ˌhɒspɪˈtæləti/",
+          "meaning": "Ngành nhà hàng khách sạn / Sự hiếu khách",
+          "phonetic": "noun"
+        },
+        {
+          "id": "en-w8-4",
+          "kanji": "Excursion",
+          "hiragana": "/ɪkˈskɜːʃn/",
+          "meaning": "Chuyến tham quan ngắn ngày",
+          "phonetic": "noun"
+        },
+        {
+          "id": "en-w8-5",
+          "kanji": "Scenery",
+          "hiragana": "/ˈsiːnəri/",
+          "meaning": "Phong cảnh thiên nhiên",
+          "phonetic": "noun"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-en-w8",
+          "structure": "Cụm động từ (Phrasal Verbs) thông dụng trong giao tiếp hàng ngày; 50 từ",
+          "meaning": "Viết đoạn văn mạch lạc 120 từ không mắc lỗi ngữ pháp cơ bản",
+          "explanation": "• Listening: Nghe podcast Spotlight English tốc độ tự nhiên; tập tóm tắt lại nội dung\n• Reading: Đọc bài đọc 400 từ; luyện kỹ năng đoán nghĩa từ mới dựa vào văn cảnh\n• Writing: Viết đoạn văn 120 từ mô tả một địa điểm yêu thích có dùng câu phức & bị động\n• Speaking: Luyện nói 2 phút về chủ đề 'A memorable trip' (ghi âm tự sửa lỗi)",
+          "level": "Band 4.0 - 4.5",
+          "examples": [
+            {
+              "id": "eg-en-w8-1",
+              "sentence": "IELTS Target Week 8: Viết đoạn văn mạch lạc 120 từ không mắc lỗi ngữ pháp cơ bản",
+              "meaning": "Mục tiêu hoàn thành KPI Tuần 8"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-week-9",
+      "weekNumber": 9,
+      "month": "Tháng 3",
+      "name": "Tuần 9: GĐ 1: Câu gián tiếp & Câu giả định",
+      "description": "GĐ 1 (Band 4.0 - 4.5) • KPI: Nắm vững quy tắc lùi thì trong câu tường thuật gián tiếp",
+      "level": "Band 4.0 - 4.5",
+      "phase": "Giai đoạn 1 (Tháng 1-3)",
+      "phaseCode": "GĐ 1",
+      "curriculum": "IELTS 7.0 Roadmap (52 Weeks)",
+      "duration": "8 - 10h/tuần",
+      "kpi": "Nắm vững quy tắc lùi thì trong câu tường thuật gián tiếp",
+      "status": "Chưa học",
+      "skills": {
+        "listening": "Luyện nghe nhận diện âm đuôi /s/, /z/, /ed/ trong các đoạn hội thoại nhanh",
+        "reading": "Đọc bài báo phân tích xã hội ngắn; xác định luận điểm và luận cứ của tác giả",
+        "writing": "Câu gián tiếp (Reported Speech) & Cấu trúc câu giả định (Wish, If only)",
+        "speaking": "Luyện nói phản xạ: Hỏi và đáp nhanh 10 câu hỏi đời sống không chuẩn bị trước",
+        "grammarVocab": "Tổng hợp 100 tính từ mô tả cảm xúc, tính cách, cảnh quan",
+        "kpi": "Nắm vững quy tắc lùi thì trong câu tường thuật gián tiếp"
+      },
+      "vocabulary": [
+        {
+          "id": "en-w9-1",
+          "kanji": "Meticulous",
+          "hiragana": "/məˈtɪkjələs/",
+          "meaning": "Tỉ mỉ, cẩn thận từng chi tiết",
+          "phonetic": "adjective"
+        },
+        {
+          "id": "en-w9-2",
+          "kanji": "Resilient",
+          "hiragana": "/rɪˈzɪliənt/",
+          "meaning": "Kiên cường, bứt phá vượt khó",
+          "phonetic": "adjective"
+        },
+        {
+          "id": "en-w9-3",
+          "kanji": "Empathetic",
+          "hiragana": "/ˌempəˈθetɪk/",
+          "meaning": "Thấu hiểu, thấu cảm",
+          "phonetic": "adjective"
+        },
+        {
+          "id": "en-w9-4",
+          "kanji": "Gregarious",
+          "hiragana": "/ɡrɪˈɡeəriəs/",
+          "meaning": "Hòa đồng, thích giao lưu",
+          "phonetic": "adjective"
+        },
+        {
+          "id": "en-w9-5",
+          "kanji": "Authentic",
+          "hiragana": "/ɔːˈθentɪk/",
+          "meaning": "Chân thật, đích thực",
+          "phonetic": "adjective"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-en-w9",
+          "structure": "Tổng hợp 100 tính từ mô tả cảm xúc, tính cách, cảnh quan",
+          "meaning": "Nắm vững quy tắc lùi thì trong câu tường thuật gián tiếp",
+          "explanation": "• Listening: Luyện nghe nhận diện âm đuôi /s/, /z/, /ed/ trong các đoạn hội thoại nhanh\n• Reading: Đọc bài báo phân tích xã hội ngắn; xác định luận điểm và luận cứ của tác giả\n• Writing: Câu gián tiếp (Reported Speech) & Cấu trúc câu giả định (Wish, If only)\n• Speaking: Luyện nói phản xạ: Hỏi và đáp nhanh 10 câu hỏi đời sống không chuẩn bị trước",
+          "level": "Band 4.0 - 4.5",
+          "examples": [
+            {
+              "id": "eg-en-w9-1",
+              "sentence": "IELTS Target Week 9: Nắm vững quy tắc lùi thì trong câu tường thuật gián tiếp",
+              "meaning": "Mục tiêu hoàn thành KPI Tuần 9"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-week-10",
+      "weekNumber": 10,
+      "month": "Tháng 3",
+      "name": "Tuần 10: GĐ 1: Kỹ năng tóm tắt & Mở rộng trường từ vựng",
+      "description": "GĐ 1 (Band 4.0 - 4.5) • KPI: Tóm tắt bài đọc chính xác, không sao chép nguyên văn",
+      "level": "Band 4.0 - 4.5",
+      "phase": "Giai đoạn 1 (Tháng 1-3)",
+      "phaseCode": "GĐ 1",
+      "curriculum": "IELTS 7.0 Roadmap (52 Weeks)",
+      "duration": "8 - 10h/tuần",
+      "kpi": "Tóm tắt bài đọc chính xác, không sao chép nguyên văn",
+      "status": "Chưa học",
+      "skills": {
+        "listening": "Nghe bài giảng ngắn 3 phút trên TED-Ed; ghi lại 5 luận điểm chính",
+        "reading": "Đọc 2 bài viết phân tích xu hướng; tập tóm tắt mỗi bài trong 3 câu",
+        "writing": "Viết bài tóm tắt nội dung 150 từ kết hợp đa dạng câu đơn, ghép, phức",
+        "speaking": "Luyện nói theo cặp hoặc trước gương: Bàn về thói quen đọc sách & xem phim",
+        "grammarVocab": "60 từ vựng học thuật cơ bản (Analyze, indicate, significant, factor...)",
+        "kpi": "Tóm tắt bài đọc chính xác, không sao chép nguyên văn"
+      },
+      "vocabulary": [
+        {
+          "id": "en-w10-1",
+          "kanji": "Analyze",
+          "hiragana": "/ˈænəlaɪz/",
+          "meaning": "Phân tích dữ liệu/thông tin",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w10-2",
+          "kanji": "Significant",
+          "hiragana": "/sɪɡˈnɪfɪkənt/",
+          "meaning": "Quan trọng, đáng kể",
+          "phonetic": "adjective"
+        },
+        {
+          "id": "en-w10-3",
+          "kanji": "Indicate",
+          "hiragana": "/ˈɪndɪkeɪt/",
+          "meaning": "Chỉ ra, cho thấy",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w10-4",
+          "kanji": "Illustrate",
+          "hiragana": "/ˈɪləstreɪt/",
+          "meaning": "Minh họa, làm rõ",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w10-5",
+          "kanji": "Primary",
+          "hiragana": "/ˈpraɪməri/",
+          "meaning": "Chính, hàng đầu, cơ bản",
+          "phonetic": "adjective"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-en-w10",
+          "structure": "60 từ vựng học thuật cơ bản (Analyze, indicate, significant, factor...)",
+          "meaning": "Tóm tắt bài đọc chính xác, không sao chép nguyên văn",
+          "explanation": "• Listening: Nghe bài giảng ngắn 3 phút trên TED-Ed; ghi lại 5 luận điểm chính\n• Reading: Đọc 2 bài viết phân tích xu hướng; tập tóm tắt mỗi bài trong 3 câu\n• Writing: Viết bài tóm tắt nội dung 150 từ kết hợp đa dạng câu đơn, ghép, phức\n• Speaking: Luyện nói theo cặp hoặc trước gương: Bàn về thói quen đọc sách & xem phim",
+          "level": "Band 4.0 - 4.5",
+          "examples": [
+            {
+              "id": "eg-en-w10-1",
+              "sentence": "IELTS Target Week 10: Tóm tắt bài đọc chính xác, không sao chép nguyên văn",
+              "meaning": "Mục tiêu hoàn thành KPI Tuần 10"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-week-11",
+      "weekNumber": 11,
+      "month": "Tháng 3",
+      "name": "Tuần 11: GĐ 1: Tổng ôn toàn bộ Ngữ pháp & Từ vựng Nền tảng",
+      "description": "GĐ 1 (Band 4.0 - 4.5) • KPI: Sẵn sàng 100% kiến thức nền tảng để bước vào format IELTS",
+      "level": "Band 4.0 - 4.5",
+      "phase": "Giai đoạn 1 (Tháng 1-3)",
+      "phaseCode": "GĐ 1",
+      "curriculum": "IELTS 7.0 Roadmap (52 Weeks)",
+      "duration": "8 - 10h/tuần",
+      "kpi": "Sẵn sàng 100% kiến thức nền tảng để bước vào format IELTS",
+      "status": "Chưa học",
+      "skills": {
+        "listening": "Luyện nghe tổng hợp các giọng đọc khác nhau (Anh - Anh, Anh - Mỹ, Anh - Úc)",
+        "reading": "Đọc hiểu 3 bài báo; kiểm tra độ hiểu đạt trên 85% không tra từ điển",
+        "writing": "Rà soát toàn bộ các cấu trúc câu đã học: Đảo ngữ cơ bản, so sánh, câu điều kiện",
+        "speaking": "Luyện nói liên tục 2 phút tự tin, chuẩn ngữ điệu và phát âm",
+        "grammarVocab": "Ôn tập toàn bộ 600 từ vựng cốt lõi của Giai đoạn 1 qua Anki",
+        "kpi": "Sẵn sàng 100% kiến thức nền tảng để bước vào format IELTS"
+      },
+      "vocabulary": [
+        {
+          "id": "en-w11-1",
+          "kanji": "Foundation W11",
+          "hiragana": "/fawnˈdeɪʃn/",
+          "meaning": "Từ vựng chủ điểm Tuần 11",
+          "phonetic": "Vocabulary"
+        },
+        {
+          "id": "en-w11-2",
+          "kanji": "Fundamental",
+          "hiragana": "/ˌfʌndəˈmentl/",
+          "meaning": "Cơ bản, cốt lõi",
+          "phonetic": "adjective"
+        },
+        {
+          "id": "en-w11-3",
+          "kanji": "Comprehend",
+          "hiragana": "/ˌkɒmprɪˈhend/",
+          "meaning": "Hiểu thấu đáo",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w11-4",
+          "kanji": "Consolidate",
+          "hiragana": "/kənˈsɒlɪdeɪt/",
+          "meaning": "Củng cố kiến thức",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w11-5",
+          "kanji": "Acquire",
+          "hiragana": "/əˈkwaɪə(r)/",
+          "meaning": "Nạp, tiếp thu kiến thức",
+          "phonetic": "verb"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-en-w11",
+          "structure": "Ôn tập toàn bộ 600 từ vựng cốt lõi của Giai đoạn 1 qua Anki",
+          "meaning": "Sẵn sàng 100% kiến thức nền tảng để bước vào format IELTS",
+          "explanation": "• Listening: Luyện nghe tổng hợp các giọng đọc khác nhau (Anh - Anh, Anh - Mỹ, Anh - Úc)\n• Reading: Đọc hiểu 3 bài báo; kiểm tra độ hiểu đạt trên 85% không tra từ điển\n• Writing: Rà soát toàn bộ các cấu trúc câu đã học: Đảo ngữ cơ bản, so sánh, câu điều kiện\n• Speaking: Luyện nói liên tục 2 phút tự tin, chuẩn ngữ điệu và phát âm",
+          "level": "Band 4.0 - 4.5",
+          "examples": [
+            {
+              "id": "eg-en-w11-1",
+              "sentence": "IELTS Target Week 11: Sẵn sàng 100% kiến thức nền tảng để bước vào format IELTS",
+              "meaning": "Mục tiêu hoàn thành KPI Tuần 11"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-week-12",
+      "weekNumber": 12,
+      "month": "Tháng 3",
+      "name": "Tuần 12: GĐ 1: TEST ĐÁNH GIÁ NỀN TẢNG (TARGET BAND 4.0 - 4.5)",
+      "description": "GĐ 1 (Band 4.0 - 4.5) • KPI: CHÍNH THỨC HOÀN THÀNH GIAI ĐOẠN 1 - ĐẠT BAND 4.0 - 4.5",
+      "level": "Band 4.0 - 4.5",
+      "phase": "Giai đoạn 1 (Tháng 1-3)",
+      "phaseCode": "GĐ 1",
+      "curriculum": "IELTS 7.0 Roadmap (52 Weeks)",
+      "duration": "10h/tuần",
+      "kpi": "CHÍNH THỨC HOÀN THÀNH GIAI ĐOẠN 1 - ĐẠT BAND 4.0 - 4.5",
+      "status": "Chưa học",
+      "skills": {
+        "listening": "Làm thử Section 1 đề Cambridge 10 Test 1 có bấm giờ (Mục tiêu >= 7/10 câu)",
+        "reading": "Làm bài đọc hiểu 13 câu hỏi ngắn (Mục tiêu >= 8/13 câu đúng)",
+        "writing": "Viết đoạn văn 150 từ nêu quan điểm về việc học tiếng Anh",
+        "speaking": "Ghi âm bài nói 3 phút giới thiệu bản thân, quê hương và công việc/học tập",
+        "grammarVocab": "Lập bảng phân tích lỗ hổng kiến thức sau bài kiểm tra",
+        "kpi": "CHÍNH THỨC HOÀN THÀNH GIAI ĐOẠN 1 - ĐẠT BAND 4.0 - 4.5"
+      },
+      "vocabulary": [
+        {
+          "id": "en-w12-1",
+          "kanji": "Foundation W12",
+          "hiragana": "/fawnˈdeɪʃn/",
+          "meaning": "Từ vựng chủ điểm Tuần 12",
+          "phonetic": "Vocabulary"
+        },
+        {
+          "id": "en-w12-2",
+          "kanji": "Fundamental",
+          "hiragana": "/ˌfʌndəˈmentl/",
+          "meaning": "Cơ bản, cốt lõi",
+          "phonetic": "adjective"
+        },
+        {
+          "id": "en-w12-3",
+          "kanji": "Comprehend",
+          "hiragana": "/ˌkɒmprɪˈhend/",
+          "meaning": "Hiểu thấu đáo",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w12-4",
+          "kanji": "Consolidate",
+          "hiragana": "/kənˈsɒlɪdeɪt/",
+          "meaning": "Củng cố kiến thức",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w12-5",
+          "kanji": "Acquire",
+          "hiragana": "/əˈkwaɪə(r)/",
+          "meaning": "Nạp, tiếp thu kiến thức",
+          "phonetic": "verb"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-en-w12",
+          "structure": "Lập bảng phân tích lỗ hổng kiến thức sau bài kiểm tra",
+          "meaning": "CHÍNH THỨC HOÀN THÀNH GIAI ĐOẠN 1 - ĐẠT BAND 4.0 - 4.5",
+          "explanation": "• Listening: Làm thử Section 1 đề Cambridge 10 Test 1 có bấm giờ (Mục tiêu >= 7/10 câu)\n• Reading: Làm bài đọc hiểu 13 câu hỏi ngắn (Mục tiêu >= 8/13 câu đúng)\n• Writing: Viết đoạn văn 150 từ nêu quan điểm về việc học tiếng Anh\n• Speaking: Ghi âm bài nói 3 phút giới thiệu bản thân, quê hương và công việc/học tập",
+          "level": "Band 4.0 - 4.5",
+          "examples": [
+            {
+              "id": "eg-en-w12-1",
+              "sentence": "IELTS Target Week 12: CHÍNH THỨC HOÀN THÀNH GIAI ĐOẠN 1 - ĐẠT BAND 4.0 - 4.5",
+              "meaning": "Mục tiêu hoàn thành KPI Tuần 12"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-week-13",
+      "weekNumber": 13,
+      "month": "Tháng 4",
+      "name": "Tuần 13: GĐ 2: Listening Sec 1 & Kỹ thuật Skimming/Scanning",
+      "description": "GĐ 2 (Band 5.0 - 5.5) • KPI: Listening Sec 1 đúng >= 7/10 câu; Viết Intro Task 1 trong 2 phút",
+      "level": "Band 5.0 - 5.5",
+      "phase": "Giai đoạn 2 (Tháng 4-6)",
+      "phaseCode": "GĐ 2",
+      "curriculum": "IELTS 7.0 Roadmap (52 Weeks)",
+      "duration": "9 - 11h/tuần",
+      "kpi": "Listening Sec 1 đúng >= 7/10 câu; Viết Intro Task 1 trong 2 phút",
+      "status": "Chưa học",
+      "skills": {
+        "listening": "Làm quen Listening Section 1 (Form Completion, Note Taking) - 3 bài Cam 11",
+        "reading": "Học kỹ thuật Skimming (đọc lướt lấy ý chính) & Scanning (quét tìm từ khóa cụ thể)",
+        "writing": "Tổng quan Writing Task 1: Tiêu chuẩn chấm điểm; Viết Introduction (Paraphrase đề)",
+        "speaking": "Speaking Part 1: Cấu trúc trả lời chuẩn 2-3 câu (Direct Answer + Reason/Detail)",
+        "grammarVocab": "Từ đồng nghĩa (Synonyms) hay gặp trong Cam Listening Sec 1; 50 từ Academic",
+        "kpi": "Listening Sec 1 đúng >= 7/10 câu; Viết Intro Task 1 trong 2 phút"
+      },
+      "vocabulary": [
+        {
+          "id": "en-w13-1",
+          "kanji": "Accommodation",
+          "hiragana": "/əˌkɒməˈdeɪʃn/",
+          "meaning": "Chỗ ở (khách sạn, phòng trọ)",
+          "phonetic": "noun"
+        },
+        {
+          "id": "en-w13-2",
+          "kanji": "Reservation",
+          "hiragana": "/ˌrezəˈveɪʃn/",
+          "meaning": "Sự đặt chỗ trước",
+          "phonetic": "noun"
+        },
+        {
+          "id": "en-w13-3",
+          "kanji": "Facility",
+          "hiragana": "/fəˈsɪləti/",
+          "meaning": "Cơ sở vật chất, tiện ích",
+          "phonetic": "noun"
+        },
+        {
+          "id": "en-w13-4",
+          "kanji": "Deposit",
+          "hiragana": "/dɪˈpɒzɪt/",
+          "meaning": "Tiền đặt cọc",
+          "phonetic": "noun"
+        },
+        {
+          "id": "en-w13-5",
+          "kanji": "Inquiry",
+          "hiragana": "/ɪnˈkwaɪəri/",
+          "meaning": "Sự thắc mắc, hỏi thông tin",
+          "phonetic": "noun"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-en-w13",
+          "structure": "Từ đồng nghĩa (Synonyms) hay gặp trong Cam Listening Sec 1; 50 từ Academic",
+          "meaning": "Listening Sec 1 đúng >= 7/10 câu; Viết Intro Task 1 trong 2 phút",
+          "explanation": "• Listening: Làm quen Listening Section 1 (Form Completion, Note Taking) - 3 bài Cam 11\n• Reading: Học kỹ thuật Skimming (đọc lướt lấy ý chính) & Scanning (quét tìm từ khóa cụ thể)\n• Writing: Tổng quan Writing Task 1: Tiêu chuẩn chấm điểm; Viết Introduction (Paraphrase đề)\n• Speaking: Speaking Part 1: Cấu trúc trả lời chuẩn 2-3 câu (Direct Answer + Reason/Detail)",
+          "level": "Band 5.0 - 5.5",
+          "examples": [
+            {
+              "id": "eg-en-w13-1",
+              "sentence": "IELTS Target Week 13: Listening Sec 1 đúng >= 7/10 câu; Viết Intro Task 1 trong 2 phút",
+              "meaning": "Mục tiêu hoàn thành KPI Tuần 13"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-week-14",
+      "weekNumber": 14,
+      "month": "Tháng 4",
+      "name": "Tuần 14: GĐ 2: Reading Completion & Writing Overview",
+      "description": "GĐ 2 (Band 5.0 - 5.5) • KPI: Viết Overview Task 1 chuẩn xác, không đưa số liệu cụ thể",
+      "level": "Band 5.0 - 5.5",
+      "phase": "Giai đoạn 2 (Tháng 4-6)",
+      "phaseCode": "GĐ 2",
+      "curriculum": "IELTS 7.0 Roadmap (52 Weeks)",
+      "duration": "9 - 11h/tuần",
+      "kpi": "Viết Overview Task 1 chuẩn xác, không đưa số liệu cụ thể",
+      "status": "Chưa học",
+      "skills": {
+        "listening": "Listening Sec 1: Dạng bài Table / Flow-chart Completion (Cam 11-12)",
+        "reading": "Reading: Dạng Sentence Completion & Summary Completion (có/không có từ sẵn)",
+        "writing": "Writing Task 1: Cách viết phần Overview (tìm 2 đặc điểm nổi bật nhất)",
+        "speaking": "Speaking Part 1: Luyện 3 chủ đề (Hometown, Accommodation, Work/Study)",
+        "grammarVocab": "Từ vựng chỉ xu hướng tăng/giảm (Increase, plunge, fluctuate, peak, stabilize)",
+        "kpi": "Viết Overview Task 1 chuẩn xác, không đưa số liệu cụ thể"
+      },
+      "vocabulary": [
+        {
+          "id": "en-w14-1",
+          "kanji": "Format W14",
+          "hiragana": "/ˈfɔːmæt/",
+          "meaning": "Từ vựng IELTS Format Tuần 14",
+          "phonetic": "IELTS Skill"
+        },
+        {
+          "id": "en-w14-2",
+          "kanji": "Paraphrase",
+          "hiragana": "/ˈpærəfreɪz/",
+          "meaning": "Diễn đạt lại bằng từ đồng nghĩa",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w14-3",
+          "kanji": "Identify",
+          "hiragana": "/aɪˈdentɪfaɪ/",
+          "meaning": "Nhận biết, xác định",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w14-4",
+          "kanji": "Structure",
+          "hiragana": "/ˈstrʌktʃə(r)/",
+          "meaning": "Cấu trúc bài làm",
+          "phonetic": "noun"
+        },
+        {
+          "id": "en-w14-5",
+          "kanji": "Coherent",
+          "hiragana": "/kəʊˈhɪərənt/",
+          "meaning": "Mạch lạc, logic",
+          "phonetic": "adjective"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-en-w14",
+          "structure": "Từ vựng chỉ xu hướng tăng/giảm (Increase, plunge, fluctuate, peak, stabilize)",
+          "meaning": "Viết Overview Task 1 chuẩn xác, không đưa số liệu cụ thể",
+          "explanation": "• Listening: Listening Sec 1: Dạng bài Table / Flow-chart Completion (Cam 11-12)\n• Reading: Reading: Dạng Sentence Completion & Summary Completion (có/không có từ sẵn)\n• Writing: Writing Task 1: Cách viết phần Overview (tìm 2 đặc điểm nổi bật nhất)\n• Speaking: Speaking Part 1: Luyện 3 chủ đề (Hometown, Accommodation, Work/Study)",
+          "level": "Band 5.0 - 5.5",
+          "examples": [
+            {
+              "id": "eg-en-w14-1",
+              "sentence": "IELTS Target Week 14: Viết Overview Task 1 chuẩn xác, không đưa số liệu cụ thể",
+              "meaning": "Mục tiêu hoàn thành KPI Tuần 14"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-week-15",
+      "weekNumber": 15,
+      "month": "Tháng 4",
+      "name": "Tuần 15: GĐ 2: Writing Line Graph & Reading Multiple Choice",
+      "description": "GĐ 2 (Band 5.0 - 5.5) • KPI: Hoàn thành 1 bài Line Graph hoàn chỉnh dưới 25 phút",
+      "level": "Band 5.0 - 5.5",
+      "phase": "Giai đoạn 2 (Tháng 4-6)",
+      "phaseCode": "GĐ 2",
+      "curriculum": "IELTS 7.0 Roadmap (52 Weeks)",
+      "duration": "9 - 11h/tuần",
+      "kpi": "Hoàn thành 1 bài Line Graph hoàn chỉnh dưới 25 phút",
+      "status": "Chưa học",
+      "skills": {
+        "listening": "Listening Sec 1: Nhận diện bẫy sửa thông tin (Distractors: but, actually, sorry)",
+        "reading": "Reading: Dạng Multiple Choice 1 đáp án (phương pháp loại trừ phương án nhiễu)",
+        "writing": "Writing Task 1: Hoàn chỉnh bài Line Graph (Intro + Overview + 2 Body paragraphs)",
+        "speaking": "Speaking Part 1: Luyện 3 chủ đề (Music, Sports, Daily Routine); tránh trả lời cộc lốc",
+        "grammarVocab": "Cụm từ chỉ thời gian & số liệu (accounted for, from... to..., reached a peak of)",
+        "kpi": "Hoàn thành 1 bài Line Graph hoàn chỉnh dưới 25 phút"
+      },
+      "vocabulary": [
+        {
+          "id": "en-w15-1",
+          "kanji": "Fluctuate",
+          "hiragana": "/ˈflʌktʃueɪt/",
+          "meaning": "Biến động, tăng giảm liên tục",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w15-2",
+          "kanji": "Plummet",
+          "hiragana": "/ˈplʌmɪt/",
+          "meaning": "Lao dốc, giảm mạnh",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w15-3",
+          "kanji": "Stabilize",
+          "hiragana": "/ˈsteɪbəlaɪz/",
+          "meaning": "Ổn định, giữ nguyên",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w15-4",
+          "kanji": "Dramatically",
+          "hiragana": "/drəˈmætɪkli/",
+          "meaning": "Một cách đáng kể, mạnh mẽ",
+          "phonetic": "adverb"
+        },
+        {
+          "id": "en-w15-5",
+          "kanji": "Plateau",
+          "hiragana": "/ˈplætəʊ/",
+          "meaning": "Đạt mức chững lại",
+          "phonetic": "verb/noun"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-en-w15",
+          "structure": "Cụm từ chỉ thời gian & số liệu (accounted for, from... to..., reached a peak of)",
+          "meaning": "Hoàn thành 1 bài Line Graph hoàn chỉnh dưới 25 phút",
+          "explanation": "• Listening: Listening Sec 1: Nhận diện bẫy sửa thông tin (Distractors: but, actually, sorry)\n• Reading: Reading: Dạng Multiple Choice 1 đáp án (phương pháp loại trừ phương án nhiễu)\n• Writing: Writing Task 1: Hoàn chỉnh bài Line Graph (Intro + Overview + 2 Body paragraphs)\n• Speaking: Speaking Part 1: Luyện 3 chủ đề (Music, Sports, Daily Routine); tránh trả lời cộc lốc",
+          "level": "Band 5.0 - 5.5",
+          "examples": [
+            {
+              "id": "eg-en-w15-1",
+              "sentence": "IELTS Target Week 15: Hoàn thành 1 bài Line Graph hoàn chỉnh dưới 25 phút",
+              "meaning": "Mục tiêu hoàn thành KPI Tuần 15"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-week-16",
+      "weekNumber": 16,
+      "month": "Tháng 4",
+      "name": "Tuần 16: GĐ 2: Bar Chart & Phân tích Keyword Table",
+      "description": "GĐ 2 (Band 5.0 - 5.5) • KPI: Nghe Sec 1 ổn định 9-10/10; Viết hoàn chỉnh 1 bài Bar Chart",
+      "level": "Band 5.0 - 5.5",
+      "phase": "Giai đoạn 2 (Tháng 4-6)",
+      "phaseCode": "GĐ 2",
+      "curriculum": "IELTS 7.0 Roadmap (52 Weeks)",
+      "duration": "9 - 11h/tuần",
+      "kpi": "Nghe Sec 1 ổn định 9-10/10; Viết hoàn chỉnh 1 bài Bar Chart",
+      "status": "Chưa học",
+      "skills": {
+        "listening": "Giải trọn vẹn Section 1 của 3 đề Cam 12; lập Sổ tay từ đồng nghĩa",
+        "reading": "Reading: Dạng Short-answer Questions & Diagram Labeling",
+        "writing": "Writing Task 1: Dạng Bar Chart (biểu đồ cột có thay đổi theo thời gian)",
+        "speaking": "Speaking Part 1: Luyện 3 chủ đề (Colors, Weather, Shopping); dùng liên từ tự nhiên",
+        "grammarVocab": "Cấu trúc so sánh hơn/nhất/gấp đôi (Twice as high as, overtook, dominant)",
+        "kpi": "Nghe Sec 1 ổn định 9-10/10; Viết hoàn chỉnh 1 bài Bar Chart"
+      },
+      "vocabulary": [
+        {
+          "id": "en-w16-1",
+          "kanji": "Format W16",
+          "hiragana": "/ˈfɔːmæt/",
+          "meaning": "Từ vựng IELTS Format Tuần 16",
+          "phonetic": "IELTS Skill"
+        },
+        {
+          "id": "en-w16-2",
+          "kanji": "Paraphrase",
+          "hiragana": "/ˈpærəfreɪz/",
+          "meaning": "Diễn đạt lại bằng từ đồng nghĩa",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w16-3",
+          "kanji": "Identify",
+          "hiragana": "/aɪˈdentɪfaɪ/",
+          "meaning": "Nhận biết, xác định",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w16-4",
+          "kanji": "Structure",
+          "hiragana": "/ˈstrʌktʃə(r)/",
+          "meaning": "Cấu trúc bài làm",
+          "phonetic": "noun"
+        },
+        {
+          "id": "en-w16-5",
+          "kanji": "Coherent",
+          "hiragana": "/kəʊˈhɪərənt/",
+          "meaning": "Mạch lạc, logic",
+          "phonetic": "adjective"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-en-w16",
+          "structure": "Cấu trúc so sánh hơn/nhất/gấp đôi (Twice as high as, overtook, dominant)",
+          "meaning": "Nghe Sec 1 ổn định 9-10/10; Viết hoàn chỉnh 1 bài Bar Chart",
+          "explanation": "• Listening: Giải trọn vẹn Section 1 của 3 đề Cam 12; lập Sổ tay từ đồng nghĩa\n• Reading: Reading: Dạng Short-answer Questions & Diagram Labeling\n• Writing: Writing Task 1: Dạng Bar Chart (biểu đồ cột có thay đổi theo thời gian)\n• Speaking: Speaking Part 1: Luyện 3 chủ đề (Colors, Weather, Shopping); dùng liên từ tự nhiên",
+          "level": "Band 5.0 - 5.5",
+          "examples": [
+            {
+              "id": "eg-en-w16-1",
+              "sentence": "IELTS Target Week 16: Nghe Sec 1 ổn định 9-10/10; Viết hoàn chỉnh 1 bài Bar Chart",
+              "meaning": "Mục tiêu hoàn thành KPI Tuần 16"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-week-17",
+      "weekNumber": 17,
+      "month": "Tháng 5",
+      "name": "Tuần 17: GĐ 2: Listening Sec 2 (Map) & Reading T/F/NG",
+      "description": "GĐ 2 (Band 5.0 - 5.5) • KPI: Làm đúng >= 70% dạng Map; nắm chắc logic True/False/Not Given",
+      "level": "Band 5.0 - 5.5",
+      "phase": "Giai đoạn 2 (Tháng 4-6)",
+      "phaseCode": "GĐ 2",
+      "curriculum": "IELTS 7.0 Roadmap (52 Weeks)",
+      "duration": "9 - 11h/tuần",
+      "kpi": "Làm đúng >= 70% dạng Map; nắm chắc logic True/False/Not Given",
+      "status": "Chưa học",
+      "skills": {
+        "listening": "Listening Section 2: Dạng Map/Plan Labelling (bản đồ, sơ đồ vị trí)",
+        "reading": "Reading: Dạng True / False / Not Given (phân biệt ranh giới giữa False và Not Given)",
+        "writing": "Tổng quan Writing Task 2: Cấu trúc chuẩn 4 đoạn (Intro, Body 1, Body 2, Conclusion)",
+        "speaking": "Speaking Part 2: Phương pháp tận dụng 1 phút chuẩn bị dàn ý theo Cue Card",
+        "grammarVocab": "Từ vựng chỉ phương hướng: Opposite, adjacent to, roundabout, corridor",
+        "kpi": "Làm đúng >= 70% dạng Map; nắm chắc logic True/False/Not Given"
+      },
+      "vocabulary": [
+        {
+          "id": "en-w17-1",
+          "kanji": "Format W17",
+          "hiragana": "/ˈfɔːmæt/",
+          "meaning": "Từ vựng IELTS Format Tuần 17",
+          "phonetic": "IELTS Skill"
+        },
+        {
+          "id": "en-w17-2",
+          "kanji": "Paraphrase",
+          "hiragana": "/ˈpærəfreɪz/",
+          "meaning": "Diễn đạt lại bằng từ đồng nghĩa",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w17-3",
+          "kanji": "Identify",
+          "hiragana": "/aɪˈdentɪfaɪ/",
+          "meaning": "Nhận biết, xác định",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w17-4",
+          "kanji": "Structure",
+          "hiragana": "/ˈstrʌktʃə(r)/",
+          "meaning": "Cấu trúc bài làm",
+          "phonetic": "noun"
+        },
+        {
+          "id": "en-w17-5",
+          "kanji": "Coherent",
+          "hiragana": "/kəʊˈhɪərənt/",
+          "meaning": "Mạch lạc, logic",
+          "phonetic": "adjective"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-en-w17",
+          "structure": "Từ vựng chỉ phương hướng: Opposite, adjacent to, roundabout, corridor",
+          "meaning": "Làm đúng >= 70% dạng Map; nắm chắc logic True/False/Not Given",
+          "explanation": "• Listening: Listening Section 2: Dạng Map/Plan Labelling (bản đồ, sơ đồ vị trí)\n• Reading: Reading: Dạng True / False / Not Given (phân biệt ranh giới giữa False và Not Given)\n• Writing: Tổng quan Writing Task 2: Cấu trúc chuẩn 4 đoạn (Intro, Body 1, Body 2, Conclusion)\n• Speaking: Speaking Part 2: Phương pháp tận dụng 1 phút chuẩn bị dàn ý theo Cue Card",
+          "level": "Band 5.0 - 5.5",
+          "examples": [
+            {
+              "id": "eg-en-w17-1",
+              "sentence": "IELTS Target Week 17: Làm đúng >= 70% dạng Map; nắm chắc logic True/False/Not Given",
+              "meaning": "Mục tiêu hoàn thành KPI Tuần 17"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-week-18",
+      "weekNumber": 18,
+      "month": "Tháng 5",
+      "name": "Tuần 18: GĐ 2: Listening Sec 2 MCQ & Task 2 Opinion",
+      "description": "GĐ 2 (Band 5.0 - 5.5) • KPI: Lập dàn ý Task 2 trong 5 phút; Nói Part 2 đủ 1.5 - 2 phút",
+      "level": "Band 5.0 - 5.5",
+      "phase": "Giai đoạn 2 (Tháng 4-6)",
+      "phaseCode": "GĐ 2",
+      "curriculum": "IELTS 7.0 Roadmap (52 Weeks)",
+      "duration": "9 - 11h/tuần",
+      "kpi": "Lập dàn ý Task 2 trong 5 phút; Nói Part 2 đủ 1.5 - 2 phút",
+      "status": "Chưa học",
+      "skills": {
+        "listening": "Listening Section 2: Dạng Multiple Choice & Matching Information",
+        "reading": "Reading: Dạng Yes / No / Not Given (nhận diện quan điểm của tác giả)",
+        "writing": "Writing Task 2: Dạng bài Opinion (Agree or Disagree) - lập luận 1 chiều",
+        "speaking": "Speaking Part 2: Luyện chủ đề 'Describe a person' (thầy cô, bạn bè, người thân)",
+        "grammarVocab": "Từ vựng nêu quan điểm: In my perspective, It is argued that, undeniable",
+        "kpi": "Lập dàn ý Task 2 trong 5 phút; Nói Part 2 đủ 1.5 - 2 phút"
+      },
+      "vocabulary": [
+        {
+          "id": "en-w18-1",
+          "kanji": "Format W18",
+          "hiragana": "/ˈfɔːmæt/",
+          "meaning": "Từ vựng IELTS Format Tuần 18",
+          "phonetic": "IELTS Skill"
+        },
+        {
+          "id": "en-w18-2",
+          "kanji": "Paraphrase",
+          "hiragana": "/ˈpærəfreɪz/",
+          "meaning": "Diễn đạt lại bằng từ đồng nghĩa",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w18-3",
+          "kanji": "Identify",
+          "hiragana": "/aɪˈdentɪfaɪ/",
+          "meaning": "Nhận biết, xác định",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w18-4",
+          "kanji": "Structure",
+          "hiragana": "/ˈstrʌktʃə(r)/",
+          "meaning": "Cấu trúc bài làm",
+          "phonetic": "noun"
+        },
+        {
+          "id": "en-w18-5",
+          "kanji": "Coherent",
+          "hiragana": "/kəʊˈhɪərənt/",
+          "meaning": "Mạch lạc, logic",
+          "phonetic": "adjective"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-en-w18",
+          "structure": "Từ vựng nêu quan điểm: In my perspective, It is argued that, undeniable",
+          "meaning": "Lập dàn ý Task 2 trong 5 phút; Nói Part 2 đủ 1.5 - 2 phút",
+          "explanation": "• Listening: Listening Section 2: Dạng Multiple Choice & Matching Information\n• Reading: Reading: Dạng Yes / No / Not Given (nhận diện quan điểm của tác giả)\n• Writing: Writing Task 2: Dạng bài Opinion (Agree or Disagree) - lập luận 1 chiều\n• Speaking: Speaking Part 2: Luyện chủ đề 'Describe a person' (thầy cô, bạn bè, người thân)",
+          "level": "Band 5.0 - 5.5",
+          "examples": [
+            {
+              "id": "eg-en-w18-1",
+              "sentence": "IELTS Target Week 18: Lập dàn ý Task 2 trong 5 phút; Nói Part 2 đủ 1.5 - 2 phút",
+              "meaning": "Mục tiêu hoàn thành KPI Tuần 18"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-week-19",
+      "weekNumber": 19,
+      "month": "Tháng 5",
+      "name": "Tuần 19: GĐ 2: Pie Chart & Task 2 Discuss Both Views",
+      "description": "GĐ 2 (Band 5.0 - 5.5) • KPI: Nắm vững bố cục cân bằng 2 vế của bài Discuss Both Views",
+      "level": "Band 5.0 - 5.5",
+      "phase": "Giai đoạn 2 (Tháng 4-6)",
+      "phaseCode": "GĐ 2",
+      "curriculum": "IELTS 7.0 Roadmap (52 Weeks)",
+      "duration": "9 - 11h/tuần",
+      "kpi": "Nắm vững bố cục cân bằng 2 vế của bài Discuss Both Views",
+      "status": "Chưa học",
+      "skills": {
+        "listening": "Ghép làm trọn vẹn Section 1 & 2 của 2 đề Cam 13 (phân tích Transcript kỹ càng)",
+        "reading": "Reading: Dạng Matching Headings (đọc câu chủ đề và bắt từ khóa cốt lõi)",
+        "writing": "Writing Task 1: Pie Chart (Biểu đồ tròn) + Task 2: Dạng Discuss Both Views",
+        "speaking": "Speaking Part 2: Luyện chủ đề 'Describe a place' (thành phố, địa điểm du lịch)",
+        "grammarVocab": "Từ vựng tỷ lệ phần trăm (a majority of, a mere 10%, a quarter, three-fifths)",
+        "kpi": "Nắm vững bố cục cân bằng 2 vế của bài Discuss Both Views"
+      },
+      "vocabulary": [
+        {
+          "id": "en-w19-1",
+          "kanji": "Proportion",
+          "hiragana": "/prəˈpɔːʃn/",
+          "meaning": "Tỷ lệ phần trăm",
+          "phonetic": "noun"
+        },
+        {
+          "id": "en-w19-2",
+          "kanji": "Constitute",
+          "hiragana": "/ˈkɒnstɪtjuːt/",
+          "meaning": "Chiếm (bao nhiêu phần trăm)",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w19-3",
+          "kanji": "Majority",
+          "hiragana": "/məˈdʒɒrəti/",
+          "meaning": "Đại đa số",
+          "phonetic": "noun"
+        },
+        {
+          "id": "en-w19-4",
+          "kanji": "Respectively",
+          "hiragana": "/rɪˈspektɪvli/",
+          "meaning": "Lần lượt theo thứ tự",
+          "phonetic": "adverb"
+        },
+        {
+          "id": "en-w19-5",
+          "kanji": "Account for",
+          "hiragana": "/əˈkaʊnt fɔː(r)/",
+          "meaning": "Chiếm tỷ trọng",
+          "phonetic": "phrase"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-en-w19",
+          "structure": "Từ vựng tỷ lệ phần trăm (a majority of, a mere 10%, a quarter, three-fifths)",
+          "meaning": "Nắm vững bố cục cân bằng 2 vế của bài Discuss Both Views",
+          "explanation": "• Listening: Ghép làm trọn vẹn Section 1 & 2 của 2 đề Cam 13 (phân tích Transcript kỹ càng)\n• Reading: Reading: Dạng Matching Headings (đọc câu chủ đề và bắt từ khóa cốt lõi)\n• Writing: Writing Task 1: Pie Chart (Biểu đồ tròn) + Task 2: Dạng Discuss Both Views\n• Speaking: Speaking Part 2: Luyện chủ đề 'Describe a place' (thành phố, địa điểm du lịch)",
+          "level": "Band 5.0 - 5.5",
+          "examples": [
+            {
+              "id": "eg-en-w19-1",
+              "sentence": "IELTS Target Week 19: Nắm vững bố cục cân bằng 2 vế của bài Discuss Both Views",
+              "meaning": "Mục tiêu hoàn thành KPI Tuần 19"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-week-20",
+      "weekNumber": 20,
+      "month": "Tháng 5",
+      "name": "Tuần 20: GĐ 2: Ghép Sec 1+2 & Hoàn thiện bài luận",
+      "description": "GĐ 2 (Band 5.0 - 5.5) • KPI: Hoàn thành bài viết Task 2 đủ số chữ và đúng cấu trúc tiêu chuẩn",
+      "level": "Band 5.0 - 5.5",
+      "phase": "Giai đoạn 2 (Tháng 4-6)",
+      "phaseCode": "GĐ 2",
+      "curriculum": "IELTS 7.0 Roadmap (52 Weeks)",
+      "duration": "9 - 11h/tuần",
+      "kpi": "Hoàn thành bài viết Task 2 đủ số chữ và đúng cấu trúc tiêu chuẩn",
+      "status": "Chưa học",
+      "skills": {
+        "listening": "Làm liên tục Section 1+2 (20 câu, mục tiêu đúng >= 16/20)",
+        "reading": "Reading Passage 1 hoàn chỉnh dưới 18 phút (13 câu)",
+        "writing": "Viết hoàn chỉnh 1 bài Task 2 Opinion (250 từ) trong 40 phút",
+        "speaking": "Speaking Part 2: Luyện chủ đề 'Describe an object / event' (món quà, lễ hội)",
+        "grammarVocab": "60 từ vựng chủ đề Tourism & Culture",
+        "kpi": "Hoàn thành bài viết Task 2 đủ số chữ và đúng cấu trúc tiêu chuẩn"
+      },
+      "vocabulary": [
+        {
+          "id": "en-w20-1",
+          "kanji": "Format W20",
+          "hiragana": "/ˈfɔːmæt/",
+          "meaning": "Từ vựng IELTS Format Tuần 20",
+          "phonetic": "IELTS Skill"
+        },
+        {
+          "id": "en-w20-2",
+          "kanji": "Paraphrase",
+          "hiragana": "/ˈpærəfreɪz/",
+          "meaning": "Diễn đạt lại bằng từ đồng nghĩa",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w20-3",
+          "kanji": "Identify",
+          "hiragana": "/aɪˈdentɪfaɪ/",
+          "meaning": "Nhận biết, xác định",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w20-4",
+          "kanji": "Structure",
+          "hiragana": "/ˈstrʌktʃə(r)/",
+          "meaning": "Cấu trúc bài làm",
+          "phonetic": "noun"
+        },
+        {
+          "id": "en-w20-5",
+          "kanji": "Coherent",
+          "hiragana": "/kəʊˈhɪərənt/",
+          "meaning": "Mạch lạc, logic",
+          "phonetic": "adjective"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-en-w20",
+          "structure": "60 từ vựng chủ đề Tourism & Culture",
+          "meaning": "Hoàn thành bài viết Task 2 đủ số chữ và đúng cấu trúc tiêu chuẩn",
+          "explanation": "• Listening: Làm liên tục Section 1+2 (20 câu, mục tiêu đúng >= 16/20)\n• Reading: Reading Passage 1 hoàn chỉnh dưới 18 phút (13 câu)\n• Writing: Viết hoàn chỉnh 1 bài Task 2 Opinion (250 từ) trong 40 phút\n• Speaking: Speaking Part 2: Luyện chủ đề 'Describe an object / event' (món quà, lễ hội)",
+          "level": "Band 5.0 - 5.5",
+          "examples": [
+            {
+              "id": "eg-en-w20-1",
+              "sentence": "IELTS Target Week 20: Hoàn thành bài viết Task 2 đủ số chữ và đúng cấu trúc tiêu chuẩn",
+              "meaning": "Mục tiêu hoàn thành KPI Tuần 20"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-week-21",
+      "weekNumber": 21,
+      "month": "Tháng 6",
+      "name": "Tuần 21: GĐ 2: Task 1 Table & Quy trình Process",
+      "description": "GĐ 2 (Band 5.0 - 5.5) • KPI: Viết hoàn chỉnh bài Process miêu tả chu trình sản xuất/tự nhiên",
+      "level": "Band 5.0 - 5.5",
+      "phase": "Giai đoạn 2 (Tháng 4-6)",
+      "phaseCode": "GĐ 2",
+      "curriculum": "IELTS 7.0 Roadmap (52 Weeks)",
+      "duration": "10 - 12h/tuần",
+      "kpi": "Viết hoàn chỉnh bài Process miêu tả chu trình sản xuất/tự nhiên",
+      "status": "Chưa học",
+      "skills": {
+        "listening": "Listening Sec 2: Luyện sâu các bài Map khó trong Cam 13-14",
+        "reading": "Reading: Dạng Matching Information to Paragraphs & Matching Features",
+        "writing": "Writing Task 1: Dạng Bảng số liệu (Table) & Quy trình tự nhiên/nhân tạo (Process)",
+        "speaking": "Speaking: Ghép nối phản xạ giữa câu hỏi Part 1 và bài nói Part 2",
+        "grammarVocab": "Từ vựng chỉ trình tự quy trình (Initially, in the subsequent stage, culminates in)",
+        "kpi": "Viết hoàn chỉnh bài Process miêu tả chu trình sản xuất/tự nhiên"
+      },
+      "vocabulary": [
+        {
+          "id": "en-w21-1",
+          "kanji": "Format W21",
+          "hiragana": "/ˈfɔːmæt/",
+          "meaning": "Từ vựng IELTS Format Tuần 21",
+          "phonetic": "IELTS Skill"
+        },
+        {
+          "id": "en-w21-2",
+          "kanji": "Paraphrase",
+          "hiragana": "/ˈpærəfreɪz/",
+          "meaning": "Diễn đạt lại bằng từ đồng nghĩa",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w21-3",
+          "kanji": "Identify",
+          "hiragana": "/aɪˈdentɪfaɪ/",
+          "meaning": "Nhận biết, xác định",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w21-4",
+          "kanji": "Structure",
+          "hiragana": "/ˈstrʌktʃə(r)/",
+          "meaning": "Cấu trúc bài làm",
+          "phonetic": "noun"
+        },
+        {
+          "id": "en-w21-5",
+          "kanji": "Coherent",
+          "hiragana": "/kəʊˈhɪərənt/",
+          "meaning": "Mạch lạc, logic",
+          "phonetic": "adjective"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-en-w21",
+          "structure": "Từ vựng chỉ trình tự quy trình (Initially, in the subsequent stage, culminates in)",
+          "meaning": "Viết hoàn chỉnh bài Process miêu tả chu trình sản xuất/tự nhiên",
+          "explanation": "• Listening: Listening Sec 2: Luyện sâu các bài Map khó trong Cam 13-14\n• Reading: Reading: Dạng Matching Information to Paragraphs & Matching Features\n• Writing: Writing Task 1: Dạng Bảng số liệu (Table) & Quy trình tự nhiên/nhân tạo (Process)\n• Speaking: Speaking: Ghép nối phản xạ giữa câu hỏi Part 1 và bài nói Part 2",
+          "level": "Band 5.0 - 5.5",
+          "examples": [
+            {
+              "id": "eg-en-w21-1",
+              "sentence": "IELTS Target Week 21: Viết hoàn chỉnh bài Process miêu tả chu trình sản xuất/tự nhiên",
+              "meaning": "Mục tiêu hoàn thành KPI Tuần 21"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-week-22",
+      "weekNumber": 22,
+      "month": "Tháng 6",
+      "name": "Tuần 22: GĐ 2: Task 1 Map & Task 2 Problem/Solution",
+      "description": "GĐ 2 (Band 5.0 - 5.5) • KPI: Viết thành thạo dạng Map so sánh đô thị/quy hoạch",
+      "level": "Band 5.0 - 5.5",
+      "phase": "Giai đoạn 2 (Tháng 4-6)",
+      "phaseCode": "GĐ 2",
+      "curriculum": "IELTS 7.0 Roadmap (52 Weeks)",
+      "duration": "10 - 12h/tuần",
+      "kpi": "Viết thành thạo dạng Map so sánh đô thị/quy hoạch",
+      "status": "Chưa học",
+      "skills": {
+        "listening": "Listening Sec 1+2: Tổng hợp các bẫy phát âm nuốt âm, nối âm (Connected speech)",
+        "reading": "Reading: Luyện đọc Passage 2 chủ đề Khoa học / Lịch sử không dùng từ điển",
+        "writing": "Writing Task 1: Dạng Map (so sánh 2 mốc thời gian) + Task 2: Causes & Solutions",
+        "speaking": "Speaking Part 2: Kỹ thuật mở rộng câu chuyện (Past - Present - Feelings)",
+        "grammarVocab": "Từ vựng cải tạo cảnh quan: Demolished, transformed into, expanded",
+        "kpi": "Viết thành thạo dạng Map so sánh đô thị/quy hoạch"
+      },
+      "vocabulary": [
+        {
+          "id": "en-w22-1",
+          "kanji": "Format W22",
+          "hiragana": "/ˈfɔːmæt/",
+          "meaning": "Từ vựng IELTS Format Tuần 22",
+          "phonetic": "IELTS Skill"
+        },
+        {
+          "id": "en-w22-2",
+          "kanji": "Paraphrase",
+          "hiragana": "/ˈpærəfreɪz/",
+          "meaning": "Diễn đạt lại bằng từ đồng nghĩa",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w22-3",
+          "kanji": "Identify",
+          "hiragana": "/aɪˈdentɪfaɪ/",
+          "meaning": "Nhận biết, xác định",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w22-4",
+          "kanji": "Structure",
+          "hiragana": "/ˈstrʌktʃə(r)/",
+          "meaning": "Cấu trúc bài làm",
+          "phonetic": "noun"
+        },
+        {
+          "id": "en-w22-5",
+          "kanji": "Coherent",
+          "hiragana": "/kəʊˈhɪərənt/",
+          "meaning": "Mạch lạc, logic",
+          "phonetic": "adjective"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-en-w22",
+          "structure": "Từ vựng cải tạo cảnh quan: Demolished, transformed into, expanded",
+          "meaning": "Viết thành thạo dạng Map so sánh đô thị/quy hoạch",
+          "explanation": "• Listening: Listening Sec 1+2: Tổng hợp các bẫy phát âm nuốt âm, nối âm (Connected speech)\n• Reading: Reading: Luyện đọc Passage 2 chủ đề Khoa học / Lịch sử không dùng từ điển\n• Writing: Writing Task 1: Dạng Map (so sánh 2 mốc thời gian) + Task 2: Causes & Solutions\n• Speaking: Speaking Part 2: Kỹ thuật mở rộng câu chuyện (Past - Present - Feelings)",
+          "level": "Band 5.0 - 5.5",
+          "examples": [
+            {
+              "id": "eg-en-w22-1",
+              "sentence": "IELTS Target Week 22: Viết thành thạo dạng Map so sánh đô thị/quy hoạch",
+              "meaning": "Mục tiêu hoàn thành KPI Tuần 22"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-week-23",
+      "weekNumber": 23,
+      "month": "Tháng 6",
+      "name": "Tuần 23: GĐ 2: Task 2 Advantage & Disadvantage",
+      "description": "GĐ 2 (Band 5.0 - 5.5) • KPI: Viết bài Advantage/Disadvantage mạch lạc trong 40 phút",
+      "level": "Band 5.0 - 5.5",
+      "phase": "Giai đoạn 2 (Tháng 4-6)",
+      "phaseCode": "GĐ 2",
+      "curriculum": "IELTS 7.0 Roadmap (52 Weeks)",
+      "duration": "10 - 12h/tuần",
+      "kpi": "Viết bài Advantage/Disadvantage mạch lạc trong 40 phút",
+      "status": "Chưa học",
+      "skills": {
+        "listening": "Làm Listening Section 1 & 2 của 2 đề Cam 14; phân tích lỗi sai chi tiết",
+        "reading": "Reading: Luyện tập tổng hợp các dạng Completion + Matching trong Passage 2",
+        "writing": "Writing Task 2: Dạng Advantage & Disadvantage (dạng cân bằng)",
+        "speaking": "Speaking Part 2: Luyện chủ đề 'Describe an activity' (thể thao, sở thích mới)",
+        "grammarVocab": "60 từ vựng chủ đề Health, Fitness & Lifestyle",
+        "kpi": "Viết bài Advantage/Disadvantage mạch lạc trong 40 phút"
+      },
+      "vocabulary": [
+        {
+          "id": "en-w23-1",
+          "kanji": "Stance",
+          "hiragana": "/stɑːns/",
+          "meaning": "Lập trường, quan điểm",
+          "phonetic": "noun"
+        },
+        {
+          "id": "en-w23-2",
+          "kanji": "Viewpoint",
+          "hiragana": "/ˈvjuːpɔɪnt/",
+          "meaning": "Góc nhìn, luận điểm",
+          "phonetic": "noun"
+        },
+        {
+          "id": "en-w23-3",
+          "kanji": "Assert",
+          "hiragana": "/əˈsɜːt/",
+          "meaning": "Khẳng định, quả quyết",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w23-4",
+          "kanji": "Thesis",
+          "hiragana": "/ˈθiːsɪs/",
+          "meaning": "Luận đề (câu chủ đề bài viết)",
+          "phonetic": "noun"
+        },
+        {
+          "id": "en-w23-5",
+          "kanji": "Advocate",
+          "hiragana": "/ˈædvəkət/",
+          "meaning": "Ủng hộ, bênh vực",
+          "phonetic": "verb/noun"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-en-w23",
+          "structure": "60 từ vựng chủ đề Health, Fitness & Lifestyle",
+          "meaning": "Viết bài Advantage/Disadvantage mạch lạc trong 40 phút",
+          "explanation": "• Listening: Làm Listening Section 1 & 2 của 2 đề Cam 14; phân tích lỗi sai chi tiết\n• Reading: Reading: Luyện tập tổng hợp các dạng Completion + Matching trong Passage 2\n• Writing: Writing Task 2: Dạng Advantage & Disadvantage (dạng cân bằng)\n• Speaking: Speaking Part 2: Luyện chủ đề 'Describe an activity' (thể thao, sở thích mới)",
+          "level": "Band 5.0 - 5.5",
+          "examples": [
+            {
+              "id": "eg-en-w23-1",
+              "sentence": "IELTS Target Week 23: Viết bài Advantage/Disadvantage mạch lạc trong 40 phút",
+              "meaning": "Mục tiêu hoàn thành KPI Tuần 23"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-week-24",
+      "weekNumber": 24,
+      "month": "Tháng 6",
+      "name": "Tuần 24: GĐ 2: Ghép nối 4 Kỹ năng & Tối ưu tốc độ",
+      "description": "GĐ 2 (Band 5.0 - 5.5) • KPI: Kiểm soát tốt thời gian từng kỹ năng không bị quá giờ",
+      "level": "Band 5.0 - 5.5",
+      "phase": "Giai đoạn 2 (Tháng 4-6)",
+      "phaseCode": "GĐ 2",
+      "curriculum": "IELTS 7.0 Roadmap (52 Weeks)",
+      "duration": "10 - 12h/tuần",
+      "kpi": "Kiểm soát tốt thời gian từng kỹ năng không bị quá giờ",
+      "status": "Chưa học",
+      "skills": {
+        "listening": "Listening: Giải trọn vẹn Section 1 + Section 2 dưới áp lực thời gian",
+        "reading": "Reading: Làm trọn vẹn Passage 1 & 2 trong 40 phút (26 câu hỏi)",
+        "writing": "Writing: Luyện viết 1 bài Task 1 hoàn chỉnh trong đúng 20 phút",
+        "speaking": "Speaking: Luyện 5 chủ đề Part 1 + 2 chủ đề Part 2 liên tục",
+        "grammarVocab": "Ôn tập 300 từ vựng và cụm Collocations của Giai đoạn 2",
+        "kpi": "Kiểm soát tốt thời gian từng kỹ năng không bị quá giờ"
+      },
+      "vocabulary": [
+        {
+          "id": "en-w24-1",
+          "kanji": "Format W24",
+          "hiragana": "/ˈfɔːmæt/",
+          "meaning": "Từ vựng IELTS Format Tuần 24",
+          "phonetic": "IELTS Skill"
+        },
+        {
+          "id": "en-w24-2",
+          "kanji": "Paraphrase",
+          "hiragana": "/ˈpærəfreɪz/",
+          "meaning": "Diễn đạt lại bằng từ đồng nghĩa",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w24-3",
+          "kanji": "Identify",
+          "hiragana": "/aɪˈdentɪfaɪ/",
+          "meaning": "Nhận biết, xác định",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w24-4",
+          "kanji": "Structure",
+          "hiragana": "/ˈstrʌktʃə(r)/",
+          "meaning": "Cấu trúc bài làm",
+          "phonetic": "noun"
+        },
+        {
+          "id": "en-w24-5",
+          "kanji": "Coherent",
+          "hiragana": "/kəʊˈhɪərənt/",
+          "meaning": "Mạch lạc, logic",
+          "phonetic": "adjective"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-en-w24",
+          "structure": "Ôn tập 300 từ vựng và cụm Collocations của Giai đoạn 2",
+          "meaning": "Kiểm soát tốt thời gian từng kỹ năng không bị quá giờ",
+          "explanation": "• Listening: Listening: Giải trọn vẹn Section 1 + Section 2 dưới áp lực thời gian\n• Reading: Reading: Làm trọn vẹn Passage 1 & 2 trong 40 phút (26 câu hỏi)\n• Writing: Writing: Luyện viết 1 bài Task 1 hoàn chỉnh trong đúng 20 phút\n• Speaking: Speaking: Luyện 5 chủ đề Part 1 + 2 chủ đề Part 2 liên tục",
+          "level": "Band 5.0 - 5.5",
+          "examples": [
+            {
+              "id": "eg-en-w24-1",
+              "sentence": "IELTS Target Week 24: Kiểm soát tốt thời gian từng kỹ năng không bị quá giờ",
+              "meaning": "Mục tiêu hoàn thành KPI Tuần 24"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-week-25",
+      "weekNumber": 25,
+      "month": "Tháng 6",
+      "name": "Tuần 25: GĐ 2: Ôn tập Tổng lực & Rà soát Lỗi sai",
+      "description": "GĐ 2 (Band 5.0 - 5.5) • KPI: Nhận diện rõ điểm nghẽn về tốc độ và dạng bài còn yếu",
+      "level": "Band 5.0 - 5.5",
+      "phase": "Giai đoạn 2 (Tháng 4-6)",
+      "phaseCode": "GĐ 2",
+      "curriculum": "IELTS 7.0 Roadmap (52 Weeks)",
+      "duration": "10 - 12h/tuần",
+      "kpi": "Nhận diện rõ điểm nghẽn về tốc độ và dạng bài còn yếu",
+      "status": "Chưa học",
+      "skills": {
+        "listening": "Làm trọn vẹn đề Listening Cam 12 Test 1 (30p nghe + 10p điền đáp án)",
+        "reading": "Làm trọn vẹn đề Reading Cam 12 Test 1 (bấm đúng 60 phút)",
+        "writing": "Tự sửa lại 3 bài Writing đã viết trong tháng; sửa sạch lỗi ngữ pháp",
+        "speaking": "Luyện nói 10 chủ đề thông dụng nhất của Part 1 & Part 2",
+        "grammarVocab": "Tổng kết Sổ tay lỗi sai (Mistake Log) của Giai đoạn 2",
+        "kpi": "Nhận diện rõ điểm nghẽn về tốc độ và dạng bài còn yếu"
+      },
+      "vocabulary": [
+        {
+          "id": "en-w25-1",
+          "kanji": "Format W25",
+          "hiragana": "/ˈfɔːmæt/",
+          "meaning": "Từ vựng IELTS Format Tuần 25",
+          "phonetic": "IELTS Skill"
+        },
+        {
+          "id": "en-w25-2",
+          "kanji": "Paraphrase",
+          "hiragana": "/ˈpærəfreɪz/",
+          "meaning": "Diễn đạt lại bằng từ đồng nghĩa",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w25-3",
+          "kanji": "Identify",
+          "hiragana": "/aɪˈdentɪfaɪ/",
+          "meaning": "Nhận biết, xác định",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w25-4",
+          "kanji": "Structure",
+          "hiragana": "/ˈstrʌktʃə(r)/",
+          "meaning": "Cấu trúc bài làm",
+          "phonetic": "noun"
+        },
+        {
+          "id": "en-w25-5",
+          "kanji": "Coherent",
+          "hiragana": "/kəʊˈhɪərənt/",
+          "meaning": "Mạch lạc, logic",
+          "phonetic": "adjective"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-en-w25",
+          "structure": "Tổng kết Sổ tay lỗi sai (Mistake Log) của Giai đoạn 2",
+          "meaning": "Nhận diện rõ điểm nghẽn về tốc độ và dạng bài còn yếu",
+          "explanation": "• Listening: Làm trọn vẹn đề Listening Cam 12 Test 1 (30p nghe + 10p điền đáp án)\n• Reading: Làm trọn vẹn đề Reading Cam 12 Test 1 (bấm đúng 60 phút)\n• Writing: Tự sửa lại 3 bài Writing đã viết trong tháng; sửa sạch lỗi ngữ pháp\n• Speaking: Luyện nói 10 chủ đề thông dụng nhất của Part 1 & Part 2",
+          "level": "Band 5.0 - 5.5",
+          "examples": [
+            {
+              "id": "eg-en-w25-1",
+              "sentence": "IELTS Target Week 25: Nhận diện rõ điểm nghẽn về tốc độ và dạng bài còn yếu",
+              "meaning": "Mục tiêu hoàn thành KPI Tuần 25"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-week-26",
+      "weekNumber": 26,
+      "month": "Tháng 6",
+      "name": "Tuần 26: GĐ 2: MOCK TEST GIỮA KỲ (MỤC TIÊU 5.5 OVERALL)",
+      "description": "GĐ 2 (Band 5.0 - 5.5) • KPI: CÁN MỐC CHÍNH THỨC BAND 5.5 OVERALL - BƯỚC VÀO GIAI ĐOẠN TĂNG TỐC",
+      "level": "Band 5.0 - 5.5",
+      "phase": "Giai đoạn 2 (Tháng 4-6)",
+      "phaseCode": "GĐ 2",
+      "curriculum": "IELTS 7.0 Roadmap (52 Weeks)",
+      "duration": "12h/tuần",
+      "kpi": "CÁN MỐC CHÍNH THỨC BAND 5.5 OVERALL - BƯỚC VÀO GIAI ĐOẠN TĂNG TỐC",
+      "status": "Chưa học",
+      "skills": {
+        "listening": "THI THỬ FULL TEST 4 KỸ NĂNG (Đề Cambridge 12 Test 2)",
+        "reading": "Listening Target: 23-25/40 (Band 6.0) | Reading Target: 23-25/40 (Band 6.0)",
+        "writing": "Writing Target: Hoàn thành cả Task 1 (20p) + Task 2 (40p) đúng form (Band 5.0 - 5.5)",
+        "speaking": "Speaking Target: Ghi âm trả lời Full Part 1 + Part 2 (Band 5.0 - 5.5)",
+        "grammarVocab": "Lập bảng phân tích chi tiết kết quả Mock Test giữa kỳ",
+        "kpi": "CÁN MỐC CHÍNH THỨC BAND 5.5 OVERALL - BƯỚC VÀO GIAI ĐOẠN TĂNG TỐC"
+      },
+      "vocabulary": [
+        {
+          "id": "en-w26-1",
+          "kanji": "Format W26",
+          "hiragana": "/ˈfɔːmæt/",
+          "meaning": "Từ vựng IELTS Format Tuần 26",
+          "phonetic": "IELTS Skill"
+        },
+        {
+          "id": "en-w26-2",
+          "kanji": "Paraphrase",
+          "hiragana": "/ˈpærəfreɪz/",
+          "meaning": "Diễn đạt lại bằng từ đồng nghĩa",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w26-3",
+          "kanji": "Identify",
+          "hiragana": "/aɪˈdentɪfaɪ/",
+          "meaning": "Nhận biết, xác định",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w26-4",
+          "kanji": "Structure",
+          "hiragana": "/ˈstrʌktʃə(r)/",
+          "meaning": "Cấu trúc bài làm",
+          "phonetic": "noun"
+        },
+        {
+          "id": "en-w26-5",
+          "kanji": "Coherent",
+          "hiragana": "/kəʊˈhɪərənt/",
+          "meaning": "Mạch lạc, logic",
+          "phonetic": "adjective"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-en-w26",
+          "structure": "Lập bảng phân tích chi tiết kết quả Mock Test giữa kỳ",
+          "meaning": "CÁN MỐC CHÍNH THỨC BAND 5.5 OVERALL - BƯỚC VÀO GIAI ĐOẠN TĂNG TỐC",
+          "explanation": "• Listening: THI THỬ FULL TEST 4 KỸ NĂNG (Đề Cambridge 12 Test 2)\n• Reading: Listening Target: 23-25/40 (Band 6.0) | Reading Target: 23-25/40 (Band 6.0)\n• Writing: Writing Target: Hoàn thành cả Task 1 (20p) + Task 2 (40p) đúng form (Band 5.0 - 5.5)\n• Speaking: Speaking Target: Ghi âm trả lời Full Part 1 + Part 2 (Band 5.0 - 5.5)",
+          "level": "Band 5.0 - 5.5",
+          "examples": [
+            {
+              "id": "eg-en-w26-1",
+              "sentence": "IELTS Target Week 26: CÁN MỐC CHÍNH THỨC BAND 5.5 OVERALL - BƯỚC VÀO GIAI ĐOẠN TĂNG TỐC",
+              "meaning": "Mục tiêu hoàn thành KPI Tuần 26"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-week-27",
+      "weekNumber": 27,
+      "month": "Tháng 7",
+      "name": "Tuần 27: GĐ 3: Listening Sec 3 (Academic) & Speaking Part 3 Intro",
+      "description": "GĐ 3 (Band 6.0 - 6.5) • KPI: Listening Sec 3 đúng >= 6/10; Nắm chắc logic tranh luận học thuật",
+      "level": "Band 6.0 - 6.5",
+      "phase": "Giai đoạn 3 (Tháng 7-9)",
+      "phaseCode": "GĐ 3",
+      "curriculum": "IELTS 7.0 Roadmap (52 Weeks)",
+      "duration": "10 - 12h/tuần",
+      "kpi": "Listening Sec 3 đúng >= 6/10; Nắm chắc logic tranh luận học thuật",
+      "status": "Chưa học",
+      "skills": {
+        "listening": "Listening Section 3: Thảo luận học thuật 2-3 người (bắt nhịp đồng thuận/phản bác)",
+        "reading": "Reading: Chiến lược làm Passage 2 dưới 20 phút (Matching Headings + T/F/NG)",
+        "writing": "Writing Task 2: Tiêu chí Coherence & Cohesion (dùng liên từ học thuật tự nhiên)",
+        "speaking": "Speaking Part 3: Khung tư duy phản biện P.E.E (Point - Explanation - Example)",
+        "grammarVocab": "60 từ vựng chủ đề Higher Education (tertiary education, curriculum, tuition)",
+        "kpi": "Listening Sec 3 đúng >= 6/10; Nắm chắc logic tranh luận học thuật"
+      },
+      "vocabulary": [
+        {
+          "id": "en-w27-1",
+          "kanji": "Proponent",
+          "hiragana": "/prəˈpəʊnənt/",
+          "meaning": "Người ủng hộ quan điểm",
+          "phonetic": "noun"
+        },
+        {
+          "id": "en-w27-2",
+          "kanji": "Opponent",
+          "hiragana": "/əˈpəʊnənt/",
+          "meaning": "Người phản đối quan điểm",
+          "phonetic": "noun"
+        },
+        {
+          "id": "en-w27-3",
+          "kanji": "Counter-argument",
+          "hiragana": "/ˈkaʊntər ɑːɡjumənt/",
+          "meaning": "Luận điểm phản biện lại",
+          "phonetic": "noun"
+        },
+        {
+          "id": "en-w27-4",
+          "kanji": "Controversy",
+          "hiragana": "/ˈkɒntrəvɜːsi/",
+          "meaning": "Tranh cãi gay gắt",
+          "phonetic": "noun"
+        },
+        {
+          "id": "en-w27-5",
+          "kanji": "Plausible",
+          "hiragana": "/ˈplɔːzəbl/",
+          "meaning": "Hợp lý, đáng tin cậy",
+          "phonetic": "adjective"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-en-w27",
+          "structure": "60 từ vựng chủ đề Higher Education (tertiary education, curriculum, tuition)",
+          "meaning": "Listening Sec 3 đúng >= 6/10; Nắm chắc logic tranh luận học thuật",
+          "explanation": "• Listening: Listening Section 3: Thảo luận học thuật 2-3 người (bắt nhịp đồng thuận/phản bác)\n• Reading: Reading: Chiến lược làm Passage 2 dưới 20 phút (Matching Headings + T/F/NG)\n• Writing: Writing Task 2: Tiêu chí Coherence & Cohesion (dùng liên từ học thuật tự nhiên)\n• Speaking: Speaking Part 3: Khung tư duy phản biện P.E.E (Point - Explanation - Example)",
+          "level": "Band 6.0 - 6.5",
+          "examples": [
+            {
+              "id": "eg-en-w27-1",
+              "sentence": "IELTS Target Week 27: Listening Sec 3 đúng >= 6/10; Nắm chắc logic tranh luận học thuật",
+              "meaning": "Mục tiêu hoàn thành KPI Tuần 27"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-week-28",
+      "weekNumber": 28,
+      "month": "Tháng 7",
+      "name": "Tuần 28: GĐ 3: Reading Matching Features & Task 2 Outweigh",
+      "description": "GĐ 3 (Band 6.0 - 6.5) • KPI: Viết bài Outweigh với lập luận so sánh rõ ràng, chặt chẽ",
+      "level": "Band 6.0 - 6.5",
+      "phase": "Giai đoạn 3 (Tháng 7-9)",
+      "phaseCode": "GĐ 3",
+      "curriculum": "IELTS 7.0 Roadmap (52 Weeks)",
+      "duration": "10 - 12h/tuần",
+      "kpi": "Viết bài Outweigh với lập luận so sánh rõ ràng, chặt chẽ",
+      "status": "Chưa học",
+      "skills": {
+        "listening": "Listening Sec 3: Dạng Matching Opinions & Multiple Choice 2 đáp án",
+        "reading": "Reading: Dạng Matching Features (nối nhà khoa học với phát biểu/nghiên cứu)",
+        "writing": "Writing Task 2: Dạng Advantage & Disadvantage (dạng Outweigh so sánh mức độ)",
+        "speaking": "Speaking Part 3: Cách trả lời câu hỏi so sánh (Quá khứ vs Hiện tại; Trẻ vs Già)",
+        "grammarVocab": "Collocations học thuật chủ đề Technology, AI & Automation",
+        "kpi": "Viết bài Outweigh với lập luận so sánh rõ ràng, chặt chẽ"
+      },
+      "vocabulary": [
+        {
+          "id": "en-w28-1",
+          "kanji": "Advanced W28",
+          "hiragana": "/ədˈvɑːnst/",
+          "meaning": "Từ vựng nâng cao Band 6.5 Tuần 28",
+          "phonetic": "C1 Academic"
+        },
+        {
+          "id": "en-w28-2",
+          "kanji": "Perspective",
+          "hiragana": "/pəˈspektɪv/",
+          "meaning": "Góc nhìn chuyên sâu",
+          "phonetic": "noun"
+        },
+        {
+          "id": "en-w28-3",
+          "kanji": "Substantiate",
+          "hiragana": "/səbˈstænʃieɪt/",
+          "meaning": "Chứng minh bằng bằng chứng",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w28-4",
+          "kanji": "Elaborate",
+          "hiragana": "/ɪˈlæbərət/",
+          "meaning": "Phát triển ý chi tiết",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w28-5",
+          "kanji": "Cohesion",
+          "hiragana": "/kəʊˈhiːʒn/",
+          "meaning": "Tính liên kết văn bản",
+          "phonetic": "noun"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-en-w28",
+          "structure": "Collocations học thuật chủ đề Technology, AI & Automation",
+          "meaning": "Viết bài Outweigh với lập luận so sánh rõ ràng, chặt chẽ",
+          "explanation": "• Listening: Listening Sec 3: Dạng Matching Opinions & Multiple Choice 2 đáp án\n• Reading: Reading: Dạng Matching Features (nối nhà khoa học với phát biểu/nghiên cứu)\n• Writing: Writing Task 2: Dạng Advantage & Disadvantage (dạng Outweigh so sánh mức độ)\n• Speaking: Speaking Part 3: Cách trả lời câu hỏi so sánh (Quá khứ vs Hiện tại; Trẻ vs Già)",
+          "level": "Band 6.0 - 6.5",
+          "examples": [
+            {
+              "id": "eg-en-w28-1",
+              "sentence": "IELTS Target Week 28: Viết bài Outweigh với lập luận so sánh rõ ràng, chặt chẽ",
+              "meaning": "Mục tiêu hoàn thành KPI Tuần 28"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-week-29",
+      "weekNumber": 29,
+      "month": "Tháng 7",
+      "name": "Tuần 29: GĐ 3: Nâng cấp Lexical Resource cho Writing Task 2",
+      "description": "GĐ 3 (Band 6.0 - 6.5) • KPI: Thay thế ít nhất 5 cụm từ đơn giản bằng Academic Collocations",
+      "level": "Band 6.0 - 6.5",
+      "phase": "Giai đoạn 3 (Tháng 7-9)",
+      "phaseCode": "GĐ 3",
+      "curriculum": "IELTS 7.0 Roadmap (52 Weeks)",
+      "duration": "10 - 12h/tuần",
+      "kpi": "Thay thế ít nhất 5 cụm từ đơn giản bằng Academic Collocations",
+      "status": "Chưa học",
+      "skills": {
+        "listening": "Ghép trọn vẹn Section 1, 2, 3 trong Cam 13 (Mục tiêu 25/30 câu)",
+        "reading": "Reading: Luyện chiến thuật làm câu hỏi chi tiết trước câu hỏi tổng quát",
+        "writing": "Writing Task 2: Nâng cấp từ vựng đơn sang Academic Collocations (tránh dịch thô)",
+        "speaking": "Speaking Part 3: Cách dùng từ đệm (Fillers) & Paraphrase câu hỏi tự nhiên",
+        "grammarVocab": "Cụm từ C1: Exacerbate, play a pivotal role, inevitable, profound impact",
+        "kpi": "Thay thế ít nhất 5 cụm từ đơn giản bằng Academic Collocations"
+      },
+      "vocabulary": [
+        {
+          "id": "en-w29-1",
+          "kanji": "Advanced W29",
+          "hiragana": "/ədˈvɑːnst/",
+          "meaning": "Từ vựng nâng cao Band 6.5 Tuần 29",
+          "phonetic": "C1 Academic"
+        },
+        {
+          "id": "en-w29-2",
+          "kanji": "Perspective",
+          "hiragana": "/pəˈspektɪv/",
+          "meaning": "Góc nhìn chuyên sâu",
+          "phonetic": "noun"
+        },
+        {
+          "id": "en-w29-3",
+          "kanji": "Substantiate",
+          "hiragana": "/səbˈstænʃieɪt/",
+          "meaning": "Chứng minh bằng bằng chứng",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w29-4",
+          "kanji": "Elaborate",
+          "hiragana": "/ɪˈlæbərət/",
+          "meaning": "Phát triển ý chi tiết",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w29-5",
+          "kanji": "Cohesion",
+          "hiragana": "/kəʊˈhiːʒn/",
+          "meaning": "Tính liên kết văn bản",
+          "phonetic": "noun"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-en-w29",
+          "structure": "Cụm từ C1: Exacerbate, play a pivotal role, inevitable, profound impact",
+          "meaning": "Thay thế ít nhất 5 cụm từ đơn giản bằng Academic Collocations",
+          "explanation": "• Listening: Ghép trọn vẹn Section 1, 2, 3 trong Cam 13 (Mục tiêu 25/30 câu)\n• Reading: Reading: Luyện chiến thuật làm câu hỏi chi tiết trước câu hỏi tổng quát\n• Writing: Writing Task 2: Nâng cấp từ vựng đơn sang Academic Collocations (tránh dịch thô)\n• Speaking: Speaking Part 3: Cách dùng từ đệm (Fillers) & Paraphrase câu hỏi tự nhiên",
+          "level": "Band 6.0 - 6.5",
+          "examples": [
+            {
+              "id": "eg-en-w29-1",
+              "sentence": "IELTS Target Week 29: Thay thế ít nhất 5 cụm từ đơn giản bằng Academic Collocations",
+              "meaning": "Mục tiêu hoàn thành KPI Tuần 29"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-week-30",
+      "weekNumber": 30,
+      "month": "Tháng 7",
+      "name": "Tuần 30: GĐ 3: Luyện đề Sec 1-3 & Chấm chữa Writing",
+      "description": "GĐ 3 (Band 6.0 - 6.5) • KPI: Listening Sec 1-3 đạt 24-26/30; Sửa triệt để các lỗi sai Writing",
+      "level": "Band 6.0 - 6.5",
+      "phase": "Giai đoạn 3 (Tháng 7-9)",
+      "phaseCode": "GĐ 3",
+      "curriculum": "IELTS 7.0 Roadmap (52 Weeks)",
+      "duration": "10 - 12h/tuần",
+      "kpi": "Listening Sec 1-3 đạt 24-26/30; Sửa triệt để các lỗi sai Writing",
+      "status": "Chưa học",
+      "skills": {
+        "listening": "Luyện 3 bài Listening Sec 3 từ Cam 14; giải mã các bẫy Paraphrase trong audio",
+        "reading": "Reading: Làm Passage 1 + Passage 2 trong 38 phút (26 câu)",
+        "writing": "Viết 2 bài Task 2 (chủ đề Environment & Society); gửi người có chuyên môn chấm",
+        "speaking": "Speaking Part 3: Thảo luận các chủ đề về Sustainable Development",
+        "grammarVocab": "60 từ vựng chuyên sâu chủ đề Môi trường (Carbon footprint, depletion, renewable)",
+        "kpi": "Listening Sec 1-3 đạt 24-26/30; Sửa triệt để các lỗi sai Writing"
+      },
+      "vocabulary": [
+        {
+          "id": "en-w30-1",
+          "kanji": "Advanced W30",
+          "hiragana": "/ədˈvɑːnst/",
+          "meaning": "Từ vựng nâng cao Band 6.5 Tuần 30",
+          "phonetic": "C1 Academic"
+        },
+        {
+          "id": "en-w30-2",
+          "kanji": "Perspective",
+          "hiragana": "/pəˈspektɪv/",
+          "meaning": "Góc nhìn chuyên sâu",
+          "phonetic": "noun"
+        },
+        {
+          "id": "en-w30-3",
+          "kanji": "Substantiate",
+          "hiragana": "/səbˈstænʃieɪt/",
+          "meaning": "Chứng minh bằng bằng chứng",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w30-4",
+          "kanji": "Elaborate",
+          "hiragana": "/ɪˈlæbərət/",
+          "meaning": "Phát triển ý chi tiết",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w30-5",
+          "kanji": "Cohesion",
+          "hiragana": "/kəʊˈhiːʒn/",
+          "meaning": "Tính liên kết văn bản",
+          "phonetic": "noun"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-en-w30",
+          "structure": "60 từ vựng chuyên sâu chủ đề Môi trường (Carbon footprint, depletion, renewable)",
+          "meaning": "Listening Sec 1-3 đạt 24-26/30; Sửa triệt để các lỗi sai Writing",
+          "explanation": "• Listening: Luyện 3 bài Listening Sec 3 từ Cam 14; giải mã các bẫy Paraphrase trong audio\n• Reading: Reading: Làm Passage 1 + Passage 2 trong 38 phút (26 câu)\n• Writing: Viết 2 bài Task 2 (chủ đề Environment & Society); gửi người có chuyên môn chấm\n• Speaking: Speaking Part 3: Thảo luận các chủ đề về Sustainable Development",
+          "level": "Band 6.0 - 6.5",
+          "examples": [
+            {
+              "id": "eg-en-w30-1",
+              "sentence": "IELTS Target Week 30: Listening Sec 1-3 đạt 24-26/30; Sửa triệt để các lỗi sai Writing",
+              "meaning": "Mục tiêu hoàn thành KPI Tuần 30"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-week-31",
+      "weekNumber": 31,
+      "month": "Tháng 8",
+      "name": "Tuần 31: GĐ 3: Listening Sec 4 (Academic Lecture)",
+      "description": "GĐ 3 (Band 6.0 - 6.5) • KPI: Listening Sec 4 đạt >= 7/10; Viết Task 1 hỗn hợp dưới 20 phút",
+      "level": "Band 6.0 - 6.5",
+      "phase": "Giai đoạn 3 (Tháng 7-9)",
+      "phaseCode": "GĐ 3",
+      "curriculum": "IELTS 7.0 Roadmap (52 Weeks)",
+      "duration": "10 - 12h/tuần",
+      "kpi": "Listening Sec 4 đạt >= 7/10; Viết Task 1 hỗn hợp dưới 20 phút",
+      "status": "Chưa học",
+      "skills": {
+        "listening": "Listening Section 4: Nghe độc thoại bài giảng không ngắt (bắt Signposting language)",
+        "reading": "Reading Passage 3: Xử lý bài đọc triết học/tâm lý học dài và nhiều thuật ngữ",
+        "writing": "Writing Task 1: Luyện tốc độ viết biểu đồ hỗn hợp (Multiple graphs) dưới 18 phút",
+        "speaking": "Speaking Part 3: Mô hình trả lời đầy đủ P.E.E.L (thêm Link - Hệ quả/Tương lai)",
+        "grammarVocab": "Signposting words trong bài giảng: Turning now to, having looked at, consequently",
+        "kpi": "Listening Sec 4 đạt >= 7/10; Viết Task 1 hỗn hợp dưới 20 phút"
+      },
+      "vocabulary": [
+        {
+          "id": "en-w31-1",
+          "kanji": "Mitigate",
+          "hiragana": "/ˈmɪtɪɡeɪt/",
+          "meaning": "Giảm thiểu tác hại",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w31-2",
+          "kanji": "Alleviate",
+          "hiragana": "/əˈliːvieɪt/",
+          "meaning": "Làm dịu bớt (vấn đề, nỗi đau)",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w31-3",
+          "kanji": "Address",
+          "hiragana": "/əˈdres/",
+          "meaning": "Giải quyết (vấn đề)",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w31-4",
+          "kanji": "Remedy",
+          "hiragana": "/ˈremədi/",
+          "meaning": "Biện pháp khắc phục",
+          "phonetic": "noun"
+        },
+        {
+          "id": "en-w31-5",
+          "kanji": "Deteriorate",
+          "hiragana": "/dɪˈtɪəriəreɪt/",
+          "meaning": "Trở nên tồi tệ hơn",
+          "phonetic": "verb"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-en-w31",
+          "structure": "Signposting words trong bài giảng: Turning now to, having looked at, consequently",
+          "meaning": "Listening Sec 4 đạt >= 7/10; Viết Task 1 hỗn hợp dưới 20 phút",
+          "explanation": "• Listening: Listening Section 4: Nghe độc thoại bài giảng không ngắt (bắt Signposting language)\n• Reading: Reading Passage 3: Xử lý bài đọc triết học/tâm lý học dài và nhiều thuật ngữ\n• Writing: Writing Task 1: Luyện tốc độ viết biểu đồ hỗn hợp (Multiple graphs) dưới 18 phút\n• Speaking: Speaking Part 3: Mô hình trả lời đầy đủ P.E.E.L (thêm Link - Hệ quả/Tương lai)",
+          "level": "Band 6.0 - 6.5",
+          "examples": [
+            {
+              "id": "eg-en-w31-1",
+              "sentence": "IELTS Target Week 31: Listening Sec 4 đạt >= 7/10; Viết Task 1 hỗn hợp dưới 20 phút",
+              "meaning": "Mục tiêu hoàn thành KPI Tuần 31"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-week-32",
+      "weekNumber": 32,
+      "month": "Tháng 8",
+      "name": "Tuần 32: GĐ 3: Reading Passage 3 & Task 2 Two-Part Question",
+      "description": "GĐ 3 (Band 6.0 - 6.5) • KPI: Giải quyết trọn vẹn Passage 3 không bị hoảng bởi từ lạ",
+      "level": "Band 6.0 - 6.5",
+      "phase": "Giai đoạn 3 (Tháng 7-9)",
+      "phaseCode": "GĐ 3",
+      "curriculum": "IELTS 7.0 Roadmap (52 Weeks)",
+      "duration": "10 - 12h/tuần",
+      "kpi": "Giải quyết trọn vẹn Passage 3 không bị hoảng bởi từ lạ",
+      "status": "Chưa học",
+      "skills": {
+        "listening": "Listening Sec 4: Dạng Summary Completion & Note Taking học thuật cao",
+        "reading": "Reading Passage 3: Kỹ thuật đoán nghĩa từ vựng trong văn cảnh (Context Clues)",
+        "writing": "Writing Task 2: Dạng Two-Part Question (trả lời trực tiếp 2 câu hỏi của đề)",
+        "speaking": "Speaking Part 3: Thảo luận các vấn đề vĩ mô (Government spending, globalization)",
+        "grammarVocab": "Từ vựng quản lý xã hội: Policy, implementation, subsidize, infrastructure",
+        "kpi": "Giải quyết trọn vẹn Passage 3 không bị hoảng bởi từ lạ"
+      },
+      "vocabulary": [
+        {
+          "id": "en-w32-1",
+          "kanji": "Advanced W32",
+          "hiragana": "/ədˈvɑːnst/",
+          "meaning": "Từ vựng nâng cao Band 6.5 Tuần 32",
+          "phonetic": "C1 Academic"
+        },
+        {
+          "id": "en-w32-2",
+          "kanji": "Perspective",
+          "hiragana": "/pəˈspektɪv/",
+          "meaning": "Góc nhìn chuyên sâu",
+          "phonetic": "noun"
+        },
+        {
+          "id": "en-w32-3",
+          "kanji": "Substantiate",
+          "hiragana": "/səbˈstænʃieɪt/",
+          "meaning": "Chứng minh bằng bằng chứng",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w32-4",
+          "kanji": "Elaborate",
+          "hiragana": "/ɪˈlæbərət/",
+          "meaning": "Phát triển ý chi tiết",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w32-5",
+          "kanji": "Cohesion",
+          "hiragana": "/kəʊˈhiːʒn/",
+          "meaning": "Tính liên kết văn bản",
+          "phonetic": "noun"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-en-w32",
+          "structure": "Từ vựng quản lý xã hội: Policy, implementation, subsidize, infrastructure",
+          "meaning": "Giải quyết trọn vẹn Passage 3 không bị hoảng bởi từ lạ",
+          "explanation": "• Listening: Listening Sec 4: Dạng Summary Completion & Note Taking học thuật cao\n• Reading: Reading Passage 3: Kỹ thuật đoán nghĩa từ vựng trong văn cảnh (Context Clues)\n• Writing: Writing Task 2: Dạng Two-Part Question (trả lời trực tiếp 2 câu hỏi của đề)\n• Speaking: Speaking Part 3: Thảo luận các vấn đề vĩ mô (Government spending, globalization)",
+          "level": "Band 6.0 - 6.5",
+          "examples": [
+            {
+              "id": "eg-en-w32-1",
+              "sentence": "IELTS Target Week 32: Giải quyết trọn vẹn Passage 3 không bị hoảng bởi từ lạ",
+              "meaning": "Mục tiêu hoàn thành KPI Tuần 32"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-week-33",
+      "weekNumber": 33,
+      "month": "Tháng 8",
+      "name": "Tuần 33: GĐ 3: Tối ưu hóa thời gian Reading 3 Passages",
+      "description": "GĐ 3 (Band 6.0 - 6.5) • KPI: Reading làm kịp cả 3 bài trong 55 phút; Listening chạm mốc 7.0",
+      "level": "Band 6.0 - 6.5",
+      "phase": "Giai đoạn 3 (Tháng 7-9)",
+      "phaseCode": "GĐ 3",
+      "curriculum": "IELTS 7.0 Roadmap (52 Weeks)",
+      "duration": "10 - 12h/tuần",
+      "kpi": "Reading làm kịp cả 3 bài trong 55 phút; Listening chạm mốc 7.0",
+      "status": "Chưa học",
+      "skills": {
+        "listening": "Luyện trọn vẹn 1 đề Listening Full 40 câu Cam 14 (Mục tiêu 28-30/40 - Band 7.0)",
+        "reading": "Luyện trọn vẹn 1 đề Reading Full 40 câu Cam 14 trong 55 phút (để 5 phút soát bài)",
+        "writing": "Writing: Luyện viết liên tục cả Task 1 & Task 2 trong 58 phút",
+        "speaking": "Speaking: Ghép trọn vẹn Part 1 + 2 + 3 theo chủ đề Media & Entertainment",
+        "grammarVocab": "Sổ tay Paraphrase: Tổng hợp 100 cặp từ đồng nghĩa kinh điển trong Cam 14",
+        "kpi": "Reading làm kịp cả 3 bài trong 55 phút; Listening chạm mốc 7.0"
+      },
+      "vocabulary": [
+        {
+          "id": "en-w33-1",
+          "kanji": "Advanced W33",
+          "hiragana": "/ədˈvɑːnst/",
+          "meaning": "Từ vựng nâng cao Band 6.5 Tuần 33",
+          "phonetic": "C1 Academic"
+        },
+        {
+          "id": "en-w33-2",
+          "kanji": "Perspective",
+          "hiragana": "/pəˈspektɪv/",
+          "meaning": "Góc nhìn chuyên sâu",
+          "phonetic": "noun"
+        },
+        {
+          "id": "en-w33-3",
+          "kanji": "Substantiate",
+          "hiragana": "/səbˈstænʃieɪt/",
+          "meaning": "Chứng minh bằng bằng chứng",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w33-4",
+          "kanji": "Elaborate",
+          "hiragana": "/ɪˈlæbərət/",
+          "meaning": "Phát triển ý chi tiết",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w33-5",
+          "kanji": "Cohesion",
+          "hiragana": "/kəʊˈhiːʒn/",
+          "meaning": "Tính liên kết văn bản",
+          "phonetic": "noun"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-en-w33",
+          "structure": "Sổ tay Paraphrase: Tổng hợp 100 cặp từ đồng nghĩa kinh điển trong Cam 14",
+          "meaning": "Reading làm kịp cả 3 bài trong 55 phút; Listening chạm mốc 7.0",
+          "explanation": "• Listening: Luyện trọn vẹn 1 đề Listening Full 40 câu Cam 14 (Mục tiêu 28-30/40 - Band 7.0)\n• Reading: Luyện trọn vẹn 1 đề Reading Full 40 câu Cam 14 trong 55 phút (để 5 phút soát bài)\n• Writing: Writing: Luyện viết liên tục cả Task 1 & Task 2 trong 58 phút\n• Speaking: Speaking: Ghép trọn vẹn Part 1 + 2 + 3 theo chủ đề Media & Entertainment",
+          "level": "Band 6.0 - 6.5",
+          "examples": [
+            {
+              "id": "eg-en-w33-1",
+              "sentence": "IELTS Target Week 33: Reading làm kịp cả 3 bài trong 55 phút; Listening chạm mốc 7.0",
+              "meaning": "Mục tiêu hoàn thành KPI Tuần 33"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-week-34",
+      "weekNumber": 34,
+      "month": "Tháng 8",
+      "name": "Tuần 34: GĐ 3: Tinh chỉnh Ngữ pháp C1 & Đảo ngữ",
+      "description": "GĐ 3 (Band 6.0 - 6.5) • KPI: Ứng dụng cấu trúc đảo ngữ chuẩn xác vào bài viết Task 2",
+      "level": "Band 6.0 - 6.5",
+      "phase": "Giai đoạn 3 (Tháng 7-9)",
+      "phaseCode": "GĐ 3",
+      "curriculum": "IELTS 7.0 Roadmap (52 Weeks)",
+      "duration": "10 - 12h/tuần",
+      "kpi": "Ứng dụng cấu trúc đảo ngữ chuẩn xác vào bài viết Task 2",
+      "status": "Chưa học",
+      "skills": {
+        "listening": "Làm đề Listening Cam 15 Test 1; phân tích lỗi sai nghe sót hay sai chính tả",
+        "reading": "Làm đề Reading Cam 15 Test 1; đối chiếu Keyword Table",
+        "writing": "Writing: Tích hợp cấu trúc nâng cao (Đảo ngữ, Câu chẻ It is... that)",
+        "speaking": "Speaking: Luyện ngữ điệu (Intonation) và nhấn trọng âm câu (Sentence stress)",
+        "grammarVocab": "Cấu trúc ngữ pháp cao cấp: Hardly had..., Not only... but also...",
+        "kpi": "Ứng dụng cấu trúc đảo ngữ chuẩn xác vào bài viết Task 2"
+      },
+      "vocabulary": [
+        {
+          "id": "en-w34-1",
+          "kanji": "Advanced W34",
+          "hiragana": "/ədˈvɑːnst/",
+          "meaning": "Từ vựng nâng cao Band 6.5 Tuần 34",
+          "phonetic": "C1 Academic"
+        },
+        {
+          "id": "en-w34-2",
+          "kanji": "Perspective",
+          "hiragana": "/pəˈspektɪv/",
+          "meaning": "Góc nhìn chuyên sâu",
+          "phonetic": "noun"
+        },
+        {
+          "id": "en-w34-3",
+          "kanji": "Substantiate",
+          "hiragana": "/səbˈstænʃieɪt/",
+          "meaning": "Chứng minh bằng bằng chứng",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w34-4",
+          "kanji": "Elaborate",
+          "hiragana": "/ɪˈlæbərət/",
+          "meaning": "Phát triển ý chi tiết",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w34-5",
+          "kanji": "Cohesion",
+          "hiragana": "/kəʊˈhiːʒn/",
+          "meaning": "Tính liên kết văn bản",
+          "phonetic": "noun"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-en-w34",
+          "structure": "Cấu trúc ngữ pháp cao cấp: Hardly had..., Not only... but also...",
+          "meaning": "Ứng dụng cấu trúc đảo ngữ chuẩn xác vào bài viết Task 2",
+          "explanation": "• Listening: Làm đề Listening Cam 15 Test 1; phân tích lỗi sai nghe sót hay sai chính tả\n• Reading: Làm đề Reading Cam 15 Test 1; đối chiếu Keyword Table\n• Writing: Writing: Tích hợp cấu trúc nâng cao (Đảo ngữ, Câu chẻ It is... that)\n• Speaking: Speaking: Luyện ngữ điệu (Intonation) và nhấn trọng âm câu (Sentence stress)",
+          "level": "Band 6.0 - 6.5",
+          "examples": [
+            {
+              "id": "eg-en-w34-1",
+              "sentence": "IELTS Target Week 34: Ứng dụng cấu trúc đảo ngữ chuẩn xác vào bài viết Task 2",
+              "meaning": "Mục tiêu hoàn thành KPI Tuần 34"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-week-35",
+      "weekNumber": 35,
+      "month": "Tháng 9",
+      "name": "Tuần 35: GĐ 3: Đẩy Listening & Reading lên 7.5+",
+      "description": "GĐ 3 (Band 6.0 - 6.5) • KPI: Listening & Reading đều chạm ngưỡng 7.5; Không bị bí ý chủ đề lạ",
+      "level": "Band 6.0 - 6.5",
+      "phase": "Giai đoạn 3 (Tháng 7-9)",
+      "phaseCode": "GĐ 3",
+      "curriculum": "IELTS 7.0 Roadmap (52 Weeks)",
+      "duration": "10 - 12h/tuần",
+      "kpi": "Listening & Reading đều chạm ngưỡng 7.5; Không bị bí ý chủ đề lạ",
+      "status": "Chưa học",
+      "skills": {
+        "listening": "Luyện đề Listening Cam 15 Test 2 (Mục tiêu 31-33 câu - Band 7.5)",
+        "reading": "Luyện đề Reading Cam 15 Test 2 (Mục tiêu 31-33 câu - Band 7.5)",
+        "writing": "Writing Task 2: Chuyên đề các chủ đề khó (Crime, Art, Space Exploration)",
+        "speaking": "Speaking Part 2: Phản xạ với các đề lạ (A difficult decision, a disagreement)",
+        "grammarVocab": "Từ vựng chuyên sâu chủ đề Crime, Rehabilitation, Space research",
+        "kpi": "Listening & Reading đều chạm ngưỡng 7.5; Không bị bí ý chủ đề lạ"
+      },
+      "vocabulary": [
+        {
+          "id": "en-w35-1",
+          "kanji": "Advanced W35",
+          "hiragana": "/ədˈvɑːnst/",
+          "meaning": "Từ vựng nâng cao Band 6.5 Tuần 35",
+          "phonetic": "C1 Academic"
+        },
+        {
+          "id": "en-w35-2",
+          "kanji": "Perspective",
+          "hiragana": "/pəˈspektɪv/",
+          "meaning": "Góc nhìn chuyên sâu",
+          "phonetic": "noun"
+        },
+        {
+          "id": "en-w35-3",
+          "kanji": "Substantiate",
+          "hiragana": "/səbˈstænʃieɪt/",
+          "meaning": "Chứng minh bằng bằng chứng",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w35-4",
+          "kanji": "Elaborate",
+          "hiragana": "/ɪˈlæbərət/",
+          "meaning": "Phát triển ý chi tiết",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w35-5",
+          "kanji": "Cohesion",
+          "hiragana": "/kəʊˈhiːʒn/",
+          "meaning": "Tính liên kết văn bản",
+          "phonetic": "noun"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-en-w35",
+          "structure": "Từ vựng chuyên sâu chủ đề Crime, Rehabilitation, Space research",
+          "meaning": "Listening & Reading đều chạm ngưỡng 7.5; Không bị bí ý chủ đề lạ",
+          "explanation": "• Listening: Luyện đề Listening Cam 15 Test 2 (Mục tiêu 31-33 câu - Band 7.5)\n• Reading: Luyện đề Reading Cam 15 Test 2 (Mục tiêu 31-33 câu - Band 7.5)\n• Writing: Writing Task 2: Chuyên đề các chủ đề khó (Crime, Art, Space Exploration)\n• Speaking: Speaking Part 2: Phản xạ với các đề lạ (A difficult decision, a disagreement)",
+          "level": "Band 6.0 - 6.5",
+          "examples": [
+            {
+              "id": "eg-en-w35-1",
+              "sentence": "IELTS Target Week 35: Listening & Reading đều chạm ngưỡng 7.5; Không bị bí ý chủ đề lạ",
+              "meaning": "Mục tiêu hoàn thành KPI Tuần 35"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-week-36",
+      "weekNumber": 36,
+      "month": "Tháng 9",
+      "name": "Tuần 36: GĐ 3: Hoàn thiện Fluency & Viết Task 1 khó",
+      "description": "GĐ 3 (Band 6.0 - 6.5) • KPI: Speaking trôi chảy tự nhiên, giảm 80% độ ngập ngừng",
+      "level": "Band 6.0 - 6.5",
+      "phase": "Giai đoạn 3 (Tháng 7-9)",
+      "phaseCode": "GĐ 3",
+      "curriculum": "IELTS 7.0 Roadmap (52 Weeks)",
+      "duration": "10 - 12h/tuần",
+      "kpi": "Speaking trôi chảy tự nhiên, giảm 80% độ ngập ngừng",
+      "status": "Chưa học",
+      "skills": {
+        "listening": "Luyện nghe audio tốc độ 1.2x để tăng độ nhạy phản xạ khi đi thi",
+        "reading": "Reading: Tập trung sửa triệt để dạng bài còn sai nhiều (Matching Headings / T/F/NG)",
+        "writing": "Writing Task 1: Luyện viết 2 bài Process & Map nâng cao",
+        "speaking": "Speaking: Thu âm và tự nghe lại để loại bỏ toàn bộ từ 'à', 'ừm' không cần thiết",
+        "grammarVocab": "Tổng hợp 50 cụm Collocations tự nhiên cho Speaking Part 1 & 2",
+        "kpi": "Speaking trôi chảy tự nhiên, giảm 80% độ ngập ngừng"
+      },
+      "vocabulary": [
+        {
+          "id": "en-w36-1",
+          "kanji": "Advanced W36",
+          "hiragana": "/ədˈvɑːnst/",
+          "meaning": "Từ vựng nâng cao Band 6.5 Tuần 36",
+          "phonetic": "C1 Academic"
+        },
+        {
+          "id": "en-w36-2",
+          "kanji": "Perspective",
+          "hiragana": "/pəˈspektɪv/",
+          "meaning": "Góc nhìn chuyên sâu",
+          "phonetic": "noun"
+        },
+        {
+          "id": "en-w36-3",
+          "kanji": "Substantiate",
+          "hiragana": "/səbˈstænʃieɪt/",
+          "meaning": "Chứng minh bằng bằng chứng",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w36-4",
+          "kanji": "Elaborate",
+          "hiragana": "/ɪˈlæbərət/",
+          "meaning": "Phát triển ý chi tiết",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w36-5",
+          "kanji": "Cohesion",
+          "hiragana": "/kəʊˈhiːʒn/",
+          "meaning": "Tính liên kết văn bản",
+          "phonetic": "noun"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-en-w36",
+          "structure": "Tổng hợp 50 cụm Collocations tự nhiên cho Speaking Part 1 & 2",
+          "meaning": "Speaking trôi chảy tự nhiên, giảm 80% độ ngập ngừng",
+          "explanation": "• Listening: Luyện nghe audio tốc độ 1.2x để tăng độ nhạy phản xạ khi đi thi\n• Reading: Reading: Tập trung sửa triệt để dạng bài còn sai nhiều (Matching Headings / T/F/NG)\n• Writing: Writing Task 1: Luyện viết 2 bài Process & Map nâng cao\n• Speaking: Speaking: Thu âm và tự nghe lại để loại bỏ toàn bộ từ 'à', 'ừm' không cần thiết",
+          "level": "Band 6.0 - 6.5",
+          "examples": [
+            {
+              "id": "eg-en-w36-1",
+              "sentence": "IELTS Target Week 36: Speaking trôi chảy tự nhiên, giảm 80% độ ngập ngừng",
+              "meaning": "Mục tiêu hoàn thành KPI Tuần 36"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-week-37",
+      "weekNumber": 37,
+      "month": "Tháng 9",
+      "name": "Tuần 37: GĐ 3: Tổng ôn bộ đề Cam 15",
+      "description": "GĐ 3 (Band 6.0 - 6.5) • KPI: Chưa học",
+      "level": "Band 6.0 - 6.5",
+      "phase": "Giai đoạn 3 (Tháng 7-9)",
+      "phaseCode": "GĐ 3",
+      "curriculum": "IELTS 7.0 Roadmap (52 Weeks)",
+      "duration": "Hoàn thành các bài viết Task 2 với lập luận đa chiều vững chắc",
+      "kpi": "Chưa học",
+      "status": "Chưa học",
+      "skills": {
+        "listening": "Làm Full Test Listening + Reading Cam 15 Test 3 & 4 (phân tích lỗi cực sâu)",
+        "reading": "Viết 3 bài Task 2 trọng điểm; kiểm tra sự cân đối lập luận giữa các đoạn",
+        "writing": "Luyện 10 chủ đề Speaking Part 3 có độ trừu tượng cao",
+        "speaking": "Ôn tập 200 từ vựng C1/Collocations từ các bài đọc Cam 15",
+        "grammarVocab": "10 - 12h/tuần",
+        "kpi": "Chưa học"
+      },
+      "vocabulary": [
+        {
+          "id": "en-w37-1",
+          "kanji": "Advanced W37",
+          "hiragana": "/ədˈvɑːnst/",
+          "meaning": "Từ vựng nâng cao Band 6.5 Tuần 37",
+          "phonetic": "C1 Academic"
+        },
+        {
+          "id": "en-w37-2",
+          "kanji": "Perspective",
+          "hiragana": "/pəˈspektɪv/",
+          "meaning": "Góc nhìn chuyên sâu",
+          "phonetic": "noun"
+        },
+        {
+          "id": "en-w37-3",
+          "kanji": "Substantiate",
+          "hiragana": "/səbˈstænʃieɪt/",
+          "meaning": "Chứng minh bằng bằng chứng",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w37-4",
+          "kanji": "Elaborate",
+          "hiragana": "/ɪˈlæbərət/",
+          "meaning": "Phát triển ý chi tiết",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w37-5",
+          "kanji": "Cohesion",
+          "hiragana": "/kəʊˈhiːʒn/",
+          "meaning": "Tính liên kết văn bản",
+          "phonetic": "noun"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-en-w37",
+          "structure": "10 - 12h/tuần",
+          "meaning": "Chưa học",
+          "explanation": "• Listening: Làm Full Test Listening + Reading Cam 15 Test 3 & 4 (phân tích lỗi cực sâu)\n• Reading: Viết 3 bài Task 2 trọng điểm; kiểm tra sự cân đối lập luận giữa các đoạn\n• Writing: Luyện 10 chủ đề Speaking Part 3 có độ trừu tượng cao\n• Speaking: Ôn tập 200 từ vựng C1/Collocations từ các bài đọc Cam 15",
+          "level": "Band 6.0 - 6.5",
+          "examples": [
+            {
+              "id": "eg-en-w37-1",
+              "sentence": "IELTS Target Week 37: Chưa học",
+              "meaning": "Mục tiêu hoàn thành KPI Tuần 37"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-week-38",
+      "weekNumber": 38,
+      "month": "Tháng 9",
+      "name": "Tuần 38: GĐ 3: Ghép đề & Rà soát Lỗi sai Toàn diện",
+      "description": "GĐ 3 (Band 6.0 - 6.5) • KPI: Chưa học",
+      "level": "Band 6.0 - 6.5",
+      "phase": "Giai đoạn 3 (Tháng 7-9)",
+      "phaseCode": "GĐ 3",
+      "curriculum": "IELTS 7.0 Roadmap (52 Weeks)",
+      "duration": "Hạn chế tối đa các lỗi sai chính tả trong Listening & Reading",
+      "kpi": "Chưa học",
+      "status": "Chưa học",
+      "skills": {
+        "listening": "Làm đề Listening & Reading Cam 16 Test 1; ghi chép chi tiết vào Mistake Log",
+        "reading": "Writing: Tối ưu hóa tiêu chí Lexical Resource & Grammatical Range",
+        "writing": "Speaking: Luyện Mock Test Speaking 1-1 có bấm giờ chính xác",
+        "speaking": "Rà soát toàn bộ các lỗi chính tả Listening hay sai (double letters)",
+        "grammarVocab": "10 - 12h/tuần",
+        "kpi": "Chưa học"
+      },
+      "vocabulary": [
+        {
+          "id": "en-w38-1",
+          "kanji": "Advanced W38",
+          "hiragana": "/ədˈvɑːnst/",
+          "meaning": "Từ vựng nâng cao Band 6.5 Tuần 38",
+          "phonetic": "C1 Academic"
+        },
+        {
+          "id": "en-w38-2",
+          "kanji": "Perspective",
+          "hiragana": "/pəˈspektɪv/",
+          "meaning": "Góc nhìn chuyên sâu",
+          "phonetic": "noun"
+        },
+        {
+          "id": "en-w38-3",
+          "kanji": "Substantiate",
+          "hiragana": "/səbˈstænʃieɪt/",
+          "meaning": "Chứng minh bằng bằng chứng",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w38-4",
+          "kanji": "Elaborate",
+          "hiragana": "/ɪˈlæbərət/",
+          "meaning": "Phát triển ý chi tiết",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w38-5",
+          "kanji": "Cohesion",
+          "hiragana": "/kəʊˈhiːʒn/",
+          "meaning": "Tính liên kết văn bản",
+          "phonetic": "noun"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-en-w38",
+          "structure": "10 - 12h/tuần",
+          "meaning": "Chưa học",
+          "explanation": "• Listening: Làm đề Listening & Reading Cam 16 Test 1; ghi chép chi tiết vào Mistake Log\n• Reading: Writing: Tối ưu hóa tiêu chí Lexical Resource & Grammatical Range\n• Writing: Speaking: Luyện Mock Test Speaking 1-1 có bấm giờ chính xác\n• Speaking: Rà soát toàn bộ các lỗi chính tả Listening hay sai (double letters)",
+          "level": "Band 6.0 - 6.5",
+          "examples": [
+            {
+              "id": "eg-en-w38-1",
+              "sentence": "IELTS Target Week 38: Chưa học",
+              "meaning": "Mục tiêu hoàn thành KPI Tuần 38"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-week-39",
+      "weekNumber": 39,
+      "month": "Tháng 9",
+      "name": "Tuần 39: GĐ 3: MOCK TEST CUỐI GIAI ĐOẠN 3 (MỤC TIÊU 6.5 OVERALL)",
+      "description": "GĐ 3 (Band 6.0 - 6.5) • KPI: ĐẠT CHÍNH THỨC BAND 6.5 OVERALL - BƯỚC VÀO CHẶNG LUYỆN ĐỀ THỰC CHIẾN",
+      "level": "Band 6.0 - 6.5",
+      "phase": "Giai đoạn 3 (Tháng 7-9)",
+      "phaseCode": "GĐ 3",
+      "curriculum": "IELTS 7.0 Roadmap (52 Weeks)",
+      "duration": "12h/tuần",
+      "kpi": "ĐẠT CHÍNH THỨC BAND 6.5 OVERALL - BƯỚC VÀO CHẶNG LUYỆN ĐỀ THỰC CHIẾN",
+      "status": "Chưa học",
+      "skills": {
+        "listening": "THI THỬ FULL TEST 4 KỸ NĂNG DƯỚI ÁP LỰC THI THẬT (Đề Cam 16 Test 2)",
+        "reading": "Listening Target: 30-32/40 (Band 7.0 - 7.5) | Reading Target: 30-32/40 (Band 7.0 - 7.5)",
+        "writing": "Writing Target: Task 1 (6.5) + Task 2 (6.5) => Writing 6.5",
+        "speaking": "Speaking Target: Fluency tốt, phát âm chuẩn, ý tứ rõ ràng (Band 6.5)",
+        "grammarVocab": "Đánh giá toàn diện và lập kế hoạch nước rút cho 3 tháng cuối",
+        "kpi": "ĐẠT CHÍNH THỨC BAND 6.5 OVERALL - BƯỚC VÀO CHẶNG LUYỆN ĐỀ THỰC CHIẾN"
+      },
+      "vocabulary": [
+        {
+          "id": "en-w39-1",
+          "kanji": "Advanced W39",
+          "hiragana": "/ədˈvɑːnst/",
+          "meaning": "Từ vựng nâng cao Band 6.5 Tuần 39",
+          "phonetic": "C1 Academic"
+        },
+        {
+          "id": "en-w39-2",
+          "kanji": "Perspective",
+          "hiragana": "/pəˈspektɪv/",
+          "meaning": "Góc nhìn chuyên sâu",
+          "phonetic": "noun"
+        },
+        {
+          "id": "en-w39-3",
+          "kanji": "Substantiate",
+          "hiragana": "/səbˈstænʃieɪt/",
+          "meaning": "Chứng minh bằng bằng chứng",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w39-4",
+          "kanji": "Elaborate",
+          "hiragana": "/ɪˈlæbərət/",
+          "meaning": "Phát triển ý chi tiết",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w39-5",
+          "kanji": "Cohesion",
+          "hiragana": "/kəʊˈhiːʒn/",
+          "meaning": "Tính liên kết văn bản",
+          "phonetic": "noun"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-en-w39",
+          "structure": "Đánh giá toàn diện và lập kế hoạch nước rút cho 3 tháng cuối",
+          "meaning": "ĐẠT CHÍNH THỨC BAND 6.5 OVERALL - BƯỚC VÀO CHẶNG LUYỆN ĐỀ THỰC CHIẾN",
+          "explanation": "• Listening: THI THỬ FULL TEST 4 KỸ NĂNG DƯỚI ÁP LỰC THI THẬT (Đề Cam 16 Test 2)\n• Reading: Listening Target: 30-32/40 (Band 7.0 - 7.5) | Reading Target: 30-32/40 (Band 7.0 - 7.5)\n• Writing: Writing Target: Task 1 (6.5) + Task 2 (6.5) => Writing 6.5\n• Speaking: Speaking Target: Fluency tốt, phát âm chuẩn, ý tứ rõ ràng (Band 6.5)",
+          "level": "Band 6.0 - 6.5",
+          "examples": [
+            {
+              "id": "eg-en-w39-1",
+              "sentence": "IELTS Target Week 39: ĐẠT CHÍNH THỨC BAND 6.5 OVERALL - BƯỚC VÀO CHẶNG LUYỆN ĐỀ THỰC CHIẾN",
+              "meaning": "Mục tiêu hoàn thành KPI Tuần 39"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-week-40",
+      "weekNumber": 40,
+      "month": "Tháng 10",
+      "name": "Tuần 40: GĐ 4: Thực chiến Cam 16 & Tối ưu Listening",
+      "description": "GĐ 4 (Band 7.0+) • KPI: Listening chạm mốc 33/40 (Band 7.5); Viết Task 1 trong 17 phút",
+      "level": "Band 7.0+",
+      "phase": "Giai đoạn 4 (Tháng 10-12)",
+      "phaseCode": "GĐ 4",
+      "curriculum": "IELTS 7.0 Roadmap (52 Weeks)",
+      "duration": "10 - 12h/tuần",
+      "kpi": "Listening chạm mốc 33/40 (Band 7.5); Viết Task 1 trong 17 phút",
+      "status": "Chưa học",
+      "skills": {
+        "listening": "Giải đề Cam 16 Test 3 & 4 (Listening + Reading buổi sáng 9h - 11h30 như thi thật)",
+        "reading": "Phân tích kỹ lưỡng từng bẫy âm thanh gây mất điểm ở Sec 3 & Sec 4",
+        "writing": "Writing Task 1: Rà soát lại tất cả các dạng, viết tốc độ 17 phút/bài",
+        "speaking": "Speaking: Luyện 15 chủ đề Part 1 trong Bộ đề Dự đoán (Forecast) mới nhất",
+        "grammarVocab": "Củng cố các cặp từ dễ nhầm lẫn trong chính tả Listening (accommodation, environment)",
+        "kpi": "Listening chạm mốc 33/40 (Band 7.5); Viết Task 1 trong 17 phút"
+      },
+      "vocabulary": [
+        {
+          "id": "en-w40-1",
+          "kanji": "Indispensable",
+          "hiragana": "/ˌɪndɪˈspensəbl/",
+          "meaning": "Không thể thiếu được",
+          "phonetic": "adjective"
+        },
+        {
+          "id": "en-w40-2",
+          "kanji": "Paramount",
+          "hiragana": "/ˈpærəmaʊnt/",
+          "meaning": "Tối quan trọng, hàng đầu",
+          "phonetic": "adjective"
+        },
+        {
+          "id": "en-w40-3",
+          "kanji": "Ubiquitous",
+          "hiragana": "/juːˈbɪkwɪtəs/",
+          "meaning": "Phổ biến ở khắp mọi nơi",
+          "phonetic": "adjective"
+        },
+        {
+          "id": "en-w40-4",
+          "kanji": "Detrimental",
+          "hiragana": "/ˌdetrɪˈmentl/",
+          "meaning": "Gây hại, có hại",
+          "phonetic": "adjective"
+        },
+        {
+          "id": "en-w40-5",
+          "kanji": "Substantial",
+          "hiragana": "/səbˈstænʃl/",
+          "meaning": "Đáng kể, lớn lao",
+          "phonetic": "adjective"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-en-w40",
+          "structure": "Củng cố các cặp từ dễ nhầm lẫn trong chính tả Listening (accommodation, environment)",
+          "meaning": "Listening chạm mốc 33/40 (Band 7.5); Viết Task 1 trong 17 phút",
+          "explanation": "• Listening: Giải đề Cam 16 Test 3 & 4 (Listening + Reading buổi sáng 9h - 11h30 như thi thật)\n• Reading: Phân tích kỹ lưỡng từng bẫy âm thanh gây mất điểm ở Sec 3 & Sec 4\n• Writing: Writing Task 1: Rà soát lại tất cả các dạng, viết tốc độ 17 phút/bài\n• Speaking: Speaking: Luyện 15 chủ đề Part 1 trong Bộ đề Dự đoán (Forecast) mới nhất",
+          "level": "Band 7.0+",
+          "examples": [
+            {
+              "id": "eg-en-w40-1",
+              "sentence": "IELTS Target Week 40: Listening chạm mốc 33/40 (Band 7.5); Viết Task 1 trong 17 phút",
+              "meaning": "Mục tiêu hoàn thành KPI Tuần 40"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-week-41",
+      "weekNumber": 41,
+      "month": "Tháng 10",
+      "name": "Tuần 41: GĐ 4: Thực chiến Cam 17 & Tối ưu Reading",
+      "description": "GĐ 4 (Band 7.0+) • KPI: Reading ổn định 33-35/40 (Band 7.5 - 8.0); Speaking phản xạ trong 10s",
+      "level": "Band 7.0+",
+      "phase": "Giai đoạn 4 (Tháng 10-12)",
+      "phaseCode": "GĐ 4",
+      "curriculum": "IELTS 7.0 Roadmap (52 Weeks)",
+      "duration": "10 - 12h/tuần",
+      "kpi": "Reading ổn định 33-35/40 (Band 7.5 - 8.0); Speaking phản xạ trong 10s",
+      "status": "Chưa học",
+      "skills": {
+        "listening": "Giải đề Cam 17 Test 1 & 2 (bấm giờ nghiêm ngặt)",
+        "reading": "Reading: Mục tiêu kiểm soát bài đọc trong 50 phút, 10 phút soát đáp án",
+        "writing": "Writing Task 2: Viết 2 bài chủ đề Giáo dục & Công nghệ theo đề thi thật",
+        "speaking": "Speaking: Luyện 10 chủ đề Part 2 trong Forecast quý thi (lập sơ đồ ý nhanh)",
+        "grammarVocab": "Học các cụm C1 nâng band điểm Lexical cho Speaking (A double-edged sword, invaluable)",
+        "kpi": "Reading ổn định 33-35/40 (Band 7.5 - 8.0); Speaking phản xạ trong 10s"
+      },
+      "vocabulary": [
+        {
+          "id": "en-w41-1",
+          "kanji": "Target 7.0 W41",
+          "hiragana": "/ˈtɑːɡɪt/",
+          "meaning": "Từ vựng thực chiến Band 7.0+ Tuần 41",
+          "phonetic": "Band 7.0+"
+        },
+        {
+          "id": "en-w41-2",
+          "kanji": "Unprecedented",
+          "hiragana": "/ʌnˈpresɪdentɪd/",
+          "meaning": "Chưa từng có tiền lệ",
+          "phonetic": "adjective"
+        },
+        {
+          "id": "en-w41-3",
+          "kanji": "Imperative",
+          "hiragana": "/ɪmˈperətɪv/",
+          "meaning": "Bắt buộc, cấp bách",
+          "phonetic": "adjective"
+        },
+        {
+          "id": "en-w41-4",
+          "kanji": "Exemplify",
+          "hiragana": "/ɪɡˈzemplɪfaɪ/",
+          "meaning": "Nêu ví dụ điển hình",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w41-5",
+          "kanji": "Profound",
+          "hiragana": "/prəˈfaʊnd/",
+          "meaning": "Sâu sắc, tác động lớn",
+          "phonetic": "adjective"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-en-w41",
+          "structure": "Học các cụm C1 nâng band điểm Lexical cho Speaking (A double-edged sword, invaluable)",
+          "meaning": "Reading ổn định 33-35/40 (Band 7.5 - 8.0); Speaking phản xạ trong 10s",
+          "explanation": "• Listening: Giải đề Cam 17 Test 1 & 2 (bấm giờ nghiêm ngặt)\n• Reading: Reading: Mục tiêu kiểm soát bài đọc trong 50 phút, 10 phút soát đáp án\n• Writing: Writing Task 2: Viết 2 bài chủ đề Giáo dục & Công nghệ theo đề thi thật\n• Speaking: Speaking: Luyện 10 chủ đề Part 2 trong Forecast quý thi (lập sơ đồ ý nhanh)",
+          "level": "Band 7.0+",
+          "examples": [
+            {
+              "id": "eg-en-w41-1",
+              "sentence": "IELTS Target Week 41: Reading ổn định 33-35/40 (Band 7.5 - 8.0); Speaking phản xạ trong 10s",
+              "meaning": "Mục tiêu hoàn thành KPI Tuần 41"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-week-42",
+      "weekNumber": 42,
+      "month": "Tháng 10",
+      "name": "Tuần 42: GĐ 4: Luyện đề Cam 17 & Đột phá Writing 6.5+",
+      "description": "GĐ 4 (Band 7.0+) • KPI: Writing được chấm ổn định 6.5; Không còn lỗi sai ngữ pháp cơ bản",
+      "level": "Band 7.0+",
+      "phase": "Giai đoạn 4 (Tháng 10-12)",
+      "phaseCode": "GĐ 4",
+      "curriculum": "IELTS 7.0 Roadmap (52 Weeks)",
+      "duration": "10 - 12h/tuần",
+      "kpi": "Writing được chấm ổn định 6.5; Không còn lỗi sai ngữ pháp cơ bản",
+      "status": "Chưa học",
+      "skills": {
+        "listening": "Giải đề Cam 17 Test 3 & 4 (Listening + Reading)",
+        "reading": "Writing: Tối ưu bài viết bằng cách đưa ví dụ thực tế và số liệu thuyết phục",
+        "writing": "Speaking: Luyện Part 3 trong Forecast (tập trung giải thích sâu và phản biện logic)",
+        "speaking": "Duy trì thói quen nghe Podcast tiếng Anh 30 phút mỗi ngày khi đi lại/thư giãn",
+        "grammarVocab": "Tổng hợp 50 Collocations ăn điểm cho Writing Task 2",
+        "kpi": "Writing được chấm ổn định 6.5; Không còn lỗi sai ngữ pháp cơ bản"
+      },
+      "vocabulary": [
+        {
+          "id": "en-w42-1",
+          "kanji": "Food for thought",
+          "hiragana": "/fuːd fɔː θɔːt/",
+          "meaning": "Điều đáng để suy ngẫm",
+          "phonetic": "idiom"
+        },
+        {
+          "id": "en-w42-2",
+          "kanji": "Hit the nail on the head",
+          "hiragana": "/hɪt ðə neɪl ɒn ðə hed/",
+          "meaning": "Nói chính xác trọng tâm",
+          "phonetic": "idiom"
+        },
+        {
+          "id": "en-w42-3",
+          "kanji": "Off the beaten track",
+          "hiragana": "/ɒf ðə biːtn træk/",
+          "meaning": "Hẻo lánh, xa rời thành thị",
+          "phonetic": "idiom"
+        },
+        {
+          "id": "en-w42-4",
+          "kanji": "In the long run",
+          "hiragana": "/ɪn ðə lɒŋ rʌn/",
+          "meaning": "Về lâu về dài",
+          "phonetic": "idiom"
+        },
+        {
+          "id": "en-w42-5",
+          "kanji": "Double-edged sword",
+          "hiragana": "/ˈdʌbl edʒd sɔːd/",
+          "meaning": "Con dao hai lưỡi",
+          "phonetic": "idiom"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-en-w42",
+          "structure": "Tổng hợp 50 Collocations ăn điểm cho Writing Task 2",
+          "meaning": "Writing được chấm ổn định 6.5; Không còn lỗi sai ngữ pháp cơ bản",
+          "explanation": "• Listening: Giải đề Cam 17 Test 3 & 4 (Listening + Reading)\n• Reading: Writing: Tối ưu bài viết bằng cách đưa ví dụ thực tế và số liệu thuyết phục\n• Writing: Speaking: Luyện Part 3 trong Forecast (tập trung giải thích sâu và phản biện logic)\n• Speaking: Duy trì thói quen nghe Podcast tiếng Anh 30 phút mỗi ngày khi đi lại/thư giãn",
+          "level": "Band 7.0+",
+          "examples": [
+            {
+              "id": "eg-en-w42-1",
+              "sentence": "IELTS Target Week 42: Writing được chấm ổn định 6.5; Không còn lỗi sai ngữ pháp cơ bản",
+              "meaning": "Mục tiêu hoàn thành KPI Tuần 42"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-week-43",
+      "weekNumber": 43,
+      "month": "Tháng 10",
+      "name": "Tuần 43: GĐ 4: Tổng kết Cam 17 & Mistake Log Chuyên sâu",
+      "description": "GĐ 4 (Band 7.0+) • KPI: Khắc phục 90% các lỗi sai cố hữu từng mắc phải trong các đề trước",
+      "level": "Band 7.0+",
+      "phase": "Giai đoạn 4 (Tháng 10-12)",
+      "phaseCode": "GĐ 4",
+      "curriculum": "IELTS 7.0 Roadmap (52 Weeks)",
+      "duration": "10 - 12h/tuần",
+      "kpi": "Khắc phục 90% các lỗi sai cố hữu từng mắc phải trong các đề trước",
+      "status": "Chưa học",
+      "skills": {
+        "listening": "Giải Full Test Cam 17; Tổng kết toàn bộ lỗi sai của bộ đề Cambridge 16 & 17",
+        "reading": "Reading: Đọc lại các bài văn mẫu điểm cao để học cách tổ chức ý tưởng",
+        "writing": "Writing: Viết 1 bài Task 1 và 1 bài Task 2 trong 55 phút liên tục",
+        "speaking": "Speaking: Mock Test 1-1 Speaking trọn vẹn 15 phút với giáo viên/bạn học",
+        "grammarVocab": "Rà soát toàn bộ các bẫy thường gặp trong Sổ tay lỗi sai cá nhân",
+        "kpi": "Khắc phục 90% các lỗi sai cố hữu từng mắc phải trong các đề trước"
+      },
+      "vocabulary": [
+        {
+          "id": "en-w43-1",
+          "kanji": "Target 7.0 W43",
+          "hiragana": "/ˈtɑːɡɪt/",
+          "meaning": "Từ vựng thực chiến Band 7.0+ Tuần 43",
+          "phonetic": "Band 7.0+"
+        },
+        {
+          "id": "en-w43-2",
+          "kanji": "Unprecedented",
+          "hiragana": "/ʌnˈpresɪdentɪd/",
+          "meaning": "Chưa từng có tiền lệ",
+          "phonetic": "adjective"
+        },
+        {
+          "id": "en-w43-3",
+          "kanji": "Imperative",
+          "hiragana": "/ɪmˈperətɪv/",
+          "meaning": "Bắt buộc, cấp bách",
+          "phonetic": "adjective"
+        },
+        {
+          "id": "en-w43-4",
+          "kanji": "Exemplify",
+          "hiragana": "/ɪɡˈzemplɪfaɪ/",
+          "meaning": "Nêu ví dụ điển hình",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w43-5",
+          "kanji": "Profound",
+          "hiragana": "/prəˈfaʊnd/",
+          "meaning": "Sâu sắc, tác động lớn",
+          "phonetic": "adjective"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-en-w43",
+          "structure": "Rà soát toàn bộ các bẫy thường gặp trong Sổ tay lỗi sai cá nhân",
+          "meaning": "Khắc phục 90% các lỗi sai cố hữu từng mắc phải trong các đề trước",
+          "explanation": "• Listening: Giải Full Test Cam 17; Tổng kết toàn bộ lỗi sai của bộ đề Cambridge 16 & 17\n• Reading: Reading: Đọc lại các bài văn mẫu điểm cao để học cách tổ chức ý tưởng\n• Writing: Writing: Viết 1 bài Task 1 và 1 bài Task 2 trong 55 phút liên tục\n• Speaking: Speaking: Mock Test 1-1 Speaking trọn vẹn 15 phút với giáo viên/bạn học",
+          "level": "Band 7.0+",
+          "examples": [
+            {
+              "id": "eg-en-w43-1",
+              "sentence": "IELTS Target Week 43: Khắc phục 90% các lỗi sai cố hữu từng mắc phải trong các đề trước",
+              "meaning": "Mục tiêu hoàn thành KPI Tuần 43"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-week-44",
+      "weekNumber": 44,
+      "month": "Tháng 11",
+      "name": "Tuần 44: GĐ 4: Thực chiến Cambridge 18 Test 1 & 2",
+      "description": "GĐ 4 (Band 7.0+) • KPI: Listening & Reading đạt mốc 8.0 vững chắc trong đề Cambridge 18",
+      "level": "Band 7.0+",
+      "phase": "Giai đoạn 4 (Tháng 10-12)",
+      "phaseCode": "GĐ 4",
+      "curriculum": "IELTS 7.0 Roadmap (52 Weeks)",
+      "duration": "10 - 12h/tuần",
+      "kpi": "Listening & Reading đạt mốc 8.0 vững chắc trong đề Cambridge 18",
+      "status": "Chưa học",
+      "skills": {
+        "listening": "Giải đề Cam 18 Test 1 & Test 2 theo đúng quy trình và khung giờ thi thật",
+        "reading": "Listening mục tiêu: 34-36/40 (Band 8.0) để tạo vùng an toàn tối đa cho Overall",
+        "writing": "Reading mục tiêu: 33-35/40 (Band 7.5 - 8.0)",
+        "speaking": "Writing: Viết và sửa 2 bài Task 2 bám sát xu hướng ra đề năm nay",
+        "grammarVocab": "Speaking: Luyện toàn bộ các chủ đề Part 1 & Part 2 còn lại trong Forecast",
+        "kpi": "Listening & Reading đạt mốc 8.0 vững chắc trong đề Cambridge 18"
+      },
+      "vocabulary": [
+        {
+          "id": "en-w44-1",
+          "kanji": "Target 7.0 W44",
+          "hiragana": "/ˈtɑːɡɪt/",
+          "meaning": "Từ vựng thực chiến Band 7.0+ Tuần 44",
+          "phonetic": "Band 7.0+"
+        },
+        {
+          "id": "en-w44-2",
+          "kanji": "Unprecedented",
+          "hiragana": "/ʌnˈpresɪdentɪd/",
+          "meaning": "Chưa từng có tiền lệ",
+          "phonetic": "adjective"
+        },
+        {
+          "id": "en-w44-3",
+          "kanji": "Imperative",
+          "hiragana": "/ɪmˈperətɪv/",
+          "meaning": "Bắt buộc, cấp bách",
+          "phonetic": "adjective"
+        },
+        {
+          "id": "en-w44-4",
+          "kanji": "Exemplify",
+          "hiragana": "/ɪɡˈzemplɪfaɪ/",
+          "meaning": "Nêu ví dụ điển hình",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w44-5",
+          "kanji": "Profound",
+          "hiragana": "/prəˈfaʊnd/",
+          "meaning": "Sâu sắc, tác động lớn",
+          "phonetic": "adjective"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-en-w44",
+          "structure": "Speaking: Luyện toàn bộ các chủ đề Part 1 & Part 2 còn lại trong Forecast",
+          "meaning": "Listening & Reading đạt mốc 8.0 vững chắc trong đề Cambridge 18",
+          "explanation": "• Listening: Giải đề Cam 18 Test 1 & Test 2 theo đúng quy trình và khung giờ thi thật\n• Reading: Listening mục tiêu: 34-36/40 (Band 8.0) để tạo vùng an toàn tối đa cho Overall\n• Writing: Reading mục tiêu: 33-35/40 (Band 7.5 - 8.0)\n• Speaking: Writing: Viết và sửa 2 bài Task 2 bám sát xu hướng ra đề năm nay",
+          "level": "Band 7.0+",
+          "examples": [
+            {
+              "id": "eg-en-w44-1",
+              "sentence": "IELTS Target Week 44: Listening & Reading đạt mốc 8.0 vững chắc trong đề Cambridge 18",
+              "meaning": "Mục tiêu hoàn thành KPI Tuần 44"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-week-45",
+      "weekNumber": 45,
+      "month": "Tháng 11",
+      "name": "Tuần 45: GĐ 4: Thực chiến Cambridge 18 Test 3 & 4",
+      "description": "GĐ 4 (Band 7.0+) • KPI: Tốc độ làm bài chuẩn xác, không bị tâm lý phòng thi",
+      "level": "Band 7.0+",
+      "phase": "Giai đoạn 4 (Tháng 10-12)",
+      "phaseCode": "GĐ 4",
+      "curriculum": "IELTS 7.0 Roadmap (52 Weeks)",
+      "duration": "10 - 12h/tuần",
+      "kpi": "Tốc độ làm bài chuẩn xác, không bị tâm lý phòng thi",
+      "status": "Chưa học",
+      "skills": {
+        "listening": "Giải đề Cam 18 Test 3 & Test 4 (Listening + Reading)",
+        "reading": "Writing Task 1: Viết nhanh các dạng biểu đồ hiếm gặp (Map quy hoạch, Process tự nhiên)",
+        "writing": "Speaking: Luyện tập phản xạ Part 3 với các chủ đề trừu tượng (Nghệ thuật, Triết học)",
+        "speaking": "Làm quen với việc tô phiếu trả lời (Answer Sheet) để tránh nhầm dòng",
+        "grammarVocab": "Ôn tập sổ tay Paraphrase và các từ vựng 'tủ' theo chủ đề",
+        "kpi": "Tốc độ làm bài chuẩn xác, không bị tâm lý phòng thi"
+      },
+      "vocabulary": [
+        {
+          "id": "en-w45-1",
+          "kanji": "Target 7.0 W45",
+          "hiragana": "/ˈtɑːɡɪt/",
+          "meaning": "Từ vựng thực chiến Band 7.0+ Tuần 45",
+          "phonetic": "Band 7.0+"
+        },
+        {
+          "id": "en-w45-2",
+          "kanji": "Unprecedented",
+          "hiragana": "/ʌnˈpresɪdentɪd/",
+          "meaning": "Chưa từng có tiền lệ",
+          "phonetic": "adjective"
+        },
+        {
+          "id": "en-w45-3",
+          "kanji": "Imperative",
+          "hiragana": "/ɪmˈperətɪv/",
+          "meaning": "Bắt buộc, cấp bách",
+          "phonetic": "adjective"
+        },
+        {
+          "id": "en-w45-4",
+          "kanji": "Exemplify",
+          "hiragana": "/ɪɡˈzemplɪfaɪ/",
+          "meaning": "Nêu ví dụ điển hình",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w45-5",
+          "kanji": "Profound",
+          "hiragana": "/prəˈfaʊnd/",
+          "meaning": "Sâu sắc, tác động lớn",
+          "phonetic": "adjective"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-en-w45",
+          "structure": "Ôn tập sổ tay Paraphrase và các từ vựng 'tủ' theo chủ đề",
+          "meaning": "Tốc độ làm bài chuẩn xác, không bị tâm lý phòng thi",
+          "explanation": "• Listening: Giải đề Cam 18 Test 3 & Test 4 (Listening + Reading)\n• Reading: Writing Task 1: Viết nhanh các dạng biểu đồ hiếm gặp (Map quy hoạch, Process tự nhiên)\n• Writing: Speaking: Luyện tập phản xạ Part 3 với các chủ đề trừu tượng (Nghệ thuật, Triết học)\n• Speaking: Làm quen với việc tô phiếu trả lời (Answer Sheet) để tránh nhầm dòng",
+          "level": "Band 7.0+",
+          "examples": [
+            {
+              "id": "eg-en-w45-1",
+              "sentence": "IELTS Target Week 45: Tốc độ làm bài chuẩn xác, không bị tâm lý phòng thi",
+              "meaning": "Mục tiêu hoàn thành KPI Tuần 45"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-week-46",
+      "weekNumber": 46,
+      "month": "Tháng 11",
+      "name": "Tuần 46: GĐ 4: Bộ đề IELTS Trainer 2 & Chữa Đề Chi tiết",
+      "description": "GĐ 4 (Band 7.0+) • KPI: Chưa học",
+      "level": "Band 7.0+",
+      "phase": "Giai đoạn 4 (Tháng 10-12)",
+      "phaseCode": "GĐ 4",
+      "curriculum": "IELTS 7.0 Roadmap (52 Weeks)",
+      "duration": "Xử lý thành thạo các câu hỏi có độ bẫy cao trong Trainer 2",
+      "kpi": "Chưa học",
+      "status": "Chưa học",
+      "skills": {
+        "listening": "Giải 2 đề Listening & Reading từ cuốn IELTS Trainer 2",
+        "reading": "Writing: Viết 2 bài Task 2 dạng Two-Part & Problem-Solution; tối ưu liên từ",
+        "writing": "Speaking: Luyện nói trôi chảy tự nhiên, chú trọng ngữ điệu và nụ cười",
+        "speaking": "Phân tích các câu sai trong IELTS Trainer 2 (thường có độ khó cao hơn Cam)",
+        "grammarVocab": "10 - 12h/tuần",
+        "kpi": "Chưa học"
+      },
+      "vocabulary": [
+        {
+          "id": "en-w46-1",
+          "kanji": "Target 7.0 W46",
+          "hiragana": "/ˈtɑːɡɪt/",
+          "meaning": "Từ vựng thực chiến Band 7.0+ Tuần 46",
+          "phonetic": "Band 7.0+"
+        },
+        {
+          "id": "en-w46-2",
+          "kanji": "Unprecedented",
+          "hiragana": "/ʌnˈpresɪdentɪd/",
+          "meaning": "Chưa từng có tiền lệ",
+          "phonetic": "adjective"
+        },
+        {
+          "id": "en-w46-3",
+          "kanji": "Imperative",
+          "hiragana": "/ɪmˈperətɪv/",
+          "meaning": "Bắt buộc, cấp bách",
+          "phonetic": "adjective"
+        },
+        {
+          "id": "en-w46-4",
+          "kanji": "Exemplify",
+          "hiragana": "/ɪɡˈzemplɪfaɪ/",
+          "meaning": "Nêu ví dụ điển hình",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w46-5",
+          "kanji": "Profound",
+          "hiragana": "/prəˈfaʊnd/",
+          "meaning": "Sâu sắc, tác động lớn",
+          "phonetic": "adjective"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-en-w46",
+          "structure": "10 - 12h/tuần",
+          "meaning": "Chưa học",
+          "explanation": "• Listening: Giải 2 đề Listening & Reading từ cuốn IELTS Trainer 2\n• Reading: Writing: Viết 2 bài Task 2 dạng Two-Part & Problem-Solution; tối ưu liên từ\n• Writing: Speaking: Luyện nói trôi chảy tự nhiên, chú trọng ngữ điệu và nụ cười\n• Speaking: Phân tích các câu sai trong IELTS Trainer 2 (thường có độ khó cao hơn Cam)",
+          "level": "Band 7.0+",
+          "examples": [
+            {
+              "id": "eg-en-w46-1",
+              "sentence": "IELTS Target Week 46: Chưa học",
+              "meaning": "Mục tiêu hoàn thành KPI Tuần 46"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-week-47",
+      "weekNumber": 47,
+      "month": "Tháng 11",
+      "name": "Tuần 47: GĐ 4: Rà soát Điểm số & Tối ưu Hóa Band Điểm",
+      "description": "GĐ 4 (Band 7.0+) • KPI: Chưa học",
+      "level": "Band 7.0+",
+      "phase": "Giai đoạn 4 (Tháng 10-12)",
+      "phaseCode": "GĐ 4",
+      "curriculum": "IELTS 7.0 Roadmap (52 Weeks)",
+      "duration": "Điểm thi thử đạt liên tục từ 7.0 đến 7.5 Overall trong 3 đề gần nhất",
+      "kpi": "Chưa học",
+      "status": "Chưa học",
+      "skills": {
+        "listening": "Làm đề Cambridge 19 Test 1 có bấm giờ phòng thi",
+        "reading": "Writing: Rà soát lần cuối toàn bộ 10 dạng bài Task 1 và 5 dạng bài Task 2",
+        "writing": "Speaking: Mock Test Full 3 Parts với người có chuyên môn (Target: 6.5+)",
+        "speaking": "Tổng hợp các cụm từ đệm tự nhiên cho Speaking để kéo dài thời gian suy nghĩ",
+        "grammarVocab": "10 - 12h/tuần",
+        "kpi": "Chưa học"
+      },
+      "vocabulary": [
+        {
+          "id": "en-w47-1",
+          "kanji": "Target 7.0 W47",
+          "hiragana": "/ˈtɑːɡɪt/",
+          "meaning": "Từ vựng thực chiến Band 7.0+ Tuần 47",
+          "phonetic": "Band 7.0+"
+        },
+        {
+          "id": "en-w47-2",
+          "kanji": "Unprecedented",
+          "hiragana": "/ʌnˈpresɪdentɪd/",
+          "meaning": "Chưa từng có tiền lệ",
+          "phonetic": "adjective"
+        },
+        {
+          "id": "en-w47-3",
+          "kanji": "Imperative",
+          "hiragana": "/ɪmˈperətɪv/",
+          "meaning": "Bắt buộc, cấp bách",
+          "phonetic": "adjective"
+        },
+        {
+          "id": "en-w47-4",
+          "kanji": "Exemplify",
+          "hiragana": "/ɪɡˈzemplɪfaɪ/",
+          "meaning": "Nêu ví dụ điển hình",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w47-5",
+          "kanji": "Profound",
+          "hiragana": "/prəˈfaʊnd/",
+          "meaning": "Sâu sắc, tác động lớn",
+          "phonetic": "adjective"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-en-w47",
+          "structure": "10 - 12h/tuần",
+          "meaning": "Chưa học",
+          "explanation": "• Listening: Làm đề Cambridge 19 Test 1 có bấm giờ phòng thi\n• Reading: Writing: Rà soát lần cuối toàn bộ 10 dạng bài Task 1 và 5 dạng bài Task 2\n• Writing: Speaking: Mock Test Full 3 Parts với người có chuyên môn (Target: 6.5+)\n• Speaking: Tổng hợp các cụm từ đệm tự nhiên cho Speaking để kéo dài thời gian suy nghĩ",
+          "level": "Band 7.0+",
+          "examples": [
+            {
+              "id": "eg-en-w47-1",
+              "sentence": "IELTS Target Week 47: Chưa học",
+              "meaning": "Mục tiêu hoàn thành KPI Tuần 47"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-week-48",
+      "weekNumber": 48,
+      "month": "Tháng 12",
+      "name": "Tuần 48: GĐ 4: Thực chiến Cambridge 19 Test 2 & 3",
+      "description": "GĐ 4 (Band 7.0+) • KPI: Chưa học",
+      "level": "Band 7.0+",
+      "phase": "Giai đoạn 4 (Tháng 10-12)",
+      "phaseCode": "GĐ 4",
+      "curriculum": "IELTS 7.0 Roadmap (52 Weeks)",
+      "duration": "Phong độ ổn định vững vàng ở mức 7.0 - 7.5 Overall",
+      "kpi": "Chưa học",
+      "status": "Chưa học",
+      "skills": {
+        "listening": "Giải đề Cam 19 Test 2 & 3 đúng quy trình thi thật",
+        "reading": "Listening & Reading duy trì phong độ đỉnh cao (34 - 36 câu đúng)",
+        "writing": "Writing: Viết 2 bài luận Task 2 hoàn chỉnh trong đúng 38 phút/bài",
+        "speaking": "Speaking: Luyện tập 20 chủ đề trọng điểm nhất trong Forecast",
+        "grammarVocab": "10 - 12h/tuần",
+        "kpi": "Chưa học"
+      },
+      "vocabulary": [
+        {
+          "id": "en-w48-1",
+          "kanji": "Target 7.0 W48",
+          "hiragana": "/ˈtɑːɡɪt/",
+          "meaning": "Từ vựng thực chiến Band 7.0+ Tuần 48",
+          "phonetic": "Band 7.0+"
+        },
+        {
+          "id": "en-w48-2",
+          "kanji": "Unprecedented",
+          "hiragana": "/ʌnˈpresɪdentɪd/",
+          "meaning": "Chưa từng có tiền lệ",
+          "phonetic": "adjective"
+        },
+        {
+          "id": "en-w48-3",
+          "kanji": "Imperative",
+          "hiragana": "/ɪmˈperətɪv/",
+          "meaning": "Bắt buộc, cấp bách",
+          "phonetic": "adjective"
+        },
+        {
+          "id": "en-w48-4",
+          "kanji": "Exemplify",
+          "hiragana": "/ɪɡˈzemplɪfaɪ/",
+          "meaning": "Nêu ví dụ điển hình",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w48-5",
+          "kanji": "Profound",
+          "hiragana": "/prəˈfaʊnd/",
+          "meaning": "Sâu sắc, tác động lớn",
+          "phonetic": "adjective"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-en-w48",
+          "structure": "10 - 12h/tuần",
+          "meaning": "Chưa học",
+          "explanation": "• Listening: Giải đề Cam 19 Test 2 & 3 đúng quy trình thi thật\n• Reading: Listening & Reading duy trì phong độ đỉnh cao (34 - 36 câu đúng)\n• Writing: Writing: Viết 2 bài luận Task 2 hoàn chỉnh trong đúng 38 phút/bài\n• Speaking: Speaking: Luyện tập 20 chủ đề trọng điểm nhất trong Forecast",
+          "level": "Band 7.0+",
+          "examples": [
+            {
+              "id": "eg-en-w48-1",
+              "sentence": "IELTS Target Week 48: Chưa học",
+              "meaning": "Mục tiêu hoàn thành KPI Tuần 48"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-week-49",
+      "weekNumber": 49,
+      "month": "Tháng 12",
+      "name": "Tuần 49: GĐ 4: Thực chiến Cambridge 19 Test 4 & Tổng kết Toàn diện",
+      "description": "GĐ 4 (Band 7.0+) • KPI: Chưa học",
+      "level": "Band 7.0+",
+      "phase": "Giai đoạn 4 (Tháng 10-12)",
+      "phaseCode": "GĐ 4",
+      "curriculum": "IELTS 7.0 Roadmap (52 Weeks)",
+      "duration": "Hoàn thành trọn vẹn bộ đề Cambridge 19 với kết quả xuất sắc",
+      "kpi": "Chưa học",
+      "status": "Chưa học",
+      "skills": {
+        "listening": "Giải đề Cambridge 19 Test 4 - Đề thi mới nhất hiện nay",
+        "reading": "Xem lại toàn bộ Sổ tay lỗi sai (Mistake Log) từ Tháng 1 đến nay",
+        "writing": "Viết 1 bài Task 1 và 1 bài Task 2 cuối cùng để kiểm tra phong độ chữ viết",
+        "speaking": "Speaking: Luyện nói nhẹ nhàng 20 phút mỗi ngày để duy trì cơ miệng",
+        "grammarVocab": "10h/tuần",
+        "kpi": "Chưa học"
+      },
+      "vocabulary": [
+        {
+          "id": "en-w49-1",
+          "kanji": "Target 7.0 W49",
+          "hiragana": "/ˈtɑːɡɪt/",
+          "meaning": "Từ vựng thực chiến Band 7.0+ Tuần 49",
+          "phonetic": "Band 7.0+"
+        },
+        {
+          "id": "en-w49-2",
+          "kanji": "Unprecedented",
+          "hiragana": "/ʌnˈpresɪdentɪd/",
+          "meaning": "Chưa từng có tiền lệ",
+          "phonetic": "adjective"
+        },
+        {
+          "id": "en-w49-3",
+          "kanji": "Imperative",
+          "hiragana": "/ɪmˈperətɪv/",
+          "meaning": "Bắt buộc, cấp bách",
+          "phonetic": "adjective"
+        },
+        {
+          "id": "en-w49-4",
+          "kanji": "Exemplify",
+          "hiragana": "/ɪɡˈzemplɪfaɪ/",
+          "meaning": "Nêu ví dụ điển hình",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w49-5",
+          "kanji": "Profound",
+          "hiragana": "/prəˈfaʊnd/",
+          "meaning": "Sâu sắc, tác động lớn",
+          "phonetic": "adjective"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-en-w49",
+          "structure": "10h/tuần",
+          "meaning": "Chưa học",
+          "explanation": "• Listening: Giải đề Cambridge 19 Test 4 - Đề thi mới nhất hiện nay\n• Reading: Xem lại toàn bộ Sổ tay lỗi sai (Mistake Log) từ Tháng 1 đến nay\n• Writing: Viết 1 bài Task 1 và 1 bài Task 2 cuối cùng để kiểm tra phong độ chữ viết\n• Speaking: Speaking: Luyện nói nhẹ nhàng 20 phút mỗi ngày để duy trì cơ miệng",
+          "level": "Band 7.0+",
+          "examples": [
+            {
+              "id": "eg-en-w49-1",
+              "sentence": "IELTS Target Week 49: Chưa học",
+              "meaning": "Mục tiêu hoàn thành KPI Tuần 49"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-week-50",
+      "weekNumber": 50,
+      "month": "Tháng 12",
+      "name": "Tuần 50: GĐ 4: Mock Test Tổng duyệt Cuối cùng",
+      "description": "GĐ 4 (Band 7.0+) • KPI: Chưa học",
+      "level": "Band 7.0+",
+      "phase": "Giai đoạn 4 (Tháng 10-12)",
+      "phaseCode": "GĐ 4",
+      "curriculum": "IELTS 7.0 Roadmap (52 Weeks)",
+      "duration": "TÂM LÝ TỰ TIN, SẴN SÀNG 100% BƯỚC VÀO PHÒNG THI THẬT",
+      "kpi": "Chưa học",
+      "status": "Chưa học",
+      "skills": {
+        "listening": "Làm 1 buổi MOCK TEST TỔNG DUYỆT ĐẦY ĐỦ 4 KỸ NĂNG (Mục tiêu 7.0 - 7.5)",
+        "reading": "Chuẩn bị đầy đủ giấy tờ tùy thân (CCCD/Passport), kiểm tra địa điểm thi",
+        "writing": "Lên kế hoạch di chuyển và chế độ dinh dưỡng, ngủ nghỉ trước ngày thi",
+        "speaking": "Đọc lướt lại sổ tay Paraphrase và các bài mẫu 8.0 để tạo cảm hứng",
+        "grammarVocab": "8 - 10h/tuần",
+        "kpi": "Chưa học"
+      },
+      "vocabulary": [
+        {
+          "id": "en-w50-1",
+          "kanji": "Target 7.0 W50",
+          "hiragana": "/ˈtɑːɡɪt/",
+          "meaning": "Từ vựng thực chiến Band 7.0+ Tuần 50",
+          "phonetic": "Band 7.0+"
+        },
+        {
+          "id": "en-w50-2",
+          "kanji": "Unprecedented",
+          "hiragana": "/ʌnˈpresɪdentɪd/",
+          "meaning": "Chưa từng có tiền lệ",
+          "phonetic": "adjective"
+        },
+        {
+          "id": "en-w50-3",
+          "kanji": "Imperative",
+          "hiragana": "/ɪmˈperətɪv/",
+          "meaning": "Bắt buộc, cấp bách",
+          "phonetic": "adjective"
+        },
+        {
+          "id": "en-w50-4",
+          "kanji": "Exemplify",
+          "hiragana": "/ɪɡˈzemplɪfaɪ/",
+          "meaning": "Nêu ví dụ điển hình",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w50-5",
+          "kanji": "Profound",
+          "hiragana": "/prəˈfaʊnd/",
+          "meaning": "Sâu sắc, tác động lớn",
+          "phonetic": "adjective"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-en-w50",
+          "structure": "8 - 10h/tuần",
+          "meaning": "Chưa học",
+          "explanation": "• Listening: Làm 1 buổi MOCK TEST TỔNG DUYỆT ĐẦY ĐỦ 4 KỸ NĂNG (Mục tiêu 7.0 - 7.5)\n• Reading: Chuẩn bị đầy đủ giấy tờ tùy thân (CCCD/Passport), kiểm tra địa điểm thi\n• Writing: Lên kế hoạch di chuyển và chế độ dinh dưỡng, ngủ nghỉ trước ngày thi\n• Speaking: Đọc lướt lại sổ tay Paraphrase và các bài mẫu 8.0 để tạo cảm hứng",
+          "level": "Band 7.0+",
+          "examples": [
+            {
+              "id": "eg-en-w50-1",
+              "sentence": "IELTS Target Week 50: Chưa học",
+              "meaning": "Mục tiêu hoàn thành KPI Tuần 50"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-week-51",
+      "weekNumber": 51,
+      "month": "Tháng 12",
+      "name": "Tuần 51: GĐ 4: TUẦN THI THẬT - CHINH PHỤC IELTS 7.0+",
+      "description": "GĐ 4 (Band 7.0+) • KPI: Chưa học",
+      "level": "Band 7.0+",
+      "phase": "Giai đoạn 4 (Tháng 10-12)",
+      "phaseCode": "GĐ 4",
+      "curriculum": "IELTS 7.0 Roadmap (52 Weeks)",
+      "duration": "KPI: HOÀN THÀNH XUẤT SẮC BÀI THI THẬT",
+      "kpi": "Chưa học",
+      "status": "Chưa học",
+      "skills": {
+        "listening": "Nghỉ ngơi, ngủ đủ 8 tiếng/ngày trước ngày thi 3 ngày; không học kiến thức mới",
+        "reading": "Khởi động nhẹ nhàng cơ miệng Speaking vào buổi sáng ngày thi",
+        "writing": "BƯỚC VÀO PHÒNG THI VỚI TINH THẦN TỰ TIN VÀ TẬP TRUNG TỐI ĐA",
+        "speaking": "HOÀN THÀNH XUẤT SẮC KỲ THI IELTS VỚI MỤC TIÊU 7.0+ OVERALL",
+        "grammarVocab": "Thời lượng: Tuần thi chính thức",
+        "kpi": "Chưa học"
+      },
+      "vocabulary": [
+        {
+          "id": "en-w51-1",
+          "kanji": "Target 7.0 W51",
+          "hiragana": "/ˈtɑːɡɪt/",
+          "meaning": "Từ vựng thực chiến Band 7.0+ Tuần 51",
+          "phonetic": "Band 7.0+"
+        },
+        {
+          "id": "en-w51-2",
+          "kanji": "Unprecedented",
+          "hiragana": "/ʌnˈpresɪdentɪd/",
+          "meaning": "Chưa từng có tiền lệ",
+          "phonetic": "adjective"
+        },
+        {
+          "id": "en-w51-3",
+          "kanji": "Imperative",
+          "hiragana": "/ɪmˈperətɪv/",
+          "meaning": "Bắt buộc, cấp bách",
+          "phonetic": "adjective"
+        },
+        {
+          "id": "en-w51-4",
+          "kanji": "Exemplify",
+          "hiragana": "/ɪɡˈzemplɪfaɪ/",
+          "meaning": "Nêu ví dụ điển hình",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w51-5",
+          "kanji": "Profound",
+          "hiragana": "/prəˈfaʊnd/",
+          "meaning": "Sâu sắc, tác động lớn",
+          "phonetic": "adjective"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-en-w51",
+          "structure": "Thời lượng: Tuần thi chính thức",
+          "meaning": "Chưa học",
+          "explanation": "• Listening: Nghỉ ngơi, ngủ đủ 8 tiếng/ngày trước ngày thi 3 ngày; không học kiến thức mới\n• Reading: Khởi động nhẹ nhàng cơ miệng Speaking vào buổi sáng ngày thi\n• Writing: BƯỚC VÀO PHÒNG THI VỚI TINH THẦN TỰ TIN VÀ TẬP TRUNG TỐI ĐA\n• Speaking: HOÀN THÀNH XUẤT SẮC KỲ THI IELTS VỚI MỤC TIÊU 7.0+ OVERALL",
+          "level": "Band 7.0+",
+          "examples": [
+            {
+              "id": "eg-en-w51-1",
+              "sentence": "IELTS Target Week 51: Chưa học",
+              "meaning": "Mục tiêu hoàn thành KPI Tuần 51"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "en-week-52",
+      "weekNumber": 52,
+      "month": "Tháng 12",
+      "name": "Tuần 52: GĐ 4: NHẬN KẾT QUẢ & ĐẠT MỤC TIÊU IELTS 7.0+",
+      "description": "GĐ 4 (Band 7.0+) • KPI: Chưa học",
+      "level": "Band 7.0+",
+      "phase": "Giai đoạn 4 (Tháng 10-12)",
+      "phaseCode": "GĐ 4",
+      "curriculum": "IELTS 7.0 Roadmap (52 Weeks)",
+      "duration": "KPI: ĐẠT CHỨNG CHỈ IELTS 7.0+ OVERALL CHÍNH THỨC",
+      "kpi": "Chưa học",
+      "status": "Chưa học",
+      "skills": {
+        "listening": "Nhận bảng điểm chính thức từ IDP / BC",
+        "reading": "Listening: 7.5+ | Reading: 7.5+ | Writing: 6.5 | Speaking: 6.5 => OVERALL 7.0+",
+        "writing": "Tổng kết hành trình 1 năm nỗ lực kiên trì và bền bỉ",
+        "speaking": "Ứng dụng chứng chỉ IELTS vào mục tiêu du học, công việc hoặc định cư",
+        "grammarVocab": "Thời lượng: Hoàn thành mục tiêu",
+        "kpi": "Chưa học"
+      },
+      "vocabulary": [
+        {
+          "id": "en-w52-1",
+          "kanji": "Target 7.0 W52",
+          "hiragana": "/ˈtɑːɡɪt/",
+          "meaning": "Từ vựng thực chiến Band 7.0+ Tuần 52",
+          "phonetic": "Band 7.0+"
+        },
+        {
+          "id": "en-w52-2",
+          "kanji": "Unprecedented",
+          "hiragana": "/ʌnˈpresɪdentɪd/",
+          "meaning": "Chưa từng có tiền lệ",
+          "phonetic": "adjective"
+        },
+        {
+          "id": "en-w52-3",
+          "kanji": "Imperative",
+          "hiragana": "/ɪmˈperətɪv/",
+          "meaning": "Bắt buộc, cấp bách",
+          "phonetic": "adjective"
+        },
+        {
+          "id": "en-w52-4",
+          "kanji": "Exemplify",
+          "hiragana": "/ɪɡˈzemplɪfaɪ/",
+          "meaning": "Nêu ví dụ điển hình",
+          "phonetic": "verb"
+        },
+        {
+          "id": "en-w52-5",
+          "kanji": "Profound",
+          "hiragana": "/prəˈfaʊnd/",
+          "meaning": "Sâu sắc, tác động lớn",
+          "phonetic": "adjective"
+        }
+      ],
+      "grammarPoints": [
+        {
+          "id": "g-en-w52",
+          "structure": "Thời lượng: Hoàn thành mục tiêu",
+          "meaning": "Chưa học",
+          "explanation": "• Listening: Nhận bảng điểm chính thức từ IDP / BC\n• Reading: Listening: 7.5+ | Reading: 7.5+ | Writing: 6.5 | Speaking: 6.5 => OVERALL 7.0+\n• Writing: Tổng kết hành trình 1 năm nỗ lực kiên trì và bền bỉ\n• Speaking: Ứng dụng chứng chỉ IELTS vào mục tiêu du học, công việc hoặc định cư",
+          "level": "Band 7.0+",
+          "examples": [
+            {
+              "id": "eg-en-w52-1",
+              "sentence": "IELTS Target Week 52: Chưa học",
+              "meaning": "Mục tiêu hoàn thành KPI Tuần 52"
+            }
           ]
         }
       ]

@@ -5,16 +5,30 @@ import Link from "next/link";
 import { getCurriculumRepository } from "@/lib/repositories";
 import { CurriculumLevelGroup, JLPTLevel } from "@/lib/repositories/types";
 import { useLanguageSetting } from "@/hooks/useLanguageSetting";
+import IeltsRoadmapDashboard from "@/components/IeltsRoadmapDashboard";
 
 export default function CurriculumPage() {
   const [groups, setGroups] = useState<CurriculumLevelGroup[]>([]);
   const [activeLevel, setActiveLevel] = useState<JLPTLevel>("N5");
   const [loading, setLoading] = useState(true);
+  const [enData, setEnData] = useState<any>(null);
   const { activeLanguage } = useLanguageSetting();
 
   useEffect(() => {
     async function loadData() {
       setLoading(true);
+      if (activeLanguage.code === "en") {
+        try {
+          const res = await fetch("/data/en-curriculum.json");
+          if (res.ok) {
+            const data = await res.json();
+            setEnData(data);
+          }
+        } catch (e) {
+          console.error("Failed to load English curriculum JSON", e);
+        }
+      }
+
       const repo = getCurriculumRepository();
       const data = await repo.getCurriculums();
       setGroups(data);
@@ -32,12 +46,12 @@ export default function CurriculumPage() {
   const headerTitle = activeLanguage.code === "de" 
     ? "Lộ trình Học Tiếng Đức (A1)" 
     : activeLanguage.code === "en" 
-    ? "Lộ trình Học Tiếng Anh (A1)" 
+    ? "Lộ Trình IELTS 7.0 (12 Tháng / 52 Tuần)" 
     : "Lộ trình Học Tiếng Nhật (N5 ➔ N2)";
   const headerSubtitle = activeLanguage.code === "de"
     ? "Học bài bản theo giáo trình Netzwerk neu A1"
     : activeLanguage.code === "en"
-    ? "Học từ vựng Oxford 3000 & Ngữ pháp Tiếng Anh"
+    ? "Luyện thi IELTS 7.0 bài bản: Foundation ➔ Format ➔ Advanced ➔ Mock Test"
     : "Học bài bản theo giáo trình Minna no Nihongo, Soumatome & Shinkanzen Master";
 
   return (
@@ -88,6 +102,13 @@ export default function CurriculumPage() {
         <div className="flex items-center justify-center py-20 text-indigo-600 font-medium">
           Đang tải kho bài học...
         </div>
+      ) : activeLanguage.code === "en" ? (
+        <IeltsRoadmapDashboard
+          lessons={enData?.lessons || activeGroup?.lessons || []}
+          materials={enData?.materials || []}
+          timetable={enData?.weeklyTimetable || []}
+          mockTests={enData?.mockTests || []}
+        />
       ) : !activeGroup || activeGroup.lessons.length === 0 ? (
         <div className="bg-white rounded-3xl p-8 text-center text-gray-400 border border-gray-100">
           Chưa có bài học nào cho trình độ {activeLevel}

@@ -286,6 +286,27 @@ export default function CurriculumLessonDetailPage({ params }: Props) {
           </div>
         </div>
 
+        {/* IELTS 4-Skills Breakdown Widget if present */}
+        {(lesson as any).skills && (
+          <div className="mt-5 p-4 bg-slate-900 text-white rounded-2xl border border-slate-800 space-y-2 text-xs">
+            <div className="font-extrabold text-indigo-400 text-sm flex items-center justify-between">
+              <span>🎯 NHIỆM VỤ 4 KỸ NĂNG TUẦN NÀY</span>
+              <span className="text-[10px] bg-indigo-500/20 text-indigo-300 px-2.5 py-0.5 rounded-full border border-indigo-400/30">
+                {(lesson as any).duration || "8 - 10h/tuần"}
+              </span>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-2 text-slate-300">
+              <div><span className="font-bold text-indigo-400">🎧 Listening:</span> {(lesson as any).skills.listening}</div>
+              <div><span className="font-bold text-indigo-400">📖 Reading:</span> {(lesson as any).skills.reading}</div>
+              <div><span className="font-bold text-indigo-400">✍️ Writing:</span> {(lesson as any).skills.writing}</div>
+              <div><span className="font-bold text-indigo-400">🗣️ Speaking:</span> {(lesson as any).skills.speaking}</div>
+            </div>
+            <div className="pt-2 text-emerald-300 border-t border-slate-800 font-medium">
+              🌟 <span className="font-bold text-emerald-400">KPI Đầu ra:</span> {(lesson as any).skills.kpi}
+            </div>
+          </div>
+        )}
+
         {/* Lesson Progress Tracking Bar */}
         <div className="bg-indigo-50/40 rounded-2xl p-4 border border-indigo-50/50 flex flex-col md:flex-row md:items-center justify-between gap-4 mt-5">
           <div className="space-y-1">

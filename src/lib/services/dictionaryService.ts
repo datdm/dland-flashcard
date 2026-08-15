@@ -12,18 +12,44 @@ export interface DictionaryItem {
   source?: string;
 }
 
-export async function searchJapaneseDictionary(query: string): Promise<DictionaryItem[]> {
+export async function searchJapaneseDictionary(query: string, langCode: string = "ja"): Promise<DictionaryItem[]> {
+  return searchMultilingualDictionary(query, langCode);
+}
+
+export async function searchMultilingualDictionary(query: string, langCode: string = "ja"): Promise<DictionaryItem[]> {
   const q = query.trim().toLowerCase();
   if (!q) return [];
 
   const results: DictionaryItem[] = [];
 
-  // 1. Search Local N5-N2 Repository (Tiếng Việt sẵn có)
+  // 1. Search Local Repository for active language
   try {
     const vocabRepo = getVocabularyRepository();
     const localMatches = await vocabRepo.searchVocabulary(q);
 
     localMatches.forEach((v) => {
+      let lvl = v.id.startsWith("n5") ? "N5" : v.id.startsWith("n4") ? "N4" : v.id.startsWith("n3") ? "N3" : v.id.startsWith("n2") ? "N2" : undefined;
+      
+      if (langCode === "en") {
+        if (v.id.startsWith("en-w")) {
+          const wNum = parseInt(v.id.split("-w")[1] || "0", 10);
+          if (wNum <= 12) lvl = "GĐ 1";
+          else if (wNum <= 26) lvl = "GĐ 2";
+          else if (wNum <= 39) lvl = "GĐ 3";
+          else lvl = "GĐ 4";
+        } else {
+          lvl = "IELTS";
+        }
+      } else if (langCode === "de") {
+        lvl = "A1";
+      }
+
+      const sourceLabel = langCode === "en"
+        ? "Nội bộ (IELTS Anh-Việt)"
+        : langCode === "de"
+        ? "Nội bộ (Goethe Đức-Việt)"
+        : "Nội bộ (JLPT Nhật-Việt)";
+
       results.push({
         id: v.id,
         kanji: v.kanji,
@@ -31,57 +57,50 @@ export async function searchJapaneseDictionary(query: string): Promise<Dictionar
         onyomi: v.onyomi,
         meaning: v.meaning || "",
         phonetic: v.phonetic,
-        level: v.id.startsWith("n5")
-          ? "N5"
-          : v.id.startsWith("n4")
-          ? "N4"
-          : v.id.startsWith("n3")
-          ? "N3"
-          : v.id.startsWith("n2")
-          ? "N2"
-          : undefined,
+        level: lvl,
         isOnline: false,
-        source: "Nội bộ (Nhật-Việt)"
+        source: sourceLabel
       });
     });
   } catch (err) {
-    console.error("Local search error:", err);
+    console.error("Local dictionary search error:", err);
   }
 
-  // 2. Fetch Online API (Mazii Nhật-Việt + Jisho Dịch Tiếng Việt)
-  try {
-    const res = await fetch(`/api/dictionary?keyword=${encodeURIComponent(q)}`);
-    if (res.ok) {
-      const json = await res.json();
-      const onlineData = json.data || [];
+  // 2. Fetch Online API (For Japanese or fallback translation)
+  if (langCode === "ja") {
+    try {
+      const res = await fetch(`/api/dictionary?keyword=${encodeURIComponent(q)}`);
+      if (res.ok) {
+        const json = await res.json();
+        const onlineData = json.data || [];
 
-      onlineData.forEach((item: any, idx: number) => {
-        const itemKanji = item.kanji;
-        const itemHiragana = item.hiragana;
+        onlineData.forEach((item: any, idx: number) => {
+          const itemKanji = item.kanji;
+          const itemHiragana = item.hiragana;
 
-        // Deduplicate if already found locally
-        const alreadyExists = results.some(
-          (r) =>
-            (itemKanji && r.kanji === itemKanji) ||
-            (itemHiragana && r.hiragana === itemHiragana)
-        );
+          const alreadyExists = results.some(
+            (r) =>
+              (itemKanji && r.kanji === itemKanji) ||
+              (itemHiragana && r.hiragana === itemHiragana)
+          );
 
-        if (!alreadyExists && (itemKanji || itemHiragana)) {
-          results.push({
-            id: `online-${idx}-${Date.now()}`,
-            kanji: itemKanji,
-            hiragana: itemHiragana,
-            onyomi: item.onyomi,
-            meaning: item.meaning, // 100% Tiếng Việt
-            level: item.level,
-            isOnline: true,
-            source: item.source || "Trực tuyến (Nhật-Việt)"
-          });
-        }
-      });
+          if (!alreadyExists && (itemKanji || itemHiragana)) {
+            results.push({
+              id: `online-${idx}-${Date.now()}`,
+              kanji: itemKanji,
+              hiragana: itemHiragana,
+              onyomi: item.onyomi,
+              meaning: item.meaning,
+              level: item.level,
+              isOnline: true,
+              source: item.source || "Trực tuyến (Nhật-Việt)"
+            });
+          }
+        });
+      }
+    } catch (err) {
+      console.error("Online dictionary search error:", err);
     }
-  } catch (err) {
-    console.error("Online dictionary search error:", err);
   }
 
   return results;
