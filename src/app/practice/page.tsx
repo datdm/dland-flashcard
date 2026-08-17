@@ -1177,30 +1177,15 @@ export default function PracticeHubPage() {
 
       {/* Add to Notebook Modal */}
       {selectedWordForNotebook && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-3xl shadow-xl p-6 w-full max-w-sm">
-            <h3 className="font-bold text-base text-gray-900 mb-2">Thêm từ vào Sổ tay</h3>
-
-            <div className="flex gap-2 justify-end">
-              <button
-                onClick={() => {
-                  setSelectedWordForNotebook(null);
-                  setDuplicateError(null);
-                }}
-                className="px-4 py-2 rounded-xl border border-gray-300 text-gray-600 hover:bg-gray-50 text-xs font-semibold"
-              >
-                Hủy
-              </button>
-              <button
-                onClick={handleAddToNotebook}
-                disabled={!targetNotebookId}
-                className="px-4 py-2 rounded-xl bg-indigo-600 text-white text-xs font-bold hover:bg-indigo-700 disabled:opacity-50"
-              >
-                Lưu vào Sổ tay
-              </button>
-            </div>
-          </div>
-        </div>
+        <AddToNotebookModal
+          selectedWord={selectedWordForNotebook}
+          onClose={() => setSelectedWordForNotebook(null)}
+          onSuccess={() => {
+            setSelectedWordForNotebook(null);
+            setSaveSuccessMsg("Đã lưu từ vựng vào sổ tay thành công!");
+            setTimeout(() => setSaveSuccessMsg(null), 3000);
+          }}
+        />
       )}
 
       {/* Success Notification */}

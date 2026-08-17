@@ -38,7 +38,15 @@ function getActiveLanguageCode(): string {
 }
 
 export function useNotebooks() {
-  const [allNotebooks, setAllNotebooks] = useState<Notebook[]>([]);
+  const [allNotebooks, setAllNotebooks] = useState<Notebook[]>(() => {
+    if (typeof window !== "undefined") {
+      const data = getItem<NotebooksData>(StorageKeys.NOTEBOOKS);
+      if (data?.notebooks && Array.isArray(data.notebooks)) {
+        return data.notebooks;
+      }
+    }
+    return [];
+  });
 
   const activeLang = getActiveLanguageCode();
 

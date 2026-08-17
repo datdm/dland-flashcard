@@ -29,10 +29,10 @@ export default function AddToNotebookModal({
     refreshNotebooks();
   }, [refreshNotebooks]);
 
-  const [targetNotebookId, setTargetNotebookId] = useState<string>(
+  const [targetNotebookId, setTargetNotebookId] = useState<string>(() =>
     notebooks.length > 0 ? notebooks[0].id : "NEW"
   );
-  const [isCreatingNew, setIsCreatingNew] = useState(
+  const [isCreatingNew, setIsCreatingNew] = useState<boolean>(() =>
     notebooks.length === 0 || targetNotebookId === "NEW"
   );
   const [newNotebookName, setNewNotebookName] = useState(
@@ -43,9 +43,16 @@ export default function AddToNotebookModal({
       : "Sổ tay Tiếng Nhật"
   );
 
+  // Sync state whenever notebooks list is reloaded or refreshed from server/localStorage
   useEffect(() => {
-    if (notebooks.length > 0 && targetNotebookId === "NEW" && !isCreatingNew) {
-      setTargetNotebookId(notebooks[0].id);
+    if (notebooks.length > 0) {
+      if (!targetNotebookId || targetNotebookId === "" || (!isCreatingNew && !notebooks.some((nb) => nb.id === targetNotebookId))) {
+        setTargetNotebookId(notebooks[0].id);
+        setIsCreatingNew(false);
+      }
+    } else {
+      setTargetNotebookId("NEW");
+      setIsCreatingNew(true);
     }
   }, [notebooks]);
 

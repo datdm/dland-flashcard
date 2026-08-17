@@ -19,60 +19,60 @@ function getNavItemsForLanguage(langCode: string): NavItem[] {
       return [
         { href: "/", label: "Trang chủ", icon: "🏠" },
         { href: "/search", label: "Tra cứu từ điển", icon: "🔍" },
+        { href: "/curriculum", label: "Lộ trình IELTS 7.0", icon: "📚" },
+        { href: "/grammar", label: "Ngữ pháp Tiếng Anh", icon: "📖" },
+        { href: "/vocabulary", label: "Kho Từ Vựng Tiếng Anh", icon: "📝" },
         { href: "/translate", label: "Dịch văn bản", icon: "🌐" },
         { href: "/chat", label: "Gia Sư AI", icon: "🤖" },
-        { href: "/curriculum", label: "Giáo trình (Oxford/IELTS)", icon: "📚" },
-        { href: "/grammar", label: "Ngữ pháp Tiếng Anh", icon: "📖" },
-        { href: "/vocabulary", label: "Từ vựng Oxford 3000", icon: "📝" },
-        { href: "/notebooks", label: "Sổ tay cá nhân", icon: "📓" },
+        { href: "/notebooks", label: "Sổ tay Tiếng Anh", icon: "📓" },
         { href: "/flashcard/all", label: "Ôn tập Flashcard", icon: "🎴" },
         { href: "/history", label: "Lịch sử học tập", icon: "📊" },
-        { href: "/settings", label: "Cài đặt & Ngôn ngữ", icon: "⚙️" },
+        { href: "/settings", label: "Cài đặt Ngôn ngữ", icon: "⚙️" },
       ];
 
     case "de":
       return [
         { href: "/", label: "Trang chủ", icon: "🏠" },
         { href: "/search", label: "Tra cứu từ điển", icon: "🔍" },
+        { href: "/curriculum", label: "Giáo trình Tiếng Đức", icon: "📚" },
+        { href: "/grammar", label: "Ngữ pháp Tiếng Đức", icon: "📖" },
+        { href: "/vocabulary", label: "Kho Từ Vựng Tiếng Đức", icon: "📝" },
         { href: "/translate", label: "Dịch văn bản", icon: "🌐" },
         { href: "/chat", label: "Gia Sư AI", icon: "🤖" },
-        { href: "/curriculum", label: "Giáo trình (Goethe A1-B2)", icon: "📚" },
-        { href: "/grammar", label: "Ngữ pháp Der/Die/Das", icon: "📖" },
-        { href: "/vocabulary", label: "Từ vựng Tiếng Đức", icon: "📝" },
-        { href: "/notebooks", label: "Sổ tay cá nhân", icon: "📓" },
+        { href: "/notebooks", label: "Sổ tay Tiếng Đức", icon: "📓" },
         { href: "/flashcard/all", label: "Ôn tập Flashcard", icon: "🎴" },
         { href: "/history", label: "Lịch sử học tập", icon: "📊" },
-        { href: "/settings", label: "Cài đặt & Ngôn ngữ", icon: "⚙️" },
+        { href: "/settings", label: "Cài đặt Ngôn ngữ", icon: "⚙️" },
       ];
 
     case "ko":
       return [
         { href: "/", label: "Trang chủ", icon: "🏠" },
         { href: "/search", label: "Tra cứu từ điển", icon: "🔍" },
+        { href: "/curriculum", label: "Giáo trình TOPIK", icon: "📚" },
+        { href: "/grammar", label: "Ngữ pháp Tiếng Hàn", icon: "📖" },
+        { href: "/vocabulary", label: "Kho Từ Vựng Tiếng Hàn", icon: "📝" },
         { href: "/translate", label: "Dịch văn bản", icon: "🌐" },
         { href: "/chat", label: "Gia Sư AI", icon: "🤖" },
-        { href: "/curriculum", label: "Giáo trình (TOPIK)", icon: "📚" },
-        { href: "/grammar", label: "Ngữ pháp Hangul", icon: "📖" },
-        { href: "/vocabulary", label: "Từ vựng Tiếng Hàn", icon: "📝" },
-        { href: "/notebooks", label: "Sổ tay cá nhân", icon: "📓" },
+        { href: "/notebooks", label: "Sổ tay Tiếng Hàn", icon: "📓" },
         { href: "/flashcard/all", label: "Ôn tập Flashcard", icon: "🎴" },
         { href: "/history", label: "Lịch sử học tập", icon: "📊" },
-        { href: "/settings", label: "Cài đặt & Ngôn ngữ", icon: "⚙️" },
+        { href: "/settings", label: "Cài đặt Ngôn ngữ", icon: "⚙️" },
       ];
 
     case "zh":
       return [
         { href: "/", label: "Trang chủ", icon: "🏠" },
         { href: "/search", label: "Tra cứu từ điển", icon: "🔍" },
+        { href: "/curriculum", label: "Giáo trình HSK", icon: "📚" },
+        { href: "/grammar", label: "Ngữ pháp Tiếng Trung", icon: "📖" },
+        { href: "/vocabulary", label: "Kho Từ Vựng Tiếng Trung", icon: "📝" },
         { href: "/translate", label: "Dịch văn bản", icon: "🌐" },
         { href: "/chat", label: "Gia Sư AI", icon: "🤖" },
-        { href: "/curriculum", label: "Giáo trình (HSK 1-6)", icon: "📚" },
-        { href: "/grammar", label: "Ngữ pháp Pinyin", icon: "📖" },
-        { href: "/vocabulary", label: "Từ vựng Tiếng Trung", icon: "📝" },
-        { href: "/notebooks", label: "Sổ tay cá nhân", icon: "📓" },
+        { href: "/notebooks", label: "Sổ tay Tiếng Trung", icon: "📓" },
         { href: "/flashcard/all", label: "Ôn tập Flashcard", icon: "🎴" },
         { href: "/history", label: "Lịch sử học tập", icon: "📊" },
-        { href: "/settings", label: "Cài đặt & Ngôn ngữ", icon: "⚙️" },
+        { href: "/settings", label: "Cài đặt Ngôn ngữ", icon: "⚙️" },
       ];
 
     case "ja":
@@ -80,17 +80,17 @@ function getNavItemsForLanguage(langCode: string): NavItem[] {
       return [
         { href: "/", label: "Trang chủ", icon: "🏠" },
         { href: "/search", label: "Tra cứu từ điển", icon: "🔍" },
-        { href: "/translate", label: "Dịch văn bản", icon: "🌐" },
-        { href: "/chat", label: "Gia Sư AI", icon: "🤖" },
         { href: "/kaiwa", label: "Lộ trình Kaiwa", icon: "🗣️" },
         { href: "/curriculum", label: "Giáo trình (N5-N2)", icon: "📚" },
         { href: "/grammar", label: "Ngữ pháp JLPT", icon: "📖" },
         { href: "/practice", label: "Luyện chuyên sâu", icon: "🏆" },
-        { href: "/vocabulary", label: "Từ vựng tiếng Nhật", icon: "📝" },
-        { href: "/notebooks", label: "Sổ tay cá nhân", icon: "📓" },
+        { href: "/vocabulary", label: "Kho Từ Vựng Tiếng Nhật", icon: "📝" },
+        { href: "/translate", label: "Dịch văn bản", icon: "🌐" },
+        { href: "/chat", label: "Gia Sư AI", icon: "🤖" },
+        { href: "/notebooks", label: "Sổ tay Tiếng Nhật", icon: "📓" },
         { href: "/flashcard/all", label: "Ôn tập Flashcard", icon: "🎴" },
         { href: "/history", label: "Lịch sử học tập", icon: "📊" },
-        { href: "/settings", label: "Cài đặt & Ngôn ngữ", icon: "⚙️" },
+        { href: "/settings", label: "Cài đặt Ngôn ngữ", icon: "⚙️" },
       ];
   }
 }
@@ -101,6 +101,18 @@ export default function Navbar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const { activeLanguage } = useLanguageSetting();
   const mobileNavRef = useRef<HTMLDivElement>(null);
+
+  const navItems = getNavItemsForLanguage(activeLanguage.code);
+
+  const activeNavItem = navItems.find((item) =>
+    item.href === "/" ? pathname === "/" : pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href))
+  );
+
+  useEffect(() => {
+    if (activeNavItem && typeof document !== "undefined") {
+      document.title = `${activeNavItem.label} | Dland Language`;
+    }
+  }, [activeNavItem, pathname]);
 
   useEffect(() => {
     const el = mobileNavRef.current;
@@ -199,8 +211,6 @@ export default function Navbar() {
     localStorage.setItem("sidebar_collapsed", String(newVal));
   };
 
-  const navItems = getNavItemsForLanguage(activeLanguage.code);
-
   const handleSyncClick = () => {
     setShowSyncDialog(true);
   };
@@ -248,6 +258,19 @@ export default function Navbar() {
               </div>
             )}
           </Link>
+
+          {/* Active Page Header Badge */}
+          {!isCollapsed && activeNavItem && (
+            <div className="mx-1 mb-4 p-2.5 rounded-2xl bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-100/80 flex items-center gap-2 shadow-3xs">
+              <div className="w-7 h-7 rounded-xl bg-white flex items-center justify-center text-sm shrink-0 shadow-2xs">
+                {activeNavItem.icon}
+              </div>
+              <div className="min-w-0 flex-1">
+                <span className="text-[9px] font-bold text-gray-400 block uppercase tracking-wider leading-none">Trang hiện tại</span>
+                <span className="text-xs font-extrabold text-indigo-900 block truncate mt-0.5">{activeNavItem.label}</span>
+              </div>
+            </div>
+          )}
 
           {/* Navigation Links */}
           <nav className="space-y-1">
@@ -345,10 +368,11 @@ export default function Navbar() {
 
       {/* Mobile Top Header */}
       <header className="md:hidden sticky top-0 z-40 flex items-center justify-between bg-white border-b border-gray-200 px-4 h-12 shadow-2xs">
-        <Link href="/" className="font-bold text-indigo-700 text-sm flex items-center gap-1.5">
-          <span>🌐</span> Dland Language
-          <span className="text-xs px-1.5 py-0.5 bg-indigo-50 rounded-md text-indigo-600 font-normal">
-            {activeLanguage.flag} {activeLanguage.name}
+        <Link href="/" className="font-bold text-indigo-700 text-sm flex items-center gap-1.5 truncate">
+          <span>{activeNavItem?.icon || "🌐"}</span>
+          <span className="truncate">{activeNavItem?.label || "Dland Language"}</span>
+          <span className="text-[10px] px-1.5 py-0.5 bg-indigo-50 rounded-md text-indigo-600 font-bold shrink-0">
+            {activeLanguage.flag} {activeLanguage.code.toUpperCase()}
           </span>
         </Link>
         <div className="flex items-center gap-2">
