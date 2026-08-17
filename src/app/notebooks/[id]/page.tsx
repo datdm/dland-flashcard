@@ -830,20 +830,25 @@ export default function NotebookDetailPage() {
                 <label className="block text-xs font-semibold text-purple-700 mb-1">
                   Chuyển sang sổ tay khác:
                 </label>
-                <select
-                  value={targetNotebookId}
-                  onChange={(e) => setTargetNotebookId(e.target.value)}
-                  className="w-full rounded-2xl border border-purple-200 bg-purple-50/50 px-4 py-2.5 text-xs font-semibold text-purple-900 focus:outline-none focus:border-purple-500"
-                >
-                  <option value="">-- Chọn sổ tay đích --</option>
-                  {notebooks
-                    .filter((nb) => nb.id !== id)
-                    .map((nb) => (
-                      <option key={nb.id} value={nb.id}>
-                        {nb.name}
-                      </option>
-                    ))}
-                </select>
+                <div className="relative">
+                  <select
+                    value={targetNotebookId}
+                    onChange={(e) => setTargetNotebookId(e.target.value)}
+                    className="w-full rounded-2xl border border-purple-200 bg-purple-50/70 px-4 py-2.5 text-xs font-semibold text-purple-900 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-100 appearance-none pr-8 cursor-pointer shadow-3xs"
+                  >
+                    <option value="">-- Chọn sổ tay đích --</option>
+                    {notebooks
+                      .filter((nb) => nb.id !== id)
+                      .map((nb) => (
+                        <option key={nb.id} value={nb.id}>
+                          📓 {nb.name} ({nb.vocabulary?.length || 0} từ)
+                        </option>
+                      ))}
+                  </select>
+                  <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-purple-400 text-[10px]">
+                    ▼
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -898,20 +903,25 @@ export default function NotebookDetailPage() {
                 <label className="block text-xs font-semibold text-purple-700 mb-2">
                   Chọn sổ tay đích để chuyển đến:
                 </label>
-                <select
-                  value={targetNotebookId}
-                  onChange={(e) => setTargetNotebookId(e.target.value)}
-                  className="w-full rounded-2xl border border-purple-200 bg-purple-50/50 px-4 py-2.5 text-xs font-semibold text-purple-900 focus:outline-none focus:border-purple-500"
-                >
-                  <option value="">-- Chọn sổ tay --</option>
-                  {notebooks
-                    .filter((nb) => nb.id !== id)
-                    .map((nb) => (
-                      <option key={nb.id} value={nb.id}>
-                        {nb.name}
-                      </option>
-                    ))}
-                </select>
+                <div className="relative">
+                  <select
+                    value={targetNotebookId}
+                    onChange={(e) => setTargetNotebookId(e.target.value)}
+                    className="w-full rounded-2xl border border-purple-200 bg-purple-50/70 px-4 py-2.5 text-xs font-semibold text-purple-900 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-100 appearance-none pr-8 cursor-pointer shadow-3xs"
+                  >
+                    <option value="">-- Chọn sổ tay --</option>
+                    {notebooks
+                      .filter((nb) => nb.id !== id)
+                      .map((nb) => (
+                        <option key={nb.id} value={nb.id}>
+                          📓 {nb.name} ({nb.vocabulary?.length || 0} từ)
+                        </option>
+                      ))}
+                  </select>
+                  <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-purple-400 text-[10px]">
+                    ▼
+                  </div>
+                </div>
               </div>
             </div>
 

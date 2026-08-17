@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useNotebooks } from "@/hooks/useNotebooks";
 import { searchJapaneseDictionary } from "@/lib/services/dictionaryService";
 import { useLanguageSetting } from "@/hooks/useLanguageSetting";
+import AddToNotebookModal from "@/components/AddToNotebookModal";
 
 interface ShadowingItem {
   id: string;
@@ -1179,108 +1180,6 @@ export default function PracticeHubPage() {
         <div className="fixed inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-3xl shadow-xl p-6 w-full max-w-sm">
             <h3 className="font-bold text-base text-gray-900 mb-2">Thêm từ vào Sổ tay</h3>
-            <div className="space-y-3 mb-4">
-              <div>
-                <label className="block text-[10px] uppercase font-bold text-gray-400 mb-1">Chữ Hán (Kanji):</label>
-                <input
-                  type="text"
-                  value={modalKanji}
-                  onChange={(e) => setModalKanji(e.target.value)}
-                  placeholder="Ví dụ: 勉強"
-                  className="w-full text-xs border border-gray-200 rounded-xl px-3 py-2 focus:outline-none focus:border-indigo-500"
-                />
-              </div>
-
-              <div>
-                <label className="block text-[10px] uppercase font-bold text-gray-400 mb-1">Cách đọc (Hiragana/Katakana):</label>
-                <input
-                  type="text"
-                  value={modalHiragana}
-                  onChange={(e) => setModalHiragana(e.target.value)}
-                  placeholder="Ví dụ: べんきょう"
-                  className="w-full text-xs border border-gray-200 rounded-xl px-3 py-2 focus:outline-none focus:border-indigo-500"
-                />
-              </div>
-
-              <div>
-                <label className="block text-[10px] uppercase font-bold text-gray-400 mb-1">Ý nghĩa (Meaning):</label>
-                <input
-                  type="text"
-                  value={modalMeaning}
-                  onChange={(e) => setModalMeaning(e.target.value)}
-                  placeholder="Ví dụ: Học tập"
-                  className="w-full text-xs border border-gray-200 rounded-xl px-3 py-2 focus:outline-none focus:border-indigo-500"
-                />
-              </div>
-            </div>
-
-            {/* Search results like Mazii */}
-            <div className="mb-4 pt-3 border-t border-gray-100">
-              <span className="block text-[10px] uppercase font-bold text-gray-400 mb-2">
-                Kết quả tra cứu từ điển (Mazii / Jisho):
-              </span>
-
-              {searchLoading ? (
-                <div className="flex items-center justify-center py-4 gap-2 text-xs text-gray-500 font-medium animate-pulse">
-                  <span className="w-3.5 h-3.5 rounded-full border-2 border-indigo-500 border-t-transparent animate-spin"></span>
-                  Đang tra từ điển...
-                </div>
-              ) : searchResults.length > 0 ? (
-                <div className="max-h-36 overflow-y-auto space-y-2 pr-1 no-scrollbar mb-2">
-                  {searchResults.slice(0, 5).map((res, rIdx) => (
-                    <button
-                      key={rIdx}
-                      type="button"
-                      onClick={() => {
-                        setModalKanji(res.kanji || "");
-                        setModalHiragana(res.hiragana || "");
-                        setModalMeaning(res.meaning || "");
-                      }}
-                      className="w-full text-left p-2 rounded-xl bg-gray-50 hover:bg-indigo-50/50 hover:border-indigo-200 border border-transparent transition-all flex flex-col gap-0.5"
-                    >
-                      <div className="flex items-baseline gap-1.5 flex-wrap">
-                        <span className="text-xs font-bold text-gray-900">{res.kanji || res.hiragana}</span>
-                        {res.kanji && res.hiragana && res.kanji !== res.hiragana && (
-                          <span className="text-[10px] text-indigo-600 font-semibold font-mono">({res.hiragana})</span>
-                        )}
-                        {res.level && (
-                          <span className="px-1 py-0.2 bg-purple-50 text-purple-700 text-[8px] font-bold rounded">
-                            {res.level}
-                          </span>
-                        )}
-                      </div>
-                      <div className="text-[10px] text-gray-600 font-medium line-clamp-2">
-                        {res.meaning}
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-[10px] text-gray-400 italic text-center py-2 mb-2">
-                  Không tìm thấy nghĩa trong từ điển. Bạn tự nhập nghĩa nhé!
-                </div>
-              )}
-            </div>
-
-            {duplicateError && (
-              <div className="mb-4 rounded-2xl border border-red-200 bg-red-50 p-3 text-xs font-semibold text-red-600">
-                ✕ {duplicateError}
-              </div>
-            )}
-
-            <label className="block text-xs font-semibold text-gray-700 mb-2">Chọn Sổ tay:</label>
-            <select
-              value={targetNotebookId}
-              onChange={(e) => setTargetNotebookId(e.target.value)}
-              className="w-full rounded-2xl border border-gray-300 px-4 py-2.5 text-sm mb-6 focus:outline-none focus:border-indigo-500"
-            >
-              <option value="">-- Chọn sổ tay --</option>
-              {notebooks.map((nb) => (
-                <option key={nb.id} value={nb.id}>
-                  {nb.name} ({nb.vocabulary.length} từ)
-                </option>
-              ))}
-            </select>
 
             <div className="flex gap-2 justify-end">
               <button

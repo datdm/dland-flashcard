@@ -145,7 +145,7 @@ export default function FlashCardAllPage() {
               <optgroup label="📓 Sổ tay cá nhân" className="font-bold text-gray-400">
                 {notebooks.map((nb) => (
                   <option key={nb.id} value={nb.id} className="text-gray-700 font-semibold">
-                    {nb.name}
+                    📓 {nb.name} ({nb.vocabulary?.length || 0} từ)
                   </option>
                 ))}
               </optgroup>

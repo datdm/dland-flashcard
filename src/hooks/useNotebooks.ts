@@ -46,33 +46,48 @@ export function useNotebooks() {
     return allNotebooks.filter((nb) => (nb.lang || "ja") === activeLang);
   }, [allNotebooks, activeLang]);
 
-  useEffect(() => {
-    // Load local data first
+  const refreshNotebooks = useCallback(async () => {
+    // 1. Load local data first
     const data = getItem<NotebooksData>(StorageKeys.NOTEBOOKS);
-    if (data?.notebooks) setAllNotebooks(data.notebooks);
+    if (data?.notebooks) {
+      setAllNotebooks(data.notebooks);
+    }
 
-    // Sync from database if logged in
-    const syncNotebooks = async () => {
-      if (checkAuthStatus()) {
-        try {
-          const serverData = await loadNotebooksFromServer() as any;
-          // serverData can be { notebooks: Notebook[] } or Notebook[] depending on backend response
-          const notebooksList = Array.isArray(serverData) 
-            ? serverData 
-            : (serverData?.notebooks || []);
-          
-          if (notebooksList.length > 0) {
-            setAllNotebooks(notebooksList);
-            setItem<NotebooksData>(StorageKeys.NOTEBOOKS, { notebooks: notebooksList });
-          }
-        } catch (error) {
-          console.error("Failed to load notebooks from server:", error);
+    // 2. Sync from database if logged in
+    if (checkAuthStatus()) {
+      try {
+        const serverData = await loadNotebooksFromServer() as any;
+        const notebooksList = Array.isArray(serverData) 
+          ? serverData 
+          : (serverData?.notebooks || []);
+        
+        if (notebooksList.length > 0) {
+          setAllNotebooks(notebooksList);
+          setItem<NotebooksData>(StorageKeys.NOTEBOOKS, { notebooks: notebooksList });
         }
+      } catch (error) {
+        console.error("Failed to load notebooks from server:", error);
       }
-    };
-    
-    syncNotebooks();
+    }
   }, []);
+
+  useEffect(() => {
+    refreshNotebooks();
+
+    const handleUpdate = () => {
+      const data = getItem<NotebooksData>(StorageKeys.NOTEBOOKS);
+      if (data?.notebooks) setAllNotebooks(data.notebooks);
+    };
+
+    window.addEventListener("notebooks-updated", handleUpdate);
+    return () => window.removeEventListener("notebooks-updated", handleUpdate);
+  }, [refreshNotebooks]);
+
+  const notifyChange = () => {
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("notebooks-updated"));
+    }
+  };
 
   const save = useCallback((updated: Notebook[]) => {
     setAllNotebooks((prev) => {
@@ -82,6 +97,7 @@ export function useNotebooks() {
       const merged = [...others, ...updatedWithLang];
       setItem<NotebooksData>(StorageKeys.NOTEBOOKS, { notebooks: merged });
       setTimeout(() => autoSync(), 0);
+      notifyChange();
       return merged;
     });
   }, []);
@@ -595,6 +611,7 @@ export function useNotebooks() {
 
   return {
     notebooks,
+    refreshNotebooks,
     save,
     createNotebook,
     deleteNotebook,

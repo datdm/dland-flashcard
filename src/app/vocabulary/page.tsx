@@ -9,6 +9,7 @@ import FilterBar, { FilterTab } from "@/components/FilterBar";
 import Link from "next/link";
 import { useLanguageSetting } from "@/hooks/useLanguageSetting";
 import { Vocabulary } from "@/types";
+import AddToNotebookModal from "@/components/AddToNotebookModal";
 
 export default function VocabularyPage() {
   const { curriculums } = useCurriculums();
@@ -382,44 +383,11 @@ export default function VocabularyPage() {
 
       {/* Add to Notebook Modal */}
       {selectedWordForNotebook && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-3xl shadow-xl p-6 w-full max-w-sm">
-            <h3 className="font-bold text-base text-gray-900 mb-2">Thêm từ vào Sổ tay</h3>
-            <p className="text-xs text-gray-500 mb-4">
-              Từ: <span className="font-bold text-indigo-600">{selectedWordForNotebook.kanji || selectedWordForNotebook.hiragana}</span> ({selectedWordForNotebook.meaning})
-            </p>
-
-            <label className="block text-xs font-semibold text-gray-700 mb-2">Chọn Sổ tay:</label>
-            <select
-              value={targetNotebookId}
-              onChange={(e) => setTargetNotebookId(e.target.value)}
-              className="w-full rounded-2xl border border-gray-300 px-4 py-2.5 text-sm mb-6 focus:outline-none focus:border-indigo-500"
-            >
-              <option value="">-- Chọn sổ tay --</option>
-              {notebooks.map((nb) => (
-                <option key={nb.id} value={nb.id}>
-                  {nb.name} ({nb.vocabulary.length} từ)
-                </option>
-              ))}
-            </select>
-
-            <div className="flex gap-2 justify-end">
-              <button
-                onClick={() => setSelectedWordForNotebook(null)}
-                className="px-4 py-2 rounded-xl border border-gray-300 text-gray-600 hover:bg-gray-50 text-xs font-semibold"
-              >
-                Hủy
-              </button>
-              <button
-                onClick={handleSaveToNotebook}
-                disabled={!targetNotebookId}
-                className="px-4 py-2 rounded-xl bg-indigo-600 text-white text-xs font-bold hover:bg-indigo-700 disabled:opacity-50"
-              >
-                Lưu vào Sổ tay
-              </button>
-            </div>
-          </div>
-        </div>
+        <AddToNotebookModal
+          selectedWord={selectedWordForNotebook}
+          onClose={() => setSelectedWordForNotebook(null)}
+          onSuccess={() => setSelectedWordForNotebook(null)}
+        />
       )}
     </div>
   );
