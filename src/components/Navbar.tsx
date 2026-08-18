@@ -259,19 +259,6 @@ export default function Navbar() {
             )}
           </Link>
 
-          {/* Active Page Header Badge */}
-          {!isCollapsed && activeNavItem && (
-            <div className="mx-1 mb-4 p-2.5 rounded-2xl bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-100/80 flex items-center gap-2 shadow-3xs">
-              <div className="w-7 h-7 rounded-xl bg-white flex items-center justify-center text-sm shrink-0 shadow-2xs">
-                {activeNavItem.icon}
-              </div>
-              <div className="min-w-0 flex-1">
-                <span className="text-[9px] font-bold text-gray-400 block uppercase tracking-wider leading-none">Trang hiện tại</span>
-                <span className="text-xs font-extrabold text-indigo-900 block truncate mt-0.5">{activeNavItem.label}</span>
-              </div>
-            </div>
-          )}
-
           {/* Navigation Links */}
           <nav className="space-y-1">
             {!isCollapsed && (
