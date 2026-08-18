@@ -67,29 +67,42 @@ export default function CurriculumPage() {
       </div>
 
       {/* Level Selector Tabs */}
+      {/* Level Selector Tabs */}
       {!isMultilingual && (
-        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-3 mb-6">
+        <div className="flex items-center gap-2.5 overflow-x-auto no-scrollbar pb-3 mb-6">
           {(["N5", "N4", "N3", "N2", "N1"] as JLPTLevel[]).map((level) => {
             const group = groups.find((g) => g.level === level);
             const count = group ? group.totalLessons : 0;
+            const textbookNames: Record<JLPTLevel, string> = {
+              N5: "Minna I (1-25)",
+              N4: "Minna II (26-50)",
+              N3: "Soumatome & Shinkanzen N3",
+              N2: "Shinkanzen Master N2",
+              N1: "Shinkanzen Master N1",
+            };
 
             return (
               <button
                 key={level}
                 onClick={() => setActiveLevel(level)}
-                className={`px-5 py-2.5 rounded-2xl font-bold text-sm transition-all whitespace-nowrap flex items-center gap-2 ${
+                className={`px-4 py-2.5 rounded-2xl font-bold text-xs transition-all whitespace-nowrap flex flex-col items-start gap-1 ${
                   activeLevel === level
                     ? "bg-indigo-600 text-white shadow-md shadow-indigo-200 scale-105"
-                    : "bg-white text-gray-600 border border-gray-200 hover:bg-gray-50"
+                    : "bg-white text-gray-700 border border-gray-200 hover:bg-gray-50"
                 }`}
               >
-                <span>{level}</span>
-                <span
-                  className={`px-2 py-0.5 text-xs rounded-full ${
-                    activeLevel === level ? "bg-white/20 text-white" : "bg-gray-100 text-gray-500"
-                  }`}
-                >
-                  {count} bài
+                <div className="flex items-center gap-2 w-full">
+                  <span className="text-sm font-extrabold">{level}</span>
+                  <span
+                    className={`px-2 py-0.5 text-[10px] rounded-full font-bold ${
+                      activeLevel === level ? "bg-white/20 text-white" : "bg-gray-100 text-gray-500"
+                    }`}
+                  >
+                    {count} bài
+                  </span>
+                </div>
+                <span className={`text-[10px] font-medium ${activeLevel === level ? "text-indigo-100" : "text-gray-400"}`}>
+                  📖 {textbookNames[level]}
                 </span>
               </button>
             );
@@ -119,15 +132,20 @@ export default function CurriculumPage() {
           <div className="bg-gradient-to-r from-indigo-600 via-indigo-700 to-purple-700 rounded-3xl p-6 text-white shadow-lg">
             <div className="flex items-start justify-between">
               <div>
-                <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-xs font-semibold tracking-wide">
-                  {isMultilingual ? "TRÌNH ĐỘ SƠ CẤP" : `CẤP ĐỘ ${activeGroup.level}`}
-                </span>
-                <h2 className="text-xl font-bold mt-2">{activeGroup.title}</h2>
+                <div className="flex items-center gap-2 flex-wrap mb-2">
+                  <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-xs font-semibold tracking-wide">
+                    {isMultilingual ? "TRÌNH ĐỘ SƠ CẤP" : `CẤP ĐỘ ${activeGroup.level}`}
+                  </span>
+                  <span className="px-3 py-1 bg-amber-400/30 text-amber-200 border border-amber-300/30 backdrop-blur-md rounded-full text-xs font-bold">
+                    📘 {activeGroup.level === "N5" ? "Giáo trình Minna no Nihongo I" : activeGroup.level === "N4" ? "Giáo trình Minna no Nihongo II" : activeGroup.level === "N3" ? "Giáo trình Soumatome & Shinkanzen N3" : activeGroup.level === "N2" ? "Giáo trình Shinkanzen Master & Try! N2" : "Giáo trình Shinkanzen Master & Try! N1"}
+                  </span>
+                </div>
+                <h2 className="text-xl font-bold mt-1">{activeGroup.title}</h2>
                 <p className="text-xs text-indigo-100 mt-1 max-w-xl leading-relaxed">
                   {activeGroup.description}
                 </p>
               </div>
-              <div className="hidden sm:flex gap-4 bg-white/10 backdrop-blur-md p-3.5 rounded-2xl text-center">
+              <div className="hidden sm:flex gap-4 bg-white/10 backdrop-blur-md p-3.5 rounded-2xl text-center shrink-0">
                 <div>
                   <div className="text-lg font-extrabold">{activeGroup.totalVocab}</div>
                   <div className="text-[10px] text-indigo-200 uppercase font-semibold">Từ vựng</div>
@@ -161,7 +179,7 @@ export default function CurriculumPage() {
                 <div>
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-xs font-semibold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-lg">
-                      {lesson.curriculum || (isMultilingual ? activeLanguage.name : activeGroup.level)}
+                      📖 {lesson.curriculum || (lesson.level === "N5" ? "Minna no Nihongo I" : lesson.level === "N4" ? "Minna no Nihongo II" : lesson.level === "N3" ? "Soumatome N3" : lesson.level === "N2" ? "Shinkanzen N2" : activeGroup.level)}
                     </span>
                     <span className="text-xs text-gray-400 group-hover:text-indigo-600 transition-colors">
                       Vào bài học →
