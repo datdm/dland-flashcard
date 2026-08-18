@@ -3,6 +3,7 @@
 import { useMemo, useState, useEffect } from "react";
 import { useProgress } from "@/hooks/useProgress";
 import { useGrammarProgress } from "@/hooks/useGrammarProgress";
+import { useKanjiProgress } from "@/hooks/useKanjiProgress";
 import { useCurriculums } from "@/hooks/useCurriculums";
 import { useNotebooks } from "@/hooks/useNotebooks";
 import { useGrammarCollections } from "@/hooks/useGrammarCollections";
@@ -29,6 +30,7 @@ interface CompletedLesson {
 export default function HistoryPage() {
   const { progress } = useProgress();
   const { progress: grammarProgress } = useGrammarProgress();
+  const { progress: kanjiProgress } = useKanjiProgress();
   const { curriculums } = useCurriculums();
   const { notebooks } = useNotebooks();
   const { collections: grammarCollections } = useGrammarCollections();
@@ -36,8 +38,10 @@ export default function HistoryPage() {
 
   const [completedLessons, setCompletedLessons] = useState<CompletedLesson[]>([]);
   const [timeFilter, setTimeFilter] = useState<"all" | "1day" | "3days" | "1month" | "3months" | "1year" | "thisYear" | number>("all");
+  const [curriculumTabFilter, setCurriculumTabFilter] = useState<"all" | "in_progress" | "completed">("all");
   const [systemVocabList, setSystemVocabList] = useState<any[]>([]);
   const [systemGrammarList, setSystemGrammarList] = useState<any[]>([]);
+  const [systemLessonsList, setSystemLessonsList] = useState<any[]>([]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -63,6 +67,7 @@ export default function HistoryPage() {
 
         const allVocab: any[] = [];
         const allGrammar: any[] = [];
+        const allLessons: any[] = [];
 
         await Promise.all(
           urls.map(async ({ url, name }) => {
@@ -72,6 +77,12 @@ export default function HistoryPage() {
             const lessons = data.lessons || [];
             
             lessons.forEach((lesson: any) => {
+              allLessons.push({
+                ...lesson,
+                curriculumTitle: data.title || name,
+                curriculumName: lesson.curriculum || data.title || name
+              });
+
               if (lesson.vocabulary) {
                 lesson.vocabulary.forEach((v: any) => {
                   allVocab.push({
@@ -94,6 +105,7 @@ export default function HistoryPage() {
 
         setSystemVocabList(allVocab);
         setSystemGrammarList(allGrammar);
+        setSystemLessonsList(allLessons);
       } catch (err) {
         console.error("Error loading system curriculum data for history lookup:", err);
       }
@@ -256,6 +268,63 @@ export default function HistoryPage() {
     // Sort by learnedAt descending
     return items.sort((a, b) => new Date(b.learnedAt).getTime() - new Date(a.learnedAt).getTime());
   }, [progress, grammarProgress, vocabLookup, grammarLookup]);
+
+  // Compute real-time curriculum lesson progress breakdown
+  const curriculumProgressDetails = useMemo(() => {
+    const manualCompletedMap = new Map<string, string>();
+    completedLessons.forEach((item) => {
+      manualCompletedMap.set(item.lessonId, item.completedAt);
+    });
+
+    const lessonItems = systemLessonsList.map((lesson) => {
+      const vocabList = lesson.vocabulary || [];
+      const grammarList = lesson.grammarPoints || [];
+      const kanjiList = lesson.kanjiItems || [];
+
+      const learnedVocab = vocabList.filter((v: any) => progress[v.id]?.learned).length;
+      const learnedGrammar = grammarList.filter((g: any) => grammarProgress[g.id]?.learned).length;
+      const learnedKanji = kanjiList.filter((k: any) => kanjiProgress[k.id]?.learned).length;
+
+      const totalItems = vocabList.length + grammarList.length + kanjiList.length;
+      const totalLearned = learnedVocab + learnedGrammar + learnedKanji;
+      let percentage = totalItems > 0 ? Math.round((totalLearned / totalItems) * 100) : 0;
+      
+      const isManuallyCompleted = manualCompletedMap.has(lesson.id);
+      if (isManuallyCompleted) percentage = 100;
+      const isFinished = percentage === 100;
+
+      return {
+        id: lesson.id,
+        name: lesson.name,
+        curriculumName: lesson.curriculumName || lesson.curriculum || lesson.level || "Giáo trình",
+        level: lesson.level,
+        learnedVocab,
+        totalVocab: vocabList.length,
+        learnedGrammar,
+        totalGrammar: grammarList.length,
+        learnedKanji,
+        totalKanji: kanjiList.length,
+        totalItems,
+        totalLearned,
+        percentage,
+        isFinished,
+        isManuallyCompleted,
+        completedAt: manualCompletedMap.get(lesson.id)
+      };
+    }).filter((item) => item.totalLearned > 0 || item.isFinished);
+
+    const inProgressList = lessonItems.filter((item) => !item.isFinished);
+    const completedList = lessonItems.filter((item) => item.isFinished);
+
+    return {
+      allActiveLessons: lessonItems,
+      inProgressList,
+      completedList,
+      totalActiveCount: lessonItems.length,
+      inProgressCount: inProgressList.length,
+      completedCount: completedList.length
+    };
+  }, [systemLessonsList, progress, grammarProgress, kanjiProgress, completedLessons]);
 
   // 2. Count Total Stats from matched timeline items to ensure counts are fully synchronized
   const totalVocabLearned = useMemo(() => {
@@ -451,45 +520,146 @@ export default function HistoryPage() {
         </div>
       </div>
 
-      {/* Completed Curriculum Lessons */}
-      <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-2xs mb-6">
-        <h2 className="text-base font-bold text-gray-900 mb-4 flex items-center gap-2">
-          <span>🎓</span> Bài học giáo trình đã hoàn thành ({completedLessons.length})
-        </h2>
-        {completedLessons.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-8 text-center text-gray-400">
-            <span className="text-3xl mb-2">📖</span>
-            <p className="text-xs font-semibold">Chưa có bài học nào được đánh dấu hoàn thành.</p>
-            <p className="text-[10px] text-gray-400 mt-0.5">Vào lộ trình bài học và nhấn "Đánh dấu hoàn thành" khi học xong!</p>
+      {/* Detailed Curriculum Lessons Progress */}
+      <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-2xs mb-6 space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-gray-100">
+          <div>
+            <h2 className="text-base font-bold text-gray-900 flex items-center gap-2">
+              <span>🎓</span> Tiến độ Chi tiết Bài học Giáo trình
+            </h2>
+            <p className="text-xs text-gray-500 mt-0.5">
+              Theo dõi chi tiết các bài học đang học một phần hoặc đã hoàn thành
+            </p>
           </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {completedLessons.map((item, idx) => {
-              const dateStr = new Date(item.completedAt).toLocaleDateString("vi-VN", {
-                day: "2-digit",
-                month: "2-digit",
-                year: "numeric",
-                hour: "2-digit",
-                minute: "2-digit"
-              });
-              return (
-                <div key={idx} className="p-4 rounded-2xl bg-emerald-50/30 border border-emerald-100 flex items-center justify-between shadow-3xs">
-                  <div>
-                    <h4 className="font-bold text-sm text-gray-800">{item.lessonName}</h4>
-                    <p className="text-[10px] text-emerald-700 font-semibold mt-0.5">{item.curriculumName}</p>
-                    <p className="text-[9px] text-gray-400 mt-1">✓ Hoàn thành lúc: {dateStr}</p>
+
+          {/* Sub-tabs Filter */}
+          <div className="flex items-center gap-1.5 bg-gray-100 p-1 rounded-2xl shrink-0">
+            {[
+              { id: "all", label: `Tất cả (${curriculumProgressDetails.totalActiveCount})` },
+              { id: "in_progress", label: `⭕ Đang học (${curriculumProgressDetails.inProgressCount})` },
+              { id: "completed", label: `✅ Hoàn thành (${curriculumProgressDetails.completedCount})` },
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setCurriculumTabFilter(tab.id as any)}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                  curriculumTabFilter === tab.id
+                    ? "bg-white text-indigo-700 shadow-3xs"
+                    : "text-gray-600 hover:text-gray-900"
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Display Items List */}
+        {(() => {
+          const displayList =
+            curriculumTabFilter === "in_progress"
+              ? curriculumProgressDetails.inProgressList
+              : curriculumTabFilter === "completed"
+              ? curriculumProgressDetails.completedList
+              : curriculumProgressDetails.allActiveLessons;
+
+          if (displayList.length === 0) {
+            return (
+              <div className="flex flex-col items-center justify-center py-10 text-center text-gray-400">
+                <span className="text-3xl mb-2">📖</span>
+                <p className="text-xs font-semibold">Chưa có dữ liệu bài học nào ở mục này.</p>
+                <p className="text-[10px] text-gray-400 mt-0.5">
+                  Vào các bài học trong Lộ trình để bắt đầu tích lũy tiến độ từ vựng & ngữ pháp!
+                </p>
+              </div>
+            );
+          }
+
+          return (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+              {displayList.map((item) => (
+                <div
+                  key={item.id}
+                  className={`p-4 rounded-2xl border transition-all flex flex-col justify-between space-y-3 ${
+                    item.isFinished
+                      ? "bg-emerald-50/40 border-emerald-200/80 shadow-3xs"
+                      : "bg-indigo-50/30 border-indigo-100/80 shadow-3xs"
+                  }`}
+                >
+                  <div className="space-y-1.5">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-md bg-white border border-gray-200 text-indigo-700 shadow-3xs">
+                        📖 {item.curriculumName}
+                      </span>
+                      <span
+                        className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                          item.isFinished
+                            ? "bg-emerald-600 text-white"
+                            : "bg-indigo-600 text-white"
+                        }`}
+                      >
+                        {item.isFinished ? "✅ Hoàn thành 100%" : `⭕ Đang học (${item.percentage}%)`}
+                      </span>
+                    </div>
+
+                    <h4 className="font-extrabold text-sm text-gray-800 leading-snug">{item.name}</h4>
+
+                    {/* Real-time Progress Bar */}
+                    <div className="space-y-1 pt-1">
+                      <div className="flex justify-between items-center text-[10px] font-bold text-gray-500">
+                        <span>Tiến độ tổng thể bài:</span>
+                        <span className={item.isFinished ? "text-emerald-700 font-extrabold" : "text-indigo-700 font-extrabold"}>
+                          {item.totalLearned}/{item.totalItems} mục ({item.percentage}%)
+                        </span>
+                      </div>
+                      <div className="w-full bg-white rounded-full h-2 overflow-hidden border border-gray-100">
+                        <div
+                          className={`h-2 rounded-full transition-all duration-300 ${
+                            item.isFinished ? "bg-emerald-500" : "bg-indigo-600"
+                          }`}
+                          style={{ width: `${item.percentage}%` }}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Breakdown Badges */}
+                    <div className="flex flex-wrap items-center gap-2 pt-1.5 text-[10px] font-semibold text-gray-600">
+                      {item.totalVocab > 0 && (
+                        <span className="bg-white/80 px-2 py-0.5 rounded-md border border-gray-100">
+                          📝 {item.learnedVocab}/{item.totalVocab} từ
+                        </span>
+                      )}
+                      {item.totalGrammar > 0 && (
+                        <span className="bg-white/80 px-2 py-0.5 rounded-md border border-gray-100">
+                          📖 {item.learnedGrammar}/{item.totalGrammar} ngữ pháp
+                        </span>
+                      )}
+                      {item.totalKanji > 0 && (
+                        <span className="bg-white/80 px-2 py-0.5 rounded-md border border-gray-100">
+                          🉐 {item.learnedKanji}/{item.totalKanji} kanji
+                        </span>
+                      )}
+                    </div>
                   </div>
-                  <Link
-                    href={`/curriculum/${item.lessonId}`}
-                    className="text-xs text-indigo-600 font-semibold hover:underline bg-white px-3 py-1.5 rounded-xl border border-gray-100 shadow-3xs"
-                  >
-                    Xem lại →
-                  </Link>
+
+                  <div className="pt-2 border-t border-gray-100/60 flex items-center justify-between">
+                    <span className="text-[9px] text-gray-400">
+                      {item.completedAt
+                        ? `✓ Hoàn thành: ${new Date(item.completedAt).toLocaleDateString("vi-VN")}`
+                        : "Đang lưu tiến độ liên tục"}
+                    </span>
+                    <Link
+                      href={`/curriculum/${item.id}`}
+                      className="text-xs font-extrabold text-indigo-600 hover:text-indigo-800 bg-white px-3 py-1.5 rounded-xl border border-gray-200 shadow-3xs transition-colors"
+                    >
+                      {item.isFinished ? "Xem lại bài →" : "Học tiếp bài này →"}
+                    </Link>
+                  </div>
                 </div>
-              );
-            })}
-          </div>
-        )}
+              ))}
+            </div>
+          );
+        })()}
       </div>
 
       {/* Activity Timeline */}

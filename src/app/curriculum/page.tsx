@@ -4,6 +4,9 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { getCurriculumRepository } from "@/lib/repositories";
 import { CurriculumLevelGroup, JLPTLevel } from "@/lib/repositories/types";
+import { useProgress } from "@/hooks/useProgress";
+import { useGrammarProgress } from "@/hooks/useGrammarProgress";
+import { useKanjiProgress } from "@/hooks/useKanjiProgress";
 import { useLanguageSetting } from "@/hooks/useLanguageSetting";
 import IeltsRoadmapDashboard from "@/components/IeltsRoadmapDashboard";
 
@@ -13,6 +16,9 @@ export default function CurriculumPage() {
   const [loading, setLoading] = useState(true);
   const [enData, setEnData] = useState<any>(null);
   const { activeLanguage } = useLanguageSetting();
+  const { progress } = useProgress();
+  const { progress: grammarProgress } = useGrammarProgress();
+  const { progress: kanjiProgress } = useKanjiProgress();
 
   useEffect(() => {
     async function loadData() {
@@ -170,38 +176,69 @@ export default function CurriculumPage() {
 
           {/* Lessons List */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {activeGroup.lessons.map((lesson) => (
-              <Link
-                key={lesson.id}
-                href={`/curriculum/${lesson.id}`}
-                className="group bg-white rounded-2xl p-5 border border-gray-100 shadow-sm hover:shadow-md hover:border-indigo-200 transition-all flex flex-col justify-between"
-              >
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs font-semibold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-lg">
-                      📖 {lesson.curriculum || (lesson.level === "N5" ? "Minna no Nihongo I" : lesson.level === "N4" ? "Minna no Nihongo II" : lesson.level === "N3" ? "Soumatome N3" : lesson.level === "N2" ? "Shinkanzen N2" : activeGroup.level)}
-                    </span>
-                    <span className="text-xs text-gray-400 group-hover:text-indigo-600 transition-colors">
-                      Vào bài học →
-                    </span>
-                  </div>
-                  <h3 className="font-bold text-gray-800 text-base group-hover:text-indigo-600 transition-colors">
-                    {lesson.name}
-                  </h3>
-                  {lesson.description && (
-                    <p className="text-xs text-gray-500 mt-1 line-clamp-2 leading-relaxed">
-                      {lesson.description}
-                    </p>
-                  )}
-                </div>
+            {activeGroup.lessons.map((lesson) => {
+              const vocabList = lesson.vocabulary || [];
+              const grammarList = lesson.grammarPoints || [];
+              const kanjiList = lesson.kanjiItems || [];
 
-                <div className="mt-4 pt-3 border-t border-gray-50 flex items-center gap-4 text-xs text-gray-500">
-                  <span>📝 {lesson.vocabulary?.length || 0} từ</span>
-                  <span>📖 {lesson.grammarPoints?.length || 0} ngữ pháp</span>
-                  {!isMultilingual && <span>🉐 {lesson.kanjiItems?.length || 0} kanji</span>}
-                </div>
-              </Link>
-            ))}
+              const learnedVocab = vocabList.filter((v: any) => progress[v.id]?.learned).length;
+              const learnedGrammar = grammarList.filter((g: any) => grammarProgress[g.id]?.learned).length;
+              const learnedKanji = kanjiList.filter((k: any) => kanjiProgress[k.id]?.learned).length;
+
+              const totalItems = vocabList.length + grammarList.length + kanjiList.length;
+              const totalLearned = learnedVocab + learnedGrammar + learnedKanji;
+              const percentage = totalItems > 0 ? Math.round((totalLearned / totalItems) * 100) : 0;
+
+              return (
+                <Link
+                  key={lesson.id}
+                  href={`/curriculum/${lesson.id}`}
+                  className="group bg-white rounded-2xl p-5 border border-gray-100 shadow-sm hover:shadow-md hover:border-indigo-200 transition-all flex flex-col justify-between"
+                >
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-xs font-semibold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-lg">
+                        📖 {lesson.curriculum || (lesson.level === "N5" ? "Minna no Nihongo I" : lesson.level === "N4" ? "Minna no Nihongo II" : lesson.level === "N3" ? "Soumatome N3" : lesson.level === "N2" ? "Shinkanzen N2" : activeGroup.level)}
+                      </span>
+                      <span className="text-xs text-gray-400 group-hover:text-indigo-600 transition-colors">
+                        Vào bài học →
+                      </span>
+                    </div>
+                    <h3 className="font-bold text-gray-800 text-base group-hover:text-indigo-600 transition-colors">
+                      {lesson.name}
+                    </h3>
+                    {lesson.description && (
+                      <p className="text-xs text-gray-500 mt-1 line-clamp-2 leading-relaxed">
+                        {lesson.description}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="mt-4 pt-3 border-t border-gray-50 space-y-2">
+                    <div className="flex items-center justify-between gap-4 text-xs text-gray-500">
+                      <span>📝 {learnedVocab}/{vocabList.length} từ</span>
+                      <span>📖 {learnedGrammar}/{grammarList.length} ngữ pháp</span>
+                      {!isMultilingual && <span>🉐 {learnedKanji}/{kanjiList.length} kanji</span>}
+                    </div>
+
+                    {totalLearned > 0 && (
+                      <div className="space-y-1 pt-1">
+                        <div className="flex justify-between items-center text-[10px] font-bold">
+                          <span className="text-indigo-600">📊 Tiến độ: {percentage}%</span>
+                          <span className="text-gray-400">{totalLearned}/{totalItems} mục</span>
+                        </div>
+                        <div className="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+                          <div
+                            className="bg-indigo-600 h-1.5 rounded-full transition-all duration-300"
+                            style={{ width: `${percentage}%` }}
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         </div>
       )}
