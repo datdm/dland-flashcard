@@ -192,12 +192,28 @@ export default function ChatPage() {
     }
   }, [messages]);
 
-  const SUGGESTIONS = [
-    "📝 Phân tích Kanji: 勉強",
-    "📖 Giải thích ngữ pháp ～てあげる",
-    "🎧 Luyện nghe hội thoại cơ bản",
-    "🗣️ Luyện giao tiếp chủ đề mua sắm"
-  ];
+  const SUGGESTIONS_BY_LANG: Record<string, string[]> = {
+    ja: [
+      "📝 Phân tích Kanji: 勉強",
+      "📖 Giải thích ngữ pháp ～てあげる",
+      "🎧 Luyện nghe hội thoại cơ bản",
+      "🗣️ Luyện giao tiếp chủ đề mua sắm"
+    ],
+    en: [
+      "📝 Phân biệt cách dùng: Although vs Despite",
+      "📖 Giải thích ngữ pháp Câu điều kiện loại 3",
+      "🎯 Luyện phát âm & IPA từ vựng IELTS",
+      "🗣️ Luyện nói tiếng Anh chủ đề Job Interview"
+    ],
+    de: [
+      "📝 Phân biệt quán từ giống: Der, Die, Das",
+      "📖 Giải thích cấu trúc ngữ pháp Weil & Dass",
+      "🎯 Luyện chia đuôi tính từ (Adjektivdeklination)",
+      "🗣️ Luyện giao tiếp tiếng Đức chủ đề Im Restaurant"
+    ]
+  };
+
+  const SUGGESTIONS = SUGGESTIONS_BY_LANG[activeLanguage.code] || SUGGESTIONS_BY_LANG.ja;
 
   const headerTitle = activeLanguage.code === "de"
     ? "Gia Sư AI Tiếng Đức"
