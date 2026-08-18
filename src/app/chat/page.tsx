@@ -222,7 +222,7 @@ export default function ChatPage() {
     : "Gia Sư AI Tiếng Nhật";
 
   return (
-    <div className="max-w-4xl mx-auto h-[calc(100vh-110px)] md:h-[calc(100vh-40px)] flex flex-col px-4 pt-4">
+    <div className="max-w-5xl mx-auto h-[calc(100vh-2.5rem)] md:h-[calc(100vh-2.5rem)] -mt-2 -mb-20 md:-mb-6 flex flex-col px-2 md:px-4">
       {/* Header */}
       <div className="bg-white rounded-t-3xl border-b border-gray-100 p-4 shadow-xs z-10 flex items-center justify-between gap-3">
         <div className="flex items-center gap-3">

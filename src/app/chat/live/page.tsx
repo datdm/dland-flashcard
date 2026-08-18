@@ -55,6 +55,8 @@ export default function GeminiLivePage() {
   const recognitionRef = useRef<any>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const micStreamRef = useRef<MediaStream | null>(null);
+  const silenceTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const currentInterimRef = useRef<string>("");
 
   const ttsLang = activeLanguage.code === "de" ? "de-DE" : activeLanguage.code === "en" ? "en-US" : "ja-JP";
   const flagEmoji = activeLanguage.code === "de" ? "🇩🇪" : activeLanguage.code === "en" ? "🇬🇧" : "🇯🇵";
@@ -96,7 +98,7 @@ export default function GeminiLivePage() {
     };
   }, []);
 
-  // Web Speech API with Real-time Streaming Interim Transcription
+  // Web Speech API with Real-time Streaming Interim Transcription & Silence Auto-Send
   const startSTT = () => {
     if (typeof window === "undefined") return;
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
@@ -124,21 +126,45 @@ export default function GeminiLivePage() {
 
       rec.onresult = (event: any) => {
         let interim = "";
+        let finalChunk = "";
+
         for (let i = event.resultIndex; i < event.results.length; ++i) {
           if (event.results[i].isFinal) {
-            const finalChunk = event.results[i][0].transcript.trim();
-            if (finalChunk) {
-              setInterimText("");
-              handleUserMessage(finalChunk);
-            }
+            finalChunk += event.results[i][0].transcript;
           } else {
             interim += event.results[i][0].transcript;
           }
         }
 
-        if (interim) {
-          setInterimText(interim);
+        const currentSpoken = (finalChunk || interim).trim();
+
+        if (currentSpoken) {
+          currentInterimRef.current = currentSpoken;
+          setInterimText(currentSpoken);
           setAiState("listening");
+
+          // Reset silence timer on every new speech chunk
+          if (silenceTimerRef.current) {
+            clearTimeout(silenceTimerRef.current);
+          }
+
+          // If final chunk is reached, or after 1.2s silence, commit and send to AI immediately
+          if (finalChunk.trim()) {
+            const textToSend = finalChunk.trim();
+            currentInterimRef.current = "";
+            setInterimText("");
+            handleUserMessage(textToSend);
+          } else {
+            silenceTimerRef.current = setTimeout(() => {
+              const textToSend = currentInterimRef.current.trim();
+              if (textToSend && textToSend.length > 1) {
+                console.log("⏱️ Auto-sending speech after silence:", textToSend);
+                currentInterimRef.current = "";
+                setInterimText("");
+                handleUserMessage(textToSend);
+              }
+            }, 1200);
+          }
         }
       };
 
@@ -165,18 +191,28 @@ export default function GeminiLivePage() {
   };
 
   const stopSTT = () => {
+    if (silenceTimerRef.current) {
+      clearTimeout(silenceTimerRef.current);
+      silenceTimerRef.current = null;
+    }
     if (recognitionRef.current) {
       try {
         recognitionRef.current.stop();
       } catch {}
       recognitionRef.current = null;
     }
+    currentInterimRef.current = "";
     setInterimText("");
   };
 
   // Handle user speech or text message
   const handleUserMessage = async (userText: string) => {
     if (!userText.trim() || isSending) return;
+
+    if (silenceTimerRef.current) {
+      clearTimeout(silenceTimerRef.current);
+      silenceTimerRef.current = null;
+    }
 
     const timeStr = new Date().toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" });
     const userMsg: ChatMessage = {
@@ -188,6 +224,7 @@ export default function GeminiLivePage() {
 
     setChatMessages((prev) => [...prev, userMsg]);
     setInterimText("");
+    currentInterimRef.current = "";
     setIsSending(true);
     setAiState("speaking");
     setStatusText("Gia sư AI đang suy nghĩ phản hồi...");
@@ -208,7 +245,7 @@ export default function GeminiLivePage() {
         body: JSON.stringify({
           message: userText,
           history: historyContext,
-          systemInstruction: `${systemInstruction}\nChủ đề hiện tại: ${activeTopic}. Hãy trả lời ngắn gọn 1-2 câu thân thiện để đàm thoại trực tiếp.`
+          systemInstruction: `${systemInstruction}\nChủ đề luyện nói hiện tại: ${activeTopic}. Hãy trả lời cực kỳ ngắn gọn 1-2 câu để đàm thoại trực tiếp.`
         })
       });
 
@@ -330,47 +367,64 @@ export default function GeminiLivePage() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6 pb-12">
+    <div className="max-w-6xl mx-auto space-y-4 pb-6 min-h-[calc(100vh-5rem)] flex flex-col justify-between">
       {/* Top Header Card */}
-      <div className="bg-white rounded-3xl p-5 md:p-6 border border-gray-100 shadow-2xs flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <Link
-            href="/chat"
-            className="p-2.5 rounded-2xl bg-gray-50 hover:bg-gray-100 text-gray-600 transition-colors border border-gray-100 shrink-0"
-            title="Quay lại chat văn bản"
-          >
-            ←
-          </Link>
-          <div>
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="px-3 py-1 bg-indigo-50 text-indigo-600 border border-indigo-100 rounded-full text-xs font-bold">
-                🎙️ Live Voice Đàm Thoại
-              </span>
-              <span className="px-3 py-1 bg-amber-50 text-amber-700 border border-amber-200/60 rounded-full text-xs font-bold flex items-center gap-1">
-                <span>{flagEmoji}</span>
-                <span>Gia sư: {tutorName}</span>
-              </span>
+      <div className="bg-white rounded-3xl p-5 md:p-6 border border-gray-100 shadow-2xs flex flex-col gap-4">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <Link
+              href="/chat"
+              className="p-2.5 rounded-2xl bg-gray-50 hover:bg-gray-100 text-gray-600 transition-colors border border-gray-100 shrink-0"
+              title="Quay lại chat văn bản"
+            >
+              ←
+            </Link>
+            <div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="px-3 py-1 bg-indigo-50 text-indigo-600 border border-indigo-100 rounded-full text-xs font-bold">
+                  🎙️ Live Voice Đàm Thoại
+                </span>
+                <span className="px-3 py-1 bg-amber-50 text-amber-700 border border-amber-200/60 rounded-full text-xs font-bold flex items-center gap-1">
+                  <span>{flagEmoji}</span>
+                  <span>Gia sư: {tutorName}</span>
+                </span>
+              </div>
+              <h1 className="text-xl md:text-2xl font-extrabold text-gray-900 mt-1">
+                Luyện Nói Giao Tiếp Trực Tiếp với AI
+              </h1>
             </div>
-            <h1 className="text-xl md:text-2xl font-extrabold text-gray-900 mt-1">
-              Luyện Nói Giao Tiếp Trực Tiếp với AI
-            </h1>
+          </div>
+
+          {/* Editable Custom Topic Input */}
+          <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-2xl px-3.5 py-2 focus-within:border-indigo-500 focus-within:ring-2 focus-within:ring-indigo-100 transition-all shadow-3xs">
+            <span className="text-sm">🎯</span>
+            <span className="text-xs font-bold text-gray-500 whitespace-nowrap">Chủ đề:</span>
+            <input
+              type="text"
+              value={activeTopic}
+              onChange={(e) => setActiveTopic(e.target.value)}
+              placeholder="Nhập chủ đề bất kỳ bạn muốn luyện..."
+              className="bg-transparent text-xs font-bold text-gray-800 placeholder-gray-400 focus:outline-none w-full sm:w-64"
+            />
           </div>
         </div>
 
-        {/* Topic Selector */}
-        <div className="flex items-center gap-2">
-          <span className="text-xs font-bold text-gray-500 whitespace-nowrap">Chủ đề:</span>
-          <select
-            value={activeTopic}
-            onChange={(e) => setActiveTopic(e.target.value)}
-            className="bg-gray-50 border border-gray-200 rounded-2xl px-3.5 py-2 text-xs font-bold text-gray-700 focus:outline-none focus:border-indigo-500 cursor-pointer shadow-3xs"
-          >
-            {SUGGESTED_TOPICS.map((topic) => (
-              <option key={topic} value={topic}>
-                {topic}
-              </option>
-            ))}
-          </select>
+        {/* Quick Suggestion Topic Chips */}
+        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pt-1">
+          <span className="text-[11px] font-bold text-gray-400 whitespace-nowrap mr-1">Gợi ý nhanh:</span>
+          {SUGGESTED_TOPICS.map((topic) => (
+            <button
+              key={topic}
+              onClick={() => setActiveTopic(topic)}
+              className={`px-3 py-1 rounded-xl text-xs font-bold whitespace-nowrap transition-all border ${
+                activeTopic === topic
+                  ? "bg-indigo-600 text-white border-indigo-600 shadow-3xs"
+                  : "bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100"
+              }`}
+            >
+              {topic}
+            </button>
+          ))}
         </div>
       </div>
 
@@ -491,7 +545,7 @@ export default function GeminiLivePage() {
           </div>
 
           {/* Messages Timeline Scroll Area */}
-          <div className="flex-1 p-5 overflow-y-auto space-y-4 max-h-[380px]">
+          <div className="flex-1 p-5 overflow-y-auto space-y-4 max-h-[460px] min-h-[340px]">
             {chatMessages.map((msg) => {
               const isUser = msg.role === "user";
               return (
