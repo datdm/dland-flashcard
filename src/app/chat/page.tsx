@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import Link from "next/link";
 import { useLanguageSetting } from "@/hooks/useLanguageSetting";
+import AuthGuard from "@/components/AuthGuard";
 
 type Message = {
   role: "user" | "model";
@@ -222,8 +223,9 @@ export default function ChatPage() {
     : "Gia Sư AI Tiếng Nhật";
 
   return (
-    <div className="max-w-5xl mx-auto h-[calc(100vh-2.5rem)] md:h-[calc(100vh-2.5rem)] -mt-2 -mb-20 md:-mb-6 flex flex-col px-2 md:px-4">
-      {/* Header */}
+    <AuthGuard featureName="Gia Sư AI 24/7" description="Đăng nhập để luyện giao tiếp, giải thích ngữ pháp, phân tích từ vựng và lưu hội thoại cùng Gia sư AI.">
+      <div className="max-w-5xl mx-auto h-[calc(100vh-2.5rem)] md:h-[calc(100vh-2.5rem)] -mt-2 -mb-20 md:-mb-6 flex flex-col px-2 md:px-4">
+        {/* Header */}
       <div className="bg-white rounded-t-3xl border-b border-gray-100 p-4 shadow-xs z-10 flex items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-600 flex items-center justify-center text-white text-xl shadow-md">
@@ -360,5 +362,6 @@ export default function ChatPage() {
         </form>
       </div>
     </div>
+  </AuthGuard>
   );
 }

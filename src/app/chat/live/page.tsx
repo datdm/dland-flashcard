@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { useLanguageSetting } from "@/hooks/useLanguageSetting";
+import AuthGuard from "@/components/AuthGuard";
 
 // System Instructions based on languages
 const SYSTEM_INSTRUCTIONS: Record<string, string> = {
@@ -367,258 +368,260 @@ export default function GeminiLivePage() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto space-y-4 pb-6 min-h-[calc(100vh-5rem)] flex flex-col justify-between">
-      {/* Top Header Card */}
-      <div className="bg-white rounded-3xl p-5 md:p-6 border border-gray-100 shadow-2xs flex flex-col gap-4">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <Link
-              href="/chat"
-              className="p-2.5 rounded-2xl bg-gray-50 hover:bg-gray-100 text-gray-600 transition-colors border border-gray-100 shrink-0"
-              title="Quay lại chat văn bản"
-            >
-              ←
-            </Link>
-            <div>
-              <div className="flex items-center gap-2 flex-wrap">
-                <span className="px-3 py-1 bg-indigo-50 text-indigo-600 border border-indigo-100 rounded-full text-xs font-bold">
-                  🎙️ Live Voice Đàm Thoại
-                </span>
-                <span className="px-3 py-1 bg-amber-50 text-amber-700 border border-amber-200/60 rounded-full text-xs font-bold flex items-center gap-1">
-                  <span>{flagEmoji}</span>
-                  <span>Gia sư: {tutorName}</span>
-                </span>
+    <AuthGuard featureName="Gemini Live Voice Đàm Thoại" description="Đăng nhập để trải nghiệm đàm thoại 2 chiều trực tiếp bằng giọng nói cùng Gia sư bản xứ.">
+      <div className="max-w-6xl mx-auto h-[calc(100vh-2.5rem)] md:h-[calc(100vh-2.5rem)] -mt-2 -mb-20 md:-mb-6 flex flex-col gap-3.5 px-2 md:px-4">
+        {/* Top Header Card */}
+        <div className="bg-white rounded-3xl p-4 md:p-5 border border-gray-100 shadow-2xs flex flex-col gap-3 shrink-0">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <Link
+                href="/chat"
+                className="p-2 rounded-2xl bg-gray-50 hover:bg-gray-100 text-gray-600 transition-colors border border-gray-100 shrink-0"
+                title="Quay lại chat văn bản"
+              >
+                ←
+              </Link>
+              <div>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="px-2.5 py-0.5 bg-indigo-50 text-indigo-600 border border-indigo-100 rounded-full text-[11px] font-bold">
+                    🎙️ Live Voice Đàm Thoại
+                  </span>
+                  <span className="px-2.5 py-0.5 bg-amber-50 text-amber-700 border border-amber-200/60 rounded-full text-[11px] font-bold flex items-center gap-1">
+                    <span>{flagEmoji}</span>
+                    <span>Gia sư: {tutorName}</span>
+                  </span>
+                </div>
+                <h1 className="text-lg md:text-xl font-extrabold text-gray-900 mt-0.5">
+                  Luyện Nói Giao Tiếp Trực Tiếp với AI
+                </h1>
               </div>
-              <h1 className="text-xl md:text-2xl font-extrabold text-gray-900 mt-1">
-                Luyện Nói Giao Tiếp Trực Tiếp với AI
-              </h1>
+            </div>
+
+            {/* Editable Custom Topic Input */}
+            <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-2xl px-3 py-1.5 focus-within:border-indigo-500 focus-within:ring-2 focus-within:ring-indigo-100 transition-all shadow-3xs">
+              <span className="text-xs">🎯</span>
+              <span className="text-[11px] font-bold text-gray-500 whitespace-nowrap">Chủ đề:</span>
+              <input
+                type="text"
+                value={activeTopic}
+                onChange={(e) => setActiveTopic(e.target.value)}
+                placeholder="Nhập chủ đề bất kỳ bạn muốn luyện..."
+                className="bg-transparent text-xs font-bold text-gray-800 placeholder-gray-400 focus:outline-none w-full sm:w-60"
+              />
             </div>
           </div>
 
-          {/* Editable Custom Topic Input */}
-          <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-2xl px-3.5 py-2 focus-within:border-indigo-500 focus-within:ring-2 focus-within:ring-indigo-100 transition-all shadow-3xs">
-            <span className="text-sm">🎯</span>
-            <span className="text-xs font-bold text-gray-500 whitespace-nowrap">Chủ đề:</span>
-            <input
-              type="text"
-              value={activeTopic}
-              onChange={(e) => setActiveTopic(e.target.value)}
-              placeholder="Nhập chủ đề bất kỳ bạn muốn luyện..."
-              className="bg-transparent text-xs font-bold text-gray-800 placeholder-gray-400 focus:outline-none w-full sm:w-64"
-            />
-          </div>
-        </div>
-
-        {/* Quick Suggestion Topic Chips */}
-        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pt-1">
-          <span className="text-[11px] font-bold text-gray-400 whitespace-nowrap mr-1">Gợi ý nhanh:</span>
-          {SUGGESTED_TOPICS.map((topic) => (
-            <button
-              key={topic}
-              onClick={() => setActiveTopic(topic)}
-              className={`px-3 py-1 rounded-xl text-xs font-bold whitespace-nowrap transition-all border ${
-                activeTopic === topic
-                  ? "bg-indigo-600 text-white border-indigo-600 shadow-3xs"
-                  : "bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100"
-              }`}
-            >
-              {topic}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Main Dual Grid: Left Visualizer & Right Live Transcript Timeline */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        
-        {/* Left Column: Visualizer & Live Controls (5 cols) */}
-        <div className="lg:col-span-5 bg-white rounded-3xl p-6 border border-gray-100 shadow-2xs flex flex-col items-center justify-between min-h-[460px]">
-          
-          <div className="w-full flex items-center justify-between pb-3 border-b border-gray-100">
-            <span className="text-xs font-bold text-gray-600 flex items-center gap-1.5">
-              <span className={`w-2.5 h-2.5 rounded-full ${connected ? "bg-emerald-500 animate-ping" : "bg-gray-300"}`} />
-              {connected ? "Live Voice Đang Bật" : "Chưa kết nối"}
-            </span>
-            <span className="text-[11px] font-semibold text-gray-400">
-              Độ trễ thấp • Nhận diện tức thì
-            </span>
-          </div>
-
-          {/* Central Radar Waves & Avatar */}
-          <div className="my-8 flex flex-col items-center justify-center">
-            <div className="relative w-44 h-44 flex items-center justify-center">
-              {/* Outer Ripple */}
-              <div
-                className={`absolute inset-0 rounded-full transition-all duration-500 ${
-                  aiState === "speaking"
-                    ? "bg-indigo-500/20 border-2 border-indigo-500/40 animate-ping scale-110"
-                    : aiState === "listening"
-                    ? "bg-pink-500/20 border-2 border-pink-500/40 animate-pulse scale-105"
-                    : "bg-gray-100/50 border border-gray-200"
-                }`}
-              />
-
-              {/* Middle Layer */}
-              <div
-                className={`absolute inset-3 rounded-full transition-all duration-500 ${
-                  aiState === "speaking"
-                    ? "bg-indigo-100 border border-indigo-300"
-                    : aiState === "listening"
-                    ? "bg-pink-100 border border-pink-300"
-                    : "bg-gray-50 border border-gray-100"
-                }`}
-              />
-
-              {/* Center Core Button */}
-              <div
-                className={`w-28 h-28 rounded-full flex items-center justify-center text-4xl shadow-md transition-all duration-500 ${
-                  aiState === "speaking"
-                    ? "bg-gradient-to-tr from-indigo-600 to-purple-600 text-white scale-105 shadow-indigo-200"
-                    : aiState === "listening"
-                    ? "bg-gradient-to-tr from-pink-500 to-rose-500 text-white scale-105 shadow-pink-200"
-                    : "bg-white text-gray-400 border border-gray-200"
+          {/* Quick Suggestion Topic Chips */}
+          <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pt-0.5">
+            <span className="text-[10px] font-bold text-gray-400 whitespace-nowrap mr-1">Gợi ý nhanh:</span>
+            {SUGGESTED_TOPICS.map((topic) => (
+              <button
+                key={topic}
+                onClick={() => setActiveTopic(topic)}
+                className={`px-2.5 py-0.5 rounded-xl text-[11px] font-bold whitespace-nowrap transition-all border ${
+                  activeTopic === topic
+                    ? "bg-indigo-600 text-white border-indigo-600 shadow-3xs"
+                    : "bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100"
                 }`}
               >
-                {aiState === "speaking" ? "🗣️" : aiState === "listening" ? "🎙️" : "💤"}
-              </div>
-            </div>
-
-            {/* AI State Title */}
-            <h3 className="text-base font-extrabold text-gray-800 mt-4 tracking-tight">
-              {aiState === "speaking"
-                ? "Gia sư AI đang nói..."
-                : aiState === "listening"
-                ? "Gia sư đang lắng nghe bạn..."
-                : connected
-                ? "Đã kết nối - Hãy nói"
-                : "Sẵn sàng đàm thoại"}
-            </h3>
-            
-            {/* Status Helper */}
-            <p className="text-xs text-gray-500 mt-1 text-center font-medium">
-              {statusText}
-            </p>
-          </div>
-
-          {/* Real-time Streaming Speech Indicator */}
-          {interimText && (
-            <div className="w-full mb-4 p-3 bg-indigo-50/70 border border-indigo-200 rounded-2xl text-xs text-indigo-950 animate-pulse">
-              <span className="text-[10px] font-extrabold text-indigo-600 uppercase tracking-wider block mb-0.5">
-                🎙️ Đang nhận diện giọng nói trực tiếp:
-              </span>
-              <p className="font-semibold italic">"{interimText}..."</p>
-            </div>
-          )}
-
-          {/* Toggle Live Voice Button */}
-          <div className="w-full space-y-2">
-            <button
-              onClick={handleToggle}
-              className={`w-full py-3.5 rounded-2xl font-extrabold text-sm tracking-wide shadow-md transition-all duration-300 transform active:scale-98 flex items-center justify-center gap-2 ${
-                connected
-                  ? "bg-red-500 hover:bg-red-600 text-white shadow-red-200"
-                  : "bg-indigo-600 hover:bg-indigo-700 text-white shadow-indigo-200 hover:shadow-lg"
-              }`}
-            >
-              <span>{connected ? "🛑 Tắt Chế Độ Live Voice" : "🎙️ Bật Live Voice (Đàm thoại trực tiếp)"}</span>
-            </button>
-            <p className="text-[10px] text-gray-400 text-center leading-relaxed">
-              Khuyên dùng tai nghe để nhận diện giọng nói chính xác và rõ ràng nhất.
-            </p>
+                {topic}
+              </button>
+            ))}
           </div>
         </div>
 
-        {/* Right Column: Live Chat Transcript Timeline (7 cols) */}
-        <div className="lg:col-span-7 bg-white rounded-3xl border border-gray-100 shadow-2xs flex flex-col min-h-[460px] overflow-hidden">
-          {/* Header */}
-          <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
-            <div className="flex items-center gap-2">
-              <span className="text-base">💬</span>
-              <div>
-                <h3 className="font-bold text-sm text-gray-800">Đoạn Hội Thoại Trực Tiếp</h3>
-                <p className="text-[10px] text-gray-400">Tự động ghi nhận câu nói của bạn và phản hồi của AI</p>
-              </div>
+        {/* Main Dual Grid: Left Visualizer & Right Live Transcript Timeline */}
+        <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-12 gap-3.5">
+          
+          {/* Left Column: Visualizer & Live Controls (5 cols) */}
+          <div className="lg:col-span-5 bg-white rounded-3xl p-5 border border-gray-100 shadow-2xs flex flex-col justify-between h-full min-h-0 overflow-y-auto">
+            
+            <div className="w-full flex items-center justify-between pb-2.5 border-b border-gray-100 shrink-0">
+              <span className="text-xs font-bold text-gray-600 flex items-center gap-1.5">
+                <span className={`w-2.5 h-2.5 rounded-full ${connected ? "bg-emerald-500 animate-ping" : "bg-gray-300"}`} />
+                {connected ? "Live Voice Đang Bật" : "Chưa kết nối"}
+              </span>
+              <span className="text-[11px] font-semibold text-gray-400">
+                Độ trễ thấp • Nhận diện tức thì
+              </span>
             </div>
-            <span className="text-xs font-bold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-xl">
-              {chatMessages.length} tin nhắn
-            </span>
-          </div>
 
-          {/* Messages Timeline Scroll Area */}
-          <div className="flex-1 p-5 overflow-y-auto space-y-4 max-h-[460px] min-h-[340px]">
-            {chatMessages.map((msg) => {
-              const isUser = msg.role === "user";
-              return (
+            {/* Central Radar Waves & Avatar */}
+            <div className="my-auto py-4 flex flex-col items-center justify-center">
+              <div className="relative w-40 h-40 flex items-center justify-center">
+                {/* Outer Ripple */}
                 <div
-                  key={msg.id}
-                  className={`flex flex-col ${isUser ? "items-end" : "items-start"} space-y-1`}
+                  className={`absolute inset-0 rounded-full transition-all duration-500 ${
+                    aiState === "speaking"
+                      ? "bg-indigo-500/20 border-2 border-indigo-500/40 animate-ping scale-110"
+                      : aiState === "listening"
+                      ? "bg-pink-500/20 border-2 border-pink-500/40 animate-pulse scale-105"
+                      : "bg-gray-100/50 border border-gray-200"
+                  }`}
+                />
+
+                {/* Middle Layer */}
+                <div
+                  className={`absolute inset-2.5 rounded-full transition-all duration-500 ${
+                    aiState === "speaking"
+                      ? "bg-indigo-100 border border-indigo-300"
+                      : aiState === "listening"
+                      ? "bg-pink-100 border border-pink-300"
+                      : "bg-gray-50 border border-gray-100"
+                  }`}
+                />
+
+                {/* Center Core Button */}
+                <div
+                  className={`w-24 h-24 rounded-full flex items-center justify-center text-3xl shadow-md transition-all duration-500 ${
+                    aiState === "speaking"
+                      ? "bg-gradient-to-tr from-indigo-600 to-purple-600 text-white scale-105 shadow-indigo-200"
+                      : aiState === "listening"
+                      ? "bg-gradient-to-tr from-pink-500 to-rose-500 text-white scale-105 shadow-pink-200"
+                      : "bg-white text-gray-400 border border-gray-200"
+                  }`}
                 >
-                  <div className="flex items-center gap-1.5 px-1 text-[10px] font-bold text-gray-400">
-                    <span>{isUser ? "👤 Bạn" : `🤖 ${tutorName}`}</span>
-                    <span className="text-[9px] text-gray-400 font-normal">{msg.timestamp}</span>
-                  </div>
-
-                  <div
-                    className={`max-w-[85%] sm:max-w-[80%] p-4 rounded-2xl leading-relaxed text-xs ${
-                      isUser
-                        ? "bg-indigo-600 text-white rounded-tr-xs shadow-xs font-medium"
-                        : "bg-gray-50 border border-gray-200/70 text-gray-800 rounded-tl-xs shadow-xs"
-                    }`}
-                  >
-                    <p className="whitespace-pre-line leading-relaxed">{msg.text}</p>
-
-                    {!isUser && (
-                      <button
-                        onClick={() => speakText(msg.text)}
-                        className="mt-2.5 text-[11px] text-indigo-600 hover:text-indigo-800 font-bold flex items-center gap-1 bg-indigo-50 px-2.5 py-1 rounded-lg transition-colors border border-indigo-100"
-                      >
-                        🔊 Nghe lại
-                      </button>
-                    )}
-                  </div>
+                  {aiState === "speaking" ? "🗣️" : aiState === "listening" ? "🎙️" : "💤"}
                 </div>
-              );
-            })}
+              </div>
 
-            {/* Real-time Streaming Speech Draft Bubble */}
+              {/* AI State Title */}
+              <h3 className="text-sm font-extrabold text-gray-800 mt-3 tracking-tight">
+                {aiState === "speaking"
+                  ? "Gia sư AI đang nói..."
+                  : aiState === "listening"
+                  ? "Gia sư đang lắng nghe bạn..."
+                  : connected
+                  ? "Đã kết nối - Hãy nói"
+                  : "Sẵn sàng đàm thoại"}
+              </h3>
+              
+              {/* Status Helper */}
+              <p className="text-xs text-gray-500 mt-0.5 text-center font-medium">
+                {statusText}
+              </p>
+            </div>
+
+            {/* Real-time Streaming Speech Indicator */}
             {interimText && (
-              <div className="flex flex-col items-end space-y-1 animate-pulse">
-                <div className="flex items-center gap-1.5 px-1 text-[10px] font-bold text-indigo-600">
-                  <span className="inline-block w-2 h-2 rounded-full bg-indigo-600 animate-ping" />
-                  <span>👤 Bạn đang nói...</span>
-                </div>
-                <div className="max-w-[85%] sm:max-w-[80%] p-4 rounded-2xl bg-indigo-50 border border-indigo-200 text-indigo-950 rounded-tr-xs shadow-xs text-xs">
-                  <p className="font-semibold italic">"{interimText}..."</p>
-                </div>
+              <div className="w-full mb-3 p-2.5 bg-indigo-50/70 border border-indigo-200 rounded-2xl text-xs text-indigo-950 animate-pulse shrink-0">
+                <span className="text-[10px] font-extrabold text-indigo-600 uppercase tracking-wider block mb-0.5">
+                  🎙️ Đang nhận diện giọng nói trực tiếp:
+                </span>
+                <p className="font-semibold italic">"{interimText}..."</p>
               </div>
             )}
 
-            <div ref={messagesEndRef} />
+            {/* Toggle Live Voice Button */}
+            <div className="w-full space-y-1.5 shrink-0 pt-2">
+              <button
+                onClick={handleToggle}
+                className={`w-full py-3 rounded-2xl font-extrabold text-xs tracking-wide shadow-md transition-all duration-300 transform active:scale-98 flex items-center justify-center gap-2 ${
+                  connected
+                    ? "bg-red-500 hover:bg-red-600 text-white shadow-red-200"
+                    : "bg-indigo-600 hover:bg-indigo-700 text-white shadow-indigo-200 hover:shadow-lg"
+                }`}
+              >
+                <span>{connected ? "🛑 Tắt Chế Độ Live Voice" : "🎙️ Bật Live Voice (Đàm thoại trực tiếp)"}</span>
+              </button>
+              <p className="text-[10px] text-gray-400 text-center leading-tight">
+                Khuyên dùng tai nghe để nhận diện giọng nói chính xác và rõ ràng nhất.
+              </p>
+            </div>
           </div>
 
-          {/* Manual Input Footer */}
-          <form
-            onSubmit={handleManualSubmit}
-            className="p-3.5 border-t border-gray-100 bg-gray-50/40 flex items-center gap-2"
-          >
-            <input
-              type="text"
-              value={textInput}
-              onChange={(e) => setTextInput(e.target.value)}
-              placeholder="Nói vào Micro hoặc gõ tin nhắn tại đây..."
-              disabled={isSending}
-              className="flex-1 bg-white border border-gray-200 rounded-2xl px-4 py-2.5 text-xs text-gray-800 placeholder-gray-400 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 shadow-3xs"
-            />
-            <button
-              type="submit"
-              disabled={!textInput.trim() || isSending}
-              className="px-5 py-2.5 bg-indigo-600 text-white rounded-2xl font-extrabold text-xs hover:bg-indigo-700 disabled:opacity-50 transition-all shadow-xs"
+          {/* Right Column: Live Chat Transcript Timeline (7 cols) */}
+          <div className="lg:col-span-7 bg-white rounded-3xl border border-gray-100 shadow-2xs flex flex-col h-full min-h-0 overflow-hidden">
+            {/* Header */}
+            <div className="px-5 py-3.5 border-b border-gray-100 flex items-center justify-between bg-gray-50/50 shrink-0">
+              <div className="flex items-center gap-2">
+                <span className="text-base">💬</span>
+                <div>
+                  <h3 className="font-bold text-xs text-gray-800">Đoạn Hội Thoại Trực Tiếp</h3>
+                  <p className="text-[10px] text-gray-400">Tự động ghi nhận câu nói của bạn và phản hồi của AI</p>
+                </div>
+              </div>
+              <span className="text-[11px] font-bold text-indigo-600 bg-indigo-50 px-2.5 py-0.5 rounded-xl">
+                {chatMessages.length} tin nhắn
+              </span>
+            </div>
+
+            {/* Messages Timeline Scroll Area */}
+            <div className="flex-1 p-4 overflow-y-auto space-y-3 min-h-0">
+              {chatMessages.map((msg) => {
+                const isUser = msg.role === "user";
+                return (
+                  <div
+                    key={msg.id}
+                    className={`flex flex-col ${isUser ? "items-end" : "items-start"} space-y-1`}
+                  >
+                    <div className="flex items-center gap-1.5 px-1 text-[10px] font-bold text-gray-400">
+                      <span>{isUser ? "👤 Bạn" : `🤖 ${tutorName}`}</span>
+                      <span className="text-[9px] text-gray-400 font-normal">{msg.timestamp}</span>
+                    </div>
+
+                    <div
+                      className={`max-w-[85%] sm:max-w-[80%] p-3.5 rounded-2xl leading-relaxed text-xs ${
+                        isUser
+                          ? "bg-indigo-600 text-white rounded-tr-xs shadow-xs font-medium"
+                          : "bg-gray-50 border border-gray-200/70 text-gray-800 rounded-tl-xs shadow-xs"
+                      }`}
+                    >
+                      <p className="whitespace-pre-line leading-relaxed">{msg.text}</p>
+
+                      {!isUser && (
+                        <button
+                          onClick={() => speakText(msg.text)}
+                          className="mt-2 text-[10px] text-indigo-600 hover:text-indigo-800 font-bold flex items-center gap-1 bg-indigo-50 px-2 py-0.5 rounded-lg transition-colors border border-indigo-100"
+                        >
+                          🔊 Nghe lại
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+
+              {/* Real-time Streaming Speech Draft Bubble */}
+              {interimText && (
+                <div className="flex flex-col items-end space-y-1 animate-pulse">
+                  <div className="flex items-center gap-1.5 px-1 text-[10px] font-bold text-indigo-600">
+                    <span className="inline-block w-2 h-2 rounded-full bg-indigo-600 animate-ping" />
+                    <span>👤 Bạn đang nói...</span>
+                  </div>
+                  <div className="max-w-[85%] sm:max-w-[80%] p-3.5 rounded-2xl bg-indigo-50 border border-indigo-200 text-indigo-950 rounded-tr-xs shadow-xs text-xs">
+                    <p className="font-semibold italic">"{interimText}..."</p>
+                  </div>
+                </div>
+              )}
+
+              <div ref={messagesEndRef} />
+            </div>
+
+            {/* Manual Input Footer */}
+            <form
+              onSubmit={handleManualSubmit}
+              className="p-3 border-t border-gray-100 bg-gray-50/40 flex items-center gap-2 shrink-0"
             >
-              {isSending ? "..." : "Gửi"}
-            </button>
-          </form>
+              <input
+                type="text"
+                value={textInput}
+                onChange={(e) => setTextInput(e.target.value)}
+                placeholder="Nói vào Micro hoặc gõ tin nhắn tại đây..."
+                disabled={isSending}
+                className="flex-1 bg-white border border-gray-200 rounded-2xl px-4 py-2 text-xs text-gray-800 placeholder-gray-400 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 shadow-3xs"
+              />
+              <button
+                type="submit"
+                disabled={!textInput.trim() || isSending}
+                className="px-4 py-2 bg-indigo-600 text-white rounded-2xl font-extrabold text-xs hover:bg-indigo-700 disabled:opacity-50 transition-all shadow-xs"
+              >
+                {isSending ? "..." : "Gửi"}
+              </button>
+            </form>
+          </div>
         </div>
       </div>
-    </div>
+    </AuthGuard>
   );
 }

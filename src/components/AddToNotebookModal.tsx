@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useNotebooks } from "@/hooks/useNotebooks";
 import { useLanguageSetting } from "@/hooks/useLanguageSetting";
+import { useAuth } from "@/context/AuthContext";
 import { Vocabulary } from "@/types";
 
 interface AddToNotebookModalProps {
@@ -24,6 +25,14 @@ export default function AddToNotebookModal({
 }: AddToNotebookModalProps) {
   const { notebooks, refreshNotebooks, createNotebook, addVocab, checkDuplicate } = useNotebooks();
   const { activeLanguage } = useLanguageSetting();
+  const { isAuthenticated, openAuthModal } = useAuth();
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      onClose();
+      openAuthModal("Vui lòng đăng nhập để lưu từ vựng vào sổ tay và đồng bộ dữ liệu học tập.");
+    }
+  }, [isAuthenticated, openAuthModal, onClose]);
 
   useEffect(() => {
     refreshNotebooks();

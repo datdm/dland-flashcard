@@ -4,6 +4,7 @@ import { useState, useRef, useMemo, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useNotebooks } from "@/hooks/useNotebooks";
 import { useProgress } from "@/hooks/useProgress";
+import AuthGuard from "@/components/AuthGuard";
 
 function applySubsetOrder<T extends { id: string }>(source: T[], orderedSubsetIds: string[]) {
   const subsetIdSet = new Set(orderedSubsetIds);
@@ -235,7 +236,8 @@ export default function NotebooksPage() {
   const hasVocabulary = notebooks.some((nb) => nb.vocabulary.length > 0);
 
   return (
-    <div className="p-4 max-w-5xl mx-auto min-h-screen pb-24">
+    <AuthGuard featureName="Sổ Tay Từ Vựng Cá Nhân">
+      <div className="p-4 max-w-5xl mx-auto min-h-screen pb-24">
       {/* Header Banner */}
       <div className="bg-gradient-to-r from-purple-700 via-indigo-700 to-purple-800 rounded-3xl p-6 text-white shadow-lg mb-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -477,6 +479,7 @@ export default function NotebooksPage() {
           </div>
         );
       })()}
-    </div>
+      </div>
+    </AuthGuard>
   );
 }

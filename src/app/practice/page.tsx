@@ -6,6 +6,7 @@ import { useNotebooks } from "@/hooks/useNotebooks";
 import { searchJapaneseDictionary } from "@/lib/services/dictionaryService";
 import { useLanguageSetting } from "@/hooks/useLanguageSetting";
 import AddToNotebookModal from "@/components/AddToNotebookModal";
+import AuthGuard from "@/components/AuthGuard";
 
 interface ShadowingItem {
   id: string;
@@ -501,7 +502,8 @@ export default function PracticeHubPage() {
   };
 
   return (
-    <div className="p-4 max-w-5xl mx-auto min-h-screen pb-24">
+    <AuthGuard featureName="Trung Tâm Luyện Tập & Kỹ Năng">
+      <div className="p-4 max-w-5xl mx-auto min-h-screen pb-24">
       {/* Header Banner */}
       <div className="bg-gradient-to-r from-teal-800 via-indigo-900 to-purple-800 rounded-3xl p-6 sm:p-8 text-white shadow-xl mb-6">
         <div>
@@ -1217,6 +1219,7 @@ export default function PracticeHubPage() {
           user-select: none;
         }
       `}</style>
-    </div>
+      </div>
+    </AuthGuard>
   );
 }

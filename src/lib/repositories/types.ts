@@ -21,6 +21,21 @@ export interface DetailedLesson extends Lesson {
   kanjiItems?: KanjiItem[];
 }
 
+export interface CurriculumBook {
+  id: string;
+  name: string;
+  level: JLPTLevel | string;
+  publisher?: string;
+  tag?: string;
+  description: string;
+  icon?: string;
+  totalLessons: number;
+  totalVocab: number;
+  totalGrammar: number;
+  totalKanji: number;
+  lessons: DetailedLesson[];
+}
+
 export interface CurriculumLevelGroup {
   level: JLPTLevel;
   title: string;
@@ -29,6 +44,7 @@ export interface CurriculumLevelGroup {
   totalVocab: number;
   totalGrammar: number;
   totalKanji: number;
+  books?: CurriculumBook[];
   lessons: DetailedLesson[];
 }
 

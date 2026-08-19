@@ -5,6 +5,7 @@ import { useCurriculums } from "@/hooks/useCurriculums";
 import { useNotebooks } from "@/hooks/useNotebooks";
 import FlashCardViewer from "@/components/FlashCardViewer";
 import Link from "next/link";
+import AuthGuard from "@/components/AuthGuard";
 
 type SourceFilter = "all" | string; // "all" | curriculum-id | notebook-id
 
@@ -73,110 +74,110 @@ export default function FlashCardAllPage() {
   }
 
   return (
-    <div className="p-4 max-w-5xl mx-auto pb-24">
-      {/* Header Banner */}
-      <div className="bg-gradient-to-r from-indigo-700 via-purple-700 to-indigo-800 rounded-3xl p-6 sm:p-8 text-white shadow-xl mb-6">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <div className="flex items-center gap-2 mb-2">
+    <AuthGuard featureName="Ôn Tập Flashcard Tổng Hợp" description="Đăng nhập để lật thẻ Flashcard, ghi nhớ từ vựng và tự động cập nhật độ thông thạo SRS.">
+      <div className="p-4 max-w-5xl mx-auto min-h-screen pb-24">
+        {/* Header Banner */}
+        <div className="bg-gradient-to-r from-indigo-700 via-purple-700 to-pink-700 rounded-3xl p-6 sm:p-8 text-white shadow-xl mb-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
               <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-bold tracking-widest uppercase">
-                Flashcard
+                Flashcard Master
               </span>
+              <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight mt-2">
+                Ôn Tập Flashcard Tổng Hợp
+              </h1>
+              <p className="text-xs sm:text-sm text-indigo-100 mt-2 leading-relaxed max-w-xl">
+                Lọc và ôn tập tất cả từ vựng theo giáo trình hoặc từng sổ tay cá nhân của bạn
+              </p>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
-              Ôn Tập Từ Vựng Toàn Diện
-            </h1>
-            <p className="text-xs sm:text-sm text-indigo-100 mt-2">
-              Lọc và ôn tập tất cả từ vựng theo giáo trình hoặc từng sổ tay cá nhân của bạn
-            </p>
           </div>
         </div>
-      </div>
 
-      {/* Daily 50 Toggle Card */}
-      <div className="bg-gradient-to-r from-amber-50 to-orange-50/50 border border-amber-100 rounded-3xl p-4 sm:p-5 mb-6 flex items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-amber-500/10 flex items-center justify-center text-xl text-amber-600 shrink-0">
-            🎲
+        {/* Daily 50 Toggle Card */}
+        <div className="bg-gradient-to-r from-amber-50 to-orange-50/50 border border-amber-100 rounded-3xl p-4 sm:p-5 mb-6 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-amber-500/10 flex items-center justify-center text-xl text-amber-600 shrink-0">
+              🎲
+            </div>
+            <div>
+              <h3 className="text-xs sm:text-sm font-bold text-gray-800">Luyện 50 từ ngẫu nhiên mỗi ngày</h3>
+              <p className="text-[10px] sm:text-xs text-gray-500 mt-0.5">Xáo trộn cố định 50 từ trong ngày để tránh quá tải và học tập đều đặn</p>
+            </div>
           </div>
-          <div>
-            <h3 className="text-xs sm:text-sm font-bold text-gray-800">Luyện 50 từ ngẫu nhiên mỗi ngày</h3>
-            <p className="text-[10px] sm:text-xs text-gray-500 mt-0.5">Xáo trộn cố định 50 từ trong ngày để tránh quá tải và học tập đều đặn</p>
-          </div>
-        </div>
-        
-        <button
-          onClick={handleToggleDaily50}
-          className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-hidden ${
-            isDaily50 ? "bg-amber-500" : "bg-gray-200"
-          }`}
-        >
-          <span
-            className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out ${
-              isDaily50 ? "translate-x-5" : "translate-x-0"
+          
+          <button
+            onClick={handleToggleDaily50}
+            className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-hidden ${
+              isDaily50 ? "bg-amber-500" : "bg-gray-200"
             }`}
-          />
-        </button>
-      </div>
-
-      {/* Filter Section */}
-      <div className="bg-white rounded-3xl p-5 sm:p-6 border border-gray-100 shadow-2xs mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <h2 className="text-sm font-bold text-gray-900 flex items-center gap-2 shrink-0">
-          <span>🎯</span> Chọn nguồn ôn tập
-        </h2>
-        
-        <div className="relative w-full sm:max-w-md">
-          <select
-            value={source}
-            onChange={(e) => setSource(e.target.value)}
-            className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 text-gray-700 text-xs font-bold rounded-2xl appearance-none pr-10 focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all cursor-pointer shadow-xs"
           >
-            <option value="all">🌟 Tất cả từ vựng</option>
-            {curriculums.length > 0 && (
-              <optgroup label="📚 Giáo trình" className="font-bold text-gray-400">
-                {curriculums.map((c) => (
-                  <option key={c.id} value={c.id} className="text-gray-700 font-semibold">
-                    {c.name}
-                  </option>
-                ))}
-              </optgroup>
-            )}
-            {notebooks.length > 0 && (
-              <optgroup label="📓 Sổ tay cá nhân" className="font-bold text-gray-400">
-                {notebooks.map((nb) => (
-                  <option key={nb.id} value={nb.id} className="text-gray-700 font-semibold">
-                    📓 {nb.name} ({nb.vocabulary?.length || 0} từ)
-                  </option>
-                ))}
-              </optgroup>
-            )}
-          </select>
-          <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none text-gray-400 text-[10px]">
-            ▼
+            <span
+              className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out ${
+                isDaily50 ? "translate-x-5" : "translate-x-0"
+              }`}
+            />
+          </button>
+        </div>
+
+        {/* Filter Section */}
+        <div className="bg-white rounded-3xl p-5 sm:p-6 border border-gray-100 shadow-2xs mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <h2 className="text-sm font-bold text-gray-900 flex items-center gap-2 shrink-0">
+            <span>🎯</span> Chọn nguồn ôn tập
+          </h2>
+          
+          <div className="relative w-full sm:max-w-md">
+            <select
+              value={source}
+              onChange={(e) => setSource(e.target.value)}
+              className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 text-gray-700 text-xs font-bold rounded-2xl appearance-none pr-10 focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all cursor-pointer shadow-xs"
+            >
+              <option value="all">🌟 Tất cả từ vựng</option>
+              {curriculums.length > 0 && (
+                <optgroup label="📚 Giáo trình" className="font-bold text-gray-400">
+                  {curriculums.map((c) => (
+                    <option key={c.id} value={c.id} className="text-gray-700 font-semibold">
+                      {c.name}
+                    </option>
+                  ))}
+                </optgroup>
+              )}
+              {notebooks.length > 0 && (
+                <optgroup label="📓 Sổ tay cá nhân" className="font-bold text-gray-400">
+                  {notebooks.map((nb) => (
+                    <option key={nb.id} value={nb.id} className="text-gray-700 font-semibold">
+                      📓 {nb.name} ({nb.vocabulary?.length || 0} từ)
+                    </option>
+                  ))}
+                </optgroup>
+              )}
+            </select>
+            <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none text-gray-400 text-[10px]">
+              ▼
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Flashcard Viewer Section */}
-      <div className="mt-8">
-        {allVocab.length === 0 ? (
-          <div className="flex flex-col items-center justify-center min-h-[300px] bg-white rounded-3xl border border-gray-100 shadow-2xs p-8 text-center max-w-xl mx-auto">
-            <div className="text-4xl mb-4">📭</div>
-            <h3 className="font-bold text-gray-900 text-lg mb-1">Không có từ vựng nào</h3>
-            <p className="text-sm text-gray-500">Nguồn được chọn chưa có bất kỳ từ vựng nào.</p>
-          </div>
-        ) : (
-          <FlashCardViewer 
-            vocabulary={allVocab} 
-            title={
-              source === "all" 
-                ? "Ôn tập tổng hợp" 
-                : curriculums.find(c => c.id === source)?.name || notebooks.find(nb => nb.id === source)?.name || "Ôn tập"
-            } 
-            dailyLimit={isDaily50 ? 50 : undefined}
-          />
-        )}
+        {/* Flashcard Viewer Section */}
+        <div className="mt-8">
+          {allVocab.length === 0 ? (
+            <div className="flex flex-col items-center justify-center min-h-[300px] bg-white rounded-3xl border border-gray-100 shadow-2xs p-8 text-center max-w-xl mx-auto">
+              <div className="text-4xl mb-4">📭</div>
+              <h3 className="font-bold text-gray-900 text-lg mb-1">Không có từ vựng nào</h3>
+              <p className="text-sm text-gray-500">Nguồn được chọn chưa có bất kỳ từ vựng nào.</p>
+            </div>
+          ) : (
+            <FlashCardViewer 
+              vocabulary={allVocab} 
+              title={
+                source === "all" 
+                  ? "Ôn tập tổng hợp" 
+                  : curriculums.find(c => c.id === source)?.name || notebooks.find(nb => nb.id === source)?.name || "Ôn tập"
+              } 
+              dailyLimit={isDaily50 ? 50 : undefined}
+            />
+          )}
+        </div>
       </div>
-    </div>
+    </AuthGuard>
   );
 }

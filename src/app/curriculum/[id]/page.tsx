@@ -12,6 +12,7 @@ import KanjiStrokeViewer from "@/components/KanjiStrokeViewer";
 import { useGrammarProgress } from "@/hooks/useGrammarProgress";
 import { useKanjiProgress } from "@/hooks/useKanjiProgress";
 import { useLanguageSetting } from "@/hooks/useLanguageSetting";
+import AuthGuard from "@/components/AuthGuard";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -239,7 +240,8 @@ export default function CurriculumLessonDetailPage({ params }: Props) {
   const learnedKanjiCount = lesson.kanjiItems ? lesson.kanjiItems.filter(k => getKanjiProgress(k.id).learned).length : 0;
 
   return (
-    <div className="p-4 max-w-5xl mx-auto pb-24">
+    <AuthGuard featureName="Bài Học Giáo Trình Chi Tiết" description="Đăng nhập để theo dõi bài học, làm bài tập Shadowing & Reading AI và ghi nhận tiến độ học tập.">
+      <div className="p-4 max-w-5xl mx-auto pb-24">
       {/* Back Link */}
       <div className="mb-4">
         <Link href="/curriculum" className="text-xs text-indigo-600 font-medium hover:underline">
@@ -757,7 +759,8 @@ export default function CurriculumLessonDetailPage({ params }: Props) {
           )}
         </div>
       )}
-    </div>
+      </div>
+    </AuthGuard>
   );
 }
 

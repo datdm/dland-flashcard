@@ -13,6 +13,7 @@ import IeltsRoadmapDashboard from "@/components/IeltsRoadmapDashboard";
 export default function CurriculumPage() {
   const [groups, setGroups] = useState<CurriculumLevelGroup[]>([]);
   const [activeLevel, setActiveLevel] = useState<JLPTLevel>("N5");
+  const [activeBookId, setActiveBookId] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const [enData, setEnData] = useState<any>(null);
   const { activeLanguage } = useLanguageSetting();
@@ -47,18 +48,22 @@ export default function CurriculumPage() {
   }, [activeLanguage.code]);
 
   const activeGroup = groups.find((g) => g.level === activeLevel);
+  const availableBooks = activeGroup?.books || [];
+
+  // Automatically select first book if activeBookId is not valid for activeGroup
+  const currentBook = availableBooks.find((b) => b.id === activeBookId) || availableBooks[0] || null;
 
   const isMultilingual = activeLanguage.code === "de" || activeLanguage.code === "en";
   const headerTitle = activeLanguage.code === "de" 
-    ? "Lộ trình Học Tiếng Đức (A1)" 
+    ? "Kho Giáo Trình Tiếng Đức" 
     : activeLanguage.code === "en" 
     ? "Lộ Trình IELTS 7.0 (12 Tháng / 52 Tuần)" 
-    : "Lộ trình Học Tiếng Nhật (N5 ➔ N2)";
+    : "Kho Giáo Trình Tiếng Nhật Theo Cấp Độ";
   const headerSubtitle = activeLanguage.code === "de"
-    ? "Học bài bản theo giáo trình Netzwerk neu A1"
+    ? "Chọn giáo trình chuẩn CEFR (Netzwerk Neu A1, Schritte International, Aspekte Neu)"
     : activeLanguage.code === "en"
     ? "Luyện thi IELTS 7.0 bài bản: Foundation ➔ Format ➔ Advanced ➔ Mock Test"
-    : "Học bài bản theo giáo trình Minna no Nihongo, Soumatome & Shinkanzen Master";
+    : "Học bài bản theo Minna no Nihongo, Genki, Soumatome, Shinkanzen Master, Marugoto & Try!";
 
   return (
     <div className="p-4 max-w-5xl mx-auto min-h-screen pb-20">
@@ -73,24 +78,23 @@ export default function CurriculumPage() {
       </div>
 
       {/* Level Selector Tabs */}
-      {/* Level Selector Tabs */}
       {!isMultilingual && (
-        <div className="flex items-center gap-2.5 overflow-x-auto no-scrollbar pb-3 mb-6">
+        <div className="flex items-center gap-2.5 overflow-x-auto no-scrollbar pb-2 mb-6">
           {(["N5", "N4", "N3", "N2", "N1"] as JLPTLevel[]).map((level) => {
             const group = groups.find((g) => g.level === level);
-            const count = group ? group.totalLessons : 0;
-            const textbookNames: Record<JLPTLevel, string> = {
-              N5: "Minna I (1-25)",
-              N4: "Minna II (26-50)",
-              N3: "Soumatome & Shinkanzen N3",
-              N2: "Shinkanzen Master N2",
-              N1: "Shinkanzen Master N1",
-            };
+            const bookCount = group?.books?.length || 1;
+            const totalLessonCount = group ? group.totalLessons : 0;
 
             return (
               <button
                 key={level}
-                onClick={() => setActiveLevel(level)}
+                onClick={() => {
+                  setActiveLevel(level);
+                  const targetGroup = groups.find((g) => g.level === level);
+                  if (targetGroup?.books && targetGroup.books.length > 0) {
+                    setActiveBookId(targetGroup.books[0].id);
+                  }
+                }}
                 className={`px-4 py-2.5 rounded-2xl font-bold text-xs transition-all whitespace-nowrap flex flex-col items-start gap-1 ${
                   activeLevel === level
                     ? "bg-indigo-600 text-white shadow-md shadow-indigo-200 scale-105"
@@ -104,11 +108,11 @@ export default function CurriculumPage() {
                       activeLevel === level ? "bg-white/20 text-white" : "bg-gray-100 text-gray-500"
                     }`}
                   >
-                    {count} bài
+                    {bookCount} giáo trình
                   </span>
                 </div>
                 <span className={`text-[10px] font-medium ${activeLevel === level ? "text-indigo-100" : "text-gray-400"}`}>
-                  📖 {textbookNames[level]}
+                  📚 {totalLessonCount} bài học tổng hợp
                 </span>
               </button>
             );
@@ -116,7 +120,7 @@ export default function CurriculumPage() {
         </div>
       )}
 
-      {/* Active Level Group Details */}
+      {/* Main Content Area */}
       {loading ? (
         <div className="flex items-center justify-center py-20 text-indigo-600 font-medium">
           Đang tải kho bài học...
@@ -134,111 +138,224 @@ export default function CurriculumPage() {
         </div>
       ) : (
         <div className="space-y-6">
-          {/* Level Header Banner */}
-          <div className="bg-gradient-to-r from-indigo-600 via-indigo-700 to-purple-700 rounded-3xl p-6 text-white shadow-lg">
-            <div className="flex items-start justify-between">
-              <div>
-                <div className="flex items-center gap-2 flex-wrap mb-2">
-                  <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-xs font-semibold tracking-wide">
-                    {isMultilingual ? "TRÌNH ĐỘ SƠ CẤP" : `CẤP ĐỘ ${activeGroup.level}`}
-                  </span>
-                  <span className="px-3 py-1 bg-amber-400/30 text-amber-200 border border-amber-300/30 backdrop-blur-md rounded-full text-xs font-bold">
-                    📘 {activeGroup.level === "N5" ? "Giáo trình Minna no Nihongo I" : activeGroup.level === "N4" ? "Giáo trình Minna no Nihongo II" : activeGroup.level === "N3" ? "Giáo trình Soumatome & Shinkanzen N3" : activeGroup.level === "N2" ? "Giáo trình Shinkanzen Master & Try! N2" : "Giáo trình Shinkanzen Master & Try! N1"}
-                  </span>
-                </div>
-                <h2 className="text-xl font-bold mt-1">{activeGroup.title}</h2>
-                <p className="text-xs text-indigo-100 mt-1 max-w-xl leading-relaxed">
-                  {activeGroup.description}
-                </p>
+
+          {/* Textbook Shelf Sub-Selector (Danh sách các giáo trình của cấp độ hiện tại) */}
+          {availableBooks.length > 0 && (
+            <div>
+              <div className="flex items-center justify-between mb-3 px-1">
+                <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider flex items-center gap-1.5">
+                  <span>📚</span> Chọn giáo trình {activeLevel} ({availableBooks.length} đầu sách):
+                </h3>
+                <span className="text-[11px] text-gray-400 font-medium">
+                  Nhấn vào giáo trình để chuyển đổi nội dung
+                </span>
               </div>
-              <div className="hidden sm:flex gap-4 bg-white/10 backdrop-blur-md p-3.5 rounded-2xl text-center shrink-0">
-                <div>
-                  <div className="text-lg font-extrabold">{activeGroup.totalVocab}</div>
-                  <div className="text-[10px] text-indigo-200 uppercase font-semibold">Từ vựng</div>
-                </div>
-                <div className="border-r border-white/20" />
-                <div>
-                  <div className="text-lg font-extrabold">{activeGroup.totalGrammar}</div>
-                  <div className="text-[10px] text-indigo-200 uppercase font-semibold">Ngữ pháp</div>
-                </div>
-                {!isMultilingual && (
-                  <>
-                    <div className="border-r border-white/20" />
-                    <div>
-                      <div className="text-lg font-extrabold">{activeGroup.totalKanji}</div>
-                      <div className="text-[10px] text-indigo-200 uppercase font-semibold">Kanji</div>
-                    </div>
-                  </>
-                )}
-              </div>
-            </div>
-          </div>
 
-          {/* Lessons List */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {activeGroup.lessons.map((lesson) => {
-              const vocabList = lesson.vocabulary || [];
-              const grammarList = lesson.grammarPoints || [];
-              const kanjiList = lesson.kanjiItems || [];
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                {availableBooks.map((book) => {
+                  const isSelected = currentBook?.id === book.id;
+                  
+                  // Calculate total learned items for this book
+                  let bookTotalLearned = 0;
+                  let bookTotalItems = 0;
+                  book.lessons.forEach((l) => {
+                    const vCount = l.vocabulary?.length || 0;
+                    const gCount = l.grammarPoints?.length || 0;
+                    const kCount = l.kanjiItems?.length || 0;
+                    bookTotalItems += vCount + gCount + kCount;
 
-              const learnedVocab = vocabList.filter((v: any) => progress[v.id]?.learned).length;
-              const learnedGrammar = grammarList.filter((g: any) => grammarProgress[g.id]?.learned).length;
-              const learnedKanji = kanjiList.filter((k: any) => kanjiProgress[k.id]?.learned).length;
+                    const lV = l.vocabulary?.filter((v: any) => progress[v.id]?.learned).length || 0;
+                    const lG = l.grammarPoints?.filter((g: any) => grammarProgress[g.id]?.learned).length || 0;
+                    const lK = l.kanjiItems?.filter((k: any) => kanjiProgress[k.id]?.learned).length || 0;
+                    bookTotalLearned += lV + lG + lK;
+                  });
 
-              const totalItems = vocabList.length + grammarList.length + kanjiList.length;
-              const totalLearned = learnedVocab + learnedGrammar + learnedKanji;
-              const percentage = totalItems > 0 ? Math.round((totalLearned / totalItems) * 100) : 0;
+                  const bookPercent = bookTotalItems > 0 ? Math.round((bookTotalLearned / bookTotalItems) * 100) : 0;
 
-              return (
-                <Link
-                  key={lesson.id}
-                  href={`/curriculum/${lesson.id}`}
-                  className="group bg-white rounded-2xl p-5 border border-gray-100 shadow-sm hover:shadow-md hover:border-indigo-200 transition-all flex flex-col justify-between"
-                >
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-xs font-semibold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-lg">
-                        📖 {lesson.curriculum || (lesson.level === "N5" ? "Minna no Nihongo I" : lesson.level === "N4" ? "Minna no Nihongo II" : lesson.level === "N3" ? "Soumatome N3" : lesson.level === "N2" ? "Shinkanzen N2" : activeGroup.level)}
-                      </span>
-                      <span className="text-xs text-gray-400 group-hover:text-indigo-600 transition-colors">
-                        Vào bài học →
-                      </span>
-                    </div>
-                    <h3 className="font-bold text-gray-800 text-base group-hover:text-indigo-600 transition-colors">
-                      {lesson.name}
-                    </h3>
-                    {lesson.description && (
-                      <p className="text-xs text-gray-500 mt-1 line-clamp-2 leading-relaxed">
-                        {lesson.description}
-                      </p>
-                    )}
-                  </div>
+                  return (
+                    <button
+                      key={book.id}
+                      onClick={() => setActiveBookId(book.id)}
+                      className={`text-left p-4 rounded-2xl border transition-all flex flex-col justify-between relative group ${
+                        isSelected
+                          ? "bg-indigo-50/80 border-indigo-500 ring-2 ring-indigo-500/20 shadow-md scale-102"
+                          : "bg-white border-gray-200 hover:border-indigo-300 hover:shadow-xs"
+                      }`}
+                    >
+                      <div>
+                        <div className="flex items-center justify-between gap-1 mb-2">
+                          <span className="text-xl">{book.icon || "📖"}</span>
+                          {book.tag && (
+                            <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full ${
+                              isSelected
+                                ? "bg-indigo-600 text-white"
+                                : "bg-gray-100 text-gray-600 group-hover:bg-indigo-50 group-hover:text-indigo-600"
+                            }`}>
+                              {book.tag}
+                            </span>
+                          )}
+                        </div>
+                        <h4 className="font-extrabold text-xs text-gray-900 line-clamp-2 leading-tight">
+                          {book.name}
+                        </h4>
+                        {book.publisher && (
+                          <p className="text-[10px] text-gray-400 mt-1 truncate">
+                            NXB: {book.publisher}
+                          </p>
+                        )}
+                      </div>
 
-                  <div className="mt-4 pt-3 border-t border-gray-50 space-y-2">
-                    <div className="flex items-center justify-between gap-4 text-xs text-gray-500">
-                      <span>📝 {learnedVocab}/{vocabList.length} từ</span>
-                      <span>📖 {learnedGrammar}/{grammarList.length} ngữ pháp</span>
-                      {!isMultilingual && <span>🉐 {learnedKanji}/{kanjiList.length} kanji</span>}
-                    </div>
-
-                    {totalLearned > 0 && (
-                      <div className="space-y-1 pt-1">
-                        <div className="flex justify-between items-center text-[10px] font-bold">
-                          <span className="text-indigo-600">📊 Tiến độ: {percentage}%</span>
-                          <span className="text-gray-400">{totalLearned}/{totalItems} mục</span>
+                      <div className="mt-3 pt-2.5 border-t border-gray-100 w-full">
+                        <div className="flex items-center justify-between text-[11px] text-gray-500 font-semibold mb-1">
+                          <span>{book.totalLessons} bài học</span>
+                          <span className={bookPercent > 0 ? "text-indigo-600 font-bold" : "text-gray-400"}>
+                            {bookPercent}%
+                          </span>
                         </div>
                         <div className="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
                           <div
-                            className="bg-indigo-600 h-1.5 rounded-full transition-all duration-300"
-                            style={{ width: `${percentage}%` }}
+                            className={`h-1.5 rounded-full transition-all duration-300 ${
+                              isSelected ? "bg-indigo-600" : "bg-indigo-400"
+                            }`}
+                            style={{ width: `${bookPercent}%` }}
                           />
                         </div>
                       </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* Active Textbook Details Banner */}
+          {currentBook && (
+            <div className="bg-gradient-to-r from-indigo-600 via-indigo-700 to-purple-700 rounded-3xl p-6 text-white shadow-lg">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                  <div className="flex items-center gap-2 flex-wrap mb-2">
+                    <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-xs font-semibold tracking-wide">
+                      {isMultilingual ? "TRÌNH ĐỘ SƠ CẤP" : `CẤP ĐỘ ${activeGroup.level}`}
+                    </span>
+                    <span className="px-3 py-1 bg-amber-400/30 text-amber-200 border border-amber-300/30 backdrop-blur-md rounded-full text-xs font-bold">
+                      {currentBook.icon || "📘"} {currentBook.name}
+                    </span>
+                    {currentBook.tag && (
+                      <span className="px-2.5 py-0.5 bg-white/15 text-white rounded-full text-[10px] font-bold">
+                        {currentBook.tag}
+                      </span>
                     )}
                   </div>
-                </Link>
-              );
-            })}
+                  <h2 className="text-xl font-bold mt-1">{currentBook.name}</h2>
+                  <p className="text-xs text-indigo-100 mt-1 max-w-2xl leading-relaxed">
+                    {currentBook.description}
+                  </p>
+                </div>
+                
+                <div className="flex gap-4 bg-white/10 backdrop-blur-md p-3.5 rounded-2xl text-center shrink-0 self-start md:self-auto">
+                  <div>
+                    <div className="text-lg font-extrabold">{currentBook.totalLessons}</div>
+                    <div className="text-[10px] text-indigo-200 uppercase font-semibold">Bài học</div>
+                  </div>
+                  <div className="border-r border-white/20" />
+                  <div>
+                    <div className="text-lg font-extrabold">{currentBook.totalVocab}</div>
+                    <div className="text-[10px] text-indigo-200 uppercase font-semibold">Từ vựng</div>
+                  </div>
+                  <div className="border-r border-white/20" />
+                  <div>
+                    <div className="text-lg font-extrabold">{currentBook.totalGrammar}</div>
+                    <div className="text-[10px] text-indigo-200 uppercase font-semibold">Ngữ pháp</div>
+                  </div>
+                  {!isMultilingual && currentBook.totalKanji > 0 && (
+                    <>
+                      <div className="border-r border-white/20" />
+                      <div>
+                        <div className="text-lg font-extrabold">{currentBook.totalKanji}</div>
+                        <div className="text-[10px] text-indigo-200 uppercase font-semibold">Kanji</div>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Lessons List of Selected Textbook */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between px-1">
+              <h3 className="text-sm font-extrabold text-gray-800">
+                Danh sách bài học — {currentBook?.name || activeGroup.title} ({currentBook?.lessons.length || activeGroup.lessons.length} bài)
+              </h3>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {(currentBook?.lessons || activeGroup.lessons).map((lesson) => {
+                const vocabList = lesson.vocabulary || [];
+                const grammarList = lesson.grammarPoints || [];
+                const kanjiList = lesson.kanjiItems || [];
+
+                const learnedVocab = vocabList.filter((v: any) => progress[v.id]?.learned).length;
+                const learnedGrammar = grammarList.filter((g: any) => grammarProgress[g.id]?.learned).length;
+                const learnedKanji = kanjiList.filter((k: any) => kanjiProgress[k.id]?.learned).length;
+
+                const totalItems = vocabList.length + grammarList.length + kanjiList.length;
+                const totalLearned = learnedVocab + learnedGrammar + learnedKanji;
+                const percentage = totalItems > 0 ? Math.round((totalLearned / totalItems) * 100) : 0;
+
+                return (
+                  <Link
+                    key={lesson.id}
+                    href={`/curriculum/${lesson.id}`}
+                    className="group bg-white rounded-2xl p-5 border border-gray-100 shadow-sm hover:shadow-md hover:border-indigo-200 transition-all flex flex-col justify-between"
+                  >
+                    <div>
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-xs font-semibold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-lg">
+                          📖 {lesson.curriculum || currentBook?.name || activeGroup.level}
+                        </span>
+                        <span className="text-xs text-gray-400 group-hover:text-indigo-600 transition-colors font-medium">
+                          Vào bài học →
+                        </span>
+                      </div>
+                      <h3 className="font-bold text-gray-800 text-base group-hover:text-indigo-600 transition-colors">
+                        {lesson.name}
+                      </h3>
+                      {lesson.description && (
+                        <p className="text-xs text-gray-500 mt-1 line-clamp-2 leading-relaxed">
+                          {lesson.description}
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="mt-4 pt-3 border-t border-gray-50 space-y-2">
+                      <div className="flex items-center justify-between gap-4 text-xs text-gray-500 font-medium">
+                        <span>📝 {learnedVocab}/{vocabList.length} từ</span>
+                        <span>📖 {learnedGrammar}/{grammarList.length} ngữ pháp</span>
+                        {!isMultilingual && kanjiList.length > 0 && (
+                          <span>🉐 {learnedKanji}/{kanjiList.length} kanji</span>
+                        )}
+                      </div>
+
+                      {totalLearned > 0 && (
+                        <div className="space-y-1 pt-1">
+                          <div className="flex justify-between items-center text-[10px] font-bold">
+                            <span className="text-indigo-600">📊 Tiến độ: {percentage}%</span>
+                            <span className="text-gray-400">{totalLearned}/{totalItems} mục</span>
+                          </div>
+                          <div className="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+                            <div
+                              className="bg-indigo-600 h-1.5 rounded-full transition-all duration-300"
+                              style={{ width: `${percentage}%` }}
+                            />
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
           </div>
         </div>
       )}

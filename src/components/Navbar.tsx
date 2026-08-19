@@ -6,6 +6,7 @@ import { useState, useEffect, useRef } from "react";
 import SyncDialog from "./SyncDialog";
 import * as syncService from "@/lib/syncService";
 import { useLanguageSetting } from "@/hooks/useLanguageSetting";
+import { useAuth } from "@/context/AuthContext";
 
 interface NavItem {
   href: string;
@@ -215,15 +216,13 @@ export default function Navbar() {
     setShowSyncDialog(true);
   };
 
+  const { user, isAuthenticated, openAuthModal, logout } = useAuth();
+
   const handleLogout = () => {
     if (confirm("Bạn có chắc muốn đăng xuất?")) {
-      syncService.logout();
-      window.location.reload();
+      logout();
     }
   };
-
-  const isAuthenticated = syncService.checkAuthStatus();
-  const user = syncService.getUser();
 
   return (
     <>
@@ -344,11 +343,14 @@ export default function Navbar() {
               )}
             </div>
           ) : (
-            !isCollapsed && (
-              <div className="text-[11px] text-gray-400 text-center px-1">
-                Lưu dữ liệu local & hỗ trợ Postgres
-              </div>
-            )
+            <button
+              onClick={() => openAuthModal("Đăng nhập để lưu từ vựng, quản lý sổ tay và đồng bộ tiến độ học tập")}
+              className={`w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl transition-all text-xs font-extrabold shadow-md shadow-indigo-200 flex items-center justify-center gap-2 active:scale-98 ${isCollapsed ? 'px-0' : 'px-3'}`}
+              title="Đăng nhập / Đăng ký tài khoản"
+            >
+              <span>🔑</span>
+              {!isCollapsed && <span className="whitespace-nowrap">Đăng nhập / Đăng ký</span>}
+            </button>
           )}
         </div>
       </aside>
@@ -370,13 +372,21 @@ export default function Navbar() {
           >
             <span>🔄</span>
           </button>
-          {isAuthenticated && user && (
+          {isAuthenticated && user ? (
             <button
               onClick={handleLogout}
-              className="px-2 py-1 bg-gray-50 text-gray-700 rounded-lg text-xs"
+              className="px-2 py-1 bg-gray-50 text-gray-700 rounded-lg text-xs font-semibold"
               title="Đăng xuất"
             >
-              👤 Đăng xuất
+              👤 {user.username}
+            </button>
+          ) : (
+            <button
+              onClick={() => openAuthModal("Đăng nhập để lưu từ vựng và đồng bộ tiến độ học tập")}
+              className="px-2.5 py-1 bg-indigo-600 text-white rounded-lg text-xs font-extrabold shadow-xs"
+              title="Đăng nhập"
+            >
+              🔑 Đăng nhập
             </button>
           )}
         </div>

@@ -9,6 +9,7 @@ import { useNotebooks } from "@/hooks/useNotebooks";
 import { useGrammarCollections } from "@/hooks/useGrammarCollections";
 import { useStreak } from "@/hooks/useStreak";
 import Link from "next/link";
+import AuthGuard from "@/components/AuthGuard";
 
 interface TimelineItem {
   id: string;
@@ -403,7 +404,8 @@ export default function HistoryPage() {
   }, [filteredTimelineItems]);
 
   return (
-    <div className="p-4 max-w-4xl mx-auto min-h-screen pb-24">
+    <AuthGuard featureName="Lịch Sử & Nhật Ký Học Tập" description="Đăng nhập để theo dõi bảng tiến độ từ vựng, ngữ pháp, kanji, chuỗi streak và lịch sử học tập cá nhân.">
+      <div className="p-4 max-w-4xl mx-auto min-h-screen pb-24">
       {/* Header Banner */}
       <div className="bg-gradient-to-r from-indigo-800 via-purple-800 to-indigo-900 rounded-3xl p-6 text-white shadow-lg mb-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -790,5 +792,6 @@ export default function HistoryPage() {
         )}
       </div>
     </div>
+  </AuthGuard>
   );
 }
