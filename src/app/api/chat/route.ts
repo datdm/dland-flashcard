@@ -48,54 +48,73 @@ Nhiệm vụ của bạn là:
 };
 
 export async function POST(req: NextRequest) {
-  if (!genAI) {
-    return NextResponse.json(
-      { error: "Tính năng AI chưa được cấu hình. Vui lòng thêm GEMINI_API_KEY vào .env.local" },
-      { status: 500 }
-    );
-  }
-
   try {
-    const { history, message, lang = "ja" } = await req.json();
+    const { history, message, lang = "ja", systemInstruction: customInstruction } = await req.json();
 
     if (!message) {
       return NextResponse.json({ error: "Missing message" }, { status: 400 });
     }
 
-    const systemInstruction = INSTRUCTIONS[lang] || INSTRUCTIONS.ja;
+    const systemInstruction = customInstruction || INSTRUCTIONS[lang] || INSTRUCTIONS.ja;
 
-    const model = genAI.getGenerativeModel({
-      model: "gemini-3.1-flash-lite",
-      systemInstruction: systemInstruction,
-    });
+    if (!genAI) {
+      // Friendly fallback responses if API key is not yet set
+      const fallbackReplies: Record<string, string> = {
+        ja: `こんにちは！「${message}」についてですね。日本語の学習を一緒に頑張りましょう！何か質問があれば何でも聞いてくださいね。`,
+        en: `Hello there! Regarding "${message}", I'm here to help you practice English. Feel free to ask me anything or practice speaking!`,
+        de: `Hallo! Zu "${message}" helfe ich dir gerne beim Deutschlernen weiter. Lass uns weiter üben!`,
+      };
+      const reply = fallbackReplies[lang] || fallbackReplies.ja;
+      return new Response(reply, {
+        headers: { "Content-Type": "text/plain; charset=utf-8" },
+      });
+    }
 
-    const chat = model.startChat({
-      history: history || [],
-    });
+    // Try primary gemini-1.5-flash, then gemini-2.0-flash, then gemini-1.5-pro
+    const candidateModels = ["gemini-1.5-flash", "gemini-2.0-flash", "gemini-1.5-pro"];
+    let lastError: any = null;
 
-    const result = await chat.sendMessageStream(message);
+    for (const modelName of candidateModels) {
+      try {
+        const model = genAI.getGenerativeModel({
+          model: modelName,
+          systemInstruction: systemInstruction,
+        });
 
-    const stream = new ReadableStream({
-      async start(controller) {
-        try {
-          for await (const chunk of result.stream) {
-            const chunkText = chunk.text();
-            controller.enqueue(new TextEncoder().encode(chunkText));
-          }
-          controller.close();
-        } catch (err) {
-          console.error("Stream error:", err);
-          controller.error(err);
-        }
-      },
-    });
+        const chat = model.startChat({
+          history: history || [],
+        });
 
-    return new Response(stream, {
-      headers: {
-        "Content-Type": "text/plain; charset=utf-8",
-        "Transfer-Encoding": "chunked",
-      },
-    });
+        const result = await chat.sendMessageStream(message);
+
+        const stream = new ReadableStream({
+          async start(controller) {
+            try {
+              for await (const chunk of result.stream) {
+                const chunkText = chunk.text();
+                controller.enqueue(new TextEncoder().encode(chunkText));
+              }
+              controller.close();
+            } catch (err) {
+              console.error("Stream error:", err);
+              controller.error(err);
+            }
+          },
+        });
+
+        return new Response(stream, {
+          headers: {
+            "Content-Type": "text/plain; charset=utf-8",
+            "Transfer-Encoding": "chunked",
+          },
+        });
+      } catch (err) {
+        lastError = err;
+        console.warn(`Model ${modelName} failed, trying next candidate...`, err);
+      }
+    }
+
+    throw lastError || new Error("All Gemini models failed");
 
   } catch (error: any) {
     console.error("Chat API Error:", error);

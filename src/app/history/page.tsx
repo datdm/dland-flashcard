@@ -8,6 +8,7 @@ import { useCurriculums } from "@/hooks/useCurriculums";
 import { useNotebooks } from "@/hooks/useNotebooks";
 import { useGrammarCollections } from "@/hooks/useGrammarCollections";
 import { useStreak } from "@/hooks/useStreak";
+import { useLanguageSetting } from "@/hooks/useLanguageSetting";
 import Link from "next/link";
 import AuthGuard from "@/components/AuthGuard";
 
@@ -19,6 +20,7 @@ interface TimelineItem {
   meaning: string;
   learnedAt: string;
   source: string;
+  lang?: string;
 }
 
 interface CompletedLesson {
@@ -35,22 +37,39 @@ export default function HistoryPage() {
   const { curriculums } = useCurriculums();
   const { notebooks } = useNotebooks();
   const { collections: grammarCollections } = useGrammarCollections();
+  const { activeLanguage, supportedLanguages } = useLanguageSetting();
   const streak = useStreak();
 
   const [completedLessons, setCompletedLessons] = useState<CompletedLesson[]>([]);
+  const [selectedLangFilter, setSelectedLangFilter] = useState<string>("current");
   const [timeFilter, setTimeFilter] = useState<"all" | "1day" | "3days" | "1month" | "3months" | "1year" | "thisYear" | number>("all");
   const [curriculumTabFilter, setCurriculumTabFilter] = useState<"all" | "in_progress" | "completed">("all");
   const [systemVocabList, setSystemVocabList] = useState<any[]>([]);
   const [systemGrammarList, setSystemGrammarList] = useState<any[]>([]);
   const [systemLessonsList, setSystemLessonsList] = useState<any[]>([]);
+  const [practiceHistory, setPracticeHistory] = useState<any[]>([]);
+
+  const effectiveLang = selectedLangFilter === "current" ? activeLanguage.code : selectedLangFilter;
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const stored = localStorage.getItem("flashcash-curriculum-history");
-      if (stored) {
-        setCompletedLessons(JSON.parse(stored));
+    const loadData = () => {
+      if (typeof window !== "undefined") {
+        const stored = localStorage.getItem("flashcash-curriculum-history");
+        if (stored) {
+          try { setCompletedLessons(JSON.parse(stored)); } catch {}
+        }
+        const pracStored = localStorage.getItem("flashcash-practice-history");
+        if (pracStored) {
+          try { setPracticeHistory(JSON.parse(pracStored)); } catch {}
+        }
       }
-    }
+    };
+    loadData();
+
+    window.addEventListener("practice-history-updated", loadData);
+    return () => {
+      window.removeEventListener("practice-history-updated", loadData);
+    };
   }, []);
 
   // Fetch all system curriculums to populate lookup tables for all languages
@@ -58,12 +77,12 @@ export default function HistoryPage() {
     async function loadAllSystemData() {
       try {
         const urls = [
-          { url: "/data/n5-curriculum.json", name: "N5" },
-          { url: "/data/n4-curriculum.json", name: "N4" },
-          { url: "/data/n3-curriculum.json", name: "N3" },
-          { url: "/data/n2-curriculum.json", name: "N2" },
-          { url: "/data/de-curriculum.json", name: "Tiếng Đức (A1)" },
-          { url: "/data/en-curriculum.json", name: "Tiếng Anh (A1)" }
+          { url: "/data/n5-curriculum.json", name: "Minna no Nihongo I (N5)", lang: "ja" },
+          { url: "/data/n4-curriculum.json", name: "Minna no Nihongo II (N4)", lang: "ja" },
+          { url: "/data/n3-curriculum.json", name: "Soumatome & Shinkanzen N3", lang: "ja" },
+          { url: "/data/n2-curriculum.json", name: "Shinkanzen Master N2", lang: "ja" },
+          { url: "/data/de-curriculum.json", name: "Netzwerk Neu A1 (Tiếng Đức)", lang: "de" },
+          { url: "/data/en-curriculum.json", name: "Lộ trình IELTS 7.0 (52 Tuần)", lang: "en" }
         ];
 
         const allVocab: any[] = [];
@@ -71,7 +90,7 @@ export default function HistoryPage() {
         const allLessons: any[] = [];
 
         await Promise.all(
-          urls.map(async ({ url, name }) => {
+          urls.map(async ({ url, name, lang }) => {
             const res = await fetch(url);
             if (!res.ok) return;
             const data = await res.json();
@@ -80,6 +99,7 @@ export default function HistoryPage() {
             lessons.forEach((lesson: any) => {
               allLessons.push({
                 ...lesson,
+                lang,
                 curriculumTitle: data.title || name,
                 curriculumName: lesson.curriculum || data.title || name
               });
@@ -88,6 +108,7 @@ export default function HistoryPage() {
                 lesson.vocabulary.forEach((v: any) => {
                   allVocab.push({
                     ...v,
+                    lang,
                     sourceName: `${data.title || name} • ${lesson.name}`
                   });
                 });
@@ -96,6 +117,7 @@ export default function HistoryPage() {
                 lesson.grammarPoints.forEach((g: any) => {
                   allGrammar.push({
                     ...g,
+                    lang,
                     sourceName: `${data.title || name} • ${lesson.name}`
                   });
                 });
@@ -116,7 +138,7 @@ export default function HistoryPage() {
 
   // 1. Build lookup tables for vocabulary and grammar
   const vocabLookup = useMemo(() => {
-    const map = new Map<string, { kanji?: string; hiragana?: string; meaning?: string; source: string }>();
+    const map = new Map<string, { kanji?: string; hiragana?: string; meaning?: string; source: string; lang: string }>();
     
     curriculums.forEach((c) => {
       c.lessons.forEach((l) => {
@@ -125,7 +147,8 @@ export default function HistoryPage() {
             kanji: v.kanji,
             hiragana: v.hiragana,
             meaning: v.meaning,
-            source: `${c.name} • ${l.name}`
+            source: `${c.name} • ${l.name}`,
+            lang: "ja"
           });
         });
       });
@@ -137,7 +160,8 @@ export default function HistoryPage() {
           kanji: v.kanji,
           hiragana: v.hiragana,
           meaning: v.meaning,
-          source: `Sổ tay: ${nb.name}`
+          source: `Sổ tay: ${nb.name}`,
+          lang: "ja"
         });
       });
     });
@@ -147,7 +171,8 @@ export default function HistoryPage() {
         kanji: v.kanji || v.word,
         hiragana: v.hiragana || v.type || "",
         meaning: v.meaning,
-        source: v.sourceName
+        source: v.sourceName,
+        lang: v.lang || "ja"
       });
     });
 
@@ -155,14 +180,15 @@ export default function HistoryPage() {
   }, [curriculums, notebooks, systemVocabList]);
 
   const grammarLookup = useMemo(() => {
-    const map = new Map<string, { structure: string; meaning: string; source: string }>();
+    const map = new Map<string, { structure: string; meaning: string; source: string; lang: string }>();
     
     grammarCollections.forEach((c) => {
       c.grammarPoints?.forEach((gp) => {
         map.set(gp.id, {
           structure: gp.structure,
           meaning: gp.meaning,
-          source: `Ngữ pháp: ${c.name}`
+          source: `Ngữ pháp: ${c.name}`,
+          lang: "ja"
         });
       });
     });
@@ -171,7 +197,8 @@ export default function HistoryPage() {
       map.set(g.id, {
         structure: g.structure,
         meaning: g.meaning,
-        source: g.sourceName
+        source: g.sourceName,
+        lang: g.lang || "ja"
       });
     });
 
@@ -182,7 +209,15 @@ export default function HistoryPage() {
 
   // 3. Compute Curriculum progress
   const curriculumProgresses = useMemo(() => {
-    return curriculums.map((c) => {
+    const filteredCurriculums = curriculums.filter((c) => {
+      if (effectiveLang === "all") return true;
+      if (effectiveLang === "ja") return !c.id.startsWith("en-") && !c.id.startsWith("de-");
+      if (effectiveLang === "en") return c.id.startsWith("en-") || c.name.toLowerCase().includes("ielts") || c.name.toLowerCase().includes("english");
+      if (effectiveLang === "de") return c.id.startsWith("de-") || c.name.toLowerCase().includes("deutsch") || c.name.toLowerCase().includes("đức");
+      return true;
+    });
+
+    return filteredCurriculums.map((c) => {
       let totalVocab = 0;
       let learnedVocab = 0;
 
@@ -203,7 +238,7 @@ export default function HistoryPage() {
         percentage: totalVocab > 0 ? Math.round((learnedVocab / totalVocab) * 100) : 0,
       };
     });
-  }, [curriculums, progress]);
+  }, [curriculums, progress, effectiveLang]);
 
   // 4. Compute Notebook progress
   const notebookProgresses = useMemo(() => {
@@ -236,15 +271,18 @@ export default function HistoryPage() {
       if (p.learned && p.learnedAt) {
         const details = vocabLookup.get(id);
         if (details) {
-          items.push({
-            id,
-            type: "vocab",
-            title: details.kanji || details.hiragana || "Từ vựng",
-            subTitle: details.kanji ? details.hiragana : undefined,
-            meaning: details.meaning || "",
-            learnedAt: p.learnedAt,
-            source: details.source,
-          });
+          if (effectiveLang === "all" || details.lang === effectiveLang) {
+            items.push({
+              id,
+              type: "vocab",
+              title: details.kanji || details.hiragana || "Từ vựng",
+              subTitle: details.kanji ? details.hiragana : undefined,
+              meaning: details.meaning || "",
+              learnedAt: p.learnedAt,
+              source: details.source,
+              lang: details.lang
+            });
+          }
         }
       }
     });
@@ -254,21 +292,24 @@ export default function HistoryPage() {
       if (p.learned && p.learnedAt) {
         const details = grammarLookup.get(id);
         if (details) {
-          items.push({
-            id,
-            type: "grammar",
-            title: details.structure,
-            meaning: details.meaning,
-            learnedAt: p.learnedAt,
-            source: details.source,
-          });
+          if (effectiveLang === "all" || details.lang === effectiveLang) {
+            items.push({
+              id,
+              type: "grammar",
+              title: details.structure,
+              meaning: details.meaning,
+              learnedAt: p.learnedAt,
+              source: details.source,
+              lang: details.lang
+            });
+          }
         }
       }
     });
 
     // Sort by learnedAt descending
     return items.sort((a, b) => new Date(b.learnedAt).getTime() - new Date(a.learnedAt).getTime());
-  }, [progress, grammarProgress, vocabLookup, grammarLookup]);
+  }, [progress, grammarProgress, vocabLookup, grammarLookup, effectiveLang]);
 
   // Compute real-time curriculum lesson progress breakdown
   const curriculumProgressDetails = useMemo(() => {
@@ -277,7 +318,11 @@ export default function HistoryPage() {
       manualCompletedMap.set(item.lessonId, item.completedAt);
     });
 
-    const lessonItems = systemLessonsList.map((lesson) => {
+    const filteredLessons = effectiveLang === "all"
+      ? systemLessonsList
+      : systemLessonsList.filter((l) => l.lang === effectiveLang);
+
+    const lessonItems = filteredLessons.map((lesson) => {
       const vocabList = lesson.vocabulary || [];
       const grammarList = lesson.grammarPoints || [];
       const kanjiList = lesson.kanjiItems || [];
@@ -299,6 +344,7 @@ export default function HistoryPage() {
         name: lesson.name,
         curriculumName: lesson.curriculumName || lesson.curriculum || lesson.level || "Giáo trình",
         level: lesson.level,
+        lang: lesson.lang,
         learnedVocab,
         totalVocab: vocabList.length,
         learnedGrammar,
@@ -325,7 +371,7 @@ export default function HistoryPage() {
       inProgressCount: inProgressList.length,
       completedCount: completedList.length
     };
-  }, [systemLessonsList, progress, grammarProgress, kanjiProgress, completedLessons]);
+  }, [systemLessonsList, progress, grammarProgress, kanjiProgress, completedLessons, effectiveLang]);
 
   // 2. Count Total Stats from matched timeline items to ensure counts are fully synchronized
   const totalVocabLearned = useMemo(() => {
@@ -403,6 +449,17 @@ export default function HistoryPage() {
     return Object.entries(groups);
   }, [filteredTimelineItems]);
 
+  const filteredPracticeHistory = useMemo(() => {
+    return practiceHistory.filter((item) => {
+      if (effectiveLang === "all") return true;
+      return item.lang === effectiveLang;
+    });
+  }, [practiceHistory, effectiveLang]);
+
+  const activeLangName = effectiveLang === "all" 
+    ? "Tất cả ngôn ngữ" 
+    : supportedLanguages.find(l => l.code === effectiveLang)?.name || "Ngôn ngữ";
+
   return (
     <AuthGuard featureName="Lịch Sử & Nhật Ký Học Tập" description="Đăng nhập để theo dõi bảng tiến độ từ vựng, ngữ pháp, kanji, chuỗi streak và lịch sử học tập cá nhân.">
       <div className="p-4 max-w-4xl mx-auto min-h-screen pb-24">
@@ -410,15 +467,62 @@ export default function HistoryPage() {
       <div className="bg-gradient-to-r from-indigo-800 via-purple-800 to-indigo-900 rounded-3xl p-6 text-white shadow-lg mb-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-xs font-semibold tracking-wide">
-              Dland History
-            </span>
-            <h1 className="text-2xl font-bold mt-2">Lịch Sử Học Tập</h1>
+            <div className="flex items-center gap-2 flex-wrap mb-1">
+              <span className="px-3 py-0.5 bg-white/20 backdrop-blur-md rounded-full text-xs font-semibold tracking-wide">
+                Dland History
+              </span>
+              <span className="px-3 py-0.5 bg-amber-400/30 text-amber-200 border border-amber-300/30 backdrop-blur-md rounded-full text-xs font-bold">
+                🌐 {activeLangName}
+              </span>
+            </div>
+            <h1 className="text-2xl font-bold mt-2">Lịch Sử & Tiến Độ Học Tập</h1>
             <p className="text-xs text-indigo-100 mt-1">
-              Theo dõi chặng đường học tập, tiến độ hoàn thành giáo trình và nhật ký học từ vựng/ngữ pháp hàng ngày
+              Theo dõi tiến độ hoàn thành giáo trình, từ vựng và ngữ pháp theo từng ngôn ngữ học tập
             </p>
           </div>
         </div>
+      </div>
+
+      {/* Language Filter Tabs */}
+      <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 mb-6">
+        <span className="text-xs font-bold text-gray-400 whitespace-nowrap mr-1">Lọc theo ngôn ngữ:</span>
+        <button
+          onClick={() => setSelectedLangFilter("current")}
+          className={`px-3 py-2 rounded-2xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-1.5 border ${
+            selectedLangFilter === "current"
+              ? "bg-indigo-600 text-white border-indigo-600 shadow-3xs scale-102"
+              : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
+          }`}
+        >
+          <span>⭐ Hiện tại: {activeLanguage.flag} {activeLanguage.name}</span>
+        </button>
+
+        {supportedLanguages.filter(l => l.status === "active").map((lang) => (
+          <button
+            key={lang.code}
+            onClick={() => setSelectedLangFilter(lang.code)}
+            className={`px-3 py-2 rounded-2xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-1.5 border ${
+              selectedLangFilter === lang.code
+                ? "bg-indigo-600 text-white border-indigo-600 shadow-3xs scale-102"
+                : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
+            }`}
+          >
+            <span>{lang.flag}</span>
+            <span>{lang.name}</span>
+          </button>
+        ))}
+
+        <button
+          onClick={() => setSelectedLangFilter("all")}
+          className={`px-3 py-2 rounded-2xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-1.5 border ${
+            selectedLangFilter === "all"
+              ? "bg-indigo-600 text-white border-indigo-600 shadow-3xs scale-102"
+              : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
+          }`}
+        >
+          <span>🌐</span>
+          <span>Tất cả ngôn ngữ</span>
+        </button>
       </div>
 
       {/* Grid Stats */}
@@ -662,6 +766,81 @@ export default function HistoryPage() {
             </div>
           );
         })()}
+      </div>
+
+      {/* Practice Center Scoring & History Section */}
+      <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-2xs mb-6 space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-gray-100">
+          <div>
+            <h2 className="text-base font-bold text-gray-900 flex items-center gap-2">
+              <span>🎯</span> Lịch Sử Luyện Tập & Chấm Điểm (Practice Hub)
+            </h2>
+            <p className="text-xs text-gray-500 mt-0.5">
+              Kết quả chấm điểm tự động từ Shadowing, Dịch thuật 2 chiều, Đọc hiểu và Thuyết trình
+            </p>
+          </div>
+          <Link
+            href="/practice"
+            className="px-3.5 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold rounded-xl text-xs flex items-center gap-1.5 transition-colors self-start sm:self-auto"
+          >
+            <span>🚀</span>
+            <span>Vào Trung Tâm Luyện Tập</span>
+          </Link>
+        </div>
+
+        {filteredPracticeHistory.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-8 text-center text-gray-400">
+            <span className="text-3xl mb-2">📊</span>
+            <p className="text-xs font-semibold">Chưa có bản ghi điểm nào cho ngôn ngữ này.</p>
+            <p className="text-[10px] text-gray-400 mt-0.5">
+              Luyện tập Shadowing, Dịch hoặc Đọc hiểu để hệ thống tự động chấm điểm và lưu vào đây!
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+            {filteredPracticeHistory.slice(0, 8).map((entry) => (
+              <div key={entry.id} className="p-4 rounded-2xl border border-gray-100 bg-gray-50/50 shadow-3xs space-y-2.5">
+                <div className="flex items-center justify-between flex-wrap gap-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-md bg-white border border-gray-200 text-gray-800 shadow-3xs">
+                      {entry.typeName}
+                    </span>
+                    <span className="text-xs font-bold text-gray-900">{entry.topic}</span>
+                  </div>
+                  <span className={`px-2.5 py-0.5 rounded-full text-xs font-black ${
+                    entry.score >= 80 ? "bg-emerald-100 text-emerald-800" : entry.score >= 50 ? "bg-amber-100 text-amber-800" : "bg-red-100 text-red-800"
+                  }`}>
+                    🎯 {entry.score}/100
+                  </span>
+                </div>
+
+                <div className="space-y-1.5 text-xs bg-white p-3 rounded-xl border border-gray-100/80">
+                  {entry.userAnswer && (
+                    <div>
+                      <span className="font-bold text-gray-400 text-[10px] uppercase block">Bài làm của bạn:</span>
+                      <span className="text-gray-900 font-semibold">{entry.userAnswer}</span>
+                    </div>
+                  )}
+                  {entry.correctAnswer && (
+                    <div className="pt-1.5 border-t border-gray-100">
+                      <span className="font-bold text-teal-700 text-[10px] uppercase block">Đáp án chuẩn:</span>
+                      <span className="text-teal-900 font-bold">{entry.correctAnswer}</span>
+                    </div>
+                  )}
+                  {entry.feedback && (
+                    <div className="pt-1 text-[11px] text-indigo-700 italic">
+                      💡 {entry.feedback}
+                    </div>
+                  )}
+                </div>
+
+                <div className="text-[10px] text-gray-400 text-right">
+                  {new Date(entry.completedAt).toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit", day: "2-digit", month: "2-digit", year: "numeric" })}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Activity Timeline */}

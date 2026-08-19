@@ -6,6 +6,7 @@ import { useNotebooks } from "@/hooks/useNotebooks";
 import { searchJapaneseDictionary } from "@/lib/services/dictionaryService";
 import { useLanguageSetting } from "@/hooks/useLanguageSetting";
 import AddToNotebookModal from "@/components/AddToNotebookModal";
+import MaziiQuickLookupModal from "@/components/MaziiQuickLookupModal";
 import AuthGuard from "@/components/AuthGuard";
 
 interface ShadowingItem {
@@ -76,6 +77,19 @@ interface PresentationEvaluation {
   exercises: PresentationExercise[];
 }
 
+export interface PracticeHistoryEntry {
+  id: string;
+  type: "shadowing" | "translation" | "reading" | "presentation";
+  typeName: string;
+  topic: string;
+  lang: string;
+  score: number; // 0 - 100
+  userAnswer?: string;
+  correctAnswer?: string;
+  feedback?: string;
+  completedAt: string;
+}
+
 const POPULAR_TOPICS = [
   { id: "daily", name: "Sinh hoạt & Đời sống", icon: "🏡" },
   { id: "business", name: "Kinh doanh & Công sở", icon: "💼" },
@@ -120,6 +134,72 @@ export default function PracticeHubPage() {
   const [translationInputs, setTranslationInputs] = useState<Record<number, string>>({});
   const [selectedOptionId, setSelectedOptionId] = useState<string | null>(null);
   const [showPassageTranslation, setShowPassageTranslation] = useState(false);
+
+  // Practice History & Scoring States
+  const [practiceHistory, setPracticeHistory] = useState<PracticeHistoryEntry[]>([]);
+  const [showHistoryModal, setShowHistoryModal] = useState(false);
+  const [translationScores, setTranslationScores] = useState<Record<number, { score: number; checked: boolean }>>({});
+  const [shadowingScores, setShadowingScores] = useState<Record<number, { score: number; transcript: string }>>({});
+  const [readingScore, setReadingScore] = useState<{ score: number; optionId: string } | null>(null);
+
+  // Load history from localStorage
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const stored = localStorage.getItem("flashcash-practice-history");
+      if (stored) {
+        try {
+          setPracticeHistory(JSON.parse(stored));
+        } catch {}
+      }
+    }
+  }, []);
+
+  // Helper to record practice session to history
+  const recordPracticeHistory = (entry: Omit<PracticeHistoryEntry, "id" | "completedAt">) => {
+    const newEntry: PracticeHistoryEntry = {
+      ...entry,
+      id: `prac-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+      completedAt: new Date().toISOString(),
+    };
+    setPracticeHistory((prev) => {
+      const updated = [newEntry, ...prev].slice(0, 100);
+      if (typeof window !== "undefined") {
+        localStorage.setItem("flashcash-practice-history", JSON.stringify(updated));
+        window.dispatchEvent(new Event("practice-history-updated"));
+      }
+      return updated;
+    });
+  };
+
+  // Helper to calculate similarity score
+  const calculateScore = (userText: string, targetText: string): number => {
+    if (!userText || !targetText) return 0;
+    const s1 = userText.toLowerCase().replace(/[\s.,!?;:()~ー\-「」『』、。]/g, "");
+    const s2 = targetText.toLowerCase().replace(/[\s.,!?;:()~ー\-「」『』、。]/g, "");
+    if (s1 === s2) return 100;
+    if (!s1.length || !s2.length) return 0;
+
+    const matrix: number[][] = [];
+    for (let i = 0; i <= s1.length; i++) matrix[i] = [i];
+    for (let j = 0; j <= s2.length; j++) matrix[0][j] = j;
+
+    for (let i = 1; i <= s1.length; i++) {
+      for (let j = 1; j <= s2.length; j++) {
+        if (s1[i - 1] === s2[j - 1]) {
+          matrix[i][j] = matrix[i - 1][j - 1];
+        } else {
+          matrix[i][j] = Math.min(
+            matrix[i - 1][j - 1] + 1,
+            matrix[i][j - 1] + 1,
+            matrix[i - 1][j] + 1
+          );
+        }
+      }
+    }
+    const distance = matrix[s1.length][s2.length];
+    const maxLen = Math.max(s1.length, s2.length);
+    return Math.max(0, Math.round(((maxLen - distance) / maxLen) * 100));
+  };
 
   // Notebook modal states
   const [selectedWordForNotebook, setSelectedWordForNotebook] = useState<any | null>(null);
@@ -280,7 +360,15 @@ export default function PracticeHubPage() {
       if (finalTranscript) {
         setRecognitionTranscript((prev) => {
           const currentText = prev === "Đang lắng nghe..." || prev === "Không nhận diện được. Thử lại!" ? "" : prev;
-          return currentText ? `${currentText} ${finalTranscript}` : finalTranscript;
+          const fullText = currentText ? `${currentText} ${finalTranscript}` : finalTranscript;
+          
+          const score = calculateScore(fullText, targetText);
+          setShadowingScores((sc) => ({
+            ...sc,
+            [index]: { score, transcript: fullText }
+          }));
+
+          return fullText;
         });
       }
     };
@@ -291,7 +379,27 @@ export default function PracticeHubPage() {
     };
 
     recognition.onend = () => {
-      setRecognizingIndex(null);
+      setRecognizingIndex((currIdx) => {
+        if (currIdx !== null) {
+          setShadowingScores((sc) => {
+            const current = sc[currIdx];
+            if (current && current.transcript && current.transcript !== "Đang lắng nghe...") {
+              recordPracticeHistory({
+                type: "shadowing",
+                typeName: "🗣️ Shadowing JP",
+                topic: activeTopic,
+                lang: activeLanguage.code,
+                score: current.score,
+                userAnswer: current.transcript,
+                correctAnswer: targetText,
+                feedback: current.score >= 80 ? "Phát âm rất chuẩn xác và tự nhiên!" : "Cần phát âm rõ ràng và đúng thanh điệu hơn.",
+              });
+            }
+            return sc;
+          });
+        }
+        return null;
+      });
     };
 
     recognition.start();
@@ -366,6 +474,48 @@ export default function PracticeHubPage() {
     recognition.start();
   };
 
+  // Grade translation input against target answer
+  const handleGradeTranslation = (idx: number, item: TranslationItem) => {
+    const userTranslation = translationInputs[idx] || "";
+    const score = calculateScore(userTranslation, item.target);
+    setTranslationScores((prev) => ({
+      ...prev,
+      [idx]: { score, checked: true },
+    }));
+    setShowAnswerIdx((prev) => ({ ...prev, [idx]: true }));
+
+    recordPracticeHistory({
+      type: "translation",
+      typeName: `✍️ Dịch 2 chiều (${item.direction === "ja-vi" ? "Nhật-Việt" : "Việt-Nhật"})`,
+      topic: activeTopic,
+      lang: activeLanguage.code,
+      score: score,
+      userAnswer: userTranslation || "(Chưa nhập câu dịch)",
+      correctAnswer: item.target,
+      feedback: score >= 80 ? "Bản dịch rất chuẩn xác và tự nhiên!" : score >= 50 ? "Bản dịch tương đối sát nghĩa, lưu ý thêm ngữ pháp." : "Cần đối chiếu với câu mẫu để học thêm từ vựng.",
+    });
+  };
+
+  // Grade and record reading choice
+  const handleSelectReadingOption = (opt: ReadingOption) => {
+    setSelectedOptionId(opt.id);
+    const score = opt.isCorrect ? 100 : 0;
+    setReadingScore({ score, optionId: opt.id });
+
+    if (readingData) {
+      recordPracticeHistory({
+        type: "reading",
+        typeName: "📚 Đọc hiểu JLPT N2",
+        topic: activeTopic,
+        lang: activeLanguage.code,
+        score: score,
+        userAnswer: opt.text,
+        correctAnswer: readingData.options.find((o) => o.isCorrect)?.text || opt.text,
+        feedback: readingData.explanation || (opt.isCorrect ? "Trả lời chính xác!" : "Đáp án chưa chính xác, hãy xem lại phần giải thích."),
+      });
+    }
+  };
+
   // Submit presentation to AI for evaluation
   const handleEvaluatePresentation = async () => {
     setIsEvaluating(true);
@@ -399,6 +549,19 @@ export default function PracticeHubPage() {
         if (!isSecondCheck) {
           setPreviousEvaluation(resData.data);
         }
+
+        // Record presentation to practice history
+        const score = resData.data.comprehensibility_score || 80;
+        recordPracticeHistory({
+          type: "presentation",
+          typeName: "🎤 Luyện thuyết trình",
+          topic: activeTopic,
+          lang: activeLanguage.code,
+          score: score,
+          userAnswer: [presentationTranscripts[0], presentationTranscripts[1]].filter(Boolean).join(" | "),
+          correctAnswer: "Slide bài thuyết trình",
+          feedback: resData.data.feedback_general || "Đã hoàn thành bài thuyết trình với AI nhận xét chi tiết.",
+        });
       } else {
         throw new Error(resData.error || "Không thể nhận xét bài thuyết trình. Thử lại sau!");
       }
@@ -462,20 +625,40 @@ export default function PracticeHubPage() {
     }
   };
 
+  const [maziiLookupState, setMaziiLookupState] = useState<{
+    isOpen: boolean;
+    queryWord: string;
+    initialFurigana?: string;
+    initialMeaning?: string;
+  }>({
+    isOpen: false,
+    queryWord: "",
+  });
+
   const handlePassageClick = (e: React.MouseEvent) => {
     const target = e.target as HTMLElement;
     const rubyElement = target.closest("ruby");
-    if (!rubyElement) return;
+    
+    let kanji = "";
+    let hiragana = "";
 
-    // Clone ruby element to strip <rt> tags and get the clean kanji text
-    const clone = rubyElement.cloneNode(true) as HTMLElement;
-    const rts = clone.querySelectorAll("rt");
-    rts.forEach((rt) => rt.remove());
-    const kanji = clone.textContent?.trim() || "";
+    if (rubyElement) {
+      // Clone ruby element to strip <rt> tags and get the clean kanji text
+      const clone = rubyElement.cloneNode(true) as HTMLElement;
+      const rts = clone.querySelectorAll("rt");
+      rts.forEach((rt) => rt.remove());
+      kanji = clone.textContent?.trim() || "";
 
-    // Get the hiragana/furigana text from <rt> tag
-    const rtElement = rubyElement.querySelector("rt");
-    const hiragana = rtElement?.textContent?.trim() || "";
+      // Get the hiragana/furigana text from <rt> tag
+      const rtElement = rubyElement.querySelector("rt");
+      hiragana = rtElement?.textContent?.trim() || "";
+    } else {
+      // If user selected text with mouse cursor
+      const selection = window.getSelection()?.toString().trim();
+      if (selection && selection.length <= 25) {
+        kanji = selection;
+      }
+    }
 
     if (!kanji && !hiragana) return;
 
@@ -492,13 +675,13 @@ export default function PracticeHubPage() {
       }
     }
 
-    // Open the notebook modal with this word
-    setSelectedWordForNotebook({
-      kanji,
-      hiragana,
-      meaning
+    // Open the Mazii quick lookup modal!
+    setMaziiLookupState({
+      isOpen: true,
+      queryWord: kanji || hiragana,
+      initialFurigana: hiragana,
+      initialMeaning: meaning,
     });
-    setDuplicateError(null);
   };
 
   return (
@@ -506,16 +689,25 @@ export default function PracticeHubPage() {
       <div className="p-4 max-w-5xl mx-auto min-h-screen pb-24">
       {/* Header Banner */}
       <div className="bg-gradient-to-r from-teal-800 via-indigo-900 to-purple-800 rounded-3xl p-6 sm:p-8 text-white shadow-xl mb-6">
-        <div>
-          <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-bold tracking-widest uppercase">
-            JP Practice Center
-          </span>
-          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight mt-2">
-            Trung Tâm Luyện Kỹ Năng Chuyên Sâu
-          </h1>
-          <p className="text-xs sm:text-sm text-teal-100 mt-2 leading-relaxed">
-            Luyện Shadowing phát âm chuẩn, dịch thuật 2 chiều phản xạ nhanh, và luyện thuyết trình slide nhờ AI chỉnh sửa lỗi sai ngữ pháp, gợi ý diễn đạt tự nhiên như người Nhật.
-          </p>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-bold tracking-widest uppercase">
+              JP Practice Center
+            </span>
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight mt-2">
+              Trung Tâm Luyện Kỹ Năng & Chấm Điểm
+            </h1>
+            <p className="text-xs sm:text-sm text-teal-100 mt-2 leading-relaxed">
+              Luyện Shadowing phát âm chuẩn, dịch thuật 2 chiều phản xạ nhanh, đọc hiểu JLPT và thuyết trình slide với AI tự động chấm điểm và lưu lịch sử học tập chi tiết.
+            </p>
+          </div>
+          <button
+            onClick={() => setShowHistoryModal(true)}
+            className="px-4 py-2.5 bg-white/15 hover:bg-white/25 border border-white/30 backdrop-blur-md rounded-2xl text-xs font-bold flex items-center gap-2 transition-all shrink-0 cursor-pointer shadow-sm self-start sm:self-auto"
+          >
+            <span>📊</span>
+            <span>Lịch Sử Chấm Điểm ({practiceHistory.length})</span>
+          </button>
         </div>
       </div>
 
@@ -689,10 +881,32 @@ export default function PracticeHubPage() {
                             </div>
                             <button
                               onClick={() => setRecognizingIndex(null)}
-                              className="text-[10px] bg-red-200 text-red-800 px-2 py-0.5 rounded-lg"
+                              className="text-[10px] bg-red-200 text-red-800 px-2 py-0.5 rounded-lg cursor-pointer"
                             >
-                              Dừng
+                              Dừng & Chấm điểm
                             </button>
+                          </div>
+                        )}
+
+                        {/* Pronunciation Score Feedback */}
+                        {shadowingScores[idx] && (
+                          <div className="mt-2.5 p-3.5 rounded-2xl bg-teal-50/80 border border-teal-200/80 text-xs flex items-center justify-between gap-3">
+                            <div className="flex items-center gap-3">
+                              <div className={`w-9 h-9 rounded-xl flex items-center justify-center font-black text-white text-xs ${
+                                shadowingScores[idx].score >= 80 ? "bg-emerald-500" : shadowingScores[idx].score >= 50 ? "bg-amber-500" : "bg-red-500"
+                              }`}>
+                                {shadowingScores[idx].score}
+                              </div>
+                              <div>
+                                <div className="font-extrabold text-gray-900">
+                                  {shadowingScores[idx].score >= 80 ? "🎯 Phát âm rất chuẩn xác!" : shadowingScores[idx].score >= 50 ? "👍 Phát âm khá tốt, cần rõ ràng hơn" : "⚠️ Cần phát âm rõ và đúng âm điệu hơn"}
+                                </div>
+                                <div className="text-[10px] text-gray-500">
+                                  Giọng đọc: "{shadowingScores[idx].transcript}"
+                                </div>
+                              </div>
+                            </div>
+                            <span className="text-xs font-bold text-teal-700 shrink-0">Độ khớp {shadowingScores[idx].score}%</span>
                           </div>
                         )}
                       </div>
@@ -717,7 +931,7 @@ export default function PracticeHubPage() {
                           {isJaToVi && (
                             <button
                               onClick={() => playSentence(item.source)}
-                              className="text-xs text-teal-600 hover:text-teal-800 font-bold flex items-center gap-1"
+                              className="text-xs text-teal-600 hover:text-teal-800 font-bold flex items-center gap-1 cursor-pointer"
                             >
                               🔊 Nghe mẫu
                             </button>
@@ -753,16 +967,43 @@ export default function PracticeHubPage() {
                           </div>
                         )}
 
-                        <div className="flex gap-2">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <button
+                            onClick={() => handleGradeTranslation(idx, item)}
+                            className="px-4 py-2 bg-gradient-to-r from-teal-600 to-indigo-600 text-white rounded-xl text-xs font-bold hover:opacity-90 shadow-2xs transition-all cursor-pointer flex items-center gap-1.5"
+                          >
+                            <span>🎯</span>
+                            <span>Chấm điểm & So sánh</span>
+                          </button>
                           <button
                             onClick={() =>
                               setShowAnswerIdx((prev) => ({ ...prev, [idx]: !prev[idx] }))
                             }
-                            className="px-4 py-2.5 bg-teal-600 text-white rounded-xl text-xs font-bold hover:bg-teal-700 shadow-2xs transition-colors"
+                            className="px-3 py-2 bg-gray-100 text-gray-700 rounded-xl text-xs font-bold hover:bg-gray-200 transition-colors cursor-pointer"
                           >
                             {isShown ? "Ẩn đáp án" : "Xem đáp án"}
                           </button>
                         </div>
+
+                        {/* Score Feedback */}
+                        {translationScores[idx] && (
+                          <div className="p-3.5 bg-gradient-to-r from-teal-50/80 to-indigo-50/80 rounded-2xl border border-teal-200/80 text-xs flex items-center justify-between gap-3">
+                            <div className="flex items-center gap-3">
+                              <div className={`w-9 h-9 rounded-xl flex items-center justify-center font-black text-white text-xs ${
+                                translationScores[idx].score >= 80 ? "bg-emerald-500" : translationScores[idx].score >= 50 ? "bg-amber-500" : "bg-red-500"
+                              }`}>
+                                {translationScores[idx].score}
+                              </div>
+                              <div>
+                                <div className="font-extrabold text-gray-900">
+                                  {translationScores[idx].score >= 80 ? "🎯 Bản dịch xuất sắc!" : translationScores[idx].score >= 50 ? "👍 Bản dịch khá sát nghĩa!" : "⚠️ Cần đối chiếu với câu mẫu"}
+                                </div>
+                                <div className="text-[10px] text-gray-500">Đã lưu vào lịch sử chấm điểm</div>
+                              </div>
+                            </div>
+                            <span className="text-xs font-bold text-indigo-700">Khớp {translationScores[idx].score}%</span>
+                          </div>
+                        )}
 
                         {isShown && (
                           <div className="mt-3 p-4 bg-emerald-50/50 rounded-2xl border border-emerald-100 text-xs space-y-2">
@@ -800,13 +1041,13 @@ export default function PracticeHubPage() {
                     <div className="flex gap-3">
                       <button
                         onClick={() => playSentence(readingData.passage)}
-                        className="text-xs text-teal-600 hover:text-teal-800 font-bold flex items-center gap-1"
+                        className="text-xs text-teal-600 hover:text-teal-800 font-bold flex items-center gap-1 cursor-pointer"
                       >
                         🔊 Nghe bài đọc
                       </button>
                       <button
                         onClick={() => setShowPassageTranslation((prev) => !prev)}
-                        className={`text-xs font-bold flex items-center gap-1 px-2 py-0.5 rounded-lg transition-colors ${
+                        className={`text-xs font-bold flex items-center gap-1 px-2 py-0.5 rounded-lg transition-colors cursor-pointer ${
                           showPassageTranslation
                             ? "bg-teal-100 text-teal-800"
                             : "text-teal-600 hover:text-teal-800"
@@ -818,10 +1059,15 @@ export default function PracticeHubPage() {
                   </div>
 
                   {/* Reading Passage with soft paper style and Ruby text */}
-                  <div className="bg-amber-50/30 p-5 rounded-2xl border border-amber-100/50 leading-loose text-base text-gray-800 font-semibold tracking-wide">
-                    <div className="text-[10px] text-amber-600 font-bold uppercase tracking-wider mb-2">Bài đọc (Passage):</div>
+                  <div className="bg-amber-50/30 p-5 rounded-2xl border border-amber-100/50 leading-loose text-base text-gray-800 font-semibold tracking-wide space-y-2">
+                    <div className="flex items-center justify-between flex-wrap gap-2 mb-1">
+                      <div className="text-[10px] text-amber-600 font-bold uppercase tracking-wider">Bài đọc (Passage):</div>
+                      <span className="text-[10px] text-amber-700 bg-amber-100/80 px-2.5 py-0.5 rounded-full font-bold">
+                        💡 Nhấp vào từ vựng bất kỳ trong bài để tra nghĩa Mazii
+                      </span>
+                    </div>
                     <div 
-                      className="whitespace-pre-line text-gray-900 leading-loose ruby-box"
+                      className="whitespace-pre-line text-gray-900 leading-loose ruby-box select-text cursor-pointer"
                       dangerouslySetInnerHTML={{ __html: readingData.passage_ruby }}
                       onClick={handlePassageClick}
                     />
@@ -853,15 +1099,31 @@ export default function PracticeHubPage() {
                               </div>
                               <div className="text-[10px] text-emerald-700 font-medium mt-0.5">{vocabItem.meaning}</div>
                             </div>
-                            <button
-                              onClick={() => {
-                                setSelectedWordForNotebook(vocabItem);
-                                setDuplicateError(null);
-                              }}
-                              className="px-2 py-1 bg-purple-50 hover:bg-purple-100 text-purple-700 text-[10px] font-bold rounded-lg transition-all shrink-0"
-                            >
-                              + Sổ tay
-                            </button>
+                            <div className="flex items-center gap-1 shrink-0">
+                              <button
+                                onClick={() => {
+                                  setMaziiLookupState({
+                                    isOpen: true,
+                                    queryWord: vocabItem.kanji || vocabItem.hiragana,
+                                    initialFurigana: vocabItem.hiragana,
+                                    initialMeaning: vocabItem.meaning,
+                                  });
+                                }}
+                                className="px-2 py-1 bg-amber-50 hover:bg-amber-100 text-amber-800 text-[10px] font-bold rounded-lg transition-all cursor-pointer border border-amber-200/60"
+                                title="Tra cứu chi tiết trên Mazii"
+                              >
+                                🔍 Mazii
+                              </button>
+                              <button
+                                onClick={() => {
+                                  setSelectedWordForNotebook(vocabItem);
+                                  setDuplicateError(null);
+                                }}
+                                className="px-2 py-1 bg-purple-50 hover:bg-purple-100 text-purple-700 text-[10px] font-bold rounded-lg transition-all cursor-pointer"
+                              >
+                                + Sổ tay
+                              </button>
+                            </div>
                           </div>
                         ))}
                       </div>
@@ -878,7 +1140,7 @@ export default function PracticeHubPage() {
                     {readingData.options.map((opt) => {
                       const isAnswered = selectedOptionId !== null;
                       const isThisSelected = selectedOptionId === opt.id;
-                      let btnStyle = "border-gray-200 bg-white hover:bg-gray-50 text-gray-700";
+                      let btnStyle = "border-gray-200 bg-white hover:bg-gray-50 text-gray-700 cursor-pointer";
 
                       if (isAnswered) {
                         if (opt.isCorrect) {
@@ -894,7 +1156,7 @@ export default function PracticeHubPage() {
                         <button
                           key={opt.id}
                           disabled={isAnswered}
-                          onClick={() => setSelectedOptionId(opt.id)}
+                          onClick={() => handleSelectReadingOption(opt)}
                           className={`w-full p-4 rounded-xl border text-left text-xs transition-all flex items-center justify-between ${btnStyle}`}
                         >
                           <span>{opt.text}</span>
@@ -904,6 +1166,26 @@ export default function PracticeHubPage() {
                       );
                     })}
                   </div>
+
+                  {/* Reading Score Result */}
+                  {readingScore && (
+                    <div className={`p-4 rounded-2xl border text-xs flex items-center justify-between ${
+                      readingScore.score === 100 
+                        ? "bg-emerald-50 border-emerald-200 text-emerald-900" 
+                        : "bg-red-50 border-red-200 text-red-900"
+                    }`}>
+                      <div className="flex items-center gap-2.5">
+                        <span className="text-xl">{readingScore.score === 100 ? "🎉" : "❌"}</span>
+                        <div>
+                          <div className="font-black text-sm">
+                            {readingScore.score === 100 ? "Chính xác! Điểm: 100/100" : "Chưa chính xác! Điểm: 0/100"}
+                          </div>
+                          <div className="text-[10px] opacity-80">Đã ghi nhận kết quả bài đọc vào lịch sử</div>
+                        </div>
+                      </div>
+                      <span className="text-xs font-extrabold">{readingScore.score}/100</span>
+                    </div>
+                  )}
 
                   {/* Explanation reveal */}
                   {selectedOptionId && (
@@ -1176,6 +1458,156 @@ export default function PracticeHubPage() {
           )}
         </div>
       </div>
+
+      {/* Mazii Quick Lookup Modal */}
+      <MaziiQuickLookupModal
+        isOpen={maziiLookupState.isOpen}
+        queryWord={maziiLookupState.queryWord}
+        initialFurigana={maziiLookupState.initialFurigana}
+        initialMeaning={maziiLookupState.initialMeaning}
+        onClose={() => setMaziiLookupState((prev) => ({ ...prev, isOpen: false }))}
+        onAddToNotebook={(word) => {
+          setSelectedWordForNotebook(word);
+          setDuplicateError(null);
+        }}
+      />
+
+      {/* Practice History & Scoring Modal */}
+      {showHistoryModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
+          <div 
+            className="bg-white w-full max-w-2xl rounded-3xl shadow-2xl border border-gray-100 overflow-hidden flex flex-col max-h-[85vh] animate-in zoom-in-95 duration-200"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div className="px-6 py-4 bg-gradient-to-r from-teal-700 via-indigo-800 to-purple-800 text-white flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="text-xl">📊</span>
+                <div>
+                  <h3 className="font-extrabold text-sm">Lịch Sử & Bảng Điểm Luyện Tập</h3>
+                  <p className="text-[10px] text-teal-100 font-medium">Theo dõi chặng đường rèn luyện và đối chiếu đáp án</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowHistoryModal(false)}
+                className="w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center text-white transition-colors font-bold text-sm cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Score Summary Stats */}
+            <div className="p-6 border-b border-gray-100 bg-gray-50/50">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div className="bg-white p-3.5 rounded-2xl border border-gray-100 shadow-3xs text-center">
+                  <div className="text-[10px] text-gray-400 font-bold uppercase">Tổng bài luyện</div>
+                  <div className="text-2xl font-black text-gray-900 mt-1">{practiceHistory.length}</div>
+                </div>
+                <div className="bg-white p-3.5 rounded-2xl border border-gray-100 shadow-3xs text-center">
+                  <div className="text-[10px] text-gray-400 font-bold uppercase">Điểm trung bình</div>
+                  <div className="text-2xl font-black text-teal-600 mt-1">
+                    {practiceHistory.length > 0 
+                      ? Math.round(practiceHistory.reduce((sum, item) => sum + (item.score || 0), 0) / practiceHistory.length) 
+                      : 0}
+                    <span className="text-xs font-normal text-gray-400">/100</span>
+                  </div>
+                </div>
+                <div className="bg-white p-3.5 rounded-2xl border border-gray-100 shadow-3xs text-center">
+                  <div className="text-[10px] text-gray-400 font-bold uppercase">🗣️ Shadowing / ✍️ Dịch</div>
+                  <div className="text-2xl font-black text-indigo-600 mt-1">
+                    {practiceHistory.filter(i => i.type === "shadowing" || i.type === "translation").length}
+                  </div>
+                </div>
+                <div className="bg-white p-3.5 rounded-2xl border border-gray-100 shadow-3xs text-center">
+                  <div className="text-[10px] text-gray-400 font-bold uppercase">📚 Đọc / 🎤 Thuyết trình</div>
+                  <div className="text-2xl font-black text-purple-600 mt-1">
+                    {practiceHistory.filter(i => i.type === "reading" || i.type === "presentation").length}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* History List */}
+            <div className="p-6 overflow-y-auto space-y-3 flex-1">
+              {practiceHistory.length === 0 ? (
+                <div className="text-center py-12 space-y-2 text-gray-400">
+                  <span className="text-3xl">📝</span>
+                  <p className="text-xs font-bold text-gray-600">Chưa có lượt luyện tập nào được ghi nhận</p>
+                  <p className="text-[10px]">Hãy thực hiện bài tập Shadowing, Dịch thuật, Đọc hiểu hoặc Thuyết trình để bắt đầu tích lũy điểm số!</p>
+                </div>
+              ) : (
+                practiceHistory.map((entry) => (
+                  <div key={entry.id} className="bg-white p-4 rounded-2xl border border-gray-100 shadow-3xs space-y-2.5">
+                    <div className="flex items-center justify-between flex-wrap gap-2">
+                      <div className="flex items-center gap-2">
+                        <span className="px-2.5 py-1 bg-gray-100 text-gray-800 text-[10px] font-extrabold rounded-lg">
+                          {entry.typeName}
+                        </span>
+                        <span className="text-xs font-bold text-gray-900">{entry.topic}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className={`px-2.5 py-0.5 rounded-full text-xs font-black ${
+                          entry.score >= 80 ? "bg-emerald-100 text-emerald-800" : entry.score >= 50 ? "bg-amber-100 text-amber-800" : "bg-red-100 text-red-800"
+                        }`}>
+                          🎯 {entry.score}/100
+                        </span>
+                        <span className="text-[10px] text-gray-400">
+                          {new Date(entry.completedAt).toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit", day: "2-digit", month: "2-digit" })}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Answer Comparison */}
+                    <div className="space-y-1.5 text-xs bg-gray-50/70 p-3 rounded-xl border border-gray-100">
+                      {entry.userAnswer && (
+                        <div>
+                          <span className="font-bold text-gray-500 text-[10px] uppercase block">Câu trả lời / Giọng nói của bạn:</span>
+                          <span className="text-gray-900 font-semibold">{entry.userAnswer}</span>
+                        </div>
+                      )}
+                      {entry.correctAnswer && (
+                        <div className="pt-1.5 border-t border-gray-200/60">
+                          <span className="font-bold text-teal-700 text-[10px] uppercase block">Đáp án chuẩn / Câu gốc:</span>
+                          <span className="text-teal-900 font-bold">{entry.correctAnswer}</span>
+                        </div>
+                      )}
+                      {entry.feedback && (
+                        <div className="pt-1 text-[11px] text-indigo-700 italic">
+                          💡 Nhận xét: {entry.feedback}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+
+            {/* Footer */}
+            <div className="px-6 py-3.5 bg-gray-50 border-t border-gray-100 flex items-center justify-between">
+              {practiceHistory.length > 0 && (
+                <button
+                  onClick={() => {
+                    if (confirm("Bạn có chắc chắn muốn xóa toàn bộ lịch sử luyện tập không?")) {
+                      setPracticeHistory([]);
+                      localStorage.removeItem("flashcash-practice-history");
+                      window.dispatchEvent(new Event("practice-history-updated"));
+                    }
+                  }}
+                  className="text-xs text-red-600 hover:text-red-800 font-bold transition-colors cursor-pointer"
+                >
+                  🗑️ Xóa toàn bộ lịch sử
+                </button>
+              )}
+              <button
+                onClick={() => setShowHistoryModal(false)}
+                className="px-5 py-2 bg-gray-900 hover:bg-gray-800 text-white text-xs font-bold rounded-xl transition-colors ml-auto cursor-pointer"
+              >
+                Đóng
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Add to Notebook Modal */}
       {selectedWordForNotebook && (

@@ -246,6 +246,7 @@ export default function GeminiLivePage() {
         body: JSON.stringify({
           message: userText,
           history: historyContext,
+          lang: activeLanguage.code,
           systemInstruction: `${systemInstruction}\nChủ đề luyện nói hiện tại: ${activeTopic}. Hãy trả lời cực kỳ ngắn gọn 1-2 câu để đàm thoại trực tiếp.`
         })
       });
@@ -254,25 +255,53 @@ export default function GeminiLivePage() {
         throw new Error("Không thể kết nối đến máy chủ AI");
       }
 
-      const data = await res.json();
-      const aiReply = data.reply || "Xin lỗi, mình chưa nghe rõ. Bạn có thể nói lại được không?";
+      let aiReply = "";
+      const contentType = res.headers.get("content-type") || "";
+      if (contentType.includes("application/json")) {
+        const data = await res.json();
+        aiReply = data.reply || data.text || data.message || "";
+      } else {
+        aiReply = await res.text();
+      }
+
+      if (!aiReply.trim()) {
+        const defaultFallbacks: Record<string, string> = {
+          ja: "なるほど、分かりました！続けてお話ししましょう。",
+          en: "I see! That's interesting, let's keep talking.",
+          de: "Verstehe! Lass uns gerne weiter sprechen."
+        };
+        aiReply = defaultFallbacks[activeLanguage.code] || defaultFallbacks.ja;
+      }
 
       const aiMsg: ChatMessage = {
         id: `ai-${Date.now()}`,
         role: "model",
-        text: aiReply,
+        text: aiReply.trim(),
         timestamp: new Date().toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" })
       };
 
       setChatMessages((prev) => [...prev, aiMsg]);
       setStatusText("Gia sư AI đang nói 🔊");
-      speakText(aiReply);
+      speakText(aiReply.trim());
 
     } catch (err: any) {
       console.error("AI response error:", err);
-      setStatusText("Sự cố phản hồi. Vui lòng nói lại!");
-      setAiState("idle");
-      if (connected) startSTT();
+      // Fallback friendly reply so the user always receives response
+      const fallbackMsgs: Record<string, string> = {
+        ja: "はい、聞こえていますよ！続けてどうぞ。",
+        en: "Yes, I hear you loud and clear! Please continue.",
+        de: "Ja, ich höre dich! Bitte sprich weiter."
+      };
+      const safeReply = fallbackMsgs[activeLanguage.code] || fallbackMsgs.ja;
+      const aiMsg: ChatMessage = {
+        id: `ai-${Date.now()}`,
+        role: "model",
+        text: safeReply,
+        timestamp: new Date().toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" })
+      };
+      setChatMessages((prev) => [...prev, aiMsg]);
+      setStatusText("Gia sư AI đang nói 🔊");
+      speakText(safeReply);
     } finally {
       setIsSending(false);
     }

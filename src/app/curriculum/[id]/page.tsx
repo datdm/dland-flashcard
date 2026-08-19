@@ -12,6 +12,7 @@ import KanjiStrokeViewer from "@/components/KanjiStrokeViewer";
 import { useGrammarProgress } from "@/hooks/useGrammarProgress";
 import { useKanjiProgress } from "@/hooks/useKanjiProgress";
 import { useLanguageSetting } from "@/hooks/useLanguageSetting";
+import MaziiQuickLookupModal from "@/components/MaziiQuickLookupModal";
 import AuthGuard from "@/components/AuthGuard";
 
 interface Props {
@@ -37,6 +38,16 @@ export default function CurriculumLessonDetailPage({ params }: Props) {
   } | null>(null);
   const [loadingActivities, setLoadingActivities] = useState(false);
   const [activitiesError, setActivitiesError] = useState<string | null>(null);
+
+  const [maziiLookupState, setMaziiLookupState] = useState<{
+    isOpen: boolean;
+    queryWord: string;
+    initialFurigana?: string;
+    initialMeaning?: string;
+  }>({
+    isOpen: false,
+    queryWord: "",
+  });
 
   // Interaction states for activities
   const [playbackRate, setPlaybackRate] = useState<number>(1.0);
@@ -697,16 +708,34 @@ export default function CurriculumLessonDetailPage({ params }: Props) {
 
                     {/* Reading passage box */}
                     <div className="bg-indigo-50/40 p-5 rounded-2xl border border-indigo-100/50 leading-relaxed text-sm font-semibold text-gray-800 space-y-2">
-                      <div className="flex justify-between items-center mb-1">
-                        <span className="text-[10px] text-indigo-500 uppercase tracking-widest font-bold">Đoạn văn (Passage):</span>
+                      <div className="flex justify-between items-center flex-wrap gap-2 mb-1">
+                        <div className="flex items-center gap-2">
+                          <span className="text-[10px] text-indigo-500 uppercase tracking-widest font-bold">Đoạn văn (Passage):</span>
+                          <span className="text-[10px] text-indigo-700 bg-indigo-100/80 px-2 py-0.5 rounded-full font-bold">
+                            💡 Chọn từ bất kỳ để tra Mazii
+                          </span>
+                        </div>
                         <button
                           onClick={() => playSentence(item.passage)}
-                          className="text-xs text-indigo-600 hover:text-indigo-800 font-bold flex items-center gap-1"
+                          className="text-xs text-indigo-600 hover:text-indigo-800 font-bold flex items-center gap-1 cursor-pointer"
                         >
                           🔊 Đọc to
                         </button>
                       </div>
-                      <p className="whitespace-pre-line text-gray-900 leading-loose">{item.passage}</p>
+                      <p 
+                        className="whitespace-pre-line text-gray-900 leading-loose select-text cursor-pointer hover:text-indigo-950 transition-colors"
+                        onMouseUp={() => {
+                          const selection = window.getSelection()?.toString().trim();
+                          if (selection && selection.length <= 25) {
+                            setMaziiLookupState({
+                              isOpen: true,
+                              queryWord: selection,
+                            });
+                          }
+                        }}
+                      >
+                        {item.passage}
+                      </p>
                     </div>
 
                     {/* Question */}
@@ -718,7 +747,7 @@ export default function CurriculumLessonDetailPage({ params }: Props) {
                     <div className="grid grid-cols-1 gap-2.5">
                       {item.options.map((opt: any) => {
                         const isThisSelected = selectedOptId === opt.id;
-                        let btnStyle = "border-gray-200 bg-white hover:bg-gray-50 text-gray-700";
+                        let btnStyle = "border-gray-200 bg-white hover:bg-gray-50 text-gray-700 cursor-pointer";
 
                         if (isAnswered) {
                           if (opt.isCorrect) {
@@ -759,6 +788,15 @@ export default function CurriculumLessonDetailPage({ params }: Props) {
           )}
         </div>
       )}
+
+      {/* Mazii Quick Lookup Modal */}
+      <MaziiQuickLookupModal
+        isOpen={maziiLookupState.isOpen}
+        queryWord={maziiLookupState.queryWord}
+        initialFurigana={maziiLookupState.initialFurigana}
+        initialMeaning={maziiLookupState.initialMeaning}
+        onClose={() => setMaziiLookupState((prev) => ({ ...prev, isOpen: false }))}
+      />
       </div>
     </AuthGuard>
   );
