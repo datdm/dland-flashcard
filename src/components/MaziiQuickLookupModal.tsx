@@ -9,6 +9,7 @@ export interface MaziiWordResult {
   meaning?: string;
   level?: string;
   source?: string;
+  examples?: { japanese: string; vietnamese: string }[];
 }
 
 interface MaziiQuickLookupModalProps {
@@ -41,7 +42,8 @@ export default function MaziiQuickLookupModal({
 
     async function fetchMazii() {
       try {
-        const res = await fetch(`/api/dictionary?q=${encodeURIComponent(queryWord.trim())}&lang=ja`);
+        const cleanWord = queryWord.trim();
+        const res = await fetch(`/api/dictionary?keyword=${encodeURIComponent(cleanWord)}&lang=ja`);
         if (!res.ok) throw new Error("Failed to search dictionary");
         const json = await res.json();
         
@@ -51,9 +53,9 @@ export default function MaziiQuickLookupModal({
             // Use fallback from reading data
             setResults([
               {
-                kanji: queryWord,
-                hiragana: initialFurigana || queryWord,
-                meaning: initialMeaning || "Đang cập nhật nghĩa...",
+                kanji: cleanWord,
+                hiragana: initialFurigana || cleanWord,
+                meaning: initialMeaning || "Đang cập nhật giải nghĩa...",
                 source: "Giáo trình JLPT",
               },
             ]);
@@ -219,6 +221,34 @@ export default function MaziiQuickLookupModal({
                   )) || currentItem.meaning}
                 </div>
               </div>
+
+              {/* Real Mazii Examples Section */}
+              {currentItem.examples && currentItem.examples.length > 0 && (
+                <div className="bg-amber-50/40 p-4 rounded-2xl border border-amber-200/50 space-y-2.5">
+                  <h4 className="text-[11px] font-extrabold text-amber-900 uppercase tracking-wider flex items-center gap-1.5">
+                    <span>💬</span> Câu ví dụ thực tế (Mazii):
+                  </h4>
+                  <div className="space-y-2">
+                    {currentItem.examples.map((ex, exIdx) => (
+                      <div key={exIdx} className="bg-white p-3 rounded-xl border border-amber-100 shadow-3xs space-y-1">
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="text-xs font-bold text-gray-900 leading-relaxed">{ex.japanese}</span>
+                          <button
+                            onClick={() => playSpeech(ex.japanese)}
+                            className="p-1 text-gray-400 hover:text-amber-600 transition-colors shrink-0 cursor-pointer"
+                            title="Nghe câu ví dụ"
+                          >
+                            🔊
+                          </button>
+                        </div>
+                        <div className="text-[11px] text-gray-600 italic leading-relaxed">
+                          {ex.vietnamese}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>

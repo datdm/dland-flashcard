@@ -20,7 +20,7 @@ async function translateToVietnamese(text: string, sourceLang: string = "en"): P
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
-  const keyword = searchParams.get("keyword");
+  const keyword = searchParams.get("keyword") || searchParams.get("q") || searchParams.get("query");
   const lang = searchParams.get("lang") || "ja";
 
   if (!keyword || !keyword.trim()) {
@@ -132,7 +132,7 @@ export async function GET(request: NextRequest) {
   }
 
   // ================= JAPANESE DICTIONARY API (MAZII & JISHO) =================
-  // 1. Try Mazii Japanese-Vietnamese API first
+  // 1. Try Mazii Japanese-Vietnamese API (Word Search)
   try {
     const maziiRes = await fetch("https://mazii.net/api/search", {
       method: "POST",
@@ -150,19 +150,42 @@ export async function GET(request: NextRequest) {
     if (maziiRes.ok) {
       const maziiJson = await maziiRes.json();
       if (maziiJson.status === 200 && Array.isArray(maziiJson.data)) {
-        maziiJson.data.slice(0, 10).forEach((item: any) => {
-          const meaningsStr = item.means
-            ?.map((m: any) => m.mean)
-            .filter(Boolean)
-            .join("; ");
+        maziiJson.data.forEach((item: any) => {
+          const meanList: string[] = [];
+          const exampleList: { japanese: string; vietnamese: string }[] = [];
 
-          if (meaningsStr) {
+          if (Array.isArray(item.means)) {
+            item.means.forEach((m: any) => {
+              if (m.mean) {
+                const kindStr = m.kind ? `[${m.kind}] ` : "";
+                meanList.push(`${kindStr}${m.mean}`);
+              }
+              if (Array.isArray(m.examples)) {
+                m.examples.forEach((ex: any) => {
+                  if (ex.content && ex.mean) {
+                    exampleList.push({
+                      japanese: ex.content,
+                      vietnamese: ex.mean,
+                    });
+                  }
+                });
+              }
+            });
+          }
+
+          const meaningsStr = meanList.join("; ") || item.short_mean || "";
+          const levelStr = Array.isArray(item.level) 
+            ? item.level.join(", ") 
+            : (item.level ? item.level : (item.jlpt ? `N${item.jlpt}` : undefined));
+
+          if (meaningsStr || item.word || item.phonetic) {
             results.push({
-              kanji: item.word !== item.phonetic ? item.word : undefined,
+              kanji: item.word,
               hiragana: item.phonetic || item.word,
-              onyomi: item.hb,
+              onyomi: item.han || item.hb || undefined,
               meaning: meaningsStr,
-              level: item.jlpt ? `N${item.jlpt}` : undefined,
+              level: levelStr,
+              examples: exampleList.slice(0, 4),
               source: "Mazii API",
             });
           }
@@ -170,10 +193,66 @@ export async function GET(request: NextRequest) {
       }
     }
   } catch (err) {
-    console.error("Mazii API error:", err);
+    console.error("Mazii Word API error:", err);
   }
 
-  // 2. Fallback to Jisho + Auto Translation to Vietnamese
+  // 2. If single Kanji or 0 word results, try Mazii Kanji search
+  if (results.length === 0 || query.length <= 2) {
+    try {
+      const kanjiRes = await fetch("https://mazii.net/api/search", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          query: query,
+          dict: "javi",
+          type: "kanji",
+          limit: 3,
+        }),
+      });
+
+      if (kanjiRes.ok) {
+        const kanjiJson = await kanjiRes.json();
+        const kanjiData = kanjiJson.results || kanjiJson.data || [];
+        if (Array.isArray(kanjiData)) {
+          kanjiData.forEach((kItem: any) => {
+            const mean = kItem.mean || kItem.detail || "";
+            const onKun = [kItem.on ? `Âm On: ${kItem.on}` : "", kItem.kun ? `Âm Kun: ${kItem.kun}` : ""].filter(Boolean).join(" • ");
+            const kanjiLevel = Array.isArray(kItem.level) ? kItem.level.join(", ") : kItem.level;
+            
+            const kanjiExamples: { japanese: string; vietnamese: string }[] = [];
+            if (Array.isArray(kItem.examples)) {
+              kItem.examples.slice(0, 4).forEach((ex: any) => {
+                if (ex.w && ex.m) {
+                  kanjiExamples.push({
+                    japanese: `${ex.w} (${ex.p || ""}) - ${ex.h || ""}`.trim(),
+                    vietnamese: ex.m,
+                  });
+                }
+              });
+            }
+
+            if (kItem.kanji || mean) {
+              results.push({
+                kanji: kItem.kanji || query,
+                hiragana: onKun || kItem.kun || kItem.on || query,
+                onyomi: kItem.mean || undefined, // Hán Việt
+                meaning: kItem.detail || mean,
+                level: kanjiLevel,
+                examples: kanjiExamples,
+                source: "Mazii Hán Tự API",
+              });
+            }
+          });
+        }
+      }
+    } catch (kErr) {
+      console.error("Mazii Kanji API error:", kErr);
+    }
+  }
+
+  // 3. Fallback to Jisho + Auto Translation to Vietnamese
   if (results.length === 0) {
     try {
       const jishoRes = await fetch(

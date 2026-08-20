@@ -13,6 +13,7 @@ import { useGrammarProgress } from "@/hooks/useGrammarProgress";
 import { useKanjiProgress } from "@/hooks/useKanjiProgress";
 import { useLanguageSetting } from "@/hooks/useLanguageSetting";
 import MaziiQuickLookupModal from "@/components/MaziiQuickLookupModal";
+import SelectionLookupTooltip from "@/components/SelectionLookupTooltip";
 import AuthGuard from "@/components/AuthGuard";
 
 interface Props {
@@ -722,18 +723,7 @@ export default function CurriculumLessonDetailPage({ params }: Props) {
                           🔊 Đọc to
                         </button>
                       </div>
-                      <p 
-                        className="whitespace-pre-line text-gray-900 leading-loose select-text cursor-pointer hover:text-indigo-950 transition-colors"
-                        onMouseUp={() => {
-                          const selection = window.getSelection()?.toString().trim();
-                          if (selection && selection.length <= 25) {
-                            setMaziiLookupState({
-                              isOpen: true,
-                              queryWord: selection,
-                            });
-                          }
-                        }}
-                      >
+                      <p className="whitespace-pre-line text-gray-900 leading-loose select-text hover:text-indigo-950 transition-colors">
                         {item.passage}
                       </p>
                     </div>
@@ -788,6 +778,16 @@ export default function CurriculumLessonDetailPage({ params }: Props) {
           )}
         </div>
       )}
+
+      {/* Floating Selection Tooltip for Mazii Lookup */}
+      <SelectionLookupTooltip
+        onLookup={(word) => {
+          setMaziiLookupState({
+            isOpen: true,
+            queryWord: word,
+          });
+        }}
+      />
 
       {/* Mazii Quick Lookup Modal */}
       <MaziiQuickLookupModal

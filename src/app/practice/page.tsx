@@ -7,6 +7,7 @@ import { searchJapaneseDictionary } from "@/lib/services/dictionaryService";
 import { useLanguageSetting } from "@/hooks/useLanguageSetting";
 import AddToNotebookModal from "@/components/AddToNotebookModal";
 import MaziiQuickLookupModal from "@/components/MaziiQuickLookupModal";
+import SelectionLookupTooltip from "@/components/SelectionLookupTooltip";
 import AuthGuard from "@/components/AuthGuard";
 
 interface ShadowingItem {
@@ -1458,6 +1459,18 @@ export default function PracticeHubPage() {
           )}
         </div>
       </div>
+
+      {/* Floating Selection Tooltip for Mazii Lookup */}
+      <SelectionLookupTooltip
+        onLookup={(word, furigana, meaning) => {
+          setMaziiLookupState({
+            isOpen: true,
+            queryWord: word,
+            initialFurigana: furigana,
+            initialMeaning: meaning,
+          });
+        }}
+      />
 
       {/* Mazii Quick Lookup Modal */}
       <MaziiQuickLookupModal
