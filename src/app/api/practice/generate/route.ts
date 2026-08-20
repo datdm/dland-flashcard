@@ -302,7 +302,7 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
     }
 
     const model = genAI.getGenerativeModel({
-      model: "gemini-1.5-flash",
+      model: "gemini-3.5-flash",
       generationConfig: {
         responseMimeType: "application/json",
         temperature: 0.95
