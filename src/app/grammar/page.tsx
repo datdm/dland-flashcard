@@ -8,11 +8,22 @@ import { GrammarPoint } from "@/types";
 import GrammarCard from "@/components/GrammarCard";
 import { useLanguageSetting } from "@/hooks/useLanguageSetting";
 
+function normalizeSearchText(text: string = ""): string {
+  return text
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[～〜~]/g, "")
+    .replace(/[\s\u3000\u00a0\t\r\n]+/g, " ")
+    .replace(/[・、。，,;；:：\(\)\[\]「」『』\.\?\!？]/g, "")
+    .trim();
+}
+
 export default function GrammarHubPage() {
   const { activeLanguage } = useLanguageSetting();
   const langCode = activeLanguage.code;
 
-  const [grammarList, setGrammarList] = useState<GrammarPoint[]>([]);
+  const [allGrammarList, setAllGrammarList] = useState<GrammarPoint[]>([]);
   const [activeLevel, setActiveLevel] = useState<string>("ALL");
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
@@ -25,23 +36,62 @@ export default function GrammarHubPage() {
     async function loadGrammar() {
       setLoading(true);
       const repo = getGrammarRepository();
-      const levelFilter = activeLevel === "ALL" ? undefined : (activeLevel as JLPTLevel);
-      const data = await repo.getAllGrammar(levelFilter);
-      setGrammarList(data);
+      const data = await repo.getAllGrammar();
+      setAllGrammarList(data);
       setLoading(false);
     }
     loadGrammar();
-  }, [activeLevel, langCode]);
+  }, [langCode]);
 
-  const filteredGrammar = grammarList.filter((g) => {
-    if (!searchQuery.trim()) return true;
-    const q = searchQuery.toLowerCase();
-    return (
-      g.structure.toLowerCase().includes(q) ||
-      g.meaning.toLowerCase().includes(q) ||
-      g.explanation?.toLowerCase().includes(q)
-    );
-  });
+  const cleanQuery = searchQuery.trim();
+  const normQuery = normalizeSearchText(cleanQuery);
+
+  // Filter grammar points
+  const { filteredGrammar, isCrossLevelResult } = (() => {
+    if (!normQuery) {
+      const list = activeLevel === "ALL" 
+        ? allGrammarList 
+        : allGrammarList.filter((g) => g.level === activeLevel);
+      return { filteredGrammar: list, isCrossLevelResult: false };
+    }
+
+    const matchesSearch = (g: GrammarPoint) => {
+      const structNorm = normalizeSearchText(g.structure);
+      const meanNorm = normalizeSearchText(g.meaning);
+      const expNorm = normalizeSearchText(g.explanation || "");
+      const exMatch = g.examples?.some(
+        (ex) =>
+          normalizeSearchText(ex.sentence).includes(normQuery) ||
+          normalizeSearchText(ex.meaning).includes(normQuery) ||
+          normalizeSearchText(ex.romaji || "").includes(normQuery)
+      );
+
+      return (
+        structNorm.includes(normQuery) ||
+        meanNorm.includes(normQuery) ||
+        expNorm.includes(normQuery) ||
+        !!exMatch
+      );
+    };
+
+    // If level filter is active, check level matches first
+    if (activeLevel !== "ALL") {
+      const levelMatches = allGrammarList.filter(
+        (g) => g.level === activeLevel && matchesSearch(g)
+      );
+      if (levelMatches.length > 0) {
+        return { filteredGrammar: levelMatches, isCrossLevelResult: false };
+      }
+      // Fallback to cross-level matches if none in current level
+      const allMatches = allGrammarList.filter(matchesSearch);
+      if (allMatches.length > 0) {
+        return { filteredGrammar: allMatches, isCrossLevelResult: true };
+      }
+      return { filteredGrammar: [], isCrossLevelResult: false };
+    }
+
+    return { filteredGrammar: allGrammarList.filter(matchesSearch), isCrossLevelResult: false };
+  })();
 
   const levelOptions = langCode === "en"
     ? ["ALL", "Band 4.0-4.5", "Band 5.0-5.5", "Band 6.0-6.5", "Band 7.0+"]
@@ -62,10 +112,10 @@ export default function GrammarHubPage() {
     : "Tổng hợp cấu trúc, giải thích chi tiết & ví dụ mẫu từ N5 đến N2";
 
   const searchPlaceholder = langCode === "en"
-    ? "Tìm kiếm ngữ pháp (vd: Thể bị động, Mệnh đề quan hệ, Present Perfect...)..."
+    ? "Dán hoặc tìm kiếm ngữ pháp (vd: Passive, Relative Clause, Present Perfect...)..."
     : langCode === "de"
-    ? "Tìm kiếm ngữ pháp (vd: Verb, Akkusativ, Dativ...)..."
-    : "Tìm kiếm ngữ pháp (vd: ている, わけだ, nguyên nhân...)...";
+    ? "Dán hoặc tìm kiếm ngữ pháp (vd: Verb, Akkusativ, Dativ...)..."
+    : "Dán hoặc tìm kiếm ngữ pháp (vd: ている, わけだ, nguyên nhân...)...";
 
   return (
     <div className="p-4 max-w-5xl mx-auto min-h-screen pb-24">
@@ -105,25 +155,51 @@ export default function GrammarHubPage() {
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
+          onPaste={(e) => {
+            const pasted = e.clipboardData?.getData("text");
+            if (pasted) {
+              e.preventDefault();
+              const cleaned = pasted.trim().replace(/[\r\n\t]+/g, " ");
+              setSearchQuery(cleaned);
+            }
+          }}
           placeholder={searchPlaceholder}
           className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 pr-10 text-sm focus:outline-none focus:border-indigo-500 shadow-2xs"
         />
         {searchQuery && (
           <button
             onClick={() => setSearchQuery("")}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-base"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-base cursor-pointer"
           >
             ✕
           </button>
         )}
       </div>
 
+      {/* Cross-level Notification Banner */}
+      {isCrossLevelResult && (
+        <div className="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-2xl text-xs text-amber-800 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span>💡</span>
+            <span>
+              Không có kết quả trong cấp độ <strong>{activeLevel}</strong>, đang hiển thị <strong>{filteredGrammar.length}</strong> kết quả phù hợp từ các cấp độ khác.
+            </span>
+          </div>
+          <button
+            onClick={() => setActiveLevel("ALL")}
+            className="px-2.5 py-1 bg-amber-200/70 hover:bg-amber-200 text-amber-900 font-bold rounded-lg transition-colors text-[11px] cursor-pointer"
+          >
+            Xem tất cả cấp độ
+          </button>
+        </div>
+      )}
+
       {/* Grammar Cards List */}
       {loading ? (
         <div className="text-center py-20 text-indigo-600 font-medium">Đang tải kho ngữ pháp...</div>
       ) : filteredGrammar.length === 0 ? (
         <div className="bg-white rounded-3xl p-12 text-center text-gray-400 border border-gray-100">
-          Không tìm thấy cấu trúc ngữ pháp nào phù hợp
+          Không tìm thấy cấu trúc ngữ pháp nào phù hợp với "{searchQuery}"
         </div>
       ) : (
         <div className="space-y-4">

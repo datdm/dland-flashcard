@@ -627,14 +627,40 @@ export class JsonGrammarRepository implements IGrammarRepository {
 
   async searchGrammar(query: string): Promise<GrammarPoint[]> {
     const all = await this.getAllGrammar();
-    const q = query.toLowerCase().trim();
+    const cleanQuery = query.trim();
+    if (!cleanQuery) return all;
+
+    const normalize = (str: string = "") =>
+      str
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[～〜~]/g, "")
+        .replace(/[\s\u3000\u00a0\t\r\n]+/g, " ")
+        .replace(/[・、。，,;；:：\(\)\[\]「」『』]/g, "")
+        .trim();
+
+    const q = normalize(cleanQuery);
     if (!q) return all;
-    return all.filter(
-      (g) =>
-        g.structure.toLowerCase().includes(q) ||
-        g.meaning.toLowerCase().includes(q) ||
-        g.explanation?.toLowerCase().includes(q)
-    );
+
+    return all.filter((g) => {
+      const structNorm = normalize(g.structure);
+      const meanNorm = normalize(g.meaning);
+      const expNorm = normalize(g.explanation || "");
+      const exMatch = g.examples?.some(
+        (ex) =>
+          normalize(ex.sentence).includes(q) ||
+          normalize(ex.meaning).includes(q) ||
+          normalize(ex.romaji || "").includes(q)
+      );
+
+      return (
+        structNorm.includes(q) ||
+        meanNorm.includes(q) ||
+        expNorm.includes(q) ||
+        !!exMatch
+      );
+    });
   }
 }
 
