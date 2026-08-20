@@ -781,6 +781,7 @@ export default function CurriculumLessonDetailPage({ params }: Props) {
 
       {/* Floating Selection Tooltip for Mazii Lookup */}
       <SelectionLookupTooltip
+        disabled={maziiLookupState.isOpen}
         onLookup={(word) => {
           setMaziiLookupState({
             isOpen: true,

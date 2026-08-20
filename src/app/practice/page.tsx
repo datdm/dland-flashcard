@@ -1064,13 +1064,12 @@ export default function PracticeHubPage() {
                     <div className="flex items-center justify-between flex-wrap gap-2 mb-1">
                       <div className="text-[10px] text-amber-600 font-bold uppercase tracking-wider">Bài đọc (Passage):</div>
                       <span className="text-[10px] text-amber-700 bg-amber-100/80 px-2.5 py-0.5 rounded-full font-bold">
-                        💡 Nhấp vào từ vựng bất kỳ trong bài để tra nghĩa Mazii
+                        💡 Bôi đen từ vựng để hiện nút tra Mazii
                       </span>
                     </div>
                     <div 
-                      className="whitespace-pre-line text-gray-900 leading-loose ruby-box select-text cursor-pointer"
+                      className="whitespace-pre-line text-gray-900 leading-loose ruby-box select-text"
                       dangerouslySetInnerHTML={{ __html: readingData.passage_ruby }}
-                      onClick={handlePassageClick}
                     />
 
                     {/* Passage Vietnamese Translation Toggle */}
@@ -1462,6 +1461,7 @@ export default function PracticeHubPage() {
 
       {/* Floating Selection Tooltip for Mazii Lookup */}
       <SelectionLookupTooltip
+        disabled={maziiLookupState.isOpen || showHistoryModal || !!selectedWordForNotebook}
         onLookup={(word, furigana, meaning) => {
           setMaziiLookupState({
             isOpen: true,
