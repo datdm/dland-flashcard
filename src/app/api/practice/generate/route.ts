@@ -267,6 +267,74 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
     }
   ]
 }`;
+      } else if (type === "kaiwa") {
+        prompt = `Bạn là chuyên gia giảng dạy giao tiếp Kaiwa tiếng Nhật trình độ JLPT N2 tự nhiên và chuẩn mực.
+Hãy tạo 1 đoạn hội thoại Kaiwa trình độ N2 gồm ĐÚNG 10 LƯỢT LỜI HỘI THOẠI (10 câu) giữa 2 nhân vật (ví dụ: 田中 (Tanaka) và 山田 (Yamada), hoặc tiền bối - hậu bối, sếp - nhân viên, đối tác kinh doanh, bạn bè) theo chủ đề "${topic}".
+Bối cảnh cụ thể của đoạn hội thoại là: "${chosenContext}".
+Sử dụng các cấu trúc ngữ pháp N2, từ vựng phong phú, kính ngữ (Keigo) hoặc cách nói tự nhiên nơi công sở/đời sống của người Nhật.
+Sau 10 câu hội thoại, hãy tạo ĐÚNG 2 CÂU HỎI TRẮC NGHIỆM ĐỌC HIỂU/HỎI ĐÁP về nội dung mà 2 nhân vật vừa trao đổi (mỗi câu hỏi có 4 đáp án lựa chọn và giải thích chi tiết đáp án đúng bằng tiếng Việt).
+(Mã ngẫu nhiên: ${randomSeed} - Hãy tạo tình huống và đối thoại độc đáo, khác biệt hoàn toàn).
+Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc trong markdown block, không có bất kỳ chữ nào ngoài cặp ngoặc nhọn JSON, phải là JSON hợp lệ):
+{
+  "kaiwa": {
+    "title": "Tiêu đề ngắn gọn của đoạn hội thoại bằng tiếng Nhật và tiếng Việt",
+    "situation": "Mô tả ngắn gọn bối cảnh và vai trò của 2 người bằng tiếng Việt (ví dụ: Anh Tanaka và chị Yamada đang thảo luận về phương án triển khai dự án mới...)",
+    "speakerA": "田中 (Tanaka)",
+    "speakerB": "山田 (Yamada)",
+    "dialogue": [
+      {
+        "speaker": "A",
+        "speaker_name": "田中",
+        "japanese": "câu tiếng Nhật chuẩn N2 không thẻ HTML",
+        "japanese_ruby": "câu tiếng Nhật bọc thẻ <ruby> và <rt> Furigana trên đầu mọi chữ Hán tự, ví dụ: <ruby>最近<rt>さいきん</rt></ruby>...",
+        "romaji": "romaji phiên âm chuẩn",
+        "meaning": "Dịch nghĩa câu tiếng Việt tự nhiên"
+      },
+      {
+        "speaker": "B",
+        "speaker_name": "山田",
+        "japanese": "câu trả lời của B tiếng Nhật chuẩn N2",
+        "japanese_ruby": "câu tiếng Nhật của B bọc thẻ <ruby> và <rt> Furigana",
+        "romaji": "romaji phiên âm chuẩn",
+        "meaning": "Dịch nghĩa tiếng Việt"
+      }
+      ... (tạo đủ ĐÚNG 10 câu xen kẽ giữa A và B: A, B, A, B, A, B, A, B, A, B)
+    ],
+    "questions": [
+      {
+        "id": "q_1",
+        "question": "Câu hỏi trắc nghiệm 1 bằng TIẾNG NHẬT về nội dung cuộc trò chuyện",
+        "question_vietnamese": "Dịch nghĩa câu hỏi 1 sang tiếng Việt",
+        "options": [
+          { "id": "opt_1", "text": "lựa chọn 1 bằng tiếng Nhật (đáp án đúng)", "isCorrect": true },
+          { "id": "opt_2", "text": "lựa chọn 2 bằng tiếng Nhật (sai)", "isCorrect": false },
+          { "id": "opt_3", "text": "lựa chọn 3 bằng tiếng Nhật (sai)", "isCorrect": false },
+          { "id": "opt_4", "text": "lựa chọn 4 bằng tiếng Nhật (sai)", "isCorrect": false }
+        ],
+        "explanation": "Giải thích chi tiết tại sao đúng và dẫn chứng trong đoạn hội thoại bằng tiếng Việt"
+      },
+      {
+        "id": "q_2",
+        "question": "Câu hỏi trắc nghiệm 2 bằng TIẾNG NHẬT về ý định/quyết định của nhân vật",
+        "question_vietnamese": "Dịch nghĩa câu hỏi 2 sang tiếng Việt",
+        "options": [
+          { "id": "opt_1", "text": "lựa chọn 1 bằng tiếng Nhật (đáp án đúng)", "isCorrect": true },
+          { "id": "opt_2", "text": "lựa chọn 2 bằng tiếng Nhật (sai)", "isCorrect": false },
+          { "id": "opt_3", "text": "lựa chọn 3 bằng tiếng Nhật (sai)", "isCorrect": false },
+          { "id": "opt_4", "text": "lựa chọn 4 bằng tiếng Nhật (sai)", "isCorrect": false }
+        ],
+        "explanation": "Giải thích chi tiết tại sao đúng bằng tiếng Việt"
+      }
+    ],
+    "key_grammar": [
+      {
+        "structure": "Cấu trúc ngữ pháp N2 xuất hiện trong bài (ví dụ: 〜わけにはいかない)",
+        "meaning": "Ý nghĩa cấu trúc",
+        "usage": "Cách dùng ngắn gọn trong bài"
+      }
+    ]
+  }
+}`;
       } else {
         // reading N2
         prompt = `Bạn là chuyên gia ôn luyện đọc hiểu JLPT N2.

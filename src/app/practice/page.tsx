@@ -78,9 +78,42 @@ interface PresentationEvaluation {
   exercises: PresentationExercise[];
 }
 
+export interface KaiwaTurn {
+  speaker: "A" | "B";
+  speaker_name: string;
+  japanese: string;
+  japanese_ruby: string;
+  romaji: string;
+  meaning: string;
+}
+
+export interface KaiwaQuestion {
+  id: string;
+  question: string;
+  question_vietnamese?: string;
+  options: { id: string; text: string; isCorrect: boolean }[];
+  explanation: string;
+}
+
+export interface KaiwaGrammar {
+  structure: string;
+  meaning: string;
+  usage: string;
+}
+
+export interface KaiwaData {
+  title: string;
+  situation: string;
+  speakerA: string;
+  speakerB: string;
+  dialogue: KaiwaTurn[];
+  questions: KaiwaQuestion[];
+  key_grammar?: KaiwaGrammar[];
+}
+
 export interface PracticeHistoryEntry {
   id: string;
-  type: "shadowing" | "translation" | "reading" | "presentation" | "ipa";
+  type: "shadowing" | "translation" | "reading" | "presentation" | "ipa" | "kaiwa";
   typeName: string;
   topic: string;
   lang: string;
@@ -115,20 +148,23 @@ const POPULAR_TOPICS_BY_LANG: Record<string, { id: string; name: string; icon: s
   ],
 };
 
-const SKILLS_BY_LANG: Record<string, { id: "shadowing" | "translation" | "reading" | "presentation"; name: string; desc: string }[]> = {
+const SKILLS_BY_LANG: Record<string, { id: "kaiwa" | "shadowing" | "translation" | "reading" | "presentation"; name: string; desc: string }[]> = {
   ja: [
+    { id: "kaiwa", name: "💬 Hội thoại Kaiwa N2", desc: "10 câu đối thoại 2 người & Trắc nghiệm đọc hiểu" },
     { id: "shadowing", name: "🗣️ Shadowing JP", desc: "Luyện nghe nói đuổi tiếng Nhật kèm Furigana" },
     { id: "translation", name: "✍️ Luyện dịch 2 chiều", desc: "Xen kẽ dịch Nhật ➔ Việt & Việt ➔ Nhật" },
     { id: "reading", name: "📚 Đọc hiểu JLPT N2", desc: "Đoạn văn Furigana, trắc nghiệm & tra Mazii" },
     { id: "presentation", name: "🎤 Luyện thuyết trình", desc: "Thuyết trình slide tiếng Nhật, AI sửa lỗi & chấm điểm" },
   ],
   en: [
+    { id: "kaiwa", name: "💬 Hội thoại Kaiwa IELTS", desc: "10 câu đối thoại 2 người & Câu hỏi thảo luận" },
     { id: "shadowing", name: "🗣️ Shadowing IELTS Speaking", desc: "Luyện nghe nói đuổi tiếng Anh chuẩn native accent" },
     { id: "translation", name: "✍️ Luyện dịch 2 chiều Anh - Việt", desc: "Xen kẽ dịch câu Academic & đời sống" },
     { id: "reading", name: "📚 Đọc hiểu IELTS Reading", desc: "Đoạn văn học thuật, trắc nghiệm & từ vựng" },
     { id: "presentation", name: "🎤 Thuyết trình IELTS Part 2", desc: "Nói qua micro, AI sửa câu & chấm điểm Fluency" },
   ],
   de: [
+    { id: "kaiwa", name: "💬 Hội thoại Kaiwa Deutsch", desc: "10 câu đối thoại 2 người & Đọc hiểu" },
     { id: "shadowing", name: "🗣️ Shadowing Deutsch", desc: "Luyện nghe nói đuổi tiếng Đức chuẩn Goethe" },
     { id: "translation", name: "✍️ Luyện dịch 2 chiều Đức - Việt", desc: "Xen kẽ dịch Đức ➔ Việt & Việt ➔ Đức" },
     { id: "reading", name: "📚 Đọc hiểu Leseverstehen", desc: "Đọc hiểu tiếng Đức Goethe A1/A2" },
@@ -146,7 +182,7 @@ export default function PracticeHubPage() {
   const selectedLang = activeLanguage.code || "ja";
 
   // Config states
-  const [selectedType, setSelectedType] = useState<"shadowing" | "translation" | "reading" | "presentation">("shadowing");
+  const [selectedType, setSelectedType] = useState<"kaiwa" | "shadowing" | "translation" | "reading" | "presentation">("kaiwa");
   const [selectedTopic, setSelectedTopic] = useState(() => {
     const defaultTopics = POPULAR_TOPICS_BY_LANG[activeLanguage.code || "ja"] || POPULAR_TOPICS_BY_LANG.ja;
     return defaultTopics[0]?.name || "Sinh hoạt & Đời sống";
@@ -157,7 +193,8 @@ export default function PracticeHubPage() {
 
   // Sync and reset data when global language changes
   useEffect(() => {
-    setSelectedType("shadowing");
+    setSelectedType("kaiwa");
+    setKaiwaData(null);
     setShadowingData([]);
     setTranslationData([]);
     setReadingData(null);
@@ -166,6 +203,18 @@ export default function PracticeHubPage() {
     setSelectedTopic(defaultTopics[0]?.name || "Sinh hoạt & Đời sống");
     setCustomTopic("");
   }, [activeLanguage.code]);
+
+  // Kaiwa Data & Interaction States
+  const [kaiwaData, setKaiwaData] = useState<KaiwaData | null>(null);
+  const [kaiwaRole, setKaiwaRole] = useState<"all" | "A" | "B">("all");
+  const [showKaiwaRuby, setShowKaiwaRuby] = useState(true);
+  const [showKaiwaMeaning, setShowKaiwaMeaning] = useState(true);
+  const [showKaiwaRomaji, setShowKaiwaRomaji] = useState(false);
+  const [kaiwaPlayingIdx, setKaiwaPlayingIdx] = useState<number | null>(null);
+  const [kaiwaMicIdx, setKaiwaMicIdx] = useState<number | null>(null);
+  const [kaiwaScores, setKaiwaScores] = useState<Record<number, { score: number; transcript: string }>>({});
+  const [kaiwaQuizAnswers, setKaiwaQuizAnswers] = useState<Record<string, { optionId: string; score: number; checked: boolean }>>({});
+  const [isAutoplayingKaiwa, setIsAutoplayingKaiwa] = useState(false);
 
   // Data states
   const [shadowingData, setShadowingData] = useState<ShadowingItem[]>([]);
@@ -321,6 +370,14 @@ export default function PracticeHubPage() {
     setTranslationInputs({});
     setShowPassageTranslation(false);
 
+    // Reset Kaiwa states
+    setKaiwaData(null);
+    setKaiwaQuizAnswers({});
+    setKaiwaScores({});
+    setKaiwaPlayingIdx(null);
+    setKaiwaMicIdx(null);
+    setIsAutoplayingKaiwa(false);
+
     // Reset presentation states
     setSlides([]);
     setPresentationTranscripts({ 0: "", 1: "" });
@@ -340,7 +397,7 @@ export default function PracticeHubPage() {
         body: JSON.stringify({
           type: selectedType === "presentation" ? "presentation_slides" : selectedType,
           topic: activeTopic,
-          level: selectedLang === "de" ? "A2" : selectedLang === "en" ? (selectedType === "reading" ? "Band 7.0" : "Band 6.5") : (selectedType === "reading" ? "N2" : "N3"),
+          level: selectedLang === "de" ? "A2" : selectedLang === "en" ? (selectedType === "reading" ? "Band 7.0" : "Band 6.5") : (selectedType === "reading" ? "N2" : "N2"),
           lang: selectedLang,
         }),
       });
@@ -351,7 +408,9 @@ export default function PracticeHubPage() {
 
       const resData = await res.json();
       if (resData.success && resData.data) {
-        if (selectedType === "shadowing") {
+        if (selectedType === "kaiwa") {
+          setKaiwaData(resData.data.kaiwa || null);
+        } else if (selectedType === "shadowing") {
           setShadowingData(resData.data.shadowing || []);
         } else if (selectedType === "translation") {
           setTranslationData(resData.data.translation || []);
@@ -369,6 +428,121 @@ export default function PracticeHubPage() {
     } finally {
       setGenerating(false);
     }
+  };
+
+  // Autoplay all turns of Kaiwa
+  const playEntireKaiwa = async () => {
+    if (!kaiwaData || !kaiwaData.dialogue?.length || typeof window === "undefined") return;
+    if (isAutoplayingKaiwa) {
+      window.speechSynthesis.cancel();
+      setIsAutoplayingKaiwa(false);
+      setKaiwaPlayingIdx(null);
+      return;
+    }
+
+    window.speechSynthesis.cancel();
+    setIsAutoplayingKaiwa(true);
+
+    for (let i = 0; i < kaiwaData.dialogue.length; i++) {
+      const turn = kaiwaData.dialogue[i];
+      setKaiwaPlayingIdx(i);
+      await new Promise<void>((resolve) => {
+        const utterance = new SpeechSynthesisUtterance(turn.japanese);
+        utterance.lang = selectedLang === "de" ? "de-DE" : selectedLang === "en" ? "en-US" : "ja-JP";
+        utterance.rate = playbackRate;
+        utterance.pitch = turn.speaker === "A" ? 1.0 : 1.15;
+        utterance.onend = () => {
+          setTimeout(resolve, 800);
+        };
+        utterance.onerror = () => resolve();
+        window.speechSynthesis.speak(utterance);
+      });
+    }
+    setKaiwaPlayingIdx(null);
+    setIsAutoplayingKaiwa(false);
+  };
+
+  // Speech recognition for Kaiwa
+  const startKaiwaMic = (targetText: string, index: number) => {
+    if (typeof window === "undefined") return;
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert("Trình duyệt không hỗ trợ micro nhận dạng giọng nói. Hãy dùng Chrome hoặc Edge.");
+      return;
+    }
+
+    if (kaiwaMicIdx === index) {
+      recognitionRef.current?.stop();
+      setKaiwaMicIdx(null);
+      return;
+    }
+
+    window.speechSynthesis.cancel();
+    const recognition = new SpeechRecognition();
+    recognitionRef.current = recognition;
+    recognition.lang = selectedLang === "de" ? "de-DE" : selectedLang === "en" ? "en-US" : "ja-JP";
+    recognition.continuous = false;
+    recognition.interimResults = false;
+
+    recognition.onstart = () => {
+      setKaiwaMicIdx(index);
+    };
+
+    recognition.onresult = (event: any) => {
+      const transcript = event.results[0][0].transcript;
+      const score = calculateScore(transcript, targetText);
+      setKaiwaScores((prev) => ({
+        ...prev,
+        [index]: { score, transcript },
+      }));
+      recordPracticeHistory({
+        type: "kaiwa",
+        typeName: "💬 Hội thoại Kaiwa",
+        topic: activeTopic,
+        lang: selectedLang,
+        score: score,
+        userAnswer: transcript,
+        correctAnswer: targetText,
+        feedback: score >= 80 ? "Phát âm rất tốt và tự nhiên!" : "Cần phát âm rõ ràng và chuẩn ngữ điệu hơn.",
+      });
+    };
+
+    recognition.onerror = () => {
+      setKaiwaMicIdx(null);
+    };
+
+    recognition.onend = () => {
+      setKaiwaMicIdx(null);
+    };
+
+    recognition.start();
+  };
+
+  // Check Kaiwa comprehension quiz answer
+  const checkKaiwaQuizAnswer = (qId: string) => {
+    const answer = kaiwaQuizAnswers[qId];
+    if (!answer || !answer.optionId || !kaiwaData) return;
+    const question = kaiwaData.questions.find((q) => q.id === qId);
+    if (!question) return;
+    const selectedOpt = question.options.find((o) => o.id === answer.optionId);
+    const isCorrect = !!selectedOpt?.isCorrect;
+    const score = isCorrect ? 100 : 0;
+
+    setKaiwaQuizAnswers((prev) => ({
+      ...prev,
+      [qId]: { ...prev[qId], score, checked: true },
+    }));
+
+    recordPracticeHistory({
+      type: "kaiwa",
+      typeName: "💬 Trắc nghiệm Kaiwa",
+      topic: activeTopic,
+      lang: selectedLang,
+      score: score,
+      userAnswer: selectedOpt?.text || "",
+      correctAnswer: question.options.find((o) => o.isCorrect)?.text || "",
+      feedback: isCorrect ? "Trả lời chính xác!" : "Chưa chính xác. Hãy đọc kỹ lại lời thoại của các nhân vật.",
+    });
   };
 
   // Play audio TTS
@@ -941,6 +1115,364 @@ export default function PracticeHubPage() {
             </div>
           ) : (
             <>
+
+              {/* KAIWA CONVERSATION DISPLAY */}
+              {selectedType === "kaiwa" && kaiwaData && (
+                <div className="space-y-6">
+                  {/* Kaiwa Header & Controls */}
+                  <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-2xs space-y-4">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gray-100 pb-4">
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-teal-50 text-teal-700 border border-teal-200">
+                            💬 Hội Thoại N2 (10 Lượt Lời)
+                          </span>
+                          <span className="text-xs text-gray-500 font-bold">
+                            {kaiwaData.title}
+                          </span>
+                        </div>
+                        <p className="text-xs text-gray-600 mt-2 leading-relaxed bg-gray-50/80 p-3 rounded-2xl border border-gray-100">
+                          💡 <strong>Tình huống:</strong> {kaiwaData.situation}
+                        </p>
+                      </div>
+
+                      {/* Autoplay Button */}
+                      <button
+                        onClick={playEntireKaiwa}
+                        className={`px-4 py-2.5 rounded-2xl text-xs font-bold transition-all shadow-md flex items-center justify-center gap-2 shrink-0 cursor-pointer ${
+                          isAutoplayingKaiwa
+                            ? "bg-red-500 hover:bg-red-600 text-white shadow-red-200 animate-pulse"
+                            : "bg-gradient-to-r from-teal-600 to-emerald-600 hover:opacity-95 text-white shadow-teal-200"
+                        }`}
+                      >
+                        <span>{isAutoplayingKaiwa ? "⏹️ Dừng phát" : "▶️ Phát toàn bộ (10 câu)"}</span>
+                      </button>
+                    </div>
+
+                    {/* Speaker Badges & View Options */}
+                    <div className="flex flex-wrap items-center justify-between gap-3 text-xs">
+                      {/* Speakers */}
+                      <div className="flex items-center gap-2">
+                        <span className="px-3 py-1.5 rounded-xl bg-indigo-50 border border-indigo-200 text-indigo-700 font-bold flex items-center gap-1.5">
+                          <span>👨‍💼</span>
+                          <span>A: {kaiwaData.speakerA}</span>
+                        </span>
+                        <span className="px-3 py-1.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 font-bold flex items-center gap-1.5">
+                          <span>👩‍💼</span>
+                          <span>B: {kaiwaData.speakerB}</span>
+                        </span>
+                      </div>
+
+                      {/* Display Toggles */}
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <button
+                          type="button"
+                          onClick={() => setShowKaiwaRuby(!showKaiwaRuby)}
+                          className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
+                            showKaiwaRuby
+                              ? "bg-teal-600 text-white shadow-3xs"
+                              : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                          }`}
+                        >
+                          あ Furigana
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setShowKaiwaMeaning(!showKaiwaMeaning)}
+                          className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
+                            showKaiwaMeaning
+                              ? "bg-teal-600 text-white shadow-3xs"
+                              : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                          }`}
+                        >
+                          🇻🇳 Dịch nghĩa
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setShowKaiwaRomaji(!showKaiwaRomaji)}
+                          className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
+                            showKaiwaRomaji
+                              ? "bg-teal-600 text-white shadow-3xs"
+                              : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                          }`}
+                        >
+                          🔤 Romaji
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Speed Controls */}
+                    <div className="flex items-center justify-between bg-teal-50/40 p-3 rounded-2xl border border-teal-100 text-xs">
+                      <span className="font-bold text-teal-900">Tốc độ phát âm:</span>
+                      <div className="flex gap-1.5">
+                        {([0.6, 0.8, 1.0, 1.2] as const).map((rate) => (
+                          <button
+                            key={rate}
+                            onClick={() => setPlaybackRate(rate)}
+                            className={`px-2.5 py-1 rounded-lg font-bold text-xs transition-all ${
+                              playbackRate === rate
+                                ? "bg-teal-600 text-white shadow-3xs"
+                                : "bg-white text-gray-600 border border-gray-200 hover:bg-gray-50"
+                            }`}
+                          >
+                            {rate === 1.0 ? "Chuẩn" : `${rate}x`}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 10 Conversation Speech Bubbles Stream */}
+                  <div className="space-y-4">
+                    {kaiwaData.dialogue.map((turn, idx) => {
+                      const isSpeakerA = turn.speaker === "A";
+                      const isPlayingThis = kaiwaPlayingIdx === idx;
+                      const scoreData = kaiwaScores[idx];
+
+                      return (
+                        <div
+                          key={idx}
+                          className={`flex items-start gap-3 transition-all duration-300 ${
+                            isSpeakerA ? "justify-start" : "justify-end"
+                          }`}
+                        >
+                          {/* Speaker A Avatar */}
+                          {isSpeakerA && (
+                            <div className="w-10 h-10 rounded-2xl bg-indigo-100 border border-indigo-200 text-indigo-700 font-extrabold flex flex-col items-center justify-center shrink-0 shadow-3xs">
+                              <span className="text-sm">👨‍💼</span>
+                              <span className="text-[9px] leading-none font-mono">A</span>
+                            </div>
+                          )}
+
+                          {/* Bubble Container */}
+                          <div
+                            className={`max-w-[85%] sm:max-w-[78%] rounded-3xl p-5 border transition-all ${
+                              isPlayingThis
+                                ? "ring-2 ring-teal-500 bg-teal-50/80 border-teal-300 shadow-md scale-[1.01]"
+                                : isSpeakerA
+                                ? "bg-white border-indigo-100 shadow-2xs hover:border-indigo-200"
+                                : "bg-white border-emerald-100 shadow-2xs hover:border-emerald-200"
+                            }`}
+                          >
+                            {/* Speaker Header */}
+                            <div className="flex items-center justify-between gap-3 mb-2">
+                              <span
+                                className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full ${
+                                  isSpeakerA
+                                    ? "bg-indigo-50 text-indigo-700 border border-indigo-100"
+                                    : "bg-emerald-50 text-emerald-700 border border-emerald-100"
+                                }`}
+                              >
+                                #{idx + 1} • {turn.speaker_name || (isSpeakerA ? kaiwaData.speakerA : kaiwaData.speakerB)}
+                              </span>
+
+                              {/* Audio & Mic Actions */}
+                              <div className="flex items-center gap-1.5">
+                                <button
+                                  type="button"
+                                  onClick={() => playSentence(turn.japanese)}
+                                  className="w-7 h-7 rounded-lg bg-gray-50 hover:bg-teal-50 text-teal-600 hover:text-teal-700 flex items-center justify-center text-xs transition-colors border border-gray-100"
+                                  title="Nghe câu này"
+                                >
+                                  🔊
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => startKaiwaMic(turn.japanese, idx)}
+                                  className={`w-7 h-7 rounded-lg flex items-center justify-center text-xs transition-colors border ${
+                                    kaiwaMicIdx === idx
+                                      ? "bg-red-500 text-white animate-pulse border-red-500"
+                                      : "bg-gray-50 hover:bg-emerald-50 text-emerald-600 border-gray-100"
+                                  }`}
+                                  title="Thu âm phát âm câu này"
+                                >
+                                  🎙️
+                                </button>
+                              </div>
+                            </div>
+
+                            {/* Japanese Sentence Text */}
+                            {showKaiwaRuby ? (
+                              <div
+                                className="text-lg font-bold text-gray-900 leading-loose tracking-wide ruby-box my-1"
+                                dangerouslySetInnerHTML={{ __html: turn.japanese_ruby }}
+                              />
+                            ) : (
+                              <div className="text-base font-bold text-gray-900 my-1">
+                                {turn.japanese}
+                              </div>
+                            )}
+
+                            {/* Romaji */}
+                            {showKaiwaRomaji && (
+                              <div className="text-[11px] text-gray-400 font-mono mt-1">
+                                {turn.romaji}
+                              </div>
+                            )}
+
+                            {/* Meaning */}
+                            {showKaiwaMeaning && (
+                              <div className="text-xs font-semibold text-gray-700 bg-gray-50/70 p-2.5 rounded-xl border border-gray-100/60 mt-2.5">
+                                🇻🇳 {turn.meaning}
+                              </div>
+                            )}
+
+                            {/* Mic Score Result */}
+                            {scoreData && (
+                              <div className="mt-2.5 p-2 rounded-xl bg-emerald-50/70 border border-emerald-200 text-xs flex items-center justify-between gap-2">
+                                <div className="text-[11px] text-emerald-800 font-medium truncate">
+                                  🎤 <em>&quot;{scoreData.transcript}&quot;</em>
+                                </div>
+                                <span className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold ${
+                                  scoreData.score >= 80 ? "bg-emerald-600 text-white" : "bg-amber-500 text-white"
+                                }`}>
+                                  {scoreData.score}%
+                                </span>
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Speaker B Avatar */}
+                          {!isSpeakerA && (
+                            <div className="w-10 h-10 rounded-2xl bg-emerald-100 border border-emerald-200 text-emerald-700 font-extrabold flex flex-col items-center justify-center shrink-0 shadow-3xs">
+                              <span className="text-sm">👩‍💼</span>
+                              <span className="text-[9px] leading-none font-mono">B</span>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  {/* Key N2 Grammar Points */}
+                  {kaiwaData.key_grammar && kaiwaData.key_grammar.length > 0 && (
+                    <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-2xs space-y-3">
+                      <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+                        <span>💡</span> Ngữ Pháp N2 Trọng Tâm Trong Bài
+                      </h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        {kaiwaData.key_grammar.map((g, gIdx) => (
+                          <div key={gIdx} className="p-3.5 rounded-2xl bg-indigo-50/40 border border-indigo-100/70 space-y-1">
+                            <div className="text-xs font-extrabold text-indigo-900 font-mono">
+                              {g.structure}
+                            </div>
+                            <div className="text-[11px] text-indigo-700 font-medium">
+                              {g.meaning}
+                            </div>
+                            <div className="text-[10px] text-gray-500 italic">
+                              Cách dùng: {g.usage}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Comprehension Quiz Section */}
+                  {kaiwaData.questions && kaiwaData.questions.length > 0 && (
+                    <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-2xs space-y-5">
+                      <div className="border-b border-gray-100 pb-3">
+                        <h3 className="text-sm font-extrabold text-gray-900 flex items-center gap-2">
+                          <span>📝</span> Trắc Nghiệm Đọc Hiểu Nội Dung Cuộc Hội Thoại
+                        </h3>
+                        <p className="text-xs text-gray-500 mt-0.5">
+                          Kiểm tra mức độ hiểu sâu về các quyết định, ý kiến và thông tin mà 2 nhân vật vừa trao đổi.
+                        </p>
+                      </div>
+
+                      <div className="space-y-6">
+                        {kaiwaData.questions.map((q, qIdx) => {
+                          const currentAnswer = kaiwaQuizAnswers[q.id];
+                          const isChecked = currentAnswer?.checked;
+
+                          return (
+                            <div key={q.id || qIdx} className="p-5 rounded-2xl bg-gray-50/60 border border-gray-200/70 space-y-3.5">
+                              <div>
+                                <div className="text-xs font-extrabold text-gray-900">
+                                  Câu {qIdx + 1}: {q.question}
+                                </div>
+                                {q.question_vietnamese && (
+                                  <div className="text-[11px] text-gray-500 italic mt-0.5">
+                                    🇻🇳 {q.question_vietnamese}
+                                  </div>
+                                )}
+                              </div>
+
+                              {/* Options */}
+                              <div className="grid grid-cols-1 gap-2">
+                                {q.options.map((opt) => {
+                                  const isSelected = currentAnswer?.optionId === opt.id;
+                                  let optClasses = "border-gray-200 bg-white text-gray-800 hover:border-gray-300";
+
+                                  if (isSelected) {
+                                    optClasses = "border-teal-600 bg-teal-50/80 text-teal-900 font-bold ring-2 ring-teal-300";
+                                  }
+
+                                  if (isChecked) {
+                                    if (opt.isCorrect) {
+                                      optClasses = "border-emerald-500 bg-emerald-50 text-emerald-900 font-bold ring-2 ring-emerald-300";
+                                    } else if (isSelected) {
+                                      optClasses = "border-red-500 bg-red-50 text-red-900 font-bold ring-2 ring-red-300";
+                                    } else {
+                                      optClasses = "border-gray-100 bg-gray-50 text-gray-400 opacity-60";
+                                    }
+                                  }
+
+                                  return (
+                                    <button
+                                      key={opt.id}
+                                      disabled={isChecked}
+                                      type="button"
+                                      onClick={() =>
+                                        setKaiwaQuizAnswers((prev) => ({
+                                          ...prev,
+                                          [q.id]: { optionId: opt.id, score: 0, checked: false },
+                                        }))
+                                      }
+                                      className={`p-3 rounded-xl border text-left text-xs transition-all cursor-pointer flex items-center justify-between gap-2 ${optClasses}`}
+                                    >
+                                      <span>{opt.text}</span>
+                                      {isChecked && opt.isCorrect && (
+                                        <span className="text-emerald-700 font-extrabold shrink-0">✓ Đáp án đúng</span>
+                                      )}
+                                      {isChecked && isSelected && !opt.isCorrect && (
+                                        <span className="text-red-600 font-extrabold shrink-0">✕ Sai</span>
+                                      )}
+                                    </button>
+                                  );
+                                })}
+                              </div>
+
+                              {/* Check Answer Button & Explanation */}
+                              {!isChecked ? (
+                                <button
+                                  type="button"
+                                  disabled={!currentAnswer?.optionId}
+                                  onClick={() => checkKaiwaQuizAnswer(q.id)}
+                                  className="px-4 py-2 bg-teal-600 hover:bg-teal-700 disabled:opacity-50 text-white rounded-xl text-xs font-bold transition-all shadow-3xs cursor-pointer"
+                                >
+                                  Kiểm tra đáp án
+                                </button>
+                              ) : (
+                                <div className="p-4 rounded-xl bg-emerald-50/80 border border-emerald-200 text-xs text-gray-800 space-y-1 animate-in zoom-in-95">
+                                  <div className="flex items-center gap-2 font-bold">
+                                    <span className={currentAnswer.score === 100 ? "text-emerald-700" : "text-red-600"}>
+                                      {currentAnswer.score === 100 ? "✓ Bạn đã trả lời chính xác (+100 điểm)!" : "✕ Chưa chính xác"}
+                                    </span>
+                                  </div>
+                                  <div className="text-[11px] text-gray-600 leading-relaxed pt-1 border-t border-emerald-100">
+                                    <strong>Giải thích:</strong> {q.explanation}
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
 
               {/* SHADOWING DISPLAY */}
               {selectedType === "shadowing" && shadowingData.length > 0 && (
@@ -1575,12 +2107,12 @@ export default function PracticeHubPage() {
               )}
 
               {/* EMPTY VIEW STATE */}
-              {!shadowingData.length && !translationData.length && !readingData && !slides.length && (
+              {!kaiwaData && !shadowingData.length && !translationData.length && !readingData && !slides.length && (
                 <div className="bg-white rounded-3xl p-12 border border-gray-100 text-center text-gray-400 flex flex-col items-center justify-center gap-2">
                   <div className="text-4xl">🏆</div>
                   <h3 className="font-bold text-gray-900 text-sm mt-2">Chưa chọn nội dung học</h3>
                   <p className="text-[11px] text-gray-500 max-w-sm">
-                    Vui lòng chọn kỹ năng và chủ đề bạn muốn luyện ở bảng điều khiển bên trái, sau đó nhấn nút "Tạo bài học AI" để tạo nội dung luyện tập chuyên sâu!
+                    Vui lòng chọn kỹ năng và chủ đề bạn muốn luyện ở bảng điều khiển bên trái, sau đó nhấn nút &quot;Tạo bài học AI&quot; để tạo nội dung luyện tập chuyên sâu!
                   </p>
                 </div>
               )}
