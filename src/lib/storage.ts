@@ -9,6 +9,11 @@ const GRAMMAR_COLLECTIONS_KEY = "flashcash-grammar-collections";
 const GRAMMAR_PROGRESS_KEY = "flashcash-grammar-progress";
 const KANJI_PROGRESS_KEY = "flashcash-kanji-progress";
 const CURRICULUM_HISTORY_KEY = "flashcash-curriculum-history";
+const PRACTICE_HISTORY_KEY = "flashcash-practice-history";
+const TARGET_LANGUAGE_KEY = "dland_target_language";
+const KAIWA_PROGRESS_KEY = "dland_kaiwa_completed";
+export const STREAK_KEY = "flashcash-streak";
+const DAILY_50_KEY = "flashcash-is-daily-50";
 
 export const StorageKeys = {
   LESSONS: LESSONS_KEY,
@@ -20,7 +25,29 @@ export const StorageKeys = {
   GRAMMAR_PROGRESS: GRAMMAR_PROGRESS_KEY,
   KANJI_PROGRESS: KANJI_PROGRESS_KEY,
   CURRICULUM_HISTORY: CURRICULUM_HISTORY_KEY,
+  PRACTICE_HISTORY: PRACTICE_HISTORY_KEY,
+  TARGET_LANGUAGE: TARGET_LANGUAGE_KEY,
+  KAIWA_PROGRESS: KAIWA_PROGRESS_KEY,
+  STREAK: STREAK_KEY,
+  DAILY_50: DAILY_50_KEY,
 } as const;
+
+export const ALL_STORAGE_KEYS = [
+  LESSONS_KEY,
+  PROGRESS_KEY,
+  SETTINGS_KEY,
+  NOTEBOOKS_KEY,
+  CURRICULUMS_KEY,
+  GRAMMAR_COLLECTIONS_KEY,
+  GRAMMAR_PROGRESS_KEY,
+  KANJI_PROGRESS_KEY,
+  CURRICULUM_HISTORY_KEY,
+  PRACTICE_HISTORY_KEY,
+  TARGET_LANGUAGE_KEY,
+  KAIWA_PROGRESS_KEY,
+  STREAK_KEY,
+  DAILY_50_KEY,
+];
 
 export function getItem<T>(key: string): T | null {
   if (typeof window === "undefined") return null;
@@ -43,52 +70,255 @@ export function removeItem(key: string): void {
   localStorage.removeItem(key);
 }
 
-export function exportAllData(): string {
+export interface BackupPayload {
+  version: string;
+  scope: string;
+  scopeName: string;
+  exportedAt: string;
+  data: Record<string, unknown>;
+}
+
+export interface ImportResult {
+  success: boolean;
+  scope: string;
+  scopeName: string;
+  notebookCount: number;
+  vocabCount: number;
+  practiceCount: number;
+  message?: string;
+  error?: string;
+}
+
+export function exportDataByScope(scope: "all" | "ja" | "en" | "de" | "ko" | "zh" = "all"): string {
   if (typeof window === "undefined") return "{}";
-  const data: Record<string, unknown> = {};
-  const keys = [
-    LESSONS_KEY,
-    PROGRESS_KEY,
-    SETTINGS_KEY,
-    NOTEBOOKS_KEY,
-    CURRICULUMS_KEY,
-    GRAMMAR_COLLECTIONS_KEY,
-    GRAMMAR_PROGRESS_KEY,
-    KANJI_PROGRESS_KEY,
-    CURRICULUM_HISTORY_KEY,
-  ];
-  for (const key of keys) {
-    const raw = localStorage.getItem(key);
-    if (raw) {
+
+  const scopeNames: Record<string, string> = {
+    all: "Toàn bộ hệ thống (Tất cả ngôn ngữ)",
+    ja: "Tiếng Nhật (Japanese)",
+    en: "Tiếng Anh (English)",
+    de: "Tiếng Đức (German)",
+    ko: "Tiếng Hàn (Korean)",
+    zh: "Tiếng Trung (Chinese)",
+  };
+
+  const rawData: Record<string, unknown> = {};
+
+  if (scope === "all") {
+    for (const key of ALL_STORAGE_KEYS) {
+      const raw = localStorage.getItem(key);
+      if (raw) {
+        try {
+          rawData[key] = JSON.parse(raw);
+        } catch {
+          rawData[key] = raw;
+        }
+      }
+    }
+  } else {
+    // 1. Notebooks: Filter by language
+    const notebooksRaw = localStorage.getItem(StorageKeys.NOTEBOOKS);
+    if (notebooksRaw) {
       try {
-        data[key] = JSON.parse(raw);
-      } catch {
-        data[key] = raw;
+        const nbData = JSON.parse(notebooksRaw) as { notebooks: any[] };
+        const filtered = (nbData.notebooks || []).filter(
+          (nb: any) => (nb.lang || "ja") === scope
+        );
+        rawData[StorageKeys.NOTEBOOKS] = { notebooks: filtered };
+      } catch {}
+    }
+
+    // 2. Practice History: Filter by language
+    const practiceRaw = localStorage.getItem(StorageKeys.PRACTICE_HISTORY);
+    if (practiceRaw) {
+      try {
+        const list = JSON.parse(practiceRaw) as any[];
+        const filtered = list.filter((item: any) => (item.lang || "ja") === scope);
+        rawData[StorageKeys.PRACTICE_HISTORY] = filtered;
+      } catch {}
+    }
+
+    // 3. Language-specific Curriculum, Kaiwa, Grammar & Kanji
+    if (scope === "ja") {
+      const curriculums = localStorage.getItem(StorageKeys.CURRICULUMS);
+      if (curriculums) rawData[StorageKeys.CURRICULUMS] = JSON.parse(curriculums);
+
+      const kaiwa = localStorage.getItem(StorageKeys.KAIWA_PROGRESS);
+      if (kaiwa) rawData[StorageKeys.KAIWA_PROGRESS] = JSON.parse(kaiwa);
+
+      const grammar = localStorage.getItem(StorageKeys.GRAMMAR_COLLECTIONS);
+      if (grammar) rawData[StorageKeys.GRAMMAR_COLLECTIONS] = JSON.parse(grammar);
+
+      const grammarProg = localStorage.getItem(StorageKeys.GRAMMAR_PROGRESS);
+      if (grammarProg) rawData[StorageKeys.GRAMMAR_PROGRESS] = JSON.parse(grammarProg);
+
+      const kanjiProg = localStorage.getItem(StorageKeys.KANJI_PROGRESS);
+      if (kanjiProg) rawData[StorageKeys.KANJI_PROGRESS] = JSON.parse(kanjiProg);
+    }
+
+    // 4. Progress & History maps
+    const curriculumHist = localStorage.getItem(StorageKeys.CURRICULUM_HISTORY);
+    if (curriculumHist) {
+      try {
+        rawData[StorageKeys.CURRICULUM_HISTORY] = JSON.parse(curriculumHist);
+      } catch {}
+    }
+
+    const progress = localStorage.getItem(StorageKeys.PROGRESS);
+    if (progress) {
+      try {
+        rawData[StorageKeys.PROGRESS] = JSON.parse(progress);
+      } catch {}
+    }
+
+    // 5. Global Streak & Settings
+    const streak = localStorage.getItem(StorageKeys.STREAK);
+    if (streak) rawData[StorageKeys.STREAK] = JSON.parse(streak);
+
+    const settings = localStorage.getItem(StorageKeys.SETTINGS);
+    if (settings) rawData[StorageKeys.SETTINGS] = JSON.parse(settings);
+
+    rawData[StorageKeys.TARGET_LANGUAGE] = scope;
+  }
+
+  const payload: BackupPayload = {
+    version: "2.0",
+    scope,
+    scopeName: scopeNames[scope] || scope,
+    exportedAt: new Date().toISOString(),
+    data: rawData,
+  };
+
+  return JSON.stringify(payload, null, 2);
+}
+
+export function exportAllData(): string {
+  return exportDataByScope("all");
+}
+
+export function importScopedData(jsonString: string, mode: "merge" | "replace" = "merge"): ImportResult {
+  if (typeof window === "undefined") {
+    return { success: false, scope: "all", scopeName: "Lỗi", notebookCount: 0, vocabCount: 0, practiceCount: 0, error: "Window undefined" };
+  }
+
+  let parsed: any;
+  try {
+    parsed = JSON.parse(jsonString);
+  } catch {
+    return { success: false, scope: "all", scopeName: "Lỗi", notebookCount: 0, vocabCount: 0, practiceCount: 0, error: "File backup JSON không hợp lệ." };
+  }
+
+  // Detect format: version 2.0 wrapped vs legacy flat format
+  const isV2 = parsed && parsed.version && parsed.data;
+  const payloadData: Record<string, unknown> = isV2 ? parsed.data : parsed;
+  const scope = isV2 && parsed.scope ? parsed.scope : "all";
+  const scopeName = isV2 && parsed.scopeName ? parsed.scopeName : (scope === "all" ? "Toàn bộ hệ thống" : scope.toUpperCase());
+
+  let notebookCount = 0;
+  let vocabCount = 0;
+  let practiceCount = 0;
+
+  if (mode === "replace" || scope === "all") {
+    // Direct replacement
+    for (const key of ALL_STORAGE_KEYS) {
+      if (payloadData[key] !== undefined) {
+        if (typeof payloadData[key] === "string") {
+          localStorage.setItem(key, payloadData[key] as string);
+        } else {
+          localStorage.setItem(key, JSON.stringify(payloadData[key]));
+        }
+      }
+    }
+  } else {
+    // Smart merge for specific language backup
+    // 1. Merge Notebooks: Keep other languages, update/append this language's notebooks
+    if (payloadData[StorageKeys.NOTEBOOKS]) {
+      const incomingNbData = payloadData[StorageKeys.NOTEBOOKS] as { notebooks?: any[] };
+      const incomingList = incomingNbData.notebooks || [];
+      const currentNbRaw = localStorage.getItem(StorageKeys.NOTEBOOKS);
+      const currentNbData = currentNbRaw ? JSON.parse(currentNbRaw) : { notebooks: [] };
+      const currentList: any[] = currentNbData.notebooks || [];
+
+      // Keep notebooks not matching this scope
+      const otherNotebooks = currentList.filter((nb: any) => (nb.lang || "ja") !== scope);
+      const mergedNotebooks = [...otherNotebooks, ...incomingList];
+      localStorage.setItem(StorageKeys.NOTEBOOKS, JSON.stringify({ notebooks: mergedNotebooks }));
+
+      notebookCount = incomingList.length;
+      vocabCount = incomingList.reduce((acc: number, nb: any) => acc + (nb.vocabulary?.length || 0), 0);
+    }
+
+    // 2. Merge Practice History: Filter incoming and merge uniquely by ID
+    if (payloadData[StorageKeys.PRACTICE_HISTORY]) {
+      const incomingHistory = (payloadData[StorageKeys.PRACTICE_HISTORY] as any[]) || [];
+      const currentHistRaw = localStorage.getItem(StorageKeys.PRACTICE_HISTORY);
+      const currentHist: any[] = currentHistRaw ? JSON.parse(currentHistRaw) : [];
+
+      const existingIds = new Set(currentHist.map((item: any) => item.id));
+      const newItems = incomingHistory.filter((item: any) => !existingIds.has(item.id));
+      const mergedHistory = [...newItems, ...currentHist].slice(0, 150);
+      localStorage.setItem(StorageKeys.PRACTICE_HISTORY, JSON.stringify(mergedHistory));
+      practiceCount = incomingHistory.length;
+    }
+
+    // 3. Merge Curriculum History
+    if (payloadData[StorageKeys.CURRICULUM_HISTORY]) {
+      const incomingCurHist = (payloadData[StorageKeys.CURRICULUM_HISTORY] as any[]) || [];
+      const currentCurRaw = localStorage.getItem(StorageKeys.CURRICULUM_HISTORY);
+      const currentCurHist: any[] = currentCurRaw ? JSON.parse(currentCurRaw) : [];
+      const existingLessonIds = new Set(currentCurHist.map((item: any) => item.lessonId));
+      const newLessons = incomingCurHist.filter((item: any) => !existingLessonIds.has(item.lessonId));
+      localStorage.setItem(StorageKeys.CURRICULUM_HISTORY, JSON.stringify([...currentCurHist, ...newLessons]));
+    }
+
+    // 4. Merge Progress Map
+    if (payloadData[StorageKeys.PROGRESS]) {
+      const incomingProgress = (payloadData[StorageKeys.PROGRESS] as Record<string, any>) || {};
+      const currentProgRaw = localStorage.getItem(StorageKeys.PROGRESS);
+      const currentProgress = currentProgRaw ? JSON.parse(currentProgRaw) : {};
+      const mergedProg = { ...currentProgress, ...incomingProgress };
+      localStorage.setItem(StorageKeys.PROGRESS, JSON.stringify(mergedProg));
+    }
+
+    // 5. If Japanese scope, merge Kaiwa, Grammar & Kanji
+    if (scope === "ja") {
+      if (payloadData[StorageKeys.KAIWA_PROGRESS]) {
+        localStorage.setItem(StorageKeys.KAIWA_PROGRESS, JSON.stringify(payloadData[StorageKeys.KAIWA_PROGRESS]));
+      }
+      if (payloadData[StorageKeys.GRAMMAR_COLLECTIONS]) {
+        localStorage.setItem(StorageKeys.GRAMMAR_COLLECTIONS, JSON.stringify(payloadData[StorageKeys.GRAMMAR_COLLECTIONS]));
+      }
+      if (payloadData[StorageKeys.GRAMMAR_PROGRESS]) {
+        localStorage.setItem(StorageKeys.GRAMMAR_PROGRESS, JSON.stringify(payloadData[StorageKeys.GRAMMAR_PROGRESS]));
+      }
+      if (payloadData[StorageKeys.KANJI_PROGRESS]) {
+        localStorage.setItem(StorageKeys.KANJI_PROGRESS, JSON.stringify(payloadData[StorageKeys.KANJI_PROGRESS]));
       }
     }
   }
-  return JSON.stringify(data, null, 2);
+
+  // Count if all format
+  if (scope === "all" && payloadData[StorageKeys.NOTEBOOKS]) {
+    const nbData = payloadData[StorageKeys.NOTEBOOKS] as { notebooks?: any[] };
+    const nbs = nbData?.notebooks || [];
+    notebookCount = nbs.length;
+    vocabCount = nbs.reduce((acc: number, nb: any) => acc + (nb.vocabulary?.length || 0), 0);
+    if (Array.isArray(payloadData[StorageKeys.PRACTICE_HISTORY])) {
+      practiceCount = (payloadData[StorageKeys.PRACTICE_HISTORY] as any[]).length;
+    }
+  }
+
+  return {
+    success: true,
+    scope,
+    scopeName,
+    notebookCount,
+    vocabCount,
+    practiceCount,
+  };
 }
 
 export function importAllData(jsonString: string): void {
-  if (typeof window === "undefined") return;
-  const data = JSON.parse(jsonString) as Record<string, unknown>;
-  const keys = [
-    LESSONS_KEY,
-    PROGRESS_KEY,
-    SETTINGS_KEY,
-    NOTEBOOKS_KEY,
-    CURRICULUMS_KEY,
-    GRAMMAR_COLLECTIONS_KEY,
-    GRAMMAR_PROGRESS_KEY,
-    KANJI_PROGRESS_KEY,
-    CURRICULUM_HISTORY_KEY,
-  ];
-  for (const key of keys) {
-    if (data[key] !== undefined) {
-      localStorage.setItem(key, JSON.stringify(data[key]));
-    }
-  }
+  importScopedData(jsonString, "merge");
 }
 
 export interface CurriculumImportFormat {
@@ -210,8 +440,6 @@ export function initializeSampleData(): void {
 }
 
 // Streak tracking
-export const STREAK_KEY = 'flashcash-streak';
-
 export interface StreakData {
   currentStreak: number;
   longestStreak: number;
