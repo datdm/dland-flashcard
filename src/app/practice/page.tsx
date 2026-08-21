@@ -8,6 +8,7 @@ import { useLanguageSetting } from "@/hooks/useLanguageSetting";
 import AddToNotebookModal from "@/components/AddToNotebookModal";
 import MaziiQuickLookupModal from "@/components/MaziiQuickLookupModal";
 import SelectionLookupTooltip from "@/components/SelectionLookupTooltip";
+import IpaPracticeModule from "@/components/IpaPracticeModule";
 import AuthGuard from "@/components/AuthGuard";
 
 interface ShadowingItem {
@@ -80,7 +81,7 @@ interface PresentationEvaluation {
 
 export interface PracticeHistoryEntry {
   id: string;
-  type: "shadowing" | "translation" | "reading" | "presentation";
+  type: "shadowing" | "translation" | "reading" | "presentation" | "ipa";
   typeName: string;
   topic: string;
   lang: string;
@@ -105,7 +106,9 @@ export default function PracticeHubPage() {
   const { activeLanguage } = useLanguageSetting();
 
   // Config states
-  const [selectedType, setSelectedType] = useState<"shadowing" | "translation" | "reading" | "presentation">("shadowing");
+  const [selectedType, setSelectedType] = useState<"shadowing" | "translation" | "reading" | "presentation" | "ipa">(
+    activeLanguage.code === "en" ? "ipa" : "shadowing"
+  );
   const [selectedTopic, setSelectedTopic] = useState("Sinh hoạt & Đời sống");
   const [customTopic, setCustomTopic] = useState("");
   const [generating, setGenerating] = useState(false);
@@ -626,6 +629,39 @@ export default function PracticeHubPage() {
     }
   };
 
+  const handleRecordIpaHistory = (entry: {
+    type: "shadowing" | "translation" | "reading" | "presentation" | "ipa";
+    typeName: string;
+    topic: string;
+    lang: string;
+    score: number;
+    userAnswer?: string;
+    correctAnswer?: string;
+    feedback?: string;
+  }) => {
+    const newEntry: PracticeHistoryEntry = {
+      id: "ipa-" + Date.now(),
+      type: entry.type as any,
+      typeName: entry.typeName,
+      topic: entry.topic,
+      lang: entry.lang || "en",
+      score: entry.score,
+      userAnswer: entry.userAnswer,
+      correctAnswer: entry.correctAnswer,
+      feedback: entry.feedback,
+      completedAt: new Date().toISOString(),
+    };
+
+    setPracticeHistory((prev) => {
+      const updated = [newEntry, ...prev].slice(0, 100);
+      try {
+        localStorage.setItem("flashcash-practice-history", JSON.stringify(updated));
+        window.dispatchEvent(new Event("practice-history-updated"));
+      } catch {}
+      return updated;
+    });
+  };
+
   const [maziiLookupState, setMaziiLookupState] = useState<{
     isOpen: boolean;
     queryWord: string;
@@ -725,6 +761,7 @@ export default function PracticeHubPage() {
               <label className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Kỹ năng học:</label>
               <div className="grid grid-cols-1 gap-2">
                 {[
+                  { id: "ipa", name: "🇬🇧 Luyện IPA & Cặp Âm", desc: "44 âm IPA & Minimal Pairs (/s/-/ʃ/, /θ/-/ð/)" },
                   { id: "shadowing", name: "🗣️ Shadowing JP", desc: "Luyện nghe nói đuổi" },
                   { id: "translation", name: "✍️ Luyện dịch 2 chiều", desc: "Xen kẽ dịch Nhật-Việt & Việt-Nhật" },
                   { id: "reading", name: "📚 Đọc hiểu JLPT N2", desc: "Đọc hiểu tiếng Nhật Furigana" },
@@ -733,7 +770,7 @@ export default function PracticeHubPage() {
                   <button
                     key={item.id}
                     onClick={() => setSelectedType(item.id as any)}
-                    className={`p-3 rounded-2xl border text-left transition-all ${
+                    className={`p-3 rounded-2xl border text-left transition-all cursor-pointer ${
                       selectedType === item.id
                         ? "border-teal-600 bg-teal-50/50 ring-2 ring-teal-300"
                         : "border-gray-200 bg-white hover:border-gray-300"
@@ -746,53 +783,67 @@ export default function PracticeHubPage() {
               </div>
             </div>
 
-            {/* Select Topic */}
-            <div className="space-y-1.5 pt-2 border-t border-gray-100">
-              <label className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Chọn chủ đề có sẵn:</label>
-              <div className="flex flex-wrap gap-1.5">
-                {POPULAR_TOPICS.map((t) => (
-                  <button
-                    key={t.id}
-                    onClick={() => {
-                      setSelectedTopic(t.name);
-                      setCustomTopic("");
-                    }}
-                    className={`px-3 py-1.5 rounded-xl text-[11px] font-bold border transition-all ${
-                      selectedTopic === t.name && !customTopic
-                        ? "bg-teal-600 border-teal-600 text-white shadow-xs"
-                        : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50"
-                    }`}
-                  >
-                    {t.icon} {t.name}
-                  </button>
-                ))}
+            {selectedType === "ipa" ? (
+              <div className="p-4 rounded-2xl bg-blue-50/80 border border-blue-200 text-xs text-blue-950 space-y-2">
+                <div className="font-extrabold flex items-center gap-1.5 text-blue-900">
+                  <span>🎧</span>
+                  <span>Phòng Luyện IPA & Cặp Âm</span>
+                </div>
+                <p className="text-[11px] text-blue-800 leading-relaxed">
+                  Đã tích hợp sẵn <strong>44 âm IPA</strong> (20 nguyên âm, 24 phụ âm) và các cặp âm then chốt <strong>/s/ - /ʃ/</strong>, <strong>/θ/ - /ð/</strong>, <strong>/iː/ - /ɪ/</strong>, <strong>/p/ - /b/</strong> kèm audio phát âm và chấm điểm micro AI.
+                </p>
               </div>
-            </div>
+            ) : (
+              <>
+                {/* Select Topic */}
+                <div className="space-y-1.5 pt-2 border-t border-gray-100">
+                  <label className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Chọn chủ đề có sẵn:</label>
+                  <div className="flex flex-wrap gap-1.5">
+                    {POPULAR_TOPICS.map((t) => (
+                      <button
+                        key={t.id}
+                        onClick={() => {
+                          setSelectedTopic(t.name);
+                          setCustomTopic("");
+                        }}
+                        className={`px-3 py-1.5 rounded-xl text-[11px] font-bold border transition-all cursor-pointer ${
+                          selectedTopic === t.name && !customTopic
+                            ? "bg-teal-600 border-teal-600 text-white shadow-xs"
+                            : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50"
+                        }`}
+                      >
+                        {t.icon} {t.name}
+                      </button>
+                    ))}
+                  </div>
+                </div>
 
-            {/* Custom Topic Input */}
-            <div className="space-y-1.5">
-              <label className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Hoặc nhập chủ đề tự chọn:</label>
-              <input
-                type="text"
-                value={customTopic}
-                onChange={(e) => setCustomTopic(e.target.value)}
-                placeholder="Ví dụ: Phỏng vấn xin việc, đi bác sĩ..."
-                className="w-full rounded-xl border border-gray-200 p-2.5 text-xs focus:outline-none focus:border-teal-500 shadow-3xs"
-              />
-            </div>
+                {/* Custom Topic Input */}
+                <div className="space-y-1.5">
+                  <label className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Hoặc nhập chủ đề tự chọn:</label>
+                  <input
+                    type="text"
+                    value={customTopic}
+                    onChange={(e) => setCustomTopic(e.target.value)}
+                    placeholder="Ví dụ: Phỏng vấn xin việc, đi bác sĩ..."
+                    className="w-full rounded-xl border border-gray-200 p-2.5 text-xs focus:outline-none focus:border-teal-500 shadow-3xs"
+                  />
+                </div>
 
-            {/* Submit Button */}
-            <button
-              onClick={handleGenerate}
-              disabled={generating}
-              className={`w-full py-3.5 rounded-2xl text-xs font-bold text-white transition-all shadow-md ${
-                generating
-                  ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-gradient-to-r from-teal-600 to-indigo-600 hover:opacity-95 shadow-teal-200"
-              }`}
-            >
-              {generating ? "🤖 Đang biên soạn nội dung..." : "🚀 Tạo bài luyện tập bằng AI"}
-            </button>
+                {/* Submit Button */}
+                <button
+                  onClick={handleGenerate}
+                  disabled={generating}
+                  className={`w-full py-3.5 rounded-2xl text-xs font-bold text-white transition-all shadow-md cursor-pointer ${
+                    generating
+                      ? "bg-gray-400 cursor-not-allowed"
+                      : "bg-gradient-to-r from-teal-600 to-indigo-600 hover:opacity-95 shadow-teal-200"
+                  }`}
+                >
+                  {generating ? "🤖 Đang biên soạn nội dung..." : "🚀 Tạo bài luyện tập bằng AI"}
+                </button>
+              </>
+            )}
           </div>
         </div>
 
@@ -812,6 +863,11 @@ export default function PracticeHubPage() {
             </div>
           ) : (
             <>
+              {/* IPA & MINIMAL PAIRS TRAINING */}
+              {selectedType === "ipa" && (
+                <IpaPracticeModule onRecordHistory={handleRecordIpaHistory} />
+              )}
+
               {/* SHADOWING DISPLAY */}
               {selectedType === "shadowing" && shadowingData.length > 0 && (
                 <div className="space-y-4">
@@ -1445,7 +1501,7 @@ export default function PracticeHubPage() {
               )}
 
               {/* EMPTY VIEW STATE */}
-              {!shadowingData.length && !translationData.length && !readingData && !slides.length && (
+              {selectedType !== "ipa" && !shadowingData.length && !translationData.length && !readingData && !slides.length && (
                 <div className="bg-white rounded-3xl p-12 border border-gray-100 text-center text-gray-400 flex flex-col items-center justify-center gap-2">
                   <div className="text-4xl">🏆</div>
                   <h3 className="font-bold text-gray-900 text-sm mt-2">Chưa chọn nội dung học</h3>

@@ -207,11 +207,6 @@ export default function DictionarySearchPage() {
                           ({item.hiragana})
                         </span>
                       )}
-                      {item.hiragana && langCode !== "ja" && (
-                        <span className="text-xs font-bold text-indigo-700 bg-indigo-50 border border-indigo-100 px-2.5 py-0.5 rounded-md font-mono">
-                          🗣️ {item.hiragana}
-                        </span>
-                      )}
                       {item.level && (
                         <span className={`px-2.5 py-0.5 text-[10px] font-bold rounded-md ${
                           item.level.includes("Band") || item.level.includes("IELTS")
@@ -228,17 +223,37 @@ export default function DictionarySearchPage() {
                       )}
                     </div>
 
-                    {item.onyomi && (
-                      <p className="text-xs text-purple-600 mt-1 font-medium">
-                        Âm Hán: {item.onyomi}
-                      </p>
-                    )}
+                    {/* Phiên âm IPA & Furigana Row */}
+                    <div className="flex items-center gap-2 flex-wrap mt-1.5">
+                      {langCode === "en" && (item.hiragana || (item.phonetic && item.phonetic.includes("/"))) && (
+                        <span className="text-xs font-black text-purple-700 bg-purple-50 border border-purple-200 px-2.5 py-0.5 rounded-lg font-mono shadow-3xs flex items-center gap-1">
+                          <span>🗣️ Phiên âm IPA:</span>
+                          <span className="text-purple-950 font-extrabold">
+                            {item.hiragana && item.hiragana.startsWith("/") 
+                              ? item.hiragana 
+                              : (item.phonetic && item.phonetic.includes("/") ? item.phonetic : `/${item.hiragana}/`)}
+                          </span>
+                        </span>
+                      )}
 
-                    <p className="text-sm font-semibold text-emerald-700 mt-1 leading-snug">
+                      {langCode === "de" && item.hiragana && item.hiragana !== item.kanji && (
+                        <span className="text-xs font-bold text-amber-800 bg-amber-50 border border-amber-200 px-2.5 py-0.5 rounded-lg font-mono">
+                          🗣️ {item.hiragana}
+                        </span>
+                      )}
+
+                      {item.onyomi && (
+                        <span className="text-[11px] font-bold text-purple-700 bg-purple-50 border border-purple-200 px-2 py-0.5 rounded-md">
+                          Âm Hán: {item.onyomi}
+                        </span>
+                      )}
+                    </div>
+
+                    <p className="text-sm font-semibold text-emerald-700 mt-1.5 leading-snug">
                       {item.meaning}
                     </p>
 
-                    {item.phonetic && (
+                    {item.phonetic && !item.phonetic.startsWith("Phiên âm chuẩn IPA") && (
                       <p className="text-xs text-gray-400 italic mt-0.5">{item.phonetic}</p>
                     )}
                   </div>

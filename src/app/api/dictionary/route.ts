@@ -41,7 +41,10 @@ export async function GET(request: NextRequest) {
         const freeDictData = await freeDictRes.json();
         if (Array.isArray(freeDictData) && freeDictData.length > 0) {
           const entry = freeDictData[0];
-          globalIpa = entry.phonetic || entry.phonetics?.find((p: any) => p.text)?.text || "";
+          const rawIpa = entry.phonetic || entry.phonetics?.find((p: any) => p.text)?.text || "";
+          if (rawIpa) {
+            globalIpa = rawIpa.startsWith("/") ? rawIpa : `/${rawIpa}/`;
+          }
           
           if (entry.meanings && entry.meanings.length > 0) {
             entry.meanings.slice(0, 2).forEach((m: any) => {
@@ -52,9 +55,9 @@ export async function GET(request: NextRequest) {
               if (def) {
                 freeDictItems.push({
                   kanji: query,
-                  hiragana: globalIpa ? `${globalIpa} (${pos})` : pos,
+                  hiragana: globalIpa || "",
                   meaning: def,
-                  phonetic: example ? `💬 Example: "${example}"` : "Định nghĩa Tiếng Anh học thuật",
+                  phonetic: pos ? `[${pos}] ${example ? `💬 Example: "${example}"` : ""}`.trim() : (example ? `💬 "${example}"` : "Academic English Definition"),
                   level: "IELTS",
                   source: "Free Dictionary API"
                 });
@@ -67,15 +70,36 @@ export async function GET(request: NextRequest) {
       console.error("FreeDictionaryAPI error:", err);
     }
 
+    // If globalIpa still empty, fetch IPA from Datamuse IPA API
+    if (!globalIpa) {
+      try {
+        const datamuseIpaRes = await fetch(`https://api.datamuse.com/words?sp=${encodeURIComponent(query)}&qe=sp&md=r&ipa=1&max=1`);
+        if (datamuseIpaRes.ok) {
+          const dmData = await datamuseIpaRes.json();
+          if (Array.isArray(dmData) && dmData.length > 0) {
+            const ipaTag = dmData[0]?.tags?.find((t: string) => t.startsWith("ipa_pron:"));
+            if (ipaTag) {
+              const pron = ipaTag.replace("ipa_pron:", "").trim();
+              if (pron) {
+                globalIpa = `/${pron}/`;
+              }
+            }
+          }
+        }
+      } catch (dmErr) {
+        console.error("Datamuse IPA error:", dmErr);
+      }
+    }
+
     // 1. Google Translate API (Anh - Việt)
     try {
       const viMeaning = await translateToVietnamese(query, "en");
       if (viMeaning && viMeaning.toLowerCase() !== query.toLowerCase()) {
         results.push({
           kanji: query,
-          hiragana: globalIpa || "Anh - Việt",
+          hiragana: globalIpa || "",
           meaning: viMeaning,
-          phonetic: "Dịch nghĩa Tiếng Việt trực tuyến",
+          phonetic: globalIpa ? `Phiên âm chuẩn IPA: ${globalIpa}` : "Dịch nghĩa Anh-Việt",
           level: "Anh-Việt",
           source: "Google Translate API"
         });
@@ -84,7 +108,12 @@ export async function GET(request: NextRequest) {
       console.error("Google Translate error:", err);
     }
 
-    // Add FreeDictionary items
+    // Add FreeDictionary items (updating globalIpa if acquired from Datamuse)
+    freeDictItems.forEach((item) => {
+      if (!item.hiragana && globalIpa) {
+        item.hiragana = globalIpa;
+      }
+    });
     results.push(...freeDictItems);
 
     // 3. Datamuse API (IELTS Synonyms / Lexical Resource)
@@ -97,9 +126,9 @@ export async function GET(request: NextRequest) {
           if (synonymsList.length > 0) {
             results.push({
               kanji: query,
-              hiragana: "Từ đồng nghĩa (Synonyms)",
+              hiragana: globalIpa || "",
               meaning: synonymsList.join(", "),
-              phonetic: "🔄 IELTS Lexical Resource (Dùng cho Writing & Speaking)",
+              phonetic: "🔄 Từ đồng nghĩa (IELTS Synonyms / Lexical Resource)",
               level: "IELTS Synonyms",
               source: "Datamuse API"
             });
