@@ -182,13 +182,22 @@ export default function ExportImportPanel({ onImportSuccess }: ExportImportPanel
 
         {/* Success / Error Feedback Card */}
         {importResult && (
-          <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 space-y-1 animate-in zoom-in-95 duration-150">
-            <div className="flex items-center gap-2 text-emerald-800 font-bold text-xs">
-              <span>✓</span>
-              <span>Nạp thành công dữ liệu [{importResult.scopeName}]!</span>
+          <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 space-y-2.5 animate-in zoom-in-95 duration-150">
+            <div className="flex items-center justify-between flex-wrap gap-2">
+              <div className="flex items-center gap-2 text-emerald-900 font-bold text-xs">
+                <span>✓</span>
+                <span>Nạp thành công dữ liệu [{importResult.scopeName}]!</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => window.location.reload()}
+                className="px-3 py-1 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg text-xs font-bold transition-all shadow-3xs cursor-pointer"
+              >
+                🔄 Tải lại trang ngay
+              </button>
             </div>
-            <div className="text-[11px] text-emerald-700">
-              Đã khôi phục: <strong>{importResult.notebookCount}</strong> sổ tay, <strong>{importResult.vocabCount}</strong> từ vựng và <strong>{importResult.practiceCount}</strong> lượt luyện tập. Hãy tải lại trang để áp dụng toàn diện.
+            <div className="text-[11px] text-emerald-800 leading-relaxed">
+              Đã đồng bộ lên trình duyệt: <strong>{importResult.notebookCount}</strong> sổ tay, <strong>{importResult.vocabCount}</strong> từ vựng và <strong>{importResult.practiceCount}</strong> lượt luyện tập.
             </div>
           </div>
         )}

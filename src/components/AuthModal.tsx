@@ -1,9 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 
 export default function AuthModal() {
+  const router = useRouter();
   const { authModalConfig, closeAuthModal, login, register } = useAuth();
   const { isOpen, reason, onSuccess } = authModalConfig;
 
@@ -43,6 +45,7 @@ export default function AuthModal() {
         if (res.success) {
           closeAuthModal();
           if (onSuccess) onSuccess();
+          router.push("/");
         } else {
           setError(res.error || "Tên đăng nhập hoặc mật khẩu không chính xác");
         }
@@ -53,6 +56,7 @@ export default function AuthModal() {
           const loginRes = await login(username, password);
           closeAuthModal();
           if (loginRes.success && onSuccess) onSuccess();
+          router.push("/");
         } else {
           setError(res.error || "Đăng ký thất bại. Tên đăng nhập có thể đã tồn tại");
         }

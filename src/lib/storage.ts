@@ -307,6 +307,16 @@ export function importScopedData(jsonString: string, mode: "merge" | "replace" =
     }
   }
 
+  // Dispatch all UI sync events across browser
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new CustomEvent("notebooks-updated"));
+    window.dispatchEvent(new Event("practice-history-updated"));
+    window.dispatchEvent(new Event("settings-updated"));
+    window.dispatchEvent(new Event("curriculum-updated"));
+    window.dispatchEvent(new Event("language-changed"));
+    window.dispatchEvent(new Event("storage"));
+  }
+
   return {
     success: true,
     scope,

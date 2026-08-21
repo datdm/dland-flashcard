@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import * as syncService from '@/lib/syncService';
 
 type DialogState = 'closed' | 'login' | 'register' | 'choose-direction' | 'syncing' | 'complete' | 'error';
@@ -12,6 +13,7 @@ interface SyncDialogProps {
 }
 
 export default function SyncDialog({ isOpen, onClose, onSyncComplete }: SyncDialogProps) {
+  const router = useRouter();
   const [state, setState] = useState<DialogState>('login');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -99,7 +101,8 @@ export default function SyncDialog({ isOpen, onClose, onSyncComplete }: SyncDial
       setTimeout(() => {
         onClose();
         onSyncComplete?.();
-      }, 2000);
+        router.push('/');
+      }, 1500);
     } else {
       setError(result.error || 'Tải lên thất bại');
       setState('error');
@@ -116,8 +119,8 @@ export default function SyncDialog({ isOpen, onClose, onSyncComplete }: SyncDial
       setState('complete');
       setTimeout(() => {
         onClose();
-        window.location.reload(); // Reload to refresh all data
-      }, 2000);
+        window.location.href = '/'; // Navigate to home and reload
+      }, 1500);
     } else {
       setError(result.error || 'Tải xuống thất bại');
       setState('error');
