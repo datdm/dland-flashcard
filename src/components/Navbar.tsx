@@ -20,7 +20,9 @@ function getNavItemsForLanguage(langCode: string): NavItem[] {
       return [
         { href: "/", label: "Trang chủ", icon: "🏠" },
         { href: "/search", label: "Tra cứu từ điển", icon: "🔍" },
+        { href: "/ipa", label: "Luyện phát âm IPA", icon: "🎙️" },
         { href: "/curriculum", label: "Lộ trình IELTS 7.0", icon: "📚" },
+        { href: "/practice", label: "Luyện chuyên sâu", icon: "🏆" },
         { href: "/grammar", label: "Ngữ pháp Tiếng Anh", icon: "📖" },
         { href: "/vocabulary", label: "Kho Từ Vựng Tiếng Anh", icon: "📝" },
         { href: "/translate", label: "Dịch văn bản", icon: "🌐" },
@@ -36,6 +38,7 @@ function getNavItemsForLanguage(langCode: string): NavItem[] {
         { href: "/", label: "Trang chủ", icon: "🏠" },
         { href: "/search", label: "Tra cứu từ điển", icon: "🔍" },
         { href: "/curriculum", label: "Giáo trình Tiếng Đức", icon: "📚" },
+        { href: "/practice", label: "Luyện chuyên sâu", icon: "🏆" },
         { href: "/grammar", label: "Ngữ pháp Tiếng Đức", icon: "📖" },
         { href: "/vocabulary", label: "Kho Từ Vựng Tiếng Đức", icon: "📝" },
         { href: "/translate", label: "Dịch văn bản", icon: "🌐" },

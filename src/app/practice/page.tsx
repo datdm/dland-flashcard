@@ -92,18 +92,71 @@ export interface PracticeHistoryEntry {
   completedAt: string;
 }
 
-const POPULAR_TOPICS = [
-  { id: "daily", name: "Sinh hoạt & Đời sống", icon: "🏡" },
-  { id: "business", name: "Kinh doanh & Công sở", icon: "💼" },
-  { id: "it", name: "Công nghệ & IT", icon: "💻" },
-  { id: "travel", name: "Du lịch & Ẩm thực", icon: "🍣" },
-  { id: "news", name: "Tin tức & Xã hội", icon: "📰" },
-];
+const POPULAR_TOPICS_BY_LANG: Record<string, { id: string; name: string; icon: string }[]> = {
+  ja: [
+    { id: "daily", name: "Sinh hoạt & Đời sống", icon: "🏡" },
+    { id: "business", name: "Kinh doanh & Công sở", icon: "💼" },
+    { id: "it", name: "Công nghệ & IT", icon: "💻" },
+    { id: "travel", name: "Du lịch & Ẩm thực", icon: "🍣" },
+    { id: "news", name: "Tin tức & Xã hội", icon: "📰" },
+  ],
+  en: [
+    { id: "daily", name: "Daily Life & Habits", icon: "☕" },
+    { id: "work", name: "Career & Business", icon: "💼" },
+    { id: "tech", name: "Technology & AI", icon: "💻" },
+    { id: "travel", name: "Travel, Culture & Food", icon: "✈️" },
+    { id: "society", name: "Society & Environment", icon: "🌍" },
+  ],
+  de: [
+    { id: "daily", name: "Alltag & Wohnen", icon: "🏡" },
+    { id: "work", name: "Beruf & Büro", icon: "💼" },
+    { id: "tech", name: "Technik & Medien", icon: "💻" },
+    { id: "travel", name: "Reisen & Essen", icon: "🥨" },
+    { id: "society", name: "Gesellschaft & Umwelt", icon: "📰" },
+  ],
+};
+
+const SKILLS_BY_LANG: Record<string, { id: "shadowing" | "translation" | "reading" | "presentation" | "ipa"; name: string; desc: string }[]> = {
+  ja: [
+    { id: "shadowing", name: "🗣️ Shadowing JP", desc: "Luyện nghe nói đuổi tiếng Nhật kèm Furigana" },
+    { id: "translation", name: "✍️ Luyện dịch 2 chiều", desc: "Xen kẽ dịch Nhật ➔ Việt & Việt ➔ Nhật" },
+    { id: "reading", name: "📚 Đọc hiểu JLPT N2", desc: "Đoạn văn Furigana, trắc nghiệm & tra Mazii" },
+    { id: "presentation", name: "🎤 Luyện thuyết trình", desc: "Thuyết trình slide tiếng Nhật, AI sửa lỗi & chấm điểm" },
+  ],
+  en: [
+    { id: "ipa", name: "🔤 Luyện 44 Âm IPA & Cặp Âm", desc: "20 nguyên âm, 24 phụ âm & Minimal Pairs (/s/-/ʃ/, /θ/-/ð/...)" },
+    { id: "shadowing", name: "🗣️ Shadowing IELTS Speaking", desc: "Luyện nghe nói đuổi tiếng Anh chuẩn native accent" },
+    { id: "translation", name: "✍️ Luyện dịch 2 chiều Anh - Việt", desc: "Xen kẽ dịch câu Academic & đời sống" },
+    { id: "reading", name: "📚 Đọc hiểu IELTS Reading", desc: "Đoạn văn học thuật, trắc nghiệm & từ vựng" },
+    { id: "presentation", name: "🎤 Thuyết trình IELTS Part 2", desc: "Nói qua micro, AI sửa câu & chấm điểm Fluency" },
+  ],
+  de: [
+    { id: "shadowing", name: "🗣️ Shadowing Deutsch", desc: "Luyện nghe nói đuổi tiếng Đức chuẩn Goethe" },
+    { id: "translation", name: "✍️ Luyện dịch 2 chiều Đức - Việt", desc: "Xen kẽ dịch Đức ➔ Việt & Việt ➔ Đức" },
+    { id: "reading", name: "📚 Đọc hiểu Leseverstehen", desc: "Đọc hiểu tiếng Đức Goethe A1/A2" },
+    { id: "presentation", name: "🎤 Luyện thuyết trình / Sprechen", desc: "Nói qua micro, AI sửa câu & chấm điểm" },
+  ],
+};
 
 export default function PracticeHubPage() {
   const { notebooks, addVocab, checkDuplicate } = useNotebooks();
   const recognitionRef = useRef<any>(null);
   const { activeLanguage } = useLanguageSetting();
+
+  // Language state for Practice Center
+  const [selectedLang, setSelectedLang] = useState<string>(activeLanguage.code || "ja");
+
+  // Sync when global language setting changes
+  useEffect(() => {
+    if (activeLanguage.code) {
+      setSelectedLang(activeLanguage.code);
+      if (activeLanguage.code === "en") {
+        setSelectedType("ipa");
+      } else {
+        setSelectedType("shadowing");
+      }
+    }
+  }, [activeLanguage.code]);
 
   // Config states
   const [selectedType, setSelectedType] = useState<"shadowing" | "translation" | "reading" | "presentation" | "ipa">(
@@ -113,6 +166,12 @@ export default function PracticeHubPage() {
   const [customTopic, setCustomTopic] = useState("");
   const [generating, setGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Update default topic when selectedLang changes
+  useEffect(() => {
+    const defaultTopics = POPULAR_TOPICS_BY_LANG[selectedLang] || POPULAR_TOPICS_BY_LANG.ja;
+    setSelectedTopic(defaultTopics[0]?.name || "Sinh hoạt & Đời sống");
+  }, [selectedLang]);
 
   // Data states
   const [shadowingData, setShadowingData] = useState<ShadowingItem[]>([]);
@@ -142,6 +201,7 @@ export default function PracticeHubPage() {
   // Practice History & Scoring States
   const [practiceHistory, setPracticeHistory] = useState<PracticeHistoryEntry[]>([]);
   const [showHistoryModal, setShowHistoryModal] = useState(false);
+  const [historyLangFilter, setHistoryLangFilter] = useState<string>("ALL");
   const [translationScores, setTranslationScores] = useState<Record<number, { score: number; checked: boolean }>>({});
   const [shadowingScores, setShadowingScores] = useState<Record<number, { score: number; transcript: string }>>({});
   const [readingScore, setReadingScore] = useState<{ score: number; optionId: string } | null>(null);
@@ -286,8 +346,8 @@ export default function PracticeHubPage() {
         body: JSON.stringify({
           type: selectedType === "presentation" ? "presentation_slides" : selectedType,
           topic: activeTopic,
-          level: selectedType === "reading" ? "N2" : "N3", // N2 level reading by default, others N3
-          lang: activeLanguage.code,
+          level: selectedLang === "de" ? "A2" : selectedLang === "en" ? (selectedType === "reading" ? "Band 7.0" : "Band 6.5") : (selectedType === "reading" ? "N2" : "N3"),
+          lang: selectedLang,
         }),
       });
 
@@ -322,7 +382,7 @@ export default function PracticeHubPage() {
     if (typeof window === "undefined") return;
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = "ja-JP";
+    utterance.lang = selectedLang === "de" ? "de-DE" : selectedLang === "en" ? "en-US" : "ja-JP";
     utterance.rate = playbackRate;
     window.speechSynthesis.speak(utterance);
   };
@@ -347,7 +407,7 @@ export default function PracticeHubPage() {
 
     const recognition = new SpeechRecognition();
     recognitionRef.current = recognition;
-    recognition.lang = activeLanguage.code === "de" ? "de-DE" : activeLanguage.code === "en" ? "en-US" : "ja-JP";
+    recognition.lang = selectedLang === "de" ? "de-DE" : selectedLang === "en" ? "en-US" : "ja-JP";
     recognition.continuous = true;
     recognition.interimResults = false;
 
@@ -390,9 +450,9 @@ export default function PracticeHubPage() {
             if (current && current.transcript && current.transcript !== "Đang lắng nghe...") {
               recordPracticeHistory({
                 type: "shadowing",
-                typeName: "🗣️ Shadowing JP",
+                typeName: selectedLang === "en" ? "🗣️ Shadowing IELTS" : selectedLang === "de" ? "🗣️ Shadowing Deutsch" : "🗣️ Shadowing JP",
                 topic: activeTopic,
-                lang: activeLanguage.code,
+                lang: selectedLang,
                 score: current.score,
                 userAnswer: current.transcript,
                 correctAnswer: targetText,
@@ -429,7 +489,7 @@ export default function PracticeHubPage() {
 
     const recognition = new SpeechRecognition();
     recognitionRef.current = recognition;
-    recognition.lang = activeLanguage.code === "de" ? "de-DE" : activeLanguage.code === "en" ? "en-US" : "ja-JP";
+    recognition.lang = selectedLang === "de" ? "de-DE" : selectedLang === "en" ? "en-US" : "ja-JP";
     recognition.continuous = true;
     recognition.interimResults = false;
 
@@ -488,11 +548,17 @@ export default function PracticeHubPage() {
     }));
     setShowAnswerIdx((prev) => ({ ...prev, [idx]: true }));
 
+    const directionLabel = selectedLang === "en"
+      ? (item.direction === "ja-vi" ? "Anh ➔ Việt" : "Việt ➔ Anh")
+      : selectedLang === "de"
+      ? (item.direction === "ja-vi" ? "Đức ➔ Việt" : "Việt ➔ Đức")
+      : (item.direction === "ja-vi" ? "Nhật ➔ Việt" : "Việt ➔ Nhật");
+
     recordPracticeHistory({
       type: "translation",
-      typeName: `✍️ Dịch 2 chiều (${item.direction === "ja-vi" ? "Nhật-Việt" : "Việt-Nhật"})`,
+      typeName: `✍️ Dịch 2 chiều (${directionLabel})`,
       topic: activeTopic,
-      lang: activeLanguage.code,
+      lang: selectedLang,
       score: score,
       userAnswer: userTranslation || "(Chưa nhập câu dịch)",
       correctAnswer: item.target,
@@ -506,12 +572,18 @@ export default function PracticeHubPage() {
     const score = opt.isCorrect ? 100 : 0;
     setReadingScore({ score, optionId: opt.id });
 
+    const readingTypeName = selectedLang === "en"
+      ? "📚 Đọc hiểu IELTS Reading"
+      : selectedLang === "de"
+      ? "📚 Đọc hiểu Leseverstehen"
+      : "📚 Đọc hiểu JLPT N2";
+
     if (readingData) {
       recordPracticeHistory({
         type: "reading",
-        typeName: "📚 Đọc hiểu JLPT N2",
+        typeName: readingTypeName,
         topic: activeTopic,
-        lang: activeLanguage.code,
+        lang: selectedLang,
         score: score,
         userAnswer: opt.text,
         correctAnswer: readingData.options.find((o) => o.isCorrect)?.text || opt.text,
@@ -539,7 +611,7 @@ export default function PracticeHubPage() {
           speechTranscripts: [presentationTranscripts[0] || "", presentationTranscripts[1] || ""],
           isSecondCheck: isSecondCheck,
           previousEvaluation: previousEvaluation,
-          lang: activeLanguage.code,
+          lang: selectedLang,
         }),
       });
 
@@ -556,11 +628,17 @@ export default function PracticeHubPage() {
 
         // Record presentation to practice history
         const score = resData.data.comprehensibility_score || 80;
+        const presTypeName = selectedLang === "en"
+          ? "🎤 Thuyết trình IELTS Speaking"
+          : selectedLang === "de"
+          ? "🎤 Thuyết trình / Sprechen"
+          : "🎤 Luyện thuyết trình JP";
+
         recordPracticeHistory({
           type: "presentation",
-          typeName: "🎤 Luyện thuyết trình",
+          typeName: presTypeName,
           topic: activeTopic,
-          lang: activeLanguage.code,
+          lang: selectedLang,
           score: score,
           userAnswer: [presentationTranscripts[0], presentationTranscripts[1]].filter(Boolean).join(" | "),
           correctAnswer: "Slide bài thuyết trình",
@@ -571,7 +649,7 @@ export default function PracticeHubPage() {
       }
     } catch (err: any) {
       console.error(err);
-      setError(err.message || "Đã xảy ra lỗi khi đánh giá.");
+      setError(err.message || "Đã xảy ra lỗi khi gửi bài thuyết trình cho AI chấm điểm.");
     } finally {
       setIsEvaluating(false);
     }
@@ -725,17 +803,31 @@ export default function PracticeHubPage() {
     <AuthGuard featureName="Trung Tâm Luyện Tập & Kỹ Năng">
       <div className="p-4 max-w-5xl mx-auto min-h-screen pb-24">
       {/* Header Banner */}
-      <div className="bg-gradient-to-r from-teal-800 via-indigo-900 to-purple-800 rounded-3xl p-6 sm:p-8 text-white shadow-xl mb-6">
+      <div className={`rounded-3xl p-6 sm:p-8 text-white shadow-xl mb-6 transition-all bg-gradient-to-r ${
+        selectedLang === "en"
+          ? "from-indigo-900 via-purple-900 to-blue-900"
+          : selectedLang === "de"
+          ? "from-amber-950 via-red-950 to-stone-900"
+          : "from-teal-800 via-indigo-900 to-purple-800"
+      }`}>
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-bold tracking-widest uppercase">
-              JP Practice Center
+              {selectedLang === "en" ? "🇬🇧 EN Practice & IELTS Hub" : selectedLang === "de" ? "🇩🇪 DE Goethe Practice" : "🇯🇵 JP Practice Center"}
             </span>
             <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight mt-2">
-              Trung Tâm Luyện Kỹ Năng & Chấm Điểm
+              {selectedLang === "en" 
+                ? "Trung Tâm Luyện Kỹ Năng Tiếng Anh (IELTS & IPA)" 
+                : selectedLang === "de" 
+                ? "Trung Tâm Luyện Kỹ Năng Tiếng Đức (Goethe)" 
+                : "Trung Tâm Luyện Kỹ Năng Tiếng Nhật (JLPT)"}
             </h1>
-            <p className="text-xs sm:text-sm text-teal-100 mt-2 leading-relaxed">
-              Luyện Shadowing phát âm chuẩn, dịch thuật 2 chiều phản xạ nhanh, đọc hiểu JLPT và thuyết trình slide với AI tự động chấm điểm và lưu lịch sử học tập chi tiết.
+            <p className="text-xs sm:text-sm text-teal-100/90 mt-2 leading-relaxed max-w-3xl">
+              {selectedLang === "en"
+                ? "Phòng luyện 44 âm IPA & Minimal Pairs, Shadowing IELTS Speaking chuẩn Oxford, luyện dịch 2 chiều Anh-Việt, đọc hiểu IELTS Reading và thuyết trình Speaking Part 2 với AI chấm điểm trực tiếp."
+                : selectedLang === "de"
+                ? "Luyện Shadowing phát âm tiếng Đức chuẩn Goethe, rèn phản xạ dịch 2 chiều Đức-Việt, đọc hiểu Leseverstehen và thuyết trình Sprechen theo chủ đề với AI chấm điểm."
+                : "Luyện Shadowing phát âm chuẩn Furigana, dịch thuật 2 chiều phản xạ nhanh, đọc hiểu JLPT và thuyết trình slide với AI tự động chấm điểm và lưu lịch sử học tập chi tiết."}
             </p>
           </div>
           <button
@@ -748,6 +840,66 @@ export default function PracticeHubPage() {
         </div>
       </div>
 
+      {/* Language Switcher Bar */}
+      <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 mb-6">
+        <button
+          onClick={() => {
+            setSelectedLang("ja");
+            setSelectedType("shadowing");
+            setShadowingData([]);
+            setTranslationData([]);
+            setReadingData(null);
+            setSlides([]);
+          }}
+          className={`px-4 py-2.5 rounded-2xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-2 border cursor-pointer ${
+            selectedLang === "ja"
+              ? "bg-teal-600 text-white border-teal-600 shadow-sm scale-102"
+              : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
+          }`}
+        >
+          <span className="text-base">🇯🇵</span>
+          <span>Tiếng Nhật (JLPT N5-N2)</span>
+        </button>
+
+        <button
+          onClick={() => {
+            setSelectedLang("en");
+            setSelectedType("ipa");
+            setShadowingData([]);
+            setTranslationData([]);
+            setReadingData(null);
+            setSlides([]);
+          }}
+          className={`px-4 py-2.5 rounded-2xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-2 border cursor-pointer ${
+            selectedLang === "en"
+              ? "bg-indigo-600 text-white border-indigo-600 shadow-sm scale-102"
+              : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
+          }`}
+        >
+          <span className="text-base">🇬🇧</span>
+          <span>Tiếng Anh (IELTS 7.0 & IPA)</span>
+        </button>
+
+        <button
+          onClick={() => {
+            setSelectedLang("de");
+            setSelectedType("shadowing");
+            setShadowingData([]);
+            setTranslationData([]);
+            setReadingData(null);
+            setSlides([]);
+          }}
+          className={`px-4 py-2.5 rounded-2xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-2 border cursor-pointer ${
+            selectedLang === "de"
+              ? "bg-amber-600 text-white border-amber-600 shadow-sm scale-102"
+              : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
+          }`}
+        >
+          <span className="text-base">🇩🇪</span>
+          <span>Tiếng Đức (Goethe A1-A2)</span>
+        </button>
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Control Panel */}
         <div className="lg:col-span-1 space-y-5">
@@ -758,21 +910,19 @@ export default function PracticeHubPage() {
 
             {/* Select Skill */}
             <div className="space-y-1.5">
-              <label className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Kỹ năng học:</label>
+              <label className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Kỹ năng học ({selectedLang.toUpperCase()}):</label>
               <div className="grid grid-cols-1 gap-2">
-                {[
-                  { id: "ipa", name: "🇬🇧 Luyện IPA & Cặp Âm", desc: "44 âm IPA & Minimal Pairs (/s/-/ʃ/, /θ/-/ð/)" },
-                  { id: "shadowing", name: "🗣️ Shadowing JP", desc: "Luyện nghe nói đuổi" },
-                  { id: "translation", name: "✍️ Luyện dịch 2 chiều", desc: "Xen kẽ dịch Nhật-Việt & Việt-Nhật" },
-                  { id: "reading", name: "📚 Đọc hiểu JLPT N2", desc: "Đọc hiểu tiếng Nhật Furigana" },
-                  { id: "presentation", name: "🎤 Luyện thuyết trình", desc: "Nói qua micro, AI sửa câu & chấm điểm" },
-                ].map((item) => (
+                {(SKILLS_BY_LANG[selectedLang] || SKILLS_BY_LANG.ja).map((item) => (
                   <button
                     key={item.id}
                     onClick={() => setSelectedType(item.id as any)}
                     className={`p-3 rounded-2xl border text-left transition-all cursor-pointer ${
                       selectedType === item.id
-                        ? "border-teal-600 bg-teal-50/50 ring-2 ring-teal-300"
+                        ? selectedLang === "en" 
+                          ? "border-indigo-600 bg-indigo-50/50 ring-2 ring-indigo-300"
+                          : selectedLang === "de"
+                          ? "border-amber-600 bg-amber-50/50 ring-2 ring-amber-300"
+                          : "border-teal-600 bg-teal-50/50 ring-2 ring-teal-300"
                         : "border-gray-200 bg-white hover:border-gray-300"
                     }`}
                   >
@@ -799,7 +949,7 @@ export default function PracticeHubPage() {
                 <div className="space-y-1.5 pt-2 border-t border-gray-100">
                   <label className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Chọn chủ đề có sẵn:</label>
                   <div className="flex flex-wrap gap-1.5">
-                    {POPULAR_TOPICS.map((t) => (
+                    {(POPULAR_TOPICS_BY_LANG[selectedLang] || POPULAR_TOPICS_BY_LANG.ja).map((t) => (
                       <button
                         key={t.id}
                         onClick={() => {
@@ -808,7 +958,11 @@ export default function PracticeHubPage() {
                         }}
                         className={`px-3 py-1.5 rounded-xl text-[11px] font-bold border transition-all cursor-pointer ${
                           selectedTopic === t.name && !customTopic
-                            ? "bg-teal-600 border-teal-600 text-white shadow-xs"
+                            ? selectedLang === "en" 
+                              ? "bg-indigo-600 border-indigo-600 text-white shadow-xs"
+                              : selectedLang === "de"
+                              ? "bg-amber-600 border-amber-600 text-white shadow-xs"
+                              : "bg-teal-600 border-teal-600 text-white shadow-xs"
                             : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50"
                         }`}
                       >
@@ -837,6 +991,10 @@ export default function PracticeHubPage() {
                   className={`w-full py-3.5 rounded-2xl text-xs font-bold text-white transition-all shadow-md cursor-pointer ${
                     generating
                       ? "bg-gray-400 cursor-not-allowed"
+                      : selectedLang === "en"
+                      ? "bg-gradient-to-r from-indigo-600 to-purple-600 hover:opacity-95 shadow-indigo-200"
+                      : selectedLang === "de"
+                      ? "bg-gradient-to-r from-amber-600 to-red-600 hover:opacity-95 shadow-amber-200"
                       : "bg-gradient-to-r from-teal-600 to-indigo-600 hover:opacity-95 shadow-teal-200"
                   }`}
                 >
@@ -1596,16 +1754,40 @@ export default function PracticeHubPage() {
               </div>
             </div>
 
+            {/* Language Filter Tabs */}
+            <div className="px-6 py-2.5 bg-white border-b border-gray-100 flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+              {[
+                { id: "ALL", name: "Tất cả", count: practiceHistory.length },
+                { id: "ja", name: "🇯🇵 Tiếng Nhật", count: practiceHistory.filter(i => i.lang === "ja" || !i.lang).length },
+                { id: "en", name: "🇬🇧 Tiếng Anh", count: practiceHistory.filter(i => i.lang === "en").length },
+                { id: "de", name: "🇩🇪 Tiếng Đức", count: practiceHistory.filter(i => i.lang === "de").length },
+              ].map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setHistoryLangFilter(tab.id)}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
+                    historyLangFilter === tab.id
+                      ? "bg-gray-900 text-white shadow-3xs"
+                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                  }`}
+                >
+                  {tab.name} ({tab.count})
+                </button>
+              ))}
+            </div>
+
             {/* History List */}
             <div className="p-6 overflow-y-auto space-y-3 flex-1">
-              {practiceHistory.length === 0 ? (
+              {practiceHistory.filter(i => historyLangFilter === "ALL" || (i.lang || "ja") === historyLangFilter).length === 0 ? (
                 <div className="text-center py-12 space-y-2 text-gray-400">
                   <span className="text-3xl">📝</span>
-                  <p className="text-xs font-bold text-gray-600">Chưa có lượt luyện tập nào được ghi nhận</p>
+                  <p className="text-xs font-bold text-gray-600">Chưa có lượt luyện tập nào cho mục này</p>
                   <p className="text-[10px]">Hãy thực hiện bài tập Shadowing, Dịch thuật, Đọc hiểu hoặc Thuyết trình để bắt đầu tích lũy điểm số!</p>
                 </div>
               ) : (
-                practiceHistory.map((entry) => (
+                practiceHistory
+                  .filter(i => historyLangFilter === "ALL" || (i.lang || "ja") === historyLangFilter)
+                  .map((entry) => (
                   <div key={entry.id} className="bg-white p-4 rounded-2xl border border-gray-100 shadow-3xs space-y-2.5">
                     <div className="flex items-center justify-between flex-wrap gap-2">
                       <div className="flex items-center gap-2">
