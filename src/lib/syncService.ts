@@ -421,6 +421,51 @@ export interface BackupDetail {
   note: string | null;
 }
 
+// Create manual backup snapshot on server
+export async function createManualBackup(note?: string): Promise<{ success: boolean; backup?: any; error?: string }> {
+  const token = getAuthToken();
+  if (!token) return { success: false, error: 'Not authenticated' };
+
+  try {
+    const backupData: Record<string, any> = {};
+    const keys = Object.values(StorageKeys);
+    
+    for (const key of keys) {
+      const value = localStorage.getItem(key);
+      if (value) {
+        try {
+          backupData[key] = JSON.parse(value);
+        } catch {
+          backupData[key] = value;
+        }
+      }
+    }
+
+    const response = await trackedFetch(`${API_URL}/api/backup/create`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        backupData,
+        note: note || `Bản sao lưu thủ công lúc ${new Date().toLocaleTimeString('vi-VN')} ${new Date().toLocaleDateString('vi-VN')}`,
+      }),
+    });
+
+    if (!response.ok) {
+      const err = await response.json();
+      return { success: false, error: err.error || 'Failed to create backup' };
+    }
+
+    const data = await response.json();
+    return { success: true, backup: data.backup };
+  } catch (error) {
+    console.error('Create manual backup error:', error);
+    return { success: false, error: 'Network error' };
+  }
+}
+
 // Get backup history list
 export async function getBackupHistory(): Promise<BackupHistoryItem[]> {
   const token = getAuthToken();

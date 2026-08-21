@@ -7,6 +7,7 @@ import type { BackupHistoryItem } from "@/lib/syncService";
 export default function BackupHistoryPanel() {
   const [backups, setBackups] = useState<BackupHistoryItem[]>([]);
   const [loading, setLoading] = useState(false);
+  const [isCreatingBackup, setIsCreatingBackup] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [restoring, setRestoring] = useState<string | null>(null);
   const [deletingAll, setDeletingAll] = useState(false);
@@ -33,6 +34,24 @@ export default function BackupHistoryPanel() {
   useEffect(() => {
     loadBackups();
   }, []);
+
+  const handleCreateBackup = async () => {
+    setIsCreatingBackup(true);
+    setError(null);
+    try {
+      const res = await syncService.createManualBackup();
+      if (res.success) {
+        alert("✅ Đã tạo bản sao lưu snapshot thành công lên máy chủ!");
+        await loadBackups();
+      } else {
+        setError(res.error || "Không thể tạo bản sao lưu.");
+      }
+    } catch (err: any) {
+      setError(err.message || "Lỗi kết nối khi tạo bản sao lưu.");
+    } finally {
+      setIsCreatingBackup(false);
+    }
+  };
 
   const handleRestore = async (backupId: string) => {
     if (!confirm("Bạn có chắc muốn khôi phục dữ liệu từ backup này? Dữ liệu hiện tại sẽ bị ghi đè.")) {
@@ -104,22 +123,41 @@ export default function BackupHistoryPanel() {
   }
 
   return (
-    <div className="border border-gray-200 rounded-2xl p-5 space-y-4">
-      <div className="flex items-center justify-between gap-2">
-        <h2 className="font-bold text-gray-800">📦 Lịch sử Backup</h2>
-        <div className="flex gap-2">
+    <div className="bg-white border border-gray-100 rounded-3xl p-6 shadow-2xs space-y-4">
+      <div className="flex items-center justify-between flex-wrap gap-3">
+        <div>
+          <h2 className="text-base font-bold text-gray-900 flex items-center gap-2">
+            <span>📦</span> Lịch Sử Bản Sao Lưu Cloud (Snapshots)
+          </h2>
+          <p className="text-xs text-gray-500 mt-0.5">
+            Dữ liệu cũ tự động sao lưu mỗi khi đồng bộ, hoặc bạn có thể tạo bản snapshot lưu trữ bất kỳ lúc nào.
+          </p>
+        </div>
+
+        <div className="flex items-center gap-2 flex-wrap">
+          {/* Create Backup Button */}
+          <button
+            onClick={handleCreateBackup}
+            disabled={loading || isCreatingBackup}
+            className="text-xs px-3.5 py-1.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:opacity-95 text-white font-bold rounded-xl shadow-md shadow-indigo-200 transition-all disabled:opacity-50 flex items-center gap-1.5 cursor-pointer"
+          >
+            <span>{isCreatingBackup ? "⏳" : "💾"}</span>
+            <span>{isCreatingBackup ? "Đang sao lưu..." : "Sao lưu ngay"}</span>
+          </button>
+
           <button
             onClick={loadBackups}
-            disabled={loading}
-            className="text-xs px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg text-gray-600 transition-colors disabled:opacity-50"
+            disabled={loading || isCreatingBackup}
+            className="text-xs px-3 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-xl text-gray-700 font-semibold transition-colors disabled:opacity-50 cursor-pointer"
           >
             {loading ? "⏳ Đang tải..." : "🔄 Tải lại"}
           </button>
+
           {backups.length > 0 && (
             <button
               onClick={handleDeleteAll}
-              disabled={loading || deletingAll}
-              className="text-xs px-3 py-1 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg transition-colors disabled:opacity-50 whitespace-nowrap"
+              disabled={loading || deletingAll || isCreatingBackup}
+              className="text-xs px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-600 font-semibold rounded-xl transition-colors disabled:opacity-50 whitespace-nowrap cursor-pointer"
             >
               {deletingAll ? "⏳" : "🗑️ Xóa tất cả"}
             </button>

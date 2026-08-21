@@ -58,6 +58,11 @@ router.post('/upload', authenticate, async (req: AuthRequest, res: Response) => 
       'flashcash-grammar-progress',
       'flashcash-kanji-progress',
       'flashcash-curriculum-history',
+      'flashcash-practice-history',
+      'dland_target_language',
+      'dland_kaiwa_completed',
+      'flashcash-streak',
+      'flashcash-is-daily-50',
     ];
 
     // First, backup current data before overwriting (skip if auto-sync)
