@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import Link from "next/link";
 
 export interface IpaSound {
   ipa: string;
@@ -765,8 +766,8 @@ export default function IpaPracticeModule({ onRecordHistory }: IpaPracticeModule
   return (
     <div className="space-y-6">
       {/* Top Header Banner for IPA */}
-      <div className="bg-gradient-to-r from-blue-700 via-indigo-700 to-purple-800 rounded-3xl p-6 text-white shadow-md relative overflow-hidden">
-        <div className="relative z-10 space-y-2">
+      <div className="bg-gradient-to-r from-blue-700 via-indigo-700 to-purple-800 rounded-3xl p-6 sm:p-7 text-white shadow-md relative overflow-hidden flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="relative z-10 space-y-2 max-w-2xl">
           <div className="flex items-center gap-2 flex-wrap">
             <span className="px-3 py-0.5 bg-white/20 backdrop-blur-md rounded-full text-xs font-bold tracking-wide">
               🇬🇧 English Phonetics Hub
@@ -775,12 +776,29 @@ export default function IpaPracticeModule({ onRecordHistory }: IpaPracticeModule
               44 Âm IPA Chuẩn Quốc Tế
             </span>
           </div>
-          <h2 className="text-xl sm:text-2xl font-black">
+          <h1 className="text-xl sm:text-2xl font-black">
             Luyện Phát Âm 44 Âm IPA & Chuyên Đề Cặp Âm (Minimal Pairs)
-          </h2>
-          <p className="text-xs text-blue-100 max-w-2xl leading-relaxed">
-            Nhận diện chuẩn xác 20 nguyên âm, 24 phụ âm và làm chủ các cặp âm kinh điển dễ nhầm lẫn như <strong>/s/ - /ʃ/</strong>, <strong>/θ/ - /ð/</strong>, <strong>/iː/ - /ɪ/</strong> kèm chấm điểm AI tức thì!
+          </h1>
+          <p className="text-xs text-blue-100 leading-relaxed">
+            Nhận diện chuẩn xác 20 nguyên âm, 24 phụ âm và làm chủ các cặp âm kinh điển dễ nhầm lẫn như <strong>/s/ - /ʃ/</strong>, <strong>/θ/ - /ð/</strong>, <strong>/iː/ - /ɪ/</strong>, <strong>/p/ - /b/</strong>, <strong>/æ/ - /e/</strong> kèm chấm điểm AI tức thì!
           </p>
+        </div>
+
+        <div className="flex sm:flex-col gap-2 shrink-0 self-start sm:self-auto relative z-10">
+          <Link
+            href="/practice"
+            className="px-3.5 py-2 bg-white/15 hover:bg-white/25 border border-white/30 backdrop-blur-md rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-sm text-white"
+          >
+            <span>🏆</span>
+            <span>Luyện Tập Chuyên Sâu</span>
+          </Link>
+          <Link
+            href="/curriculum"
+            className="px-3.5 py-2 bg-white/15 hover:bg-white/25 border border-white/30 backdrop-blur-md rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-sm text-white"
+          >
+            <span>📚</span>
+            <span>Lộ Trình IELTS 7.0</span>
+          </Link>
         </div>
       </div>
 

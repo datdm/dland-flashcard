@@ -8,7 +8,6 @@ import { useLanguageSetting } from "@/hooks/useLanguageSetting";
 import AddToNotebookModal from "@/components/AddToNotebookModal";
 import MaziiQuickLookupModal from "@/components/MaziiQuickLookupModal";
 import SelectionLookupTooltip from "@/components/SelectionLookupTooltip";
-import IpaPracticeModule from "@/components/IpaPracticeModule";
 import AuthGuard from "@/components/AuthGuard";
 
 interface ShadowingItem {
@@ -116,7 +115,7 @@ const POPULAR_TOPICS_BY_LANG: Record<string, { id: string; name: string; icon: s
   ],
 };
 
-const SKILLS_BY_LANG: Record<string, { id: "shadowing" | "translation" | "reading" | "presentation" | "ipa"; name: string; desc: string }[]> = {
+const SKILLS_BY_LANG: Record<string, { id: "shadowing" | "translation" | "reading" | "presentation"; name: string; desc: string }[]> = {
   ja: [
     { id: "shadowing", name: "🗣️ Shadowing JP", desc: "Luyện nghe nói đuổi tiếng Nhật kèm Furigana" },
     { id: "translation", name: "✍️ Luyện dịch 2 chiều", desc: "Xen kẽ dịch Nhật ➔ Việt & Việt ➔ Nhật" },
@@ -124,7 +123,6 @@ const SKILLS_BY_LANG: Record<string, { id: "shadowing" | "translation" | "readin
     { id: "presentation", name: "🎤 Luyện thuyết trình", desc: "Thuyết trình slide tiếng Nhật, AI sửa lỗi & chấm điểm" },
   ],
   en: [
-    { id: "ipa", name: "🔤 Luyện 44 Âm IPA & Cặp Âm", desc: "20 nguyên âm, 24 phụ âm & Minimal Pairs (/s/-/ʃ/, /θ/-/ð/...)" },
     { id: "shadowing", name: "🗣️ Shadowing IELTS Speaking", desc: "Luyện nghe nói đuổi tiếng Anh chuẩn native accent" },
     { id: "translation", name: "✍️ Luyện dịch 2 chiều Anh - Việt", desc: "Xen kẽ dịch câu Academic & đời sống" },
     { id: "reading", name: "📚 Đọc hiểu IELTS Reading", desc: "Đoạn văn học thuật, trắc nghiệm & từ vựng" },
@@ -144,34 +142,30 @@ export default function PracticeHubPage() {
   const { activeLanguage } = useLanguageSetting();
 
   // Language state for Practice Center
-  const [selectedLang, setSelectedLang] = useState<string>(activeLanguage.code || "ja");
-
-  // Sync when global language setting changes
-  useEffect(() => {
-    if (activeLanguage.code) {
-      setSelectedLang(activeLanguage.code);
-      if (activeLanguage.code === "en") {
-        setSelectedType("ipa");
-      } else {
-        setSelectedType("shadowing");
-      }
-    }
-  }, [activeLanguage.code]);
+  // Active language for Practice Center
+  const selectedLang = activeLanguage.code || "ja";
 
   // Config states
-  const [selectedType, setSelectedType] = useState<"shadowing" | "translation" | "reading" | "presentation" | "ipa">(
-    activeLanguage.code === "en" ? "ipa" : "shadowing"
-  );
-  const [selectedTopic, setSelectedTopic] = useState("Sinh hoạt & Đời sống");
+  const [selectedType, setSelectedType] = useState<"shadowing" | "translation" | "reading" | "presentation">("shadowing");
+  const [selectedTopic, setSelectedTopic] = useState(() => {
+    const defaultTopics = POPULAR_TOPICS_BY_LANG[activeLanguage.code || "ja"] || POPULAR_TOPICS_BY_LANG.ja;
+    return defaultTopics[0]?.name || "Sinh hoạt & Đời sống";
+  });
   const [customTopic, setCustomTopic] = useState("");
   const [generating, setGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Update default topic when selectedLang changes
+  // Sync and reset data when global language changes
   useEffect(() => {
-    const defaultTopics = POPULAR_TOPICS_BY_LANG[selectedLang] || POPULAR_TOPICS_BY_LANG.ja;
+    setSelectedType("shadowing");
+    setShadowingData([]);
+    setTranslationData([]);
+    setReadingData(null);
+    setSlides([]);
+    const defaultTopics = POPULAR_TOPICS_BY_LANG[activeLanguage.code] || POPULAR_TOPICS_BY_LANG.ja;
     setSelectedTopic(defaultTopics[0]?.name || "Sinh hoạt & Đời sống");
-  }, [selectedLang]);
+    setCustomTopic("");
+  }, [activeLanguage.code]);
 
   // Data states
   const [shadowingData, setShadowingData] = useState<ShadowingItem[]>([]);
@@ -813,18 +807,18 @@ export default function PracticeHubPage() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-bold tracking-widest uppercase">
-              {selectedLang === "en" ? "🇬🇧 EN Practice & IELTS Hub" : selectedLang === "de" ? "🇩🇪 DE Goethe Practice" : "🇯🇵 JP Practice Center"}
+              {activeLanguage.name} ({activeLanguage.code.toUpperCase()})
             </span>
             <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight mt-2">
               {selectedLang === "en" 
-                ? "Trung Tâm Luyện Kỹ Năng Tiếng Anh (IELTS & IPA)" 
+                ? "Trung Tâm Luyện Kỹ Năng Tiếng Anh (IELTS)" 
                 : selectedLang === "de" 
                 ? "Trung Tâm Luyện Kỹ Năng Tiếng Đức (Goethe)" 
                 : "Trung Tâm Luyện Kỹ Năng Tiếng Nhật (JLPT)"}
             </h1>
             <p className="text-xs sm:text-sm text-teal-100/90 mt-2 leading-relaxed max-w-3xl">
               {selectedLang === "en"
-                ? "Phòng luyện 44 âm IPA & Minimal Pairs, Shadowing IELTS Speaking chuẩn Oxford, luyện dịch 2 chiều Anh-Việt, đọc hiểu IELTS Reading và thuyết trình Speaking Part 2 với AI chấm điểm trực tiếp."
+                ? "Luyện Shadowing IELTS Speaking chuẩn Oxford/Cambridge, rèn phản xạ dịch 2 chiều Anh-Việt, đọc hiểu IELTS Reading và thuyết trình Speaking Part 2 với AI chấm điểm trực tiếp."
                 : selectedLang === "de"
                 ? "Luyện Shadowing phát âm tiếng Đức chuẩn Goethe, rèn phản xạ dịch 2 chiều Đức-Việt, đọc hiểu Leseverstehen và thuyết trình Sprechen theo chủ đề với AI chấm điểm."
                 : "Luyện Shadowing phát âm chuẩn Furigana, dịch thuật 2 chiều phản xạ nhanh, đọc hiểu JLPT và thuyết trình slide với AI tự động chấm điểm và lưu lịch sử học tập chi tiết."}
@@ -838,66 +832,6 @@ export default function PracticeHubPage() {
             <span>Lịch Sử Chấm Điểm ({practiceHistory.length})</span>
           </button>
         </div>
-      </div>
-
-      {/* Language Switcher Bar */}
-      <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 mb-6">
-        <button
-          onClick={() => {
-            setSelectedLang("ja");
-            setSelectedType("shadowing");
-            setShadowingData([]);
-            setTranslationData([]);
-            setReadingData(null);
-            setSlides([]);
-          }}
-          className={`px-4 py-2.5 rounded-2xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-2 border cursor-pointer ${
-            selectedLang === "ja"
-              ? "bg-teal-600 text-white border-teal-600 shadow-sm scale-102"
-              : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
-          }`}
-        >
-          <span className="text-base">🇯🇵</span>
-          <span>Tiếng Nhật (JLPT N5-N2)</span>
-        </button>
-
-        <button
-          onClick={() => {
-            setSelectedLang("en");
-            setSelectedType("ipa");
-            setShadowingData([]);
-            setTranslationData([]);
-            setReadingData(null);
-            setSlides([]);
-          }}
-          className={`px-4 py-2.5 rounded-2xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-2 border cursor-pointer ${
-            selectedLang === "en"
-              ? "bg-indigo-600 text-white border-indigo-600 shadow-sm scale-102"
-              : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
-          }`}
-        >
-          <span className="text-base">🇬🇧</span>
-          <span>Tiếng Anh (IELTS 7.0 & IPA)</span>
-        </button>
-
-        <button
-          onClick={() => {
-            setSelectedLang("de");
-            setSelectedType("shadowing");
-            setShadowingData([]);
-            setTranslationData([]);
-            setReadingData(null);
-            setSlides([]);
-          }}
-          className={`px-4 py-2.5 rounded-2xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-2 border cursor-pointer ${
-            selectedLang === "de"
-              ? "bg-amber-600 text-white border-amber-600 shadow-sm scale-102"
-              : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
-          }`}
-        >
-          <span className="text-base">🇩🇪</span>
-          <span>Tiếng Đức (Goethe A1-A2)</span>
-        </button>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -933,75 +867,61 @@ export default function PracticeHubPage() {
               </div>
             </div>
 
-            {selectedType === "ipa" ? (
-              <div className="p-4 rounded-2xl bg-blue-50/80 border border-blue-200 text-xs text-blue-950 space-y-2">
-                <div className="font-extrabold flex items-center gap-1.5 text-blue-900">
-                  <span>🎧</span>
-                  <span>Phòng Luyện IPA & Cặp Âm</span>
-                </div>
-                <p className="text-[11px] text-blue-800 leading-relaxed">
-                  Đã tích hợp sẵn <strong>44 âm IPA</strong> (20 nguyên âm, 24 phụ âm) và các cặp âm then chốt <strong>/s/ - /ʃ/</strong>, <strong>/θ/ - /ð/</strong>, <strong>/iː/ - /ɪ/</strong>, <strong>/p/ - /b/</strong> kèm audio phát âm và chấm điểm micro AI.
-                </p>
+            {/* Select Topic */}
+            <div className="space-y-1.5 pt-2 border-t border-gray-100">
+              <label className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Chọn chủ đề có sẵn:</label>
+              <div className="flex flex-wrap gap-1.5">
+                {(POPULAR_TOPICS_BY_LANG[selectedLang] || POPULAR_TOPICS_BY_LANG.ja).map((t) => (
+                  <button
+                    key={t.id}
+                    onClick={() => {
+                      setSelectedTopic(t.name);
+                      setCustomTopic("");
+                    }}
+                    className={`px-3 py-1.5 rounded-xl text-[11px] font-bold border transition-all cursor-pointer ${
+                      selectedTopic === t.name && !customTopic
+                        ? selectedLang === "en" 
+                          ? "bg-indigo-600 border-indigo-600 text-white shadow-xs"
+                          : selectedLang === "de"
+                          ? "bg-amber-600 border-amber-600 text-white shadow-xs"
+                          : "bg-teal-600 border-teal-600 text-white shadow-xs"
+                        : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50"
+                    }`}
+                  >
+                    {t.icon} {t.name}
+                  </button>
+                ))}
               </div>
-            ) : (
-              <>
-                {/* Select Topic */}
-                <div className="space-y-1.5 pt-2 border-t border-gray-100">
-                  <label className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Chọn chủ đề có sẵn:</label>
-                  <div className="flex flex-wrap gap-1.5">
-                    {(POPULAR_TOPICS_BY_LANG[selectedLang] || POPULAR_TOPICS_BY_LANG.ja).map((t) => (
-                      <button
-                        key={t.id}
-                        onClick={() => {
-                          setSelectedTopic(t.name);
-                          setCustomTopic("");
-                        }}
-                        className={`px-3 py-1.5 rounded-xl text-[11px] font-bold border transition-all cursor-pointer ${
-                          selectedTopic === t.name && !customTopic
-                            ? selectedLang === "en" 
-                              ? "bg-indigo-600 border-indigo-600 text-white shadow-xs"
-                              : selectedLang === "de"
-                              ? "bg-amber-600 border-amber-600 text-white shadow-xs"
-                              : "bg-teal-600 border-teal-600 text-white shadow-xs"
-                            : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50"
-                        }`}
-                      >
-                        {t.icon} {t.name}
-                      </button>
-                    ))}
-                  </div>
-                </div>
+            </div>
 
-                {/* Custom Topic Input */}
-                <div className="space-y-1.5">
-                  <label className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Hoặc nhập chủ đề tự chọn:</label>
-                  <input
-                    type="text"
-                    value={customTopic}
-                    onChange={(e) => setCustomTopic(e.target.value)}
-                    placeholder="Ví dụ: Phỏng vấn xin việc, đi bác sĩ..."
-                    className="w-full rounded-xl border border-gray-200 p-2.5 text-xs focus:outline-none focus:border-teal-500 shadow-3xs"
-                  />
-                </div>
+            {/* Custom Topic Input */}
+            <div className="space-y-1.5">
+              <label className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Hoặc nhập chủ đề tự chọn:</label>
+              <input
+                type="text"
+                value={customTopic}
+                onChange={(e) => setCustomTopic(e.target.value)}
+                placeholder="Ví dụ: Phỏng vấn xin việc, đi bác sĩ..."
+                className="w-full rounded-xl border border-gray-200 p-2.5 text-xs focus:outline-none focus:border-teal-500 shadow-3xs"
+              />
+            </div>
 
-                {/* Submit Button */}
-                <button
-                  onClick={handleGenerate}
-                  disabled={generating}
-                  className={`w-full py-3.5 rounded-2xl text-xs font-bold text-white transition-all shadow-md cursor-pointer ${
-                    generating
-                      ? "bg-gray-400 cursor-not-allowed"
-                      : selectedLang === "en"
-                      ? "bg-gradient-to-r from-indigo-600 to-purple-600 hover:opacity-95 shadow-indigo-200"
-                      : selectedLang === "de"
-                      ? "bg-gradient-to-r from-amber-600 to-red-600 hover:opacity-95 shadow-amber-200"
-                      : "bg-gradient-to-r from-teal-600 to-indigo-600 hover:opacity-95 shadow-teal-200"
-                  }`}
-                >
-                  {generating ? "🤖 Đang biên soạn nội dung..." : "🚀 Tạo bài luyện tập bằng AI"}
-                </button>
-              </>
-            )}
+            {/* Submit Button */}
+            <button
+              onClick={handleGenerate}
+              disabled={generating}
+              className={`w-full py-3.5 rounded-2xl text-xs font-bold text-white transition-all shadow-md cursor-pointer ${
+                generating
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : selectedLang === "en"
+                  ? "bg-gradient-to-r from-indigo-600 to-purple-600 hover:opacity-95 shadow-indigo-200"
+                  : selectedLang === "de"
+                  ? "bg-gradient-to-r from-amber-600 to-red-600 hover:opacity-95 shadow-amber-200"
+                  : "bg-gradient-to-r from-teal-600 to-indigo-600 hover:opacity-95 shadow-teal-200"
+              }`}
+            >
+              {generating ? "🤖 Đang biên soạn nội dung..." : "🚀 Tạo bài luyện tập bằng AI"}
+            </button>
           </div>
         </div>
 
@@ -1021,10 +941,6 @@ export default function PracticeHubPage() {
             </div>
           ) : (
             <>
-              {/* IPA & MINIMAL PAIRS TRAINING */}
-              {selectedType === "ipa" && (
-                <IpaPracticeModule onRecordHistory={handleRecordIpaHistory} />
-              )}
 
               {/* SHADOWING DISPLAY */}
               {selectedType === "shadowing" && shadowingData.length > 0 && (
@@ -1659,7 +1575,7 @@ export default function PracticeHubPage() {
               )}
 
               {/* EMPTY VIEW STATE */}
-              {selectedType !== "ipa" && !shadowingData.length && !translationData.length && !readingData && !slides.length && (
+              {!shadowingData.length && !translationData.length && !readingData && !slides.length && (
                 <div className="bg-white rounded-3xl p-12 border border-gray-100 text-center text-gray-400 flex flex-col items-center justify-center gap-2">
                   <div className="text-4xl">🏆</div>
                   <h3 className="font-bold text-gray-900 text-sm mt-2">Chưa chọn nội dung học</h3>
