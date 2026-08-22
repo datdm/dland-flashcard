@@ -131,6 +131,7 @@ export function useGrammarCollections() {
         mnemonic?: string;
         level?: string;
         notes?: string;
+        examples?: GrammarExample[];
       }
     ): GrammarPoint => {
       const grammarPoint: GrammarPoint = {
@@ -141,7 +142,7 @@ export function useGrammarCollections() {
         mnemonic: data.mnemonic?.trim(),
         level: data.level,
         notes: data.notes?.trim(),
-        examples: [],
+        examples: data.examples || [],
         relatedGrammar: [],
       };
 
