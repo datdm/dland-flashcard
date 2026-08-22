@@ -269,7 +269,7 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
 }`;
       } else if (type === "kaiwa") {
         prompt = `Bạn là chuyên gia giảng dạy giao tiếp Kaiwa tiếng Nhật trình độ JLPT N2 tự nhiên và chuẩn mực.
-Hãy tạo 1 đoạn hội thoại Kaiwa trình độ N2 gồm ĐÚNG 10 LƯỢT LỜI HỘI THOẠI (10 câu) giữa 2 nhân vật (ví dụ: 田中 (Tanaka) và 山田 (Yamada), hoặc tiền bối - hậu bối, sếp - nhân viên, đối tác kinh doanh, bạn bè) theo chủ đề "${topic}".
+Hãy tạo 1 đoạn hội thoại Kaiwa trình độ N2 gồm ĐÚNG 10 LƯỢT LỜI HỘI THOẠI (10 câu) giữa 2 nhân vật (ví dụ: 田中 và 山田, hoặc tiền bối - hậu bối, sếp - nhân viên, đối tác, bạn bè) theo chủ đề "${topic}".
 Bối cảnh cụ thể của đoạn hội thoại là: "${chosenContext}".
 Sử dụng các cấu trúc ngữ pháp N2, từ vựng phong phú, kính ngữ (Keigo) hoặc cách nói tự nhiên nơi công sở/đời sống của người Nhật.
 Sau 10 câu hội thoại, hãy tạo ĐÚNG 2 CÂU HỎI TRẮC NGHIỆM ĐỌC HIỂU/HỎI ĐÁP về nội dung mà 2 nhân vật vừa trao đổi (mỗi câu hỏi có 4 đáp án lựa chọn và giải thích chi tiết đáp án đúng bằng tiếng Việt).
@@ -278,27 +278,90 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
 {
   "kaiwa": {
     "title": "Tiêu đề ngắn gọn của đoạn hội thoại bằng tiếng Nhật và tiếng Việt",
-    "situation": "Mô tả ngắn gọn bối cảnh và vai trò của 2 người bằng tiếng Việt (ví dụ: Anh Tanaka và chị Yamada đang thảo luận về phương án triển khai dự án mới...)",
+    "situation": "Mô tả ngắn gọn bối cảnh và vai trò của 2 người bằng tiếng Việt",
     "speakerA": "田中 (Tanaka)",
     "speakerB": "山田 (Yamada)",
     "dialogue": [
       {
         "speaker": "A",
         "speaker_name": "田中",
-        "japanese": "câu tiếng Nhật chuẩn N2 không thẻ HTML",
-        "japanese_ruby": "câu tiếng Nhật bọc thẻ <ruby> và <rt> Furigana trên đầu mọi chữ Hán tự, ví dụ: <ruby>最近<rt>さいきん</rt></ruby>...",
+        "japanese": "câu tiếng Nhật lượt 1 chuẩn N2 không thẻ HTML",
+        "japanese_ruby": "câu tiếng Nhật lượt 1 bọc thẻ <ruby> và <rt> Furigana",
         "romaji": "romaji phiên âm chuẩn",
-        "meaning": "Dịch nghĩa câu tiếng Việt tự nhiên"
+        "meaning": "Dịch nghĩa tiếng Việt"
       },
       {
         "speaker": "B",
         "speaker_name": "山田",
-        "japanese": "câu trả lời của B tiếng Nhật chuẩn N2",
-        "japanese_ruby": "câu tiếng Nhật của B bọc thẻ <ruby> và <rt> Furigana",
+        "japanese": "câu tiếng Nhật lượt 2 chuẩn N2",
+        "japanese_ruby": "câu tiếng Nhật lượt 2 bọc thẻ <ruby> và <rt> Furigana",
+        "romaji": "romaji phiên âm chuẩn",
+        "meaning": "Dịch nghĩa tiếng Việt"
+      },
+      {
+        "speaker": "A",
+        "speaker_name": "田中",
+        "japanese": "câu tiếng Nhật lượt 3 chuẩn N2",
+        "japanese_ruby": "câu tiếng Nhật lượt 3 bọc thẻ <ruby> và <rt> Furigana",
+        "romaji": "romaji phiên âm chuẩn",
+        "meaning": "Dịch nghĩa tiếng Việt"
+      },
+      {
+        "speaker": "B",
+        "speaker_name": "山田",
+        "japanese": "câu tiếng Nhật lượt 4 chuẩn N2",
+        "japanese_ruby": "câu tiếng Nhật lượt 4 bọc thẻ <ruby> và <rt> Furigana",
+        "romaji": "romaji phiên âm chuẩn",
+        "meaning": "Dịch nghĩa tiếng Việt"
+      },
+      {
+        "speaker": "A",
+        "speaker_name": "田中",
+        "japanese": "câu tiếng Nhật lượt 5 chuẩn N2",
+        "japanese_ruby": "câu tiếng Nhật lượt 5 bọc thẻ <ruby> và <rt> Furigana",
+        "romaji": "romaji phiên âm chuẩn",
+        "meaning": "Dịch nghĩa tiếng Việt"
+      },
+      {
+        "speaker": "B",
+        "speaker_name": "山田",
+        "japanese": "câu tiếng Nhật lượt 6 chuẩn N2",
+        "japanese_ruby": "câu tiếng Nhật lượt 6 bọc thẻ <ruby> và <rt> Furigana",
+        "romaji": "romaji phiên âm chuẩn",
+        "meaning": "Dịch nghĩa tiếng Việt"
+      },
+      {
+        "speaker": "A",
+        "speaker_name": "田中",
+        "japanese": "câu tiếng Nhật lượt 7 chuẩn N2",
+        "japanese_ruby": "câu tiếng Nhật lượt 7 bọc thẻ <ruby> và <rt> Furigana",
+        "romaji": "romaji phiên âm chuẩn",
+        "meaning": "Dịch nghĩa tiếng Việt"
+      },
+      {
+        "speaker": "B",
+        "speaker_name": "山田",
+        "japanese": "câu tiếng Nhật lượt 8 chuẩn N2",
+        "japanese_ruby": "câu tiếng Nhật lượt 8 bọc thẻ <ruby> và <rt> Furigana",
+        "romaji": "romaji phiên âm chuẩn",
+        "meaning": "Dịch nghĩa tiếng Việt"
+      },
+      {
+        "speaker": "A",
+        "speaker_name": "田中",
+        "japanese": "câu tiếng Nhật lượt 9 chuẩn N2",
+        "japanese_ruby": "câu tiếng Nhật lượt 9 bọc thẻ <ruby> và <rt> Furigana",
+        "romaji": "romaji phiên âm chuẩn",
+        "meaning": "Dịch nghĩa tiếng Việt"
+      },
+      {
+        "speaker": "B",
+        "speaker_name": "山田",
+        "japanese": "câu tiếng Nhật lượt 10 chuẩn N2",
+        "japanese_ruby": "câu tiếng Nhật lượt 10 bọc thẻ <ruby> và <rt> Furigana",
         "romaji": "romaji phiên âm chuẩn",
         "meaning": "Dịch nghĩa tiếng Việt"
       }
-      ... (tạo đủ ĐÚNG 10 câu xen kẽ giữa A và B: A, B, A, B, A, B, A, B, A, B)
     ],
     "questions": [
       {
@@ -361,24 +424,39 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
         "kanji": "chữ Hán tự chính được trích xuất từ bài đọc (ví dụ: 医師)",
         "hiragana": "cách đọc chữ Hán tự đó (ví dụ: いし)",
         "meaning": "nghĩa của từ đó bằng tiếng Việt (ví dụ: Bác sĩ)"
-      },
-      ... (trích xuất khoảng 4 đến 6 từ vựng hữu ích trong đoạn văn trên)
+      }
     ]
   }
 }`;
       }
     }
 
-    const model = genAI.getGenerativeModel({
-      model: "gemini-3.5-flash",
-      generationConfig: {
-        responseMimeType: "application/json",
-        temperature: 0.95
-      }
-    });
+    const candidateModels = ["gemini-1.5-flash", "gemini-2.0-flash", "gemini-1.5-pro"];
+    let text = "";
+    let lastError: any = null;
 
-    const result = await model.generateContent(prompt);
-    const text = result.response.text();
+    for (const modelName of candidateModels) {
+      try {
+        const model = genAI.getGenerativeModel({
+          model: modelName,
+          generationConfig: {
+            responseMimeType: "application/json",
+            temperature: 0.95
+          }
+        });
+
+        const result = await model.generateContent(prompt);
+        text = result.response.text();
+        if (text) break;
+      } catch (err: any) {
+        lastError = err;
+        console.warn(`Model ${modelName} failed for practice generate, trying next candidate...`, err?.message);
+      }
+    }
+
+    if (!text) {
+      throw lastError || new Error("Không thể tạo nội dung từ AI. Vui lòng thử lại!");
+    }
 
     let cleaned = text.trim();
     if (cleaned.startsWith("```")) {

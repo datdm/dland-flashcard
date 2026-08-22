@@ -79,16 +79,32 @@ Hãy đánh giá bài thuyết trình và trả về kết quả dưới dạng 
   ]
 }`;
 
-    const model = genAI.getGenerativeModel({
-      model: "gemini-3.5-flash",
-      generationConfig: {
-        responseMimeType: "application/json",
-        temperature: 0.8
-      }
-    });
+    const candidateModels = ["gemini-1.5-flash", "gemini-2.0-flash", "gemini-1.5-pro"];
+    let text = "";
+    let lastError: any = null;
 
-    const result = await model.generateContent(prompt);
-    const text = result.response.text();
+    for (const modelName of candidateModels) {
+      try {
+        const model = genAI.getGenerativeModel({
+          model: modelName,
+          generationConfig: {
+            responseMimeType: "application/json",
+            temperature: 0.8
+          }
+        });
+
+        const result = await model.generateContent(prompt);
+        text = result.response.text();
+        if (text) break;
+      } catch (err: any) {
+        lastError = err;
+        console.warn(`Model ${modelName} failed for presentation evaluate:`, err?.message);
+      }
+    }
+
+    if (!text) {
+      throw lastError || new Error("Không thể đánh giá bài thuyết trình từ AI.");
+    }
 
     let cleaned = text.trim();
     if (cleaned.startsWith("```")) {
