@@ -70,8 +70,8 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // Try latest gemini-2.5-flash, then gemini-2.0-flash, then gemini-2.0-flash-lite, then gemini-1.5-flash
-    const candidateModels = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-2.0-flash-lite", "gemini-1.5-flash", "gemini-2.5-pro", "gemini-1.5-pro"];
+    // Use latest Gemini 3.x Flash series
+    const candidateModels = ["gemini-3.7-flash", "gemini-3.6-flash", "gemini-3.5-flash"];
     let lastError: any = null;
 
     for (const modelName of candidateModels) {
