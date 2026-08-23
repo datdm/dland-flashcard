@@ -286,10 +286,23 @@ export async function downloadFromServer(): Promise<{ success: boolean; error?: 
 
     // Write server data to localStorage
     for (const [key, value] of Object.entries(result.data)) {
-      localStorage.setItem(key, JSON.stringify(value));
+      if (typeof value === 'string') {
+        localStorage.setItem(key, value);
+      } else {
+        localStorage.setItem(key, JSON.stringify(value));
+      }
     }
 
     localStorage.setItem(LAST_SYNC_KEY, result.timestamp);
+
+    // Notify all listeners
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('notebooks-updated'));
+      window.dispatchEvent(new CustomEvent('practice-history-updated'));
+      window.dispatchEvent(new CustomEvent('curriculum-updated'));
+      window.dispatchEvent(new CustomEvent('settings-updated'));
+      window.dispatchEvent(new CustomEvent('storage'));
+    }
 
     return { success: true };
   } catch (error) {
@@ -839,3 +852,119 @@ export async function patchProgressOnServer(
     return { success: false, error: 'Không thể kết nối máy chủ' };
   }
 }
+
+// Export entire database (Cloud server data + local state)
+export async function exportFullDatabase(): Promise<{ success: boolean; data?: any; error?: string }> {
+  const token = getAuthToken();
+  
+  if (token) {
+    try {
+      const response = await trackedFetch(`${API_URL}/api/sync/export-full`, {
+        headers: { 'Authorization': `Bearer ${token}` },
+      });
+      if (response.ok) {
+        const fullData = await response.json();
+        return { success: true, data: fullData };
+      }
+    } catch (err) {
+      console.warn('Server full export failed, falling back to local dump:', err);
+    }
+  }
+
+  // Fallback / offline export from all local keys
+  try {
+    const localData: Record<string, any> = {};
+    const keys = Object.values(StorageKeys);
+    for (const key of keys) {
+      const val = localStorage.getItem(key);
+      if (val) {
+        try {
+          localData[key] = JSON.parse(val);
+        } catch {
+          localData[key] = val;
+        }
+      }
+    }
+
+    const payload = {
+      success: true,
+      version: '2.0-database-dump-local',
+      exportedAt: new Date().toISOString(),
+      metadata: {
+        totalDataKeys: Object.keys(localData).length,
+        totalBackups: 0,
+      },
+      userData: localData,
+      backupHistory: [],
+    };
+    return { success: true, data: payload };
+  } catch (err: any) {
+    return { success: false, error: err?.message || 'Không thể xuất dữ liệu' };
+  }
+}
+
+// Import entire database (Restore to Cloud server + Local storage)
+export async function importFullDatabase(
+  jsonString: string,
+  mode: 'merge' | 'replace' = 'merge'
+): Promise<{ success: boolean; message?: string; error?: string }> {
+  try {
+    const parsed = JSON.parse(jsonString);
+    const userData = parsed.userData || (parsed.data ? parsed.data : parsed);
+
+    if (!userData || typeof userData !== 'object') {
+      return { success: false, error: 'File sao lưu không đúng định dạng database dump' };
+    }
+
+    // 1. Update localStorage
+    if (mode === 'replace') {
+      clearLocalData();
+    }
+
+    for (const [key, value] of Object.entries(userData)) {
+      if (typeof value === 'string') {
+        localStorage.setItem(key, value);
+      } else {
+        localStorage.setItem(key, JSON.stringify(value));
+      }
+    }
+
+    // 2. If logged in, sync to server
+    const token = getAuthToken();
+    if (token) {
+      try {
+        await trackedFetch(`${API_URL}/api/sync/import-full`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            userData,
+            backupHistory: parsed.backupHistory || [],
+            mode,
+          }),
+        });
+      } catch (serverErr) {
+        console.warn('Server sync during import warning:', serverErr);
+      }
+    }
+
+    // 3. Dispatch browser events
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('notebooks-updated'));
+      window.dispatchEvent(new CustomEvent('practice-history-updated'));
+      window.dispatchEvent(new CustomEvent('curriculum-updated'));
+      window.dispatchEvent(new CustomEvent('settings-updated'));
+      window.dispatchEvent(new CustomEvent('storage'));
+    }
+
+    return {
+      success: true,
+      message: `Đã khôi phục thành công toàn bộ Database (${Object.keys(userData).length} nhóm dữ liệu)!`,
+    };
+  } catch (err: any) {
+    return { success: false, error: err?.message || 'File JSON không hợp lệ' };
+  }
+}
+
