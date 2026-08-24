@@ -215,6 +215,26 @@ export default function PracticeHubPage() {
   const [kaiwaScores, setKaiwaScores] = useState<Record<number, { score: number; transcript: string }>>({});
   const [kaiwaQuizAnswers, setKaiwaQuizAnswers] = useState<Record<string, { optionId: string; score: number; checked: boolean }>>({});
   const [isAutoplayingKaiwa, setIsAutoplayingKaiwa] = useState(false);
+  const isAutoplayingKaiwaRef = useRef(false);
+
+  const stopAllAudio = () => {
+    isAutoplayingKaiwaRef.current = false;
+    setIsAutoplayingKaiwa(false);
+    setKaiwaPlayingIdx(null);
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      stopAllAudio();
+    };
+  }, []);
+
+  useEffect(() => {
+    stopAllAudio();
+  }, [selectedType, activeLanguage.code]);
 
   // Data states
   const [shadowingData, setShadowingData] = useState<ShadowingItem[]>([]);
@@ -363,6 +383,7 @@ export default function PracticeHubPage() {
   const activeTopic = customTopic.trim() || selectedTopic;
 
   const handleGenerate = async () => {
+    stopAllAudio();
     setGenerating(true);
     setError(null);
     setSelectedOptionId(null);
@@ -433,38 +454,70 @@ export default function PracticeHubPage() {
   // Autoplay all turns of Kaiwa
   const playEntireKaiwa = async () => {
     if (!kaiwaData || !kaiwaData.dialogue?.length || typeof window === "undefined") return;
-    if (isAutoplayingKaiwa) {
-      window.speechSynthesis.cancel();
-      setIsAutoplayingKaiwa(false);
-      setKaiwaPlayingIdx(null);
+
+    if (isAutoplayingKaiwaRef.current) {
+      stopAllAudio();
       return;
     }
 
-    window.speechSynthesis.cancel();
+    stopAllAudio();
+    isAutoplayingKaiwaRef.current = true;
     setIsAutoplayingKaiwa(true);
 
     for (let i = 0; i < kaiwaData.dialogue.length; i++) {
+      if (!isAutoplayingKaiwaRef.current) break;
+
       const turn = kaiwaData.dialogue[i];
       setKaiwaPlayingIdx(i);
+
       await new Promise<void>((resolve) => {
+        if (!isAutoplayingKaiwaRef.current) {
+          resolve();
+          return;
+        }
+
         const utterance = new SpeechSynthesisUtterance(turn.japanese);
         utterance.lang = selectedLang === "de" ? "de-DE" : selectedLang === "en" ? "en-US" : "ja-JP";
         utterance.rate = playbackRate;
         utterance.pitch = turn.speaker === "A" ? 1.0 : 1.15;
-        utterance.onend = () => {
-          setTimeout(resolve, 800);
+
+        let resolved = false;
+        const done = () => {
+          if (!resolved) {
+            resolved = true;
+            resolve();
+          }
         };
-        utterance.onerror = () => resolve();
+
+        utterance.onend = () => {
+          if (!isAutoplayingKaiwaRef.current) {
+            done();
+            return;
+          }
+          setTimeout(done, 600);
+        };
+
+        utterance.onerror = () => {
+          done();
+        };
+
         window.speechSynthesis.speak(utterance);
       });
+
+      if (!isAutoplayingKaiwaRef.current) break;
     }
-    setKaiwaPlayingIdx(null);
-    setIsAutoplayingKaiwa(false);
+
+    if (isAutoplayingKaiwaRef.current) {
+      setKaiwaPlayingIdx(null);
+      setIsAutoplayingKaiwa(false);
+      isAutoplayingKaiwaRef.current = false;
+    }
   };
 
   // Speech recognition for Kaiwa
   const startKaiwaMic = (targetText: string, index: number) => {
     if (typeof window === "undefined") return;
+    stopAllAudio();
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     if (!SpeechRecognition) {
       alert("Trình duyệt không hỗ trợ micro nhận dạng giọng nói. Hãy dùng Chrome hoặc Edge.");
@@ -477,7 +530,6 @@ export default function PracticeHubPage() {
       return;
     }
 
-    window.speechSynthesis.cancel();
     const recognition = new SpeechRecognition();
     recognitionRef.current = recognition;
     recognition.lang = selectedLang === "de" ? "de-DE" : selectedLang === "en" ? "en-US" : "ja-JP";
@@ -548,7 +600,7 @@ export default function PracticeHubPage() {
   // Play audio TTS
   const playSentence = (text: string) => {
     if (typeof window === "undefined") return;
-    window.speechSynthesis.cancel();
+    stopAllAudio();
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = selectedLang === "de" ? "de-DE" : selectedLang === "en" ? "en-US" : "ja-JP";
     utterance.rate = playbackRate;
@@ -558,6 +610,7 @@ export default function PracticeHubPage() {
   // Speech recognition for shadowing
   const startShadowingMic = (targetText: string, index: number) => {
     if (typeof window === "undefined") return;
+    stopAllAudio();
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     if (!SpeechRecognition) {
       alert("Trình duyệt không hỗ trợ micro nhận dạng giọng nói. Hãy dùng Chrome hoặc Edge.");
