@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import Link from "next/link";
 import { useNotebooks } from "@/hooks/useNotebooks";
 import { searchJapaneseDictionary } from "@/lib/services/dictionaryService";
@@ -264,10 +264,23 @@ export default function PracticeHubPage() {
   // Practice History & Scoring States
   const [practiceHistory, setPracticeHistory] = useState<PracticeHistoryEntry[]>([]);
   const [showHistoryModal, setShowHistoryModal] = useState(false);
-  const [historyLangFilter, setHistoryLangFilter] = useState<string>("ALL");
+  const [historyLangFilter, setHistoryLangFilter] = useState<string>(activeLanguage.code || "ja");
   const [translationScores, setTranslationScores] = useState<Record<number, { score: number; checked: boolean }>>({});
   const [shadowingScores, setShadowingScores] = useState<Record<number, { score: number; transcript: string }>>({});
   const [readingScore, setReadingScore] = useState<{ score: number; optionId: string } | null>(null);
+
+  // Sync history language filter when active language changes
+  useEffect(() => {
+    setHistoryLangFilter(activeLanguage.code || "ja");
+  }, [activeLanguage.code]);
+
+  const currentLangHistoryCount = useMemo(() => {
+    return practiceHistory.filter((i) => (i.lang || "ja") === selectedLang).length;
+  }, [practiceHistory, selectedLang]);
+
+  const modalFilteredHistory = useMemo(() => {
+    return practiceHistory.filter((i) => historyLangFilter === "ALL" || (i.lang || "ja") === historyLangFilter);
+  }, [practiceHistory, historyLangFilter]);
 
   // Load history from localStorage
   useEffect(() => {
@@ -1052,11 +1065,14 @@ export default function PracticeHubPage() {
             </p>
           </div>
           <button
-            onClick={() => setShowHistoryModal(true)}
+            onClick={() => {
+              setHistoryLangFilter(selectedLang);
+              setShowHistoryModal(true);
+            }}
             className="px-4 py-2.5 bg-white/15 hover:bg-white/25 border border-white/30 backdrop-blur-md rounded-2xl text-xs font-bold flex items-center gap-2 transition-all shrink-0 cursor-pointer shadow-sm self-start sm:self-auto"
           >
             <span>📊</span>
-            <span>Lịch Sử Chấm Điểm ({practiceHistory.length})</span>
+            <span>Lịch Sử Chấm Điểm ({currentLangHistoryCount})</span>
           </button>
         </div>
       </div>
@@ -2212,8 +2228,23 @@ export default function PracticeHubPage() {
               <div className="flex items-center gap-2">
                 <span className="text-xl">📊</span>
                 <div>
-                  <h3 className="font-extrabold text-sm">Lịch Sử & Bảng Điểm Luyện Tập</h3>
-                  <p className="text-[10px] text-teal-100 font-medium">Theo dõi chặng đường rèn luyện và đối chiếu đáp án</p>
+                  <h3 className="font-extrabold text-sm flex items-center gap-2 flex-wrap">
+                    <span>Lịch Sử & Bảng Điểm Luyện Tập</span>
+                    <span className="px-2 py-0.5 bg-white/20 backdrop-blur-md rounded-lg text-xs font-bold">
+                      {historyLangFilter === "ja"
+                        ? "🇯🇵 Tiếng Nhật"
+                        : historyLangFilter === "en"
+                        ? "🇬🇧 Tiếng Anh"
+                        : historyLangFilter === "de"
+                        ? "🇩🇪 Tiếng Đức"
+                        : historyLangFilter === "ko"
+                        ? "🇰🇷 Tiếng Hàn"
+                        : historyLangFilter === "zh"
+                        ? "🇨🇳 Tiếng Trung"
+                        : "🌐 Tất cả"}
+                    </span>
+                  </h3>
+                  <p className="text-[10px] text-teal-100 font-medium mt-0.5">Theo dõi chặng đường rèn luyện và đối chiếu đáp án chuẩn</p>
                 </div>
               </div>
               <button
@@ -2229,13 +2260,13 @@ export default function PracticeHubPage() {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 <div className="bg-white p-3.5 rounded-2xl border border-gray-100 shadow-3xs text-center">
                   <div className="text-[10px] text-gray-400 font-bold uppercase">Tổng bài luyện</div>
-                  <div className="text-2xl font-black text-gray-900 mt-1">{practiceHistory.length}</div>
+                  <div className="text-2xl font-black text-gray-900 mt-1">{modalFilteredHistory.length}</div>
                 </div>
                 <div className="bg-white p-3.5 rounded-2xl border border-gray-100 shadow-3xs text-center">
                   <div className="text-[10px] text-gray-400 font-bold uppercase">Điểm trung bình</div>
                   <div className="text-2xl font-black text-teal-600 mt-1">
-                    {practiceHistory.length > 0 
-                      ? Math.round(practiceHistory.reduce((sum, item) => sum + (item.score || 0), 0) / practiceHistory.length) 
+                    {modalFilteredHistory.length > 0 
+                      ? Math.round(modalFilteredHistory.reduce((sum: number, item: PracticeHistoryEntry) => sum + (item.score || 0), 0) / modalFilteredHistory.length) 
                       : 0}
                     <span className="text-xs font-normal text-gray-400">/100</span>
                   </div>
@@ -2243,13 +2274,13 @@ export default function PracticeHubPage() {
                 <div className="bg-white p-3.5 rounded-2xl border border-gray-100 shadow-3xs text-center">
                   <div className="text-[10px] text-gray-400 font-bold uppercase">🗣️ Shadowing / ✍️ Dịch</div>
                   <div className="text-2xl font-black text-indigo-600 mt-1">
-                    {practiceHistory.filter(i => i.type === "shadowing" || i.type === "translation").length}
+                    {modalFilteredHistory.filter((i: PracticeHistoryEntry) => i.type === "shadowing" || i.type === "translation").length}
                   </div>
                 </div>
                 <div className="bg-white p-3.5 rounded-2xl border border-gray-100 shadow-3xs text-center">
-                  <div className="text-[10px] text-gray-400 font-bold uppercase">📚 Đọc / 🎤 Thuyết trình</div>
+                  <div className="text-[10px] text-gray-400 font-bold uppercase">💬 Kaiwa / 📚 Đọc / 🎤 Thuyết trình</div>
                   <div className="text-2xl font-black text-purple-600 mt-1">
-                    {practiceHistory.filter(i => i.type === "reading" || i.type === "presentation").length}
+                    {modalFilteredHistory.filter((i: PracticeHistoryEntry) => i.type === "kaiwa" || i.type === "reading" || i.type === "presentation").length}
                   </div>
                 </div>
               </div>
@@ -2258,10 +2289,12 @@ export default function PracticeHubPage() {
             {/* Language Filter Tabs */}
             <div className="px-6 py-2.5 bg-white border-b border-gray-100 flex items-center gap-1.5 overflow-x-auto no-scrollbar">
               {[
-                { id: "ALL", name: "Tất cả", count: practiceHistory.length },
-                { id: "ja", name: "🇯🇵 Tiếng Nhật", count: practiceHistory.filter(i => i.lang === "ja" || !i.lang).length },
-                { id: "en", name: "🇬🇧 Tiếng Anh", count: practiceHistory.filter(i => i.lang === "en").length },
-                { id: "de", name: "🇩🇪 Tiếng Đức", count: practiceHistory.filter(i => i.lang === "de").length },
+                { id: "ja", name: "🇯🇵 Tiếng Nhật", count: practiceHistory.filter((i: PracticeHistoryEntry) => (i.lang || "ja") === "ja").length },
+                { id: "en", name: "🇬🇧 Tiếng Anh", count: practiceHistory.filter((i: PracticeHistoryEntry) => i.lang === "en").length },
+                { id: "de", name: "🇩🇪 Tiếng Đức", count: practiceHistory.filter((i: PracticeHistoryEntry) => i.lang === "de").length },
+                { id: "ko", name: "🇰🇷 Tiếng Hàn", count: practiceHistory.filter((i: PracticeHistoryEntry) => i.lang === "ko").length },
+                { id: "zh", name: "🇨🇳 Tiếng Trung", count: practiceHistory.filter((i: PracticeHistoryEntry) => i.lang === "zh").length },
+                { id: "ALL", name: "🌐 Tất cả", count: practiceHistory.length },
               ].map((tab) => (
                 <button
                   key={tab.id}
@@ -2279,16 +2312,14 @@ export default function PracticeHubPage() {
 
             {/* History List */}
             <div className="p-6 overflow-y-auto space-y-3 flex-1">
-              {practiceHistory.filter(i => historyLangFilter === "ALL" || (i.lang || "ja") === historyLangFilter).length === 0 ? (
+              {modalFilteredHistory.length === 0 ? (
                 <div className="text-center py-12 space-y-2 text-gray-400">
                   <span className="text-3xl">📝</span>
-                  <p className="text-xs font-bold text-gray-600">Chưa có lượt luyện tập nào cho mục này</p>
-                  <p className="text-[10px]">Hãy thực hiện bài tập Shadowing, Dịch thuật, Đọc hiểu hoặc Thuyết trình để bắt đầu tích lũy điểm số!</p>
+                  <p className="text-xs font-bold text-gray-600">Chưa có lượt luyện tập nào cho ngôn ngữ này</p>
+                  <p className="text-[10px]">Hãy thực hiện bài tập Kaiwa, Shadowing, Dịch thuật, Đọc hiểu hoặc Thuyết trình để tích lũy điểm số!</p>
                 </div>
               ) : (
-                practiceHistory
-                  .filter(i => historyLangFilter === "ALL" || (i.lang || "ja") === historyLangFilter)
-                  .map((entry) => (
+                modalFilteredHistory.map((entry: PracticeHistoryEntry) => (
                   <div key={entry.id} className="bg-white p-4 rounded-2xl border border-gray-100 shadow-3xs space-y-2.5">
                     <div className="flex items-center justify-between flex-wrap gap-2">
                       <div className="flex items-center gap-2">
@@ -2339,15 +2370,22 @@ export default function PracticeHubPage() {
               {practiceHistory.length > 0 && (
                 <button
                   onClick={() => {
-                    if (confirm("Bạn có chắc chắn muốn xóa toàn bộ lịch sử luyện tập không?")) {
-                      setPracticeHistory([]);
-                      localStorage.removeItem("flashcash-practice-history");
+                    const targetLabel = historyLangFilter === "ALL" ? "toàn bộ các ngôn ngữ" : `mục ${historyLangFilter.toUpperCase()}`;
+                    if (confirm(`Bạn có chắc chắn muốn xóa lịch sử luyện tập (${targetLabel}) không?`)) {
+                      let updated: PracticeHistoryEntry[];
+                      if (historyLangFilter === "ALL") {
+                        updated = [];
+                      } else {
+                        updated = practiceHistory.filter((i: PracticeHistoryEntry) => (i.lang || "ja") !== historyLangFilter);
+                      }
+                      setPracticeHistory(updated);
+                      localStorage.setItem("flashcash-practice-history", JSON.stringify(updated));
                       window.dispatchEvent(new Event("practice-history-updated"));
                     }
                   }}
                   className="text-xs text-red-600 hover:text-red-800 font-bold transition-colors cursor-pointer"
                 >
-                  🗑️ Xóa toàn bộ lịch sử
+                  🗑️ Xóa lịch sử ({historyLangFilter === "ALL" ? "Tất cả" : historyLangFilter.toUpperCase()})
                 </button>
               )}
               <button

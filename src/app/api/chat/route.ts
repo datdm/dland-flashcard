@@ -70,8 +70,8 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // Use latest Gemini 3.x Flash series
-    const candidateModels = ["gemini-3.7-flash", "gemini-3.6-flash", "gemini-3.5-flash"];
+    // Use fastest Gemini 3.5 Flash series with fallback
+    const candidateModels = ["gemini-3.5-flash", "gemini-3.6-flash"];
     let lastError: any = null;
 
     for (const modelName of candidateModels) {
