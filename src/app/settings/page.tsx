@@ -48,6 +48,89 @@ function CurriculumDisplaySettings() {
   );
 }
 
+function ResetHistorySettingsPanel() {
+  const [showResetModal, setShowResetModal] = useState(false);
+
+  const handleResetAllProgress = () => {
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("flashcash-vocab-progress");
+      localStorage.removeItem("flashcash-grammar-progress");
+      localStorage.removeItem("flashcash-kanji-progress");
+      localStorage.removeItem("flashcash-curriculum-history");
+      localStorage.removeItem("flashcash-practice-history");
+      localStorage.removeItem("flashcash-streak-data");
+      localStorage.removeItem("flashcash-curriculum-progress");
+
+      window.dispatchEvent(new Event("storage"));
+      window.dispatchEvent(new Event("practice-history-updated"));
+      window.dispatchEvent(new Event("progress-updated"));
+
+      setShowResetModal(false);
+      window.location.reload();
+    }
+  };
+
+  return (
+    <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-2xs">
+      <h2 className="text-base font-bold text-gray-900 mb-1 flex items-center gap-2">
+        <span>🗑️</span> Reset Lịch Sử & Tiến Độ Học Tập
+      </h2>
+      <p className="text-xs text-gray-500 mb-4">
+        Xóa sạch toàn bộ tiến độ bài học, thẻ từ vựng đã thuộc, kết quả bài thi và lịch sử Streak về 0%.
+      </p>
+
+      <div className="bg-rose-50/70 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border border-rose-100">
+        <div>
+          <h3 className="text-xs font-bold text-rose-900">Xóa dữ liệu tiến độ cá nhân</h3>
+          <p className="text-[11px] text-rose-700 mt-0.5">
+            Dùng khi bạn muốn học lại từ đầu toàn bộ các môn học hoặc đặt lại bảng điểm luyện tập.
+          </p>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => setShowResetModal(true)}
+          className="px-4 py-2.5 bg-rose-600 hover:bg-rose-700 text-white rounded-2xl font-bold text-xs shadow-md shadow-rose-200 transition-all cursor-pointer shrink-0"
+        >
+          🗑️ Reset Lịch Sử Học Tập
+        </button>
+      </div>
+
+      {showResetModal && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl p-6 max-w-md w-full shadow-2xl border border-gray-100 text-center animate-in fade-in zoom-in duration-200">
+            <div className="w-14 h-14 bg-rose-100 text-rose-600 rounded-2xl flex items-center justify-center mx-auto text-2xl mb-4 shadow-inner">
+              ⚠️
+            </div>
+            <h3 className="text-lg font-black text-gray-900">Xác nhận xóa lịch sử học tập?</h3>
+            <p className="text-xs text-gray-500 mt-2 leading-relaxed">
+              Bạn có chắc chắn muốn xóa toàn bộ <strong className="text-rose-600">tiến độ bài học, thẻ từ vựng/ngữ pháp/kanji đã thuộc, bảng điểm luyện tập và chuỗi Streak</strong> không?
+            </p>
+            <div className="mt-3 p-3 bg-rose-50 border border-rose-100 rounded-2xl text-[11px] text-rose-700 font-semibold">
+              🚨 Lưu ý: Toàn bộ tiến độ sẽ quay về 0% và không thể khôi phục sau khi xóa.
+            </div>
+
+            <div className="mt-6 flex items-center gap-3">
+              <button
+                onClick={() => setShowResetModal(false)}
+                className="flex-1 py-3 px-4 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xs rounded-2xl transition-colors cursor-pointer"
+              >
+                Hủy bỏ
+              </button>
+              <button
+                onClick={handleResetAllProgress}
+                className="flex-1 py-3 px-4 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-2xl transition-all shadow-md shadow-rose-200 cursor-pointer"
+              >
+                🗑️ Đồng ý xóa hết
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function SettingsPage() {
   const isAuthenticated = syncService.checkAuthStatus();
   const user = syncService.getUser();
@@ -187,6 +270,9 @@ export default function SettingsPage() {
 
         {/* Sample Curriculum Display Settings Section */}
         <CurriculumDisplaySettings />
+
+        {/* Reset History & Progress Section */}
+        <ResetHistorySettingsPanel />
 
         {/* Account Info Section */}
         {isAuthenticated && user && (

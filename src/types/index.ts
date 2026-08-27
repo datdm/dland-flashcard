@@ -6,6 +6,8 @@ export interface Vocabulary {
   meaning?: string;
   phonetic?: string;
   createdAt?: string;
+  sourceType?: "curriculum" | "notebook";
+  sourceName?: string;
 }
 
 export interface Lesson {

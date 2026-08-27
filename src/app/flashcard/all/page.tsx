@@ -41,21 +41,45 @@ export default function FlashCardAllPage() {
   // Get all vocabulary based on filter
   const allVocab = useMemo(() => {
     if (source === "all") {
-      const curriculumVocab = curriculums.flatMap((c) => c.lessons.flatMap((l) => l.vocabulary || []));
-      const notebookVocab = notebooks.flatMap((nb) => nb.vocabulary || []);
+      const curriculumVocab = curriculums.flatMap((c) =>
+        c.lessons.flatMap((l) =>
+          (l.vocabulary || []).map((v) => ({
+            ...v,
+            sourceType: "curriculum" as const,
+            sourceName: `${c.name} • ${l.name}`,
+          }))
+        )
+      );
+      const notebookVocab = notebooks.flatMap((nb) =>
+        (nb.vocabulary || []).map((v) => ({
+          ...v,
+          sourceType: "notebook" as const,
+          sourceName: `Sổ tay: ${nb.name}`,
+        }))
+      );
       return [...curriculumVocab, ...notebookVocab];
     }
     
     // Check if it's a curriculum ID
     const curriculum = curriculums.find((c) => c.id === source);
     if (curriculum) {
-      return curriculum.lessons.flatMap((l) => l.vocabulary || []);
+      return curriculum.lessons.flatMap((l) =>
+        (l.vocabulary || []).map((v) => ({
+          ...v,
+          sourceType: "curriculum" as const,
+          sourceName: `${curriculum.name} • ${l.name}`,
+        }))
+      );
     }
     
     // Otherwise it's a notebook ID
     const notebook = notebooks.find((nb) => nb.id === source);
     if (notebook) {
-      return notebook.vocabulary || [];
+      return (notebook.vocabulary || []).map((v) => ({
+        ...v,
+        sourceType: "notebook" as const,
+        sourceName: `Sổ tay: ${notebook.name}`,
+      }));
     }
     
     return [];

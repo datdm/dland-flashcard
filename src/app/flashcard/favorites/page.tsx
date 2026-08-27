@@ -13,8 +13,22 @@ export default function FlashCardFavoritesPage() {
   const { progress } = useProgress();
 
   const favorites = useMemo(() => {
-    const curriculumVocab = curriculums.flatMap((c) => c.lessons.flatMap((l) => l.vocabulary || []));
-    const notebookVocab = notebooks.flatMap((nb) => nb.vocabulary || []);
+    const curriculumVocab = curriculums.flatMap((c) =>
+      c.lessons.flatMap((l) =>
+        (l.vocabulary || []).map((v) => ({
+          ...v,
+          sourceType: "curriculum" as const,
+          sourceName: `${c.name} • ${l.name}`,
+        }))
+      )
+    );
+    const notebookVocab = notebooks.flatMap((nb) =>
+      (nb.vocabulary || []).map((v) => ({
+        ...v,
+        sourceType: "notebook" as const,
+        sourceName: `Sổ tay: ${nb.name}`,
+      }))
+    );
     const allVocab = [...curriculumVocab, ...notebookVocab];
     return allVocab.filter((v) => v && progress[v.id]?.favorite);
   }, [curriculums, notebooks, progress]);

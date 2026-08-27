@@ -25,6 +25,17 @@ function FlashCardFace({ vocab, settings }: FlashCardFaceProps) {
 
   return (
     <div className="flex flex-col items-center justify-center h-full gap-3 p-6 text-center relative">
+      {/* Source Badge (Giáo trình / Sổ tay) */}
+      {vocab.sourceName && (
+        <div 
+          className="absolute top-4 left-4 max-w-[65%] truncate text-[10px] font-extrabold px-2.5 py-1 rounded-full bg-slate-100/90 text-slate-600 border border-slate-200/80 shadow-2xs flex items-center gap-1 z-10" 
+          title={vocab.sourceName}
+        >
+          <span>{vocab.sourceType === "notebook" ? "📓" : "📚"}</span>
+          <span className="truncate">{vocab.sourceName}</span>
+        </div>
+      )}
+
       {japaneseText && (
         <button
           onClick={(e) => speakText(e, japaneseText)}

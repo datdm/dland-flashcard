@@ -39,7 +39,12 @@ export default function FlashCardLearnedPage() {
             
             lessons.forEach((lesson: any) => {
               if (lesson.vocabulary) {
-                allVocab = allVocab.concat(lesson.vocabulary);
+                const taggedVocab = lesson.vocabulary.map((v: any) => ({
+                  ...v,
+                  sourceType: "curriculum" as const,
+                  sourceName: `${data.title || "Giáo trình"} • ${lesson.name}`,
+                }));
+                allVocab = allVocab.concat(taggedVocab);
               }
             });
           })
@@ -55,8 +60,22 @@ export default function FlashCardLearnedPage() {
 
   const learnedWords = useMemo(() => {
     // Collect all vocabulary words across curriculums, notebooks, and system curriculums
-    const curriculumVocab = curriculums.flatMap((c) => c.lessons.flatMap((l) => l.vocabulary || []));
-    const notebookVocab = notebooks.flatMap((nb) => nb.vocabulary || []);
+    const curriculumVocab = curriculums.flatMap((c) =>
+      c.lessons.flatMap((l) =>
+        (l.vocabulary || []).map((v) => ({
+          ...v,
+          sourceType: "curriculum" as const,
+          sourceName: `${c.name} • ${l.name}`,
+        }))
+      )
+    );
+    const notebookVocab = notebooks.flatMap((nb) =>
+      (nb.vocabulary || []).map((v) => ({
+        ...v,
+        sourceType: "notebook" as const,
+        sourceName: `Sổ tay: ${nb.name}`,
+      }))
+    );
 
     const filteredSystemVocab = systemVocabList.filter((v) => {
       if (!v || !v.id) return false;
