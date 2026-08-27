@@ -7,10 +7,13 @@ import { useProgress } from "@/hooks/useProgress";
 import FlashCardViewer from "@/components/FlashCardViewer";
 import Link from "next/link";
 
+import { useLanguageSetting } from "@/hooks/useLanguageSetting";
+
 export default function FlashCardLearnedPage() {
-  const { curriculums } = useCurriculums();
+  const { activeCurriculums: curriculums } = useCurriculums();
   const { notebooks } = useNotebooks();
   const { progress } = useProgress();
+  const { activeLanguage } = useLanguageSetting();
   const [systemVocabList, setSystemVocabList] = useState<any[]>([]);
 
   useEffect(() => {
@@ -54,10 +57,17 @@ export default function FlashCardLearnedPage() {
     // Collect all vocabulary words across curriculums, notebooks, and system curriculums
     const curriculumVocab = curriculums.flatMap((c) => c.lessons.flatMap((l) => l.vocabulary || []));
     const notebookVocab = notebooks.flatMap((nb) => nb.vocabulary || []);
+
+    const filteredSystemVocab = systemVocabList.filter((v) => {
+      if (!v || !v.id) return false;
+      if (activeLanguage.code === "en") return v.id.startsWith("en-") || v.level?.includes("Band");
+      if (activeLanguage.code === "de") return v.id.startsWith("de-") || v.level?.includes("A1") || v.level?.includes("A2");
+      return !v.id.startsWith("en-") && !v.id.startsWith("de-");
+    });
     
     // De-duplicate vocabulary words by ID to prevent duplicates if they appear in both systems
     const seen = new Set<string>();
-    const allVocab = [...curriculumVocab, ...notebookVocab, ...systemVocabList].filter((v) => {
+    const allVocab = [...curriculumVocab, ...notebookVocab, ...filteredSystemVocab].filter((v) => {
       if (!v || !v.id) return false;
       if (seen.has(v.id)) return false;
       seen.add(v.id);
@@ -65,7 +75,7 @@ export default function FlashCardLearnedPage() {
     });
 
     return allVocab.filter((v) => progress[v.id]?.learned);
-  }, [curriculums, notebooks, systemVocabList, progress]);
+  }, [curriculums, notebooks, systemVocabList, progress, activeLanguage.code]);
 
   if (learnedWords.length === 0) {
     return (

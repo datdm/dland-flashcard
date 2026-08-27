@@ -10,9 +10,42 @@ function generateId(prefix: string): string {
   return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
 }
 
+export function isCurriculumMatchLang(c: { id: string; name: string; lang?: string }, langCode: string): boolean {
+  if (c.lang) return c.lang === langCode;
+  if (langCode === "en") return c.id.startsWith("en-") || c.name.toLowerCase().includes("ielts") || c.name.toLowerCase().includes("english");
+  if (langCode === "de") return c.id.startsWith("de-") || c.name.toLowerCase().includes("deutsch") || c.name.toLowerCase().includes("netzwerk") || c.name.toLowerCase().includes("đức");
+  if (langCode === "ko") return c.id.startsWith("ko-") || c.name.toLowerCase().includes("topik") || c.name.toLowerCase().includes("hàn");
+  if (langCode === "zh") return c.id.startsWith("zh-") || c.name.toLowerCase().includes("hsk") || c.name.toLowerCase().includes("trung");
+  // Default ja (Japanese)
+  return !c.id.startsWith("en-") && !c.id.startsWith("de-") && !c.id.startsWith("ko-") && !c.id.startsWith("zh-");
+}
+
+function getActiveLanguageCode(): string {
+  if (typeof window !== "undefined") {
+    const saved = localStorage.getItem("dland_target_language");
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch {
+        return saved;
+      }
+    }
+  }
+  return "ja";
+}
+
 export function useCurriculums() {
   const [curriculums, setCurriculums] = useState<Curriculum[]>([]);
   const [hideSuperMaster, setHideSuperMaster] = useState(false);
+  const [activeLang, setActiveLang] = useState<string>(() => getActiveLanguageCode());
+
+  useEffect(() => {
+    const handleLangChange = () => {
+      setActiveLang(getActiveLanguageCode());
+    };
+    window.addEventListener("storage", handleLangChange);
+    return () => window.removeEventListener("storage", handleLangChange);
+  }, []);
 
   useEffect(() => {
     // Load local data first
@@ -67,6 +100,10 @@ export function useCurriculums() {
       (c) => c.id !== "default-n5-super-master-tango" && !c.name.toLowerCase().includes("super master")
     );
   }, [curriculums, hideSuperMaster]);
+
+  const activeCurriculums = useMemo(() => {
+    return visibleCurriculums.filter((c) => isCurriculumMatchLang(c, activeLang));
+  }, [visibleCurriculums, activeLang]);
 
   const save = useCallback((updated: Curriculum[]) => {
     setCurriculums(updated);
@@ -516,6 +553,7 @@ export function useCurriculums() {
 
   return {
     curriculums: visibleCurriculums,
+    activeCurriculums,
     rawCurriculums: curriculums,
     save,
     addCurriculum,

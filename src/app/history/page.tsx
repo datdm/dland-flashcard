@@ -136,11 +136,12 @@ export default function HistoryPage() {
     loadAllSystemData();
   }, []);
 
-  // 1. Build lookup tables for vocabulary and grammar
+  // 1. Build lookup tables for vocabulary
   const vocabLookup = useMemo(() => {
     const map = new Map<string, { kanji?: string; hiragana?: string; meaning?: string; source: string; lang: string }>();
     
     curriculums.forEach((c) => {
+      const curriculumLang = c.id.startsWith("en-") || c.name.toLowerCase().includes("ielts") ? "en" : c.id.startsWith("de-") || c.name.toLowerCase().includes("deutsch") ? "de" : "ja";
       c.lessons.forEach((l) => {
         l.vocabulary?.forEach((v) => {
           map.set(v.id, {
@@ -148,7 +149,7 @@ export default function HistoryPage() {
             hiragana: v.hiragana,
             meaning: v.meaning,
             source: `${c.name} • ${l.name}`,
-            lang: "ja"
+            lang: curriculumLang
           });
         });
       });
@@ -161,7 +162,7 @@ export default function HistoryPage() {
           hiragana: v.hiragana,
           meaning: v.meaning,
           source: `Sổ tay: ${nb.name}`,
-          lang: "ja"
+          lang: nb.lang || "ja"
         });
       });
     });
@@ -188,7 +189,7 @@ export default function HistoryPage() {
           structure: gp.structure,
           meaning: gp.meaning,
           source: `Ngữ pháp: ${c.name}`,
-          lang: "ja"
+          lang: (c as any).lang || "ja"
         });
       });
     });
@@ -204,8 +205,6 @@ export default function HistoryPage() {
 
     return map;
   }, [grammarCollections, systemGrammarList]);
-
-
 
   // 3. Compute Curriculum progress
   const curriculumProgresses = useMemo(() => {
@@ -242,7 +241,12 @@ export default function HistoryPage() {
 
   // 4. Compute Notebook progress
   const notebookProgresses = useMemo(() => {
-    return notebooks.map((nb) => {
+    const filteredNotebooks = notebooks.filter((nb) => {
+      if (effectiveLang === "all") return true;
+      return (nb.lang || "ja") === effectiveLang;
+    });
+
+    return filteredNotebooks.map((nb) => {
       let totalVocab = nb.vocabulary?.length || 0;
       let learnedVocab = 0;
 
@@ -260,7 +264,7 @@ export default function HistoryPage() {
         percentage: totalVocab > 0 ? Math.round((learnedVocab / totalVocab) * 100) : 0,
       };
     });
-  }, [notebooks, progress]);
+  }, [notebooks, progress, effectiveLang]);
 
   // 5. Build Activity Timeline
   const timelineItems = useMemo(() => {

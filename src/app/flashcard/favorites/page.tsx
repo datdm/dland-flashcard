@@ -8,15 +8,15 @@ import FlashCardViewer from "@/components/FlashCardViewer";
 import Link from "next/link";
 
 export default function FlashCardFavoritesPage() {
-  const { curriculums } = useCurriculums();
+  const { activeCurriculums: curriculums } = useCurriculums();
   const { notebooks } = useNotebooks();
   const { progress } = useProgress();
 
   const favorites = useMemo(() => {
-    const curriculumVocab = curriculums.flatMap((c) => c.lessons.flatMap((l) => l.vocabulary));
-    const notebookVocab = notebooks.flatMap((nb) => nb.vocabulary);
+    const curriculumVocab = curriculums.flatMap((c) => c.lessons.flatMap((l) => l.vocabulary || []));
+    const notebookVocab = notebooks.flatMap((nb) => nb.vocabulary || []);
     const allVocab = [...curriculumVocab, ...notebookVocab];
-    return allVocab.filter((v) => progress[v.id]?.favorite);
+    return allVocab.filter((v) => v && progress[v.id]?.favorite);
   }, [curriculums, notebooks, progress]);
 
   if (favorites.length === 0) {

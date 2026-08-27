@@ -10,7 +10,7 @@ import AuthGuard from "@/components/AuthGuard";
 type SourceFilter = "all" | string; // "all" | curriculum-id | notebook-id
 
 export default function FlashCardAllPage() {
-  const { curriculums } = useCurriculums();
+  const { activeCurriculums: curriculums } = useCurriculums();
   const { notebooks } = useNotebooks();
   const [source, setSource] = useState<SourceFilter>("all");
   const [isDaily50, setIsDaily50] = useState(false);
