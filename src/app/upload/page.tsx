@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Link from "next/link";
 import UploadPanel from "@/components/UploadPanel";
@@ -28,7 +28,7 @@ export default function UploadPage() {
               📚 Giáo trình (Curriculum)
             </summary>
             <pre className="mt-2 text-xs bg-gray-50 p-3 rounded-xl overflow-x-auto text-gray-700">{`{
-  "curriculum": "N5 Super Master 語彙",
+  "curriculum": "N5 Speed Master 語彙",
   "lessons": [
     {
       "name": "Bài 1 - Chào hỏi",

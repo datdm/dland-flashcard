@@ -121,6 +121,57 @@ export default function CurriculumPage() {
     return getLevelStats(activeLevel);
   }, [groups, activeLevel, progress, grammarProgress, kanjiProgress]);
 
+  const currentBookStats = useMemo(() => {
+    if (!currentBook) return activeLevelStats;
+
+    let totalVocab = 0, learnedVocab = 0;
+    let totalGrammar = 0, learnedGrammar = 0;
+    let totalKanji = 0, learnedKanji = 0;
+    let completedLessonsCount = 0;
+
+    currentBook.lessons.forEach((l) => {
+      const vList = l.vocabulary || [];
+      const gList = l.grammarPoints || [];
+      const kList = l.kanjiItems || [];
+
+      totalVocab += vList.length;
+      totalGrammar += gList.length;
+      totalKanji += kList.length;
+
+      const lV = vList.filter((v: any) => progress[v.id]?.learned).length;
+      const lG = gList.filter((g: any) => grammarProgress[g.id]?.learned).length;
+      const lK = kList.filter((k: any) => kanjiProgress[k.id]?.learned).length;
+
+      learnedVocab += lV;
+      learnedGrammar += lG;
+      learnedKanji += lK;
+
+      const totalLessonItems = vList.length + gList.length + kList.length;
+      const learnedLessonItems = lV + lG + lK;
+      if (totalLessonItems > 0 && learnedLessonItems === totalLessonItems) {
+        completedLessonsCount++;
+      }
+    });
+
+    const totalItems = totalVocab + totalGrammar + totalKanji;
+    const learnedItems = learnedVocab + learnedGrammar + learnedKanji;
+    const percentage = totalItems > 0 ? Math.round((learnedItems / totalItems) * 100) : 0;
+
+    return {
+      totalItems,
+      learnedItems,
+      percentage,
+      totalLessons: currentBook.lessons.length,
+      completedLessons: completedLessonsCount,
+      totalVocab,
+      learnedVocab,
+      totalGrammar,
+      learnedGrammar,
+      totalKanji,
+      learnedKanji
+    };
+  }, [currentBook, activeLevelStats, progress, grammarProgress, kanjiProgress]);
+
   return (
     <div className="p-4 max-w-5xl mx-auto min-h-screen pb-20">
       {/* Header */}
@@ -204,36 +255,36 @@ export default function CurriculumPage() {
         </div>
       ) : (
         <div className="space-y-6">
-          {/* Overall Level Progress Overview Banner for Japanese */}
+          {/* Progress Overview Banner for Selected Textbook */}
           {!isMultilingual && activeGroup && (
             <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-purple-950 rounded-3xl p-5 sm:p-6 text-white shadow-xl border border-indigo-900/50">
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-5">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 flex-wrap mb-1.5">
                     <span className="px-3 py-0.5 bg-indigo-500/30 text-indigo-200 border border-indigo-400/30 backdrop-blur-md rounded-full text-xs font-extrabold tracking-wide uppercase">
-                      🎯 Progress Tracker — Trình độ {activeLevel}
+                      🎯 Progress Tracker — {currentBook?.name || `Trình độ ${activeLevel}`}
                     </span>
                     <span className="px-2.5 py-0.5 bg-amber-400/20 text-amber-300 border border-amber-300/30 rounded-full text-xs font-black">
-                      Tiến độ: {activeLevelStats.percentage}%
+                      Tiến độ: {currentBookStats.percentage}%
                     </span>
                   </div>
                   <h2 className="text-lg sm:text-xl font-black tracking-tight text-white mt-1">
-                    Tổng Quan Tiến Độ Học Tập JLPT {activeLevel}
+                    Tổng Quan Tiến Độ Học Tập — {currentBook?.name || activeGroup.title}
                   </h2>
                   <p className="text-xs text-slate-300 mt-1 leading-relaxed">
-                    Theo dõi tổng hợp số từ vựng, ngữ pháp, kanji và bài học đã thuộc trên tất cả các giáo trình cấp độ {activeLevel}
+                    Theo dõi tiến độ từ vựng, ngữ pháp, kanji và các bài học đã thuộc của giáo trình {currentBook?.name || activeGroup.title}
                   </p>
 
                   {/* Progress Bar */}
                   <div className="mt-4 space-y-1.5">
                     <div className="flex justify-between text-[11px] font-bold text-slate-300">
-                      <span>Hoàn thành: {activeLevelStats.learnedItems} / {activeLevelStats.totalItems} mục</span>
-                      <span className="text-amber-300 font-extrabold">{activeLevelStats.percentage}%</span>
+                      <span>Hoàn thành: {currentBookStats.learnedItems} / {currentBookStats.totalItems} mục</span>
+                      <span className="text-amber-300 font-extrabold">{currentBookStats.percentage}%</span>
                     </div>
                     <div className="w-full bg-slate-800 rounded-full h-2 overflow-hidden border border-slate-700">
                       <div
                         className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 h-2 rounded-full transition-all duration-500 shadow-sm"
-                        style={{ width: `${activeLevelStats.percentage}%` }}
+                        style={{ width: `${currentBookStats.percentage}%` }}
                       />
                     </div>
                   </div>
@@ -242,19 +293,19 @@ export default function CurriculumPage() {
                 {/* Stats Grid Chips */}
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 shrink-0 bg-white/5 p-3.5 rounded-2xl border border-white/10">
                   <div className="text-center p-2.5 rounded-xl bg-white/5">
-                    <div className="text-base sm:text-lg font-black text-indigo-300">{activeLevelStats.learnedVocab}/{activeLevelStats.totalVocab}</div>
+                    <div className="text-base sm:text-lg font-black text-indigo-300">{currentBookStats.learnedVocab}/{currentBookStats.totalVocab}</div>
                     <div className="text-[10px] font-bold text-slate-400 uppercase mt-0.5">📝 Từ vựng</div>
                   </div>
                   <div className="text-center p-2.5 rounded-xl bg-white/5">
-                    <div className="text-base sm:text-lg font-black text-teal-300">{activeLevelStats.learnedGrammar}/{activeLevelStats.totalGrammar}</div>
+                    <div className="text-base sm:text-lg font-black text-teal-300">{currentBookStats.learnedGrammar}/{currentBookStats.totalGrammar}</div>
                     <div className="text-[10px] font-bold text-slate-400 uppercase mt-0.5">📖 Ngữ pháp</div>
                   </div>
                   <div className="text-center p-2.5 rounded-xl bg-white/5">
-                    <div className="text-base sm:text-lg font-black text-pink-300">{activeLevelStats.learnedKanji}/{activeLevelStats.totalKanji}</div>
+                    <div className="text-base sm:text-lg font-black text-pink-300">{currentBookStats.learnedKanji}/{currentBookStats.totalKanji}</div>
                     <div className="text-[10px] font-bold text-slate-400 uppercase mt-0.5">🉐 Kanji</div>
                   </div>
                   <div className="text-center p-2.5 rounded-xl bg-white/5">
-                    <div className="text-base sm:text-lg font-black text-amber-300">{activeLevelStats.completedLessons}/{activeLevelStats.totalLessons}</div>
+                    <div className="text-base sm:text-lg font-black text-amber-300">{currentBookStats.completedLessons}/{currentBookStats.totalLessons}</div>
                     <div className="text-[10px] font-bold text-slate-400 uppercase mt-0.5">✅ Bài học</div>
                   </div>
                 </div>

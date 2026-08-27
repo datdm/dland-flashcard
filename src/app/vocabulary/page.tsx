@@ -11,6 +11,8 @@ import { useLanguageSetting } from "@/hooks/useLanguageSetting";
 import { Vocabulary } from "@/types";
 import AddToNotebookModal from "@/components/AddToNotebookModal";
 
+import { getCurriculumRepository } from "@/lib/repositories";
+
 export default function VocabularyPage() {
   const { curriculums } = useCurriculums();
   const { notebooks, addVocab } = useNotebooks();
@@ -28,19 +30,51 @@ export default function VocabularyPage() {
   // State for Add to Notebook modal
   const [selectedWordForNotebook, setSelectedWordForNotebook] = useState<Vocabulary | null>(null);
   const [targetNotebookId, setTargetNotebookId] = useState<string>("");
+  const [repoBooks, setRepoBooks] = useState<Array<{ id: string; name: string; lessons: any[] }>>([]);
 
   const ITEMS_PER_PAGE = 30;
 
-  // Get curriculum list
+  useEffect(() => {
+    async function loadCurriculumBooks() {
+      try {
+        const repo = getCurriculumRepository();
+        const groups = await repo.getCurriculums();
+        const allBooks = groups.flatMap((g) => g.books || []);
+        setRepoBooks(allBooks);
+      } catch (err) {
+        console.error("Failed to load curriculum books for vocabulary page:", err);
+      }
+    }
+    loadCurriculumBooks();
+  }, [langCode]);
+
+  // Combine repoBooks and local curriculums to form full curriculum list
+  const activeCurriculumsList = useMemo(() => {
+    const map = new Map<string, { id: string; name: string; lessons: any[] }>();
+    repoBooks.forEach((b) => map.set(b.id, b));
+    curriculums.forEach((c) => {
+      if (!map.has(c.id)) {
+        map.set(c.id, { id: c.id, name: c.name, lessons: c.lessons });
+      }
+    });
+    return Array.from(map.values());
+  }, [repoBooks, curriculums]);
+
+  // Curriculum dropdown list
   const curriculumList = useMemo(() => {
-    return curriculums.map((c) => ({ id: c.id, name: c.name }));
-  }, [curriculums]);
+    return activeCurriculumsList.map((c) => ({ id: c.id, name: c.name }));
+  }, [activeCurriculumsList]);
+
+  // Notebooks matching active language
+  const langNotebooks = useMemo(() => {
+    return notebooks.filter((nb) => (nb.lang || "ja") === langCode);
+  }, [notebooks, langCode]);
 
   // Get all vocabulary with source info
   const allVocabWithSource = useMemo(() => {
-    const curriculumVocab = curriculums.flatMap((curr) =>
+    const curriculumVocab = activeCurriculumsList.flatMap((curr) =>
       curr.lessons.flatMap((lesson) =>
-        lesson.vocabulary.map((v) => ({
+        (lesson.vocabulary || []).map((v: Vocabulary) => ({
           ...v,
           source: "curriculum" as const,
           curriculumId: curr.id,
@@ -48,16 +82,23 @@ export default function VocabularyPage() {
         }))
       )
     );
-    const notebookVocab = notebooks.flatMap((nb) =>
-      nb.vocabulary.map((v) => ({
+    const notebookVocab = langNotebooks.flatMap((nb) =>
+      (nb.vocabulary || []).map((v) => ({
         ...v,
         source: "notebook" as const,
         notebookId: nb.id,
         notebookName: nb.name,
       }))
     );
-    return [...curriculumVocab, ...notebookVocab];
-  }, [curriculums, notebooks]);
+
+    const seen = new Set<string>();
+    return [...curriculumVocab, ...notebookVocab].filter((v) => {
+      if (!v || !v.id) return false;
+      if (seen.has(v.id)) return false;
+      seen.add(v.id);
+      return true;
+    });
+  }, [activeCurriculumsList, langNotebooks]);
 
   // Filter by curriculum and notebook
   const filteredBySource = allVocabWithSource.filter((v) => {
@@ -222,10 +263,10 @@ export default function VocabularyPage() {
                 }}
                 className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-2.5 text-xs font-semibold text-gray-800 focus:outline-none focus:border-indigo-500 shadow-2xs"
               >
-                <option value="all">Tất cả sổ tay ({notebooks.length})</option>
-                {notebooks.map((nb) => (
+                <option value="all">Tất cả sổ tay ({langNotebooks.length})</option>
+                {langNotebooks.map((nb) => (
                   <option key={nb.id} value={nb.id}>
-                    {nb.name} ({nb.vocabulary.length} từ)
+                    {nb.name} ({nb.vocabulary?.length || 0} từ)
                   </option>
                 ))}
               </select>

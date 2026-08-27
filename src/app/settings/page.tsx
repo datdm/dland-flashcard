@@ -24,9 +24,9 @@ function CurriculumDisplaySettings() {
 
       <div className="bg-gray-50 rounded-2xl p-4 flex items-center justify-between gap-4 border border-gray-100">
         <div>
-          <h3 className="text-xs font-bold text-gray-900">Ẩn bộ từ vựng "N5 Super Master 語彙"</h3>
+          <h3 className="text-xs font-bold text-gray-900">Ẩn bộ từ vựng "N5 Speed Master 語彙"</h3>
           <p className="text-[11px] text-gray-500 mt-0.5">
-            Tạm thời ẩn bộ giáo trình N5 Super Master khỏi trang Ôn tập Flashcard, Giáo trình và Tra cứu.
+            Tạm thời ẩn bộ giáo trình N5 Speed Master khỏi trang Ôn tập Flashcard, Giáo trình và Tra cứu.
           </p>
         </div>
 

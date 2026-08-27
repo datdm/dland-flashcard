@@ -40,7 +40,7 @@ export default function FlashCardSettingsPanel({
 
           <div className="pt-3 border-t border-gray-100 flex items-center justify-between gap-3">
             <div>
-              <span className="text-xs font-bold text-gray-800 block">🙈 Ẩn N5 Super Master 語彙</span>
+              <span className="text-xs font-bold text-gray-800 block">🙈 Ẩn N5 Speed Master 語彙</span>
               <span className="text-[10px] text-gray-400 block mt-0.5">Tạm ẩn bộ từ vựng mẫu này khỏi danh sách ôn tập</span>
             </div>
             <button
