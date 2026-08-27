@@ -41,7 +41,6 @@ export default function HistoryPage() {
   const streak = useStreak();
 
   const [completedLessons, setCompletedLessons] = useState<CompletedLesson[]>([]);
-  const [selectedLangFilter, setSelectedLangFilter] = useState<string>("current");
   const [timeFilter, setTimeFilter] = useState<"all" | "1day" | "3days" | "1month" | "3months" | "1year" | "thisYear" | number>("all");
   const [curriculumTabFilter, setCurriculumTabFilter] = useState<"all" | "in_progress" | "completed">("all");
   const [systemVocabList, setSystemVocabList] = useState<any[]>([]);
@@ -49,7 +48,7 @@ export default function HistoryPage() {
   const [systemLessonsList, setSystemLessonsList] = useState<any[]>([]);
   const [practiceHistory, setPracticeHistory] = useState<any[]>([]);
 
-  const effectiveLang = selectedLangFilter === "current" ? activeLanguage.code : selectedLangFilter;
+  const effectiveLang = activeLanguage.code;
 
   useEffect(() => {
     const loadData = () => {
@@ -476,57 +475,15 @@ export default function HistoryPage() {
                 Dland History
               </span>
               <span className="px-3 py-0.5 bg-amber-400/30 text-amber-200 border border-amber-300/30 backdrop-blur-md rounded-full text-xs font-bold">
-                🌐 {activeLangName}
+                {activeLanguage.flag} {activeLanguage.name}
               </span>
             </div>
             <h1 className="text-2xl font-bold mt-2">Lịch Sử & Tiến Độ Học Tập</h1>
             <p className="text-xs text-indigo-100 mt-1">
-              Theo dõi tiến độ hoàn thành giáo trình, từ vựng và ngữ pháp theo từng ngôn ngữ học tập
+              Theo dõi tiến độ hoàn thành giáo trình, từ vựng và ngữ pháp cho {activeLanguage.name}
             </p>
           </div>
         </div>
-      </div>
-
-      {/* Language Filter Tabs */}
-      <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 mb-6">
-        <span className="text-xs font-bold text-gray-400 whitespace-nowrap mr-1">Lọc theo ngôn ngữ:</span>
-        <button
-          onClick={() => setSelectedLangFilter("current")}
-          className={`px-3 py-2 rounded-2xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-1.5 border ${
-            selectedLangFilter === "current"
-              ? "bg-indigo-600 text-white border-indigo-600 shadow-3xs scale-102"
-              : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
-          }`}
-        >
-          <span>⭐ Hiện tại: {activeLanguage.flag} {activeLanguage.name}</span>
-        </button>
-
-        {supportedLanguages.filter(l => l.status === "active").map((lang) => (
-          <button
-            key={lang.code}
-            onClick={() => setSelectedLangFilter(lang.code)}
-            className={`px-3 py-2 rounded-2xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-1.5 border ${
-              selectedLangFilter === lang.code
-                ? "bg-indigo-600 text-white border-indigo-600 shadow-3xs scale-102"
-                : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
-            }`}
-          >
-            <span>{lang.flag}</span>
-            <span>{lang.name}</span>
-          </button>
-        ))}
-
-        <button
-          onClick={() => setSelectedLangFilter("all")}
-          className={`px-3 py-2 rounded-2xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-1.5 border ${
-            selectedLangFilter === "all"
-              ? "bg-indigo-600 text-white border-indigo-600 shadow-3xs scale-102"
-              : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
-          }`}
-        >
-          <span>🌐</span>
-          <span>Tất cả ngôn ngữ</span>
-        </button>
       </div>
 
       {/* Grid Stats */}
