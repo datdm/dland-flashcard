@@ -224,12 +224,23 @@ export default function HistoryPage() {
 
   const activeRepoBooks = useMemo(() => {
     const map = new Map<string, any>();
-    repoBooks.forEach((b) => map.set(b.id, b));
-    curriculums.forEach((c) => {
-      if (!map.has(c.id)) {
-        map.set(c.id, { id: c.id, name: c.name, lessons: c.lessons });
-      }
+    const seenNormNames = new Set<string>();
+
+    repoBooks.forEach((b) => {
+      const norm = b.name.toLowerCase().replace("super master", "speed master").trim();
+      map.set(b.id, b);
+      seenNormNames.add(norm);
     });
+
+    curriculums.forEach((c) => {
+      const norm = c.name.toLowerCase().replace("super master", "speed master").trim();
+      if (map.has(c.id) || seenNormNames.has(norm)) return;
+
+      const cleanName = c.name.replace(/Super Master/gi, "Speed Master");
+      map.set(c.id, { id: c.id, name: cleanName, lessons: c.lessons });
+      seenNormNames.add(norm);
+    });
+
     return Array.from(map.values());
   }, [repoBooks, curriculums]);
 

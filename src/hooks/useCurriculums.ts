@@ -48,13 +48,25 @@ export function useCurriculums() {
   }, []);
 
   useEffect(() => {
+    // Helper to sanitize old "Super Master" names in localStorage
+    const sanitizeCurriculums = (list: Curriculum[]) => {
+      return list.map((c) => {
+        if (c.id === "default-n5-super-master-tango" || c.name.toLowerCase().includes("super master")) {
+          return { ...c, name: "N5 Speed Master 語彙" };
+        }
+        return c;
+      });
+    };
+
     // Load local data first
     const data = getItem<CurriculumsData>(StorageKeys.CURRICULUMS);
     if (data?.curriculums && data.curriculums.length > 0) {
-      setCurriculums(data.curriculums);
+      const sanitized = sanitizeCurriculums(data.curriculums);
+      setCurriculums(sanitized);
     } else if (DEFAULT_VOCABULARY?.curriculums) {
-      setCurriculums(DEFAULT_VOCABULARY.curriculums);
-      setItem<CurriculumsData>(StorageKeys.CURRICULUMS, DEFAULT_VOCABULARY);
+      const sanitized = sanitizeCurriculums(DEFAULT_VOCABULARY.curriculums);
+      setCurriculums(sanitized);
+      setItem<CurriculumsData>(StorageKeys.CURRICULUMS, { curriculums: sanitized });
     }
 
     // Sync from database if logged in
