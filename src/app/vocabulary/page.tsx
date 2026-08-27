@@ -91,11 +91,19 @@ export default function VocabularyPage() {
       }))
     );
 
-    const seen = new Set<string>();
+    const seenId = new Set<string>();
+    const seenText = new Set<string>();
+
     return [...curriculumVocab, ...notebookVocab].filter((v) => {
-      if (!v || !v.id) return false;
-      if (seen.has(v.id)) return false;
-      seen.add(v.id);
+      if (!v) return false;
+      if (v.id && seenId.has(v.id)) return false;
+      
+      // De-duplicate by word text content (kanji/hiragana/meaning)
+      const textKey = `${(v.kanji || "").trim()}_${(v.hiragana || "").trim()}_${(v.meaning || "").trim()}`.toLowerCase();
+      if (textKey && textKey !== "__" && seenText.has(textKey)) return false;
+
+      if (v.id) seenId.add(v.id);
+      if (textKey && textKey !== "__") seenText.add(textKey);
       return true;
     });
   }, [activeCurriculumsList, langNotebooks]);

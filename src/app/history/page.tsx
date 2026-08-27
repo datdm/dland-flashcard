@@ -30,6 +30,8 @@ interface CompletedLesson {
   completedAt: string;
 }
 
+import { getCurriculumRepository } from "@/lib/repositories";
+
 export default function HistoryPage() {
   const { progress } = useProgress();
   const { progress: grammarProgress } = useGrammarProgress();
@@ -47,8 +49,23 @@ export default function HistoryPage() {
   const [systemGrammarList, setSystemGrammarList] = useState<any[]>([]);
   const [systemLessonsList, setSystemLessonsList] = useState<any[]>([]);
   const [practiceHistory, setPracticeHistory] = useState<any[]>([]);
+  const [repoBooks, setRepoBooks] = useState<any[]>([]);
 
   const effectiveLang = activeLanguage.code;
+
+  useEffect(() => {
+    async function loadRepoBooks() {
+      try {
+        const repo = getCurriculumRepository();
+        const groups = await repo.getCurriculums();
+        const allBooks = groups.flatMap((g) => g.books || []);
+        setRepoBooks(allBooks);
+      } catch (err) {
+        console.error("Failed to load repo books in history page:", err);
+      }
+    }
+    loadRepoBooks();
+  }, [effectiveLang]);
 
   useEffect(() => {
     const loadData = () => {
@@ -205,9 +222,20 @@ export default function HistoryPage() {
     return map;
   }, [grammarCollections, systemGrammarList]);
 
+  const activeRepoBooks = useMemo(() => {
+    const map = new Map<string, any>();
+    repoBooks.forEach((b) => map.set(b.id, b));
+    curriculums.forEach((c) => {
+      if (!map.has(c.id)) {
+        map.set(c.id, { id: c.id, name: c.name, lessons: c.lessons });
+      }
+    });
+    return Array.from(map.values());
+  }, [repoBooks, curriculums]);
+
   // 3. Compute Curriculum progress
   const curriculumProgresses = useMemo(() => {
-    const filteredCurriculums = curriculums.filter((c) => {
+    const filteredCurriculums = activeRepoBooks.filter((c) => {
       if (effectiveLang === "all") return true;
       if (effectiveLang === "ja") return !c.id.startsWith("en-") && !c.id.startsWith("de-");
       if (effectiveLang === "en") return c.id.startsWith("en-") || c.name.toLowerCase().includes("ielts") || c.name.toLowerCase().includes("english");
@@ -219,8 +247,8 @@ export default function HistoryPage() {
       let totalVocab = 0;
       let learnedVocab = 0;
 
-      c.lessons.forEach((l) => {
-        l.vocabulary?.forEach((v) => {
+      c.lessons?.forEach((l: any) => {
+        l.vocabulary?.forEach((v: any) => {
           totalVocab++;
           if (progress[v.id]?.learned) {
             learnedVocab++;
@@ -236,7 +264,7 @@ export default function HistoryPage() {
         percentage: totalVocab > 0 ? Math.round((learnedVocab / totalVocab) * 100) : 0,
       };
     });
-  }, [curriculums, progress, effectiveLang]);
+  }, [activeRepoBooks, progress, effectiveLang]);
 
   // 4. Compute Notebook progress
   const notebookProgresses = useMemo(() => {
