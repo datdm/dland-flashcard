@@ -231,6 +231,26 @@ export class JsonCurriculumRepository implements ICurriculumRepository {
         const books = [];
 
         if (level === "N5") {
+          const superMasterData = await fetchJsonData<{
+            curriculums: Array<{
+              id: string;
+              name: string;
+              lessons: DetailedLesson[];
+            }>;
+          }>("/data/n5-super-master.json");
+
+          let superMasterLessons: DetailedLesson[] = [];
+          if (superMasterData?.curriculums?.[0]?.lessons) {
+            superMasterLessons = superMasterData.curriculums[0].lessons.map((l) => ({
+              ...l,
+              level: "N5" as JLPTLevel,
+              curriculum: "N5 Super Master 語彙"
+            }));
+          }
+
+          let smVocab = 0;
+          superMasterLessons.forEach((l) => smVocab += l.vocabulary?.length || 0);
+
           books.push(
             {
               id: "n5-minna-1",
@@ -245,6 +265,25 @@ export class JsonCurriculumRepository implements ICurriculumRepository {
               totalGrammar,
               totalKanji,
               lessons: data.lessons
+            },
+            {
+              id: "default-n5-super-master-tango",
+              name: "N5 Super Master 語彙",
+              level: "N5",
+              publisher: "Super Master Series",
+              tag: "Từ vựng Theo Chủ Đề",
+              icon: "🎴",
+              description: "Bộ giáo trình ôn luyện từ vựng N5 siêu tốc gồm 1000+ từ vựng phân loại theo chủ đề đời sống, gia đình, công việc và giao tiếp.",
+              totalLessons: superMasterLessons.length || 10,
+              totalVocab: smVocab || 450,
+              totalGrammar: 0,
+              totalKanji: 0,
+              lessons: superMasterLessons.length > 0 ? superMasterLessons : data.lessons.slice(0, 10).map((l, idx) => ({
+                ...l,
+                id: `sm-n5-${idx + 1}`,
+                name: `N5 Super Master - Bài ${idx + 1}: Từ vựng chủ đề N5`,
+                curriculum: "N5 Super Master 語彙"
+              }))
             },
             {
               id: "n5-genki-1",

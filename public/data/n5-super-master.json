@@ -1,0 +1,1991 @@
+{
+  "curriculums": [
+    {
+      "id": "default-n5-super-master-tango",
+      "name": "N5 Super Master 語彙",
+      "createdAt": "2026-05-10T00:00:00.000Z",
+      "lessons": [
+        {
+          "id": "n5-bai-gia-dinh",
+          "name": "Bài 1 - Gia đình & con người",
+          "vocabulary": [
+            {
+              "id": "n5-001",
+              "kanji": "人",
+              "hiragana": "ひと",
+              "meaning": "Người"
+            },
+            {
+              "id": "n5-002",
+              "kanji": "男",
+              "hiragana": "おとこ",
+              "meaning": "Đàn ông"
+            },
+            {
+              "id": "n5-003",
+              "kanji": "女",
+              "hiragana": "おんな",
+              "meaning": "Phụ nữ"
+            },
+            {
+              "id": "n5-004",
+              "kanji": "子供",
+              "hiragana": "こども",
+              "meaning": "Trẻ em"
+            },
+            {
+              "id": "n5-005",
+              "kanji": "父",
+              "hiragana": "ちち",
+              "meaning": "Bố"
+            },
+            {
+              "id": "n5-006",
+              "kanji": "母",
+              "hiragana": "はは",
+              "meaning": "Mẹ"
+            },
+            {
+              "id": "n5-007",
+              "kanji": "お父さん",
+              "hiragana": "おとうさん",
+              "meaning": "Bố (kính ngữ)"
+            },
+            {
+              "id": "n5-008",
+              "kanji": "お母さん",
+              "hiragana": "おかあさん",
+              "meaning": "Mẹ (kính ngữ)"
+            },
+            {
+              "id": "n5-009",
+              "kanji": "兄",
+              "hiragana": "あに",
+              "meaning": "Anh trai"
+            },
+            {
+              "id": "n5-010",
+              "kanji": "姉",
+              "hiragana": "あね",
+              "meaning": "Chị gái"
+            }
+          ]
+        },
+        {
+          "id": "n5-bai-2",
+          "name": "Bài 2 - Thân thể",
+          "vocabulary": [
+            {
+              "id": "n5-011",
+              "kanji": "頭",
+              "hiragana": "あたま",
+              "meaning": "Đầu"
+            },
+            {
+              "id": "n5-012",
+              "kanji": "顔",
+              "hiragana": "かお",
+              "meaning": "Mặt"
+            },
+            {
+              "id": "n5-013",
+              "kanji": "目",
+              "hiragana": "め",
+              "meaning": "Mắt"
+            },
+            {
+              "id": "n5-014",
+              "kanji": "耳",
+              "hiragana": "みみ",
+              "meaning": "Tai"
+            },
+            {
+              "id": "n5-015",
+              "kanji": "口",
+              "hiragana": "くち",
+              "meaning": "Miệng"
+            },
+            {
+              "id": "n5-016",
+              "kanji": "手",
+              "hiragana": "て",
+              "meaning": "Tay"
+            },
+            {
+              "id": "n5-017",
+              "kanji": "足",
+              "hiragana": "あし",
+              "meaning": "Chân"
+            },
+            {
+              "id": "n5-018",
+              "kanji": "体",
+              "hiragana": "からだ",
+              "meaning": "Cơ thể"
+            },
+            {
+              "id": "n5-019",
+              "kanji": "歯",
+              "hiragana": "は",
+              "meaning": "Răng"
+            },
+            {
+              "id": "n5-020",
+              "kanji": "鼻",
+              "hiragana": "はな",
+              "meaning": "Mũi"
+            }
+          ]
+        },
+        {
+          "id": "n5-bai-3",
+          "name": "Bài 3 - Thời gian",
+          "vocabulary": [
+            {
+              "id": "n5-021",
+              "kanji": "今日",
+              "hiragana": "きょう",
+              "meaning": "Hôm nay"
+            },
+            {
+              "id": "n5-022",
+              "kanji": "明日",
+              "hiragana": "あした",
+              "meaning": "Ngày mai"
+            },
+            {
+              "id": "n5-023",
+              "kanji": "昨日",
+              "hiragana": "きのう",
+              "meaning": "Hôm qua"
+            },
+            {
+              "id": "n5-024",
+              "kanji": "朝",
+              "hiragana": "あさ",
+              "meaning": "Sáng"
+            },
+            {
+              "id": "n5-025",
+              "kanji": "昼",
+              "hiragana": "ひる",
+              "meaning": "Trưa"
+            },
+            {
+              "id": "n5-026",
+              "kanji": "夜",
+              "hiragana": "よる",
+              "meaning": "Tối"
+            },
+            {
+              "id": "n5-027",
+              "kanji": "時間",
+              "hiragana": "じかん",
+              "meaning": "Thời gian"
+            },
+            {
+              "id": "n5-028",
+              "kanji": "分",
+              "hiragana": "ふん",
+              "meaning": "Phút"
+            },
+            {
+              "id": "n5-029",
+              "kanji": "半",
+              "hiragana": "はん",
+              "meaning": "Rưỡi"
+            },
+            {
+              "id": "n5-030",
+              "kanji": "年",
+              "hiragana": "ねん",
+              "meaning": "Năm"
+            }
+          ]
+        },
+        {
+          "id": "n5-bai-4",
+          "name": "Bài 4 - Địa điểm",
+          "vocabulary": [
+            {
+              "id": "n5-031",
+              "kanji": "学校",
+              "hiragana": "がっこう",
+              "meaning": "Trường"
+            },
+            {
+              "id": "n5-032",
+              "kanji": "会社",
+              "hiragana": "かいしゃ",
+              "meaning": "Công ty"
+            },
+            {
+              "id": "n5-033",
+              "kanji": "家",
+              "hiragana": "いえ",
+              "meaning": "Nhà"
+            },
+            {
+              "id": "n5-034",
+              "kanji": "駅",
+              "hiragana": "えき",
+              "meaning": "Ga tàu"
+            },
+            {
+              "id": "n5-035",
+              "kanji": "公園",
+              "hiragana": "こうえん",
+              "meaning": "Công viên"
+            },
+            {
+              "id": "n5-036",
+              "kanji": "図書館",
+              "hiragana": "としょかん",
+              "meaning": "Thư viện"
+            },
+            {
+              "id": "n5-037",
+              "kanji": "銀行",
+              "hiragana": "ぎんこう",
+              "meaning": "Ngân hàng"
+            },
+            {
+              "id": "n5-038",
+              "kanji": "病院",
+              "hiragana": "びょういん",
+              "meaning": "Bệnh viện"
+            },
+            {
+              "id": "n5-039",
+              "kanji": "店",
+              "hiragana": "みせ",
+              "meaning": "Cửa hàng"
+            },
+            {
+              "id": "n5-040",
+              "kanji": "レストラン",
+              "hiragana": "レストラン",
+              "meaning": "Nhà hàng"
+            }
+          ]
+        },
+        {
+          "id": "n5-bai-5",
+          "name": "Bài 5 - Thức ăn",
+          "vocabulary": [
+            {
+              "id": "n5-041",
+              "kanji": "ご飯",
+              "hiragana": "ごはん",
+              "meaning": "Cơm"
+            },
+            {
+              "id": "n5-042",
+              "kanji": "パン",
+              "hiragana": "パン",
+              "meaning": "Bánh"
+            },
+            {
+              "id": "n5-043",
+              "kanji": "麺",
+              "hiragana": "めん",
+              "meaning": "Mì"
+            },
+            {
+              "id": "n5-044",
+              "kanji": "肉",
+              "hiragana": "にく",
+              "meaning": "Thịt"
+            },
+            {
+              "id": "n5-045",
+              "kanji": "魚",
+              "hiragana": "さかな",
+              "meaning": "Cá"
+            },
+            {
+              "id": "n5-046",
+              "kanji": "野菜",
+              "hiragana": "やさい",
+              "meaning": "Rau"
+            },
+            {
+              "id": "n5-047",
+              "kanji": "果物",
+              "hiragana": "くだもの",
+              "meaning": "Trái cây"
+            },
+            {
+              "id": "n5-048",
+              "kanji": "卵",
+              "hiragana": "たまご",
+              "meaning": "Trứng"
+            },
+            {
+              "id": "n5-049",
+              "kanji": "牛乳",
+              "hiragana": "ぎゅうにゅう",
+              "meaning": "Sữa"
+            },
+            {
+              "id": "n5-050",
+              "kanji": "水",
+              "hiragana": "みず",
+              "meaning": "Nước"
+            }
+          ]
+        },
+        {
+          "id": "n5-bai-6",
+          "name": "Bài 6 - Quần áo",
+          "vocabulary": [
+            {
+              "id": "n5-051",
+              "kanji": "服",
+              "hiragana": "ふく",
+              "meaning": "Quần áo"
+            },
+            {
+              "id": "n5-052",
+              "kanji": "シャツ",
+              "hiragana": "シャツ",
+              "meaning": "Áo sơ mi"
+            },
+            {
+              "id": "n5-053",
+              "kanji": "ズボン",
+              "hiragana": "ズボン",
+              "meaning": "Quần"
+            },
+            {
+              "id": "n5-054",
+              "kanji": "スカート",
+              "hiragana": "スカート",
+              "meaning": "Váy"
+            },
+            {
+              "id": "n5-055",
+              "kanji": "靴",
+              "hiragana": "くつ",
+              "meaning": "Giày"
+            },
+            {
+              "id": "n5-056",
+              "kanji": "靴下",
+              "hiragana": "くつした",
+              "meaning": "Tất"
+            },
+            {
+              "id": "n5-057",
+              "kanji": "帽子",
+              "hiragana": "ぼうし",
+              "meaning": "Mũ"
+            },
+            {
+              "id": "n5-058",
+              "kanji": "眼鏡",
+              "hiragana": "めがね",
+              "meaning": "Kính"
+            },
+            {
+              "id": "n5-059",
+              "kanji": "時計",
+              "hiragana": "とけい",
+              "meaning": "Đồng hồ"
+            },
+            {
+              "id": "n5-060",
+              "kanji": "ネクタイ",
+              "hiragana": "ネクタイ",
+              "meaning": "Cà vạt"
+            }
+          ]
+        },
+        {
+          "id": "n5-bai-7",
+          "name": "Bài 7 - Phương tiện",
+          "vocabulary": [
+            {
+              "id": "n5-061",
+              "kanji": "電車",
+              "hiragana": "でんしゃ",
+              "meaning": "Tàu điện"
+            },
+            {
+              "id": "n5-062",
+              "kanji": "バス",
+              "hiragana": "バス",
+              "meaning": "Xe buýt"
+            },
+            {
+              "id": "n5-063",
+              "kanji": "タクシー",
+              "hiragana": "タクシー",
+              "meaning": "Taxi"
+            },
+            {
+              "id": "n5-064",
+              "kanji": "自動車",
+              "hiragana": "じどうしゃ",
+              "meaning": "Xe ô tô"
+            },
+            {
+              "id": "n5-065",
+              "kanji": "飛行機",
+              "hiragana": "ひこうき",
+              "meaning": "Máy bay"
+            },
+            {
+              "id": "n5-066",
+              "kanji": "船",
+              "hiragana": "ふね",
+              "meaning": "Thuyền"
+            },
+            {
+              "id": "n5-067",
+              "kanji": "駅",
+              "hiragana": "えき",
+              "meaning": "Ga tàu"
+            },
+            {
+              "id": "n5-068",
+              "kanji": "切符",
+              "hiragana": "きっぷ",
+              "meaning": "Vé"
+            },
+            {
+              "id": "n5-069",
+              "kanji": "乗る",
+              "hiragana": "のる",
+              "meaning": "Lên"
+            },
+            {
+              "id": "n5-070",
+              "kanji": "降りる",
+              "hiragana": "おりる",
+              "meaning": "Xuống"
+            }
+          ]
+        },
+        {
+          "id": "n5-bai-8",
+          "name": "Bài 8 - Sinh hoạt hàng ngày",
+          "vocabulary": [
+            {
+              "id": "n5-071",
+              "kanji": "起きる",
+              "hiragana": "おきる",
+              "meaning": "Thức dậy"
+            },
+            {
+              "id": "n5-072",
+              "kanji": "寝る",
+              "hiragana": "ねる",
+              "meaning": "Nằm ngủ"
+            },
+            {
+              "id": "n5-073",
+              "kanji": "食べる",
+              "hiragana": "たべる",
+              "meaning": "Ăn"
+            },
+            {
+              "id": "n5-074",
+              "kanji": "飲む",
+              "hiragana": "のむ",
+              "meaning": "Uống"
+            },
+            {
+              "id": "n5-075",
+              "kanji": "働く",
+              "hiragana": "はたらく",
+              "meaning": "Làm việc"
+            },
+            {
+              "id": "n5-076",
+              "kanji": "遊ぶ",
+              "hiragana": "あそぶ",
+              "meaning": "Chơi"
+            },
+            {
+              "id": "n5-077",
+              "kanji": "勉強する",
+              "hiragana": "べんきょうする",
+              "meaning": "Học"
+            },
+            {
+              "id": "n5-078",
+              "kanji": "読む",
+              "hiragana": "よむ",
+              "meaning": "Đọc"
+            },
+            {
+              "id": "n5-079",
+              "kanji": "書く",
+              "hiragana": "かく",
+              "meaning": "Viết"
+            },
+            {
+              "id": "n5-080",
+              "kanji": "笑う",
+              "hiragana": "わらう",
+              "meaning": "Cười"
+            }
+          ]
+        },
+        {
+          "id": "n5-bai-9",
+          "name": "Bài 9 - Cảm xúc",
+          "vocabulary": [
+            {
+              "id": "n5-081",
+              "kanji": "嬉しい",
+              "hiragana": "うれしい",
+              "meaning": "Vui"
+            },
+            {
+              "id": "n5-082",
+              "kanji": "悲しい",
+              "hiragana": "かなしい",
+              "meaning": "Buồn"
+            },
+            {
+              "id": "n5-083",
+              "kanji": "怖い",
+              "hiragana": "こわい",
+              "meaning": "Sợ"
+            },
+            {
+              "id": "n5-084",
+              "kanji": "驚く",
+              "hiragana": "おどろく",
+              "meaning": "Ngạc nhiên"
+            },
+            {
+              "id": "n5-085",
+              "kanji": "疲れる",
+              "hiragana": "つかれる",
+              "meaning": "Mệt"
+            },
+            {
+              "id": "n5-086",
+              "kanji": "怒る",
+              "hiragana": "おこる",
+              "meaning": "Giận"
+            },
+            {
+              "id": "n5-087",
+              "kanji": "泣く",
+              "hiragana": "なく",
+              "meaning": "Khóc"
+            },
+            {
+              "id": "n5-088",
+              "kanji": "元気",
+              "hiragana": "げんき",
+              "meaning": "Khỏe"
+            },
+            {
+              "id": "n5-089",
+              "kanji": "病気",
+              "hiragana": "びょうき",
+              "meaning": "Bệnh"
+            },
+            {
+              "id": "n5-090",
+              "kanji": "喜ぶ",
+              "hiragana": "よろこぶ",
+              "meaning": "Vui mừng"
+            }
+          ]
+        },
+        {
+          "id": "n5-bai-10",
+          "name": "Bài 10 - Trường học",
+          "vocabulary": [
+            {
+              "id": "n5-091",
+              "kanji": "学校",
+              "hiragana": "がっこう",
+              "meaning": "Trường"
+            },
+            {
+              "id": "n5-092",
+              "kanji": "教室",
+              "hiragana": "きょうしつ",
+              "meaning": "Lớp"
+            },
+            {
+              "id": "n5-093",
+              "kanji": "先生",
+              "hiragana": "せんせい",
+              "meaning": "Giáo viên"
+            },
+            {
+              "id": "n5-094",
+              "kanji": "学生",
+              "hiragana": "がくせい",
+              "meaning": "Học sinh"
+            },
+            {
+              "id": "n5-095",
+              "kanji": "友人",
+              "hiragana": "ゆうじん",
+              "meaning": "Bạn"
+            },
+            {
+              "id": "n5-096",
+              "kanji": "本",
+              "hiragana": "ほん",
+              "meaning": "Sách"
+            },
+            {
+              "id": "n5-097",
+              "kanji": "ペン",
+              "hiragana": "ペン",
+              "meaning": "Bút"
+            },
+            {
+              "id": "n5-098",
+              "kanji": "ノート",
+              "hiragana": "ノート",
+              "meaning": "Sổ"
+            },
+            {
+              "id": "n5-099",
+              "kanji": "試験",
+              "hiragana": "しけん",
+              "meaning": "Thi"
+            },
+            {
+              "id": "n5-100",
+              "kanji": "成績",
+              "hiragana": "せいせき",
+              "meaning": "Điểm"
+            }
+          ]
+        },
+        {
+          "id": "n5-bai-11",
+          "name": "Bài 11 - Giải trí",
+          "vocabulary": [
+            {
+              "id": "n5-101",
+              "kanji": "映画",
+              "hiragana": "えいが",
+              "meaning": "Phim"
+            },
+            {
+              "id": "n5-102",
+              "kanji": "テレビ",
+              "hiragana": "テレビ",
+              "meaning": "TV"
+            },
+            {
+              "id": "n5-103",
+              "kanji": "ゲーム",
+              "hiragana": "ゲーム",
+              "meaning": "Trò chơi"
+            },
+            {
+              "id": "n5-104",
+              "kanji": "本",
+              "hiragana": "ほん",
+              "meaning": "Sách"
+            },
+            {
+              "id": "n5-105",
+              "kanji": "新聞",
+              "hiragana": "しんぶん",
+              "meaning": "Báo"
+            },
+            {
+              "id": "n5-106",
+              "kanji": "雑誌",
+              "hiragana": "ざっし",
+              "meaning": "Tạp chí"
+            },
+            {
+              "id": "n5-107",
+              "kanji": "音楽",
+              "hiragana": "おんがく",
+              "meaning": "Âm nhạc"
+            },
+            {
+              "id": "n5-108",
+              "kanji": "歌",
+              "hiragana": "うた",
+              "meaning": "Bài hát"
+            },
+            {
+              "id": "n5-109",
+              "kanji": "楽器",
+              "hiragana": "がっき",
+              "meaning": "Nhạc cụ"
+            },
+            {
+              "id": "n5-110",
+              "kanji": "美術",
+              "hiragana": "びじゅつ",
+              "meaning": "Mỹ thuật"
+            }
+          ]
+        },
+        {
+          "id": "n5-bai-12",
+          "name": "Bài 12 - Thể thao",
+          "vocabulary": [
+            {
+              "id": "n5-111",
+              "kanji": "スポーツ",
+              "hiragana": "スポーツ",
+              "meaning": "Thể thao"
+            },
+            {
+              "id": "n5-112",
+              "kanji": "野球",
+              "hiragana": "やきゅう",
+              "meaning": "Bóng chày"
+            },
+            {
+              "id": "n5-113",
+              "kanji": "サッカー",
+              "hiragana": "サッカー",
+              "meaning": "Bóng đá"
+            },
+            {
+              "id": "n5-114",
+              "kanji": "テニス",
+              "hiragana": "テニス",
+              "meaning": "Quần vợt"
+            },
+            {
+              "id": "n5-115",
+              "kanji": "水泳",
+              "hiragana": "すいえい",
+              "meaning": "Bơi"
+            },
+            {
+              "id": "n5-116",
+              "kanji": "スキー",
+              "hiragana": "スキー",
+              "meaning": "Trượt tuyết"
+            },
+            {
+              "id": "n5-117",
+              "kanji": "体操",
+              "hiragana": "たいそう",
+              "meaning": "Thể dục"
+            },
+            {
+              "id": "n5-118",
+              "kanji": "運動",
+              "hiragana": "うんどう",
+              "meaning": "Tập thể dục"
+            },
+            {
+              "id": "n5-119",
+              "kanji": "試合",
+              "hiragana": "しあい",
+              "meaning": "Trận đấu"
+            },
+            {
+              "id": "n5-120",
+              "kanji": "勝つ",
+              "hiragana": "かつ",
+              "meaning": "Thắng"
+            }
+          ]
+        },
+        {
+          "id": "n5-bai-13",
+          "name": "Bài 13 - Thời tiết",
+          "vocabulary": [
+            {
+              "id": "n5-121",
+              "kanji": "天気",
+              "hiragana": "てんき",
+              "meaning": "Thời tiết"
+            },
+            {
+              "id": "n5-122",
+              "kanji": "晴れ",
+              "hiragana": "はれ",
+              "meaning": "Nắng"
+            },
+            {
+              "id": "n5-123",
+              "kanji": "曇り",
+              "hiragana": "くもり",
+              "meaning": "Âm u"
+            },
+            {
+              "id": "n5-124",
+              "kanji": "雨",
+              "hiragana": "あめ",
+              "meaning": "Mưa"
+            },
+            {
+              "id": "n5-125",
+              "kanji": "雪",
+              "hiragana": "ゆき",
+              "meaning": "Tuyết"
+            },
+            {
+              "id": "n5-126",
+              "kanji": "風",
+              "hiragana": "かぜ",
+              "meaning": "Gió"
+            },
+            {
+              "id": "n5-127",
+              "kanji": "春",
+              "hiragana": "はる",
+              "meaning": "Mùa xuân"
+            },
+            {
+              "id": "n5-128",
+              "kanji": "夏",
+              "hiragana": "なつ",
+              "meaning": "Mùa hè"
+            },
+            {
+              "id": "n5-129",
+              "kanji": "秋",
+              "hiragana": "あき",
+              "meaning": "Mùa thu"
+            },
+            {
+              "id": "n5-130",
+              "kanji": "冬",
+              "hiragana": "ふゆ",
+              "meaning": "Mùa đông"
+            }
+          ]
+        },
+        {
+          "id": "n5-bai-14",
+          "name": "Bài 14 - Mua sắm",
+          "vocabulary": [
+            {
+              "id": "n5-131",
+              "kanji": "店",
+              "hiragana": "みせ",
+              "meaning": "Cửa hàng"
+            },
+            {
+              "id": "n5-132",
+              "kanji": "商品",
+              "hiragana": "しょうひん",
+              "meaning": "Hàng hóa"
+            },
+            {
+              "id": "n5-133",
+              "kanji": "値段",
+              "hiragana": "ねだん",
+              "meaning": "Giá"
+            },
+            {
+              "id": "n5-134",
+              "kanji": "お金",
+              "hiragana": "おかね",
+              "meaning": "Tiền"
+            },
+            {
+              "id": "n5-135",
+              "kanji": "硬貨",
+              "hiragana": "こうか",
+              "meaning": "Đồng xu"
+            },
+            {
+              "id": "n5-136",
+              "kanji": "札",
+              "hiragana": "さつ",
+              "meaning": "Tờ tiền"
+            },
+            {
+              "id": "n5-137",
+              "kanji": "買う",
+              "hiragana": "かう",
+              "meaning": "Mua"
+            },
+            {
+              "id": "n5-138",
+              "kanji": "売る",
+              "hiragana": "うる",
+              "meaning": "Bán"
+            },
+            {
+              "id": "n5-139",
+              "kanji": "安い",
+              "hiragana": "やすい",
+              "meaning": "Rẻ"
+            },
+            {
+              "id": "n5-140",
+              "kanji": "高い",
+              "hiragana": "たかい",
+              "meaning": "Đắt"
+            }
+          ]
+        },
+        {
+          "id": "n5-bai-15",
+          "name": "Bài 15 - Nhà cửa",
+          "vocabulary": [
+            {
+              "id": "n5-141",
+              "kanji": "家",
+              "hiragana": "いえ",
+              "meaning": "Nhà"
+            },
+            {
+              "id": "n5-142",
+              "kanji": "部屋",
+              "hiragana": "へや",
+              "meaning": "Phòng"
+            },
+            {
+              "id": "n5-143",
+              "kanji": "寝室",
+              "hiragana": "しんしつ",
+              "meaning": "Phòng ngủ"
+            },
+            {
+              "id": "n5-144",
+              "kanji": "台所",
+              "hiragana": "だいどころ",
+              "meaning": "Bếp"
+            },
+            {
+              "id": "n5-145",
+              "kanji": "風呂",
+              "hiragana": "ふろ",
+              "meaning": "Phòng tắm"
+            },
+            {
+              "id": "n5-146",
+              "kanji": "トイレ",
+              "hiragana": "トイレ",
+              "meaning": "Nhà vệ sinh"
+            },
+            {
+              "id": "n5-147",
+              "kanji": "ベッド",
+              "hiragana": "ベッド",
+              "meaning": "Giường"
+            },
+            {
+              "id": "n5-148",
+              "kanji": "机",
+              "hiragana": "つくえ",
+              "meaning": "Bàn"
+            },
+            {
+              "id": "n5-149",
+              "kanji": "椅子",
+              "hiragana": "いす",
+              "meaning": "Ghế"
+            },
+            {
+              "id": "n5-150",
+              "kanji": "窓",
+              "hiragana": "まど",
+              "meaning": "Cửa sổ"
+            }
+          ]
+        },
+        {
+          "id": "n5-bai-16",
+          "name": "Bài 16 - Số & Đơn vị",
+          "vocabulary": [
+            {
+              "id": "n5-151",
+              "kanji": "一",
+              "hiragana": "いち",
+              "meaning": "Một"
+            },
+            {
+              "id": "n5-152",
+              "kanji": "二",
+              "hiragana": "に",
+              "meaning": "Hai"
+            },
+            {
+              "id": "n5-153",
+              "kanji": "三",
+              "hiragana": "さん",
+              "meaning": "Ba"
+            },
+            {
+              "id": "n5-154",
+              "kanji": "四",
+              "hiragana": "し",
+              "meaning": "Bốn"
+            },
+            {
+              "id": "n5-155",
+              "kanji": "五",
+              "hiragana": "ご",
+              "meaning": "Năm"
+            },
+            {
+              "id": "n5-156",
+              "kanji": "六",
+              "hiragana": "ろく",
+              "meaning": "Sáu"
+            },
+            {
+              "id": "n5-157",
+              "kanji": "七",
+              "hiragana": "しち",
+              "meaning": "Bảy"
+            },
+            {
+              "id": "n5-158",
+              "kanji": "八",
+              "hiragana": "はち",
+              "meaning": "Tám"
+            },
+            {
+              "id": "n5-159",
+              "kanji": "九",
+              "hiragana": "きゅう",
+              "meaning": "Chín"
+            },
+            {
+              "id": "n5-160",
+              "kanji": "十",
+              "hiragana": "じゅう",
+              "meaning": "Mười"
+            }
+          ]
+        },
+        {
+          "id": "n5-bai-17",
+          "name": "Bài 17 - Gặp gỡ & Giao lưu",
+          "vocabulary": [
+            {
+              "id": "n5-161",
+              "kanji": "初めて",
+              "hiragana": "はじめて",
+              "meaning": "Lần đầu"
+            },
+            {
+              "id": "n5-162",
+              "kanji": "友達",
+              "hiragana": "ともだち",
+              "meaning": "Bạn bè"
+            },
+            {
+              "id": "n5-163",
+              "kanji": "知人",
+              "hiragana": "ちじん",
+              "meaning": "Người quen"
+            },
+            {
+              "id": "n5-164",
+              "kanji": "同僚",
+              "hiragana": "どうりょう",
+              "meaning": "Đồng nghiệp"
+            },
+            {
+              "id": "n5-165",
+              "kanji": "近所",
+              "hiragana": "きんじょ",
+              "meaning": "Hàng xóm"
+            },
+            {
+              "id": "n5-166",
+              "kanji": "はじめまして",
+              "hiragana": "はじめまして",
+              "meaning": "Rất vui được gặp bạn"
+            },
+            {
+              "id": "n5-167",
+              "kanji": "よろしくお願いします",
+              "hiragana": "よろしくおねがいします",
+              "meaning": "Mong được hỗ trợ"
+            },
+            {
+              "id": "n5-168",
+              "kanji": "ありがとう",
+              "hiragana": "ありがとう",
+              "meaning": "Cảm ơn"
+            },
+            {
+              "id": "n5-169",
+              "kanji": "こんにちは",
+              "hiragana": "こんにちは",
+              "meaning": "Xin chào"
+            },
+            {
+              "id": "n5-170",
+              "kanji": "さようなら",
+              "hiragana": "さようなら",
+              "meaning": "Tạm biệt"
+            }
+          ]
+        },
+        {
+          "id": "n5-bai-18",
+          "name": "Bài 18 - Thích & Không thích",
+          "vocabulary": [
+            {
+              "id": "n5-171",
+              "kanji": "好き",
+              "hiragana": "すき",
+              "meaning": "Thích"
+            },
+            {
+              "id": "n5-172",
+              "kanji": "嫌い",
+              "hiragana": "きらい",
+              "meaning": "Không thích"
+            },
+            {
+              "id": "n5-173",
+              "kanji": "大好き",
+              "hiragana": "だいすき",
+              "meaning": "Rất thích"
+            },
+            {
+              "id": "n5-174",
+              "kanji": "大嫌い",
+              "hiragana": "だいきらい",
+              "meaning": "Rất không thích"
+            },
+            {
+              "id": "n5-175",
+              "kanji": "興味",
+              "hiragana": "きょうみ",
+              "meaning": "Quan tâm"
+            },
+            {
+              "id": "n5-176",
+              "kanji": "趣味",
+              "hiragana": "しゅみ",
+              "meaning": "Sở thích"
+            },
+            {
+              "id": "n5-177",
+              "kanji": "好物",
+              "hiragana": "こうぶつ",
+              "meaning": "Đồ ưa thích"
+            },
+            {
+              "id": "n5-178",
+              "kanji": "美味しい",
+              "hiragana": "おいしい",
+              "meaning": "Ngon"
+            },
+            {
+              "id": "n5-179",
+              "kanji": "面白い",
+              "hiragana": "おもしろい",
+              "meaning": "Thú vị"
+            },
+            {
+              "id": "n5-180",
+              "kanji": "つまらない",
+              "hiragana": "つまらない",
+              "meaning": "Chán"
+            }
+          ]
+        },
+        {
+          "id": "n5-bai-19",
+          "name": "Bài 19 - Công việc",
+          "vocabulary": [
+            {
+              "id": "n5-181",
+              "kanji": "仕事",
+              "hiragana": "しごと",
+              "meaning": "Công việc"
+            },
+            {
+              "id": "n5-182",
+              "kanji": "会社",
+              "hiragana": "かいしゃ",
+              "meaning": "Công ty"
+            },
+            {
+              "id": "n5-183",
+              "kanji": "従業員",
+              "hiragana": "じゅうぎょういん",
+              "meaning": "Nhân viên"
+            },
+            {
+              "id": "n5-184",
+              "kanji": "上司",
+              "hiragana": "じょうし",
+              "meaning": "Sếp"
+            },
+            {
+              "id": "n5-185",
+              "kanji": "同僚",
+              "hiragana": "どうりょう",
+              "meaning": "Đồng nghiệp"
+            },
+            {
+              "id": "n5-186",
+              "kanji": "給料",
+              "hiragana": "きゅうりょう",
+              "meaning": "Lương"
+            },
+            {
+              "id": "n5-187",
+              "kanji": "休み",
+              "hiragana": "やすみ",
+              "meaning": "Nghỉ"
+            },
+            {
+              "id": "n5-188",
+              "kanji": "仕事中",
+              "hiragana": "しごとちゅう",
+              "meaning": "Đang làm việc"
+            },
+            {
+              "id": "n5-189",
+              "kanji": "忙しい",
+              "hiragana": "いそがしい",
+              "meaning": "Bận"
+            },
+            {
+              "id": "n5-190",
+              "kanji": "暇",
+              "hiragana": "ひま",
+              "meaning": "Rảnh"
+            }
+          ]
+        },
+        {
+          "id": "n5-bai-20",
+          "name": "Bài 20 - Sức khỏe",
+          "vocabulary": [
+            {
+              "id": "n5-191",
+              "kanji": "病気",
+              "hiragana": "びょうき",
+              "meaning": "Bệnh"
+            },
+            {
+              "id": "n5-192",
+              "kanji": "医者",
+              "hiragana": "いしゃ",
+              "meaning": "Bác sĩ"
+            },
+            {
+              "id": "n5-193",
+              "kanji": "病院",
+              "hiragana": "びょういん",
+              "meaning": "Bệnh viện"
+            },
+            {
+              "id": "n5-194",
+              "kanji": "薬",
+              "hiragana": "くすり",
+              "meaning": "Thuốc"
+            },
+            {
+              "id": "n5-195",
+              "kanji": "風邪",
+              "hiragana": "かぜ",
+              "meaning": "Cảm"
+            },
+            {
+              "id": "n5-196",
+              "kanji": "頭痛",
+              "hiragana": "ずつう",
+              "meaning": "Đau đầu"
+            },
+            {
+              "id": "n5-197",
+              "kanji": "歯痛",
+              "hiragana": "はいたみ",
+              "meaning": "Đau răng"
+            },
+            {
+              "id": "n5-198",
+              "kanji": "腹痛",
+              "hiragana": "ふくつう",
+              "meaning": "Đau bụng"
+            },
+            {
+              "id": "n5-199",
+              "kanji": "疲れ",
+              "hiragana": "つかれ",
+              "meaning": "Mệt"
+            },
+            {
+              "id": "n5-200",
+              "kanji": "熱",
+              "hiragana": "ねつ",
+              "meaning": "Sốt"
+            }
+          ]
+        },
+        {
+          "id": "n5-bai-21",
+          "name": "Bài 21 - Tài chính",
+          "vocabulary": [
+            {
+              "id": "n5-201",
+              "kanji": "お金",
+              "hiragana": "おかね",
+              "meaning": "Tiền"
+            },
+            {
+              "id": "n5-202",
+              "kanji": "給料",
+              "hiragana": "きゅうりょう",
+              "meaning": "Lương"
+            },
+            {
+              "id": "n5-203",
+              "kanji": "ボーナス",
+              "hiragana": "ボーナス",
+              "meaning": "Thưởng"
+            },
+            {
+              "id": "n5-204",
+              "kanji": "税金",
+              "hiragana": "ぜいきん",
+              "meaning": "Thuế"
+            },
+            {
+              "id": "n5-205",
+              "kanji": "銀行",
+              "hiragana": "ぎんこう",
+              "meaning": "Ngân hàng"
+            },
+            {
+              "id": "n5-206",
+              "kanji": "預金",
+              "hiragana": "よきん",
+              "meaning": "Tiết kiệm"
+            },
+            {
+              "id": "n5-207",
+              "kanji": "貸す",
+              "hiragana": "かす",
+              "meaning": "Cho vay"
+            },
+            {
+              "id": "n5-208",
+              "kanji": "借りる",
+              "hiragana": "かりる",
+              "meaning": "Vay"
+            },
+            {
+              "id": "n5-209",
+              "kanji": "安い",
+              "hiragana": "やすい",
+              "meaning": "Rẻ"
+            },
+            {
+              "id": "n5-210",
+              "kanji": "高い",
+              "hiragana": "たかい",
+              "meaning": "Đắt"
+            }
+          ]
+        },
+        {
+          "id": "n5-bai-22",
+          "name": "Bài 22 - Giáo dục",
+          "vocabulary": [
+            {
+              "id": "n5-211",
+              "kanji": "学校",
+              "hiragana": "がっこう",
+              "meaning": "Trường"
+            },
+            {
+              "id": "n5-212",
+              "kanji": "大学",
+              "hiragana": "だいがく",
+              "meaning": "Đại học"
+            },
+            {
+              "id": "n5-213",
+              "kanji": "大学院",
+              "hiragana": "だいがくいん",
+              "meaning": "Sau đại học"
+            },
+            {
+              "id": "n5-214",
+              "kanji": "先生",
+              "hiragana": "せんせい",
+              "meaning": "Giáo viên"
+            },
+            {
+              "id": "n5-215",
+              "kanji": "学生",
+              "hiragana": "がくせい",
+              "meaning": "Học sinh"
+            },
+            {
+              "id": "n5-216",
+              "kanji": "試験",
+              "hiragana": "しけん",
+              "meaning": "Thi"
+            },
+            {
+              "id": "n5-217",
+              "kanji": "合格",
+              "hiragana": "ごうかく",
+              "meaning": "Đỗ"
+            },
+            {
+              "id": "n5-218",
+              "kanji": "不合格",
+              "hiragana": "ふごうかく",
+              "meaning": "Rớt"
+            },
+            {
+              "id": "n5-219",
+              "kanji": "卒業",
+              "hiragana": "そつぎょう",
+              "meaning": "Tốt nghiệp"
+            },
+            {
+              "id": "n5-220",
+              "kanji": "入学",
+              "hiragana": "にゅうがく",
+              "meaning": "Nhập học"
+            }
+          ]
+        },
+        {
+          "id": "n5-bai-23",
+          "name": "Bài 23 - Pháp luật",
+          "vocabulary": [
+            {
+              "id": "n5-221",
+              "kanji": "法律",
+              "hiragana": "ほうりつ",
+              "meaning": "Luật"
+            },
+            {
+              "id": "n5-222",
+              "kanji": "警察",
+              "hiragana": "けいさつ",
+              "meaning": "Cảnh sát"
+            },
+            {
+              "id": "n5-223",
+              "kanji": "裁判所",
+              "hiragana": "さいばんしょ",
+              "meaning": "Tòa án"
+            },
+            {
+              "id": "n5-224",
+              "kanji": "弁護士",
+              "hiragana": "べんごし",
+              "meaning": "Luật sư"
+            },
+            {
+              "id": "n5-225",
+              "kanji": "罪",
+              "hiragana": "つみ",
+              "meaning": "Tội"
+            },
+            {
+              "id": "n5-226",
+              "kanji": "有罪",
+              "hiragana": "ゆうざい",
+              "meaning": "Có tội"
+            },
+            {
+              "id": "n5-227",
+              "kanji": "無罪",
+              "hiragana": "むざい",
+              "meaning": "Vô tội"
+            },
+            {
+              "id": "n5-228",
+              "kanji": "刑罰",
+              "hiragana": "けいばつ",
+              "meaning": "Hình phạt"
+            },
+            {
+              "id": "n5-229",
+              "kanji": "禁止",
+              "hiragana": "きんし",
+              "meaning": "Cấm"
+            },
+            {
+              "id": "n5-230",
+              "kanji": "許可",
+              "hiragana": "きょか",
+              "meaning": "Cho phép"
+            }
+          ]
+        },
+        {
+          "id": "n5-bai-24",
+          "name": "Bài 24 - Phương pháp học",
+          "vocabulary": [
+            {
+              "id": "n5-231",
+              "kanji": "本",
+              "hiragana": "ほん",
+              "meaning": "Sách"
+            },
+            {
+              "id": "n5-232",
+              "kanji": "ペン",
+              "hiragana": "ペン",
+              "meaning": "Bút"
+            },
+            {
+              "id": "n5-233",
+              "kanji": "ノート",
+              "hiragana": "ノート",
+              "meaning": "Sổ"
+            },
+            {
+              "id": "n5-234",
+              "kanji": "辞書",
+              "hiragana": "じしょ",
+              "meaning": "Từ điển"
+            },
+            {
+              "id": "n5-235",
+              "kanji": "参考書",
+              "hiragana": "さんこうしょ",
+              "meaning": "Sách tham khảo"
+            },
+            {
+              "id": "n5-236",
+              "kanji": "教科書",
+              "hiragana": "きょうかしょ",
+              "meaning": "Sách giáo khoa"
+            },
+            {
+              "id": "n5-237",
+              "kanji": "パソコン",
+              "hiragana": "パソコン",
+              "meaning": "Máy tính"
+            },
+            {
+              "id": "n5-238",
+              "kanji": "インターネット",
+              "hiragana": "インターネット",
+              "meaning": "Internet"
+            },
+            {
+              "id": "n5-239",
+              "kanji": "勉強",
+              "hiragana": "べんきょう",
+              "meaning": "Học"
+            },
+            {
+              "id": "n5-240",
+              "kanji": "宿題",
+              "hiragana": "しゅくだい",
+              "meaning": "Bài tập"
+            }
+          ]
+        },
+        {
+          "id": "n5-bai-25",
+          "name": "Bài 25 - Trò chơi",
+          "vocabulary": [
+            {
+              "id": "n5-241",
+              "kanji": "ゲーム",
+              "hiragana": "ゲーム",
+              "meaning": "Trò chơi"
+            },
+            {
+              "id": "n5-242",
+              "kanji": "将棋",
+              "hiragana": "しょうぎ",
+              "meaning": "Cờ tướng"
+            },
+            {
+              "id": "n5-243",
+              "kanji": "囲碁",
+              "hiragana": "いご",
+              "meaning": "Cờ vây"
+            },
+            {
+              "id": "n5-244",
+              "kanji": "トランプ",
+              "hiragana": "トランプ",
+              "meaning": "Bài tây"
+            },
+            {
+              "id": "n5-245",
+              "kanji": "サイコロ",
+              "hiragana": "サイコロ",
+              "meaning": "Xúc xắc"
+            },
+            {
+              "id": "n5-246",
+              "kanji": "ボール",
+              "hiragana": "ボール",
+              "meaning": "Bóng"
+            },
+            {
+              "id": "n5-247",
+              "kanji": "ラケット",
+              "hiragana": "ラケット",
+              "meaning": "Vợt"
+            },
+            {
+              "id": "n5-248",
+              "kanji": "勝つ",
+              "hiragana": "かつ",
+              "meaning": "Thắng"
+            },
+            {
+              "id": "n5-249",
+              "kanji": "負ける",
+              "hiragana": "まける",
+              "meaning": "Thua"
+            },
+            {
+              "id": "n5-250",
+              "kanji": "同点",
+              "hiragana": "どうてん",
+              "meaning": "Hòa"
+            }
+          ]
+        },
+        {
+          "id": "n5-bai-26",
+          "name": "Bài 26 - Du lịch",
+          "vocabulary": [
+            {
+              "id": "n5-251",
+              "kanji": "旅行",
+              "hiragana": "りょこう",
+              "meaning": "Du lịch"
+            },
+            {
+              "id": "n5-252",
+              "kanji": "ホテル",
+              "hiragana": "ホテル",
+              "meaning": "Khách sạn"
+            },
+            {
+              "id": "n5-253",
+              "kanji": "旅館",
+              "hiragana": "りょかん",
+              "meaning": "Nhà trọ"
+            },
+            {
+              "id": "n5-254",
+              "kanji": "空港",
+              "hiragana": "くうこう",
+              "meaning": "Sân bay"
+            },
+            {
+              "id": "n5-255",
+              "kanji": "駅",
+              "hiragana": "えき",
+              "meaning": "Ga tàu"
+            },
+            {
+              "id": "n5-256",
+              "kanji": "切符",
+              "hiragana": "きっぷ",
+              "meaning": "Vé"
+            },
+            {
+              "id": "n5-257",
+              "kanji": "ガイド",
+              "hiragana": "ガイド",
+              "meaning": "Hướng dẫn viên"
+            },
+            {
+              "id": "n5-258",
+              "kanji": "地図",
+              "hiragana": "ちず",
+              "meaning": "Bản đồ"
+            },
+            {
+              "id": "n5-259",
+              "kanji": "観光",
+              "hiragana": "かんこう",
+              "meaning": "Du lịch"
+            },
+            {
+              "id": "n5-260",
+              "kanji": "パスポート",
+              "hiragana": "パスポート",
+              "meaning": "Hộ chiếu"
+            }
+          ]
+        },
+        {
+          "id": "n5-bai-27",
+          "name": "Bài 27 - Nơi tiếp xúc",
+          "vocabulary": [
+            {
+              "id": "n5-261",
+              "kanji": "駅",
+              "hiragana": "えき",
+              "meaning": "Ga tàu"
+            },
+            {
+              "id": "n5-262",
+              "kanji": "バス停",
+              "hiragana": "バスてい",
+              "meaning": "Trạm xe buýt"
+            },
+            {
+              "id": "n5-263",
+              "kanji": "タクシー乗り場",
+              "hiragana": "タクシーのりば",
+              "meaning": "Bến taxi"
+            },
+            {
+              "id": "n5-264",
+              "kanji": "ガソリンスタンド",
+              "hiragana": "ガソリンスタンド",
+              "meaning": "Trạm xăng"
+            },
+            {
+              "id": "n5-265",
+              "kanji": "駐車場",
+              "hiragana": "ちゅうしゃじょう",
+              "meaning": "Bãi đỗ xe"
+            },
+            {
+              "id": "n5-266",
+              "kanji": "レストラン",
+              "hiragana": "レストラン",
+              "meaning": "Nhà hàng"
+            },
+            {
+              "id": "n5-267",
+              "kanji": "カフェ",
+              "hiragana": "カフェ",
+              "meaning": "Cà phê"
+            },
+            {
+              "id": "n5-268",
+              "kanji": "トイレ",
+              "hiragana": "トイレ",
+              "meaning": "Nhà vệ sinh"
+            },
+            {
+              "id": "n5-269",
+              "kanji": "係員",
+              "hiragana": "かかりいん",
+              "meaning": "Nhân viên"
+            },
+            {
+              "id": "n5-270",
+              "kanji": "受付",
+              "hiragana": "うけつけ",
+              "meaning": "Lễ tân"
+            }
+          ]
+        },
+        {
+          "id": "n5-bai-28",
+          "name": "Bài 28 - Loại hàng",
+          "vocabulary": [
+            {
+              "id": "n5-271",
+              "kanji": "野菜",
+              "hiragana": "やさい",
+              "meaning": "Rau"
+            },
+            {
+              "id": "n5-272",
+              "kanji": "果物",
+              "hiragana": "くだもの",
+              "meaning": "Trái cây"
+            },
+            {
+              "id": "n5-273",
+              "kanji": "肉",
+              "hiragana": "にく",
+              "meaning": "Thịt"
+            },
+            {
+              "id": "n5-274",
+              "kanji": "魚",
+              "hiragana": "さかな",
+              "meaning": "Cá"
+            },
+            {
+              "id": "n5-275",
+              "kanji": "パン",
+              "hiragana": "パン",
+              "meaning": "Bánh"
+            },
+            {
+              "id": "n5-276",
+              "kanji": "チーズ",
+              "hiragana": "チーズ",
+              "meaning": "Pho mát"
+            },
+            {
+              "id": "n5-277",
+              "kanji": "ヨーグルト",
+              "hiragana": "ヨーグルト",
+              "meaning": "Sữa chua"
+            },
+            {
+              "id": "n5-278",
+              "kanji": "牛乳",
+              "hiragana": "ぎゅうにゅう",
+              "meaning": "Sữa"
+            },
+            {
+              "id": "n5-279",
+              "kanji": "ジュース",
+              "hiragana": "ジュース",
+              "meaning": "Nước ép"
+            },
+            {
+              "id": "n5-280",
+              "kanji": "ビール",
+              "hiragana": "ビール",
+              "meaning": "Bia"
+            }
+          ]
+        },
+        {
+          "id": "n5-bai-29",
+          "name": "Bài 29 - Đặc điểm",
+          "vocabulary": [
+            {
+              "id": "n5-281",
+              "kanji": "大きい",
+              "hiragana": "おおきい",
+              "meaning": "To"
+            },
+            {
+              "id": "n5-282",
+              "kanji": "小さい",
+              "hiragana": "ちいさい",
+              "meaning": "Nhỏ"
+            },
+            {
+              "id": "n5-283",
+              "kanji": "長い",
+              "hiragana": "ながい",
+              "meaning": "Dài"
+            },
+            {
+              "id": "n5-284",
+              "kanji": "短い",
+              "hiragana": "みじかい",
+              "meaning": "Ngắn"
+            },
+            {
+              "id": "n5-285",
+              "kanji": "厚い",
+              "hiragana": "あつい",
+              "meaning": "Dày"
+            },
+            {
+              "id": "n5-286",
+              "kanji": "薄い",
+              "hiragana": "うすい",
+              "meaning": "Mỏng"
+            },
+            {
+              "id": "n5-287",
+              "kanji": "重い",
+              "hiragana": "おもい",
+              "meaning": "Nặng"
+            },
+            {
+              "id": "n5-288",
+              "kanji": "軽い",
+              "hiragana": "かるい",
+              "meaning": "Nhẹ"
+            },
+            {
+              "id": "n5-289",
+              "kanji": "濃い",
+              "hiragana": "こい",
+              "meaning": "Đậm"
+            },
+            {
+              "id": "n5-290",
+              "kanji": "薄い",
+              "hiragana": "うすい",
+              "meaning": "Loãng"
+            }
+          ]
+        },
+        {
+          "id": "n5-bai-30",
+          "name": "Bài 30 - Ôn tập tổng hợp",
+          "vocabulary": [
+            {
+              "id": "n5-291",
+              "kanji": "日本",
+              "hiragana": "にほん",
+              "meaning": "Nhật Bản"
+            },
+            {
+              "id": "n5-292",
+              "kanji": "日本語",
+              "hiragana": "にほんご",
+              "meaning": "Tiếng Nhật"
+            },
+            {
+              "id": "n5-293",
+              "kanji": "ベトナム",
+              "hiragana": "ベトナム",
+              "meaning": "Việt Nam"
+            },
+            {
+              "id": "n5-294",
+              "kanji": "ベトナム語",
+              "hiragana": "ベトナムご",
+              "meaning": "Tiếng Việt"
+            },
+            {
+              "id": "n5-295",
+              "kanji": "英語",
+              "hiragana": "えいご",
+              "meaning": "Tiếng Anh"
+            },
+            {
+              "id": "n5-296",
+              "kanji": "中国語",
+              "hiragana": "ちゅうごくご",
+              "meaning": "Tiếng Trung"
+            },
+            {
+              "id": "n5-297",
+              "kanji": "韓国語",
+              "hiragana": "かんこくご",
+              "meaning": "Tiếng Hàn"
+            },
+            {
+              "id": "n5-298",
+              "kanji": "こんにちは",
+              "hiragana": "こんにちは",
+              "meaning": "Xin chào"
+            },
+            {
+              "id": "n5-299",
+              "kanji": "ありがとう",
+              "hiragana": "ありがとう",
+              "meaning": "Cảm ơn"
+            },
+            {
+              "id": "n5-300",
+              "kanji": "さようなら",
+              "hiragana": "さようなら",
+              "meaning": "Tạm biệt"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
