@@ -824,6 +824,44 @@ export async function loadSettingsFromServer(): Promise<Record<string, any>> {
   }
 }
 
+// Load practice test history from server
+export async function loadPracticeHistoryFromServer(): Promise<any[]> {
+  const token = getAuthToken();
+  if (!token) return [];
+
+  try {
+    const response = await trackedFetch(`${API_URL}/api/data/practice-history`, {
+      headers: { 'Authorization': `Bearer ${token}` },
+    });
+
+    if (!response.ok) throw new Error('Failed to load practice history');
+    const data = await response.json();
+    return data.data || [];
+  } catch (error) {
+    console.error('Load practice history error:', error);
+    return [];
+  }
+}
+
+// Load curriculum completed lessons history from server
+export async function loadCurriculumHistoryFromServer(): Promise<any[]> {
+  const token = getAuthToken();
+  if (!token) return [];
+
+  try {
+    const response = await trackedFetch(`${API_URL}/api/data/curriculum-history`, {
+      headers: { 'Authorization': `Bearer ${token}` },
+    });
+
+    if (!response.ok) throw new Error('Failed to load curriculum history');
+    const data = await response.json();
+    return data.data || [];
+  } catch (error) {
+    console.error('Load curriculum history error:', error);
+    return [];
+  }
+}
+
 // Delta-patch a single vocab's progress on server (learned / favorite)
 export async function patchProgressOnServer(
   vocabId: string,

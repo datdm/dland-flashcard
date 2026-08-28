@@ -9,6 +9,7 @@ import AddToNotebookModal from "@/components/AddToNotebookModal";
 import MaziiQuickLookupModal from "@/components/MaziiQuickLookupModal";
 import SelectionLookupTooltip from "@/components/SelectionLookupTooltip";
 import AuthGuard from "@/components/AuthGuard";
+import { autoSync } from "@/lib/syncService";
 
 interface ShadowingItem {
   id: string;
@@ -300,6 +301,7 @@ export default function PracticeHubPage() {
       if (typeof window !== "undefined") {
         localStorage.setItem("flashcash-practice-history", JSON.stringify(updated));
         window.dispatchEvent(new Event("practice-history-updated"));
+        autoSync();
       }
       return updated;
     });

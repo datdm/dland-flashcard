@@ -128,6 +128,50 @@ router.get('/settings', authenticate, async (req: AuthRequest, res: Response) =>
   }
 });
 
+// Get practice history data
+router.get('/practice-history', authenticate, async (req: AuthRequest, res: Response) => {
+  try {
+    const result = await pool.query(
+      `SELECT data_value FROM user_data 
+       WHERE user_id = $1 AND data_key = $2`,
+      [req.userId, 'flashcash-practice-history']
+    );
+
+    const history = result.rows[0]?.data_value || [];
+
+    res.json({
+      success: true,
+      data: history,
+      timestamp: new Date().toISOString(),
+    });
+  } catch (error) {
+    console.error('Get practice history error:', error);
+    res.status(500).json({ error: 'Failed to load practice history' });
+  }
+});
+
+// Get curriculum completed lessons history data
+router.get('/curriculum-history', authenticate, async (req: AuthRequest, res: Response) => {
+  try {
+    const result = await pool.query(
+      `SELECT data_value FROM user_data 
+       WHERE user_id = $1 AND data_key = $2`,
+      [req.userId, 'flashcash-curriculum-history']
+    );
+
+    const history = result.rows[0]?.data_value || [];
+
+    res.json({
+      success: true,
+      data: history,
+      timestamp: new Date().toISOString(),
+    });
+  } catch (error) {
+    console.error('Get curriculum history error:', error);
+    res.status(500).json({ error: 'Failed to load curriculum history' });
+  }
+});
+
 // PATCH /progress/:vocabId – delta update a single vocab's progress (learned/favorite)
 router.patch('/progress/:vocabId', authenticate, async (req: AuthRequest, res: Response) => {
   try {

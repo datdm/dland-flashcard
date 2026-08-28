@@ -31,7 +31,12 @@ interface CompletedLesson {
 }
 
 import { getCurriculumRepository } from "@/lib/repositories";
-import { resetAllLearningProgress } from "@/lib/syncService";
+import { 
+  resetAllLearningProgress, 
+  loadPracticeHistoryFromServer, 
+  loadCurriculumHistoryFromServer, 
+  checkAuthStatus 
+} from "@/lib/syncService";
 
 export default function HistoryPage() {
   const { progress } = useProgress();
@@ -79,7 +84,8 @@ export default function HistoryPage() {
   }, [effectiveLang]);
 
   useEffect(() => {
-    const loadData = () => {
+    const loadData = async () => {
+      // 1. Load local data first for instant UI responsiveness
       if (typeof window !== "undefined") {
         const stored = localStorage.getItem("flashcash-curriculum-history");
         if (stored) {
@@ -90,12 +96,35 @@ export default function HistoryPage() {
           try { setPracticeHistory(JSON.parse(pracStored)); } catch {}
         }
       }
+
+      // 2. Sync from backend API if user is authenticated
+      if (checkAuthStatus()) {
+        try {
+          const [serverPrac, serverCurr] = await Promise.all([
+            loadPracticeHistoryFromServer(),
+            loadCurriculumHistoryFromServer()
+          ]);
+
+          if (Array.isArray(serverPrac) && serverPrac.length > 0) {
+            setPracticeHistory(serverPrac);
+            localStorage.setItem("flashcash-practice-history", JSON.stringify(serverPrac));
+          }
+          if (Array.isArray(serverCurr) && serverCurr.length > 0) {
+            setCompletedLessons(serverCurr);
+            localStorage.setItem("flashcash-curriculum-history", JSON.stringify(serverCurr));
+          }
+        } catch (err) {
+          console.error("Failed to load history from server API:", err);
+        }
+      }
     };
     loadData();
 
     window.addEventListener("practice-history-updated", loadData);
+    window.addEventListener("curriculum-history-updated", loadData);
     return () => {
       window.removeEventListener("practice-history-updated", loadData);
+      window.removeEventListener("curriculum-history-updated", loadData);
     };
   }, []);
 
