@@ -5,6 +5,7 @@ import { Curriculum, CurriculumsData, Vocabulary, LessonInCurriculum, FlashCardS
 import { getItem, setItem, StorageKeys } from "@/lib/storage";
 import { DEFAULT_VOCABULARY } from "@/data";
 import { autoSync, checkAuthStatus, loadCurriculumsFromServer } from "@/lib/syncService";
+import { getCurriculumRepository } from "@/lib/repositories";
 
 function generateId(prefix: string): string {
   return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
@@ -36,6 +37,7 @@ function getActiveLanguageCode(): string {
 
 export function useCurriculums() {
   const [curriculums, setCurriculums] = useState<Curriculum[]>([]);
+  const [repoCurriculums, setRepoCurriculums] = useState<Curriculum[]>([]);
   const [hideSuperMaster, setHideSuperMaster] = useState(false);
   const [activeLang, setActiveLang] = useState<string>(() => getActiveLanguageCode());
 
@@ -46,6 +48,33 @@ export function useCurriculums() {
     window.addEventListener("storage", handleLangChange);
     return () => window.removeEventListener("storage", handleLangChange);
   }, []);
+
+  useEffect(() => {
+    async function loadRepositoryCurriculums() {
+      try {
+        const repo = getCurriculumRepository();
+        const groups = await repo.getCurriculums();
+        const allBooks = groups.flatMap((g) => g.books || []);
+        
+        const mappedBooks: Curriculum[] = allBooks.map((b) => ({
+          id: b.id,
+          name: b.name,
+          createdAt: new Date().toISOString(),
+          lessons: (b.lessons || []).map((l: any) => ({
+            id: l.id,
+            name: l.name,
+            vocabulary: l.vocabulary || [],
+          })),
+          lang: isCurriculumMatchLang(b, "en") ? "en" : isCurriculumMatchLang(b, "de") ? "de" : "ja"
+        }));
+
+        setRepoCurriculums(mappedBooks);
+      } catch (err) {
+        console.error("Failed to load repository curriculums:", err);
+      }
+    }
+    loadRepositoryCurriculums();
+  }, [activeLang]);
 
   useEffect(() => {
     // Helper to sanitize old "Super Master" names in localStorage
@@ -106,12 +135,35 @@ export function useCurriculums() {
     };
   }, []);
 
+  // Combine repository books and local user curriculums
+  const combinedCurriculums = useMemo(() => {
+    const map = new Map<string, Curriculum>();
+    const seenNormNames = new Set<string>();
+
+    repoCurriculums.forEach((b) => {
+      const norm = b.name.toLowerCase().replace("super master", "speed master").trim();
+      map.set(b.id, b);
+      seenNormNames.add(norm);
+    });
+
+    curriculums.forEach((c) => {
+      const norm = c.name.toLowerCase().replace("super master", "speed master").trim();
+      if (map.has(c.id) || seenNormNames.has(norm)) return;
+
+      const cleanName = c.name.replace(/Super Master/gi, "Speed Master");
+      map.set(c.id, { ...c, name: cleanName });
+      seenNormNames.add(norm);
+    });
+
+    return Array.from(map.values());
+  }, [repoCurriculums, curriculums]);
+
   const visibleCurriculums = useMemo(() => {
-    if (!hideSuperMaster) return curriculums;
-    return curriculums.filter(
-      (c) => c.id !== "default-n5-super-master-tango" && !c.name.toLowerCase().includes("super master")
+    if (!hideSuperMaster) return combinedCurriculums;
+    return combinedCurriculums.filter(
+      (c) => c.id !== "default-n5-super-master-tango" && !c.name.toLowerCase().includes("super master") && !c.name.toLowerCase().includes("speed master")
     );
-  }, [curriculums, hideSuperMaster]);
+  }, [combinedCurriculums, hideSuperMaster]);
 
   const activeCurriculums = useMemo(() => {
     return visibleCurriculums.filter((c) => isCurriculumMatchLang(c, activeLang));

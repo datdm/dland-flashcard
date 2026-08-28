@@ -57,7 +57,15 @@ export default function FlashCardAllPage() {
           sourceName: `Sổ tay: ${nb.name}`,
         }))
       );
-      return [...curriculumVocab, ...notebookVocab];
+      
+      const seen = new Set<string>();
+      const combined = [...curriculumVocab, ...notebookVocab];
+      return combined.filter((v) => {
+        const key = `${v.kanji || ""}_${v.hiragana || ""}_${v.meaning || ""}`;
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
     }
     
     // Check if it's a curriculum ID
@@ -118,14 +126,18 @@ export default function FlashCardAllPage() {
         </div>
 
         {/* Daily 50 Toggle Card */}
-        <div className="bg-gradient-to-r from-amber-50 to-orange-50/50 border border-amber-100 rounded-3xl p-4 sm:p-5 mb-6 flex items-center justify-between gap-4">
+        <div className="bg-white rounded-3xl p-5 sm:p-6 border border-gray-100 shadow-2xs mb-4 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-amber-500/10 flex items-center justify-center text-xl text-amber-600 shrink-0">
+            <div className="w-10 h-10 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg shrink-0">
               🎲
             </div>
             <div>
-              <h3 className="text-xs sm:text-sm font-bold text-gray-800">Luyện 50 từ ngẫu nhiên mỗi ngày</h3>
-              <p className="text-[10px] sm:text-xs text-gray-500 mt-0.5">Xáo trộn cố định 50 từ trong ngày để tránh quá tải và học tập đều đặn</p>
+              <h3 className="text-xs sm:text-sm font-bold text-gray-900">
+                Luyện 50 từ ngẫu nhiên mỗi ngày
+              </h3>
+              <p className="text-[11px] text-gray-500 mt-0.5">
+                Xáo trộn cố định 50 từ trong ngày để tránh quá tải và học tập đều đặn
+              </p>
             </div>
           </div>
           
@@ -155,14 +167,17 @@ export default function FlashCardAllPage() {
               onChange={(e) => setSource(e.target.value)}
               className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 text-gray-700 text-xs font-bold rounded-2xl appearance-none pr-10 focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all cursor-pointer shadow-xs"
             >
-              <option value="all">🌟 Tất cả từ vựng</option>
+              <option value="all">🌟 Tất cả từ vựng ({allVocab.length} từ)</option>
               {curriculums.length > 0 && (
                 <optgroup label="📚 Giáo trình" className="font-bold text-gray-400">
-                  {curriculums.map((c) => (
-                    <option key={c.id} value={c.id} className="text-gray-700 font-semibold">
-                      {c.name}
-                    </option>
-                  ))}
+                  {curriculums.map((c) => {
+                    const count = c.lessons?.reduce((acc, l) => acc + (l.vocabulary?.length || 0), 0) || 0;
+                    return (
+                      <option key={c.id} value={c.id} className="text-gray-700 font-semibold">
+                        📚 {c.name} {count > 0 ? `(${count} từ)` : ""}
+                      </option>
+                    );
+                  })}
                 </optgroup>
               )}
               {notebooks.length > 0 && (
