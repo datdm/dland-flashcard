@@ -31,6 +31,7 @@ interface CompletedLesson {
 }
 
 import { getCurriculumRepository } from "@/lib/repositories";
+import { resetAllLearningProgress } from "@/lib/syncService";
 
 export default function HistoryPage() {
   const { progress } = useProgress();
@@ -51,26 +52,16 @@ export default function HistoryPage() {
   const [practiceHistory, setPracticeHistory] = useState<any[]>([]);
   const [repoBooks, setRepoBooks] = useState<any[]>([]);
   const [showResetModal, setShowResetModal] = useState(false);
+  const [isResetting, setIsResetting] = useState(false);
 
   const effectiveLang = activeLanguage.code;
 
-  const handleResetAllProgress = () => {
-    if (typeof window !== "undefined") {
-      localStorage.removeItem("flashcash-vocab-progress");
-      localStorage.removeItem("flashcash-grammar-progress");
-      localStorage.removeItem("flashcash-kanji-progress");
-      localStorage.removeItem("flashcash-curriculum-history");
-      localStorage.removeItem("flashcash-practice-history");
-      localStorage.removeItem("flashcash-streak-data");
-      localStorage.removeItem("flashcash-curriculum-progress");
-
-      window.dispatchEvent(new Event("storage"));
-      window.dispatchEvent(new Event("practice-history-updated"));
-      window.dispatchEvent(new Event("progress-updated"));
-
-      setShowResetModal(false);
-      window.location.reload();
-    }
+  const handleResetAllProgress = async () => {
+    setIsResetting(true);
+    await resetAllLearningProgress();
+    setShowResetModal(false);
+    setIsResetting(false);
+    window.location.reload();
   };
 
   useEffect(() => {

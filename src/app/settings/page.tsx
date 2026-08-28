@@ -50,24 +50,14 @@ function CurriculumDisplaySettings() {
 
 function ResetHistorySettingsPanel() {
   const [showResetModal, setShowResetModal] = useState(false);
+  const [isResetting, setIsResetting] = useState(false);
 
-  const handleResetAllProgress = () => {
-    if (typeof window !== "undefined") {
-      localStorage.removeItem("flashcash-vocab-progress");
-      localStorage.removeItem("flashcash-grammar-progress");
-      localStorage.removeItem("flashcash-kanji-progress");
-      localStorage.removeItem("flashcash-curriculum-history");
-      localStorage.removeItem("flashcash-practice-history");
-      localStorage.removeItem("flashcash-streak-data");
-      localStorage.removeItem("flashcash-curriculum-progress");
-
-      window.dispatchEvent(new Event("storage"));
-      window.dispatchEvent(new Event("practice-history-updated"));
-      window.dispatchEvent(new Event("progress-updated"));
-
-      setShowResetModal(false);
-      window.location.reload();
-    }
+  const handleResetAllProgress = async () => {
+    setIsResetting(true);
+    await syncService.resetAllLearningProgress();
+    setShowResetModal(false);
+    setIsResetting(false);
+    window.location.reload();
   };
 
   return (

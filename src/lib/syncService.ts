@@ -968,3 +968,42 @@ export async function importFullDatabase(
   }
 }
 
+// Reset all learning history & progress (Local + Cloud server sync)
+export async function resetAllLearningProgress(): Promise<{ success: boolean; error?: string }> {
+  if (typeof window === 'undefined') return { success: true };
+
+  try {
+    // 1. Reset all progress keys in localStorage to empty states
+    localStorage.setItem(StorageKeys.PROGRESS, JSON.stringify({}));
+    localStorage.setItem(StorageKeys.GRAMMAR_PROGRESS, JSON.stringify({}));
+    localStorage.setItem(StorageKeys.KANJI_PROGRESS, JSON.stringify({}));
+    localStorage.setItem(StorageKeys.CURRICULUM_HISTORY, JSON.stringify([]));
+    localStorage.setItem(StorageKeys.PRACTICE_HISTORY, JSON.stringify([]));
+    localStorage.setItem(StorageKeys.STREAK, JSON.stringify({ currentStreak: 0, bestStreak: 0, lastStudyDate: null, history: [] }));
+    localStorage.setItem(StorageKeys.KAIWA_PROGRESS, JSON.stringify([]));
+    localStorage.removeItem('flashcash-curriculum-progress');
+    localStorage.removeItem('flashcash-vocab-progress');
+    localStorage.removeItem('flashcash-streak-data');
+
+    // 2. If logged in, immediately upload the reset state to the Cloud PostgreSQL server
+    if (checkAuthStatus()) {
+      try {
+        await uploadToServer(true);
+      } catch (serverErr) {
+        console.warn('Server sync error during reset:', serverErr);
+      }
+    }
+
+    // 3. Dispatch browser events for reactivity
+    window.dispatchEvent(new CustomEvent('practice-history-updated'));
+    window.dispatchEvent(new CustomEvent('progress-updated'));
+    window.dispatchEvent(new CustomEvent('curriculum-history-updated'));
+    window.dispatchEvent(new CustomEvent('storage'));
+
+    return { success: true };
+  } catch (err: any) {
+    console.error('Reset all learning progress error:', err);
+    return { success: false, error: err?.message || 'Lỗi khi reset tiến độ' };
+  }
+}
+
