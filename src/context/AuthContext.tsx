@@ -90,11 +90,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       checkAuth();
       window.dispatchEvent(new Event("auth-state-changed"));
       
-      // Auto trigger sync after login
+      // Auto trigger download from server after login to sync user data
       try {
-        await syncService.autoSync();
+        await syncService.downloadFromServer();
       } catch (err) {
-        console.error("Auto sync after login error:", err);
+        console.error("Download after login error:", err);
       }
     }
     return result;

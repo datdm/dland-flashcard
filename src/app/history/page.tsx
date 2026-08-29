@@ -73,7 +73,7 @@ export default function HistoryPage() {
     async function loadRepoBooks() {
       try {
         const repo = getCurriculumRepository();
-        const groups = await repo.getCurriculums();
+        const groups = await repo.getAllCurriculums();
         const allBooks = groups.flatMap((g) => g.books || []);
         setRepoBooks(allBooks);
       } catch (err) {
@@ -105,11 +105,11 @@ export default function HistoryPage() {
             loadCurriculumHistoryFromServer()
           ]);
 
-          if (Array.isArray(serverPrac) && serverPrac.length > 0) {
+          if (Array.isArray(serverPrac)) {
             setPracticeHistory(serverPrac);
             localStorage.setItem("flashcash-practice-history", JSON.stringify(serverPrac));
           }
-          if (Array.isArray(serverCurr) && serverCurr.length > 0) {
+          if (Array.isArray(serverCurr)) {
             setCompletedLessons(serverCurr);
             localStorage.setItem("flashcash-curriculum-history", JSON.stringify(serverCurr));
           }
@@ -306,6 +306,10 @@ export default function HistoryPage() {
           }
         });
       });
+
+      if (totalVocab === 0 && (c as any).totalVocab) {
+        totalVocab = (c as any).totalVocab;
+      }
 
       return {
         id: c.id,

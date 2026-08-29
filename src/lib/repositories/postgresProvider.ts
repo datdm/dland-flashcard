@@ -20,11 +20,15 @@ import { Vocabulary, GrammarPoint } from "@/types";
  * Module này sẽ tự động được sử dụng để truy vấn trực tiếp từ PostgreSQL Database.
  */
 export class PostgresCurriculumRepository implements ICurriculumRepository {
-  async getCurriculums(): Promise<CurriculumLevelGroup[]> {
+  async getCurriculums(lang?: string): Promise<CurriculumLevelGroup[]> {
     console.log("[PostgreSQL] Fetching curriculums from Database...");
-    // Fallback sang JsonCurriculumRepository nếu chưa cấu hình chuỗi kết nối DB
     const { JsonCurriculumRepository } = await import("./jsonProvider");
-    return new JsonCurriculumRepository().getCurriculums();
+    return new JsonCurriculumRepository().getCurriculums(lang);
+  }
+
+  async getAllCurriculums(): Promise<CurriculumLevelGroup[]> {
+    const { JsonCurriculumRepository } = await import("./jsonProvider");
+    return new JsonCurriculumRepository().getAllCurriculums();
   }
 
   async getLessonById(id: string): Promise<DetailedLesson | null> {

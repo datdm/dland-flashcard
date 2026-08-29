@@ -20,8 +20,8 @@ export function useProgress() {
       if (checkAuthStatus()) {
         try {
           const serverData = await loadProgressFromServer();
-          const vocabProgress = serverData?.vocabulary || {};
-          if (Object.keys(vocabProgress).length > 0) {
+          const vocabProgress = serverData?.vocabulary;
+          if (vocabProgress && typeof vocabProgress === "object") {
             setProgress(vocabProgress);
             setItem(StorageKeys.PROGRESS, vocabProgress);
           }

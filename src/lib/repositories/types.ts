@@ -49,7 +49,8 @@ export interface CurriculumLevelGroup {
 }
 
 export interface ICurriculumRepository {
-  getCurriculums(): Promise<CurriculumLevelGroup[]>;
+  getCurriculums(lang?: string): Promise<CurriculumLevelGroup[]>;
+  getAllCurriculums(): Promise<CurriculumLevelGroup[]>;
   getLessonById(id: string): Promise<DetailedLesson | null>;
   getLessonsByLevel(level: JLPTLevel): Promise<DetailedLesson[]>;
 }

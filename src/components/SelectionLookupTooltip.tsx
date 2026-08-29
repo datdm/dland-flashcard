@@ -28,6 +28,7 @@ export default function SelectionLookupTooltip({
   });
 
   const tooltipRef = useRef<HTMLDivElement>(null);
+  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (disabled) {
@@ -52,9 +53,9 @@ export default function SelectionLookupTooltip({
       return false;
     };
 
-    const handleMouseUp = (e: MouseEvent) => {
-      // If clicking inside the tooltip itself, don't close it immediately
-      if (tooltipRef.current && tooltipRef.current.contains(e.target as Node)) {
+    const processSelection = (targetElement?: Node | null) => {
+      // If tapping inside the tooltip itself, do nothing
+      if (targetElement && tooltipRef.current && tooltipRef.current.contains(targetElement)) {
         return;
       }
 
@@ -71,7 +72,7 @@ export default function SelectionLookupTooltip({
 
       const anchorNode = selection.anchorNode;
       // Do NOT show tooltip if text was selected inside a modal/dialog or floating container
-      if (isInsideModal(anchorNode) || isInsideModal(e.target as Node)) {
+      if (isInsideModal(anchorNode) || isInsideModal(targetElement || null)) {
         setTooltip((prev) => (prev.visible ? { ...prev, visible: false } : prev));
         return;
       }
@@ -94,16 +95,16 @@ export default function SelectionLookupTooltip({
       try {
         const range = selection.getRangeAt(0);
         const rect = range.getBoundingClientRect();
-        
+
         if (rect && (rect.width > 0 || rect.height > 0)) {
           const scrollY = window.scrollY || window.pageYOffset;
           const scrollX = window.scrollX || window.pageXOffset;
-          
+
           setTooltip({
             visible: true,
             text: selectedText,
             x: rect.left + scrollX + rect.width / 2,
-            y: Math.max(10, rect.top + scrollY - 10),
+            y: Math.max(10, rect.top + scrollY - 12),
           });
         }
       } catch (err) {
@@ -111,31 +112,70 @@ export default function SelectionLookupTooltip({
       }
     };
 
-    const handleSelectionChange = () => {
-      const selection = window.getSelection();
-      if (!selection || selection.isCollapsed) {
-        setTooltip((prev) => (prev.visible ? { ...prev, visible: false } : prev));
-      }
+    const handleMouseUp = (e: MouseEvent) => {
+      processSelection(e.target as Node);
     };
 
-    const handleMouseDown = (e: MouseEvent) => {
+    const handleTouchEnd = (e: TouchEvent) => {
+      const target = e.target as Node;
+      if (tooltipRef.current && tooltipRef.current.contains(target)) {
+        return;
+      }
+
+      // Short delay to let mobile OS finish text selection range adjustment
+      setTimeout(() => {
+        processSelection(target);
+      }, 150);
+    };
+
+    const handleSelectionChange = () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+
+      debounceTimerRef.current = setTimeout(() => {
+        const selection = window.getSelection();
+        if (!selection || selection.isCollapsed) {
+          setTooltip((prev) => (prev.visible ? { ...prev, visible: false } : prev));
+        } else {
+          processSelection(selection.anchorNode);
+        }
+      }, 200);
+    };
+
+    const handlePointerDown = (e: Event) => {
       if (tooltipRef.current && !tooltipRef.current.contains(e.target as Node)) {
         setTooltip((prev) => (prev.visible ? { ...prev, visible: false } : prev));
       }
     };
 
     document.addEventListener("mouseup", handleMouseUp);
-    document.addEventListener("mousedown", handleMouseDown);
+    document.addEventListener("mousedown", handlePointerDown);
+    document.addEventListener("touchend", handleTouchEnd);
+    document.addEventListener("touchstart", handlePointerDown);
     document.addEventListener("selectionchange", handleSelectionChange);
 
     return () => {
+      if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
       document.removeEventListener("mouseup", handleMouseUp);
-      document.removeEventListener("mousedown", handleMouseDown);
+      document.removeEventListener("mousedown", handlePointerDown);
+      document.removeEventListener("touchend", handleTouchEnd);
+      document.removeEventListener("touchstart", handlePointerDown);
       document.removeEventListener("selectionchange", handleSelectionChange);
     };
   }, [containerRef, disabled]);
 
   if (disabled || !tooltip.visible || !tooltip.text) return null;
+
+  const triggerLookup = (e: React.SyntheticEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const word = tooltip.text;
+    setTooltip({ visible: false, text: "", x: 0, y: 0 });
+    // Clear text selection
+    window.getSelection()?.removeAllRanges();
+    onLookup(word, tooltip.furigana, tooltip.meaning);
+  };
 
   return (
     <div
@@ -147,19 +187,12 @@ export default function SelectionLookupTooltip({
         transform: "translate(-50%, -100%)",
         zIndex: 9999,
       }}
-      className="animate-in fade-in zoom-in-90 duration-150 pointer-events-auto select-none"
+      className="animate-in fade-in zoom-in-90 duration-150 pointer-events-auto select-none touch-manipulation"
     >
       <button
         type="button"
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          const word = tooltip.text;
-          setTooltip({ visible: false, text: "", x: 0, y: 0 });
-          // Clear text selection
-          window.getSelection()?.removeAllRanges();
-          onLookup(word, tooltip.furigana, tooltip.meaning);
-        }}
+        onClick={triggerLookup}
+        onTouchEnd={triggerLookup}
         className="flex items-center gap-1.5 px-3.5 py-1.5 bg-gradient-to-r from-amber-600 via-orange-600 to-amber-700 text-white rounded-full text-xs font-extrabold shadow-2xl hover:scale-105 active:scale-95 transition-all cursor-pointer border border-amber-300/40 backdrop-blur-md"
       >
         <span className="text-sm">🔍</span>

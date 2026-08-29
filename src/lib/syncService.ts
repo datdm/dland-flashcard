@@ -164,6 +164,7 @@ export function logout(): void {
   localStorage.removeItem(AUTH_TOKEN_KEY);
   localStorage.removeItem(USER_KEY);
   localStorage.removeItem(LAST_SYNC_KEY);
+  clearLocalData();
 }
 
 // Verify token is still valid
@@ -1023,9 +1024,16 @@ export async function resetAllLearningProgress(): Promise<{ success: boolean; er
     localStorage.removeItem('flashcash-vocab-progress');
     localStorage.removeItem('flashcash-streak-data');
 
-    // 2. If logged in, immediately upload the reset state to the Cloud PostgreSQL server
+    // 2. If logged in, call dedicated server reset-progress API & upload state
     if (checkAuthStatus()) {
       try {
+        const token = getAuthToken();
+        if (token) {
+          await trackedFetch(`${API_URL}/api/sync/reset-progress`, {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${token}` },
+          });
+        }
         await uploadToServer(true);
       } catch (serverErr) {
         console.warn('Server sync error during reset:', serverErr);

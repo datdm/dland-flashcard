@@ -29,8 +29,8 @@ export function useGrammarProgress() {
       if (checkAuthStatus()) {
         try {
           const serverData = await loadProgressFromServer();
-          const grammarProgressData = serverData?.grammar || {};
-          if (Object.keys(grammarProgressData).length > 0) {
+          const grammarProgressData = serverData?.grammar;
+          if (grammarProgressData && typeof grammarProgressData === "object") {
             setProgress(grammarProgressData);
             setItem(StorageKeys.GRAMMAR_PROGRESS, grammarProgressData);
           }

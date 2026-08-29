@@ -35,8 +35,8 @@ export function useKanjiProgress() {
       if (checkAuthStatus()) {
         try {
           const serverData = await loadProgressFromServer();
-          const kanjiProgressData = serverData?.kanji || {};
-          if (Object.keys(kanjiProgressData).length > 0) {
+          const kanjiProgressData = serverData?.kanji;
+          if (kanjiProgressData && typeof kanjiProgressData === "object") {
             setProgress(kanjiProgressData);
             setItem(StorageKeys.KANJI_PROGRESS, kanjiProgressData);
           }

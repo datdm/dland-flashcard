@@ -49,8 +49,8 @@ async function fetchJsonData<T>(url: string): Promise<T | null> {
 }
 
 export class JsonCurriculumRepository implements ICurriculumRepository {
-  async getCurriculums(): Promise<CurriculumLevelGroup[]> {
-    const langCode = getActiveLanguageCode();
+  async getCurriculums(lang?: string): Promise<CurriculumLevelGroup[]> {
+    const langCode = lang || getActiveLanguageCode();
     const groups: CurriculumLevelGroup[] = [];
 
     if (langCode === "en") {
@@ -583,19 +583,44 @@ export class JsonCurriculumRepository implements ICurriculumRepository {
     return groups;
   }
 
+  async getAllCurriculums(): Promise<CurriculumLevelGroup[]> {
+    const jaGroups = await this.getCurriculums("ja");
+    const enGroups = await this.getCurriculums("en");
+    const deGroups = await this.getCurriculums("de");
+    return [...jaGroups, ...enGroups, ...deGroups];
+  }
+
   async getLessonById(id: string): Promise<DetailedLesson | null> {
-    const groups = await this.getCurriculums();
+    const decodedId = decodeURIComponent(id);
+    const groups = await this.getAllCurriculums();
     for (const group of groups) {
-      const foundInMain = group.lessons.find((l) => l.id === id);
+      const foundInMain = group.lessons.find((l) => l.id === id || l.id === decodedId);
       if (foundInMain) return foundInMain;
 
       if (group.books) {
         for (const book of group.books) {
-          const foundInBook = book.lessons.find((l) => l.id === id);
+          const foundInBook = book.lessons.find((l) => l.id === id || l.id === decodedId);
           if (foundInBook) return foundInBook;
         }
       }
     }
+
+    if (typeof window !== "undefined") {
+      try {
+        const raw = localStorage.getItem("flashcash-curriculums");
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          const list = parsed.curriculums || [];
+          for (const c of list) {
+            const foundInUser = c.lessons?.find((l: any) => l.id === id || l.id === decodedId);
+            if (foundInUser) return foundInUser;
+          }
+        }
+      } catch (e) {
+        console.error("Error searching custom curriculums in getLessonById:", e);
+      }
+    }
+
     return null;
   }
 

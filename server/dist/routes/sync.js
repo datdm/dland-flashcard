@@ -58,16 +58,14 @@ router.post('/upload', auth_1.authenticate, async (req, res) => {
         if (!skipBackup) {
             const currentDataResult = await client.query('SELECT data_key, data_value FROM user_data WHERE user_id = $1', [req.userId]);
             if (currentDataResult.rows.length > 0) {
-                // Build backup data object
                 const backupData = {};
                 const dataKeys = [];
                 currentDataResult.rows.forEach((row) => {
                     backupData[row.data_key] = row.data_value;
                     dataKeys.push(row.data_key);
                 });
-                // Save backup to backup_history
                 await client.query(`INSERT INTO backup_history (user_id, backup_data, backup_type, data_keys, note)
-         VALUES ($1, $2, $3, $4, $5)`, [
+           VALUES ($1, $2, $3, $4, $5)`, [
                     req.userId,
                     JSON.stringify(backupData),
                     'auto',
@@ -79,7 +77,7 @@ router.post('/upload', auth_1.authenticate, async (req, res) => {
         // Now upload new data
         for (const [key, value] of Object.entries(data)) {
             if (!validKeys.includes(key)) {
-                continue; // Skip invalid keys
+                continue;
             }
             const jsonString = JSON.stringify(value);
             await client.query(`INSERT INTO user_data (user_id, data_key, data_value, updated_at)
@@ -87,7 +85,6 @@ router.post('/upload', auth_1.authenticate, async (req, res) => {
          ON CONFLICT (user_id, data_key)
          DO UPDATE SET data_value = $3::jsonb, updated_at = NOW()`, [req.userId, key, jsonString]);
         }
-        // Update last sync time
         await client.query('UPDATE users SET last_sync_at = NOW() WHERE id = $1', [req.userId]);
         await client.query('COMMIT');
         res.json({
@@ -99,6 +96,50 @@ router.post('/upload', auth_1.authenticate, async (req, res) => {
     catch (error) {
         await client.query('ROLLBACK');
         console.error('Upload error:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+    finally {
+        client.release();
+    }
+});
+// Reset learning progress & history on server
+router.post('/reset-progress', auth_1.authenticate, async (req, res) => {
+    const client = await db_1.default.connect();
+    try {
+        await client.query('BEGIN');
+        const resetKeys = [
+            'flashcash-progress',
+            'flashcash-grammar-progress',
+            'flashcash-kanji-progress',
+            'flashcash-curriculum-history',
+            'flashcash-practice-history',
+            'flashcash-streak',
+            'dland_kaiwa_completed',
+            'flashcash-curriculum-progress',
+            'flashcash-vocab-progress',
+        ];
+        for (const key of resetKeys) {
+            const defaultValue = key === 'flashcash-progress' || key === 'flashcash-grammar-progress' || key === 'flashcash-kanji-progress'
+                ? '{}'
+                : key === 'flashcash-streak'
+                    ? JSON.stringify({ currentStreak: 0, bestStreak: 0, lastStudyDate: null, history: [] })
+                    : '[]';
+            await client.query(`INSERT INTO user_data (user_id, data_key, data_value, updated_at)
+         VALUES ($1, $2, $3::jsonb, NOW())
+         ON CONFLICT (user_id, data_key)
+         DO UPDATE SET data_value = $3::jsonb, updated_at = NOW()`, [req.userId, key, defaultValue]);
+        }
+        await client.query('UPDATE users SET last_sync_at = NOW() WHERE id = $1', [req.userId]);
+        await client.query('COMMIT');
+        res.json({
+            success: true,
+            message: 'Learning progress reset successfully on server',
+            timestamp: new Date().toISOString(),
+        });
+    }
+    catch (error) {
+        await client.query('ROLLBACK');
+        console.error('Reset progress error:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
     finally {
@@ -192,7 +233,6 @@ router.post('/import-full', auth_1.authenticate, async (req, res) => {
          DO UPDATE SET data_value = $3::jsonb, updated_at = NOW()`, [req.userId, key, jsonString]);
             importedKeysCount++;
         }
-        // Optional restore backup history
         if (Array.isArray(backupHistory) && backupHistory.length > 0) {
             for (const b of backupHistory) {
                 if (b.backup_data) {
