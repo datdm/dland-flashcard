@@ -284,6 +284,20 @@ export default function HistoryPage() {
     return Array.from(map.values());
   }, [repoBooks, curriculums]);
 
+function getItemLevel(c: { id: string; name: string; level?: string }): string {
+  if (c.level) return c.level;
+  const nameUpper = c.name.toUpperCase();
+  const idUpper = c.id.toUpperCase();
+  if (nameUpper.includes("N5") || idUpper.includes("N5")) return "N5";
+  if (nameUpper.includes("N4") || idUpper.includes("N4")) return "N4";
+  if (nameUpper.includes("N3") || idUpper.includes("N3")) return "N3";
+  if (nameUpper.includes("N2") || idUpper.includes("N2")) return "N2";
+  if (nameUpper.includes("N1") || idUpper.includes("N1")) return "N1";
+  if (nameUpper.includes("IELTS") || idUpper.includes("EN-")) return "IELTS";
+  if (nameUpper.includes("DEUTSCH") || idUpper.includes("DE-") || nameUpper.includes("NETZWERK") || nameUpper.includes("SCHRITTE")) return "CEFR A1-B2";
+  return "N5";
+}
+
   // 3. Compute Curriculum progress
   const curriculumProgresses = useMemo(() => {
     const filteredCurriculums = activeRepoBooks.filter((c) => {
@@ -314,12 +328,47 @@ export default function HistoryPage() {
       return {
         id: c.id,
         name: c.name,
+        level: getItemLevel(c),
         total: totalVocab,
         learned: learnedVocab,
         percentage: totalVocab > 0 ? Math.round((learnedVocab / totalVocab) * 100) : 0,
       };
     });
   }, [activeRepoBooks, progress, effectiveLang]);
+
+  const groupedCurriculumProgresses = useMemo(() => {
+    const groupsMap = new Map<string, typeof curriculumProgresses>();
+    const levelOrder = ["N5", "N4", "N3", "N2", "N1", "IELTS", "CEFR A1-B2", "Khác"];
+
+    curriculumProgresses.forEach((item) => {
+      const lvl = item.level || "N5";
+      if (!groupsMap.has(lvl)) {
+        groupsMap.set(lvl, []);
+      }
+      groupsMap.get(lvl)!.push(item);
+    });
+
+    const sortedLevels = Array.from(groupsMap.keys()).sort((a, b) => {
+      const idxA = levelOrder.indexOf(a) !== -1 ? levelOrder.indexOf(a) : 99;
+      const idxB = levelOrder.indexOf(b) !== -1 ? levelOrder.indexOf(b) : 99;
+      return idxA - idxB;
+    });
+
+    return sortedLevels.map((lvl) => {
+      const items = groupsMap.get(lvl) || [];
+      const totalVocab = items.reduce((acc, i) => acc + i.total, 0);
+      const learnedVocab = items.reduce((acc, i) => acc + i.learned, 0);
+      const percentage = totalVocab > 0 ? Math.round((learnedVocab / totalVocab) * 100) : 0;
+
+      return {
+        level: lvl,
+        items,
+        totalVocab,
+        learnedVocab,
+        percentage,
+      };
+    });
+  }, [curriculumProgresses]);
 
   // 4. Compute Notebook progress
   const notebookProgresses = useMemo(() => {
@@ -653,29 +702,75 @@ export default function HistoryPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         {/* Curriculums Progress */}
         <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-2xs flex flex-col">
-          <h2 className="text-base font-bold text-gray-900 mb-4 flex items-center gap-2">
-            <span>📚</span> Tiến độ Giáo trình
-          </h2>
+          <div className="flex items-center justify-between mb-4 pb-2 border-b border-gray-100">
+            <h2 className="text-base font-bold text-gray-900 flex items-center gap-2">
+              <span>📚</span> Tiến độ Giáo trình
+            </h2>
+            <span className="text-[10px] font-extrabold text-indigo-700 bg-indigo-50 border border-indigo-100 px-2.5 py-1 rounded-full">
+              Phân loại Cấp độ
+            </span>
+          </div>
+
           {curriculumProgresses.length === 0 ? (
             <p className="text-xs text-gray-400 italic">Chưa có giáo trình nào.</p>
           ) : (
-            <div className="space-y-4 flex-1">
-              {curriculumProgresses.map((c) => (
-                <div key={c.id} className="space-y-1.5">
-                  <div className="flex justify-between items-center text-xs">
-                    <span className="font-bold text-gray-700 truncate max-w-[200px]">{c.name}</span>
-                    <span className="font-bold text-indigo-600 shrink-0">
-                      {c.learned}/{c.total} từ ({c.percentage}%)
-                    </span>
+            <div className="space-y-4 flex-1 max-h-[460px] overflow-y-auto pr-1">
+              {groupedCurriculumProgresses.map((group) => {
+                const badgeColor = 
+                  group.level === "N5" ? "bg-indigo-100 text-indigo-700 border-indigo-200" :
+                  group.level === "N4" ? "bg-emerald-100 text-emerald-700 border-emerald-200" :
+                  group.level === "N3" ? "bg-amber-100 text-amber-800 border-amber-200" :
+                  group.level === "N2" ? "bg-rose-100 text-rose-700 border-rose-200" :
+                  group.level === "N1" ? "bg-purple-100 text-purple-700 border-purple-200" :
+                  group.level === "IELTS" ? "bg-amber-500 text-white" :
+                  "bg-blue-100 text-blue-700 border-blue-200";
+
+                return (
+                  <div key={group.level} className="space-y-2.5 bg-gray-50/70 rounded-2xl p-3 border border-gray-100">
+                    {/* Level Group Header */}
+                    <div className="flex items-center justify-between pb-1.5 border-b border-gray-200/50">
+                      <div className="flex items-center gap-2">
+                        <span className={`px-2 py-0.5 text-[10px] font-black rounded-md border ${badgeColor}`}>
+                          {group.level}
+                        </span>
+                        <span className="text-xs font-bold text-gray-800">
+                          {group.level.startsWith("N") ? `Cấp độ JLPT ${group.level}` : group.level}
+                        </span>
+                        <span className="text-[10px] text-gray-400 font-medium">
+                          ({group.items.length} sách)
+                        </span>
+                      </div>
+
+                      <span className="text-xs font-extrabold text-indigo-600">
+                        {group.learnedVocab}/{group.totalVocab} từ ({group.percentage}%)
+                      </span>
+                    </div>
+
+                    {/* Book items under this level */}
+                    <div className="space-y-2 pt-0.5">
+                      {group.items.map((c) => (
+                        <div key={c.id} className="space-y-1 bg-white p-2.5 rounded-xl border border-gray-100 shadow-3xs">
+                          <div className="flex justify-between items-center text-xs">
+                            <span className="font-bold text-gray-700 truncate max-w-[200px] flex items-center gap-1.5">
+                              <span className="text-[10px] text-gray-400">📖</span>
+                              {c.name}
+                            </span>
+                            <span className="font-bold text-indigo-600 shrink-0 text-[11px]">
+                              {c.learned}/{c.total} từ ({c.percentage}%)
+                            </span>
+                          </div>
+                          <div className="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+                            <div
+                              className="bg-indigo-600 h-1.5 rounded-full transition-all duration-300"
+                              style={{ width: `${c.percentage}%` }}
+                            />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                  <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
-                    <div
-                      className="bg-indigo-600 h-2 rounded-full transition-all duration-300"
-                      style={{ width: `${c.percentage}%` }}
-                    />
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>
@@ -778,9 +873,23 @@ export default function HistoryPage() {
                 >
                   <div className="space-y-1.5">
                     <div className="flex items-center justify-between gap-2">
-                      <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-md bg-white border border-gray-200 text-indigo-700 shadow-3xs">
-                        📖 {item.curriculumName}
-                      </span>
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        {item.level && (
+                          <span className={`text-[10px] font-black px-2 py-0.5 rounded-md border ${
+                            item.level === "N5" ? "bg-indigo-100 text-indigo-700 border-indigo-200" :
+                            item.level === "N4" ? "bg-emerald-100 text-emerald-700 border-emerald-200" :
+                            item.level === "N3" ? "bg-amber-100 text-amber-800 border-amber-200" :
+                            item.level === "N2" ? "bg-rose-100 text-rose-700 border-rose-200" :
+                            item.level === "N1" ? "bg-purple-100 text-purple-700 border-purple-200" :
+                            "bg-blue-100 text-blue-700 border-blue-200"
+                          }`}>
+                            {item.level}
+                          </span>
+                        )}
+                        <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-md bg-white border border-gray-200 text-indigo-700 shadow-3xs">
+                          📖 {item.curriculumName}
+                        </span>
+                      </div>
                       <span
                         className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
                           item.isFinished

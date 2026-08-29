@@ -38,29 +38,59 @@ export default function FlashCardAllPage() {
     }
   };
 
+  type SourceFilter = "all" | "all_curriculums" | "all_notebooks" | string;
+
+  const totalCurriculumVocabCount = useMemo(() => {
+    return curriculums.reduce((acc, c) => acc + (c.lessons?.reduce((lAcc, l) => lAcc + (l.vocabulary?.length || 0), 0) || 0), 0);
+  }, [curriculums]);
+
+  const totalNotebookVocabCount = useMemo(() => {
+    return notebooks.reduce((acc, nb) => acc + (nb.vocabulary?.length || 0), 0);
+  }, [notebooks]);
+
   // Get all vocabulary based on filter
   const allVocab = useMemo(() => {
-    if (source === "all") {
-      const curriculumVocab = curriculums.flatMap((c) =>
-        c.lessons.flatMap((l) =>
-          (l.vocabulary || []).map((v) => ({
-            ...v,
-            sourceType: "curriculum" as const,
-            sourceName: `${c.name} • ${l.name}`,
-          }))
-        )
-      );
-      const notebookVocab = notebooks.flatMap((nb) =>
-        (nb.vocabulary || []).map((v) => ({
+    const curriculumVocab = curriculums.flatMap((c) =>
+      c.lessons.flatMap((l) =>
+        (l.vocabulary || []).map((v) => ({
           ...v,
-          sourceType: "notebook" as const,
-          sourceName: `Sổ tay: ${nb.name}`,
+          sourceType: "curriculum" as const,
+          sourceName: `${c.name} • ${l.name}`,
         }))
-      );
-      
+      )
+    );
+    const notebookVocab = notebooks.flatMap((nb) =>
+      (nb.vocabulary || []).map((v) => ({
+        ...v,
+        sourceType: "notebook" as const,
+        sourceName: `Sổ tay: ${nb.name}`,
+      }))
+    );
+
+    if (source === "all") {
       const seen = new Set<string>();
       const combined = [...curriculumVocab, ...notebookVocab];
       return combined.filter((v) => {
+        const key = `${v.kanji || ""}_${v.hiragana || ""}_${v.meaning || ""}`;
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+    }
+
+    if (source === "all_curriculums") {
+      const seen = new Set<string>();
+      return curriculumVocab.filter((v) => {
+        const key = `${v.kanji || ""}_${v.hiragana || ""}_${v.meaning || ""}`;
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+    }
+
+    if (source === "all_notebooks") {
+      const seen = new Set<string>();
+      return notebookVocab.filter((v) => {
         const key = `${v.kanji || ""}_${v.hiragana || ""}_${v.meaning || ""}`;
         if (seen.has(key)) return false;
         seen.add(key);
@@ -167,21 +197,24 @@ export default function FlashCardAllPage() {
               onChange={(e) => setSource(e.target.value)}
               className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 text-gray-700 text-xs font-bold rounded-2xl appearance-none pr-10 focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all cursor-pointer shadow-xs"
             >
-              <option value="all">🌟 Tất cả từ vựng ({allVocab.length} từ)</option>
+              <option value="all">🌟 Tất cả từ vựng (Toàn bộ Giáo trình & Sổ tay)</option>
+              <option value="all_curriculums">📚 Tất cả Giáo trình ({totalCurriculumVocabCount} từ)</option>
+              <option value="all_notebooks">📓 Tất cả Sổ tay cá nhân ({totalNotebookVocabCount} từ)</option>
+
               {curriculums.length > 0 && (
-                <optgroup label="📚 Giáo trình" className="font-bold text-gray-400">
+                <optgroup label="📚 Giáo trình từng sách" className="font-bold text-gray-400">
                   {curriculums.map((c) => {
                     const count = c.lessons?.reduce((acc, l) => acc + (l.vocabulary?.length || 0), 0) || 0;
                     return (
                       <option key={c.id} value={c.id} className="text-gray-700 font-semibold">
-                        📚 {c.name} {count > 0 ? `(${count} từ)` : ""}
+                        📖 {c.name} {count > 0 ? `(${count} từ)` : ""}
                       </option>
                     );
                   })}
                 </optgroup>
               )}
               {notebooks.length > 0 && (
-                <optgroup label="📓 Sổ tay cá nhân" className="font-bold text-gray-400">
+                <optgroup label="📓 Sổ tay cá nhân từng sổ" className="font-bold text-gray-400">
                   {notebooks.map((nb) => (
                     <option key={nb.id} value={nb.id} className="text-gray-700 font-semibold">
                       📓 {nb.name} ({nb.vocabulary?.length || 0} từ)
@@ -210,6 +243,10 @@ export default function FlashCardAllPage() {
               title={
                 source === "all" 
                   ? "Ôn tập tổng hợp" 
+                  : source === "all_curriculums"
+                  ? "Tất cả Giáo trình"
+                  : source === "all_notebooks"
+                  ? "Tất cả Sổ tay"
                   : curriculums.find(c => c.id === source)?.name || notebooks.find(nb => nb.id === source)?.name || "Ôn tập"
               } 
               dailyLimit={isDaily50 ? 50 : undefined}
