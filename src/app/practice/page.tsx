@@ -173,16 +173,25 @@ const SKILLS_BY_LANG: Record<string, { id: "kaiwa" | "shadowing" | "translation"
   ],
 };
 
+const LEVELS_BY_LANG: Record<string, string[]> = {
+  ja: ["N5", "N4", "N3", "N2", "N1"],
+  en: ["Band 5.0", "Band 6.0", "Band 7.0", "Band 8.0"],
+  de: ["A1", "A2", "B1", "B2"],
+};
+
 export default function PracticeHubPage() {
   const { notebooks, addVocab, checkDuplicate } = useNotebooks();
   const recognitionRef = useRef<any>(null);
   const { activeLanguage } = useLanguageSetting();
 
   // Language state for Practice Center
-  // Active language for Practice Center
   const selectedLang = activeLanguage.code || "ja";
 
   // Config states
+  const [selectedLevel, setSelectedLevel] = useState<string>(() => {
+    const lang = activeLanguage.code || "ja";
+    return lang === "de" ? "A2" : lang === "en" ? "Band 7.0" : "N2";
+  });
   const [selectedType, setSelectedType] = useState<"kaiwa" | "shadowing" | "translation" | "reading" | "presentation">("kaiwa");
   const [selectedTopic, setSelectedTopic] = useState(() => {
     const defaultTopics = POPULAR_TOPICS_BY_LANG[activeLanguage.code || "ja"] || POPULAR_TOPICS_BY_LANG.ja;
@@ -195,6 +204,7 @@ export default function PracticeHubPage() {
   // Sync and reset data when global language changes
   useEffect(() => {
     setSelectedType("kaiwa");
+    setSelectedLevel(activeLanguage.code === "de" ? "A2" : activeLanguage.code === "en" ? "Band 7.0" : "N2");
     setKaiwaData(null);
     setShadowingData([]);
     setTranslationData([]);
@@ -427,8 +437,10 @@ export default function PracticeHubPage() {
         body: JSON.stringify({
           type: selectedType === "presentation" ? "presentation_slides" : selectedType,
           topic: activeTopic,
-          level: selectedLang === "de" ? "A2" : selectedLang === "en" ? (selectedType === "reading" ? "Band 7.0" : "Band 6.5") : (selectedType === "reading" ? "N2" : "N2"),
+          level: selectedLevel,
           lang: selectedLang,
+          seed: Math.floor(Math.random() * 1000000),
+          nonce: Date.now(),
         }),
       });
 
@@ -1080,9 +1092,38 @@ export default function PracticeHubPage() {
               <span>🛠️</span> Cấu hình bài luyện tập
             </h2>
 
-            {/* Select Skill */}
+            {/* Step 1: Select Level FIRST */}
             <div className="space-y-1.5">
-              <label className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Kỹ năng học ({selectedLang.toUpperCase()}):</label>
+              <label className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">
+                1. Chọn Trình độ / Cấp độ ({selectedLang.toUpperCase()}):
+              </label>
+              <div className="flex flex-wrap gap-1.5">
+                {(LEVELS_BY_LANG[selectedLang] || LEVELS_BY_LANG.ja).map((lvl) => (
+                  <button
+                    key={lvl}
+                    type="button"
+                    onClick={() => setSelectedLevel(lvl)}
+                    className={`px-3 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer border ${
+                      selectedLevel === lvl
+                        ? selectedLang === "en"
+                          ? "bg-indigo-600 border-indigo-600 text-white shadow-xs"
+                          : selectedLang === "de"
+                          ? "bg-amber-600 border-amber-600 text-white shadow-xs"
+                          : "bg-teal-600 border-teal-600 text-white shadow-xs"
+                        : "bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100"
+                    }`}
+                  >
+                    {lvl}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Step 2: Select Skill */}
+            <div className="space-y-1.5 pt-2 border-t border-gray-100">
+              <label className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">
+                2. Chọn Kỹ năng học ({selectedLevel}):
+              </label>
               <div className="grid grid-cols-1 gap-2">
                 {(SKILLS_BY_LANG[selectedLang] || SKILLS_BY_LANG.ja).map((item) => (
                   <button
@@ -1105,9 +1146,11 @@ export default function PracticeHubPage() {
               </div>
             </div>
 
-            {/* Select Topic */}
+            {/* Step 3: Select Topic */}
             <div className="space-y-1.5 pt-2 border-t border-gray-100">
-              <label className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Chọn chủ đề có sẵn:</label>
+              <label className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">
+                3. Chọn chủ đề luyện tập:
+              </label>
               <div className="flex flex-wrap gap-1.5">
                 {(POPULAR_TOPICS_BY_LANG[selectedLang] || POPULAR_TOPICS_BY_LANG.ja).map((t) => (
                   <button
@@ -1158,7 +1201,7 @@ export default function PracticeHubPage() {
                   : "bg-gradient-to-r from-teal-600 to-indigo-600 hover:opacity-95 shadow-teal-200"
               }`}
             >
-              {generating ? "🤖 Đang biên soạn nội dung..." : "🚀 Tạo bài luyện tập bằng AI"}
+              {generating ? "🤖 Đang biên soạn nội dung..." : `🚀 Tạo bài luyện tập ${selectedLevel} bằng AI`}
             </button>
           </div>
         </div>
@@ -1179,6 +1222,33 @@ export default function PracticeHubPage() {
             </div>
           ) : (
             <>
+              {/* Top Action Bar when exercise is loaded */}
+              {(kaiwaData || shadowingData.length > 0 || translationData.length > 0 || readingData || slides.length > 0) && (
+                <div className="bg-white rounded-3xl p-4 sm:p-5 border border-gray-100 shadow-2xs flex flex-wrap items-center justify-between gap-3 mb-4">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className={`px-3 py-1 text-xs font-black rounded-xl border ${
+                      selectedLang === "en" ? "bg-indigo-100 text-indigo-700 border-indigo-200" :
+                      selectedLang === "de" ? "bg-amber-100 text-amber-800 border-amber-200" :
+                      "bg-teal-100 text-teal-800 border-teal-200"
+                    }`}>
+                      {selectedLevel}
+                    </span>
+                    <span className="text-xs sm:text-sm font-bold text-gray-800">
+                      Chủ đề: <span className="text-indigo-600 font-extrabold">{activeTopic}</span>
+                    </span>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={handleGenerate}
+                    disabled={generating}
+                    className="px-4 py-2 rounded-2xl text-xs font-bold transition-all shadow-md flex items-center gap-1.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:opacity-95 cursor-pointer disabled:opacity-50"
+                  >
+                    <span className={generating ? "animate-spin" : ""}>🔄</span>
+                    <span>Gen bài học mới (Từ vựng & nội dung khác)</span>
+                  </button>
+                </div>
+              )}
 
               {/* KAIWA CONVERSATION DISPLAY */}
               {selectedType === "kaiwa" && kaiwaData && (
@@ -1189,7 +1259,7 @@ export default function PracticeHubPage() {
                       <div>
                         <div className="flex items-center gap-2">
                           <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-teal-50 text-teal-700 border border-teal-200">
-                            💬 Hội Thoại N2 (10 Lượt Lời)
+                            💬 Hội Thoại {selectedLevel} (10 Lượt Lời)
                           </span>
                           <span className="text-xs text-gray-500 font-bold">
                             {kaiwaData.title}
