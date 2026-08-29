@@ -151,10 +151,10 @@ const POPULAR_TOPICS_BY_LANG: Record<string, { id: string; name: string; icon: s
 
 const SKILLS_BY_LANG: Record<string, { id: "kaiwa" | "shadowing" | "translation" | "reading" | "presentation"; name: string; desc: string }[]> = {
   ja: [
-    { id: "kaiwa", name: "💬 Hội thoại Kaiwa N2", desc: "10 câu đối thoại 2 người & Trắc nghiệm đọc hiểu" },
+    { id: "kaiwa", name: "💬 Hội thoại Kaiwa", desc: "10 câu đối thoại 2 người & Trắc nghiệm đọc hiểu" },
     { id: "shadowing", name: "🗣️ Shadowing JP", desc: "Luyện nghe nói đuổi tiếng Nhật kèm Furigana" },
     { id: "translation", name: "✍️ Luyện dịch 2 chiều", desc: "Xen kẽ dịch Nhật ➔ Việt & Việt ➔ Nhật" },
-    { id: "reading", name: "📚 Đọc hiểu JLPT N2", desc: "Đoạn văn Furigana, trắc nghiệm & tra Mazii" },
+    { id: "reading", name: "📚 Đọc hiểu JLPT", desc: "Đoạn văn Furigana, trắc nghiệm & tra Mazii" },
     { id: "presentation", name: "🎤 Luyện thuyết trình", desc: "Thuyết trình slide tiếng Nhật, AI sửa lỗi & chấm điểm" },
   ],
   en: [
@@ -818,7 +818,7 @@ export default function PracticeHubPage() {
       ? "📚 Đọc hiểu IELTS Reading"
       : selectedLang === "de"
       ? "📚 Đọc hiểu Leseverstehen"
-      : "📚 Đọc hiểu JLPT N2";
+      : `📚 Đọc hiểu JLPT ${selectedLevel}`;
 
     if (readingData) {
       recordPracticeHistory({
@@ -1482,7 +1482,7 @@ export default function PracticeHubPage() {
                   {kaiwaData.key_grammar && kaiwaData.key_grammar.length > 0 && (
                     <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-2xs space-y-3">
                       <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
-                        <span>💡</span> Ngữ Pháp N2 Trọng Tâm Trong Bài
+                        <span>💡</span> Ngữ Pháp {selectedLevel} Trọng Tâm Trong Bài
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                         {kaiwaData.key_grammar.map((g, gIdx) => (
@@ -1833,7 +1833,7 @@ export default function PracticeHubPage() {
                 <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-2xs space-y-4">
                   <div className="flex items-center justify-between">
                     <span className="px-3 py-1 bg-purple-100 text-purple-800 text-[10px] font-bold rounded-lg uppercase tracking-wider">
-                      Bài đọc hiểu N2
+                      Bài đọc hiểu {selectedLevel}
                     </span>
                     <div className="flex gap-3">
                       <button
@@ -1987,7 +1987,7 @@ export default function PracticeHubPage() {
                   {selectedOptionId && (
                     <div className="mt-4 p-4 bg-teal-50/30 rounded-2xl border border-teal-100/50 text-xs leading-relaxed space-y-2">
                       <div className="font-extrabold text-teal-800 flex items-center gap-1">
-                        <span>💡</span> Hướng dẫn giải nghĩa & Ngữ pháp N2:
+                        <span>💡</span> Hướng dẫn giải nghĩa & Ngữ pháp {selectedLevel}:
                       </div>
                       <p className="text-gray-700 whitespace-pre-line">{readingData.explanation}</p>
                     </div>
