@@ -37,7 +37,7 @@ export default function CurriculumPage() {
       }
 
       const repo = getCurriculumRepository();
-      const data = await repo.getCurriculums();
+      const data = await repo.getCurriculums(activeLanguage.code);
       setGroups(data);
       if (activeLanguage.code === "de" || activeLanguage.code === "en") {
         setActiveLevel("N5");

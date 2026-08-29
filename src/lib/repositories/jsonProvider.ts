@@ -50,7 +50,8 @@ async function fetchJsonData<T>(url: string): Promise<T | null> {
 
 export class JsonCurriculumRepository implements ICurriculumRepository {
   async getCurriculums(lang?: string): Promise<CurriculumLevelGroup[]> {
-    const langCode = lang || getActiveLanguageCode();
+    const requestedLang = lang || getActiveLanguageCode();
+    const langCode = (requestedLang === "en" || requestedLang === "de") ? requestedLang : "ja";
     const groups: CurriculumLevelGroup[] = [];
 
     if (langCode === "en") {
@@ -625,7 +626,7 @@ export class JsonCurriculumRepository implements ICurriculumRepository {
   }
 
   async getLessonsByLevel(level: JLPTLevel): Promise<DetailedLesson[]> {
-    const groups = await this.getCurriculums();
+    const groups = await this.getCurriculums("ja");
     const group = groups.find((g) => g.level === level);
     return group?.lessons || [];
   }
@@ -634,15 +635,29 @@ export class JsonCurriculumRepository implements ICurriculumRepository {
 export class JsonVocabularyRepository implements IVocabularyRepository {
   async getAllVocabulary(level?: JLPTLevel): Promise<Vocabulary[]> {
     const curriculumRepo = new JsonCurriculumRepository();
-    const groups = await curriculumRepo.getCurriculums();
+    const groups = await curriculumRepo.getAllCurriculums();
     let result: Vocabulary[] = [];
+    const seenIds = new Set<string>();
 
     groups.forEach((group) => {
       if (!level || group.level === level) {
         group.lessons.forEach((lesson) => {
-          if (lesson.vocabulary) {
-            result = result.concat(lesson.vocabulary);
-          }
+          lesson.vocabulary?.forEach((v) => {
+            if (!seenIds.has(v.id)) {
+              seenIds.add(v.id);
+              result.push(v);
+            }
+          });
+        });
+        group.books?.forEach((book) => {
+          book.lessons?.forEach((lesson) => {
+            lesson.vocabulary?.forEach((v) => {
+              if (!seenIds.has(v.id)) {
+                seenIds.add(v.id);
+                result.push(v);
+              }
+            });
+          });
         });
       }
     });
@@ -668,15 +683,29 @@ export class JsonVocabularyRepository implements IVocabularyRepository {
 export class JsonGrammarRepository implements IGrammarRepository {
   async getAllGrammar(level?: JLPTLevel): Promise<GrammarPoint[]> {
     const curriculumRepo = new JsonCurriculumRepository();
-    const groups = await curriculumRepo.getCurriculums();
+    const groups = await curriculumRepo.getAllCurriculums();
     let result: GrammarPoint[] = [];
+    const seenIds = new Set<string>();
 
     groups.forEach((group) => {
       if (!level || group.level === level) {
         group.lessons.forEach((lesson) => {
-          if (lesson.grammarPoints) {
-            result = result.concat(lesson.grammarPoints);
-          }
+          lesson.grammarPoints?.forEach((g) => {
+            if (!seenIds.has(g.id)) {
+              seenIds.add(g.id);
+              result.push(g);
+            }
+          });
+        });
+        group.books?.forEach((book) => {
+          book.lessons?.forEach((lesson) => {
+            lesson.grammarPoints?.forEach((g) => {
+              if (!seenIds.has(g.id)) {
+                seenIds.add(g.id);
+                result.push(g);
+              }
+            });
+          });
         });
       }
     });
