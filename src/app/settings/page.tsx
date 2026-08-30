@@ -9,6 +9,7 @@ import UploadPanel from "@/components/UploadPanel";
 import * as syncService from "@/lib/syncService";
 import { useLanguageSetting } from "@/hooks/useLanguageSetting";
 import { useFlashCardSettings } from "@/hooks/useFlashCardSettings";
+import { useNavMenuSettings } from "@/hooks/useNavMenuSettings";
 
 function CurriculumDisplaySettings() {
   const { settings, saveSettings } = useFlashCardSettings();
@@ -44,6 +45,203 @@ function CurriculumDisplaySettings() {
           />
         </button>
       </div>
+    </div>
+  );
+}
+
+// --- Menu Visibility Settings per language ---
+
+interface NavItem {
+  href: string;
+  label: string;
+  icon: string;
+}
+
+function getNavItemsForLanguage(langCode: string): NavItem[] {
+  switch (langCode) {
+    case "en":
+      return [
+        { href: "/", label: "Trang chủ", icon: "🏠" },
+        { href: "/search", label: "Tra cứu từ điển", icon: "🔍" },
+        { href: "/ipa", label: "Luyện phát âm IPA", icon: "🎤" },
+        { href: "/curriculum", label: "Lộ trình IELTS 7.0", icon: "📚" },
+        { href: "/practice", label: "Luyện chuyên sâu", icon: "🏆" },
+        { href: "/grammar", label: "Ngữ pháp Tiếng Anh", icon: "📖" },
+        { href: "/vocabulary", label: "Kho Từ Vựng Tiếng Anh", icon: "📝" },
+        { href: "/translate", label: "Dịch văn bản", icon: "🌐" },
+        { href: "/chat", label: "Gia Sư AI", icon: "🤖" },
+        { href: "/notebooks", label: "Sổ tay Tiếng Anh", icon: "📓" },
+        { href: "/flashcard/all", label: "Ôn tập Flashcard", icon: "🎴" },
+        { href: "/history", label: "Lịch sử học tập", icon: "📊" },
+        { href: "/settings", label: "Cài đặt Ngôn ngữ", icon: "⚙️" },
+      ];
+    case "de":
+      return [
+        { href: "/", label: "Trang chủ", icon: "🏠" },
+        { href: "/search", label: "Tra cứu từ điển", icon: "🔍" },
+        { href: "/curriculum", label: "Giáo trình Tiếng Đức", icon: "📚" },
+        { href: "/practice", label: "Luyện chuyên sâu", icon: "🏆" },
+        { href: "/grammar", label: "Ngữ pháp Tiếng Đức", icon: "📖" },
+        { href: "/vocabulary", label: "Kho Từ Vựng Tiếng Đức", icon: "📝" },
+        { href: "/translate", label: "Dịch văn bản", icon: "🌐" },
+        { href: "/chat", label: "Gia Sư AI", icon: "🤖" },
+        { href: "/notebooks", label: "Sổ tay Tiếng Đức", icon: "📓" },
+        { href: "/flashcard/all", label: "Ôn tập Flashcard", icon: "🎴" },
+        { href: "/history", label: "Lịch sử học tập", icon: "📊" },
+        { href: "/settings", label: "Cài đặt Ngôn ngữ", icon: "⚙️" },
+      ];
+    case "ko":
+      return [
+        { href: "/", label: "Trang chủ", icon: "🏠" },
+        { href: "/search", label: "Tra cứu từ điển", icon: "🔍" },
+        { href: "/curriculum", label: "Giáo trình TOPIK", icon: "📚" },
+        { href: "/grammar", label: "Ngữ pháp Tiếng Hàn", icon: "📖" },
+        { href: "/vocabulary", label: "Kho Từ Vựng Tiếng Hàn", icon: "📝" },
+        { href: "/translate", label: "Dịch văn bản", icon: "🌐" },
+        { href: "/chat", label: "Gia Sư AI", icon: "🤖" },
+        { href: "/notebooks", label: "Sổ tay Tiếng Hàn", icon: "📓" },
+        { href: "/flashcard/all", label: "Ôn tập Flashcard", icon: "🎴" },
+        { href: "/history", label: "Lịch sử học tập", icon: "📊" },
+        { href: "/settings", label: "Cài đặt Ngôn ngữ", icon: "⚙️" },
+      ];
+    case "zh":
+      return [
+        { href: "/", label: "Trang chủ", icon: "🏠" },
+        { href: "/search", label: "Tra cứu từ điển", icon: "🔍" },
+        { href: "/curriculum", label: "Giáo trình HSK", icon: "📚" },
+        { href: "/grammar", label: "Ngữ pháp Tiếng Trung", icon: "📖" },
+        { href: "/vocabulary", label: "Kho Từ Vựng Tiếng Trung", icon: "📝" },
+        { href: "/translate", label: "Dịch văn bản", icon: "🌐" },
+        { href: "/chat", label: "Gia Sư AI", icon: "🤖" },
+        { href: "/notebooks", label: "Sổ tay Tiếng Trung", icon: "📓" },
+        { href: "/flashcard/all", label: "Ôn tập Flashcard", icon: "🎴" },
+        { href: "/history", label: "Lịch sử học tập", icon: "📊" },
+        { href: "/settings", label: "Cài đặt Ngôn ngữ", icon: "⚙️" },
+      ];
+    case "ja":
+    default:
+      return [
+        { href: "/", label: "Trang chủ", icon: "🏠" },
+        { href: "/search", label: "Tra cứu từ điển", icon: "🔍" },
+        { href: "/kaiwa", label: "Lộ trình Kaiwa", icon: "🗣️" },
+        { href: "/curriculum", label: "Giáo trình (N5-N2)", icon: "📚" },
+        { href: "/grammar", label: "Ngữ pháp JLPT", icon: "📖" },
+        { href: "/practice", label: "Luyện chuyên sâu", icon: "🏆" },
+        { href: "/vocabulary", label: "Kho Từ Vựng Tiếng Nhật", icon: "📝" },
+        { href: "/translate", label: "Dịch văn bản", icon: "🌐" },
+        { href: "/chat", label: "Gia Sư AI", icon: "🤖" },
+        { href: "/notebooks", label: "Sổ tay Tiếng Nhật", icon: "📓" },
+        { href: "/flashcard/all", label: "Ôn tập Flashcard", icon: "🎴" },
+        { href: "/history", label: "Lịch sử học tập", icon: "📊" },
+        { href: "/settings", label: "Cài đặt Ngôn ngữ", icon: "⚙️" },
+      ];
+  }
+}
+
+// Items that MUST always stay visible (cannot be hidden)
+const ALWAYS_VISIBLE = new Set(["/", "/settings"]);
+
+function NavMenuSettingsPanel() {
+  const { activeLanguage, supportedLanguages } = useLanguageSetting();
+  const { isVisible, toggleItem, resetLang } = useNavMenuSettings();
+  const [previewLang, setPreviewLang] = useState<string>(activeLanguage.code);
+
+  const langItems = getNavItemsForLanguage(previewLang);
+  const previewLangInfo = supportedLanguages.find((l) => l.code === previewLang);
+  const hiddenCount = langItems.filter((item) => !ALWAYS_VISIBLE.has(item.href) && !isVisible(previewLang, item.href)).length;
+
+  return (
+    <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-2xs">
+      <div className="flex items-center justify-between mb-1">
+        <h2 className="text-base font-bold text-gray-900 flex items-center gap-2">
+          <span>📋</span> Tùy Chỉnh Hiển Thị Menu
+        </h2>
+        {hiddenCount > 0 && (
+          <button
+            onClick={() => resetLang(previewLang)}
+            className="text-[11px] text-indigo-600 font-bold hover:underline"
+          >
+            Hiện lại tất cả
+          </button>
+        )}
+      </div>
+      <p className="text-xs text-gray-500 mb-4">
+        Chọn mục nào xuất hiện trong thanh menu. Mỗi ngôn ngữ có cài đặt riêng.
+      </p>
+
+      {/* Language picker */}
+      <div className="flex flex-wrap gap-2 mb-5">
+        {supportedLanguages
+          .filter((l) => l.status !== "coming_soon")
+          .map((lang) => (
+            <button
+              key={lang.code}
+              onClick={() => setPreviewLang(lang.code)}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold border transition-all ${
+                previewLang === lang.code
+                  ? "bg-indigo-600 text-white border-indigo-600 shadow-md"
+                  : "bg-gray-50 text-gray-600 border-gray-200 hover:border-indigo-300"
+              }`}
+            >
+              <span>{lang.flag}</span>
+              <span>{lang.name}</span>
+              {lang.code === activeLanguage.code && (
+                <span className="text-[9px] opacity-80">★</span>
+              )}
+            </button>
+          ))}
+      </div>
+
+      {/* Menu item toggles */}
+      <div className="space-y-2">
+        {langItems.map(({ href, label, icon }) => {
+          const locked = ALWAYS_VISIBLE.has(href);
+          const visible = isVisible(previewLang, href);
+          return (
+            <div
+              key={href}
+              className={`flex items-center justify-between px-4 py-3 rounded-2xl border transition-all ${
+                visible ? "bg-gray-50 border-gray-100" : "bg-gray-50/50 border-dashed border-gray-200 opacity-60"
+              }`}
+            >
+              <div className="flex items-center gap-3 min-w-0">
+                <span className="text-base shrink-0">{icon}</span>
+                <div className="min-w-0">
+                  <p className={`text-xs font-semibold truncate ${visible ? "text-gray-800" : "text-gray-400 line-through"}`}>
+                    {label}
+                  </p>
+                  <p className="text-[10px] text-gray-400 font-mono">{href}</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                disabled={locked}
+                onClick={() => !locked && toggleItem(previewLang, href)}
+                title={locked ? "Không thể ẩn trang này" : visible ? "Ẩn khỏi menu" : "Hiện trong menu"}
+                className={`relative inline-flex h-7 w-12 shrink-0 rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out ${
+                  locked
+                    ? "bg-gray-200 cursor-not-allowed opacity-50"
+                    : visible
+                    ? "bg-indigo-600 cursor-pointer"
+                    : "bg-gray-300 cursor-pointer"
+                }`}
+              >
+                <span
+                  className={`pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out ${
+                    visible ? "translate-x-5" : "translate-x-0"
+                  }`}
+                />
+              </button>
+            </div>
+          );
+        })}
+      </div>
+
+      {hiddenCount > 0 && (
+        <p className="mt-3 text-[11px] text-amber-600 font-semibold bg-amber-50 border border-amber-100 rounded-xl px-3 py-2">
+          ⚠️ Đang ẩn {hiddenCount} mục trong menu {previewLangInfo?.name}. Menu vẫn hiển thị theo ngôn ngữ đang học.
+        </p>
+      )}
     </div>
   );
 }
@@ -261,8 +459,11 @@ export default function SettingsPage() {
         {/* Sample Curriculum Display Settings Section */}
         <CurriculumDisplaySettings />
 
-        {/* Reset History & Progress Section */}
-        <ResetHistorySettingsPanel />
+        {/* Nav Menu Visibility Settings */}
+        <NavMenuSettingsPanel />
+
+        {/* Reset History & Progress Section — only when logged in */}
+        {isAuthenticated && <ResetHistorySettingsPanel />}
 
         {/* Account Info Section */}
         {isAuthenticated && user && (

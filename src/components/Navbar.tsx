@@ -7,6 +7,7 @@ import SyncDialog from "./SyncDialog";
 import * as syncService from "@/lib/syncService";
 import { useLanguageSetting } from "@/hooks/useLanguageSetting";
 import { useAuth } from "@/context/AuthContext";
+import { useNavMenuSettings } from "@/hooks/useNavMenuSettings";
 
 interface NavItem {
   href: string;
@@ -107,6 +108,8 @@ export default function Navbar() {
   const mobileNavRef = useRef<HTMLDivElement>(null);
 
   const navItems = getNavItemsForLanguage(activeLanguage.code);
+  const { isVisible } = useNavMenuSettings();
+  const visibleNavItems = navItems.filter((item) => isVisible(activeLanguage.code, item.href));
 
   const activeNavItem = navItems.find((item) =>
     item.href === "/" ? pathname === "/" : pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href))
@@ -268,7 +271,7 @@ export default function Navbar() {
                 Danh mục {activeLanguage.name}
               </div>
             )}
-            {navItems.map(({ href, label, icon }) => {
+            {visibleNavItems.map(({ href, label, icon }) => {
               const isActive = pathname === href || (href !== "/" && pathname.startsWith(href));
               return (
                 <Link
@@ -400,7 +403,7 @@ export default function Navbar() {
         ref={mobileNavRef}
         className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white border-t border-gray-200 flex flex-nowrap h-14 overflow-x-auto scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden px-2 touch-pan-x [webkit-overflow-scrolling:touch] cursor-grab active:cursor-grabbing select-none"
       >
-        {navItems.map(({ href, label, icon }) => {
+        {visibleNavItems.map(({ href, label, icon }) => {
           const isActive = pathname === href || (href !== "/" && pathname.startsWith(href));
           return (
             <Link
