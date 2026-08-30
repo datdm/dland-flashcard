@@ -1,3 +1,17 @@
+export type WordType = "Danh từ" | "Tính từ" | "Động từ" | "Phó từ" | "Liên từ" | "Trợ từ" | "Khác";
+
+export const WORD_TYPES: WordType[] = ["Danh từ", "Tính từ", "Động từ", "Phó từ", "Liên từ", "Trợ từ", "Khác"];
+
+export const WORD_TYPE_STYLES: Record<WordType, { bg: string; text: string; border: string }> = {
+  "Danh từ":  { bg: "bg-blue-100",    text: "text-blue-800",    border: "border-blue-200" },
+  "Tính từ":  { bg: "bg-rose-100",    text: "text-rose-700",    border: "border-rose-200" },
+  "Động từ":  { bg: "bg-emerald-100", text: "text-emerald-800", border: "border-emerald-200" },
+  "Phó từ":   { bg: "bg-amber-100",   text: "text-amber-800",   border: "border-amber-200" },
+  "Liên từ":  { bg: "bg-purple-100",  text: "text-purple-800",  border: "border-purple-200" },
+  "Trợ từ":   { bg: "bg-indigo-100",  text: "text-indigo-800",  border: "border-indigo-200" },
+  "Khác":     { bg: "bg-gray-100",    text: "text-gray-700",    border: "border-gray-200" },
+};
+
 export interface Vocabulary {
   id: string;
   kanji?: string;
@@ -8,6 +22,7 @@ export interface Vocabulary {
   createdAt?: string;
   sourceType?: "curriculum" | "notebook";
   sourceName?: string;
+  wordType?: WordType;
 }
 
 export interface Lesson {

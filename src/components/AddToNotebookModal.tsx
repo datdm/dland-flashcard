@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useNotebooks } from "@/hooks/useNotebooks";
 import { useLanguageSetting } from "@/hooks/useLanguageSetting";
 import { useAuth } from "@/context/AuthContext";
-import { Vocabulary } from "@/types";
+import { Vocabulary, WordType, WORD_TYPES, WORD_TYPE_STYLES } from "@/types";
 
 interface AddToNotebookModalProps {
   selectedWord: Partial<Vocabulary> & {
@@ -67,6 +67,7 @@ export default function AddToNotebookModal({
 
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [selectedWordType, setSelectedWordType] = useState<WordType>("Danh từ");
 
   const handleSubmit = async () => {
     setError(null);
@@ -109,6 +110,7 @@ export default function AddToNotebookModal({
         onyomi: selectedWord.onyomi || "",
         meaning: selectedWord.meaning || "",
         phonetic: selectedWord.phonetic || "",
+        wordType: selectedWordType,
       });
 
       if (vocab) {
@@ -146,6 +148,29 @@ export default function AddToNotebookModal({
           Từ: <span className="font-bold text-indigo-600">{mainWordText}</span>
           {selectedWord.meaning ? ` — ${selectedWord.meaning}` : ""}
         </p>
+
+        {/* Word Type Selector */}
+        <div className="mb-4">
+          <label className="block text-xs font-semibold text-gray-700 mb-1.5">Loại từ:</label>
+          <div className="flex flex-wrap gap-1.5">
+            {WORD_TYPES.map((wt) => {
+              const s = WORD_TYPE_STYLES[wt];
+              const selected = selectedWordType === wt;
+              return (
+                <button
+                  key={wt}
+                  type="button"
+                  onClick={() => setSelectedWordType(wt)}
+                  className={`px-2.5 py-1 rounded-lg text-[11px] font-bold border transition-all cursor-pointer ${
+                    selected ? `${s.bg} ${s.text} ${s.border} ring-2 ring-offset-1 ring-current/30` : "bg-gray-50 text-gray-500 border-gray-200 hover:bg-gray-100"
+                  }`}
+                >
+                  {wt}
+                </button>
+              );
+            })}
+          </div>
+        </div>
 
         {error && (
           <div className="mb-4 rounded-2xl border border-red-200 bg-red-50 p-3 text-xs font-semibold text-red-600 flex items-start gap-1.5">

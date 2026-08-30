@@ -6,7 +6,7 @@ import { useParams } from "next/navigation";
 import { useNotebooks } from "@/hooks/useNotebooks";
 import { useProgress } from "@/hooks/useProgress";
 import FilterBar, { FilterTab } from "@/components/FilterBar";
-import { Vocabulary } from "@/types";
+import { Vocabulary, WordType, WORD_TYPES, WORD_TYPE_STYLES } from "@/types";
 
 type VocabFields = Omit<Vocabulary, "id">;
 
@@ -16,6 +16,7 @@ const EMPTY_FIELDS: VocabFields = {
   onyomi: "",
   meaning: "",
   phonetic: "",
+  wordType: "Danh từ",
 };
 
 const FIELD_LABELS: { key: keyof VocabFields; label: string; placeholder: string }[] = [
@@ -120,6 +121,7 @@ export default function NotebookDetailPage() {
       onyomi: v.onyomi ?? "",
       meaning: v.meaning ?? "",
       phonetic: v.phonetic ?? "",
+      wordType: v.wordType ?? "Danh từ",
     });
     setTargetNotebookId("");
     setDuplicateError(null);
@@ -603,11 +605,21 @@ export default function NotebookDetailPage() {
                                 </span>
                               )}
                             </div>
-                            {v.onyomi && (
-                              <p className="text-[11px] text-purple-600 font-medium mt-0.5">
-                                Âm Hán: {v.onyomi}
-                              </p>
-                            )}
+                            <div className="flex items-center gap-1.5 mt-1 flex-wrap">
+                              {v.wordType && (() => {
+                                const s = WORD_TYPE_STYLES[v.wordType];
+                                return (
+                                  <span className={`px-2 py-0.5 rounded-lg text-[10px] font-bold border ${s.bg} ${s.text} ${s.border}`}>
+                                    {v.wordType}
+                                  </span>
+                                );
+                              })()}
+                              {v.onyomi && (
+                                <p className="text-[11px] text-purple-600 font-medium">
+                                  Âm Hán: {v.onyomi}
+                                </p>
+                              )}
+                            </div>
                           </div>
                         </div>
 
@@ -755,6 +767,28 @@ export default function NotebookDetailPage() {
               </div>
             )}
             <div className="space-y-3 mb-6">
+              {/* Word Type Selector */}
+              <div>
+                <label className="block text-xs font-semibold text-gray-700 mb-1.5">Loại từ</label>
+                <div className="flex flex-wrap gap-1.5">
+                  {WORD_TYPES.map((wt) => {
+                    const s = WORD_TYPE_STYLES[wt];
+                    const selected = (form.wordType ?? "Danh từ") === wt;
+                    return (
+                      <button
+                        key={wt}
+                        type="button"
+                        onClick={() => setForm((f) => ({ ...f, wordType: wt as WordType }))}
+                        className={`px-2.5 py-1 rounded-lg text-[11px] font-bold border transition-all cursor-pointer ${
+                          selected ? `${s.bg} ${s.text} ${s.border} ring-2 ring-offset-1 ring-current/30` : "bg-gray-50 text-gray-500 border-gray-200 hover:bg-gray-100"
+                        }`}
+                      >
+                        {wt}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
               {FIELD_LABELS.map(({ key, label, placeholder }) => (
                 <div key={key}>
                   <label className="block text-xs font-semibold text-gray-700 mb-1">{label}</label>
@@ -813,6 +847,28 @@ export default function NotebookDetailPage() {
               </div>
             )}
             <div className="space-y-3 mb-6">
+              {/* Word Type Selector (Edit) */}
+              <div>
+                <label className="block text-xs font-semibold text-gray-700 mb-1.5">Loại từ</label>
+                <div className="flex flex-wrap gap-1.5">
+                  {WORD_TYPES.map((wt) => {
+                    const s = WORD_TYPE_STYLES[wt];
+                    const selected = (editFields.wordType ?? "Danh từ") === wt;
+                    return (
+                      <button
+                        key={wt}
+                        type="button"
+                        onClick={() => setEditFields((f) => ({ ...f, wordType: wt as WordType }))}
+                        className={`px-2.5 py-1 rounded-lg text-[11px] font-bold border transition-all cursor-pointer ${
+                          selected ? `${s.bg} ${s.text} ${s.border} ring-2 ring-offset-1 ring-current/30` : "bg-gray-50 text-gray-500 border-gray-200 hover:bg-gray-100"
+                        }`}
+                      >
+                        {wt}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
               {FIELD_LABELS.map(({ key, label, placeholder }) => (
                 <div key={key}>
                   <label className="block text-xs font-semibold text-gray-700 mb-1">{label}</label>
