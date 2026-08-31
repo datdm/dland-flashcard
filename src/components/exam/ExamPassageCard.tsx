@@ -27,7 +27,10 @@ export default function ExamPassageCard({
       <div className="flex items-center gap-2 mb-3 px-1">
         <span className="text-base">📖</span>
         <span className="font-extrabold text-sm text-indigo-900">
-          {passage.mondai || ""} {passage.passageTitle || "Bài đọc"}
+          {passage.mondai ? `${passage.mondai} — ` : ""}
+          {passage.passageTitle && !passage.passageTitle.startsWith("passage-")
+            ? passage.passageTitle
+            : `Đoạn văn (Câu ${passage.questions.map((q) => q.id).join(", ")})`}
         </span>
         <span className="text-xs font-semibold text-gray-400">
           ({passage.questions.length} câu hỏi)

@@ -310,6 +310,7 @@ export default function GeminiLivePage() {
   const speakText = (text: string) => {
     if (typeof window === "undefined") return;
     window.speechSynthesis.cancel();
+    stopSTT();
 
     // Clean text before speaking
     const cleanText = text.replace(/[*_#`~>\[\]()-]/g, "");
@@ -340,9 +341,8 @@ export default function GeminiLivePage() {
     try {
       setStatusText("Đang kích hoạt Micro...");
       setConnected(true);
-      setAiState("listening");
-      startSTT();
-      setStatusText("Đã kết nối! Hãy bắt đầu nói vào Micro 🎙️");
+      setAiState("speaking");
+      setStatusText("Gia sư AI đang chào hỏi... 🔊");
 
       // Play introductory prompt
       const introMsg = chatMessages[0]?.text || "Hello! Let's talk!";

@@ -66,12 +66,25 @@ export default function TranslatePage() {
 
   return (
     <div className="w-full max-w-[1600px] mx-auto px-3.5 sm:px-6 lg:px-8 py-4 sm:py-6 min-h-screen pb-28 space-y-6">
-      {/* Header */}
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Dịch Văn Bản</h1>
-        <p className="text-xs text-gray-500 mt-1">
-          Dịch tự động đa ngôn ngữ sử dụng LibreTranslate AI
-        </p>
+      {/* Header Banner */}
+      <div className={`rounded-2xl sm:rounded-3xl p-5 sm:p-8 text-white shadow-xl mb-6 transition-all duration-300 bg-gradient-to-r ${
+        activeLanguage.code === "en"
+          ? "from-indigo-900 via-purple-900 to-blue-900"
+          : activeLanguage.code === "de"
+          ? "from-amber-950 via-red-950 to-stone-900"
+          : "from-teal-800 via-indigo-900 to-purple-800"
+      }`}>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-bold tracking-widest uppercase">
+              {activeLanguage.name} ({activeLanguage.code.toUpperCase()})
+            </span>
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight mt-2">Dịch Văn Bản</h1>
+            <p className="text-xs sm:text-sm text-indigo-100 mt-2 leading-relaxed">
+              Dịch tự động đa ngôn ngữ sử dụng LibreTranslate AI
+            </p>
+          </div>
+        </div>
       </div>
 
       <div className="bg-white rounded-3xl shadow-xs border border-gray-100 overflow-hidden">

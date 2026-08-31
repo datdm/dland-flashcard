@@ -115,15 +115,25 @@ export default function DictionarySearchPage() {
 
   return (
     <div className="w-full max-w-[1600px] mx-auto px-3.5 sm:px-6 lg:px-8 py-4 sm:py-6 min-h-screen pb-28 space-y-6">
-      {/* Header */}
-      <div className="mb-6">
-        <div className="flex items-center gap-2 mb-1">
-          <span className="px-2.5 py-0.5 rounded-full bg-indigo-100 text-indigo-700 text-xs font-bold">
-            {activeLanguage.name} ({activeLanguage.code.toUpperCase()})
-          </span>
+      {/* Header Banner */}
+      <div className={`rounded-2xl sm:rounded-3xl p-5 sm:p-8 text-white shadow-xl mb-6 transition-all duration-300 bg-gradient-to-r ${
+        activeLanguage.code === "en"
+          ? "from-indigo-900 via-purple-900 to-blue-900"
+          : activeLanguage.code === "de"
+          ? "from-amber-950 via-red-950 to-stone-900"
+          : "from-teal-800 via-indigo-900 to-purple-800"
+      }`}>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-bold tracking-widest uppercase">
+              {activeLanguage.name} ({activeLanguage.code.toUpperCase()})
+            </span>
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight mt-2">{headerTitle}</h1>
+            <p className="text-xs sm:text-sm text-indigo-100 mt-2 leading-relaxed">
+              {headerSubtitle}
+            </p>
+          </div>
         </div>
-        <h1 className="text-2xl font-bold text-gray-900 tracking-tight">{headerTitle}</h1>
-        <p className="text-xs text-gray-500 mt-1">{headerSubtitle}</p>
       </div>
 
       {/* Search Input Box */}

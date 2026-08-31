@@ -148,7 +148,11 @@ export default function ExamSectionNav({
                           className="text-[11px] font-bold text-emerald-700 hover:underline flex items-center gap-1 cursor-pointer text-left"
                         >
                           <span>📖</span>
-                          <span>{pg.passageTitle || pid}</span>
+                          <span className="line-clamp-1">
+                            {pg.passageTitle && !pg.passageTitle.startsWith("passage-")
+                              ? pg.passageTitle
+                              : `Đoạn văn (Câu ${pg.questions.map((q) => q.id).join(", ")})`}
+                          </span>
                         </button>
 
                         <div className="flex flex-wrap gap-1.5 pl-1.5">
