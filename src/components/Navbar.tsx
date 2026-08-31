@@ -9,13 +9,13 @@ import { useLanguageSetting } from "@/hooks/useLanguageSetting";
 import { useAuth } from "@/context/AuthContext";
 import { useNavMenuSettings } from "@/hooks/useNavMenuSettings";
 
-interface NavItem {
+export interface NavItem {
   href: string;
   label: string;
   icon: string;
 }
 
-function getNavItemsForLanguage(langCode: string): NavItem[] {
+export function getNavItemsForLanguage(langCode: string): NavItem[] {
   switch (langCode) {
     case "en":
       return [
