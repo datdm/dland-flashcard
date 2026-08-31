@@ -1,16 +1,17 @@
 "use client";
 
-import React, { useEffect, useState, use } from "react";
+import React, { useEffect, useState, use, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import AuthGuard from "@/components/AuthGuard";
 import { getResultById, getExamById } from "@/lib/examStorage";
-import { ExamResult, StoredExam } from "@/types/exam";
+import { ExamResult, StoredExam, ExamMajorSection } from "@/types/exam";
 import ExamQuestionCard from "@/components/exam/ExamQuestionCard";
 import ExamPassageCard from "@/components/exam/ExamPassageCard";
 import ExamSectionNav from "@/components/exam/ExamSectionNav";
 import MaziiQuickLookupModal from "@/components/MaziiQuickLookupModal";
 import SelectionLookupTooltip from "@/components/SelectionLookupTooltip";
+import { getStructuredMajorSections } from "@/lib/examUtils";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -23,6 +24,7 @@ export default function ExamResultPage({ params }: Props) {
   const [result, setResult] = useState<ExamResult | null>(null);
   const [exam, setExam] = useState<StoredExam | null>(null);
   const [showFullReview, setShowFullReview] = useState<boolean>(true);
+  const [selectedReviewTab, setSelectedReviewTab] = useState<string>("all");
 
   // Mazii Quick Lookup Modal state
   const [maziiState, setMaziiState] = useState<{
@@ -46,6 +48,11 @@ export default function ExamResultPage({ params }: Props) {
       setExam(loadedExam);
     }
   }, [id, router]);
+
+  const majorSections = useMemo<ExamMajorSection[]>(() => {
+    if (!exam) return [];
+    return getStructuredMajorSections(exam.data);
+  }, [exam]);
 
   if (!result || !exam) {
     return (
@@ -89,6 +96,15 @@ export default function ExamResultPage({ params }: Props) {
     curIdx += pg.questions.length;
   });
 
+  const questionMap = new Map<number, any>();
+  exam.data.questions.forEach((q) => questionMap.set(q.id, q));
+  const passageMap = new Map<string, any>();
+  (exam.data.passages || []).forEach((p) => passageMap.set(p.id, p));
+
+  const filteredMajorSections = majorSections.filter(
+    (major) => selectedReviewTab === "all" || major.id === selectedReviewTab
+  );
+
   const scaledScore = Math.round((result.correctCount / result.totalQuestions) * 180);
 
   return (
@@ -129,7 +145,11 @@ export default function ExamResultPage({ params }: Props) {
                 JLPT {result.level}
               </span>
               <span className="text-xs text-gray-400">
-                {new Date(result.finishedAt).toLocaleDateString("vi-VN")} {new Date(result.finishedAt).toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" })}
+                {new Date(result.finishedAt).toLocaleDateString("vi-VN")}{" "}
+                {new Date(result.finishedAt).toLocaleTimeString("vi-VN", {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
               </span>
             </div>
 
@@ -162,7 +182,9 @@ export default function ExamResultPage({ params }: Props) {
                 }`}
               >
                 <span>{result.passed ? "🎉" : "⚠️"}</span>
-                <span>{result.passed ? "KẾT QUẢ: ĐẠT (PASS)" : "KẾT QUẢ: CHƯA ĐẠT (FAIL)"}</span>
+                <span>
+                  {result.passed ? "KẾT QUẢ: ĐẠT (PASS)" : "KẾT QUẢ: CHƯA ĐẠT (FAIL)"}
+                </span>
               </span>
 
               <span className="px-4 py-2 rounded-2xl bg-gray-100 text-gray-700 text-xs font-bold flex items-center gap-1.5">
@@ -177,64 +199,113 @@ export default function ExamResultPage({ params }: Props) {
             </div>
           </div>
 
-          {/* Section Results Breakdown */}
-          <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-2xs space-y-4">
+          {/* Section & Mondai Results Breakdown */}
+          <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-2xs space-y-5">
             <h2 className="text-base font-extrabold text-gray-900 flex items-center gap-2">
               <span>📊</span>
-              <span>Chi Tiết Điểm Số Từng Phần Thi</span>
+              <span>Chi Tiết Điểm Số Theo Mục Lớn & Mondai</span>
             </h2>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
               {result.sectionResults.map((sec, idx) => {
-                const secPct = sec.total > 0 ? Math.round((sec.correct / sec.total) * 100) : 0;
-                const isSecPassed = secPct >= 32; // JLPT minimum section threshold
+                const secPct =
+                  sec.total > 0 ? Math.round((sec.correct / sec.total) * 100) : 0;
+                const isSecPassed = secPct >= 32;
 
                 return (
                   <div
                     key={idx}
-                    className="bg-gray-50/80 rounded-2xl p-4 border border-gray-100 space-y-2"
+                    className="bg-gray-50/80 rounded-2xl p-5 border border-gray-100 space-y-3 flex flex-col justify-between"
                   >
-                    <div className="flex items-center justify-between text-xs font-extrabold">
-                      <span className="text-gray-800">{sec.name}</span>
-                      <span className={isSecPassed ? "text-indigo-600" : "text-rose-600"}>
-                        {sec.correct}/{sec.total} ({secPct}%)
-                      </span>
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between text-xs font-extrabold">
+                        <span className="text-gray-900 font-black">{sec.name}</span>
+                        <span className={isSecPassed ? "text-indigo-600 font-black" : "text-rose-600 font-black"}>
+                          {sec.correct}/{sec.total} ({secPct}%)
+                        </span>
+                      </div>
+
+                      <div className="w-full h-2.5 bg-gray-200 rounded-full overflow-hidden">
+                        <div
+                          className={`h-full rounded-full transition-all ${
+                            secPct >= 60
+                              ? "bg-emerald-500"
+                              : secPct >= 35
+                              ? "bg-amber-500"
+                              : "bg-rose-500"
+                          }`}
+                          style={{ width: `${secPct}%` }}
+                        />
+                      </div>
+
+                      <div className="flex items-center justify-between text-[11px] text-gray-400 font-medium">
+                        <span>Điểm phần: {sec.score || 0}/60đ</span>
+                        <span>{isSecPassed ? "✅ Đạt chuẩn" : "❌ Liệt phần"}</span>
+                      </div>
                     </div>
 
-                    <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
-                      <div
-                        className={`h-full rounded-full transition-all ${
-                          secPct >= 60
-                            ? "bg-emerald-500"
-                            : secPct >= 35
-                            ? "bg-amber-500"
-                            : "bg-rose-500"
-                        }`}
-                        style={{ width: `${secPct}%` }}
-                      />
-                    </div>
-
-                    <div className="flex items-center justify-between text-[11px] text-gray-400 font-medium">
-                      <span>Điểm phần: {sec.score || 0}/60đ</span>
-                      <span>{isSecPassed ? "✅ Đạt chuẩn" : "❌ Liệt phần"}</span>
-                    </div>
+                    {/* Mondai Breakdown Mini List */}
+                    {sec.mondaiResults && sec.mondaiResults.length > 0 && (
+                      <div className="pt-3 border-t border-gray-200/60 space-y-1.5">
+                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1">
+                          Chi tiết các Mondai:
+                        </span>
+                        {sec.mondaiResults.map((m, mIdx) => (
+                          <div
+                            key={mIdx}
+                            className="flex items-center justify-between text-[11px] text-gray-600 bg-white px-2.5 py-1 rounded-lg border border-gray-100"
+                          >
+                            <span className="truncate max-w-[170px] font-medium">{m.mondaiTitle}</span>
+                            <span className="font-extrabold text-indigo-700 shrink-0">
+                              {m.correct}/{m.total}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 );
               })}
             </div>
           </div>
 
-          {/* Toggle Review Button */}
-          <div className="flex items-center justify-between gap-4">
-            <h2 className="text-base font-extrabold text-gray-900 flex items-center gap-2">
-              <span>📝</span>
-              <span>Xem Lại Đáp Án & Giải Thích Chi Tiết</span>
-            </h2>
+          {/* Major Section Filter Tabs for Review */}
+          <div className="flex items-center justify-between gap-4 flex-wrap">
+            <div className="flex items-center gap-2 overflow-x-auto">
+              <button
+                onClick={() => setSelectedReviewTab("all")}
+                className={`px-4 py-2 rounded-2xl text-xs font-black transition-all shrink-0 cursor-pointer ${
+                  selectedReviewTab === "all"
+                    ? "bg-indigo-600 text-white shadow-xs"
+                    : "bg-white text-gray-600 border border-gray-200 hover:bg-gray-50"
+                }`}
+              >
+                🌟 Tất cả câu hỏi ({result.totalQuestions})
+              </button>
+
+              {majorSections.map((major) => {
+                const isSelected = selectedReviewTab === major.id;
+                return (
+                  <button
+                    key={major.id}
+                    onClick={() => setSelectedReviewTab(major.id)}
+                    className={`px-4 py-2 rounded-2xl text-xs font-black transition-all shrink-0 cursor-pointer flex items-center gap-1.5 ${
+                      isSelected
+                        ? "bg-indigo-600 text-white shadow-xs"
+                        : "bg-white text-gray-600 border border-gray-200 hover:bg-gray-50"
+                    }`}
+                  >
+                    <span>{major.icon}</span>
+                    <span>{major.name}</span>
+                  </button>
+                );
+              })}
+            </div>
 
             <button
               type="button"
               onClick={() => setShowFullReview((prev) => !prev)}
-              className="px-4 py-2 rounded-2xl bg-indigo-600 text-white font-extrabold text-xs shadow-xs hover:bg-indigo-700 transition-all cursor-pointer"
+              className="px-4 py-2 rounded-2xl bg-gray-200 hover:bg-gray-300 text-gray-800 font-extrabold text-xs transition-all cursor-pointer"
             >
               {showFullReview ? "▲ Thu gọn bài thi" : "▼ Xem toàn bộ câu hỏi"}
             </button>
@@ -243,49 +314,106 @@ export default function ExamResultPage({ params }: Props) {
           {/* Full Exam Review Layout */}
           {showFullReview && (
             <div className="flex flex-col lg:flex-row gap-6 items-start">
-              {/* Questions Stream with Answers & Explanations */}
-              <div className="flex-1 min-w-0 space-y-4">
-                {exam.data.questions.map((q, idx) => (
-                  <ExamQuestionCard
-                    key={q.id}
-                    question={q}
-                    index={idx + 1}
-                    selected={result.answers[q.id] || []}
-                    onChange={() => {}}
-                    showResult={true}
-                    onOpenMazii={(word) =>
-                      setMaziiState({ isOpen: true, queryWord: word })
-                    }
-                  />
-                ))}
+              {/* Questions Stream grouped by Major Section & Mondai with Explanations */}
+              <div className="flex-1 min-w-0 space-y-8">
+                {filteredMajorSections.map((major) => (
+                  <section
+                    key={major.id}
+                    id={`major-review-${major.id}`}
+                    className="space-y-6 scroll-mt-28"
+                  >
+                    {/* Major Section Header */}
+                    <div className="bg-gradient-to-r from-indigo-900 via-indigo-800 to-purple-900 rounded-3xl p-5 sm:p-6 text-white shadow-md flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <span className="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-2xl">
+                          {major.icon}
+                        </span>
+                        <div>
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-200">
+                            {major.japaneseName}
+                          </span>
+                          <h2 className="text-lg sm:text-xl font-black">{major.name}</h2>
+                        </div>
+                      </div>
+                    </div>
 
-                {(exam.data.passages || []).map((pg) => (
-                  <ExamPassageCard
-                    key={pg.id}
-                    passage={pg}
-                    startIndex={passageStartMap[pg.id] || 1}
-                    answers={result.answers}
-                    onChange={() => {}}
-                    showResult={true}
-                    onOpenMazii={(word) =>
-                      setMaziiState({ isOpen: true, queryWord: word })
-                    }
-                  />
+                    {/* Mondai Blocks */}
+                    {major.mondais.map((mondai) => (
+                      <div
+                        key={mondai.id}
+                        id={`mondai-review-${mondai.id}`}
+                        className="bg-white rounded-3xl p-5 sm:p-6 border border-gray-200/90 shadow-xs space-y-4 scroll-mt-24"
+                      >
+                        {/* Mondai Header Card */}
+                        <div className="bg-indigo-50/70 border border-indigo-100 rounded-2xl p-4">
+                          <span className="text-xs font-black text-indigo-900 flex items-center gap-1.5 mb-1">
+                            <span className="w-2 h-2 rounded-full bg-indigo-600" />
+                            <span>{mondai.title}</span>
+                          </span>
+                          {mondai.instruction && (
+                            <p className="text-xs font-medium text-gray-700 leading-relaxed pt-1 border-t border-indigo-100/60 select-text">
+                              {mondai.instruction}
+                            </p>
+                          )}
+                        </div>
+
+                        {/* Questions in this Mondai */}
+                        <div className="space-y-4 pt-1">
+                          {(mondai.questionIds || []).map((qid) => {
+                            const q = questionMap.get(qid);
+                            if (!q) return null;
+                            const qIndex = exam.data.questions.findIndex((x) => x.id === qid) + 1;
+                            return (
+                              <ExamQuestionCard
+                                key={q.id}
+                                question={q}
+                                index={qIndex}
+                                selected={result.answers[q.id] || []}
+                                onChange={() => {}}
+                                showResult={true}
+                                onOpenMazii={(word) =>
+                                  setMaziiState({ isOpen: true, queryWord: word })
+                                }
+                              />
+                            );
+                          })}
+
+                          {/* Passages in this Mondai */}
+                          {(mondai.passageIds || []).map((pid) => {
+                            const pg = passageMap.get(pid);
+                            if (!pg) return null;
+                            return (
+                              <ExamPassageCard
+                                key={pg.id}
+                                passage={pg}
+                                startIndex={passageStartMap[pg.id] || 1}
+                                answers={result.answers}
+                                onChange={() => {}}
+                                showResult={true}
+                                onOpenMazii={(word) =>
+                                  setMaziiState({ isOpen: true, queryWord: word })
+                                }
+                              />
+                            );
+                          })}
+                        </div>
+                      </div>
+                    ))}
+                  </section>
                 ))}
               </div>
 
               {/* Sidebar Navigator */}
-              <div className="hidden lg:block w-72 shrink-0 sticky top-20 bg-white rounded-3xl p-5 border border-gray-100 shadow-2xs max-h-[calc(100vh-6rem)] overflow-y-auto custom-scrollbar">
+              <div className="hidden lg:block w-80 shrink-0 sticky top-20 bg-white rounded-3xl p-5 border border-gray-100 shadow-2xs max-h-[calc(100vh-6rem)] overflow-y-auto custom-scrollbar">
                 <div className="text-xs font-extrabold text-gray-700 pb-3 mb-3 border-b border-gray-100 flex items-center justify-between">
                   <span>Bảng đáp án</span>
-                  <span className="text-emerald-600">
+                  <span className="text-emerald-600 font-black">
                     {result.correctCount}/{result.totalQuestions} Đúng
                   </span>
                 </div>
 
                 <ExamSectionNav
-                  sections={exam.data.meta.sections}
-                  passages={exam.data.passages}
+                  examData={exam.data}
                   answers={result.answers}
                   currentQuestionId={null}
                   onNavigate={(qid) => {
@@ -296,6 +424,12 @@ export default function ExamResultPage({ params }: Props) {
                   }}
                   onNavigatePassage={(pid) => {
                     document.getElementById(`passage-${pid}`)?.scrollIntoView({
+                      behavior: "smooth",
+                      block: "start",
+                    });
+                  }}
+                  onNavigateMondai={(mondaiId) => {
+                    document.getElementById(`mondai-review-${mondaiId}`)?.scrollIntoView({
                       behavior: "smooth",
                       block: "start",
                     });

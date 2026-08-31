@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useRef, useCallback, use } from "react";
+import React, { useEffect, useState, useRef, useCallback, use, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import AuthGuard from "@/components/AuthGuard";
@@ -12,13 +12,14 @@ import {
   saveExamResult,
   generateExamId,
 } from "@/lib/examStorage";
-import { StoredExam, ExamResult, SectionResult } from "@/types/exam";
+import { StoredExam, ExamResult, SectionResult, ExamMajorSection, MondaiResult } from "@/types/exam";
 import ExamTimer from "@/components/exam/ExamTimer";
 import ExamQuestionCard from "@/components/exam/ExamQuestionCard";
 import ExamPassageCard from "@/components/exam/ExamPassageCard";
 import ExamSectionNav from "@/components/exam/ExamSectionNav";
 import MaziiQuickLookupModal from "@/components/MaziiQuickLookupModal";
 import SelectionLookupTooltip from "@/components/SelectionLookupTooltip";
+import { getStructuredMajorSections } from "@/lib/examUtils";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -35,6 +36,7 @@ export default function ExamTakingPage({ params }: Props) {
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
   const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
+  const [selectedMajorTab, setSelectedMajorTab] = useState<string>("all");
 
   // Mazii Quick Lookup Modal state
   const [maziiState, setMaziiState] = useState<{
@@ -146,6 +148,21 @@ export default function ExamTakingPage({ params }: Props) {
     }, 80);
   };
 
+  const navigateToMondai = (mondaiId: string) => {
+    setIsDrawerOpen(false);
+    setTimeout(() => {
+      document.getElementById(`mondai-block-${mondaiId}`)?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }, 80);
+  };
+
+  const majorSections = useMemo<ExamMajorSection[]>(() => {
+    if (!exam) return [];
+    return getStructuredMajorSections(exam.data);
+  }, [exam]);
+
   const handleSubmit = useCallback(
     (force = false) => {
       if (!exam) return;
@@ -158,54 +175,71 @@ export default function ExamTakingPage({ params }: Props) {
       const currentAnswers = answersRef.current;
       let totalCorrect = 0;
 
-      const sectionResults: SectionResult[] = exam.data.meta.sections.map(
-        (section) => {
-          let correct = 0;
-          let total = 0;
+      const sectionResults: SectionResult[] = majorSections.map((major) => {
+        let correct = 0;
+        let total = 0;
+        const mondaiResults: MondaiResult[] = [];
 
-          (section.questionIds || []).forEach((qid) => {
+        major.mondais.forEach((m) => {
+          let mCorrect = 0;
+          let mTotal = 0;
+
+          (m.questionIds || []).forEach((qid) => {
             const q = exam.data.questions.find((x) => x.id === qid);
             if (!q) return;
             total++;
+            mTotal++;
             const userAns = currentAnswers[qid] || [];
             if (
               userAns.length === q.answers.length &&
               userAns.every((a) => q.answers.includes(a))
             ) {
               correct++;
+              mCorrect++;
             }
           });
 
-          (section.passageIds || []).forEach((pid) => {
+          (m.passageIds || []).forEach((pid) => {
             const pg = (exam.data.passages || []).find((p) => p.id === pid);
             if (!pg) return;
             pg.questions.forEach((q) => {
               total++;
+              mTotal++;
               const userAns = currentAnswers[q.id] || [];
               if (
                 userAns.length === q.answers.length &&
                 userAns.every((a) => q.answers.includes(a))
               ) {
                 correct++;
+                mCorrect++;
               }
             });
           });
 
-          totalCorrect += correct;
-          return {
-            name: section.name,
-            correct,
-            total,
-            score: total > 0 ? Math.round((correct / total) * 60) : 0,
-            maxScore: 60,
-          };
-        }
-      );
+          if (mTotal > 0) {
+            mondaiResults.push({
+              mondaiTitle: m.title,
+              correct: mCorrect,
+              total: mTotal,
+            });
+          }
+        });
+
+        totalCorrect += correct;
+        return {
+          name: major.name,
+          majorSectionId: major.id,
+          correct,
+          total,
+          score: total > 0 ? Math.round((correct / total) * 60) : 0,
+          maxScore: 60,
+          mondaiResults,
+        };
+      });
 
       const totalQ = allQuestions.length;
       const scorePct = totalQ > 0 ? Math.round((totalCorrect / totalQ) * 100) : 0;
       const passMark = exam.data.meta.passMark || 90;
-      // In JLPT: scaled total score out of 180 (or percentage >= 50%)
       const scaledScore = Math.round((totalCorrect / totalQ) * 180);
       const passed = scaledScore >= passMark;
 
@@ -231,7 +265,7 @@ export default function ExamTakingPage({ params }: Props) {
       saveExamResult(result);
       router.push(`/exam/result/${result.id}`);
     },
-    [exam, id, router]
+    [exam, id, router, majorSections]
   );
 
   if (!exam) {
@@ -263,6 +297,15 @@ export default function ExamTakingPage({ params }: Props) {
     passageStartMap[pg.id] = curIdx;
     curIdx += pg.questions.length;
   });
+
+  const questionMap = new Map<number, any>();
+  exam.data.questions.forEach((q) => questionMap.set(q.id, q));
+  const passageMap = new Map<string, any>();
+  (exam.data.passages || []).forEach((p) => passageMap.set(p.id, p));
+
+  const filteredMajorSections = majorSections.filter(
+    (major) => selectedMajorTab === "all" || major.id === selectedMajorTab
+  );
 
   return (
     <AuthGuard featureName="Luyện Thi JLPT">
@@ -323,38 +366,140 @@ export default function ExamTakingPage({ params }: Props) {
               </button>
             </div>
           </div>
+
+          {/* Major Sections Filter Tabs */}
+          <div className="max-w-7xl mx-auto flex items-center gap-2 pt-2.5 overflow-x-auto custom-scrollbar">
+            <button
+              onClick={() => setSelectedMajorTab("all")}
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-extrabold transition-all shrink-0 cursor-pointer ${
+                selectedMajorTab === "all"
+                  ? "bg-indigo-600 text-white shadow-xs"
+                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+              }`}
+            >
+              🌟 Tất cả các phần
+            </button>
+
+            {majorSections.map((major) => {
+              const isSelected = selectedMajorTab === major.id;
+              return (
+                <button
+                  key={major.id}
+                  onClick={() => setSelectedMajorTab(major.id)}
+                  className={`px-3.5 py-1.5 rounded-xl text-xs font-extrabold transition-all shrink-0 cursor-pointer flex items-center gap-1.5 ${
+                    isSelected
+                      ? "bg-indigo-600 text-white shadow-xs"
+                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                  }`}
+                >
+                  <span>{major.icon}</span>
+                  <span>{major.name}</span>
+                </button>
+              );
+            })}
+          </div>
         </header>
 
         {/* Main Content Layout */}
         <div className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 flex gap-6 items-start">
-          {/* Questions Stream */}
-          <main className="flex-1 min-w-0 space-y-4">
-            {/* Standalone questions */}
-            {exam.data.questions.map((q, idx) => (
-              <ExamQuestionCard
-                key={q.id}
-                question={q}
-                index={idx + 1}
-                selected={answers[q.id] || []}
-                onChange={handleAnswerChange}
-                onOpenMazii={(word) =>
-                  setMaziiState({ isOpen: true, queryWord: word })
-                }
-              />
-            ))}
+          {/* Questions Stream grouped by Major Section & Mondai */}
+          <main className="flex-1 min-w-0 space-y-8">
+            {filteredMajorSections.map((major) => (
+              <section
+                key={major.id}
+                id={`major-section-${major.id}`}
+                className="space-y-6 scroll-mt-28"
+              >
+                {/* Major Section Banner Header */}
+                <div className="bg-gradient-to-r from-indigo-900 via-indigo-800 to-purple-900 rounded-3xl p-5 sm:p-6 text-white shadow-md flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <span className="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-2xl">
+                      {major.icon}
+                    </span>
+                    <div>
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-200">
+                        {major.japaneseName}
+                      </span>
+                      <h2 className="text-lg sm:text-xl font-black">{major.name}</h2>
+                    </div>
+                  </div>
+                  <span className="text-xs font-bold bg-white/15 px-3 py-1 rounded-full border border-white/20">
+                    {major.mondais.length} Mondai
+                  </span>
+                </div>
 
-            {/* Reading passages with sub-questions */}
-            {(exam.data.passages || []).map((pg) => (
-              <ExamPassageCard
-                key={pg.id}
-                passage={pg}
-                startIndex={passageStartMap[pg.id] || 1}
-                answers={answers}
-                onChange={handleAnswerChange}
-                onOpenMazii={(word) =>
-                  setMaziiState({ isOpen: true, queryWord: word })
-                }
-              />
+                {/* Mondai Blocks */}
+                {major.mondais.map((mondai) => (
+                  <div
+                    key={mondai.id}
+                    id={`mondai-block-${mondai.id}`}
+                    className="bg-white rounded-3xl p-5 sm:p-6 border border-gray-200/90 shadow-xs space-y-4 scroll-mt-24"
+                  >
+                    {/* Mondai Header Card */}
+                    <div className="bg-indigo-50/70 border border-indigo-100 rounded-2xl p-4">
+                      <div className="flex items-center justify-between gap-2 flex-wrap mb-1.5">
+                        <span className="text-xs font-black text-indigo-900 flex items-center gap-1.5">
+                          <span className="w-2 h-2 rounded-full bg-indigo-600" />
+                          <span>{mondai.title}</span>
+                        </span>
+                        <span className="text-[11px] font-bold text-indigo-600 bg-white px-2.5 py-0.5 rounded-lg border border-indigo-200/60 shadow-3xs">
+                          {(mondai.questionIds?.length || 0) +
+                            (mondai.passageIds?.reduce(
+                              (acc, pid) => acc + (passageMap.get(pid)?.questions?.length || 0),
+                              0
+                            ) || 0)}{" "}
+                          câu hỏi
+                        </span>
+                      </div>
+
+                      {mondai.instruction && (
+                        <p className="text-xs font-medium text-gray-700 leading-relaxed pt-1 border-t border-indigo-100/60 select-text">
+                          {mondai.instruction}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Questions in this Mondai */}
+                    <div className="space-y-4 pt-1">
+                      {(mondai.questionIds || []).map((qid) => {
+                        const q = questionMap.get(qid);
+                        if (!q) return null;
+                        const qIndex = exam.data.questions.findIndex((x) => x.id === qid) + 1;
+                        return (
+                          <ExamQuestionCard
+                            key={q.id}
+                            question={q}
+                            index={qIndex}
+                            selected={answers[q.id] || []}
+                            onChange={handleAnswerChange}
+                            onOpenMazii={(word) =>
+                              setMaziiState({ isOpen: true, queryWord: word })
+                            }
+                          />
+                        );
+                      })}
+
+                      {/* Passages in this Mondai */}
+                      {(mondai.passageIds || []).map((pid) => {
+                        const pg = passageMap.get(pid);
+                        if (!pg) return null;
+                        return (
+                          <ExamPassageCard
+                            key={pg.id}
+                            passage={pg}
+                            startIndex={passageStartMap[pg.id] || 1}
+                            answers={answers}
+                            onChange={handleAnswerChange}
+                            onOpenMazii={(word) =>
+                              setMaziiState({ isOpen: true, queryWord: word })
+                            }
+                          />
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
+              </section>
             ))}
 
             {/* Bottom Submit Banner */}
@@ -364,7 +509,7 @@ export default function ExamTakingPage({ params }: Props) {
                 Bạn đã hoàn thành {answeredCount}/{totalCount} câu hỏi
               </h3>
               <p className="text-xs text-gray-500 max-w-md mx-auto">
-                Kiểm tra lại các câu hỏi chưa làm trong bảng danh sách bên cạnh trước khi nhấn nộp bài.
+                Kiểm tra lại các câu hỏi chưa làm trong danh sách Mondai trước khi nhấn nộp bài.
               </p>
               <button
                 type="button"
@@ -376,8 +521,8 @@ export default function ExamTakingPage({ params }: Props) {
             </div>
           </main>
 
-          {/* Desktop Right Sidebar (Sticky Navigation Palette) */}
-          <aside className="hidden md:flex w-80 shrink-0 flex-col sticky top-20 bg-white rounded-3xl p-5 border border-gray-100 shadow-2xs max-h-[calc(100vh-6rem)] overflow-hidden">
+          {/* Desktop Right Sidebar (Hierarchical Navigation Palette) */}
+          <aside className="hidden md:flex w-80 shrink-0 flex-col sticky top-28 bg-white rounded-3xl p-5 border border-gray-100 shadow-2xs max-h-[calc(100vh-8rem)] overflow-hidden">
             {/* Progress Bar */}
             <div className="pb-4 border-b border-gray-100 shrink-0">
               <div className="flex items-center justify-between text-xs font-extrabold mb-1.5">
@@ -394,15 +539,15 @@ export default function ExamTakingPage({ params }: Props) {
               </div>
             </div>
 
-            {/* Question Navigation Palette */}
+            {/* Hierarchical Question Navigation Palette */}
             <div className="flex-1 overflow-y-auto pt-3 pr-1 space-y-4 custom-scrollbar">
               <ExamSectionNav
-                sections={exam.data.meta.sections}
-                passages={exam.data.passages}
+                examData={exam.data}
                 answers={answers}
                 currentQuestionId={currentQId}
                 onNavigate={navigateToQuestion}
                 onNavigatePassage={navigateToPassage}
+                onNavigateMondai={navigateToMondai}
               />
             </div>
           </aside>
@@ -427,12 +572,12 @@ export default function ExamTakingPage({ params }: Props) {
 
               <div className="flex-1 overflow-y-auto py-4">
                 <ExamSectionNav
-                  sections={exam.data.meta.sections}
-                  passages={exam.data.passages}
+                  examData={exam.data}
                   answers={answers}
                   currentQuestionId={currentQId}
                   onNavigate={navigateToQuestion}
                   onNavigatePassage={navigateToPassage}
+                  onNavigateMondai={navigateToMondai}
                 />
               </div>
             </div>
