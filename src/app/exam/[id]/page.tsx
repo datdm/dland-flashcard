@@ -19,6 +19,7 @@ import ExamPassageCard from "@/components/exam/ExamPassageCard";
 import ExamSectionNav from "@/components/exam/ExamSectionNav";
 import MaziiQuickLookupModal from "@/components/MaziiQuickLookupModal";
 import SelectionLookupTooltip from "@/components/SelectionLookupTooltip";
+import ExamStructureModal from "@/components/exam/ExamStructureModal";
 import { getStructuredMajorSections } from "@/lib/examUtils";
 
 interface Props {
@@ -36,6 +37,7 @@ export default function ExamTakingPage({ params }: Props) {
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
   const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
+  const [showStructureModal, setShowStructureModal] = useState<boolean>(false);
   const [selectedMajorTab, setSelectedMajorTab] = useState<string>("all");
 
   // Mazii Quick Lookup Modal state
@@ -315,12 +317,12 @@ export default function ExamTakingPage({ params }: Props) {
         />
 
         {/* Top Sticky Header */}
-        <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-200 px-4 py-3 shadow-3xs">
-          <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
-            <div className="flex items-center gap-3 min-w-0">
+        <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-200 px-3.5 sm:px-6 lg:px-8 py-2.5 sm:py-3.5 shadow-3xs">
+          <div className="max-w-[1600px] mx-auto flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
               <Link
                 href="/exam"
-                className="p-2 rounded-xl text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors shrink-0"
+                className="p-1.5 sm:p-2 rounded-xl text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors shrink-0"
                 title="Quay lại danh sách đề thi"
               >
                 ←
@@ -337,7 +339,17 @@ export default function ExamTakingPage({ params }: Props) {
               </div>
             </div>
 
-            <div className="flex items-center gap-3 shrink-0">
+            <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+              <button
+                type="button"
+                onClick={() => setShowStructureModal(true)}
+                className="hidden sm:flex px-3 py-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xs transition-colors items-center gap-1 cursor-pointer"
+                title="Xem phân bổ thời gian và mục tiêu từng Mondai"
+              >
+                <span>📋</span>
+                <span>Cấu trúc đề {exam.data.meta.level}</span>
+              </button>
+
               <ExamTimer
                 initialSeconds={timeRemaining}
                 onTimeUp={() => handleSubmit(true)}
@@ -350,7 +362,7 @@ export default function ExamTakingPage({ params }: Props) {
               <button
                 type="button"
                 onClick={() => setShowConfirmModal(true)}
-                className="px-4 py-2 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs shadow-md shadow-indigo-200 transition-all flex items-center gap-1.5 cursor-pointer active:scale-98"
+                className="px-3 sm:px-4 py-2 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs shadow-md shadow-indigo-200 transition-all flex items-center gap-1.5 cursor-pointer active:scale-98"
               >
                 <span>📤</span>
                 <span className="hidden sm:inline">Nộp bài thi</span>
@@ -360,15 +372,16 @@ export default function ExamTakingPage({ params }: Props) {
               <button
                 type="button"
                 onClick={() => setIsDrawerOpen(true)}
-                className="md:hidden px-3 py-2 bg-gray-100 rounded-xl text-xs font-bold text-gray-700 cursor-pointer"
+                className="md:hidden px-2.5 py-2 bg-indigo-50 border border-indigo-200 text-indigo-700 rounded-xl text-xs font-black cursor-pointer flex items-center gap-1"
               >
-                📑 {answeredCount}/{totalCount}
+                <span>📑</span>
+                <span>{answeredCount}/{totalCount}</span>
               </button>
             </div>
           </div>
 
           {/* Major Sections Filter Tabs */}
-          <div className="max-w-7xl mx-auto flex items-center gap-2 pt-2.5 overflow-x-auto custom-scrollbar">
+          <div className="max-w-[1600px] mx-auto flex items-center gap-2 pt-2.5 overflow-x-auto custom-scrollbar">
             <button
               onClick={() => setSelectedMajorTab("all")}
               className={`px-3.5 py-1.5 rounded-xl text-xs font-extrabold transition-all shrink-0 cursor-pointer ${
@@ -401,17 +414,17 @@ export default function ExamTakingPage({ params }: Props) {
         </header>
 
         {/* Main Content Layout */}
-        <div className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 flex gap-6 items-start">
+        <div className="flex-1 max-w-[1600px] w-full mx-auto p-3.5 sm:p-6 lg:p-8 flex gap-5 lg:gap-7 items-start">
           {/* Questions Stream grouped by Major Section & Mondai */}
-          <main className="flex-1 min-w-0 space-y-8">
+          <main className="flex-1 min-w-0 space-y-6 sm:space-y-8">
             {filteredMajorSections.map((major) => (
               <section
                 key={major.id}
                 id={`major-section-${major.id}`}
-                className="space-y-6 scroll-mt-28"
+                className="space-y-4 sm:space-y-6 scroll-mt-28"
               >
                 {/* Major Section Banner Header */}
-                <div className="bg-gradient-to-r from-indigo-900 via-indigo-800 to-purple-900 rounded-3xl p-5 sm:p-6 text-white shadow-md flex items-center justify-between">
+                <div className="bg-gradient-to-r from-indigo-900 via-indigo-800 to-purple-900 rounded-2xl sm:rounded-3xl p-4 sm:p-6 text-white shadow-md flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <span className="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-2xl">
                       {major.icon}
@@ -635,6 +648,13 @@ export default function ExamTakingPage({ params }: Props) {
           isOpen={maziiState.isOpen}
           queryWord={maziiState.queryWord}
           onClose={() => setMaziiState({ isOpen: false, queryWord: "" })}
+        />
+
+        {/* Structure Modal */}
+        <ExamStructureModal
+          isOpen={showStructureModal}
+          onClose={() => setShowStructureModal(false)}
+          initialLevel={exam.data.meta.level}
         />
       </div>
     </AuthGuard>

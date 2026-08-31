@@ -139,9 +139,9 @@ export default function FlashCardAllPage() {
 
   return (
     <AuthGuard featureName="Ôn Tập Flashcard Tổng Hợp" description="Đăng nhập để lật thẻ Flashcard, ghi nhớ từ vựng và tự động cập nhật độ thông thạo SRS.">
-      <div className="p-4 max-w-5xl mx-auto min-h-screen pb-24">
+      <div className="w-full max-w-[1600px] mx-auto px-3.5 sm:px-6 lg:px-8 py-4 sm:py-6 min-h-screen pb-28 space-y-6">
         {/* Header Banner */}
-        <div className="bg-gradient-to-r from-indigo-700 via-purple-700 to-pink-700 rounded-3xl p-6 sm:p-8 text-white shadow-xl mb-6">
+        <div className="bg-gradient-to-r from-indigo-700 via-purple-700 to-pink-700 rounded-2xl sm:rounded-3xl p-5 sm:p-8 text-white shadow-xl">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-bold tracking-widest uppercase">

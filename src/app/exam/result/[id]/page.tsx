@@ -115,8 +115,8 @@ export default function ExamResultPage({ params }: Props) {
         />
 
         {/* Top Header */}
-        <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-200 px-4 py-3 shadow-3xs">
-          <div className="max-w-6xl mx-auto flex items-center justify-between gap-3">
+        <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-200 px-3.5 sm:px-6 lg:px-8 py-2.5 sm:py-3.5 shadow-3xs">
+          <div className="max-w-[1600px] mx-auto flex items-center justify-between gap-3">
             <Link
               href="/exam"
               className="px-3.5 py-1.5 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-bold transition-colors flex items-center gap-1.5"
@@ -137,9 +137,9 @@ export default function ExamResultPage({ params }: Props) {
           </div>
         </header>
 
-        <div className="max-w-6xl mx-auto p-4 sm:p-6 space-y-6">
+        <div className="max-w-[1600px] mx-auto p-3.5 sm:p-6 lg:p-8 space-y-6 sm:space-y-8">
           {/* Main Score Hero Card */}
-          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-gray-100 shadow-xl text-center relative overflow-hidden">
+          <div className="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-8 border border-gray-100 shadow-xl text-center relative overflow-hidden">
             <div className="flex items-center justify-center gap-2 mb-2">
               <span className="px-3 py-1 bg-indigo-50 text-indigo-700 rounded-full text-xs font-extrabold border border-indigo-100">
                 JLPT {result.level}

@@ -237,9 +237,9 @@ export default function NotebooksPage() {
 
   return (
     <AuthGuard featureName="Sổ Tay Từ Vựng Cá Nhân">
-      <div className="p-4 max-w-5xl mx-auto min-h-screen pb-24">
+      <div className="w-full max-w-[1600px] mx-auto px-3.5 sm:px-6 lg:px-8 py-4 sm:py-6 min-h-screen pb-28 space-y-6">
       {/* Header Banner */}
-      <div className="bg-gradient-to-r from-purple-700 via-indigo-700 to-purple-800 rounded-3xl p-6 text-white shadow-lg mb-6">
+      <div className="bg-gradient-to-r from-purple-700 via-indigo-700 to-purple-800 rounded-2xl sm:rounded-3xl p-5 sm:p-8 text-white shadow-lg">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-xs font-semibold tracking-wide">

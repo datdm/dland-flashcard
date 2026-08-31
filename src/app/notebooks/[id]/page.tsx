@@ -424,16 +424,16 @@ export default function NotebookDetailPage() {
   }
 
   return (
-    <div className="p-4 max-w-5xl mx-auto min-h-screen pb-24">
+    <div className="w-full max-w-[1600px] mx-auto px-3.5 sm:px-6 lg:px-8 py-4 sm:py-6 min-h-screen pb-28 space-y-5 sm:space-y-6">
       {/* Back Link */}
-      <div className="mb-4">
-        <Link href="/notebooks" className="text-xs text-indigo-600 font-semibold hover:underline">
+      <div>
+        <Link href="/notebooks" className="text-xs text-indigo-600 font-semibold hover:underline flex items-center gap-1">
           ← Danh sách Sổ tay
         </Link>
       </div>
 
       {/* Header Banner */}
-      <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-2xs mb-6">
+      <div className="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-6 border border-gray-100 shadow-2xs">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-bold">
@@ -564,7 +564,7 @@ export default function NotebookDetailPage() {
         </div>
       ) : (
         <>
-          <div ref={gridRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          <div ref={gridRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3.5 sm:gap-4">
             {renderedVocabIds.map((vocabId, renderIndex) => {
               const v = vocabMap.get(vocabId);
               if (!v) return null;

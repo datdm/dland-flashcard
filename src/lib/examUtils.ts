@@ -60,6 +60,8 @@ export function getStructuredMajorSections(examData: ExamData): ExamMajorSection
     passageIds: string[];
   }>();
 
+  const level = (examData.meta.level || "N2").toUpperCase();
+
   // Helper to extract Mondai info
   const extractMondaiInfo = (
     mondaiStr?: string,
@@ -85,9 +87,31 @@ export function getStructuredMajorSections(examData: ExamData): ExamMajorSection
     let majorId = fallbackMajorId;
 
     if (typeof num === "number" && !isNaN(num)) {
-      if (num >= 1 && num <= 6) majorId = "vocab";
-      else if (num >= 7 && num <= 9) majorId = "grammar";
-      else if (num >= 10) majorId = "reading";
+      if (level === "N1") {
+        if (num >= 1 && num <= 4) majorId = "vocab";
+        else if (num >= 5 && num <= 7) majorId = "grammar";
+        else if (num >= 8 && num <= 13) majorId = "reading";
+      } else if (level === "N2") {
+        if (num >= 1 && num <= 6) majorId = "vocab";
+        else if (num >= 7 && num <= 9) majorId = "grammar";
+        else if (num >= 10 && num <= 14) majorId = "reading";
+      } else if (level === "N3") {
+        if (num >= 1 && num <= 5) majorId = "vocab";
+        else if (num >= 6 && num <= 8) majorId = "grammar";
+        else if (num >= 9 && num <= 12) majorId = "reading";
+      } else if (level === "N4") {
+        if (num >= 1 && num <= 5) majorId = "vocab";
+        else if (num >= 6 && num <= 8) majorId = "grammar";
+        else if (num >= 9 && num <= 11) majorId = "reading";
+      } else if (level === "N5") {
+        if (num >= 1 && num <= 4) majorId = "vocab";
+        else if (num >= 5 && num <= 7) majorId = "grammar";
+        else if (num >= 8 && num <= 10) majorId = "reading";
+      } else {
+        if (num >= 1 && num <= 6) majorId = "vocab";
+        else if (num >= 7 && num <= 9) majorId = "grammar";
+        else if (num >= 10) majorId = "reading";
+      }
     }
 
     let title = `問題 ${num}`;

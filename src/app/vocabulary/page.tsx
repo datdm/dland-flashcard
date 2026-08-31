@@ -186,9 +186,9 @@ export default function VocabularyPage() {
   };
 
   return (
-    <div className="p-4 max-w-5xl mx-auto min-h-screen pb-24">
+    <div className="w-full max-w-[1600px] mx-auto px-3.5 sm:px-6 lg:px-8 py-4 sm:py-6 min-h-screen pb-28 space-y-6">
       {/* Header Banner */}
-      <div className="bg-gradient-to-r from-indigo-700 via-purple-700 to-indigo-800 rounded-3xl p-6 text-white shadow-lg mb-6">
+      <div className="bg-gradient-to-r from-indigo-700 via-purple-700 to-indigo-800 rounded-2xl sm:rounded-3xl p-5 sm:p-8 text-white shadow-lg">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 mb-1">
@@ -353,7 +353,7 @@ export default function VocabularyPage() {
             <>
               {/* Vocab Items Grid / List */}
               {viewMode === "card" ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3.5 sm:gap-4">
                   {paginatedVocab.map((vocab) => {
                     const nbInfo = vocab.source === "notebook"
                       ? { id: vocab.notebookId, name: vocab.notebookName }

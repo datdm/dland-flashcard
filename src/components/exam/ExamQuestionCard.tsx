@@ -43,7 +43,7 @@ export default function ExamQuestionCard({
   return (
     <div
       id={`question-${question.id}`}
-      className={`p-5 rounded-3xl mb-4 border transition-all scroll-mt-24 ${
+      className={`p-4 sm:p-5 rounded-2xl sm:rounded-3xl mb-3.5 sm:mb-4 border transition-all scroll-mt-24 ${
         showResult
           ? isCorrect
             ? "bg-emerald-50/60 border-emerald-200 shadow-xs"

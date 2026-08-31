@@ -7,6 +7,7 @@ import AuthGuard from "@/components/AuthGuard";
 import { getAllExams, getAllResults, deleteCustomExam } from "@/lib/examStorage";
 import { StoredExam, ExamResult } from "@/types/exam";
 import ExamUploadModal from "@/components/exam/ExamUploadModal";
+import ExamStructureModal from "@/components/exam/ExamStructureModal";
 import { useLanguageSetting } from "@/hooks/useLanguageSetting";
 
 const LEVEL_COLORS: Record<string, { badge: string; border: string }> = {
@@ -25,6 +26,7 @@ export default function ExamHubPage() {
   const [selectedLevel, setSelectedLevel] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [showUploadModal, setShowUploadModal] = useState<boolean>(false);
+  const [showStructureModal, setShowStructureModal] = useState<boolean>(false);
 
   const loadData = () => {
     setExams(getAllExams());
@@ -60,9 +62,9 @@ export default function ExamHubPage() {
       featureName="Luyện Thi & Thi Thử JLPT"
       description="Đăng nhập để làm các đề thi thử JLPT chuẩn cấu trúc N5 - N1, bấm giờ làm bài, chấm điểm và lưu lịch sử kết quả."
     >
-      <div className="p-4 sm:p-6 max-w-6xl mx-auto min-h-screen pb-28 space-y-6">
+      <div className="w-full max-w-[1600px] mx-auto px-3.5 sm:px-6 lg:px-8 py-4 sm:py-6 min-h-screen pb-28 space-y-6 sm:space-y-8">
         {/* Header Hero Banner */}
-        <div className="bg-gradient-to-r from-rose-900 via-indigo-900 to-purple-900 rounded-3xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden">
+        <div className="bg-gradient-to-r from-rose-900 via-indigo-900 to-purple-900 rounded-2xl sm:rounded-3xl p-5 sm:p-8 text-white shadow-xl relative overflow-hidden">
           <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div>
               <div className="flex items-center gap-2 flex-wrap mb-2">
@@ -81,14 +83,25 @@ export default function ExamHubPage() {
               </p>
             </div>
 
-            <button
-              type="button"
-              onClick={() => setShowUploadModal(true)}
-              className="px-5 py-3 rounded-2xl bg-white text-indigo-950 font-extrabold text-xs shadow-lg hover:bg-gray-100 transition-all flex items-center gap-2 shrink-0 cursor-pointer self-start md:self-auto active:scale-98"
-            >
-              <span>📥</span>
-              <span>Nhập đề thi JSON</span>
-            </button>
+            <div className="flex items-center gap-2.5 flex-wrap self-start md:self-auto shrink-0">
+              <button
+                type="button"
+                onClick={() => setShowStructureModal(true)}
+                className="px-4 py-3 rounded-2xl bg-white/20 hover:bg-white/30 backdrop-blur-md text-white font-extrabold text-xs border border-white/30 transition-all flex items-center gap-1.5 cursor-pointer active:scale-98"
+              >
+                <span>📋</span>
+                <span>Cấu trúc đề thi N1-N5</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setShowUploadModal(true)}
+                className="px-4 py-3 rounded-2xl bg-white text-indigo-950 font-extrabold text-xs shadow-lg hover:bg-gray-100 transition-all flex items-center gap-1.5 cursor-pointer active:scale-98"
+              >
+                <span>📥</span>
+                <span>Nhập đề JSON</span>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -173,7 +186,7 @@ export default function ExamHubPage() {
         </div>
 
         {/* Exam Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
           {filteredExams.map((exam) => {
             const meta = exam.data.meta;
             const levelStyle =
@@ -190,7 +203,7 @@ export default function ExamHubPage() {
             return (
               <div
                 key={exam.id}
-                className={`bg-white rounded-3xl p-6 border border-gray-100 shadow-2xs transition-all duration-200 hover:shadow-md flex flex-col justify-between ${levelStyle.border}`}
+                className={`bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-6 border border-gray-100 shadow-2xs transition-all duration-200 hover:shadow-md flex flex-col justify-between ${levelStyle.border}`}
               >
                 <div>
                   <div className="flex items-center justify-between gap-3 mb-3">
@@ -298,6 +311,13 @@ export default function ExamHubPage() {
             loadData();
             router.push(`/exam/${examId}`);
           }}
+        />
+
+        {/* Modal Structure Blueprint */}
+        <ExamStructureModal
+          isOpen={showStructureModal}
+          onClose={() => setShowStructureModal(false)}
+          initialLevel={selectedLevel === "all" ? "N2" : selectedLevel}
         />
       </div>
     </AuthGuard>

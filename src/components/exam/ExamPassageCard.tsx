@@ -38,16 +38,16 @@ export default function ExamPassageCard({
       <div className="flex flex-col lg:flex-row gap-5 items-start">
         {/* Passage Text Box (Sticky on Desktop) */}
         <div className="w-full lg:w-1/2 shrink-0">
-          <div className="lg:sticky lg:top-20 bg-white rounded-3xl p-5 sm:p-6 border border-gray-200/80 shadow-xs">
-            <div className="flex items-center justify-between pb-3 mb-3 border-b border-gray-100">
+          <div className="lg:sticky lg:top-24 bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 border border-gray-200/80 shadow-xs">
+            <div className="flex items-center justify-between pb-2.5 mb-3 border-b border-gray-100">
               <span className="text-xs font-black text-indigo-700 uppercase tracking-wider flex items-center gap-1.5">
                 <span>📄</span> Văn bản Đọc hiểu (読解本文)
               </span>
-              <span className="text-[11px] text-gray-400 font-medium">Bôi đen chữ để tra từ</span>
+              <span className="text-[10px] sm:text-[11px] text-gray-400 font-medium">Bôi đen chữ để tra từ</span>
             </div>
 
-            <div className="max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar">
-              <p className="whitespace-pre-wrap text-sm leading-loose text-gray-800 font-medium tracking-wide select-text">
+            <div className="max-h-[45vh] sm:max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar">
+              <p className="whitespace-pre-wrap text-xs sm:text-sm leading-loose text-gray-800 font-medium tracking-wide select-text">
                 {passage.passageText}
               </p>
             </div>

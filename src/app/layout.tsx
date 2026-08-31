@@ -23,7 +23,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Navbar />
           <GlobalSyncIndicator />
           <AuthModal />
-          <main id="main-content" className="flex-1 md:pl-64 pb-24 md:pb-8 transition-all duration-300 ease-in-out">{children}</main>
+          <main id="main-content" className="flex-1 md:pl-64 pb-24 md:pb-8 transition-all duration-300 ease-in-out w-full min-w-0 overflow-x-hidden">{children}</main>
         </AuthProvider>
       </body>
     </html>
