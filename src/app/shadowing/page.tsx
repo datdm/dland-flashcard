@@ -6,9 +6,11 @@ import { getAllShadowingVideos } from "@/lib/shadowingStorage";
 import { ShadowingVideo } from "@/types/shadowing";
 import YouTubeVideoSearchModal from "@/components/shadowing/YouTubeVideoSearchModal";
 import { useRouter } from "next/navigation";
+import { useLanguageSetting } from "@/hooks/useLanguageSetting";
 
 export default function ShadowingHubPage() {
   const router = useRouter();
+  const { activeLanguage } = useLanguageSetting();
   const [videos, setVideos] = useState<ShadowingVideo[]>([]);
   const [selectedLevel, setSelectedLevel] = useState<string>("All");
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
@@ -32,20 +34,26 @@ export default function ShadowingHubPage() {
   return (
     <div className="w-full max-w-[1600px] mx-auto px-3.5 sm:px-6 lg:px-8 py-4 sm:py-6 min-h-screen pb-28 space-y-6 sm:space-y-8">
       {/* Hero Banner */}
-      <div className="bg-gradient-to-r from-blue-700 via-indigo-700 to-purple-800 rounded-2xl sm:rounded-3xl p-5 sm:p-8 text-white shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-6">
+      <div className={`rounded-2xl sm:rounded-3xl p-5 sm:p-8 text-white shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-6 transition-all duration-300 bg-gradient-to-r ${
+        activeLanguage.code === "en"
+          ? "from-indigo-900 via-purple-900 to-blue-900"
+          : activeLanguage.code === "de"
+          ? "from-amber-950 via-red-950 to-stone-900"
+          : "from-teal-800 via-indigo-900 to-purple-800"
+      }`}>
         <div className="max-w-2xl space-y-2">
-          <div className="flex items-center gap-2">
-            <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-xs font-semibold tracking-wide">
-              🎬 YouTube Shadowing Studio
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-bold tracking-widest uppercase">
+              {activeLanguage.name} ({activeLanguage.code.toUpperCase()})
             </span>
             <span className="px-2.5 py-0.5 bg-white/30 backdrop-blur-md rounded-full text-xs font-bold">
               3 Chế độ luyện tập
             </span>
           </div>
-          <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight">
+          <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight mt-2">
             Luyện Shadowing & Viết Chính Tả Qua Video YouTube
           </h1>
-          <p className="text-xs sm:text-sm text-blue-100 leading-relaxed">
+          <p className="text-xs sm:text-sm text-indigo-100 leading-relaxed">
             Luyện nói đuổi theo người bản xứ với phụ đề Furigana chuẩn, tự động ngắt câu, tra từ Mazii tức thì, kiểm tra chính tả và nhận diện giọng nói AI chấm điểm.
           </p>
         </div>

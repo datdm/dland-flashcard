@@ -1,19 +1,19 @@
 {
   "meta": {
-    "title": "JLPT N2 — Đề Thi Chuẩn Quốc Tế 07/2025 (Chữ Hán, Từ Vựng, Ngữ Pháp & Đọc Hiểu)",
-    "subject": "JLPT",
+    "title": "JLPT N2 - Đề Thi Chính Thức Tháng 07/2025 (言語知識・読解)",
+    "subject": "Japanese (JLPT N2)",
     "level": "N2",
-    "exam": "Kỳ thi Năng lực Nhật ngữ N2",
-    "version": "2.0",
-    "year": "07/2025",
-    "description": "Đề thi hoàn chỉnh chuẩn 100% cấu trúc N2 của Japan Foundation & JEES bao gồm đầy đủ 14 Mondai: 文字・語彙 (Mondai 1-6, 30 câu), 文法 (Mondai 7-9, 21 câu), 読解 (Mondai 10-14, 20 câu). Tổng 71 câu hỏi trắc nghiệm kèm lời giải chi tiết.",
-    "totalQuestions": 71,
+    "exam": "JLPT N2 2025-07",
+    "version": "Official Original Exam Paper (2025年7月)",
+    "totalQuestions": 68,
     "timeLimit": 6300,
     "passMark": 90,
+    "year": "2025-07",
+    "description": "Đề thi chính thức JLPT N2 kỳ thi Tháng 07/2025 (Đầy đủ phần Kiến thức ngôn ngữ Chữ Hán, Từ vựng, Ngữ pháp & Đọc hiểu theo đúng file PDF gốc) kèm bản dịch và giải thích chi tiết.",
     "sections": [
       {
-        "name": "文字・語彙 (Kanji & Từ vựng)",
-        "mondai": "問題 1-6",
+        "name": "文字・語彙",
+        "mondai": "Mondai 1 - 6 (30 câu)",
         "questionIds": [
           1,
           2,
@@ -45,11 +45,12 @@
           28,
           29,
           30
-        ]
+        ],
+        "maxScore": 60
       },
       {
-        "name": "文法 (Ngữ pháp & Dựng câu)",
-        "mondai": "問題 7-9",
+        "name": "文法",
+        "mondai": "Mondai 7 - 9 (21 câu)",
         "questionIds": [
           31,
           32,
@@ -72,14 +73,35 @@
           49,
           50,
           51
-        ]
+        ],
+        "passageIds": [
+          "passage-n2-p01"
+        ],
+        "maxScore": 60
       },
       {
-        "name": "読解 (Đọc hiểu Đoạn văn)",
-        "mondai": "問題 10-14",
-        "questionIds": [],
+        "name": "読解",
+        "mondai": "Mondai 10 - 13 (17 câu)",
+        "questionIds": [
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61,
+          62,
+          63,
+          64,
+          65,
+          66,
+          67,
+          68
+        ],
         "passageIds": [
-          "passage-n2-p01",
           "passage-n2-p02",
           "passage-n2-p03",
           "passage-n2-p04",
@@ -89,1215 +111,1327 @@
           "passage-n2-p08",
           "passage-n2-p09",
           "passage-n2-p10",
-          "passage-n2-p11"
-        ]
+          "passage-n2-p11",
+          "passage-n2-p12"
+        ],
+        "maxScore": 60
       }
     ]
   },
   "questions": [
     {
       "id": 1,
-      "mondai": "問題1: 漢字読み — ＿＿の言葉の読み方として最もよいものを、1・2・3・4から一つ選びなさい。",
-      "question": "この地域は昔から農業が<u>盛ん</u>に行われている。",
+      "question": "1. ＿＿の言葉の読み方として最もよいものを、1・2・3・4から一つ選びなさい。\n\n[辛い]食べ物は好きではありません。",
       "type": "single",
       "options": [
-        "さかん",
-        "ゆたか",
-        "さかん",
-        "はで"
-      ],
-      "answers": [
-        0
-      ],
-      "explanation": "「盛ん（さかん）」: Thịnh vượng, phát triển mạnh mẽ. Cụm từ: 農業が盛ん (Nông nghiệp phát triển mạnh)."
-    },
-    {
-      "id": 2,
-      "mondai": "問題1: 漢字読み — ＿＿の言葉の読み方として最もよいものを、1・2・3・4から一つ選びなさい。",
-      "question": "彼はどんな困難にも<u>屈しない</u>強い意志を持っている。",
-      "type": "single",
-      "options": [
-        "くっしない",
-        "まけない",
-        "くじけない",
-        "たおれない"
-      ],
-      "answers": [
-        0
-      ],
-      "explanation": "「屈する（くっする）」: Khuất phục, đầu hàng. 「屈しない」: Không chịu khuất phục trước gian khó."
-    },
-    {
-      "id": 3,
-      "mondai": "問題1: 漢字読み — ＿＿の言葉の読み方として最もよいものを、1・2・3・4から一つ選びなさい。",
-      "question": "会議の資料を事前に<u>配布</u>しておいてください。",
-      "type": "single",
-      "options": [
-        "はいふ",
-        "はいぷ",
-        "はっぷ",
-        "はいぶん"
-      ],
-      "answers": [
-        0
-      ],
-      "explanation": "「配布（はいふ）」: Phân phát tài liệu/thông tin cho mọi người."
-    },
-    {
-      "id": 4,
-      "mondai": "問題1: 漢字読み — ＿＿の言葉の読み方として最もよいものを、1・2・3・4から一つ選びなさい。",
-      "question": "新しい技術の導入により、コストが大幅に<u>削減</u>された。",
-      "type": "single",
-      "options": [
-        "さくげん",
-        "しょうげん",
-        "さくじょ",
-        "へんげん"
-      ],
-      "answers": [
-        0
-      ],
-      "explanation": "「削減（さくげん）」: Cắt giảm, giảm bớt (chi phí, ngân sách, nhân lực)."
-    },
-    {
-      "id": 5,
-      "mondai": "問題1: 漢字読み — ＿＿の言葉の読み方として最もよいものを、1・2・3・4から一つ選びなさい。",
-      "question": "双方の意見の食い違いを<u>埋める</u>努力を重ねた。",
-      "type": "single",
-      "options": [
-        "うめる",
-        "しめる",
-        "おさめる",
-        "つめる"
-      ],
-      "answers": [
-        0
-      ],
-      "explanation": "「埋める（うめる）」: Chôn, lấp đầy, thu hẹp (khoảng cách, sự bất đồng quan điểm)."
-    },
-    {
-      "id": 6,
-      "mondai": "問題2: 表記 — ＿＿の言葉を漢字で書くとき、最もよいものを、1・2・3・4から一つ選びなさい。",
-      "question": "駅前の広場で環境保護の<u>けいはつ</u>イベントが開催された。",
-      "type": "single",
-      "options": [
-        "啓発",
-        "恵発",
-        "契発",
-        "掲発"
-      ],
-      "answers": [
-        0
-      ],
-      "explanation": "「啓発（けいはつ）」: Khai phát, nâng cao nhận thức, giáo dục tuyên truyền."
-    },
-    {
-      "id": 7,
-      "mondai": "問題2: 表記 — ＿＿の言葉を漢字で書くとき、最もよいものを、1・2・3・4から一つ選びなさい。",
-      "question": "古い伝統を今でも大切に<u>けいしょう</u>している。",
-      "type": "single",
-      "options": [
-        "継承",
-        "継章",
-        "経承",
-        "系承"
-      ],
-      "answers": [
-        0
-      ],
-      "explanation": "「継承（けいしょう）」: Kế thừa, thừa hưởng (truyền thống, văn hóa, tài sản)."
-    },
-    {
-      "id": 8,
-      "mondai": "問題2: 表記 — ＿＿の言葉を漢字で書くとき、最もよいものを、1・2・3・4から一つ選びなさい。",
-      "question": "法律の専門家に相談して、契約の<u>だとうせい</u>を確認した。",
-      "type": "single",
-      "options": [
-        "妥当性",
-        "打当性",
-        "堕当性",
-        "妥統性"
-      ],
-      "answers": [
-        0
-      ],
-      "explanation": "「妥当性（だとうせい）」: Tính thỏa đáng, tính hợp lý theo quy chuẩn pháp luật."
-    },
-    {
-      "id": 9,
-      "mondai": "問題2: 表記 — ＿＿の言葉を漢字で書くとき、最もよいものを、1・2・3・4から一つ選びなさい。",
-      "question": "突然のトラブルにも慌てず、<u>れいせい</u>に対処した。",
-      "type": "single",
-      "options": [
-        "冷静",
-        "冷精",
-        "令静",
-        "冷政"
-      ],
-      "answers": [
-        0
-      ],
-      "explanation": "「冷静（れいせい）」: Điềm tĩnh, bình tĩnh, không bối rối."
-    },
-    {
-      "id": 10,
-      "mondai": "問題2: 表記 — ＿＿の言葉を漢字で書くとき、最もよいものを、1・2・3・4から一つ選びなさい。",
-      "question": "彼の言動には明らかな<u>むじゅん</u>が含まれている。",
-      "type": "single",
-      "options": [
-        "矛盾",
-        "矛順",
-        "無盾",
-        "霧順"
-      ],
-      "answers": [
-        0
-      ],
-      "explanation": "「矛盾（むじゅん）」: Mâu thuẫn, tiền hậu bất nhất (chữ Mâu - ngọn giáo và chữ Thuẫn - cái khiên)."
-    },
-    {
-      "id": 11,
-      "mondai": "問題3: 語形成 — （　　）に入れるのに最もよいものを、1・2・3・4から一つ選びなさい。",
-      "question": "このホテルは（　　）宿泊客専用の特別ラウンジを用意している。",
-      "type": "single",
-      "options": [
-        "長期",
-        "永期",
-        "延期",
-        "遠期"
-      ],
-      "answers": [
-        0
-      ],
-      "explanation": "「長期（ちょうき）」: Tiền tố kết hợp thành từ ghép 「長期宿泊客」 (khách lưu trú dài hạn)."
-    },
-    {
-      "id": 12,
-      "mondai": "問題3: 語形成 — （　　）に入れるのに最もよいものを、1・2・3・4から一つ選びなさい。",
-      "question": "世界中の（　　）都市から多くの観光客やビジネス客が集まる。",
-      "type": "single",
-      "options": [
-        "主要",
-        "主体",
-        "主旨",
-        "主力"
-      ],
-      "answers": [
-        0
-      ],
-      "explanation": "「主要（しゅよう）」: Cụm từ 「主要都市」 (các đô thị/thành phố chủ yếu, trọng điểm)."
-    },
-    {
-      "id": 13,
-      "mondai": "問題3: 語形成 — （　　）に入れるのに最もよいものを、1・2・3・4から一つ選びなさい。",
-      "question": "この最新家電は（　　）エネルギー設計で、電気代を大幅に抑えられる。",
-      "type": "single",
-      "options": [
-        "省",
-        "減",
-        "低",
-        "節"
-      ],
-      "answers": [
-        0
-      ],
-      "explanation": "「省（しょう）」: Tiền tố ghép thành 「省エネルギー（省エネ）」 mang nghĩa tiết kiệm năng lượng."
-    },
-    {
-      "id": 14,
-      "mondai": "問題4: 文脈規定 — （　　）に入れるのに最もよいものを、1・2・3・4から一つ選びなさい。",
-      "question": "新しいスマートフォンの販売台数が発売から（　　）3日で100万台を突破した。",
-      "type": "single",
-      "options": [
-        "わずか",
-        "およそ",
-        "たいして",
-        "せめて"
-      ],
-      "answers": [
-        0
-      ],
-      "explanation": "「わずか」: Vỏn vẹn, chỉ mới (nhấn mạnh số lượng ít hoặc thời gian ngắn nhưng đạt kỳ tích)."
-    },
-    {
-      "id": 15,
-      "mondai": "問題4: 文脈規定 — （　　）に入れるのに最もよいものを、1・2・3・4から一つ選びなさい。",
-      "question": "彼女の感動的なスピーチは、会場にいた聴衆の心を（　　）揺さぶった。",
-      "type": "single",
-      "options": [
-        "深く",
-        "手厚く",
-        "重たく",
-        "手堅く"
-      ],
-      "answers": [
-        0
-      ],
-      "explanation": "「深く揺さぶる（ふかくゆさぶる）」: Lay động sâu sắc tâm can người nghe."
-    },
-    {
-      "id": 16,
-      "mondai": "問題4: 文脈規定 — （　　）に入れるのに最もよいものを、1・2・3・4から一つ選びなさい。",
-      "question": "長年の研究開発が実を結び、画期的な新素材が（　　）した。",
-      "type": "single",
-      "options": [
-        "誕生",
-        "発足",
-        "設立",
-        "開拓"
-      ],
-      "answers": [
-        0
-      ],
-      "explanation": "「誕生（たんじょう）する」: Ra đời, xuất hiện (dùng cho vật liệu mới, sản phẩm mang tính đột phá)."
-    },
-    {
-      "id": 17,
-      "mondai": "問題4: 文脈規定 — （　　）に入れるのに最もよいものを、1・2・3・4から一つ選びなさい。",
-      "question": "台風の接近に伴い、沿岸部には（　　）な警戒が呼びかけられている。",
-      "type": "single",
-      "options": [
-        "厳重",
-        "厳格",
-        "厳密",
-        "厳粛"
-      ],
-      "answers": [
-        0
-      ],
-      "explanation": "「厳重（げんじゅう）な警戒」: Cảnh giác nghiêm ngặt, đề phòng ở mức độ cao nhất."
-    },
-    {
-      "id": 18,
-      "mondai": "問題4: 文脈規定 — （　　）に入れるのに最もよいものを、1・2・3・4から一つ選びなさい。",
-      "question": "彼はいつも物静かで、自分の感情をめったに（　　）に出さない。",
-      "type": "single",
-      "options": [
-        "表",
-        "姿",
-        "顔",
-        "面"
-      ],
-      "answers": [
-        0
-      ],
-      "explanation": "「表（おもて）に出す」: Cụm quán dụng ngữ thể hiện cảm xúc, suy nghĩ bộc lộ ra ngoài."
-    },
-    {
-      "id": 19,
-      "mondai": "問題4: 文脈規定 — （　　）に入れるのに最もよいものを、1・2・3・4から一つ選びなさい。",
-      "question": "予期せぬトラブルに見舞われたが、メンバー全員の協力で（　　）乗り切った。",
-      "type": "single",
-      "options": [
-        "無事に",
-        "気軽に",
-        "平気で",
-        "安易に"
-      ],
-      "answers": [
-        0
-      ],
-      "explanation": "「無事に（ぶじに）乗り切る」: Vượt qua sóng gió/khó khăn một cách bình an vô sự."
-    },
-    {
-      "id": 20,
-      "mondai": "問題4: 文脈規定 — （　　）に入れるのに最もよいものを、1・2・3・4から一つ選びなさい。",
-      "question": "このドキュメンタリー映画は、当時の厳しい社会情勢を（　　）に映し出している。",
-      "type": "single",
-      "options": [
-        "如実",
-        "切実",
-        "確実",
-        "実直"
-      ],
-      "answers": [
-        0
-      ],
-      "explanation": "「如実（にょじつ）に」: Phản ánh/thể hiện một cách chân thực, đúng như thực tế."
-    },
-    {
-      "id": 21,
-      "mondai": "問題5: 言い換え類義 — ＿＿の言葉に意味が最も近いものを、1・2・3・4から一つ選びなさい。",
-      "question": "今回のイベントのスケジュールは<u>あらかじめ</u>決まっていた。",
-      "type": "single",
-      "options": [
-        "事前に",
-        "急に",
-        "偶然に",
-        "秘密裏に"
-      ],
-      "answers": [
-        0
-      ],
-      "explanation": "「あらかじめ」 = 「事前に（じぜんに）」: Làm sẵn từ trước, chuẩn bị trước."
-    },
-    {
-      "id": 22,
-      "mondai": "問題5: 言い換え類義 — ＿＿の言葉に意味が最も近いものを、1・2・3・4から一つ選びなさい。",
-      "question": "参加者の意見は<u>おおむね</u>一致していた。",
-      "type": "single",
-      "options": [
-        "だいたい",
-        "まったく",
-        "めったに",
-        "かならず"
-      ],
-      "answers": [
-        0
-      ],
-      "explanation": "「おおむね」 = 「だいたい / ほぼ」: Đại thể, hầu như, phần lớn."
-    },
-    {
-      "id": 23,
-      "mondai": "問題5: 言い換え類義 — ＿＿の言葉に意味が最も近いものを、1・2・3・4から一つ選びなさい。",
-      "question": "初対面の相手に対してあのような態度は<u>ぶしつけ</u>だ。",
-      "type": "single",
-      "options": [
-        "失礼だ",
-        "冷淡だ",
-        "臆病だ",
-        "親切だ"
-      ],
-      "answers": [
-        0
-      ],
-      "explanation": "「ぶしつけ（不躾）」 = 「失礼だ / 礼儀がない」: Vô lễ, khiếm nhã, thô lỗ."
-    },
-    {
-      "id": 24,
-      "mondai": "問題5: 言い換え類義 — ＿＿の言葉に意味が最も近いものを、1・2・3・4から一つ選びなさい。",
-      "question": "担当者に書類の再提出を<u>うながした</u>。",
-      "type": "single",
-      "options": [
-        "早く出すよう求めた",
-        "自分で代わりに書いた",
-        "破棄するよう頼んだ",
-        "郵送で送り返した"
-      ],
-      "answers": [
-        0
-      ],
-      "explanation": "「促す（うながす）」 = 「〜するように働きかける / 求める」: Thúc giục, nhắc nhở mau chóng làm."
-    },
-    {
-      "id": 25,
-      "mondai": "問題5: 言い換え類義 — ＿＿の言葉に意味が最も近いものを、1・2・3・4から一つ選びなさい。",
-      "question": "彼のレポートは要点が<u>簡潔</u>にまとめられている。",
-      "type": "single",
-      "options": [
-        "短く分かりやすく",
-        "詳しく長文で",
-        "難解で専門的に",
-        "曖昧で控えめに"
-      ],
-      "answers": [
-        0
-      ],
-      "explanation": "「簡潔（かんけつ）」 = 「短く分かりやすい」: Ngắn gọn, súc tích, dễ hiểu."
-    },
-    {
-      "id": 26,
-      "mondai": "問題6: 用法 — 次の言葉の使い方として最もよいものを、1・2・3・4から一つ選びなさい。",
-      "question": "【愛着】",
-      "type": "single",
-      "options": [
-        "子どもの頃から使っているこの机には特別な愛着がある。",
-        "毎朝のジョギングを愛着してから体調が良くなった。",
-        "最新のスマートフォンに愛着して購入を決めた。",
-        "雨が降ってきたので傘を愛着して出かけた。"
-      ],
-      "answers": [
-        0
-      ],
-      "explanation": "「愛着（あいちゃく）」: Tình cảm gắn bó, yêu quý gắn liền với đồ vật gắn bó lâu năm (物に愛着がわく / 愛着を持つ)."
-    },
-    {
-      "id": 27,
-      "mondai": "問題6: 用法 — 次の言葉の使い方として最もよいものを、1・2・3・4から一つ選びなさい。",
-      "question": "【普及】",
-      "type": "single",
-      "options": [
-        "インターネットの普及により、世界中の情報が瞬時に手に入るようになった。",
-        "駅前の道路を普及して交通渋滞を解消した。",
-        "体調を普及するために毎日ビタミン剤を飲んでいる。",
-        "壊れたパソコンを普及して再び使えるようにした。"
-      ],
-      "answers": [
-        0
-      ],
-      "explanation": "「普及（ふきゅう）」: Phổ biến rộng rãi, lan tỏa trong xã hội (インターネットの普及, サービスの普及)."
-    },
-    {
-      "id": 28,
-      "mondai": "問題6: 用法 — 次の言葉の使い方として最もよいものを、1・2・3・4から一つ選びなさい。",
-      "question": "【一変】",
-      "type": "single",
-      "options": [
-        "新しい高速道路の開通によって、周辺の街並みが一変した。",
-        "昨日の試験の結果を一変して満足した。",
-        "友人と一緒に映画館で映画を一変した。",
-        "部屋の電気を一変して明るくした。"
-      ],
-      "answers": [
-        0
-      ],
-      "explanation": "「一変（いっぺん）する」: Thay đổi hoàn toàn diện mạo, chuyển biến 180 độ (状況が一変する, 態度が一変する)."
-    },
-    {
-      "id": 29,
-      "mondai": "問題6: 用法 — 次の言葉の使い方として最もよいものを、1・2・3・4から一つ選びなさい。",
-      "question": "【合致】",
-      "type": "single",
-      "options": [
-        "彼の提案は、わが社が目指す経営方針と完全に合致している。",
-        "友人と待ち合わせ場所で時間を合致した。",
-        "重い荷物を二人で力を合致して運んだ。",
-        "数学の難問を公式に合致して解き明かした。"
-      ],
-      "answers": [
-        0
-      ],
-      "explanation": "「合致（がっち）する」: Trùng khớp, hoàn toàn phù hợp với tiêu chí/mục tiêu (方針に合致する, 条件に合致する)."
-    },
-    {
-      "id": 30,
-      "mondai": "問題6: 用法 — 次の言葉の使い方として最もよいものを、1・2・3・4から一つ選びなさい。",
-      "question": "【念願】",
-      "type": "single",
-      "options": [
-        "10年間の努力がついに実を結び、念願の自分の店を開くことができた。",
-        "明日の天気予報を念願して傘を持っていく。",
-        "健康のために毎朝野菜ジュースを念願している。",
-        "駅までの道を通りすがりの人に念願した。"
-      ],
-      "answers": [
-        0
-      ],
-      "explanation": "「念願（ねんがん）」: Nguyện vọng tha thiết ấp ủ từ lâu (念願の夢, 念願を果たす)."
-    },
-    {
-      "id": 31,
-      "mondai": "問題7: 文法形式の判断 — 次の文の（　　）に入れるのに最もよいものを、1・2・3・4から一つ選びなさい。",
-      "question": "たとえ周囲の人々から反対され（　　）、私は自分の信じた道を進むつもりだ。",
-      "type": "single",
-      "options": [
-        "ようと",
-        "まいと",
-        "がちで",
-        "つつも"
-      ],
-      "answers": [
-        0
-      ],
-      "explanation": "「〜ようと（も） / 〜ようが」: Dù cho có... đi chăng nữa thì vẫn không thay đổi quyết tâm."
-    },
-    {
-      "id": 32,
-      "mondai": "問題7: 文法形式の判断 — 次の文の（　　）に入れるのに最もよいものを、1・2・3・4から一つ選びなさい。",
-      "question": "今回のプロジェクトの成否は、チーム全員の結束力（　　）かかっている。",
-      "type": "single",
-      "options": [
-        "いかんに",
-        "よそに",
-        "ぬきに",
-        "かぎりに"
-      ],
-      "answers": [
-        0
-      ],
-      "explanation": "「〜いかんにかかっている」: Tùy thuộc vào..., phụ thuộc vào... (thành bại phụ thuộc vào tinh thần đoàn kết)."
-    },
-    {
-      "id": 33,
-      "mondai": "問題7: 文法形式の判断 — 次の文の（　　）に入れるのに最もよいものを、1・2・3・4から一つ選びなさい。",
-      "question": "一流のシェフが丹精込めて作った料理（　　）、味も盛り付けも実に素晴らしい。",
-      "type": "single",
-      "options": [
-        "だけあって",
-        "どころか",
-        "ばかりに",
-        "にあって"
-      ],
-      "answers": [
-        0
-      ],
-      "explanation": "「〜だけあって」: Quả đúng là... (khen ngợi kết quả tương xứng với danh tiếng/đẳng cấp)."
-    },
-    {
-      "id": 34,
-      "mondai": "問題7: 文法形式の判断 — 次の文の（　　）に入れるのに最もよいものを、1・2・3・4から一つ選びなさい。",
-      "question": "合格発表の掲示板で自分の番号を見つけた瞬間、嬉しさ（　　）思わず涙が溢れ出た。",
-      "type": "single",
-      "options": [
-        "のあまり",
-        "にかこつけて",
-        "を契機に",
-        "を皮切りに"
-      ],
-      "answers": [
-        0
-      ],
-      "explanation": "「〜のあまり / あまりに」: Vì quá... nên dẫn đến một trạng thái hoặc hành động bất thường (quá vui sướng bật khóc)."
-    },
-    {
-      "id": 35,
-      "mondai": "問題7: 文法形式の判断 — 次の文の（　　）に入れるのに最もよいものを、1・2・3・4から一つ選びなさい。",
-      "question": "「最近の若者は忍耐力がない」とよく言われるが、一概にそう（　　）。",
-      "type": "single",
-      "options": [
-        "とは言い切れない",
-        "に相違ない",
-        "ざるを得ない",
-        "に決まっている"
-      ],
-      "answers": [
-        0
-      ],
-      "explanation": "「一概に〜とは言い切れない」: Không thể khẳng định một cách vội vàng/phiến diện là..."
-    },
-    {
-      "id": 36,
-      "mondai": "問題7: 文法形式の判断 — 次の文の（　　）に入れるのに最もよいものを、1・2・3・4から一つ選びなさい。",
-      "question": "絶好の行楽日和（　　）、海沿いの公園は朝から家族連れで賑わっている。",
-      "type": "single",
-      "options": [
-        "とあって",
-        "にしては",
-        "とあれば",
-        "にあって"
-      ],
-      "answers": [
-        0
-      ],
-      "explanation": "「〜とあって」: Vì là... (nêu ra tình huống đặc biệt dẫn đến hiện tượng đương nhiên diễn ra)."
-    },
-    {
-      "id": 37,
-      "mondai": "問題7: 文法形式の判断 — 次の文の（　　）に入れるのに最もよいものを、1・2・3・4から一つ選びなさい。",
-      "question": "チームのリーダーを引き受けた（　　）、最後まで責任を持ってやり遂げなければならない。",
-      "type": "single",
-      "options": [
-        "からには",
-        "ものの",
-        "につけ",
-        "がてら"
-      ],
-      "answers": [
-        0
-      ],
-      "explanation": "「〜からには / 以上は」: Một khi đã... thì nhất định phải làm tròn bổn phận."
-    },
-    {
-      "id": 38,
-      "mondai": "問題7: 文法形式の判断 — 次の文の（　　）に入れるのに最もよいものを、1・2・3・4から一つ選びなさい。",
-      "question": "彼は高齢（　　）、毎日10キロのランニングを欠かさず続けている。",
-      "type": "single",
-      "options": [
-        "をものともせず",
-        "を皮切りに",
-        "をきっかけに",
-        "に即して"
-      ],
-      "answers": [
-        0
-      ],
-      "explanation": "「〜をものともせず（に）」: Bất chấp gian khó/tuổi tác/trở ngại để kiên trì hành động."
-    },
-    {
-      "id": 39,
-      "mondai": "問題7: 文法形式の判断 — 次の文の（　　）に入れるのに最もよいものを、1・2・3・4から一つ選びなさい。",
-      "question": "長時間のデスクワーク（　　）肩こりや腰痛に悩まされる人が増えている。",
-      "type": "single",
-      "options": [
-        "からくる",
-        "に即した",
-        "をよそにした",
-        "に足る"
-      ],
-      "answers": [
-        0
-      ],
-      "explanation": "「〜からくる」: Bắt nguồn từ, do nguyên nhân... gây ra (đau mỏi vai gáy bắt nguồn từ ngồi máy tính lâu)."
-    },
-    {
-      "id": 40,
-      "mondai": "問題7: 文法形式の判断 — 次の文の（　　）に入れるのに最もよいものを、1・2・3・4から一つ選びなさい。",
-      "question": "天候悪化（　　）、本日の野外コンサートは中止とさせていただきます。",
-      "type": "single",
-      "options": [
-        "につき",
-        "につれ",
-        "に沿って",
-        "に際して"
-      ],
-      "answers": [
-        0
-      ],
-      "explanation": "「〜につき」: Vì lý do... (cách diễn đạt trang trọng trong thông báo chính thức)."
-    },
-    {
-      "id": 41,
-      "mondai": "問題7: 文法形式の判断 — 次の文の（　　）に入れるのに最もよいものを、1・2・3・4から一つ選びなさい。",
-      "question": "これまでの彼の地道な努力と実績を知っている者なら、成功を確信して（　　）。",
-      "type": "single",
-      "options": [
-        "やまない",
-        "しまわない",
-        "おかない",
-        "いられない"
-      ],
-      "answers": [
-        0
-      ],
-      "explanation": "「〜てやまない」: Luôn luôn, hết lòng... từ tận đáy lòng (tin tưởng tuyệt đối vào thành công của anh ấy)."
-    },
-    {
-      "id": 42,
-      "mondai": "問題7: 文法形式の判断 — 次の文の（　　）に入れるのに最もよいものを、1・2・3・4から一つ選びなさい。",
-      "question": "事故の原因については、現在警察が詳細を調査中であり、結論が出るまでにはまだ時間が（　　）。",
-      "type": "single",
-      "options": [
-        "かかりそうだ",
-        "かかるわけがない",
-        "かかるっこない",
-        "かかりっこない"
-      ],
-      "answers": [
-        0
-      ],
-      "explanation": "「〜そうだ（様態）」: Có vẻ như sẽ tốn thêm thời gian (phán đoán dựa trên tình hình hiện tại)."
-    },
-    {
-      "id": 43,
-      "mondai": "問題8: 文の組み立て — 次の文の ＿＿ に入る最もよいものを、1・2・3・4から一つ選びなさい。（★に入るものを選ぶ）",
-      "question": "どんなに ＿＿ ＿＿ ★ ＿＿ ならない。\n1. 大切に\n2. 時代が\n3. 伝統は\n4. 変わろうとも",
-      "type": "single",
-      "options": [
-        "大切に",
-        "時代が",
-        "伝統は",
-        "変わろうとも"
-      ],
-      "answers": [
-        0
-      ],
-      "explanation": "【Cấu trúc câu】: どんなに【時代が】(2) 【変わろうとも】(4) 【伝統は】(3) ★【大切に】(1) しなければならない。\n(Dù thời đại có đổi thay thế nào thì truyền thống vẫn phải được giữ gìn quý trọng.)"
-    },
-    {
-      "id": 44,
-      "mondai": "問題8: 文の組み立て — 次の文の ＿＿ に入る最もよいものを、1・2・3・4から一つ選びなさい。（★に入るものを選ぶ）",
-      "question": "今回の事件は、専門家による ＿＿ ＿＿ ★ ＿＿ 明らかになった。\n1. 調査によって\n2. 徹底的な\n3. 初めて\n4. その全貌が",
-      "type": "single",
-      "options": [
-        "調査によって",
-        "徹底的な",
-        "初めて",
-        "その全貌が"
-      ],
-      "answers": [
-        2
-      ],
-      "explanation": "【Cấu trúc câu】: 専門家による【徹底的な】(2) 【調査によって】(1) ★【初めて】(3) 【その全貌が】(4) 明らかになった。\n(Nhờ cuộc điều tra triệt để từ các chuyên gia mà toàn bộ bức tranh vụ việc lần đầu tiên mới được sáng tỏ.)"
-    },
-    {
-      "id": 45,
-      "mondai": "問題8: 文の組み立て — 次の文の ＿＿ に入る最もよいものを、1・2・3・4から一つ選びなさい。（★に入るものを選ぶ）",
-      "question": "心身ともに健康で ＿＿ ＿＿ ★ ＿＿ 思わない。\n1. ありさえすれば\n2. 幸福だとは\n3. それだけで\n4. 人生が",
-      "type": "single",
-      "options": [
-        "ありさえすれば",
-        "幸福だとは",
-        "それだけで",
-        "人生が"
-      ],
-      "answers": [
-        2
-      ],
-      "explanation": "【Cấu trúc câu】: 心身ともに健康で【ありさえすれば】(1) 【人生が】(4) ★【それだけで】(3) 【幸福だとは】(2) 思わない。\n(Tôi không nghĩ rằng cuộc đời chỉ cần có sức khỏe là tự khắc sẽ hạnh phúc trọn vẹn.)"
-    },
-    {
-      "id": 46,
-      "mondai": "問題8: 文の組み立て — 次の文の ＿＿ に入る最もよいものを、1・2・3・4から一つ選びなさい。（★に入るものを選ぶ）",
-      "question": "この新車は ＿＿ ＿＿ ★ ＿＿ 高く評価されている。\n1. のみならず\n2. デザインの美しさ\n3. 実用性の\n4. 高さにおいても",
-      "type": "single",
-      "options": [
-        "のみならず",
-        "デザインの美しさ",
-        "実用性の",
-        "高さにおいても"
-      ],
-      "answers": [
-        2
-      ],
-      "explanation": "【Cấu trúc câu】: この新車は【デザインの美しさ】(2) 【のみならず】(1) ★【実用性の】(3) 【高さにおいても】(4) 高く評価されている。\n(Mẫu xe mới này được đánh giá cao không chỉ bởi thiết kế đẹp mắt mà còn ở tính thực dụng vượt trội.)"
-    },
-    {
-      "id": 47,
-      "mondai": "問題8: 文の組み立て — 次の文の ＿＿ に入る最もよいものを、1・2・3・4から一つ選びなさい。（★に入るものを選ぶ）",
-      "question": "普段あんなに ＿＿ ＿＿ ★ ＿＿ 信じられない。\n1. ような\n2. 嘘をつく\n3. まじめな人が\n4. 故意に",
-      "type": "single",
-      "options": [
-        "ような",
-        "嘘をつく",
-        "まじめな人が",
-        "故意に"
+        "あまい",
+        "からい",
+        "にがい",
+        "しぶい"
       ],
       "answers": [
         1
       ],
-      "explanation": "【Cấu trúc câu】: 普段あんなに【まじめな人が】(3) 【故意に】(4) ★【嘘をつく】(2) 【ような】(1) ことは信じられない。\n(Thật không thể tin nổi một người bình thường nghiêm túc như vậy lại cố tình nói dối.)"
+      "explanation": "「辛い」đọc là からい (cay). 1. あまい (ngọt), 3. にがい (đắng), 4. しぶい (chát). Dịch: Tôi không thích đồ ăn cay.",
+      "mondai": "問題 1: 漢字読み (Cách đọc chữ Hán)",
+      "mondaiNumber": 1,
+      "majorSection": "vocab"
     },
     {
-      "id": 48,
-      "mondai": "問題9: 文章の文法 — 次の文章を読んで、文章全体の趣旨を踏まえて、【48】から【51】の中に入る最もよいものを一つ選びなさい。",
-      "question": "【48】に入る最も適当なものはどれか。\n（※ 本文：現代社会において集中力を維持することは容易ではない。スマートフォンからの通知が絶え間なく届く【48】、私たちの意識は細切れに分断されてしまう。）",
+      "id": 2,
+      "question": "2. ＿＿の言葉の読み方として最もよいものを、1・2・3・4から一つ選びなさい。\n\n私の友人は[刑事]です。",
       "type": "single",
       "options": [
-        "せいで",
-        "おかげで",
-        "ついでに",
-        "かわりに"
+        "けんじ",
+        "かんじ",
+        "けいじ",
+        "かいじ"
+      ],
+      "answers": [
+        2
+      ],
+      "explanation": "「刑事」đọc là けいじ (thám tử/cảnh sát hình sự). Dịch: Bạn tôi là cảnh sát hình sự.",
+      "mondai": "問題 1: 漢字読み (Cách đọc chữ Hán)",
+      "mondaiNumber": 1,
+      "majorSection": "vocab"
+    },
+    {
+      "id": 3,
+      "question": "3. ＿＿の言葉の読み方として最もよいものを、1・2・3・4から一つ選びなさい。\n\n素晴らしい[才能]を発揮した。",
+      "type": "single",
+      "options": [
+        "ぜいのう",
+        "ざいのう",
+        "せいのう",
+        "さいのう"
+      ],
+      "answers": [
+        3
+      ],
+      "explanation": "「才能」đọc là さいのう (tài năng). Dịch: Đã phát huy tài năng tuyệt vời.",
+      "mondai": "問題 1: 漢字読み (Cách đọc chữ Hán)",
+      "mondaiNumber": 1,
+      "majorSection": "vocab"
+    },
+    {
+      "id": 4,
+      "question": "4. ＿＿の言葉の読み方として最もよいものを、1・2・3・4から一つ選びなさい。\n\n夕方になって、ようやく風が[収まった]。",
+      "type": "single",
+      "options": [
+        "さだまった",
+        "しずまった",
+        "おさまった",
+        "やすまった"
+      ],
+      "answers": [
+        2
+      ],
+      "explanation": "「収まる」đọc là おさまる (lắng xuống, dịu bớt). Dịch: Đến chiều tối thì gió cuối cùng cũng đã dịu bớt.",
+      "mondai": "問題 1: 漢字読み (Cách đọc chữ Hán)",
+      "mondaiNumber": 1,
+      "majorSection": "vocab"
+    },
+    {
+      "id": 5,
+      "question": "5. ＿＿の言葉の読み方として最もよいものを、1・2・3・4から一つ選びなさい。\n\n毎朝6時に[起床]して、少し運動をしている。",
+      "type": "single",
+      "options": [
+        "きしょう",
+        "ぎしょう",
+        "きしょ",
+        "ぎしょ"
       ],
       "answers": [
         0
       ],
-      "explanation": "「〜せいで」: Vì/do... (nguyên nhân tiêu cực dẫn đến hậu quả ý thức bị phân tán do thông báo điện thoại)."
+      "explanation": "「起床」đọc là きしょう (thức dậy, rời giường). Dịch: Mỗi sáng tôi thức dậy lúc 6 giờ và vận động nhẹ một chút.",
+      "mondai": "問題 1: 漢字読み (Cách đọc chữ Hán)",
+      "mondaiNumber": 1,
+      "majorSection": "vocab"
     },
     {
-      "id": 49,
-      "mondai": "問題9: 文章の文法 — 次の文章を読んで、文章全体の趣旨を踏まえて、【48】から【51】の中に入る最もよいものを一つ選びなさい。",
-      "question": "【49】に入る最も適当なものはどれか。\n（※ 本文：ある研究によれば、一度作業を中断されると元の集中状態に戻るまでに約23分もの時間が【49】という。）",
+      "id": 6,
+      "question": "6. ＿＿の言葉を漢字で書くとき、最もよいものを、1・2・3・4から一つ選びなさい。\n\nこの時期は風邪をひく人が増える[けいこう]がある。",
       "type": "single",
       "options": [
-        "かかる",
-        "かからない",
-        "かけさせる",
-        "かけられる"
+        "傾向",
+        "頃向",
+        "傾高",
+        "頃高"
       ],
       "answers": [
         0
       ],
-      "explanation": "「時間がかかる」: Tốn thời gian. Kết hợp với truyền đạt 「〜という」 (khoảng 23 phút để hồi phục sự tập trung)."
+      "explanation": "けいこう được viết là 「傾向」 (khuynh hướng, xu hướng). Dịch: Vào thời điểm này có xu hướng người bị cảm lạnh tăng lên.",
+      "mondai": "問題 2: 表記 (Cách viết chữ Hán)",
+      "mondaiNumber": 2,
+      "majorSection": "vocab"
     },
     {
-      "id": 50,
-      "mondai": "問題9: 文章の文法 — 次の文章を読んで、文章全体の趣旨を踏まえて、【48】から【51】の中に入る最もよいものを一つ選びなさい。",
-      "question": "【50】に入る最も適当なものはどれか。\n（※ 本文：【50】、デジタル機器を完全に排除することは現実的ではない。重要なのは、機器に使われるのではなく、主体的にコントロールする姿勢を持つことだ。）",
+      "id": 7,
+      "question": "7. ＿＿の言葉を漢字で書くとき、最もよいものを、1・2・3・4から一つ選びなさい。\n\nこのタオルはまだ[しめって]いる。",
       "type": "single",
       "options": [
-        "もっとも",
-        "それゆえ",
-        "すなわち",
-        "あるいは"
+        "渡って",
+        "温まって",
+        "汗って",
+        "湿って"
+      ],
+      "answers": [
+        3
+      ],
+      "explanation": "しめる được viết là 「湿る」 (ẩm ướt). Dịch: Chiếc khăn tắm này vẫn còn ẩm.",
+      "mondai": "問題 2: 表記 (Cách viết chữ Hán)",
+      "mondaiNumber": 2,
+      "majorSection": "vocab"
+    },
+    {
+      "id": 8,
+      "question": "8. ＿＿の言葉を漢字で書くとき、最もよいものを、1・2・3・4から一つ選びなさい。\n\nもう少し力を入れて[けずって]ください。",
+      "type": "single",
+      "options": [
+        "絞って",
+        "削って",
+        "握って",
+        "掘って"
+      ],
+      "answers": [
+        1
+      ],
+      "explanation": "けずる được viết là 「削る」 (gọt, bào, cạo). 1. 絞る (vắt), 3. 握る (nắm), 4. 掘る (đào). Dịch: Hãy dùng thêm chút lực để gọt.",
+      "mondai": "問題 2: 表記 (Cách viết chữ Hán)",
+      "mondaiNumber": 2,
+      "majorSection": "vocab"
+    },
+    {
+      "id": 9,
+      "question": "9. ＿＿の言葉を漢字で書くとき、最もよいものを、1・2・3・4から一つ選びなさい。\n\nこの[しせつ]には、駐車場はありません。",
+      "type": "single",
+      "options": [
+        "支援",
+        "施援",
+        "支段",
+        "施設"
+      ],
+      "answers": [
+        3
+      ],
+      "explanation": "しせつ được viết là 「施設」 (cơ sở, công trình tiện ích). Dịch: Cơ sở này không có bãi đỗ xe.",
+      "mondai": "問題 2: 表記 (Cách viết chữ Hán)",
+      "mondaiNumber": 2,
+      "majorSection": "vocab"
+    },
+    {
+      "id": 10,
+      "question": "10. ＿＿の言葉を漢字で書くとき、最もよいものを、1・2・3・4から一つ選びなさい。\n\n大勢の人が[しさつ]に訪れた。",
+      "type": "single",
+      "options": [
+        "診察",
+        "視察",
+        "試察",
+        "診祭"
+      ],
+      "answers": [
+        1
+      ],
+      "explanation": "しさつ được viết là 「視察」 (thị sát, khảo sát thực tế). Dịch: Rất đông người đã đến thị sát.",
+      "mondai": "問題 2: 表記 (Cách viết chữ Hán)",
+      "mondaiNumber": 2,
+      "majorSection": "vocab"
+    },
+    {
+      "id": 11,
+      "question": "11. （　）に入れるのに最もよいものを、1・2・3・4から一つ選びなさい。\n\nこの魚は骨が多くて食べ（　）。",
+      "type": "single",
+      "options": [
+        "づらい",
+        "いたい",
+        "おそい",
+        "ぐるしい"
       ],
       "answers": [
         0
       ],
-      "explanation": "「もっとも」: Tuy nhiên/nói là vậy nhưng (bổ sung điều kiện thực tế: không thể loại bỏ hoàn toàn thiết bị số)."
+      "explanation": "Vます + づらい: Khó làm gì (về mặt tâm lý hoặc vật lý). 食べづらい: Khó ăn vì nhiều xương.",
+      "mondai": "問題 3: 語形成 (Cấu tạo từ ghép)",
+      "mondaiNumber": 3,
+      "majorSection": "vocab"
     },
     {
-      "id": 51,
-      "mondai": "問題9: 文章の文法 — 次の文章を読んで、文章全体の趣旨を踏まえて、【48】から【51】の中に入る最もよいものを一つ選びなさい。",
-      "question": "【51】に入る最も適当なものはどれか。\n（※ 本文：日々の小さな工夫を重ねることこそが、深い思考力を取り戻すための第一歩と【51】。）",
+      "id": 12,
+      "question": "12. （　）に入れるのに最もよいものを、1・2・3・4から一つ選びなさい。\n\n今回の事故は（　）条件が重なって起きた。",
       "type": "single",
       "options": [
-        "言えるのではないだろうか",
-        "言うまでもないだろう",
-        "言わざるを得ないだろう",
-        "言わないでおこう"
+        "損",
+        "劣",
+        "危",
+        "悪"
+      ],
+      "answers": [
+        3
+      ],
+      "explanation": "悪条件 (あくじょうけん): Điều kiện bất lợi, điều kiện xấu. Dịch: Tai nạn lần này xảy ra do nhiều điều kiện bất lợi trùng lặp.",
+      "mondai": "問題 3: 語形成 (Cấu tạo từ ghép)",
+      "mondaiNumber": 3,
+      "majorSection": "vocab"
+    },
+    {
+      "id": 13,
+      "question": "13. （　）に入れるのに最もよいものを、1・2・3・4から一つ選びなさい。\n\n教師たちの間で、新たな教育（　）が注目されている。",
+      "type": "single",
+      "options": [
+        "則",
+        "理",
+        "論",
+        "規"
+      ],
+      "answers": [
+        2
+      ],
+      "explanation": "教育論 (きょういくろん): Lý luận/quan điểm về giáo dục. Dịch: Giữa các giáo viên, lý luận giáo dục mới đang rất được chú ý.",
+      "mondai": "問題 3: 語形成 (Cấu tạo từ ghép)",
+      "mondaiNumber": 3,
+      "majorSection": "vocab"
+    },
+    {
+      "id": 14,
+      "question": "14. （　）に入れるのに最もよいものを、1・2・3・4から一つ選びなさい。\n\n工事のため、（　）電気の止まることがあります。",
+      "type": "single",
+      "options": [
+        "簡潔に",
+        "一時的に",
+        "手軽に",
+        "不完全に"
+      ],
+      "answers": [
+        1
+      ],
+      "explanation": "一時的 (いっときてき): Tạm thời. Dịch: Do công trình thi công, điện có thể bị cắt tạm thời trong một khoảng thời gian.",
+      "mondai": "問題 4: 文脈規定 (Điền từ theo ngữ cảnh)",
+      "mondaiNumber": 4,
+      "majorSection": "vocab"
+    },
+    {
+      "id": 15,
+      "question": "15. （　）に入れるのに最もよいものを、1・2・3・4から一つ選びなさい。\n\n息子はみんなの前で、悪いことは絶対にしないと（　）。",
+      "type": "single",
+      "options": [
+        "論じた",
+        "命じた",
+        "誓った",
+        "迫った"
+      ],
+      "answers": [
+        2
+      ],
+      "explanation": "誓う (ちかう): Thề, cam đoan. Dịch: Con trai tôi đã thề trước mặt mọi người rằng tuyệt đối sẽ không làm điều xấu.",
+      "mondai": "問題 4: 文脈規定 (Điền từ theo ngữ cảnh)",
+      "mondaiNumber": 4,
+      "majorSection": "vocab"
+    },
+    {
+      "id": 16,
+      "question": "16. （　）に入れるのに最もよいものを、1・2・3・4から一つ選びなさい。\n\n油で汚れたフライパンは、（　）してとても洗いにくいです。",
+      "type": "single",
+      "options": [
+        "べたべた",
+        "かさかさ",
+        "じめじめ",
+        "ちくちく"
       ],
       "answers": [
         0
       ],
-      "explanation": "「〜と言えるのではないだろうか」: Chẳng phải có thể nói là... hay sao (cách kết bài nêu lên chủ kiến một cách thuyết phục)."
+      "explanation": "べたべた: Dính dính, nhờn dính dầu mỡ. かさかさ (khô ráp), じめじめ (ẩm ướt nhớp nháp), ちくちく (châm chích).",
+      "mondai": "問題 4: 文脈規定 (Điền từ theo ngữ cảnh)",
+      "mondaiNumber": 4,
+      "majorSection": "vocab"
+    },
+    {
+      "id": 17,
+      "question": "17. （　）に入れるのに最もよいものを、1・2・3・4から一つ選びなさい。\n\nあの人物が今回の事件に（　）していたのは間違いない。",
+      "type": "single",
+      "options": [
+        "列",
+        "加入",
+        "場",
+        "関与"
+      ],
+      "answers": [
+        3
+      ],
+      "explanation": "関与 (かんよ) する: Dính líu, can dự vào sự việc. Dịch: Không nghi ngờ gì việc nhân vật đó có dính líu đến vụ án lần này.",
+      "mondai": "問題 4: 文脈規定 (Điền từ theo ngữ cảnh)",
+      "mondaiNumber": 4,
+      "majorSection": "vocab"
+    },
+    {
+      "id": 18,
+      "question": "18. （　）に入れるのに最もよいものを、1・2・3・4から一つ選びなさい。\n\n虫が飛んできたので、手に持っていた団扇を振って遠くに（　）。",
+      "type": "single",
+      "options": [
+        "連れ出した",
+        "締め出した",
+        "取り払った",
+        "追い払った"
+      ],
+      "answers": [
+        3
+      ],
+      "explanation": "追い払う (おいはらう): Xua đuổi, đuổi đi. Dịch: Có con bọ bay tới nên tôi quạt quạt để xua nó đi xa.",
+      "mondai": "問題 4: 文脈規定 (Điền từ theo ngữ cảnh)",
+      "mondaiNumber": 4,
+      "majorSection": "vocab"
+    },
+    {
+      "id": 19,
+      "question": "19. （　）に入れるのに最もよいものを、1・2・3・4から一つ選びなさい。\n\n社会の変化に合わせて、働き方や休日の過ごし方など人々が選ぶ生活の（　）も変わりつつある。",
+      "type": "single",
+      "options": [
+        "ポーズ",
+        "スタイル",
+        "ブランド",
+        "シリーズ"
+      ],
+      "answers": [
+        1
+      ],
+      "explanation": "生活スタイル (lifestyle): Lối sống, phong cách sống. Dịch: Cùng với sự thay đổi của xã hội, phong cách sống mà mọi người lựa chọn cũng đang dần đổi thay.",
+      "mondai": "問題 4: 文脈規定 (Điền từ theo ngữ cảnh)",
+      "mondaiNumber": 4,
+      "majorSection": "vocab"
+    },
+    {
+      "id": 20,
+      "question": "20. （　）に入れるのに最もよいものを、1・2・3・4から一つ選びなさい。\n\nサッカーで手を使うのは禁止されていて、もし使ったら（　）になる。",
+      "type": "single",
+      "options": [
+        "反則",
+        "違法",
+        "非常識",
+        "不都合"
+      ],
+      "answers": [
+        0
+      ],
+      "explanation": "反則 (はんそく): Phạm quy, phạm luật trong thể thao. Dịch: Dùng tay trong bóng đá bị cấm, nếu dùng sẽ bị coi là phạm luật.",
+      "mondai": "問題 4: 文脈規定 (Điền từ theo ngữ cảnh)",
+      "mondaiNumber": 4,
+      "majorSection": "vocab"
+    },
+    {
+      "id": 21,
+      "question": "21. ＿＿の言葉に意味が最も近いものを、1・2・3・4から一つ選びなさい。\n\n鈴木さんは[相当]迷っているらしい。",
+      "type": "single",
+      "options": [
+        "いろいろ",
+        "まだ",
+        "やっぱり",
+        "かなり"
+      ],
+      "answers": [
+        3
+      ],
+      "explanation": "相当 (そうとう) = かなり (khá là, tương đối nhiều). Dịch: Có vẻ anh Suzuki đang khá phân vân.",
+      "mondai": "問題 5: 言い換え類義 (Từ đồng nghĩa)",
+      "mondaiNumber": 5,
+      "majorSection": "vocab"
+    },
+    {
+      "id": 22,
+      "question": "22. ＿＿の言葉に意味が最も近いものを、1・2・3・4から一つ選びなさい。\n\n昨夜、家の近くで[妙な]事件が起こった。",
+      "type": "single",
+      "options": [
+        "恐ろしい",
+        "不思議な",
+        "悲しい",
+        "重大な"
+      ],
+      "answers": [
+        1
+      ],
+      "explanation": "妙な (みょうな) = 不思議な (kỳ lạ, lạ thường). Dịch: Tối qua gần nhà tôi xảy ra một vụ việc kỳ lạ.",
+      "mondai": "問題 5: 言い換え類義 (Từ đồng nghĩa)",
+      "mondaiNumber": 5,
+      "majorSection": "vocab"
+    },
+    {
+      "id": 23,
+      "question": "23. ＿＿の言葉に意味が最も近いものを、1・2・3・4から一つ選びなさい。\n\n中山さんは[帰省]しています。",
+      "type": "single",
+      "options": [
+        "出張から戻って",
+        "部屋に戻って",
+        "ふるさとに戻って",
+        "休暇から戻って"
+      ],
+      "answers": [
+        2
+      ],
+      "explanation": "帰省 (きせい) = ふるさとに戻ること (về quê). Dịch: Anh Nakayama đang về quê thăm nhà.",
+      "mondai": "問題 5: 言い換え類義 (Từ đồng nghĩa)",
+      "mondaiNumber": 5,
+      "majorSection": "vocab"
+    },
+    {
+      "id": 24,
+      "question": "24. ＿＿の言葉に意味が最も近いものを、1・2・3・4から一つ選びなさい。\n\n林さんは、[いきなり]振り返った。",
+      "type": "single",
+      "options": [
+        "やっと",
+        "一度",
+        "突然",
+        "ゆっくり"
+      ],
+      "answers": [
+        2
+      ],
+      "explanation": "いきなり = 突然 (đột ngột, bất thình lình). Dịch: Anh Hayashi đột nhiên quay đầu lại.",
+      "mondai": "問題 5: 言い換え類義 (Từ đồng nghĩa)",
+      "mondaiNumber": 5,
+      "majorSection": "vocab"
+    },
+    {
+      "id": 25,
+      "question": "25. ＿＿の言葉に意味が最も近いものを、1・2・3・4から一つ選びなさい。\n\n教室が[やかましくて]、勉強に集中できない。",
+      "type": "single",
+      "options": [
+        "うるさくて",
+        "汚くて",
+        "暑くて",
+        "暗くて"
+      ],
+      "answers": [
+        0
+      ],
+      "explanation": "やかましい = うるさい (ồn ào, om sòm). Dịch: Phòng học ồn ào quá nên tôi không tập trung học được.",
+      "mondai": "問題 5: 言い換え類義 (Từ đồng nghĩa)",
+      "mondaiNumber": 5,
+      "majorSection": "vocab"
+    },
+    {
+      "id": 26,
+      "question": "26. 次の言葉の使い方として最もよいものを、1・2・3・4から一つ選びなさい。\n\n[粗末]",
+      "type": "single",
+      "options": [
+        "昔の学校給食は、おかずの種類も少なく、今と比べると粗末なものだった。",
+        "言葉遣いが粗末だったので、友達を怒らせてしまった。",
+        "風邪をひいてしまい、声が粗末で上手に歌えない。",
+        "お金がないので、友人がくれた古くて機能の粗末なパソコンを使っている。"
+      ],
+      "answers": [
+        0
+      ],
+      "explanation": "粗末 (そまつ): Đơn sơ, đạm bạc, sơ sài (dùng cho bữa ăn, đồ vật thô sơ). Câu 1 đúng: Bữa ăn học đường ngày xưa ít món và đạm bạc.",
+      "mondai": "問題 6: 用法 (Cách dùng từ)",
+      "mondaiNumber": 6,
+      "majorSection": "vocab"
+    },
+    {
+      "id": 27,
+      "question": "27. 次の言葉の使い方として最もよいものを、1・2・3・4から一つ選びなさい。\n\n[潰す]",
+      "type": "single",
+      "options": [
+        "ガラスのコップを落として、潰してしまった。",
+        "空き缶は、潰してからごみ箱に入れてください。",
+        "洗濯物が乾いたので、綺麗に潰してたんすにしまった。",
+        "いらなくなった書類をびりびりと細かく潰して捨てた。"
+      ],
+      "answers": [
+        1
+      ],
+      "explanation": "潰す (つぶす): Nghiền nát, bẹp dí (như lon rỗng). Câu 2 đúng: Lon rỗng hãy bẹp lại rồi mới bỏ vào thùng rác.",
+      "mondai": "問題 6: 用法 (Cách dùng từ)",
+      "mondaiNumber": 6,
+      "majorSection": "vocab"
+    },
+    {
+      "id": 28,
+      "question": "28. 次の言葉の使い方として最もよいものを、1・2・3・4から一つ選びなさい。\n\n[和やか]",
+      "type": "single",
+      "options": [
+        "火事や地震のときは、慌てずに和やかな行動を取ることが重要だ。",
+        "この地方は、一年中気候が和やかなので暮らしやすい。",
+        "この店のスープは、和やかな味で飲むとほっとする。",
+        "代表者同士の話し合いは、和やかな雰囲気で行われた。"
+      ],
+      "answers": [
+        3
+      ],
+      "explanation": "和やか (なごやか): Hòa nhã, êm đềm, thân mật (thường đi với 雰囲気 - bầu không khí). Câu 4 đúng: Cuộc thảo luận giữa các đại diện diễn ra trong bầu không khí hòa nhã.",
+      "mondai": "問題 6: 用法 (Cách dùng từ)",
+      "mondaiNumber": 6,
+      "majorSection": "vocab"
+    },
+    {
+      "id": 29,
+      "question": "29. 次の言葉の使い方として最もよいものを、1・2・3・4から一つ選びなさい。\n\n[愛着]",
+      "type": "single",
+      "options": [
+        "いろいろな靴をはいでみたが、どれも愛着がなかったので買わなかった。",
+        "スーパーで、地元の人が愛着を入れて育てた野菜を買った。",
+        "この机はもう使っていないのだが、愛着があってなかなか捨てられない。",
+        "弟は教師になるという夢に愛着を持ち、教育学部に通学した。"
+      ],
+      "answers": [
+        2
+      ],
+      "explanation": "愛着 (あいちゃく) がある/を持つ: Tình cảm gắn bó, quyến luyến với đồ vật đã gắn bó lâu năm. Câu 3 đúng: Chiếc bàn này dù không dùng nữa nhưng vì gắn bó lâu nên mãi không nỡ vứt đi.",
+      "mondai": "問題 6: 用法 (Cách dùng từ)",
+      "mondaiNumber": 6,
+      "majorSection": "vocab"
+    },
+    {
+      "id": 30,
+      "question": "30. 次の言葉の使い方として最もよいものを、1・2・3・4から一つ選びなさい。\n\n[熱中]",
+      "type": "single",
+      "options": [
+        "ごみ処理の問題に関して、市民から市当局に批判が熱中した。",
+        "学生のときは野球に熱中していて、毎日遅くまで練習していた。",
+        "うちの娘はこの服に熱中していて、毎日こればかり着たがります。",
+        "オリンピックの期間中、世界の関心が開催地に熱中している。"
+      ],
+      "answers": [
+        1
+      ],
+      "explanation": "熱中 (ねっちゅう) する: Say mê, miệt mài vào sở thích/hoạt động nào đó. Câu 2 đúng: Hồi học sinh tôi say mê bóng chày và tập luyện đến muộn mỗi ngày.",
+      "mondai": "問題 6: 用法 (Cách dùng từ)",
+      "mondaiNumber": 6,
+      "majorSection": "vocab"
+    },
+    {
+      "id": 31,
+      "question": "31. 次の文の（　）に入れるのに最もよいものを、1・2・3・4から一つ選びなさい。\n\n彼女は、まだ小学生（　）、すでに数々の国際的なピアノコンクールで優勝している。",
+      "type": "single",
+      "options": [
+        "こそ",
+        "すら",
+        "ながらも",
+        "どころか"
+      ],
+      "answers": [
+        2
+      ],
+      "explanation": "〜ながらも: Tuy... nhưng... (Mặc dù vẫn còn là học sinh tiểu học nhưng đã vô địch nhiều cuộc thi piano quốc tế).",
+      "mondai": "問題 7: 文法形式の判断 (Ngữ pháp trong câu)",
+      "mondaiNumber": 7,
+      "majorSection": "grammar"
+    },
+    {
+      "id": 32,
+      "question": "32. 次の文の（　）に入れるのに最もよいものを、1・2・3・4から一つ選びなさい。\n\n仕事ができると言われる人は、そうでない人と比べて（　）何が違うのだろうか。",
+      "type": "single",
+      "options": [
+        "いったい",
+        "おそらく",
+        "かえって",
+        "どうしても"
+      ],
+      "answers": [
+        0
+      ],
+      "explanation": "いったい〜だろうか (Rốt cuộc là... thế nào nhỉ?): Dùng nhấn mạnh câu hỏi thắc mắc.",
+      "mondai": "問題 7: 文法形式の判断 (Ngữ pháp trong câu)",
+      "mondaiNumber": 7,
+      "majorSection": "grammar"
+    },
+    {
+      "id": 33,
+      "question": "33. 次の文の（　）に入れるのに最もよいものを、1・2・3・4から一つ選びなさい。\n\n南市は、市民ホールを建設する（　）、周辺の住民に対して説明会を行う予定だ。",
+      "type": "single",
+      "options": [
+        "とすると",
+        "にあたって",
+        "ものなら",
+        "わりには"
+      ],
+      "answers": [
+        1
+      ],
+      "explanation": "Vる + にあたって: Nhân dịp/Khi chuẩn bị thực hiện một sự kiện quan trọng (Khi tiến hành xây dựng hội trường thành phố...).",
+      "mondai": "問題 7: 文法形式の判断 (Ngữ pháp trong câu)",
+      "mondaiNumber": 7,
+      "majorSection": "grammar"
+    },
+    {
+      "id": 34,
+      "question": "34. 次の文の（　）に入れるのに最もよいものを、1・2・3・4から一つ選びなさい。\n\n父は、健康のことを考えてなるべく（　）、会社から家まで1時間かけて歩いて帰ってくることもある。",
+      "type": "single",
+      "options": [
+        "歩こうとしそうで",
+        "歩こうとすることで",
+        "歩くようにしているらしく",
+        "歩くようにしていたら"
+      ],
+      "answers": [
+        2
+      ],
+      "explanation": "〜ようにしているらしく (Dường như đang cố gắng...): Diễn tả suy đoán về nỗ lực duy trì thói quen đi bộ của bố.",
+      "mondai": "問題 7: 文法形式の判断 (Ngữ pháp trong câu)",
+      "mondaiNumber": 7,
+      "majorSection": "grammar"
+    },
+    {
+      "id": 35,
+      "question": "35. 次の文の（　）に入れるのに最もよいものを、1・2・3・4から一つ選びなさい。\n\n（旅館で）旅館の人「いらっしゃいませ。本日は森川旅館に（　）ありがとうございます。」",
+      "type": "single",
+      "options": [
+        "伺いまして",
+        "お越しになり",
+        "参りまして",
+        "おいでくださり"
+      ],
+      "answers": [
+        3
+      ],
+      "explanation": "おいでくださり (Kính ngữ của 来てくれて): Cảm ơn quý khách đã cất công đến với lữ quán Morikawa.",
+      "mondai": "問題 7: 文法形式の判断 (Ngữ pháp trong câu)",
+      "mondaiNumber": 7,
+      "majorSection": "grammar"
+    },
+    {
+      "id": 36,
+      "question": "36. 次の文の（　）に入れるのに最もよいものを、1・2・3・4から一つ選びなさい。\n\n最近成績が伸びないので、このままの勉強方法（　）、先生に相談してみた。",
+      "type": "single",
+      "options": [
+        "でいいことを",
+        "ならいいことを",
+        "でいいのかどうか",
+        "ならいいのかどうか"
+      ],
+      "answers": [
+        2
+      ],
+      "explanation": "〜でいいのかどうか (Liệu cách học như hiện tại có ổn hay không): Đi với 相談する.",
+      "mondai": "問題 7: 文法形式の判断 (Ngữ pháp trong câu)",
+      "mondaiNumber": 7,
+      "majorSection": "grammar"
+    },
+    {
+      "id": 37,
+      "question": "37. 次の文の（　）に入れるのに最もよいものを、1・2・3・4から一つ選びなさい。\n\n図書館で本を借りたのだが、最後まで（　）、返却期限が来そうだ。",
+      "type": "single",
+      "options": [
+        "読み終わるより",
+        "読み終わらないうちに",
+        "読んでしまうまで",
+        "読んでしまわなければ"
+      ],
+      "answers": [
+        1
+      ],
+      "explanation": "Vない + うちに (Trước khi kịp làm gì thì...): Chưa kịp đọc xong hết thì hạn trả sách đã tới.",
+      "mondai": "問題 7: 文法形式の判断 (Ngữ pháp trong câu)",
+      "mondaiNumber": 7,
+      "majorSection": "grammar"
+    },
+    {
+      "id": 38,
+      "question": "38. 次の文の（　）に入れるのに最もよいものを、1・2・3・4から一つ選びなさい。\n\n週末、山に登った。とても暑い日だったが、頂上の近くは気温が低くて寒い（　）。",
+      "type": "single",
+      "options": [
+        "とよかった",
+        "に違いなかった",
+        "かのようだった",
+        "くらいだった"
+      ],
+      "answers": [
+        3
+      ],
+      "explanation": "〜くらいだった (Đến mức mà...): Gần đỉnh núi nhiệt độ thấp đến mức cảm thấy rét.",
+      "mondai": "問題 7: 文法形式の判断 (Ngữ pháp trong câu)",
+      "mondaiNumber": 7,
+      "majorSection": "grammar"
+    },
+    {
+      "id": 39,
+      "question": "39. 次の文の（　）に入れるのに最もよいものを、1・2・3・4から一つ選びなさい。\n\n満員電車に乗るのは嫌だが、ほかに手段がないので、（　）。",
+      "type": "single",
+      "options": [
+        "乗るものではない",
+        "乗りようがない",
+        "乗らないわけにはいかない",
+        "乗らなくてもかまわない"
+      ],
+      "answers": [
+        2
+      ],
+      "explanation": "Vない + わけにはいかない (Không thể không làm / Buộc phải làm): Vì không còn phương tiện nào khác nên buộc phải chen lên tàu đông.",
+      "mondai": "問題 7: 文法形式の判断 (Ngữ pháp trong câu)",
+      "mondaiNumber": 7,
+      "majorSection": "grammar"
+    },
+    {
+      "id": 40,
+      "question": "40. 次の文の（　）に入れるのに最もよいものを、1・2・3・4から一つ選びなさい。\n\n環境問題への意識が世界的に高まってきており、メーカー間の電気自動車の開発競争は激しくなる（　）。",
+      "type": "single",
+      "options": [
+        "一方だ",
+        "次第だ",
+        "ほどだ",
+        "べきだ"
+      ],
+      "answers": [
+        0
+      ],
+      "explanation": "Vる + 一方だ (Ngày càng có xu hướng...): Cuộc cạnh tranh phát triển xe điện ngày một trở nên khốc liệt hơn.",
+      "mondai": "問題 7: 文法形式の判断 (Ngữ pháp trong câu)",
+      "mondaiNumber": 7,
+      "majorSection": "grammar"
+    },
+    {
+      "id": 41,
+      "question": "41. 次の文の（　）に入れるのに最もよいものを、1・2・3・4から一つ選びなさい。\n\n私は猫アレルギーで、猫に触ると体がかゆくなってしまうのだが、猫は好きなので、見るとつい（　）。",
+      "type": "single",
+      "options": [
+        "触ってみたがっている",
+        "触ってみたくなってしまう",
+        "触ってみてほしがっている",
+        "触ってみてほしくなってしまう"
+      ],
+      "answers": [
+        1
+      ],
+      "explanation": "つい〜てしまう (Lỡ / Buộc lòng...): Nhìn thấy mèo là tôi lại lỡ muốn chạm vào thử.",
+      "mondai": "問題 7: 文法形式の判断 (Ngữ pháp trong câu)",
+      "mondaiNumber": 7,
+      "majorSection": "grammar"
+    },
+    {
+      "id": 42,
+      "question": "42. 次の文の（　）に入れるのに最もよいものを、1・2・3・4から一つ選びなさい。\n\n(テレビ番組で)\n司会「薬はどうして水以外の飲み物で飲んではいけないんでしょうか。」\n医者「それは、お茶やジュースで飲むと薬の効きめに影響が出る（　）。」",
+      "type": "single",
+      "options": [
+        "ことがあるためです",
+        "にするためです",
+        "ことがあるはずです",
+        "にするはずです"
+      ],
+      "answers": [
+        0
+      ],
+      "explanation": "〜ことがあるためです (Là vì có trường hợp sẽ làm ảnh hưởng đến hiệu quả của thuốc).",
+      "mondai": "問題 7: 文法形式の判断 (Ngữ pháp trong câu)",
+      "mondaiNumber": 7,
+      "majorSection": "grammar"
+    },
+    {
+      "id": 43,
+      "question": "43. 次の文の ★ に入る最もよいものを、1・2・3・4から一つえらびなさい。\n\n昨日は、梅雨の ___ ___ [ ★ ] ___ 、久しぶりに洗濯物を外に干すことができた。",
+      "type": "single",
+      "options": [
+        "いい天気で",
+        "時期にしては",
+        "この",
+        "珍しく"
+      ],
+      "answers": [
+        0
+      ],
+      "explanation": "Thứ tự ghép đúng: この (3) -> 時期にしては (2) -> [★ いい天気で (1)] -> 珍しく (4). Dịch: Hôm qua thời tiết đẹp hiếm thấy so với giai đoạn mùa mưa này nên tôi đã phơi đồ ngoài trời.",
+      "mondai": "問題 8: 文の組み立て ★ (Sắp xếp câu tìm sao)",
+      "mondaiNumber": 8,
+      "majorSection": "grammar"
+    },
+    {
+      "id": 44,
+      "question": "44. 次の文の ★ に入る最もよいものを、1・2・3・4から一つえらびなさい。\n\n今回のセミナーの開催日が人の ___ ___ [ ★ ] ___ 参加者が集まったのは大成功といえる。",
+      "type": "single",
+      "options": [
+        "集まりにくい",
+        "ことを考えると",
+        "平日だった",
+        "200名もの"
+      ],
+      "answers": [
+        1
+      ],
+      "explanation": "Thứ tự ghép đúng: 集まりにくい (1) -> 平日だった (3) -> [★ ことを考えると (2)] -> 200名もの (4). Dịch: Xét đến việc ngày tổ chức là ngày trong tuần khó tập trung người mà có tới 200 người tham gia thì quả là đại thành công.",
+      "mondai": "問題 8: 文の組み立て ★ (Sắp xếp câu tìm sao)",
+      "mondaiNumber": 8,
+      "majorSection": "grammar"
+    },
+    {
+      "id": 45,
+      "question": "45. 次の文の ★ に入る最もよいものを、1・2・3・4から一つえらびなさい。\n\nこのパン屋では、原料の ___ ___ [ ★ ] ___ 一つ一つ丁寧にパンを作っているそうだ。",
+      "type": "single",
+      "options": [
+        "こだわって",
+        "小麦粉は",
+        "水にまで",
+        "もちろん"
+      ],
+      "answers": [
+        2
+      ],
+      "explanation": "Thứ tự ghép đúng: 小麦粉は (2) -> もちろん (4) -> [★ 水にまで (3)] -> こだわって (1). Cấu trúc: Aはもちろん、Bにまで (A là đương nhiên, đến cả B cũng...). Dịch: Tiệm bánh này nghe nói bột mì là đương nhiên, đến cả nước cũng được chọn lọc kỹ càng.",
+      "mondai": "問題 8: 文の組み立て ★ (Sắp xếp câu tìm sao)",
+      "mondaiNumber": 8,
+      "majorSection": "grammar"
+    },
+    {
+      "id": 46,
+      "question": "46. 次の文の ★ に入る最もよいものを、1・2・3・4から一つえらびなさい。\n\n昨日の晩、目覚まし時計をセットするのを忘れてしまい、今朝は寝坊してしまった。それでも ___ [ ★ ] ___ からだ。",
+      "type": "single",
+      "options": [
+        "のは",
+        "たまたまかかってきた",
+        "電話に起こされた",
+        "遅刻をせずに済んだ"
+      ],
+      "answers": [
+        0
+      ],
+      "explanation": "Thứ tự ghép đúng: 遅刻をせずに済んだ (4) -> [★ のは (1)] -> たまたまかかってきた (2) -> 電話に起こされた (3). Dịch: Dù ngủ quên nhưng sở dĩ không bị muộn là vì tình cờ được đánh thức bởi cuộc gọi điện thoại.",
+      "mondai": "問題 8: 文の組み立て ★ (Sắp xếp câu tìm sao)",
+      "mondaiNumber": 8,
+      "majorSection": "grammar"
+    },
+    {
+      "id": 47,
+      "question": "47. 次の文の ★ に入る最もよいものを、1・2・3・4から一つえらびなさい。\n\n人には ___ ___ [ ★ ] ___ 気づくのは難しい。",
+      "type": "single",
+      "options": [
+        "良さがあるというが",
+        "誰にでも",
+        "その人にしかない",
+        "自分ではそれに"
+      ],
+      "answers": [
+        0
+      ],
+      "explanation": "Thứ tự ghép đúng: 誰にでも (2) -> その人にしかない (3) -> [★ 良さがあるというが (1)] -> 自分ではそれに (4). Dịch: Người ta nói ai cũng có nét tốt riêng chỉ mình người đó có, nhưng tự bản thân nhận ra điều đó lại rất khó.",
+      "mondai": "問題 8: 文の組み立て ★ (Sắp xếp câu tìm sao)",
+      "mondaiNumber": 8,
+      "majorSection": "grammar"
     }
   ],
   "passages": [
     {
+      "kind": "passage",
       "id": "passage-n2-p01",
-      "mondai": "問題10: 短文読解 — 次の文章を読んで、後の問いに対する答えとして最もよいものを、1・2・3・4から一つ選びなさい。",
-      "passageTitle": "短文 1: 社内リモートワーク制度の改定について",
-      "passageText": "社員各位\n\n総務部より在宅勤務（リモートワーク）制度の改定についてお知らせいたします。\n来月1日より、週当たりの在宅勤務可能日数がこれまでの「週2日」から「週3日」へと拡大されます。ただし、円滑な業務連携および新入社員の育成を支援する観点から、毎週月曜日の全社定例ミーティング日については、原則として全社員の出社を必須といたします。個別のご事情により月曜日の出社が困難な場合は、事前に所属部署の長の承認を得た上で申請を行ってください。",
+      "mondai": "問題 9: 文章の文法 (Ngữ pháp trong đoạn văn)",
+      "mondaiNumber": 9,
+      "majorSection": "grammar",
+      "passageTitle": "高齢者の外出支援",
+      "passageText": "現在、日本では65歳以上の高齢者が人口の約3割に達するほど高齢化が進んでいる。そんな日本で今、高齢者の体と心の健康のために外出を支援するサービスの重要性が増しているそうだ。このサービスには、どのような効果があるのだろうか。\n外出を支援するサービスは、大きく分けて二つある。まず一つ目は、移動をサポートするサービスで、主に車での送迎サービスだ。車の運転が困難な人や、最寄りのバス停や駅まで歩くことが負担になる人に（ 48 ）。二つ目は、外出の機会を提供するサービスだ。用事がないから外出しないという高齢者は（ 49 ）。そのため、商店街での割引を実施したり、集まっておしゃべりができる会を開いたりするなど、外出の目的や場所を提供している。これらのサービスにより、外出の回数が増えたという人も多いそうだ。\n外出回数は、高齢者の体と心の健康に大きく影響する。（ 50 ）調査では、歩行に障害が出た人の数は、外出回数が1日1回以上の人より3日に1回未満の人のほうが約4倍も多かった。また、外出は心の健康のために欠かせないという研究報告もある。外出によって脳に刺激を与えることは、脳の機能が低下するのを防ぎ、心の健康につながる近技なのだそうだ。\n外出と健康の関係を考えると、高齢者が外出することには大きな意味がある。高齢化が進む日本（ 51 ）、外出支援サービスは重要な役割を果たしているのだ。",
+      "questions": [
+        {
+          "id": 48,
+          "question": "48番に入る最もよいものを選びなさい。",
+          "type": "single",
+          "options": [
+            "利用させてほしい",
+            "利用されている",
+            "利用してくれている",
+            "利用してもいい"
+          ],
+          "answers": [
+            1
+          ],
+          "explanation": "Căn cứ vào bối cảnh câu: Dịch vụ hỗ trợ di chuyển đang 'được sử dụng' (利用されている) bởi những người gặp khó khăn khi lái xe hoặc đi bộ đến trạm xe buýt.",
+          "_normalized": true
+        },
+        {
+          "id": 49,
+          "question": "49番に入る最もよいものを選びなさい。",
+          "type": "single",
+          "options": [
+            "少なかったはずだ",
+            "少なくなったのだ",
+            "少なくないという",
+            "少なくなりかねない"
+          ],
+          "answers": [
+            2
+          ],
+          "explanation": "Cấu trúc 少なくないという (Nghe nói là không ít) phù hợp với việc diễn tả thực trạng nhiều người cao tuổi không ra ngoài vì không có việc gì làm.",
+          "_normalized": true
+        },
+        {
+          "id": 50,
+          "question": "50番に入る最もよいものを選びなさい。",
+          "type": "single",
+          "options": [
+            "このような",
+            "その",
+            "次の",
+            "ある"
+          ],
+          "answers": [
+            3
+          ],
+          "explanation": "ある調査 (Một cuộc khảo sát nọ) dùng để đưa ra dẫn chứng/số liệu cụ thể hỗ trợ cho luận điểm trước đó.",
+          "_normalized": true
+        },
+        {
+          "id": 51,
+          "question": "51番に入る最もよいものを選びなさい。",
+          "type": "single",
+          "options": [
+            "において",
+            "に限らず",
+            "を中心に",
+            "をはじめ"
+          ],
+          "answers": [
+            0
+          ],
+          "explanation": "Cấu trúc Nにおいて (Tại / Ở / Trong hoàn cảnh N): Trong một nước Nhật đang già hóa, dịch vụ hỗ trợ ra ngoài đóng vai trò quan trọng.",
+          "_normalized": true
+        }
+      ]
+    },
+    {
+      "kind": "passage",
+      "id": "passage-n2-p02",
+      "mondai": "問題 10: 短文理解 (Đọc hiểu đoạn ngắn)",
+      "mondaiNumber": 10,
+      "majorSection": "reading",
+      "passageTitle": null,
+      "passageText": "人間は「私」として生きるのですが、よく言われるように「私」とは、「あなた」がいて初めてその像を結びます。これは、「他人の評価によって自分が決まる」ということではなく、「他人と自分の違いを通して初めて、自分というものがどういうものかがわかる」ということです。他人との好みの違いや意見の対立。そういうものをとおして初めて、自分とは何が好きで何が嫌で何を支えにしているのかがわかるということです。それは、他者との付き合いなしに生まれることはありません。",
       "questions": [
         {
           "id": 52,
-          "question": "このお知らせの内容として最も合致しているものはどれか。",
+          "question": "筆者の考えに合うのはどれか。",
           "type": "single",
           "options": [
-            "来月以降、月曜日以外であれば週に最大3日まで在宅勤務が可能になる。",
-            "来月以降はすべての社員が週5日自由に在宅勤務を選べるようになる。",
-            "月曜日の定例ミーティングは原則としてオンラインで開催される。",
-            "在宅勤務をする際は、曜日に関わらず毎回総務部長の承認が必要である。"
+            "自分がどういう人間かは、他者とのかかわりがなければわからない。",
+            "相手がどういう人間かは、自分との好みの違いを知ればわかる。",
+            "他者からの評価がなければ、自分がどういう人間かわからない。",
+            "他者との付き合いを通して、自分への評価がわかる。"
           ],
           "answers": [
             0
           ],
-          "explanation": "Theo thông báo: Số ngày làm việc từ xa tăng lên tối đa 3 ngày/tuần, nhưng thứ Hai bắt buộc phải đến công ty (trừ khi có đơn duyệt trước). Do đó câu 1 là chính xác nhất."
+          "explanation": "Tác giả khẳng định: Nhờ trải qua sự khác biệt với người khác mà ta mới hiểu bản thân là người thế nào, và điều đó không thể sinh ra nếu không có sự giao tiếp/mối quan hệ với người khác (他者との付き合いなしに生まれることはありません).",
+          "_normalized": true
         }
       ]
     },
     {
-      "id": "passage-n2-p02",
-      "mondai": "問題10: 短文読解 — 次の文章を読んで、後の問いに対する答えとして最もよいものを、1・2・3・4から一つ選びなさい。",
-      "passageTitle": "短文 2: ビジネスメール（訪問日程の変更依頼）",
-      "passageText": "株式会社グローバルソリューションズ\n営業部　佐藤様\n\nいつも大変お世話になっております。大和商事の田中です。\n\nさて、来週水曜日（15日）14時に予定しておりました新システム導入に関するお打ち合わせの件ですが、大変恐縮ながら弊社役員の急な海外出張が決定し、同席が困難となってしまいました。\n誠に勝手なお願いで恐縮ですが、もし佐藤様のご都合がよろしければ、下記の日程のいずれかにご変更いただくことは可能でしょうか。\n\n・第1希望：10月17日（金）14:00〜15:30\n・第2希望：10月20日（月）10:30〜12:00\n\n急な日程変更によりご迷惑をおかけしますことを深くお詫び申し上げます。",
+      "kind": "passage",
+      "id": "passage-n2-p03",
+      "mondai": "問題 10: 短文理解 (Đọc hiểu段落 - メール)",
+      "mondaiNumber": 10,
+      "majorSection": "reading",
+      "passageTitle": null,
+      "passageText": "水石食品 商品開発部\n田中由夏様\n\n昨日は「水石りんごジャム」のサンプルをお届けいただき、ありがとうございました。\n本日試食をし、予定どおり来月から朝食で提供することにいたしました。\nまた、お客様から名産のりんごを使ったお土産がないかたびたび質問を受けますので、このジャムを売店でも販売したいと考えております。同じ時期に販売を開始したいと思っておりますが、ご対応いただけるでしょうか。\nご検討いただきたく、どうぞよろしくお願いいたします。\n\n水石温泉ホテル営業部\n島本洋太",
       "questions": [
         {
           "id": 53,
-          "question": "田中さんがこのメールを送った主な理由は何か。",
+          "question": "このメールで問い合わせていることは何か。",
           "type": "single",
           "options": [
-            "役員の出張により同席できなくなったため、打ち合わせの日程再調整をお願いするため。",
-            "新システム導入の計画自体を一度白紙に戻して延期することを伝えるため。",
-            "10月15日の打ち合わせに佐藤様が欠席されることを確認するため。",
-            "田中さん自身が海外出張に行くことになり、打ち合わせを中止するため。"
+            "来月から「水石りんごジャム」をホテルの朝食で提供できるか。",
+            "来月から販売予定の「水石りんごジャム」は、名産のりんごを使っているか。",
+            "来月までに名産のりんごを使った新しい土産品が作れるか。",
+            "売店で販売するための「水石りんごジャム」を、来月から納品できるか。"
           ],
           "answers": [
-            0
+            3
           ],
-          "explanation": "Lý do田中 gửi mail: Do giám đốc công ty Tanaka có lịch công tác nước ngoài đột xuất nên không thể cùng tham gia cuộc họp ngày 15, vì vậy cần xin đổi lịch sang 1 trong 2 khung giờ đề xuất (17 hoặc 20)."
+          "explanation": "Trong thư hỏi: 'このジャムを売店でも販売したい...同じ時期（来月）に販売を開始したいと思っておりますが、ご対応いただけるでしょうか' -> Hỏi xem phía bên kia có thể cung cấp/giao hàng mứt táo để bán ở cửa hàng từ tháng sau được không.",
+          "_normalized": true
         }
       ]
     },
     {
-      "id": "passage-n2-p03",
-      "mondai": "問題10: 短文読解 — 次の文章を読んで、後の問いに対する答えとして最もよいものを、1・2・3・4から一つ選びなさい。",
-      "passageTitle": "短文 3: 心理学コラム（相手の話を聞く技術）",
-      "passageText": "人間関係を円滑にする上で「聞き上手」になることの重要性はよく指摘される。しかし、単に黙って相手の話に相槌を打つだけで十分なわけではない。真の聞き上手とは、相手の言葉の背後にある「感情」や「伝えたい動機」に関心を向け、時には的確な質問を挟むことで、相手自身が自分の考えを整理できるよう手助けする人のことである。相手が『この人は私を深く理解してくれている』と感じたとき、初めて深い信頼関係が生まれるのである。",
+      "kind": "passage",
+      "id": "passage-n2-p04",
+      "mondai": "問題 10: 短文理解 (Đọc hiểu段落 - ラジオ)",
+      "mondaiNumber": 10,
+      "majorSection": "reading",
+      "passageTitle": null,
+      "passageText": "ラジオというのはながら聴きができるところが好きだった。何か他のことをしながら聴く。いい音楽や話があると、それが突然まるでボリュームが上がったように大きく聴こえ、そこから頭の中に空想の世界が浮かびだす。ラジオは余白のあるメディアだ。音しかそこに存在しないわけで、そこから先は聞き手である自分たちの手に委ねられる。まるで本で読む小説のように。与えられる情報が少ないほど、ある意味、自由度が高い。",
       "questions": [
         {
           "id": 54,
-          "question": "筆者によると、「真の聞き上手」とはどのような人か。",
+          "question": "ラジオについて、筆者はどのように考えているか。",
           "type": "single",
           "options": [
-            "相手の感情や動機に関心を持ち、考えを整理できるよう促しながら聞く人。",
-            "相手が話し終えるまで自分の意見や質問を一切挟まずに黙って聞く人。",
-            "相手の話し方の欠点を指摘して正しい話し方を教える人。",
-            "誰とでもすぐに親しくなるために面白い話題をたくさん提供する人。"
+            "他のことをしながら聴け、時間が有効に使える。",
+            "いい音楽や話が聴け、自由が感じられる。",
+            "音以外の情報がなく、自由に空想が広がりやすい。",
+            "目からの情報がなく、小説より自由に空想ができる。"
           ],
           "answers": [
-            0
+            2
           ],
-          "explanation": "Đoạn văn định nghĩa: Người biết lắng nghe thực thụ là người thấu hiểu cảm xúc đằng sau câu chuyện, biết đặt câu hỏi đúng lúc giúp đối phương sắp xếp suy nghĩ của mình."
+          "explanation": "Đoạn văn ghi: '音しかそこに存在しないわけで... 与えられる情報が少ないほど、ある意味、自由度が高い' -> Không có thông tin gì ngoài âm thanh nên người nghe dễ tự do tưởng tượng.",
+          "_normalized": true
         }
       ]
     },
     {
-      "id": "passage-n2-p04",
-      "mondai": "問題10: 短文読解 — 次の文章を読んで、後の問いに対する答えとして最もよいものを、1・2・3・4から一つ選びなさい。",
-      "passageTitle": "短文 4: 現代社会論（読書と情報収集の違い）",
-      "passageText": "インターネットで短時間に必要な情報を検索することは、現代の生活において極めて効率的なスキルである。しかし、それは「情報収集」であって、一冊の本をじっくりと読み通す「読書」とは本質的に異なる。読書とは、著者の思考のプロセスを追体験し、自分自身の内面と対話する行為である。答えを即座に求めるだけでなく、疑問を抱えたまま考え続ける力こそが、一冊の本と向き合うことで養われるのである。",
+      "kind": "passage",
+      "id": "passage-n2-p05",
+      "mondai": "問題 10: 短文理解 (Đọc hiểu段落 - お知らせ)",
+      "mondaiNumber": 10,
+      "majorSection": "reading",
+      "passageTitle": null,
+      "passageText": "坂元ガスをご利用のお客様へ\n6月10日\n坂元ガス株式会社\n\n使用量および料金の通知について\n\nいつも坂元ガスをご利用いただき、ありがとうございます。\nこれまで月々のガスの使用量と料金は、紙の通知書でお伝えしていましたが、資源節約のため8月末で廃止いたします。\n9月以降、使用量と料金の確認は、ウェブ会員サービス「サカモト・ガスネット」をご利用ください。引き続き通知書をご希望のお客様には郵送でお届けいたしますが、手数料180円／月をご負担いただきます。\nなお、「サカモト・ガスネット」のご利用方法、および通知書を希望される場合のお申し込み方法は、7月中にお知らせいたします。\nご理解、ご協力をお願い申し上げます。",
       "questions": [
         {
           "id": 55,
-          "question": "読書の効果について、筆者はどのように述べているか。",
+          "question": "ガスの使用量と料金の通知について、このお知らせで伝えたいことは何か。",
           "type": "single",
           "options": [
-            "著者の思考を追体験し、自分と対話しながら深く考え続ける力を養うことができる。",
-            "ネット検索よりも短時間で膨大な最新情報を効率的に収集できる。",
-            "すぐに正しい答えを見つけ出すための実践的テクニックが身につく。",
-            "他人の意見に惑わされず、疑問を一切持たなくなる。"
+            "7月中にウェブ会員サービスの申し込みを始めるので、登録してほしい",
+            "8月末で使用量と料金の通知を終了するので、知りたい場合は連絡してほしい。",
+            "9月から新しい形式の紙の通知書を郵送するので、手数料を負担してほしい",
+            "9月から紙の通知書を有料にするので、無料で確認したい場合はウェブで確認してほしい"
           ],
           "answers": [
-            0
+            3
           ],
-          "explanation": "Tác giả nhấn mạnh: Việc đọc sách cho phép ta trải nghiệm lại tư duy của tác giả và nuôi dưỡng khả năng trăn trở, suy ngẫm đối thoại với chính mình."
+          "explanation": "Thông báo nêu từ tháng 9 giấy báo tính phí 180 yên/tháng, còn kiểm tra qua web 'サカモト・ガスネット' thì miễn phí.",
+          "_normalized": true
         }
       ]
     },
     {
-      "id": "passage-n2-p05",
-      "mondai": "問題10: 短文読解 — 次の文章を読んで、後の問いに対する答えとして最もよいものを、1・2・3・4から一つ選びなさい。",
-      "passageTitle": "短文 5: マンション管理組合からのお知らせ",
-      "passageText": "マンション住民の皆様へ\n\nエレベーター定期保守点検の実施について\n\n下記の日時におきまして、法令に基づくエレベーターの定期点検および安全装置の動作テストを実施いたします。点検作業中はエレベーターの運転が完全に停止いたしますので、階段をご利用いただきますようお願いいたします。ご高齢の方や重い荷物をお持ちの方には大変ご不便をおかけいたしますが、安全運行のためご理解とご協力をお願い申し上げます。\n\n■ 日時：11月10日（火）午前10:00 〜 午後1:00（予定）",
+      "kind": "passage",
+      "id": "passage-n2-p06",
+      "mondai": "問題 10: 短文理解 (Đọc hiểu段落 - 会社)",
+      "mondaiNumber": 10,
+      "majorSection": "reading",
+      "passageTitle": null,
+      "passageText": "仕事というものは、自分の専門分野のことだけ考えればよいのではなく、部門を超えてどんな影響を与えあうか考え調整しながらやるべきものである。自部門に余裕があれば、忙しい他部門を手伝ってあげるべきだが、誰もそういう具合には考えない、そして、いつのまにか自分の城を築き、守りに入る。これでは「会社」ではない。会社は、そこで働く普通の人たちの力が、みんなで働くことによって何倍にも大きくなり、個人では成しえないような偉大なことを行う場所である。",
       "questions": [
         {
           "id": 56,
-          "question": "この点検作業中について、住民が注意すべきことは何か。",
+          "question": "会社について、筆者はどのように述べているか。",
           "type": "single",
           "options": [
-            "作業時間帯はエレベーターが使えないため、階段を利用する必要がある。",
-            "点検作業中はマンションから一切外出してはならない。",
-            "重い荷物がある場合は作業員が代わりに部屋まで運んでくれる。",
-            "点検の立ち会いのために各部屋で待機していなければならない。"
+            "各部門の仕事量に差があると、会社は発展していかない。",
+            "部門を分けないほうが、会社は大きな成果を上げられる。",
+            "部門内で助け合って仕事をしていれば、社内の雰囲気もよくなる。",
+            "部門同士が互いのことを考えて仕事をしなければ、会社とはいえない。"
           ],
           "answers": [
-            0
+            3
           ],
-          "explanation": "Thông báo nêu rõ: Trong thời gian 10:00 - 13:00 ngày 10/11 thang máy dừng hoạt động hoàn toàn, cư dân cần sử dụng cầu thang bộ."
+          "explanation": "Tác giả nhấn mạnh công việc phải suy nghĩ vượt ra khỏi phòng ban mình và hỗ trợ lẫn nhau, nếu chỉ thủ trong phòng ban của mình thì 'これでは「会社」ではない' (như thế không phải là công ty).",
+          "_normalized": true
         }
       ]
     },
     {
-      "id": "passage-n2-p06",
-      "mondai": "問題11: 中文読解 — 次の文章を読んで、後の問いに対する答えとして最もよいものを、1・2・3・4から一つ選びなさい。",
-      "passageTitle": "中文 1: AI時代の人間らしさと創造性",
-      "passageText": "近年、人工知能（AI）の急速な進化により、これまで人間にしかできないと考えられていた文章の執筆や絵画の制作、さらには高度なデータ分析までもが機械によって瞬時に行われるようになった。このような変化を目の当たりにして、「人間の仕事がAIに奪われてしまうのではないか」という不安の声が世界中で高まっている。\n\nしかし、私たちは技術の進化をただ恐れるのではなく、AIと人間の本質的な違いを冷静に見つめ直す必要がある。AIは膨大な既存データを学習し、統計的に最も確率の高い「最適解」を素早く提示することに長けている。一方で、人間は自らの身体的な体験、感情の揺らぎ、時には「失敗や無駄」を通じて、既存の枠組みにはない全く新しい価値や問いを生み出すことができる。\n\nこれからの時代に求められるのは、AIと競い合うことではない。AIを思考を広げるための強力なパートナーとして活用しながら、人間ならではの感性や倫理観、そして独自の問いを立てる力を磨いていくことこそが重要なのである。",
+      "kind": "passage",
+      "id": "passage-n2-p07",
+      "mondai": "問題 11: 中文理解 (Đọc hiểu đoạn trung 1)",
+      "mondaiNumber": 11,
+      "majorSection": "reading",
+      "passageTitle": null,
+      "passageText": "ゾウの鼻は進化の産物です。長い進化の中で鼻が何か目的を持って自らを変化させたわけではないかもしれません。何かの副産物かもしれません。しかし、ゾウが生きる世界を、ゾウの視点から理解するためにも大切なことです。\nまず、ゾウの体を分析してみましょう。長い鼻があって、その根元には大きな頭があります。頭の重さは500キログラムほど。その頭を支えるには、太い首は不可欠です。（中略）\nゾウの頭はなぜこんなにも大きいのでしょう？ゾウの頭は頑丈な頭骨とむきむきの筋肉からなります。ゾウはとても賢い動物で豊かな感情を持っています。そういった知能や心の世界を支えるのは、もちろん脳です。5000グラムにも及ぶ大きな脳を守る頑丈な頭骨と、ゾウの象徴である太くて長い鼻を維持するための筋肉がついてゾウの頭はあんなにも大きくなったのです。\n大きな脳と長い鼻の間にも関係があると、私は考えています。大きな脳、つまり大きな頭を支えるために、首が十分に太くなければなりませんでした。首を太く頑丈にすると、困ったことに、頭部の動きが制限されてしまったのです。その不自由さを、長く機能性に優れた鼻が十分に補ってくれたのではないでしょうか。鼻がよく動くことで、首が固定されていても生活に困りません。大きな頭を保ったまま、鼻で動きの自由も得たのです。",
       "questions": [
         {
           "id": 57,
-          "question": "現在、多くの人々がAIの進化に対して抱いている不安とはどのようなものか。",
+          "question": "ゾウの頭について、筆者はどのように述べているか。",
           "type": "single",
           "options": [
-            "AIが高度な作業を行えるようになり、人間の働く場が奪われるのではないかという不安。",
-            "AIが故障して社会の重要なインフラがすべて停止してしまうのではないかという不安。",
-            "AIを使うためのコストが高すぎて一般人が利用できないのではないかという不安。",
-            "AIによって人間同士のコミュニケーションが一切なくなってしまうのではないかという不安。"
+            "高い知能を持つ脳を守るため、頭骨が頑丈である。",
+            "筋肉がついていて大きいので、感情が分かりやすい。",
+            "頭骨が頑丈なので、太くて長い鼻が維持できる。",
+            "重量のほとんどが脳の重さで、知能が高い。"
           ],
           "answers": [
             0
           ],
-          "explanation": "Đoạn 1 nêu rõ: Mọi người lo ngại rằng công việc của con người sẽ bị AI cướp mất do AI có thể làm được cả viết văn, vẽ tranh, phân tích dữ liệu."
+          "explanation": "Trong bài viết: '5000グラムにも及ぶ大きな脳を守る頑丈な頭骨...' -> Xương đầu chắc chắn để bảo vệ bộ脳 (bộ脑) lớn nuôi dưỡng trí thông minh.",
+          "_normalized": true
         },
         {
           "id": 58,
-          "question": "筆者が考える「AI」と「人間」の決定的な違いは何か。",
+          "question": "ゾウの鼻について、筆者はどのように考えているか。",
           "type": "single",
           "options": [
-            "AIは過去のデータから最適解を導くのに対し、人間は実体験や感情を通して新しい問いや価値を創出できる点。",
-            "AIは感情豊かに文章を書くことができるが、人間は計算やデータ分析しかできない点。",
-            "人間は失敗を一切しない完璧な存在だが、AIは頻繁に誤った情報を出力してしまう点。",
-            "人間は既存の知識だけを忠実に再現するが、AIは直感だけで物事を判断する点。"
+            "脳が発達しているので、首が固定されていても自由に動かせる。",
+            "自由に動かすことで頭部の動きがよくなり、脳も発達した。",
+            "首が太く頭部が自由に動かないのを補っている。",
+            "大きな頭部を支えるために、太く長くなった。"
           ],
           "answers": [
-            0
+            2
           ],
-          "explanation": "Đoạn 2 phân tích: AI giỏi tính toán tối ưu dựa trên dữ liệu cũ, trong khi con người dựa vào trải nghiệm, cảm xúc, thậm chí sự vấp ngã để tạo ra giá trị và câu hỏi hoàn toàn mới."
-        },
-        {
-          "id": 59,
-          "question": "これからの社会で人間が取るべき姿勢として、筆者が最も強調していることは何か。",
-          "type": "single",
-          "options": [
-            "AIを道具・パートナーとして賢く使いこなし、人間固有の感性や問いを立てる力を高めること。",
-            "AIの利用を法律で全面的に禁止し、すべての作業を手作業に戻すこと。",
-            "AIの計算スピードに負けないよう、暗記力や計算能力を徹底的に鍛え上げること。",
-            "AIの指示にすべて従い、人間自身は深く考えることをやめること。"
-          ],
-          "answers": [
-            0
-          ],
-          "explanation": "Đoạn 3 kết luận: Không cạnh tranh mù quáng với AI, mà xem AI là cộng sự để con người phát huy sự nhạy cảm, đạo đức và khả năng đặt ra những vấn đề mới."
+          "explanation": "Trong bài: '首を太く頑丈にすると...頭部の動きが制限されてしまった...その不自由さを、長く機能性に優れた鼻が十分に補ってくれた' -> Vòi voi bù đắp cho việc cổ to làm đầu khó cử động linh hoạt.",
+          "_normalized": true
         }
       ]
     },
     {
-      "id": "passage-n2-p07",
-      "mondai": "問題11: 中文読解 — 次の文章を読んで、後の問いに対する答えとして最もよいものを、1・2・3・4から一つ選びなさい。",
-      "passageTitle": "中文 2: 地域食文化の継承と持続可能性",
-      "passageText": "日本各地には、その土地の気候風土や歴史に育まれた独自の「郷土料理」が存在する。これらの料理は単に美味しいだけでなく、旬の食材を余すところなく使い切る知恵や、保存性を高める発酵技術など、先人たちの豊かな生活の工夫が詰まっている。\n\nところが近年、食のグローバル化や流通網の発達により、全国どこにいても同じ食材や加工食品が手に入るようになった。その利便性と引き換えに、家庭で伝統的な郷土料理を作る機会は減少し、地域の食文化が失われつつある。\n\n食文化を守ることは、単に過去の料理法を保存することにとどまらない。地元の農林水産業を支え、フードロスを削減し、地域のコミュニティの結びつきを再確認することに直結している。地域の食を現代のライフスタイルに合わせて再発見し、次世代へ語り継ぐ取り組みが今こそ求められている。",
+      "kind": "passage",
+      "id": "passage-n2-p08",
+      "mondai": "問題 11: 中文理解 (Đọc hiểu段落 - 職業観)",
+      "mondaiNumber": 11,
+      "majorSection": "reading",
+      "passageTitle": null,
+      "passageText": "若い人たちの職業観で、気になることがある。ある調査では、自分に合った仕事をしたい、と多くの若者が考えているらしい。僕に言わせれば、それが大きな勘違いである。そんなことにこだわるから、ますます就職するのがキツくなるのだ。\n仕事というのは社会のニーズだ。（中略）\nたとえば僕の本が売れたとする。売れた理由は買った人に聞いてみないとわからないが、少なくともそこに穴があいていたから、とは言えるだろう。埋まっていない隙間があって、実はみんなが気になっていた。そこを本という形で埋めたから買ってもらえた。一見平坦な場所に穴が、つまり隠れたニーズがあったということである。\n起業という言葉をメディアでよく目にするが、この言葉の使われ方を見ていると、平坦な場所に新しく何かを積み上げるようなイメージだ。しかし話はまったく逆だと僕は思う。起業というのは社会にあいている穴を見つけて埋めることではないか。何か足りない、不便だとみんなが思っている。\nそれを埋めてやったら、即商業になるはずだ。穴があったら入りたい。そう考えて、とにかく仕事に就き、身体を動かして現場の作業を知ることだ。どの穴も、外側から見て全体がわかるほど単純な形はしていない。入ってみないで頭でばかり考えたって何もわからないのである。",
       "questions": [
         {
-          "id": 60,
-          "question": "郷土料理の特徴として、文章で述べられているものはどれか。",
+          "id": 59,
+          "question": "売れた理由とあるが、筆者はなぜ売れたと考えているか。",
           "type": "single",
           "options": [
-            "その土地の気候や歴史に根ざし、食材を活かしきる知恵や発酵技術が詰まっていること。",
-            "全国どこでも全く同じ材料と調理法で手軽に作れるように規格化されていること。",
-            "外国から輸入された高級食材をふんだんに使用していること。",
-            "保存が難しいため、調理後数分以内に食べきらなければならないこと。"
+            "多くの人が知らない新しいことを書いたから",
+            "多くの人が何か足りないと思っていたことを取り上げたから",
+            "多くの人が気づいていなかった社会の問題を指摘したから",
+            "多くの人が感じていた社会のニーズをわかりやすく説明したから"
           ],
           "answers": [
-            0
+            1
           ],
-          "explanation": "Đoạn 1 nêu: Món ăn truyền thống địa phương gắn liền với khí hậu, thổ nhưỡng, chứa đựng trí tuệ sử dụng triệt để nguyên liệu mùa vụ và kỹ thuật lên men bảo quản."
+          "explanation": "Tác giả giải thích cuốn sách bán chạy là do có 'lỗ hổng chưa được lấp đầy' mà mọi人 quan tâm, tức là giải quyết điều mà nhiều người cảm thấy thiếu sót (何か足りないと思っていたこと).",
+          "_normalized": true
         },
         {
-          "id": 61,
-          "question": "郷土料理が衰退しつつある背景として、筆者は何を挙げているか。",
+          "id": 60,
+          "question": "若い人たちに対して、筆者が言いたいことは何か。",
           "type": "single",
           "options": [
-            "全国どこでも同じ加工食品や食材が手に入る便利さが増したこと。",
-            "郷土料理の味が現代人の口に合わなくなったこと。",
-            "伝統的な食材の価格が高騰して誰も買えなくなったこと。",
-            "若者が全員外食をやめて自炊ばかりするようになったこと。"
+            "自分に合った仕事より、社会のニーズに応えられる仕事に就くべきだ",
+            "自分に合った仕事を見つけるには、身体を動かす仕事をしてみるべきだ。",
+            "自分に合った仕事を探すよりも、まずは仕事に就いてみることが大切だ。",
+            "どんな仕事でも、仕事をしているうちに自分に合った仕事になっていく。"
           ],
           "answers": [
-            0
+            2
           ],
-          "explanation": "Đoạn 2 nêu: Do thực phẩm toàn cầu hóa và hệ thống phân phối phát triển, người ta có thể mua cùng một loại thực phẩm chế biến sẵn ở bất kỳ đâu, làm giảm việc nấu nướng truyền thống."
+          "explanation": "Tác giả khuyên: 'とにかく仕事に就き、身体を動かして現場の作業を知ることだ...入ってみないで頭でばかり考えたって何もわからない' -> Thay vì cứ đi tìm công việc hợp với mình thì trước tiên hãy cứ đi làm đã.",
+          "_normalized": true
+        }
+      ]
+    },
+    {
+      "kind": "passage",
+      "id": "passage-n2-p09",
+      "mondai": "問題 11: 中文理解 (Đọc hiểu段落 - 子どもの教育)",
+      "mondaiNumber": 11,
+      "majorSection": "reading",
+      "passageTitle": null,
+      "passageText": "子どもはむずかしいことが好きである。\nニュースなどを見ていて、なにか関心を持ったようなら、子どもにわかるよう言葉を選んで教えてあげるといい。\n親がそのように努力して教えても、実はわかっていないことのほうが多いのだが、それでいいのである。子どもをわかったような気にさせるというのでいい。なぜなら、そこから好奇心が動き出し、やがて本当にわかるように調べてみようという気になる。\nそして、そうやっているうちに、本当にわかってくることも多い。\n要は、好奇心を刺激し、いろいろなものに関心を持たせることがいちばん重要なのである。\n子どもは、どこか背伸びしたがるものだ。それを否定的に見るのではなく、表面的な理解であってもかまわない、自分なりの理解でいい、とおおらかに受け止めよう。やがて、本格的な学びの場面で、その関心が伸びてくるからだ。\n（中略）\n子どもの理解力はゴムのようなもので、伸びないと思えばまったく伸びないままだが、伸びると思えばおそろしく伸びる。\nそのわかれ目は、課題が出会ったとき、興味をそそるように話してやれるかどうかだ。\nいざとなれば、大人がじゅうぶんわかっていなくてもいい。もちろん、まちがったことを教えるのはよくないが、「自分にもよくわからないが、こういうことだろうと思う」と正直に言えば、子どもは納得する。大人もわからないことがあるのだと知ったり、子ども自身がなんとなくわかったような気がするというのでもいいだろう。",
+      "questions": [
+        {
+          "id": 61,
+          "question": "筆者によると、子どもにわからないことがあったとき、親はどうすればいいか。",
+          "type": "single",
+          "options": [
+            "すぐにわかることだけを理解させる。",
+            "わかったつもりにさせる。",
+            "全部わからなくともいいと思わせる。",
+            "全部わかるようにする。"
+          ],
+          "answers": [
+            1
+          ],
+          "explanation": "Trong bài nêu rõ: '子どもをわかったような気にさせるというのでいい' -> Tạo cảm giác cho trẻ như thể đã hiểu (わかったつもりにさせる) để kích thích trí好奇心.",
+          "_normalized": true
         },
         {
           "id": 62,
-          "question": "食文化を守り継ぐことの意義について、筆者の考えはどれか。",
+          "question": "筆者の考えに合うのはどれか。",
           "type": "single",
           "options": [
-            "地元の産業を支え、フードロス削減や地域社会の繋がりを強めることにつながる。",
-            "外国からの観光客を増やして莫大な経済利益を得ることだけが目的である。",
-            "過去と全く同じ生活様式を全員に強制することである。",
-            "最新の加工食品をすべて市場から排除することである。"
+            "子どもにわからないことがあったら、大人は一緒に興味を持って調べるべきだ。",
+            "子どもに関心を持ったとき、大人は興味がわくように話してやることが大切だ。",
+            "子どもが課題に出会ったら、大人は答えを教えないで自分で考えさせるべきだ。",
+            "子どもが疑問を持ったとき、大人は納得するまで教えてやることが大切だ。"
           ],
           "answers": [
-            0
+            1
           ],
-          "explanation": "Đoạn 3 khẳng định: Giữ gìn ẩm thực địa phương giúp hỗ trợ nông nghiệp địa phương, giảm lãng phí thực phẩm và gắn kết cộng đồng."
+          "explanation": "Đoạn văn viết: 'そのわかれ目は、課題が出会ったとき、興味をそそるように話してやれるかどうかだ' -> Quan trọng là người lớn nói chuyện sao cho trẻ cảm thấy tò mò, hứng thú.",
+          "_normalized": true
         }
       ]
     },
     {
-      "id": "passage-n2-p08",
-      "mondai": "問題11: 中文読解 — 次の文章を読んで、後の問いに対する答えとして最もよいものを、1・2・3・4から一つ選びなさい。",
-      "passageTitle": "中文 3: 科学研究における「失敗」の価値",
-      "passageText": "科学の歴史を振り返ると、大発見の多くは計画通りの実験からではなく、予期せぬ失敗や偶然の産物から生まれている。例えば、抗生物質のペニシリンは、細菌の培養皿に誤ってアオカビが混入したという「実験ミス」がきっかけで発見された。\n\n失敗を避けることばかりを重視する研究環境では、すでに結果が予想できる無難なテーマばかりが選ばれ、真のブレイクスルーは生まれにくくなる。未知の領域を切り拓くためには、仮説が外れたときに「なぜ失敗したのか」を深く探求する好奇心と、失敗を恐れずに挑戦を許容する組織の姿勢が不可欠なのである。",
+      "kind": "passage",
+      "id": "passage-n2-p10",
+      "mondai": "問題 11: 中文理解 (Đọc hiểu段落 - 医療の個別性)",
+      "mondaiNumber": 11,
+      "majorSection": "reading",
+      "passageTitle": null,
+      "passageText": "あまり語られないことですが、医療というものは、非常に「個別性」が高い分野です。「個別性」とは言いかえると、治療方針は10人いれば10通りあるということです。どれほど苦しくても生きられるなら辛い治療を頑張りたい人がいる一方で、痛みや苦しみがあるくらいなら命が短くなっても治療は一切したくない人だっているのです。我々医者は、科学的な根拠のある方法を知りながらも、あくまで患者さんのやりたいよう、生きたいように手助けするという使命があります。\nこれからの時代、この「個別性」はよりいっそう加速されるでしょう。これは、一人ひとりの患者さんに合わせた治療をしていくという意味で「テーラーメイド医療」などと呼ばれています。\n目の前の患者さんが、どんな生き方を望んでいるのか。決して十分とはいいがたい時間のなかで、医者は把握せねばなりません。それを知る唯一の方法は、やはり面と向かっての会話なのです。その意味で、話を聞いてくれない医者は、患者さんに向き合っていないと、私は思います。時間がないのは私も医者なので痛いほどわかるのですが、それでも「話を聞く姿勢」だけは死守したいと思っています。",
       "questions": [
         {
           "id": 63,
-          "question": "筆者がペニシリンの例を挙げた理由は何か。",
+          "question": "筆者によると、医療における「個別性」とはどういうことか。",
           "type": "single",
           "options": [
-            "科学史上の大発見が予期せぬ失敗や偶然の出来事から生まれたことを示すため。",
-            "アオカビが人体にとって極めて危険な物質であることを警告するため。",
-            "実験ミスをした研究者を厳しく処罰すべきだと主張するため。",
-            "抗生物質の正しい製造方法を解説するため。"
+            "医者と患者との人間関係がさまざまであること",
+            "患者の考え方に応じて、治療方針がさまざまになること",
+            "同じ治療を行っても、患者の受け止め方はさまざまであること",
+            "同じ病気でも患者の症状が異なるので、治療方針もさまざまになること。"
           ],
           "answers": [
-            0
+            1
           ],
-          "explanation": "Tác giả lấy ví dụ Penicillin để minh chứng cho việc những đột phá khoa học vĩ đại thường khởi nguồn từ những sự cố bất ngờ hoặc sai sót trong thí nghiệm."
+          "explanation": "Giải thích trong bài: '治療方針は10人いれば10通り...患者さんのやりたいよう、生きたいように手助けする' -> Phương phác điều trị thay đổi tùy theo quan điểm/mong muốn của từng bệnh nhân.",
+          "_normalized": true
         },
         {
           "id": 64,
-          "question": "真のイノベーションを起こすために必要なこととして、筆者が述べているのはどれか。",
+          "question": "筆者が医者として大切にしていることは何か。",
           "type": "single",
           "options": [
-            "失敗を恐れず挑戦し、失敗の原因を深く探求する姿勢とそれを認める環境。",
-            "結果が確実に予測できるテーマだけを選んで確実に研究を進めること。",
-            "一度でも失敗した研究者はすぐにチームから外すこと。",
-            "他人の研究成果を模倣して手堅く論文数を増やすこと。"
+            "患者と直接話をして、患者の考えや希望を理解すること",
+            "患者が治療方針を理解するまで、時間をかけて話し合うこと",
+            "患者の考えや希望を聞いたうえで、自分の方針を示すこと",
+            "患者の話をよく聞いて、治療に対する不安を取り除くこと"
           ],
           "answers": [
             0
           ],
-          "explanation": "Đoạn cuối nhấn mạnh: Cần có sự tò mò tìm hiểu nguyên nhân thất bại và một tổ chức sẵn sàng đón nhận rủi ro, thử thách cái mới."
+          "explanation": "Đoạn cuối bài khẳng định phương pháp duy nhất để biết bệnh nhân muốn sống thế nào là '面と向かっての会話' và giữ vững '話を聞く姿勢'.",
+          "_normalized": true
         }
       ]
     },
     {
-      "id": "passage-n2-p09",
-      "mondai": "問題12: 統合理解 — 次のAとBの文章を読んで、後の問いに対する答えとして最もよいものを、1・2・3・4から一つ選びなさい。",
-      "passageTitle": "統合理解: 週休3日制の導入について（AとBの比較）",
-      "passageText": "【A】\n働き方改革の一環として「週休3日制」を導入する企業が増えている。この制度の最大の利点は、従業員がまとまった休息や自己啓発、育児や介護に充てる時間を確保できる点にある。十分な休養によって心身のリフレッシュが図られれば、勤務日の集中力や生産性が向上する。結果として企業の業績向上にも寄与し、優秀な人材の確保にも繋がるため、積極的に推進すべきである。\n\n【B】\n週休3日制には一見魅力的な側面が多いが、導入には慎重な議論が求められる。休日が増える分、1日あたりの労働時間を増やさなければ総労働時間が減少し、給与の引き下げに繋がる懸念がある。また、顧客対応が中心の業種では、人員不足や業務の偏りが生じ、出社している従業員に過度な負担がかかる恐れもある。単に休みを増やすだけでなく、業務プロセスの抜本的な見直しが先決である。",
+      "kind": "passage",
+      "id": "passage-n2-p11",
+      "mondai": "問題 12: 比較理解 (Đọc hiểu so sánh A-B)",
+      "mondaiNumber": 12,
+      "majorSection": "reading",
+      "passageTitle": null,
+      "passageText": "（A）\n私はスポーツを観戦するのが好きだ。レベルの高いプレーが見られるのも魅力の一つだが、選手と感情を共有できるというのが最大の魅力だ。応援したチームや選手が勝てばうれしいと感じ、選手がミスをしたときは悔しいと感じる。必死に戦う選手の姿を見ていると、まるで自分が選手と一緒にその場にいてプレーしているかのような感覚になるのだ。スポーツ観戦に興味がないと言う人の中には、ルールを知らないから試合が理解できず楽しめないと思い込んでいる人もいるようだ。しかし、私は、知らなくても十分楽しめると思う。ルールのことは気にせず、気軽にスポーツ観戦を楽しんでほしい。\n\n（B）\nスポーツを観戦する魅力は何だろうか。試合の結果がどうなるか分からない状況を見ていて味わう緊張感だと言う人がいる。確かに試合中は予測しないことが起こるので、最後まで勝敗が予想できず、はらはらどきどきするというのも魅力の一つだが、私が感じる魅力は、選手と同じように喜んだり悔しく思ったりできることだ。点が入ったり奪われたりするシーンだけでなく、試合を見ていると、選手と同様の心理や感情になってくる。\nこのような体験をするには、ルールを理解しておくといい。チームや選手の戦略が分かるからだ。細かいルールをすべて知っている必要はないが、試合が理解できる程度の知識があれば、スポーツ観戦の魅力が分かるだろう。",
       "questions": [
         {
           "id": 65,
-          "question": "AとBの筆者の立場について、最も適切な説明はどれか。",
+          "question": "スポーツ観戦の魅力について、AとBが共通して述べていることはどれか。",
           "type": "single",
           "options": [
-            "Aは週休3日制のメリットを強調して推進を肯定し、Bは給与減少や現場負担の懸念から慎重な対応を求めている。",
-            "AもBも週休3日制はすべての業界にとって百害あって一利なしだと反対している。",
-            "Aは給与が下がっても構わないと主張し、Bは休みを完全に廃止すべきだと主張している。",
-            "Aは顧客対応の難しさを懸念し、Bは従業員の自己啓発を最優先すべきだと述べている。"
+            "選手の高度なプレーが見られること。",
+            "選手と同じ気持ちになれること。",
+            "応援したチームや選手が勝つこと。",
+            "緊張感が味わえること。"
           ],
           "answers": [
-            0
+            1
           ],
-          "explanation": "Văn bản A khẳng định lợi ích nâng cao năng suất và tuyển dụng nhân tài; Văn bản B nêu lo ngại về giảm lương và quá tải công việc cho người ở lại, cần cân nhắc thận trọng."
+          "explanation": "Cả A và B đều nhắc tới việc chia sẻ cảm xúc với vận động員: A bảo '選手と感情を共有できる', B bảo '選手と同じように喜んだり悔しく思ったりできる'.",
+          "_normalized": true
         },
         {
           "id": 66,
-          "question": "週休3日制に関して、AとBの共通の前提として読み取れるものは何か。",
+          "question": "スポーツ観戦でその競技のルールを知っているかどうかについて、AとBはどのように述べているか。",
           "type": "single",
           "options": [
-            "労働者の働き方や企業の生産性に大きな影響を与える制度であるという点。",
-            "導入すればどの企業でも必ず人件費が半減するという点。",
-            "すべての社員が週休3日制の導入に強く反対しているという点。",
-            "政府によって来月から全企業への導入が義務付けられているという点。"
+            "AもBも、ルールを全く知らなくても楽しめると述べている",
+            "AもBも、できるだけ多くのルールを理解しておくほうがいいと述べている",
+            "Aは必ずしもルールを知らなくてもいいと述べ、Bはルールの基本を理解しておくほうがいいと述べている。",
+            "Aは知らなくても、観戦しながらルールを学べると述べ、Bは細かいルールまで知っているほうがいいと述べている。"
           ],
           "answers": [
-            0
+            2
           ],
-          "explanation": "Cả hai tác giả đều xem chế độ nghỉ 3 ngày/tuần là một sự thay đổi lớn tác động trực tiếp tới cách làm việc của người lao động và năng suất vận hành của doanh nghiệp."
+          "explanation": "A cho rằng không cần biết luật vẫn tận hưởng được (知らなくても十分楽しめる). B cho rằng nên hiểu luật ở mức đủ hiểu trận đấu (試合が理解できる程度の知識があれば).",
+          "_normalized": true
         }
       ]
     },
     {
-      "id": "passage-n2-p10",
-      "mondai": "問題13: 主張理解（長文） — 次の文章を読んで、後の問いに対する答えとして最もよいものを、1・2・3・4から一つ選びなさい。",
-      "passageTitle": "長文: 「積極的な孤独」がもたらす心の豊かさ",
-      "passageText": "現代社会は「常時接続」の時代である。スマートフォンを開けばSNSを通じていつでも誰かと繋がることができ、孤独を感じる暇すらないように思える。孤独という言葉には「寂しい」「孤立している」といったネガティブな響きが伴いがちであり、私たちは無意識のうちに一人になることを恐れ、誰かからの承認や連絡を絶えず求め続けている。\n\nしかし、他者との繋がりばかりを優先していると、私たちは自分自身の本音を見失ってしまう。他人の評価や世間の流行に流され、自分が本当に何を望み、何を大切にしたいのかという根本的な問いに向き合う時間が削られていくからだ。\n\nここで私が提唱したいのは、他者から拒絶された孤立ではなく、自らの意志で選び取る<u>「積極的な孤独」</u>の時間である。一人静かに本を読んだり、自然の中を散歩したり、日記を書いたりして自分と向き合うこと。それは寂しさに耐えることではなく、自分自身の内面を豊かに耕す時間である。自分との対話を深めることで、自分の価値観が確立され、他人に過度に依存しない自立した心が育まれる。\n\nそして逆説的ではあるが、一人の時間を充実させることができる人ほど、他者との関係も深めることができる。自分の軸を持っている人は、相手の異なる意見にも寛容になれるからだ。孤独を恐れるのではなく、自分を育てる貴重な時間として楽しむこと。それこそが、情報に溢れる現代を自分らしく生き抜くための鍵なのである。",
+      "kind": "passage",
+      "id": "passage-n2-p12",
+      "mondai": "問題 13: 長文理解 (Đọc hiểu đoạn dài)",
+      "mondaiNumber": 13,
+      "majorSection": "reading",
+      "passageTitle": null,
+      "passageText": "以下は、独学を学ぶ人に向けて書かれた文章である。\nよく「分かるとは「分ける」ことだと言われます。みなさんの頭の中に沢山のラベルがつけられた「箱」があるとイメージしてみてください。みなさんは郵便局員のように、入ってくる情報に対して、これはこっちの箱、これはそっちの箱と仕分けをしていきます。新しい情報を頭の中のしかるべき「箱」に入れることが「分かる」ことであり、どの箱にいれるべきかを的確にガイドしてくれる説明がいわゆる「分かりやすい説明」というわけです。\nしかし、もしやってきた情報が、みなさんの持っているどの箱にも分類できないようなものであるとしましょう。①「分けられない」のですから「分からない」、その「分からない」状態でいることに私達は我慢できなくなってしまうのですね。そんなとき、その概念を手近な箱に無理やり押し込んでくれる説明があると、それを「分かりやすい」と感じてしまいがちです。でもそれはみなさんを安心させるためのその場しのぎの説明、確かに分かったつもりにはなれるでしょうが誤った箱に入れられた情報は二度と顧みられることはなく、本質的な理解からは永遠に遠ざかったままになってしまいます。これが「分かりやすさ」のとても危険な落とし穴なのです。\n学習においてとても大切な姿勢は何か、それは「分からないを分からないものとして一旦受け入れるということ」だと僕は思うのです。言ってみれば「分からない」というラベルのついた「箱」を作り、行き場のない情報はひとまずそこに放り込んでおくということです。もちろんそれは少し居心地が悪いかもしれません。でもその違和感をうまくならしながら、ときどきは箱の中をチラチラと眺めながら先に進んでいくと、不思議なことに「分からない」の箱にいれておいたいくつかの情報が結びつき、きちんと意味を持ちはじめる日がくるのです。頭の中にその概念をおさめる新しい「箱」が立ち上がる、これが真の「エウレカ」「分かった」の瞬間です。「分からない」は学びの障害ではありません、むしろ学びにおいてなくてはならない重要な通過点なのです。",
       "questions": [
         {
           "id": 67,
-          "question": "筆者が述べる「積極的な孤独」とは何を指しているか。",
+          "question": "なぜ①「分かるとは「分ける」ことだと言われるのか。",
           "type": "single",
           "options": [
-            "他人に流されず、自らの意志で一人になり自分の内面と向き合って心を育てる時間。",
-            "他人とトラブルを起こして社会から完全に孤立してしまうこと。",
-            "SNSで誰もフォローせずに自分の意見だけを一方的に発信し続けること。",
-            "すべての人間関係を断ち切って一生誰とも話さないこと。"
+            "「分かるとは、新しい情報を頭の中にある知識と関連つけて分類することだから。",
+            "「分かるとは、新しい情報と頭の中にある知識との違いを明らかにすることだから。",
+            "「分かるとは、新しい情報を類の箱に入れるものと入れないものに分けることだから。",
+            "「分かるとは、新しい情報をどう分類するべきかを教えてくれる説明を選ぶことだから。"
           ],
           "answers": [
             0
           ],
-          "explanation": "Đoạn 3 định nghĩa: \"Sự cô đơn tích cực\" là việc chủ động dành thời gian một mình để suy ngẫm, đọc sách, thấu hiểu chính mình thay vì bị lệ thuộc vào người khác."
+          "explanation": "Đoạn 1 mô tả 'Hiểu' là việc phân loại thông tin mới nhét vào các 'chiếc hộp' (kiến thức) sẵn có tương ứng trong đầu.",
+          "_normalized": true
         },
         {
           "id": 68,
-          "question": "筆者によると、一人の時間を充実させることができる人が他者と良好な関係を築けるのはなぜか。",
+          "question": "②これ（落とし穴）とは何か。",
           "type": "single",
           "options": [
-            "自分自身の軸（価値観）が確立しているため、他者の異なる意見にも寛容になれるから。",
-            "他人に頼らなくてもすべての仕事を一人で完璧にこなせるようになるから。",
-            "誰に対しても嘘をついて自分を大きく見せることができるようになるから。",
-            "他人と話す機会が減るため、人間関係のトラブル自体が完全に消えるから。"
+            "どの箱に入れればよいか分からず、結局どの箱にも入れられないこと。",
+            "適切な箱に入れたか誤った箱に入れたか、分からなくなってしまうこと。",
+            "誤った箱に入れたと分かっていても、気にしなくなってしまうこと。",
+            "誤った箱に入れたのに、適切な箱に入れたつもりになって忘れてしまうこと。"
           ],
           "answers": [
-            0
+            3
           ],
-          "explanation": "Đoạn 4 giải thích: Người biết trân trọng thời gian một mình sẽ xây dựng được lập trường vững vàng, từ đó trở nên bao dung và biết tôn trọng quan điểm khác biệt của người khác."
-        },
-        {
-          "id": 69,
-          "question": "この文章全体を通して、筆者が最も読者に伝えたいメッセージはどれか。",
-          "type": "single",
-          "options": [
-            "孤独を恐れずに自ら一人の時間を作り、自分自身と対話して豊かな心を育てることの大切さ。",
-            "スマートフォンやSNSを今すぐ解約してデジタル社会から完全に離脱すべきだということ。",
-            "他人の意見に常に従っていれば、一切悩まずに幸せに暮らせるということ。",
-            "人間関係を維持するためには、常に誰かと連絡を取り合っていなければならないということ。"
-          ],
-          "answers": [
-            0
-          ],
-          "explanation": "Thông điệp chính: Đừng sợ cô đơn; hãy xem khoảng lặng một mình là cơ hội quý báu để đối thoại nội tâm và sống là chính mình giữa kỷ nguyên số."
-        }
-      ]
-    },
-    {
-      "id": "passage-n2-p11",
-      "mondai": "問題14: 情報検索 — 右のページ（案内）を見て、後の問いに対する答えとして最もよいものを、1・2・3・4から一つ選びなさい。",
-      "passageTitle": "情報検索: 市民国際交流センター 冬期講座のご案内",
-      "passageText": "【市民国際交流センター 冬期文化・語学講座のご案内】\n\n当センターでは、市民の皆様の国際理解を深めるため、以下の講座を開講いたします。\n\n■ 開講コース一覧\n1. 【ビジネス英会話コース】\n・日時：毎週火曜日 19:00〜20:30（全10回）\n・対象：TOEIC 600点以上または同等の英語力を有する方\n・受講料：20,000円（教材費別 2,000円）\n・定員：15名（先着順）\n\n2. 【はじめての日常中国語】\n・日時：毎週土曜日 10:30〜12:00（全8回）\n・対象：中国語学習が初めての方\n・受講料：16,000円（教材費込）\n・定員：20名\n\n3. 【日本の伝統文化体験（茶道・着付け）】\n・日時：隔週日曜日 13:30〜15:30（全5回）\n・対象：どなたでも（外国人住民の参加歓迎）\n・受講料：12,000円（材料費込）\n・定員：10名\n\n■ 割引制度・注意事項\n※ 【市民割引・学生割引】：市内在住・在勤・在学の方は受講料から2,000円引きとなります（要証明書提示）。\n※ 【キャンセル規定】：開講日の7日前までに窓口にて手続きされた場合は全額返金いたします。それ以降の返金は一切いたしかねます。\n※ 【申込方法】：公式ウェブサイトまたは当センター窓口にて11月25日までにお申し込みください。",
-      "questions": [
-        {
-          "id": 70,
-          "question": "市内在住の大学生のリーさん（中国語初学者）が「はじめての日常中国語」を受講する場合、支払う合計金額はいくらか。",
-          "type": "single",
-          "options": [
-            "14,000円",
-            "16,000円",
-            "18,000円",
-            "12,000円"
-          ],
-          "answers": [
-            0
-          ],
-          "explanation": "Chi phí gốc lớp Tiếng Trung: 16,000円 (đã bao gồm giáo trình). Lee là cư dân trong thành phố và là sinh viên nên được giảm 2,000円 theo chính sách ưu đãi. Số tiền phải đóng: 16,000 - 2,000 = 14,000円."
-        },
-        {
-          "id": 71,
-          "question": "この講座の申し込みおよびキャンセル規定について、正しいものはどれか。",
-          "type": "single",
-          "options": [
-            "開講日の7日前までに窓口で手続きをすれば受講料が全額返金される。",
-            "一度申し込んだ後は、理由に関わらず受講料の返金は一切行われない。",
-            "申し込みは窓口でのみ受け付けており、ウェブサイトからは申し込めない。",
-            "市内在住者であっても証明書を提示しなければ割引は一切適用されないが、開講後でも半額返金される。"
-          ],
-          "answers": [
-            0
-          ],
-          "explanation": "Quy định hủy lớp ghi rõ: Hủy trước ngày khai giảng từ 7 ngày trở lên tại quầy sẽ được hoàn lại toàn bộ 100% học phí (全額返金)."
+          "explanation": "Bẫy nguy hiểm ở đây là: thông tin bị nén ép vào nhầm hộp nhưng ta lại tưởng là mình đã hiểu (分かったつもり), rồi không bao giờ xem xét lại nữa và xa rời hiểu biết bản chất.",
+          "_normalized": true
         }
       ]
     }

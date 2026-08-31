@@ -4,8 +4,10 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { KAIWA_ROADMAP, KaiwaWeek } from "./roadmapData";
 import { autoSync } from "@/lib/syncService";
+import { useLanguageSetting } from "@/hooks/useLanguageSetting";
 
 export default function KaiwaRoadmapPage() {
+  const { activeLanguage } = useLanguageSetting();
   const [selectedMonth, setSelectedMonth] = useState<number>(1);
   const [selectedWeek, setSelectedWeek] = useState<KaiwaWeek>(KAIWA_ROADMAP[0]);
   const [completedWeeks, setCompletedWeeks] = useState<number[]>([]);
@@ -54,16 +56,22 @@ export default function KaiwaRoadmapPage() {
       </div>
 
       {/* Hero Header */}
-      <div className="bg-gradient-to-r from-slate-900 via-indigo-900 to-slate-900 rounded-3xl p-6 sm:p-8 text-white shadow-xl mb-8 border border-indigo-500/20">
+      <div className={`rounded-3xl p-6 sm:p-8 text-white shadow-xl mb-8 transition-all duration-300 bg-gradient-to-r ${
+        activeLanguage.code === "en"
+          ? "from-indigo-900 via-purple-900 to-blue-900"
+          : activeLanguage.code === "de"
+          ? "from-amber-950 via-red-950 to-stone-900"
+          : "from-teal-800 via-indigo-900 to-purple-800"
+      }`}>
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="max-w-2xl">
-            <span className="px-3 py-1 bg-indigo-500/20 border border-indigo-400/30 rounded-full text-xs font-semibold tracking-wide text-indigo-300">
-              🇯🇵 Lộ Trình Giao Tiếp Tương Tác
+            <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-bold tracking-widest uppercase">
+              {activeLanguage.name} ({activeLanguage.code.toUpperCase()})
             </span>
             <h1 className="text-2xl sm:text-3xl font-extrabold mt-3 tracking-tight leading-tight">
               Lộ Trình Học Kaiwa 3 Tháng
             </h1>
-            <p className="text-xs sm:text-sm text-slate-300 mt-2 leading-relaxed">
+            <p className="text-xs sm:text-sm text-indigo-100 mt-2 leading-relaxed">
               Luyện phản xạ giao tiếp tự nhiên từ số 0 đến tự tin nói chuyện đời thường. Học cấu trúc thực tế, từ vựng theo chủ đề, kịch bản nhập vai và đối thoại trực tiếp với Gia sư AI.
             </p>
           </div>

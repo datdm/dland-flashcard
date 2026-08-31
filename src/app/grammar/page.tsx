@@ -178,11 +178,17 @@ export default function GrammarHubPage() {
   return (
     <div className="w-full max-w-[1600px] mx-auto px-3.5 sm:px-6 lg:px-8 py-4 sm:py-6 min-h-screen pb-28 space-y-6">
       {/* Header Banner */}
-      <div className="bg-gradient-to-br from-indigo-700 via-indigo-800 to-purple-800 text-white rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-xl shadow-indigo-100 relative overflow-hidden">
+      <div className={`rounded-2xl sm:rounded-3xl p-5 sm:p-8 text-white shadow-xl relative overflow-hidden transition-all duration-300 bg-gradient-to-r ${
+        activeLanguage.code === "en"
+          ? "from-indigo-900 via-purple-900 to-blue-900"
+          : activeLanguage.code === "de"
+          ? "from-amber-950 via-red-950 to-stone-900"
+          : "from-teal-800 via-indigo-900 to-purple-800"
+      }`}>
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10">
           <div>
             <div className="flex items-center gap-2 mb-1.5">
-              <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-extrabold tracking-widest uppercase">
+              <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-bold tracking-widest uppercase">
                 {activeLanguage.name} ({activeLanguage.code.toUpperCase()})
               </span>
             </div>

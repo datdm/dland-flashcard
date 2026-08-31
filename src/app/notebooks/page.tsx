@@ -4,6 +4,7 @@ import { useState, useRef, useMemo, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useNotebooks } from "@/hooks/useNotebooks";
 import { useProgress } from "@/hooks/useProgress";
+import { useLanguageSetting } from "@/hooks/useLanguageSetting";
 import AuthGuard from "@/components/AuthGuard";
 
 function applySubsetOrder<T extends { id: string }>(source: T[], orderedSubsetIds: string[]) {
@@ -32,6 +33,7 @@ function insertDraggedAtIndex(ids: string[], draggedId: string, insertIndex: num
 export default function NotebooksPage() {
   const { notebooks, save, createNotebook, deleteNotebook, exportNotebook, exportAllNotebooks, importNotebook } = useNotebooks();
   const { progress } = useProgress();
+  const { activeLanguage } = useLanguageSetting();
   const [newName, setNewName] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [importError, setImportError] = useState<string | null>(null);
@@ -239,14 +241,20 @@ export default function NotebooksPage() {
     <AuthGuard featureName="Sổ Tay Từ Vựng Cá Nhân">
       <div className="w-full max-w-[1600px] mx-auto px-3.5 sm:px-6 lg:px-8 py-4 sm:py-6 min-h-screen pb-28 space-y-6">
       {/* Header Banner */}
-      <div className="bg-gradient-to-r from-purple-700 via-indigo-700 to-purple-800 rounded-2xl sm:rounded-3xl p-5 sm:p-8 text-white shadow-lg">
+      <div className={`rounded-2xl sm:rounded-3xl p-5 sm:p-8 text-white shadow-lg transition-all duration-300 bg-gradient-to-r ${
+        activeLanguage.code === "en"
+          ? "from-indigo-900 via-purple-900 to-blue-900"
+          : activeLanguage.code === "de"
+          ? "from-amber-950 via-red-950 to-stone-900"
+          : "from-teal-800 via-indigo-900 to-purple-800"
+      }`}>
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-xs font-semibold tracking-wide">
-              SỔ TAY CÁ NHÂN
+            <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-bold tracking-widest uppercase mb-2 inline-block">
+              {activeLanguage.name} ({activeLanguage.code.toUpperCase()})
             </span>
-            <h1 className="text-2xl font-bold mt-2">Sổ Tay & Bộ Sưu Tập Từ Vựng</h1>
-            <p className="text-xs text-purple-100 mt-1">
+            <h1 className="text-2xl font-bold">Sổ Tay & Bộ Sưu Tập Từ Vựng</h1>
+            <p className="text-xs text-indigo-100 mt-1">
               Tạo và quản lý các nhóm từ vựng cá nhân, xuất/nhập file JSON dễ dàng
             </p>
           </div>

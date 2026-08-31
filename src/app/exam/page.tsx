@@ -64,12 +64,18 @@ export default function ExamHubPage() {
     >
       <div className="w-full max-w-[1600px] mx-auto px-3.5 sm:px-6 lg:px-8 py-4 sm:py-6 min-h-screen pb-28 space-y-6 sm:space-y-8">
         {/* Header Hero Banner */}
-        <div className="bg-gradient-to-r from-rose-900 via-indigo-900 to-purple-900 rounded-2xl sm:rounded-3xl p-5 sm:p-8 text-white shadow-xl relative overflow-hidden">
+        <div className={`rounded-2xl sm:rounded-3xl p-5 sm:p-8 text-white shadow-xl relative overflow-hidden transition-all duration-300 bg-gradient-to-r ${
+          activeLanguage.code === "en"
+            ? "from-indigo-900 via-purple-900 to-blue-900"
+            : activeLanguage.code === "de"
+            ? "from-amber-950 via-red-950 to-stone-900"
+            : "from-teal-800 via-indigo-900 to-purple-800"
+        }`}>
           <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div>
               <div className="flex items-center gap-2 flex-wrap mb-2">
-                <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-xs font-semibold tracking-wide">
-                  🇯🇵 Dland JLPT Exam Hub
+                <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-bold tracking-widest uppercase">
+                  {activeLanguage.name} ({activeLanguage.code.toUpperCase()})
                 </span>
                 <span className="px-3 py-1 bg-amber-400/30 text-amber-200 border border-amber-300/30 backdrop-blur-md rounded-full text-xs font-bold">
                   Kỳ thi N1 ➔ N5

@@ -590,15 +590,18 @@ function getItemLevel(c: { id: string; name: string; level?: string }): string {
     <AuthGuard featureName="Lịch Sử & Nhật Ký Học Tập" description="Đăng nhập để theo dõi bảng tiến độ từ vựng, ngữ pháp, kanji, chuỗi streak và lịch sử học tập cá nhân.">
       <div className="w-full max-w-[1600px] mx-auto px-3.5 sm:px-6 lg:px-8 py-4 sm:py-6 min-h-screen pb-28 space-y-6">
       {/* Header Banner */}
-      <div className="bg-gradient-to-r from-indigo-800 via-purple-800 to-indigo-900 rounded-2xl sm:rounded-3xl p-5 sm:p-8 text-white shadow-lg">
+      <div className={`rounded-2xl sm:rounded-3xl p-5 sm:p-8 text-white shadow-lg transition-all duration-300 bg-gradient-to-r ${
+        activeLanguage.code === "en"
+          ? "from-indigo-900 via-purple-900 to-blue-900"
+          : activeLanguage.code === "de"
+          ? "from-amber-950 via-red-950 to-stone-900"
+          : "from-teal-800 via-indigo-900 to-purple-800"
+      }`}>
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 flex-wrap mb-1">
-              <span className="px-3 py-0.5 bg-white/20 backdrop-blur-md rounded-full text-xs font-semibold tracking-wide">
-                Dland History
-              </span>
-              <span className="px-3 py-0.5 bg-amber-400/30 text-amber-200 border border-amber-300/30 backdrop-blur-md rounded-full text-xs font-bold">
-                {activeLanguage.flag} {activeLanguage.name}
+              <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-bold tracking-widest uppercase">
+                {activeLanguage.name} ({activeLanguage.code.toUpperCase()})
               </span>
             </div>
             <h1 className="text-2xl font-bold mt-2">Lịch Sử & Tiến Độ Học Tập</h1>

@@ -188,12 +188,18 @@ export default function VocabularyPage() {
   return (
     <div className="w-full max-w-[1600px] mx-auto px-3.5 sm:px-6 lg:px-8 py-4 sm:py-6 min-h-screen pb-28 space-y-6">
       {/* Header Banner */}
-      <div className="bg-gradient-to-r from-indigo-700 via-purple-700 to-indigo-800 rounded-2xl sm:rounded-3xl p-5 sm:p-8 text-white shadow-lg">
+      <div className={`rounded-2xl sm:rounded-3xl p-5 sm:p-8 text-white shadow-lg transition-all duration-300 bg-gradient-to-r ${
+        activeLanguage.code === "en"
+          ? "from-indigo-900 via-purple-900 to-blue-900"
+          : activeLanguage.code === "de"
+          ? "from-amber-950 via-red-950 to-stone-900"
+          : "from-teal-800 via-indigo-900 to-purple-800"
+      }`}>
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-xs font-semibold tracking-wide">
-                KHO TỪ VỰNG {activeLanguage.name.toUpperCase()} ({activeLanguage.code.toUpperCase()})
+              <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-bold tracking-widest uppercase">
+                {activeLanguage.name} ({activeLanguage.code.toUpperCase()})
               </span>
             </div>
             <h1 className="text-2xl font-bold mt-1">Kho Từ Vựng & Sổ Tay</h1>
