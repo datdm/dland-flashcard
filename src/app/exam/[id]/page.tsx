@@ -534,10 +534,10 @@ export default function ExamTakingPage({ params }: Props) {
             </div>
           </main>
 
-          {/* Desktop Right Sidebar (Hierarchical Navigation Palette) */}
-          <aside className="hidden md:flex w-80 shrink-0 flex-col sticky top-28 bg-white rounded-3xl p-5 border border-gray-100 shadow-2xs max-h-[calc(100vh-8rem)] overflow-hidden">
+          {/* Desktop Right Sidebar (Hierarchical Navigation Palette - Sticky) */}
+          <aside className="hidden md:flex w-72 lg:w-80 shrink-0 flex-col sticky top-24 lg:top-28 bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-5 border border-gray-200/80 shadow-xs max-h-[calc(100vh-7.5rem)] overflow-hidden z-30">
             {/* Progress Bar */}
-            <div className="pb-4 border-b border-gray-100 shrink-0">
+            <div className="pb-3 sm:pb-4 border-b border-gray-100 shrink-0">
               <div className="flex items-center justify-between text-xs font-extrabold mb-1.5">
                 <span className="text-gray-500">Tiến độ bài thi</span>
                 <span className="text-indigo-600">

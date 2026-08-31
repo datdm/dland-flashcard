@@ -17,13 +17,13 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="vi" className={`${geist.variable} antialiased h-full`}>
-      <body className="min-h-full flex flex-col bg-gray-50 text-gray-900 overflow-x-hidden">
+      <body className="min-h-full flex flex-col bg-gray-50 text-gray-900 overflow-x-clip">
         <AuthProvider>
           <AutoImport />
           <Navbar />
           <GlobalSyncIndicator />
           <AuthModal />
-          <main id="main-content" className="flex-1 md:pl-64 pb-24 md:pb-8 transition-all duration-300 ease-in-out w-full min-w-0 overflow-x-hidden">{children}</main>
+          <main id="main-content" className="flex-1 md:pl-64 pb-24 md:pb-8 transition-all duration-300 ease-in-out w-full min-w-0">{children}</main>
         </AuthProvider>
       </body>
     </html>

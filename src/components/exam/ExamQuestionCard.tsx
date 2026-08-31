@@ -9,6 +9,7 @@ interface Props {
   selected: number[];
   onChange: (qid: number, selected: number[]) => void;
   showResult?: boolean;
+  showMondaiBadge?: boolean;
   onOpenMazii?: (word: string) => void;
 }
 
@@ -20,6 +21,7 @@ export default function ExamQuestionCard({
   selected,
   onChange,
   showResult = false,
+  showMondaiBadge = false,
   onOpenMazii,
 }: Props) {
   const handleSelect = (idx: number) => {
@@ -55,8 +57,8 @@ export default function ExamQuestionCard({
           : "bg-white border-gray-100 shadow-2xs hover:border-gray-200"
       }`}
     >
-      {/* Mondai header if exists */}
-      {"mondai" in question && question.mondai && (
+      {/* Optional standalone Mondai header if requested */}
+      {showMondaiBadge && "mondai" in question && question.mondai && (
         <div className="text-[11px] font-bold text-indigo-700 bg-indigo-50 border border-indigo-100/80 px-3 py-1 rounded-xl mb-3 inline-block">
           {question.mondai}
         </div>

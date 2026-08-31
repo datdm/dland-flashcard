@@ -403,8 +403,8 @@ export default function ExamResultPage({ params }: Props) {
                 ))}
               </div>
 
-              {/* Sidebar Navigator */}
-              <div className="hidden lg:block w-80 shrink-0 sticky top-20 bg-white rounded-3xl p-5 border border-gray-100 shadow-2xs max-h-[calc(100vh-6rem)] overflow-y-auto custom-scrollbar">
+              {/* Sidebar Navigator - Sticky */}
+              <div className="hidden lg:block w-80 shrink-0 sticky top-24 bg-white rounded-2xl sm:rounded-3xl p-5 border border-gray-200/80 shadow-xs max-h-[calc(100vh-7rem)] overflow-y-auto custom-scrollbar z-30">
                 <div className="text-xs font-extrabold text-gray-700 pb-3 mb-3 border-b border-gray-100 flex items-center justify-between">
                   <span>Bảng đáp án</span>
                   <span className="text-emerald-600 font-black">

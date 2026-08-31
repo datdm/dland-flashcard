@@ -114,17 +114,25 @@ export function getStructuredMajorSections(examData: ExamData): ExamMajorSection
       }
     }
 
-    let title = `問題 ${num}`;
-    let instruction = mondaiStr;
+    let title = num ? `問題 ${num}` : (mondaiStr || "Câu hỏi");
+    let instruction = "";
 
-    if (mondaiStr.includes(":")) {
-      const parts = mondaiStr.split(":");
-      title = parts[0].trim();
-      instruction = parts.slice(1).join(":").trim();
-    } else if (mondaiStr.includes("：")) {
-      const parts = mondaiStr.split("：");
-      title = parts[0].trim();
-      instruction = parts.slice(1).join("：").trim();
+    if (mondaiStr.includes(":") || mondaiStr.includes("：")) {
+      const sep = mondaiStr.includes(":") ? ":" : "：";
+      const parts = mondaiStr.split(sep);
+      const rawTitle = parts[0].trim();
+      const rest = parts.slice(1).join(sep).trim();
+
+      if (rest.includes("—") || rest.includes(" - ")) {
+        const dashParts = rest.split(/—| - /);
+        title = `${rawTitle}: ${dashParts[0].trim()}`;
+        instruction = dashParts.slice(1).join(" — ").trim();
+      } else {
+        title = rawTitle;
+        instruction = rest;
+      }
+    } else {
+      instruction = mondaiStr;
     }
 
     return {
