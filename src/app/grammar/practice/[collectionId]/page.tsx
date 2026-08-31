@@ -109,7 +109,7 @@ export default function GrammarPracticePage() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 flex flex-col">
       {/* Header */}
       <div className="bg-white border-b border-gray-200 p-4 md:p-6">
-        <div className="max-w-6xl mx-auto flex items-center justify-between gap-4">
+        <div className="max-w-[1600px] mx-auto flex items-center justify-between gap-4">
           <div className="flex-1">
             <Link
               href={`/grammar/${collectionId}`}
@@ -141,7 +141,7 @@ export default function GrammarPracticePage() {
             </div>
           </div>
         ) : (
-          <div className="max-w-6xl mx-auto">
+          <div className="max-w-[1600px] mx-auto">
             {currentPoint && currentProgress && (
               <GrammarFlashCard
                 point={currentPoint}
@@ -149,17 +149,17 @@ export default function GrammarPracticePage() {
                 isFavorite={currentProgress.favorite}
                 onMarkLearned={handleMarkLearned}
                 onMarkFavorite={handleMarkFavorite}
-                onPrev={handlePrev}
                 onNext={handleNext}
+                onPrev={handlePrev}
               />
             )}
           </div>
         )}
       </div>
 
-      {/* Footer - Controls */}
+      {/* Footer controls */}
       <div className="bg-white border-t border-gray-200 p-4 md:p-6">
-        <div className="max-w-6xl mx-auto space-y-4">
+        <div className="max-w-[1600px] mx-auto space-y-4">
           {/* Progress bar */}
           {displayPoints.length > 0 && (
             <div className="flex items-center gap-4">

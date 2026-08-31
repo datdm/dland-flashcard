@@ -36,7 +36,7 @@ export default function KanjiHubPage() {
   });
 
   return (
-    <div className="p-4 max-w-5xl mx-auto min-h-screen pb-24">
+    <div className="w-full max-w-[1600px] mx-auto px-3.5 sm:px-6 lg:px-8 py-4 sm:py-6 min-h-screen pb-28 space-y-6">
       {/* Header */}
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Thư viện Kanji & Nét Vẽ (N5 ➔ N2)</h1>

@@ -1043,7 +1043,7 @@ export default function PracticeHubPage() {
 
   return (
     <AuthGuard featureName="Trung Tâm Luyện Tập & Kỹ Năng">
-      <div className="p-4 max-w-5xl mx-auto min-h-screen pb-24">
+      <div className="w-full max-w-[1600px] mx-auto px-3.5 sm:px-6 lg:px-8 py-4 sm:py-6 min-h-screen pb-28 space-y-6">
       {/* Header Banner */}
       <div className={`rounded-3xl p-6 sm:p-8 text-white shadow-xl mb-6 transition-all bg-gradient-to-r ${
         selectedLang === "en"

@@ -258,16 +258,16 @@ export default function CurriculumLessonDetailPage({ params }: Props) {
 
   return (
     <AuthGuard featureName="Bài Học Giáo Trình Chi Tiết" description="Đăng nhập để theo dõi bài học, làm bài tập Shadowing & Reading AI và ghi nhận tiến độ học tập.">
-      <div className="p-4 max-w-5xl mx-auto pb-24">
+      <div className="w-full max-w-[1600px] mx-auto px-3.5 sm:px-6 lg:px-8 py-4 sm:py-6 min-h-screen pb-28 space-y-5 sm:space-y-6">
       {/* Back Link */}
-      <div className="mb-4">
-        <Link href="/curriculum" className="text-xs text-indigo-600 font-medium hover:underline">
+      <div>
+        <Link href="/curriculum" className="text-xs text-indigo-600 font-medium hover:underline flex items-center gap-1">
           ← Danh sách Lộ trình Bài học
         </Link>
       </div>
 
       {/* Lesson Header */}
-      <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm mb-6">
+      <div className="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-6 border border-gray-100 shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2">

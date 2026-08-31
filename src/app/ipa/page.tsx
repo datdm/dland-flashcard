@@ -44,7 +44,7 @@ export default function IpaPracticePage() {
 
   return (
     <AuthGuard featureName="Phòng Luyện Phát Âm IPA">
-      <div className="p-4 max-w-5xl mx-auto min-h-screen pb-24 space-y-4">
+      <div className="w-full max-w-[1600px] mx-auto px-3.5 sm:px-6 lg:px-8 py-4 sm:py-6 min-h-screen pb-28 space-y-5">
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 text-xs text-gray-500">
           <Link href="/" className="hover:text-indigo-600 font-medium">Trang chủ</Link>

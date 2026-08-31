@@ -109,7 +109,7 @@ export default function FlashCardLearnedPage() {
   }
 
   return (
-    <div className="p-4 max-w-5xl mx-auto min-h-screen">
+    <div className="w-full max-w-[1600px] mx-auto px-3.5 sm:px-6 lg:px-8 py-4 sm:py-6 min-h-screen pb-28 space-y-5">
       <div className="mb-4">
         <Link href="/history" className="text-sm text-indigo-600 hover:underline">← Lịch sử học tập</Link>
       </div>

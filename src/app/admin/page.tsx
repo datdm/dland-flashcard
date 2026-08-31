@@ -305,9 +305,9 @@ export default function AdminDashboardPage() {
   }
 
   return (
-    <div className="p-4 max-w-7xl mx-auto min-h-screen pb-24 space-y-6">
+    <div className="w-full max-w-[1600px] mx-auto px-3.5 sm:px-6 lg:px-8 py-4 sm:py-6 min-h-screen pb-28 space-y-6">
       {/* Header Banner */}
-      <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 rounded-3xl p-6 text-white shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-6">
+      <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 rounded-2xl sm:rounded-3xl p-5 sm:p-8 text-white shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
           <span className="px-3 py-1 bg-indigo-600/30 border border-indigo-500/20 rounded-full text-[10px] font-bold tracking-wide uppercase">
             🛡️ Dland System Administrator Panel

@@ -224,7 +224,7 @@ export default function ChatPage() {
 
   return (
     <AuthGuard featureName="Gia Sư AI 24/7" description="Đăng nhập để luyện giao tiếp, giải thích ngữ pháp, phân tích từ vựng và lưu hội thoại cùng Gia sư AI.">
-      <div className="max-w-5xl mx-auto h-[calc(100vh-2.5rem)] md:h-[calc(100vh-2.5rem)] -mt-2 -mb-20 md:-mb-6 flex flex-col px-2 md:px-4">
+      <div className="w-full max-w-[1600px] mx-auto h-[calc(100vh-2.5rem)] md:h-[calc(100vh-2.5rem)] -mt-2 -mb-20 md:-mb-6 flex flex-col px-3.5 sm:px-6 lg:px-8">
         {/* Header */}
       <div className="bg-white rounded-t-3xl border-b border-gray-100 p-4 shadow-xs z-10 flex items-center justify-between gap-3">
         <div className="flex items-center gap-3">

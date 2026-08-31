@@ -7,7 +7,7 @@ import BackupHistoryPanel from "@/components/BackupHistoryPanel";
 
 export default function UploadPage() {
   return (
-    <div className="p-4 max-w-2xl mx-auto space-y-6">
+    <div className="w-full max-w-[1600px] mx-auto px-3.5 sm:px-6 lg:px-8 py-4 sm:py-6 min-h-screen pb-28 space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-bold text-gray-800">📤 Upload từ vựng</h1>
         <Link href="/" className="text-sm text-indigo-600 hover:underline">← Trang chủ</Link>

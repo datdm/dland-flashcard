@@ -588,9 +588,9 @@ function getItemLevel(c: { id: string; name: string; level?: string }): string {
 
   return (
     <AuthGuard featureName="Lịch Sử & Nhật Ký Học Tập" description="Đăng nhập để theo dõi bảng tiến độ từ vựng, ngữ pháp, kanji, chuỗi streak và lịch sử học tập cá nhân.">
-      <div className="p-4 max-w-4xl mx-auto min-h-screen pb-24">
+      <div className="w-full max-w-[1600px] mx-auto px-3.5 sm:px-6 lg:px-8 py-4 sm:py-6 min-h-screen pb-28 space-y-6">
       {/* Header Banner */}
-      <div className="bg-gradient-to-r from-indigo-800 via-purple-800 to-indigo-900 rounded-3xl p-6 text-white shadow-lg mb-6">
+      <div className="bg-gradient-to-r from-indigo-800 via-purple-800 to-indigo-900 rounded-2xl sm:rounded-3xl p-5 sm:p-8 text-white shadow-lg">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 flex-wrap mb-1">

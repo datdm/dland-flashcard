@@ -176,9 +176,9 @@ export default function GrammarHubPage() {
   };
 
   return (
-    <div className="p-4 max-w-5xl mx-auto min-h-screen pb-24 space-y-6">
+    <div className="w-full max-w-[1600px] mx-auto px-3.5 sm:px-6 lg:px-8 py-4 sm:py-6 min-h-screen pb-28 space-y-6">
       {/* Header Banner */}
-      <div className="bg-gradient-to-br from-indigo-700 via-indigo-800 to-purple-800 text-white rounded-3xl p-6 sm:p-8 shadow-xl shadow-indigo-100 relative overflow-hidden">
+      <div className="bg-gradient-to-br from-indigo-700 via-indigo-800 to-purple-800 text-white rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-xl shadow-indigo-100 relative overflow-hidden">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10">
           <div>
             <div className="flex items-center gap-2 mb-1.5">
@@ -415,7 +415,7 @@ export default function GrammarHubPage() {
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
               {collections.map((c) => {
                 const progressPct = getCollectionProgress(c);
                 const count = c.grammarPoints?.length || 0;

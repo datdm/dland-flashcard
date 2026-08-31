@@ -172,7 +172,7 @@ export default function LessonDetailPage() {
   }
 
   return (
-    <div className="p-4 max-w-2xl mx-auto">
+    <div className="w-full max-w-[1600px] mx-auto px-3.5 sm:px-6 lg:px-8 py-4 sm:py-6 min-h-screen pb-28 space-y-5">
       {/* Header */}
       <div className="mb-4">
         <Link href={`/curriculums/${id}`} className="text-sm text-indigo-600 hover:underline">

@@ -40,7 +40,7 @@ export default function CurriculumsPage() {
   });
 
   return (
-    <div className="p-4 max-w-5xl mx-auto">
+    <div className="w-full max-w-[1600px] mx-auto px-3.5 sm:px-6 lg:px-8 py-4 sm:py-6 min-h-screen pb-28 space-y-6">
       {/* Header */}
       <div className="mb-4">
         <Link href="/" className="text-sm text-indigo-600 hover:underline">
