@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { KAIWA_ROADMAP, KaiwaWeek } from "./roadmapData";
+import { autoSync } from "@/lib/syncService";
 
 export default function KaiwaRoadmapPage() {
   const [selectedMonth, setSelectedMonth] = useState<number>(1);
@@ -33,6 +34,7 @@ export default function KaiwaRoadmapPage() {
     }
     setCompletedWeeks(newCompletedList);
     localStorage.setItem("dland_kaiwa_completed", JSON.stringify(newCompletedList));
+    autoSync();
   };
 
   const filteredWeeks = KAIWA_ROADMAP.filter((w) => w.month === selectedMonth);

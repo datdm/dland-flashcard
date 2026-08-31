@@ -8,12 +8,21 @@ import { autoSync, checkAuthStatus, loadProgressFromServer, patchProgressOnServe
 const defaultProgress = (): VocabProgress => ({ learned: false, favorite: false });
 
 export function useProgress() {
-  const [progress, setProgress] = useState<ProgressMap>({});
+  const [progress, setProgress] = useState<ProgressMap>(() => {
+    if (typeof window !== "undefined") {
+      return getItem<ProgressMap>(StorageKeys.PROGRESS) || {};
+    }
+    return {};
+  });
+
+  const reloadProgress = useCallback(() => {
+    const data = getItem<ProgressMap>(StorageKeys.PROGRESS);
+    if (data) setProgress(data);
+  }, []);
 
   useEffect(() => {
     // Load local data first
-    const data = getItem<ProgressMap>(StorageKeys.PROGRESS);
-    if (data) setProgress(data);
+    reloadProgress();
 
     // Sync from database if logged in
     const syncProgress = async () => {
@@ -32,7 +41,14 @@ export function useProgress() {
     };
 
     syncProgress();
-  }, []);
+
+    window.addEventListener("progress-updated", reloadProgress);
+    window.addEventListener("storage", reloadProgress);
+    return () => {
+      window.removeEventListener("progress-updated", reloadProgress);
+      window.removeEventListener("storage", reloadProgress);
+    };
+  }, [reloadProgress]);
 
   const updateProgress = useCallback((id: string, patch: Partial<VocabProgress>) => {
     setProgress((prev) => {
@@ -42,6 +58,9 @@ export function useProgress() {
         [id]: { ...current, ...patch },
       };
       setItem(StorageKeys.PROGRESS, updated);
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new Event("progress-updated"));
+      }
       autoSync(); // Auto-sync after save
       return updated;
     });
@@ -64,6 +83,9 @@ export function useProgress() {
           [id]: { ...(prev[id] ?? defaultProgress()), ...newPatch },
         };
         setItem(StorageKeys.PROGRESS, updated);
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(new Event("progress-updated"));
+        }
         return updated;
       });
 
@@ -97,6 +119,9 @@ export function useProgress() {
         [id]: { ...(prev[id] ?? defaultProgress()), ...newPatch },
       };
       setItem(StorageKeys.PROGRESS, updated);
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new Event("progress-updated"));
+      }
       return updated;
     });
 

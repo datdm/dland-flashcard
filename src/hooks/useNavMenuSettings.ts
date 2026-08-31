@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { autoSync } from "@/lib/syncService";
 
 const STORAGE_KEY = "dland_nav_menu_settings";
 
@@ -61,6 +62,7 @@ export function useNavMenuSettings() {
         saveSettingsToStorage(updated);
         // Dispatch event so Navbar re-reads immediately
         window.dispatchEvent(new CustomEvent("nav-menu-settings-changed"));
+        autoSync();
         return updated;
       });
     },
@@ -76,6 +78,7 @@ export function useNavMenuSettings() {
       delete updated[langCode];
       saveSettingsToStorage(updated);
       window.dispatchEvent(new CustomEvent("nav-menu-settings-changed"));
+      autoSync();
       return updated;
     });
   }, []);

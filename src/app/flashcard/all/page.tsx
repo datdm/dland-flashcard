@@ -6,6 +6,7 @@ import { useNotebooks } from "@/hooks/useNotebooks";
 import FlashCardViewer from "@/components/FlashCardViewer";
 import Link from "next/link";
 import AuthGuard from "@/components/AuthGuard";
+import { autoSync } from "@/lib/syncService";
 
 type SourceFilter = "all" | string; // "all" | curriculum-id | notebook-id
 
@@ -35,6 +36,7 @@ export default function FlashCardAllPage() {
     setIsDaily50(nextVal);
     if (typeof window !== "undefined") {
       localStorage.setItem("flashcash-is-daily-50", nextVal ? "true" : "false");
+      autoSync();
     }
   };
 

@@ -12,14 +12,23 @@ const defaultGrammarProgress = (): GrammarProgress => ({
 });
 
 export function useGrammarProgress() {
-  const [progress, setProgress] = useState<GrammarProgressMap>({});
+  const [progress, setProgress] = useState<GrammarProgressMap>(() => {
+    if (typeof window !== "undefined") {
+      return getItem<GrammarProgressMap>(StorageKeys.GRAMMAR_PROGRESS) || {};
+    }
+    return {};
+  });
   const [isLoading, setIsLoading] = useState(true);
+
+  const reloadProgress = useCallback(() => {
+    const data = getItem<GrammarProgressMap>(StorageKeys.GRAMMAR_PROGRESS);
+    if (data) setProgress(data);
+  }, []);
 
   useEffect(() => {
     // Load local data first
     try {
-      const data = getItem<GrammarProgressMap>(StorageKeys.GRAMMAR_PROGRESS);
-      if (data) setProgress(data);
+      reloadProgress();
     } finally {
       setIsLoading(false);
     }
@@ -41,7 +50,14 @@ export function useGrammarProgress() {
     };
 
     syncGrammarProgress();
-  }, []);
+
+    window.addEventListener("progress-updated", reloadProgress);
+    window.addEventListener("storage", reloadProgress);
+    return () => {
+      window.removeEventListener("progress-updated", reloadProgress);
+      window.removeEventListener("storage", reloadProgress);
+    };
+  }, [reloadProgress]);
 
   const updateProgress = useCallback(
     (grammarId: string, patch: Partial<GrammarProgress>) => {
@@ -52,6 +68,9 @@ export function useGrammarProgress() {
           [grammarId]: { ...current, ...patch },
         };
         setItem(StorageKeys.GRAMMAR_PROGRESS, updated);
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(new Event("progress-updated"));
+        }
         autoSync(); // Auto-sync after save
         return updated;
       });
@@ -76,6 +95,9 @@ export function useGrammarProgress() {
           updateStreak();
         }
         setItem(StorageKeys.GRAMMAR_PROGRESS, updated);
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(new Event("progress-updated"));
+        }
         autoSync(); // Auto-sync after save
         return updated;
       });
@@ -92,6 +114,9 @@ export function useGrammarProgress() {
           [grammarId]: { ...current, favorite: !current.favorite },
         };
         setItem(StorageKeys.GRAMMAR_PROGRESS, updated);
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(new Event("progress-updated"));
+        }
         autoSync(); // Auto-sync after save
         return updated;
       });
@@ -111,6 +136,9 @@ export function useGrammarProgress() {
           },
         };
         setItem(StorageKeys.GRAMMAR_PROGRESS, updated);
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(new Event("progress-updated"));
+        }
         autoSync(); // Auto-sync after save
         return updated;
       });
@@ -130,6 +158,9 @@ export function useGrammarProgress() {
           },
         };
         setItem(StorageKeys.GRAMMAR_PROGRESS, updated);
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(new Event("progress-updated"));
+        }
         autoSync(); // Auto-sync after save
         return updated;
       });
@@ -154,4 +185,3 @@ export function useGrammarProgress() {
     getGrammarProgress,
   };
 }
-

@@ -18,7 +18,11 @@ export function useStreak() {
     };
     
     window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
+    window.addEventListener('progress-updated', handleStorageChange);
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('progress-updated', handleStorageChange);
+    };
   }, []);
 
   return streak;

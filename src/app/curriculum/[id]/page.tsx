@@ -15,6 +15,7 @@ import { useLanguageSetting } from "@/hooks/useLanguageSetting";
 import MaziiQuickLookupModal from "@/components/MaziiQuickLookupModal";
 import SelectionLookupTooltip from "@/components/SelectionLookupTooltip";
 import AuthGuard from "@/components/AuthGuard";
+import { autoSync } from "@/lib/syncService";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -86,6 +87,10 @@ export default function CurriculumLessonDetailPage({ params }: Props) {
       setIsCompleted(true);
     }
     localStorage.setItem("flashcash-curriculum-history", JSON.stringify(list));
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("curriculum-history-updated"));
+      autoSync();
+    }
   };
 
   useEffect(() => {

@@ -111,9 +111,11 @@ export default function HistoryPage() {
 
     window.addEventListener("practice-history-updated", loadData);
     window.addEventListener("curriculum-history-updated", loadData);
+    window.addEventListener("storage", loadData);
     return () => {
       window.removeEventListener("practice-history-updated", loadData);
       window.removeEventListener("curriculum-history-updated", loadData);
+      window.removeEventListener("storage", loadData);
     };
   }, []);
 

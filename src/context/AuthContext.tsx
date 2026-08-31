@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
+import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from "react";
 import * as syncService from "@/lib/syncService";
 
 interface User {
@@ -26,48 +26,134 @@ interface AuthContextType {
   login: (username: string, password: string) => Promise<{ success: boolean; error?: string }>;
   register: (username: string, password: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => void;
+  syncDataNow: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [user, setUser] = useState<User | null>(() => {
+    if (typeof window !== "undefined") {
+      return syncService.getUser();
+    }
+    return null;
+  });
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
+    if (typeof window !== "undefined") {
+      return syncService.checkAuthStatus();
+    }
+    return false;
+  });
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [authModalConfig, setAuthModalConfig] = useState<AuthModalConfig>({
     isOpen: false,
   });
 
-  const checkAuth = useCallback(() => {
+  const isInitialMount = useRef(true);
+
+  // Validate session against server
+  const validateSessionAndSync = useCallback(async (initial = false) => {
     if (typeof window === "undefined") return;
     const token = syncService.getAuthToken();
-    const currentUser = syncService.getUser();
 
-    if (token && currentUser) {
-      setUser(currentUser);
-      setIsAuthenticated(true);
-    } else {
+    if (!token) {
       setUser(null);
       setIsAuthenticated(false);
+      setIsLoading(false);
+      return;
     }
-    setIsLoading(false);
+
+    if (initial) {
+      setIsLoading(true);
+    }
+
+    try {
+      const { valid, user: verifiedUser } = await syncService.validateSession();
+      if (valid && verifiedUser) {
+        setUser(verifiedUser);
+        setIsAuthenticated(true);
+
+        // Auto download newest data from cloud on valid session start
+        try {
+          await syncService.downloadFromServer();
+        } catch (syncErr) {
+          console.warn("Initial sync after session validation error:", syncErr);
+        }
+      } else {
+        // Token was invalid or expired
+        setUser(null);
+        setIsAuthenticated(false);
+      }
+    } catch (err) {
+      console.error("Auth validation error:", err);
+      // Fallback: check local storage if offline
+      const localUser = syncService.getUser();
+      if (localUser && syncService.checkAuthStatus()) {
+        setUser(localUser);
+        setIsAuthenticated(true);
+      } else {
+        setUser(null);
+        setIsAuthenticated(false);
+      }
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
 
   useEffect(() => {
-    checkAuth();
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      validateSessionAndSync(true);
+    }
 
     const handleStorageChange = () => {
-      checkAuth();
+      const token = syncService.getAuthToken();
+      const currentUser = syncService.getUser();
+      if (token && currentUser) {
+        setUser(currentUser);
+        setIsAuthenticated(true);
+      } else {
+        setUser(null);
+        setIsAuthenticated(false);
+      }
+    };
+
+    const handleSessionExpired = () => {
+      setUser(null);
+      setIsAuthenticated(false);
+    };
+
+    // Auto-refresh when tab becomes active / window focused (multi-device sync)
+    const handleWindowFocus = () => {
+      if (syncService.checkAuthStatus()) {
+        const lastSync = syncService.getLastSyncAt();
+        const shouldSync = !lastSync || Date.now() - new Date(lastSync).getTime() > 60000;
+        if (shouldSync) {
+          syncService.downloadFromServer().catch(console.warn);
+        }
+      }
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        handleWindowFocus();
+      }
     };
 
     window.addEventListener("storage", handleStorageChange);
     window.addEventListener("auth-state-changed", handleStorageChange);
+    window.addEventListener("auth-session-expired", handleSessionExpired);
+    window.addEventListener("focus", handleWindowFocus);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
       window.removeEventListener("storage", handleStorageChange);
       window.removeEventListener("auth-state-changed", handleStorageChange);
+      window.removeEventListener("auth-session-expired", handleSessionExpired);
+      window.removeEventListener("focus", handleWindowFocus);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, [checkAuth]);
+  }, [validateSessionAndSync]);
 
   const openAuthModal = useCallback((reason?: string, onSuccess?: () => void) => {
     setAuthModalConfig({
@@ -84,13 +170,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }));
   }, []);
 
+  const syncDataNow = useCallback(async () => {
+    if (syncService.checkAuthStatus()) {
+      await syncService.downloadFromServer();
+    }
+  }, []);
+
   const login = useCallback(async (username: string, password: string) => {
     const result = await syncService.login(username, password);
     if (result.success) {
-      checkAuth();
+      const currentUser = syncService.getUser();
+      setUser(currentUser);
+      setIsAuthenticated(true);
       window.dispatchEvent(new Event("auth-state-changed"));
-      
-      // Auto trigger download from server after login to sync user data
+
+      // Download from database on new device login to guarantee latest data
       try {
         await syncService.downloadFromServer();
       } catch (err) {
@@ -98,22 +192,34 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     }
     return result;
-  }, [checkAuth]);
+  }, []);
 
   const register = useCallback(async (username: string, password: string) => {
     const result = await syncService.register(username, password);
     if (result.success) {
-      checkAuth();
+      const currentUser = syncService.getUser();
+      setUser(currentUser);
+      setIsAuthenticated(true);
       window.dispatchEvent(new Event("auth-state-changed"));
+
+      // If this device has initial local data, upload it to cloud database
+      try {
+        if (syncService.detectLocalData()) {
+          await syncService.uploadToServer(true);
+        }
+      } catch (err) {
+        console.error("Initial upload after register error:", err);
+      }
     }
     return result;
-  }, [checkAuth]);
+  }, []);
 
   const logout = useCallback(() => {
     syncService.logout();
-    checkAuth();
+    setUser(null);
+    setIsAuthenticated(false);
     window.dispatchEvent(new Event("auth-state-changed"));
-  }, [checkAuth]);
+  }, []);
 
   return (
     <AuthContext.Provider
@@ -127,6 +233,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         login,
         register,
         logout,
+        syncDataNow,
       }}
     >
       {children}

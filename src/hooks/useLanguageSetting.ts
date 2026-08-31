@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { getItem, setItem } from "@/lib/storage";
+import { autoSync } from "@/lib/syncService";
 
 export interface LanguageOption {
   code: string;
@@ -68,11 +69,22 @@ export function useLanguageSetting() {
   const [draftLangCode, setDraftLangCode] = useState<string>("ja");
 
   useEffect(() => {
-    const saved = getItem<string>(LANGUAGE_STORAGE_KEY);
-    if (saved && SUPPORTED_LANGUAGES.some((l) => l.code === saved)) {
-      setActiveLangCode(saved);
-      setDraftLangCode(saved);
-    }
+    const handleLangUpdate = () => {
+      const saved = getItem<string>(LANGUAGE_STORAGE_KEY);
+      if (saved && SUPPORTED_LANGUAGES.some((l) => l.code === saved)) {
+        setActiveLangCode(saved);
+        setDraftLangCode(saved);
+      }
+    };
+
+    handleLangUpdate();
+
+    window.addEventListener("language-changed", handleLangUpdate);
+    window.addEventListener("storage", handleLangUpdate);
+    return () => {
+      window.removeEventListener("language-changed", handleLangUpdate);
+      window.removeEventListener("storage", handleLangUpdate);
+    };
   }, []);
 
   const selectDraftLanguage = useCallback((code: string) => {
@@ -83,6 +95,8 @@ export function useLanguageSetting() {
     setActiveLangCode(draftLangCode);
     setItem<string>(LANGUAGE_STORAGE_KEY, draftLangCode);
     if (typeof window !== "undefined") {
+      window.dispatchEvent(new Event("language-changed"));
+      autoSync();
       window.location.reload();
     }
   }, [draftLangCode]);

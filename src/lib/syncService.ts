@@ -62,17 +62,45 @@ function triggerErrorNotification(message: string) {
   window.dispatchEvent(new CustomEvent('sync-error', { detail: { message } }));
 }
 
+// Handle session expiration: clean up auth state and notify UI
+export function handleSessionExpired(customMessage?: string) {
+  if (typeof window === 'undefined') return;
+  const hadToken = !!localStorage.getItem(AUTH_TOKEN_KEY);
+  localStorage.removeItem(AUTH_TOKEN_KEY);
+  localStorage.removeItem(USER_KEY);
+  localStorage.removeItem(LAST_SYNC_KEY);
+
+  if (hadToken) {
+    const msg = customMessage || 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.';
+    window.dispatchEvent(new Event('auth-state-changed'));
+    window.dispatchEvent(new CustomEvent('auth-session-expired', {
+      detail: { message: msg }
+    }));
+    window.dispatchEvent(new CustomEvent('show-toast', {
+      detail: {
+        id: Date.now(),
+        message: msg,
+        type: 'error',
+      }
+    }));
+  }
+}
+
 async function trackedFetch(input: RequestInfo | URL, init?: RequestInit): Promise<Response> {
   startTrackingRequest();
   try {
     const response = await fetch(input, init);
     if (!response.ok) {
-      let errMsg = 'Có lỗi xảy ra khi kết nối server';
-      try {
-        const data = await response.clone().json();
-        errMsg = data.error || errMsg;
-      } catch {}
-      triggerErrorNotification(errMsg);
+      if (response.status === 401) {
+        handleSessionExpired();
+      } else {
+        let errMsg = 'Có lỗi xảy ra khi kết nối server';
+        try {
+          const data = await response.clone().json();
+          errMsg = data.error || errMsg;
+        } catch {}
+        triggerErrorNotification(errMsg);
+      }
     }
     return response;
   } catch (error) {
@@ -167,20 +195,42 @@ export function logout(): void {
   clearLocalData();
 }
 
-// Verify token is still valid
-export async function verifyToken(): Promise<boolean> {
+// Validate token & session with backend on initial load
+export async function validateSession(): Promise<{ valid: boolean; user?: User }> {
   const token = getAuthToken();
-  if (!token) return false;
+  if (!token) return { valid: false };
 
   try {
-    const response = await trackedFetch(`${API_URL}/api/auth/verify`, {
+    const response = await fetch(`${API_URL}/api/auth/verify`, {
       headers: { 'Authorization': `Bearer ${token}` },
     });
 
-    return response.ok;
-  } catch {
-    return false;
+    if (response.ok) {
+      const data = await response.json();
+      if (data.user) {
+        localStorage.setItem(USER_KEY, JSON.stringify(data.user));
+        return { valid: true, user: data.user };
+      }
+    }
+
+    // Invalid token or expired or user not found -> clear local stale auth
+    handleSessionExpired();
+    return { valid: false };
+  } catch (error) {
+    console.error('Validate session network error:', error);
+    // Offline mode: keep local cached user if present
+    const localUser = getUser();
+    if (localUser) {
+      return { valid: true, user: localUser };
+    }
+    return { valid: false };
   }
+}
+
+// Verify token is still valid
+export async function verifyToken(): Promise<boolean> {
+  const { valid } = await validateSession();
+  return valid;
 }
 
 // Check if localStorage has any app data
@@ -276,32 +326,43 @@ export async function downloadFromServer(): Promise<{ success: boolean; error?: 
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
+      const errorData = await response.json().catch(() => ({}));
       return { success: false, error: errorData.error || 'Download failed' };
     }
 
     const result = await response.json() as DataResponse;
+    const serverData = result.data || {};
+    const serverHasKeys = Object.keys(serverData).length > 0;
 
-    // Clear existing app data
-    clearLocalData();
+    if (serverHasKeys) {
+      // Clear existing app data
+      clearLocalData();
 
-    // Write server data to localStorage
-    for (const [key, value] of Object.entries(result.data)) {
-      if (typeof value === 'string') {
-        localStorage.setItem(key, value);
-      } else {
-        localStorage.setItem(key, JSON.stringify(value));
+      // Write server data to localStorage
+      for (const [key, value] of Object.entries(serverData)) {
+        if (typeof value === 'string') {
+          localStorage.setItem(key, value);
+        } else {
+          localStorage.setItem(key, JSON.stringify(value));
+        }
       }
+    } else if (detectLocalData()) {
+      // Server has no data yet, but local device has data: upload local data to database
+      await uploadToServer(true);
     }
 
-    localStorage.setItem(LAST_SYNC_KEY, result.timestamp);
+    localStorage.setItem(LAST_SYNC_KEY, result.timestamp || new Date().toISOString());
 
     // Notify all listeners
     if (typeof window !== 'undefined') {
       window.dispatchEvent(new CustomEvent('notebooks-updated'));
       window.dispatchEvent(new CustomEvent('practice-history-updated'));
       window.dispatchEvent(new CustomEvent('curriculum-updated'));
+      window.dispatchEvent(new CustomEvent('curriculum-history-updated'));
+      window.dispatchEvent(new CustomEvent('progress-updated'));
       window.dispatchEvent(new CustomEvent('settings-updated'));
+      window.dispatchEvent(new CustomEvent('nav-menu-settings-changed'));
+      window.dispatchEvent(new CustomEvent('language-changed'));
       window.dispatchEvent(new CustomEvent('storage'));
     }
 

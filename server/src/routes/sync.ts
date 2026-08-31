@@ -63,6 +63,7 @@ router.post('/upload', authenticate, async (req: AuthRequest, res: Response) => 
       'dland_kaiwa_completed',
       'flashcash-streak',
       'flashcash-is-daily-50',
+      'dland_nav_menu_settings',
     ];
 
     // First, backup current data before overwriting (skip if auto-sync)
@@ -278,6 +279,7 @@ router.post('/import-full', authenticate, async (req: AuthRequest, res: Response
       'dland_kaiwa_completed',
       'flashcash-streak',
       'flashcash-is-daily-50',
+      'dland_nav_menu_settings',
     ];
 
     if (mode === 'replace') {

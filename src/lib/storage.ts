@@ -14,6 +14,7 @@ const TARGET_LANGUAGE_KEY = "dland_target_language";
 const KAIWA_PROGRESS_KEY = "dland_kaiwa_completed";
 export const STREAK_KEY = "flashcash-streak";
 const DAILY_50_KEY = "flashcash-is-daily-50";
+const NAV_MENU_SETTINGS_KEY = "dland_nav_menu_settings";
 
 export const StorageKeys = {
   LESSONS: LESSONS_KEY,
@@ -30,6 +31,7 @@ export const StorageKeys = {
   KAIWA_PROGRESS: KAIWA_PROGRESS_KEY,
   STREAK: STREAK_KEY,
   DAILY_50: DAILY_50_KEY,
+  NAV_MENU_SETTINGS: NAV_MENU_SETTINGS_KEY,
 } as const;
 
 export const ALL_STORAGE_KEYS = [
@@ -47,6 +49,7 @@ export const ALL_STORAGE_KEYS = [
   KAIWA_PROGRESS_KEY,
   STREAK_KEY,
   DAILY_50_KEY,
+  NAV_MENU_SETTINGS_KEY,
 ];
 
 export function getItem<T>(key: string): T | null {

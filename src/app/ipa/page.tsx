@@ -3,6 +3,7 @@
 import Link from "next/link";
 import AuthGuard from "@/components/AuthGuard";
 import IpaPracticeModule from "@/components/IpaPracticeModule";
+import { autoSync } from "@/lib/syncService";
 
 export default function IpaPracticePage() {
   const handleRecordHistory = (entry: {
@@ -35,6 +36,7 @@ export default function IpaPracticePage() {
       const updated = [newEntry, ...currentList].slice(0, 100);
       localStorage.setItem("flashcash-practice-history", JSON.stringify(updated));
       window.dispatchEvent(new Event("practice-history-updated"));
+      autoSync();
     } catch (e) {
       console.error("Failed to save IPA practice history:", e);
     }
