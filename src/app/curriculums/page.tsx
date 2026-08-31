@@ -5,10 +5,12 @@ import { useCurriculums } from "@/hooks/useCurriculums";
 import { useProgress } from "@/hooks/useProgress";
 import CurriculumCard from "@/components/CurriculumCard";
 import Link from "next/link";
+import { useAuth } from "@/context/AuthContext";
 
 export default function CurriculumsPage() {
   const { curriculums, addCurriculum, updateCurriculum, deleteCurriculum, exportCurriculum, exportAllCurriculums } = useCurriculums();
   const { progress } = useProgress();
+  const { user } = useAuth();
   const [showAddModal, setShowAddModal] = useState(false);
   const [curriculumName, setCurriculumName] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -53,7 +55,7 @@ export default function CurriculumsPage() {
           <p className="text-xs text-gray-400 mt-0.5">{curriculums.length} giáo trình</p>
         </div>
         <div className="flex gap-2">
-          {curriculums.length > 0 && (
+          {user?.isAdmin && curriculums.length > 0 && (
             <button
               onClick={() => {
                 const json = exportAllCurriculums();

@@ -226,14 +226,23 @@ export default function ChatPage() {
     <AuthGuard featureName="Gia Sư AI 24/7" description="Đăng nhập để luyện giao tiếp, giải thích ngữ pháp, phân tích từ vựng và lưu hội thoại cùng Gia sư AI.">
       <div className="w-full max-w-[1600px] mx-auto h-[calc(100vh-2.5rem)] md:h-[calc(100vh-2.5rem)] -mt-2 -mb-20 md:-mb-6 flex flex-col px-3.5 sm:px-6 lg:px-8">
         {/* Header */}
-      <div className="bg-white rounded-t-3xl border-b border-gray-100 p-4 shadow-xs z-10 flex items-center justify-between gap-3">
+      <div className={`rounded-t-3xl p-4 shadow-xs z-10 flex items-center justify-between gap-3 text-white transition-all duration-300 bg-gradient-to-r ${
+        activeLanguage.code === "en"
+          ? "from-indigo-900 via-purple-900 to-blue-900"
+          : activeLanguage.code === "de"
+          ? "from-amber-950 via-red-950 to-stone-900"
+          : "from-teal-800 via-indigo-900 to-purple-800"
+      }`}>
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-600 flex items-center justify-center text-white text-xl shadow-md">
+          <div className="w-10 h-10 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-white text-xl shadow-sm">
             🤖
           </div>
           <div>
-            <h1 className="text-lg font-bold text-gray-900">{headerTitle}</h1>
-            <p className="text-xs text-gray-500">Được cung cấp bởi Google Gemini</p>
+            <span className="px-2.5 py-0.5 bg-white/20 backdrop-blur-md rounded-full text-[9px] font-bold tracking-widest uppercase mb-0.5 inline-block">
+              {activeLanguage.name} ({activeLanguage.code.toUpperCase()})
+            </span>
+            <h1 className="text-sm font-bold">{headerTitle}</h1>
+            <p className="text-[10px] text-indigo-100">Được cung cấp bởi Google Gemini</p>
           </div>
         </div>
 
@@ -241,17 +250,17 @@ export default function ChatPage() {
         <div className="flex items-center gap-2">
           <Link
             href="/chat/live"
-            className="text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white transition-all px-3 py-1.5 rounded-full shadow-sm flex items-center gap-1"
+            className="text-xs font-bold bg-white text-indigo-950 hover:bg-gray-100 transition-all px-3 py-1.5 rounded-full shadow-sm flex items-center gap-1 cursor-pointer"
             title="Đàm thoại hai chiều thời gian thực bằng giọng nói"
           >
             🎙️ Gemini Live
           </Link>
           <button
             onClick={() => setAutoSpeak(!autoSpeak)}
-            className={`text-xs font-bold transition-all flex items-center gap-1.5 px-3 py-1.5 rounded-full border ${
+            className={`text-xs font-bold transition-all flex items-center gap-1.5 px-3 py-1.5 rounded-full border cursor-pointer ${
               autoSpeak
-                ? "bg-indigo-50 border-indigo-200 text-indigo-600 font-extrabold"
-                : "bg-gray-50 border-gray-200 text-gray-400"
+                ? "bg-white/20 border-white/30 text-white font-extrabold"
+                : "bg-white/5 border-white/10 text-white/60 hover:bg-white/15"
             }`}
             title="Tự động phát âm thanh phản hồi từ AI"
           >

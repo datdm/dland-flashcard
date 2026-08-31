@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import ExportImportPanel from "@/components/ExportImportPanel";
 import BackupHistoryPanel from "@/components/BackupHistoryPanel";
@@ -10,40 +10,99 @@ import * as syncService from "@/lib/syncService";
 import { useLanguageSetting } from "@/hooks/useLanguageSetting";
 import { useFlashCardSettings } from "@/hooks/useFlashCardSettings";
 import { useNavMenuSettings } from "@/hooks/useNavMenuSettings";
+import { getCurriculumRepository } from "@/lib/repositories";
 
 function CurriculumDisplaySettings() {
   const { settings, saveSettings } = useFlashCardSettings();
+  const { activeLanguage } = useLanguageSetting();
+  const [defaultBooks, setDefaultBooks] = useState<any[]>([]);
+
+  useEffect(() => {
+    async function loadDefaultBooks() {
+      try {
+        const repo = getCurriculumRepository();
+        const groups = await repo.getCurriculums(activeLanguage.code);
+        const books = groups.flatMap((g) => g.books || []);
+        
+        // Remove duplicate book IDs (in case they are defined across different levels)
+        const uniqueBooks = books.filter(
+          (book, idx, self) => self.findIndex((b) => b.id === book.id) === idx
+        );
+        
+        setDefaultBooks(uniqueBooks);
+      } catch (err) {
+        console.error("Failed to load default curriculums for settings:", err);
+      }
+    }
+    loadDefaultBooks();
+  }, [activeLanguage.code]);
+
+  const toggleCurriculum = (id: string) => {
+    const hiddenIds = settings.hiddenCurriculumIds || [];
+    const nextHiddenIds = hiddenIds.includes(id)
+      ? hiddenIds.filter((x) => x !== id)
+      : [...hiddenIds, id];
+    
+    let nextHideSuperMasterN5 = settings.hideSuperMasterN5;
+    if (id === "default-n5-super-master-tango") {
+      nextHideSuperMasterN5 = nextHiddenIds.includes(id);
+    }
+
+    saveSettings({
+      ...settings,
+      hideSuperMasterN5: nextHideSuperMasterN5,
+      hiddenCurriculumIds: nextHiddenIds,
+    });
+  };
 
   return (
-    <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-2xs">
-      <h2 className="text-base font-bold text-gray-900 mb-1 flex items-center gap-2">
-        <span>🙈</span> Quản Lý Hiển Thị Giáo Trình Mẫu
-      </h2>
-      <p className="text-xs text-gray-500 mb-4">
-        Tùy chỉnh ẩn/hiện các bộ dữ liệu mẫu mặc định để giao diện gọn gàng hơn.
-      </p>
+    <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-2xs space-y-4">
+      <div>
+        <h2 className="text-base font-bold text-gray-900 mb-1 flex items-center gap-2">
+          <span>🙈</span> Quản Lý Hiển Thị Giáo Trình Mẫu
+        </h2>
+        <p className="text-xs text-gray-500">
+          Tùy chỉnh ẩn/hiện các bộ giáo trình mẫu mặc định của {activeLanguage.name} để giao diện học tập gọn gàng hơn.
+        </p>
+      </div>
 
-      <div className="bg-gray-50 rounded-2xl p-4 flex items-center justify-between gap-4 border border-gray-100">
-        <div>
-          <h3 className="text-xs font-bold text-gray-900">Ẩn bộ từ vựng "N5 Speed Master 語彙"</h3>
-          <p className="text-[11px] text-gray-500 mt-0.5">
-            Tạm thời ẩn bộ giáo trình N5 Speed Master khỏi trang Ôn tập Flashcard, Giáo trình và Tra cứu.
-          </p>
-        </div>
+      <div className="space-y-3">
+        {defaultBooks.map((book) => {
+          const isHidden =
+            (settings.hiddenCurriculumIds || []).includes(book.id) ||
+            (book.id === "default-n5-super-master-tango" && settings.hideSuperMasterN5);
 
-        <button
-          type="button"
-          onClick={() => saveSettings({ ...settings, hideSuperMasterN5: !settings.hideSuperMasterN5 })}
-          className={`relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out ${
-            settings.hideSuperMasterN5 ? "bg-indigo-600" : "bg-gray-200"
-          }`}
-        >
-          <span
-            className={`pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out ${
-              settings.hideSuperMasterN5 ? "translate-x-5" : "translate-x-0"
-            }`}
-          />
-        </button>
+          return (
+            <div
+              key={book.id}
+              className="bg-gray-50 rounded-2xl p-4 flex items-center justify-between gap-4 border border-gray-100"
+            >
+              <div>
+                <h3 className="text-xs font-bold text-gray-900">Ẩn giáo trình "{book.name}"</h3>
+                <p className="text-[11px] text-gray-500 mt-0.5">
+                  {book.description || `Tạm thời ẩn bộ giáo trình ${book.name} khỏi trang học tập.`}
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => toggleCurriculum(book.id)}
+                className={`relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out ${
+                  isHidden ? "bg-indigo-600" : "bg-gray-200"
+                }`}
+              >
+                <span
+                  className={`pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out ${
+                    isHidden ? "translate-x-5" : "translate-x-0"
+                  }`}
+                />
+              </button>
+            </div>
+          );
+        })}
+        {defaultBooks.length === 0 && (
+          <p className="text-xs text-gray-400 italic">Không có giáo trình mẫu nào cho ngôn ngữ này.</p>
+        )}
       </div>
     </div>
   );
@@ -162,6 +221,7 @@ function NavMenuSettingsPanel() {
 function ResetHistorySettingsPanel() {
   const [showResetModal, setShowResetModal] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
 
   const handleResetAllProgress = async () => {
     setIsResetting(true);
@@ -171,20 +231,62 @@ function ResetHistorySettingsPanel() {
     window.location.reload();
   };
 
+  const handleClearLocalAndSync = async () => {
+    if (!confirm("Bạn có chắc chắn muốn xóa toàn bộ bộ nhớ tạm local storage trên trình duyệt này và tải lại dữ liệu mới nhất từ máy chủ không?")) {
+      return;
+    }
+    setIsSyncing(true);
+    try {
+      syncService.clearLocalData();
+      const res = await syncService.downloadFromServer();
+      if (res.success) {
+        alert("Đồng bộ thành công! Bộ nhớ tạm đã được làm sạch và cập nhật dữ liệu mới nhất từ máy chủ.");
+        window.location.reload();
+      } else {
+        alert("Đồng bộ thất bại: " + (res.error || "Không thể tải dữ liệu từ máy chủ."));
+      }
+    } catch (err: any) {
+      console.error(err);
+      alert("Đã xảy ra lỗi trong quá trình đồng bộ dữ liệu.");
+    } finally {
+      setIsSyncing(false);
+    }
+  };
+
   return (
-    <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-2xs">
-      <h2 className="text-base font-bold text-gray-900 mb-1 flex items-center gap-2">
-        <span>🗑️</span> Reset Lịch Sử & Tiến Độ Học Tập
-      </h2>
-      <p className="text-xs text-gray-500 mb-4">
-        Xóa sạch toàn bộ tiến độ bài học, thẻ từ vựng đã thuộc, kết quả bài thi và lịch sử Streak về 0%.
-      </p>
+    <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-2xs space-y-4">
+      <div>
+        <h2 className="text-base font-bold text-gray-900 mb-1 flex items-center gap-2">
+          <span>⚙️</span> Quản Lý & Khôi Phục Dữ Liệu
+        </h2>
+        <p className="text-xs text-gray-500">
+          Quản lý, làm sạch bộ nhớ tạm local storage hoặc thiết lập đặt lại tiến trình học tập của bạn.
+        </p>
+      </div>
+
+      <div className="bg-indigo-50/70 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border border-indigo-100">
+        <div>
+          <h3 className="text-xs font-bold text-indigo-900">Xóa bộ nhớ tạm & Đồng bộ từ Cloud</h3>
+          <p className="text-[11px] text-indigo-700 mt-0.5">
+            Xóa dữ liệu cục bộ trên thiết bị này và kéo toàn bộ lịch sử từ vựng, bài học mới nhất từ tài khoản đám mây của bạn.
+          </p>
+        </div>
+
+        <button
+          type="button"
+          onClick={handleClearLocalAndSync}
+          disabled={isSyncing}
+          className="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white rounded-2xl font-bold text-xs shadow-md shadow-indigo-200 transition-all cursor-pointer shrink-0"
+        >
+          {isSyncing ? "🔄 Đang đồng bộ..." : "🔄 Xóa & Đồng bộ từ Cloud"}
+        </button>
+      </div>
 
       <div className="bg-rose-50/70 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border border-rose-100">
         <div>
-          <h3 className="text-xs font-bold text-rose-900">Xóa dữ liệu tiến độ cá nhân</h3>
+          <h3 className="text-xs font-bold text-rose-900">Xóa dữ liệu tiến độ học tập (Reset)</h3>
           <p className="text-[11px] text-rose-700 mt-0.5">
-            Dùng khi bạn muốn học lại từ đầu toàn bộ các môn học hoặc đặt lại bảng điểm luyện tập.
+            Dùng khi bạn muốn học lại từ đầu toàn bộ các bài học hoặc đặt lại chuỗi Streak học tập về 0%.
           </p>
         </div>
 

@@ -7,6 +7,7 @@ import { useCurriculums } from "@/hooks/useCurriculums";
 import { useProgress } from "@/hooks/useProgress";
 import VocabularyListItem from "@/components/VocabularyListItem";
 import FilterBar, { FilterTab } from "@/components/FilterBar";
+import { useAuth } from "@/context/AuthContext";
 import { Vocabulary } from "@/types";
 
 type VocabFields = Omit<Vocabulary, "id">;
@@ -31,6 +32,7 @@ export default function LessonDetailPage() {
   const { id, lessonId } = useParams<{ id: string; lessonId: string }>();
   const { getCurriculumById, getLessonById, addVocab, updateVocab, deleteVocab, checkDuplicate, exportLesson, importVocabFromJson } = useCurriculums();
   const { toggleLearned, toggleFavorite, progress } = useProgress();
+  const { user } = useAuth();
   const curriculum = getCurriculumById(id);
   const lesson = curriculum ? getLessonById(id, lessonId) : null;
 
@@ -191,19 +193,23 @@ export default function LessonDetailPage() {
           >
             + Thêm từ
           </button>
-          <button
-            onClick={() => fileRef.current?.click()}
-            className="text-sm border border-gray-300 rounded-xl px-3 py-1.5 text-gray-600 hover:border-indigo-400 hover:text-indigo-600 transition-colors"
-          >
-            Import
-          </button>
-          <input ref={fileRef} type="file" accept=".json" className="sr-only" onChange={handleImportFile} />
-          <button
-            onClick={handleExport}
-            className="text-sm border border-gray-300 rounded-xl px-3 py-1.5 text-gray-600 hover:border-emerald-400 hover:text-emerald-600 transition-colors"
-          >
-            Export
-          </button>
+          {user?.isAdmin && (
+            <>
+              <button
+                onClick={() => fileRef.current?.click()}
+                className="text-sm border border-gray-300 rounded-xl px-3 py-1.5 text-gray-600 hover:border-indigo-400 hover:text-indigo-600 transition-colors"
+              >
+                Import
+              </button>
+              <input ref={fileRef} type="file" accept=".json" className="sr-only" onChange={handleImportFile} />
+              <button
+                onClick={handleExport}
+                className="text-sm border border-gray-300 rounded-xl px-3 py-1.5 text-gray-600 hover:border-emerald-400 hover:text-emerald-600 transition-colors"
+              >
+                Export
+              </button>
+            </>
+          )}
           {lesson.vocabulary.length > 0 && (
             <Link
               href={`/flashcard/curriculum/${id}/lesson/${lessonId}`}

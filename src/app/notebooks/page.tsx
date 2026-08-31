@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useNotebooks } from "@/hooks/useNotebooks";
 import { useProgress } from "@/hooks/useProgress";
 import { useLanguageSetting } from "@/hooks/useLanguageSetting";
+import { useAuth } from "@/context/AuthContext";
 import AuthGuard from "@/components/AuthGuard";
 
 function applySubsetOrder<T extends { id: string }>(source: T[], orderedSubsetIds: string[]) {
@@ -33,6 +34,7 @@ function insertDraggedAtIndex(ids: string[], draggedId: string, insertIndex: num
 export default function NotebooksPage() {
   const { notebooks, save, createNotebook, deleteNotebook, exportNotebook, exportAllNotebooks, importNotebook } = useNotebooks();
   const { progress } = useProgress();
+  const { user } = useAuth();
   const { activeLanguage } = useLanguageSetting();
   const [newName, setNewName] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
@@ -268,7 +270,7 @@ export default function NotebooksPage() {
                 <span>🎴 Flashcard tất cả</span>
               </Link>
             )}
-            {notebooks.length > 0 && (
+            {user?.isAdmin && notebooks.length > 0 && (
               <button
                 onClick={handleExportAll}
                 className="px-4 py-2.5 bg-white/10 hover:bg-white/20 backdrop-blur-md text-white font-bold rounded-2xl border border-white/20 text-xs transition-colors flex items-center gap-1.5"
@@ -276,12 +278,14 @@ export default function NotebooksPage() {
                 <span>💾 Export tất cả</span>
               </button>
             )}
-            <button
-              onClick={() => fileRef.current?.click()}
-              className="px-4 py-2.5 bg-white/10 hover:bg-white/20 backdrop-blur-md text-white font-bold rounded-2xl border border-white/20 text-xs transition-colors flex items-center gap-1.5"
-            >
-              <span>📥 Import sổ tay</span>
-            </button>
+            {user?.isAdmin && (
+              <button
+                onClick={() => fileRef.current?.click()}
+                className="px-4 py-2.5 bg-white/10 hover:bg-white/20 backdrop-blur-md text-white font-bold rounded-2xl border border-white/20 text-xs transition-colors flex items-center gap-1.5"
+              >
+                <span>📥 Import sổ tay</span>
+              </button>
+            )}
             <input ref={fileRef} type="file" accept=".json" className="sr-only" onChange={handleImportFile} />
           </div>
         </div>

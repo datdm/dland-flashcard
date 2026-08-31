@@ -135,6 +135,7 @@ export interface FlashCardSettings {
   front: CardSideSettings;
   back: CardSideSettings;
   hideSuperMasterN5?: boolean;
+  hiddenCurriculumIds?: string[];
 }
 
 export const FIELD_LABELS: Record<VocabField, string> = {
@@ -163,4 +164,5 @@ export const DEFAULT_SETTINGS: FlashCardSettings = {
     phonetic: true,
   },
   hideSuperMasterN5: false,
+  hiddenCurriculumIds: [],
 };

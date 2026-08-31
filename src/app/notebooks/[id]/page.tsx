@@ -6,6 +6,7 @@ import { useParams } from "next/navigation";
 import { useNotebooks } from "@/hooks/useNotebooks";
 import { useProgress } from "@/hooks/useProgress";
 import FilterBar, { FilterTab } from "@/components/FilterBar";
+import { useAuth } from "@/context/AuthContext";
 import { Vocabulary, WordType, WORD_TYPES, WORD_TYPE_STYLES } from "@/types";
 
 type VocabFields = Omit<Vocabulary, "id">;
@@ -38,6 +39,7 @@ export default function NotebookDetailPage() {
   const { id } = useParams<{ id: string }>();
   const { notebooks, save, addVocab, updateVocab, deleteVocab, moveVocab, moveMultipleVocab, exportNotebook, importVocabFromJson, checkDuplicate } = useNotebooks();
   const { toggleLearned, toggleFavorite, progress } = useProgress();
+  const { user } = useAuth();
 
   const [form, setForm] = useState<VocabFields>(EMPTY_FIELDS);
   const [showAddModal, setShowAddModal] = useState(false);
@@ -450,19 +452,23 @@ export default function NotebookDetailPage() {
             >
               + Thêm từ mới
             </button>
-            <button
-              onClick={() => fileRef.current?.click()}
-              className="px-4 py-2.5 border border-gray-200 text-gray-700 rounded-2xl text-xs font-semibold hover:bg-gray-50 transition-colors"
-            >
-              📥 Import
-            </button>
-            <input ref={fileRef} type="file" accept=".json" className="sr-only" onChange={handleImportFile} />
-            <button
-              onClick={handleExport}
-              className="px-4 py-2.5 border border-gray-200 text-gray-700 rounded-2xl text-xs font-semibold hover:bg-gray-50 transition-colors"
-            >
-              💾 Export
-            </button>
+            {user?.isAdmin && (
+              <>
+                <button
+                  onClick={() => fileRef.current?.click()}
+                  className="px-4 py-2.5 border border-gray-200 text-gray-700 rounded-2xl text-xs font-semibold hover:bg-gray-50 transition-colors"
+                >
+                  📥 Import
+                </button>
+                <input ref={fileRef} type="file" accept=".json" className="sr-only" onChange={handleImportFile} />
+                <button
+                  onClick={handleExport}
+                  className="px-4 py-2.5 border border-gray-200 text-gray-700 rounded-2xl text-xs font-semibold hover:bg-gray-50 transition-colors"
+                >
+                  💾 Export
+                </button>
+              </>
+            )}
             {notebook.vocabulary.length > 0 && (
               <Link
                 href={`/flashcard/notebook/${id}`}

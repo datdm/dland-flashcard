@@ -39,6 +39,7 @@ export function useCurriculums() {
   const [curriculums, setCurriculums] = useState<Curriculum[]>([]);
   const [repoCurriculums, setRepoCurriculums] = useState<Curriculum[]>([]);
   const [hideSuperMaster, setHideSuperMaster] = useState(false);
+  const [hiddenCurriculumIds, setHiddenCurriculumIds] = useState<string[]>([]);
   const [activeLang, setActiveLang] = useState<string>(() => getActiveLanguageCode());
 
   useEffect(() => {
@@ -124,6 +125,7 @@ export function useCurriculums() {
     const checkHideSetting = () => {
       const saved = getItem<FlashCardSettings>(StorageKeys.SETTINGS);
       setHideSuperMaster(!!saved?.hideSuperMasterN5);
+      setHiddenCurriculumIds(saved?.hiddenCurriculumIds || []);
     };
 
     checkHideSetting();
@@ -159,11 +161,16 @@ export function useCurriculums() {
   }, [repoCurriculums, curriculums]);
 
   const visibleCurriculums = useMemo(() => {
-    if (!hideSuperMaster) return combinedCurriculums;
-    return combinedCurriculums.filter(
-      (c) => c.id !== "default-n5-super-master-tango" && !c.name.toLowerCase().includes("super master") && !c.name.toLowerCase().includes("speed master")
-    );
-  }, [combinedCurriculums, hideSuperMaster]);
+    return combinedCurriculums.filter((c) => {
+      if (hideSuperMaster && (c.id === "default-n5-super-master-tango" || c.name.toLowerCase().includes("super master") || c.name.toLowerCase().includes("speed master"))) {
+        return false;
+      }
+      if (hiddenCurriculumIds.includes(c.id)) {
+        return false;
+      }
+      return true;
+    });
+  }, [combinedCurriculums, hideSuperMaster, hiddenCurriculumIds]);
 
   const activeCurriculums = useMemo(() => {
     return visibleCurriculums.filter((c) => isCurriculumMatchLang(c, activeLang));

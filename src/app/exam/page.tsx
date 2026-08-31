@@ -9,6 +9,7 @@ import { StoredExam, ExamResult } from "@/types/exam";
 import ExamUploadModal from "@/components/exam/ExamUploadModal";
 import ExamStructureModal from "@/components/exam/ExamStructureModal";
 import { useLanguageSetting } from "@/hooks/useLanguageSetting";
+import { useAuth } from "@/context/AuthContext";
 
 const LEVEL_COLORS: Record<string, { badge: string; border: string }> = {
   N1: { badge: "bg-purple-100 text-purple-800 border-purple-200", border: "hover:border-purple-300" },
@@ -21,6 +22,7 @@ const LEVEL_COLORS: Record<string, { badge: string; border: string }> = {
 export default function ExamHubPage() {
   const router = useRouter();
   const { activeLanguage } = useLanguageSetting();
+  const { user } = useAuth();
   const [exams, setExams] = useState<StoredExam[]>([]);
   const [results, setResults] = useState<ExamResult[]>([]);
   const [selectedLevel, setSelectedLevel] = useState<string>("all");
@@ -99,14 +101,16 @@ export default function ExamHubPage() {
                 <span>Cấu trúc đề thi N1-N5</span>
               </button>
 
-              <button
-                type="button"
-                onClick={() => setShowUploadModal(true)}
-                className="px-4 py-3 rounded-2xl bg-white text-indigo-950 font-extrabold text-xs shadow-lg hover:bg-gray-100 transition-all flex items-center gap-1.5 cursor-pointer active:scale-98"
-              >
-                <span>📥</span>
-                <span>Nhập đề JSON</span>
-              </button>
+              {user?.isAdmin && (
+                <button
+                  type="button"
+                  onClick={() => setShowUploadModal(true)}
+                  className="px-4 py-3 rounded-2xl bg-white text-indigo-950 font-extrabold text-xs shadow-lg hover:bg-gray-100 transition-all flex items-center gap-1.5 cursor-pointer active:scale-98"
+                >
+                  <span>📥</span>
+                  <span>Nhập đề JSON</span>
+                </button>
+              )}
             </div>
           </div>
         </div>
