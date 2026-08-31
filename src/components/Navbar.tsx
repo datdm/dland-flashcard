@@ -21,6 +21,7 @@ function getNavItemsForLanguage(langCode: string): NavItem[] {
       return [
         { href: "/", label: "Trang chủ", icon: "🏠" },
         { href: "/search", label: "Tra cứu từ điển", icon: "🔍" },
+        { href: "/shadowing", label: "Shadowing Video", icon: "🎬" },
         { href: "/ipa", label: "Luyện phát âm IPA", icon: "🎙️" },
         { href: "/curriculum", label: "Lộ trình IELTS 7.0", icon: "📚" },
         { href: "/practice", label: "Luyện chuyên sâu", icon: "🏆" },
@@ -38,6 +39,7 @@ function getNavItemsForLanguage(langCode: string): NavItem[] {
       return [
         { href: "/", label: "Trang chủ", icon: "🏠" },
         { href: "/search", label: "Tra cứu từ điển", icon: "🔍" },
+        { href: "/shadowing", label: "Shadowing Video", icon: "🎬" },
         { href: "/curriculum", label: "Giáo trình Tiếng Đức", icon: "📚" },
         { href: "/practice", label: "Luyện chuyên sâu", icon: "🏆" },
         { href: "/grammar", label: "Ngữ pháp Tiếng Đức", icon: "📖" },
@@ -54,6 +56,7 @@ function getNavItemsForLanguage(langCode: string): NavItem[] {
       return [
         { href: "/", label: "Trang chủ", icon: "🏠" },
         { href: "/search", label: "Tra cứu từ điển", icon: "🔍" },
+        { href: "/shadowing", label: "Shadowing Video", icon: "🎬" },
         { href: "/curriculum", label: "Giáo trình TOPIK", icon: "📚" },
         { href: "/grammar", label: "Ngữ pháp Tiếng Hàn", icon: "📖" },
         { href: "/vocabulary", label: "Kho Từ Vựng Tiếng Hàn", icon: "📝" },
@@ -69,6 +72,7 @@ function getNavItemsForLanguage(langCode: string): NavItem[] {
       return [
         { href: "/", label: "Trang chủ", icon: "🏠" },
         { href: "/search", label: "Tra cứu từ điển", icon: "🔍" },
+        { href: "/shadowing", label: "Shadowing Video", icon: "🎬" },
         { href: "/curriculum", label: "Giáo trình HSK", icon: "📚" },
         { href: "/grammar", label: "Ngữ pháp Tiếng Trung", icon: "📖" },
         { href: "/vocabulary", label: "Kho Từ Vựng Tiếng Trung", icon: "📝" },
@@ -85,6 +89,7 @@ function getNavItemsForLanguage(langCode: string): NavItem[] {
       return [
         { href: "/", label: "Trang chủ", icon: "🏠" },
         { href: "/search", label: "Tra cứu từ điển", icon: "🔍" },
+        { href: "/shadowing", label: "Shadowing Video", icon: "🎬" },
         { href: "/kaiwa", label: "Lộ trình Kaiwa", icon: "🗣️" },
         { href: "/curriculum", label: "Giáo trình (N5-N2)", icon: "📚" },
         { href: "/grammar", label: "Ngữ pháp JLPT", icon: "📖" },
