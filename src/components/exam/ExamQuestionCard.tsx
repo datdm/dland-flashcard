@@ -82,12 +82,21 @@ export default function ExamQuestionCard({
 
         <div className="flex-1">
           <p
-            className="text-sm font-bold text-gray-900 leading-relaxed tracking-wide select-text"
+            className="text-sm sm:text-base font-bold text-gray-900 leading-relaxed tracking-wide select-text"
             dangerouslySetInnerHTML={{
-              __html: question.question.replace(
-                /★/g,
-                '<span class="text-amber-500 font-extrabold text-base">★</span>'
-              ),
+              __html: question.question
+                // Strip redundant leading numbering (e.g. "1. ", "52. ") since we already have "Câu X" badge
+                .replace(/^[0-9０-９]+[\.\s、\s]+/g, "")
+                // Format bracketed target words [漢字] as underlined JLPT target words
+                .replace(
+                  /\[([^\]]+)\]/g,
+                  '<span class="font-black text-indigo-700 underline decoration-2 decoration-indigo-500 underline-offset-4 px-0.5">$1</span>'
+                )
+                // Highlight star in Mondai 8
+                .replace(
+                  /★/g,
+                  '<span class="text-amber-500 font-extrabold text-base px-0.5">★</span>'
+                ),
             }}
           />
         </div>

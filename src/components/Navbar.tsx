@@ -75,6 +75,7 @@ export function getNavItemsForLanguage(langCode: string): NavItem[] {
         { href: "/shadowing", label: "Shadowing Video", icon: "🎬" },
         { href: "/curriculum", label: "Giáo trình HSK", icon: "📚" },
         { href: "/grammar", label: "Ngữ pháp Tiếng Trung", icon: "📖" },
+        { href: "/kanji", label: "Hán tự Hanzi", icon: "🉐" },
         { href: "/vocabulary", label: "Kho Từ Vựng Tiếng Trung", icon: "📝" },
         { href: "/translate", label: "Dịch văn bản", icon: "🌐" },
         { href: "/chat", label: "Gia Sư AI", icon: "🤖" },
@@ -93,6 +94,7 @@ export function getNavItemsForLanguage(langCode: string): NavItem[] {
         { href: "/kaiwa", label: "Lộ trình Kaiwa", icon: "🗣️" },
         { href: "/curriculum", label: "Giáo trình (N5-N2)", icon: "📚" },
         { href: "/grammar", label: "Ngữ pháp JLPT", icon: "📖" },
+        { href: "/kanji", label: "Tập viết Kanji", icon: "🉐" },
         { href: "/exam", label: "Luyện thi JLPT", icon: "📝" },
         { href: "/practice", label: "Luyện chuyên sâu", icon: "🏆" },
         { href: "/vocabulary", label: "Kho Từ Vựng Tiếng Nhật", icon: "📝" },
@@ -249,9 +251,9 @@ export default function Navbar() {
           {isCollapsed ? "▶" : "◀"}
         </button>
 
-        <div>
+        <div className="flex flex-col flex-1 min-h-0 w-full mb-4">
           {/* Brand Logo */}
-          <Link href="/" className={`flex items-center gap-3 mb-6 group ${isCollapsed ? 'justify-center px-0 py-2' : 'px-3 py-2'}`}>
+          <Link href="/" className={`flex items-center gap-3 mb-6 shrink-0 group ${isCollapsed ? 'justify-center px-0 py-2' : 'px-3 py-2'}`}>
             <div className="w-10 h-10 shrink-0 rounded-2xl bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-600 flex items-center justify-center text-white text-xl font-bold shadow-md shadow-indigo-200 group-hover:scale-105 transition-transform">
               🌐
             </div>
@@ -271,7 +273,7 @@ export default function Navbar() {
           </Link>
 
           {/* Navigation Links */}
-          <nav className="space-y-1">
+          <nav className="space-y-1 overflow-y-auto flex-1 pr-1 scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
             {!isCollapsed && (
               <div className="px-3 mb-2 text-[11px] font-bold text-gray-400 uppercase tracking-wider whitespace-nowrap">
                 Danh mục {activeLanguage.name}
