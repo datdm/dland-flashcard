@@ -18,7 +18,7 @@ interface MaziiQuickLookupModalProps {
   queryWord: string;
   initialFurigana?: string;
   initialMeaning?: string;
-  onAddToNotebook?: (word: { kanji: string; hiragana: string; meaning: string }) => void;
+  onAddToNotebook?: (word: { kanji: string; hiragana: string; meaning: string; wordType?: string }) => void;
 }
 
 export default function MaziiQuickLookupModal({
@@ -273,6 +273,7 @@ export default function MaziiQuickLookupModal({
                     kanji: currentItem.kanji || queryWord,
                     hiragana: currentItem.hiragana || queryWord,
                     meaning: currentItem.meaning || initialMeaning || "",
+                    wordType: "Danh từ",
                   });
                   onClose();
                 }}

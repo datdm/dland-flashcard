@@ -54,6 +54,8 @@ router.post('/upload', auth_1.authenticate, async (req, res) => {
             'flashcash-streak',
             'flashcash-is-daily-50',
             'dland_nav_menu_settings',
+            'dland_custom_exams',
+            'dland_exam_results',
         ];
         // First, backup current data before overwriting (skip if auto-sync)
         if (!skipBackup) {
@@ -220,6 +222,8 @@ router.post('/import-full', auth_1.authenticate, async (req, res) => {
             'flashcash-streak',
             'flashcash-is-daily-50',
             'dland_nav_menu_settings',
+            'dland_custom_exams',
+            'dland_exam_results',
         ];
         if (mode === 'replace') {
             await client.query('DELETE FROM user_data WHERE user_id = $1', [req.userId]);

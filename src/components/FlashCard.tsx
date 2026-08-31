@@ -1,6 +1,6 @@
 "use client";
 
-import { Vocabulary, CardSideSettings, FIELD_LABELS, ALL_FIELDS, WORD_TYPE_STYLES } from "@/types";
+import { Vocabulary, CardSideSettings, FIELD_LABELS, ALL_FIELDS, WORD_TYPE_STYLES, WordType } from "@/types";
 
 interface FlashCardFaceProps {
   vocab: Vocabulary;
@@ -37,12 +37,14 @@ function FlashCardFace({ vocab, settings }: FlashCardFaceProps) {
       )}
 
       {/* Word Type Badge */}
-      {vocab.wordType && (() => {
-        const s = WORD_TYPE_STYLES[vocab.wordType];
+      {(() => {
+        const currentWordType = vocab.wordType || (vocab.sourceType === "notebook" ? "Danh từ" : undefined);
+        if (!currentWordType) return null;
+        const s = WORD_TYPE_STYLES[currentWordType as WordType] || WORD_TYPE_STYLES["Danh từ"];
         return (
           <div className={`absolute top-4 ${vocab.sourceName ? "left-4 mt-8" : "left-4"} z-10`} style={{ top: vocab.sourceName ? "2.8rem" : "1rem" }}>
             <span className={`text-[10px] font-bold px-2 py-0.5 rounded-lg border ${s.bg} ${s.text} ${s.border}`}>
-              {vocab.wordType}
+              {currentWordType}
             </span>
           </div>
         );

@@ -1,0 +1,246 @@
+{
+  "meta": {
+    "title": "JLPT N5 — Đề Thi Thử Sơ Cấp (Chữ Hán, Từ Vựng & Ngữ Pháp N5)",
+    "subject": "JLPT",
+    "level": "N5",
+    "exam": "Kỳ thi Năng lực Nhật ngữ N5",
+    "version": "1.0",
+    "year": "Mock 2025",
+    "description": "Đề thi thử JLPT N5 sơ cấp đầy đủ Chữ Hán, Từ vựng, Ngữ pháp và Đọc hiểu câu ngắn.",
+    "totalQuestions": 25,
+    "timeLimit": 3600,
+    "passMark": 80,
+    "sections": [
+      {
+        "name": "文字・語彙 (Kanji & Từ vựng)",
+        "mondai": "問題 1-4",
+        "questionIds": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+      },
+      {
+        "name": "文法 (Ngữ pháp & Trợ từ)",
+        "mondai": "問題 5-7",
+        "questionIds": [11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+      },
+      {
+        "name": "読解 (Đọc hiểu ngắn)",
+        "mondai": "問題 8",
+        "questionIds": [],
+        "passageIds": ["passage-n5-01"]
+      }
+    ]
+  },
+  "questions": [
+    {
+      "id": 1,
+      "mondai": "問題1: ＿＿の言葉の読み方として正しいものを一つ選んでください。",
+      "question": "きのう<u>本</u>を３さつ買いました。",
+      "type": "single",
+      "options": ["ほん", "ぼん", "ぽん", "ほんぐ"],
+      "answers": [0],
+      "explanation": "「本（ほん）」: Sách."
+    },
+    {
+      "id": 2,
+      "mondai": "問題1: ＿＿の言葉の読み方として正しいものを一つ選んでください。",
+      "question": "あの<u>白い</u>車は田中さんのです。",
+      "type": "single",
+      "options": ["しろい", "くろい", "あかい", "あおい"],
+      "answers": [0],
+      "explanation": "「白い（しろい）」: Màu trắng."
+    },
+    {
+      "id": 3,
+      "mondai": "問題1: ＿＿の言葉の読み方として正しいものを一つ選んでください。",
+      "question": "毎朝７時に<u>起きます</u>。",
+      "type": "single",
+      "options": ["おきます", "いきます", "ききます", "あきます"],
+      "answers": [0],
+      "explanation": "「起きる（おきる）」: Thức dậy."
+    },
+    {
+      "id": 4,
+      "mondai": "問題1: ＿＿の言葉の読み方として正しいものを一つ選んでください。",
+      "question": "あした<u>雨</u>がふるでしょう。",
+      "type": "single",
+      "options": ["あめ", "ゆき", "くも", "かぜ"],
+      "answers": [0],
+      "explanation": "「雨（あめ）」: Mưa."
+    },
+    {
+      "id": 5,
+      "mondai": "問題2: ＿＿の言葉を漢字で書くとき、どれが正しいですか。",
+      "question": "毎日日本語の<u>がっこう</u>へ行きます。",
+      "type": "single",
+      "options": ["学校", "学佼", "学較", "学効"],
+      "answers": [0],
+      "explanation": "「学校（がっこう）」: Trường học."
+    },
+    {
+      "id": 6,
+      "mondai": "問題2: ＿＿の言葉を漢字で書くとき、どれが正しいですか。",
+      "question": "あの<u>ひと</u>はだれですか。",
+      "type": "single",
+      "options": ["人", "入", "八", "大"],
+      "answers": [0],
+      "explanation": "「人（ひと）」: Người."
+    },
+    {
+      "id": 7,
+      "mondai": "問題3: （ ）に入れるのに一番いいものを一つ選んでください。",
+      "question": "テーブルの（ ）にねこがいます。",
+      "type": "single",
+      "options": ["下", "前", "間", "中"],
+      "answers": [0],
+      "explanation": "「下（した）」: Ở dưới (bàn)."
+    },
+    {
+      "id": 8,
+      "mondai": "問題3: （ ）に入れるのに一番いいものを一つ選んでください。",
+      "question": "のどがかわきましたから、お水を（ ）ください。",
+      "type": "single",
+      "options": ["飲んで", "食べて", "見て", "聞いて"],
+      "answers": [0],
+      "explanation": "お水を飲んでください: Xin hãy uống nước."
+    },
+    {
+      "id": 9,
+      "mondai": "問題4: （ ）に入れるのに一番いいものを一つ選んでください。",
+      "question": "きょうは天気がよくて、（ ）あたたかいです。",
+      "type": "single",
+      "options": ["とても", "あまり", "ぜんぜん", "すこしも"],
+      "answers": [0],
+      "explanation": "「とても」: Rất (rất ấm áp)."
+    },
+    {
+      "id": 10,
+      "mondai": "問題4: （ ）に入れるのに一番いいものを一つ選んでください。",
+      "question": "駅まで（ ）で１０分かかります。",
+      "type": "single",
+      "options": ["歩いて", "散歩", "走って", "足"],
+      "answers": [0],
+      "explanation": "「歩いて（あるいて）」: Đi bộ 10 phút."
+    },
+    {
+      "id": 11,
+      "mondai": "問題5: （ ）に入れるのに一番いいものを一つ選んでください。",
+      "question": "わたしはスーパー（ ）りんごを買いました。",
+      "type": "single",
+      "options": ["で", "に", "へ", "を"],
+      "answers": [0],
+      "explanation": "Trợ từ 「で」: Chỉ nơi diễn ra hành động (mua táo ở siêu thị)."
+    },
+    {
+      "id": 12,
+      "mondai": "問題5: （ ）に入れるのに一番いいものを一つ選んでください。",
+      "question": "日曜日（ ）友達と公園へ行きます。",
+      "type": "single",
+      "options": ["に", "で", "を", "へ"],
+      "answers": [0],
+      "explanation": "Trợ từ 「に」: Đi sau mốc thời gian cụ thể (Chủ Nhật)."
+    },
+    {
+      "id": 13,
+      "mondai": "問題5: （ ）に入れるのに一番いいものを一つ選んでください。",
+      "question": "いっしょに映画を（ ）ませんか。",
+      "type": "single",
+      "options": ["見", "見る", "見て", "見ない"],
+      "answers": [0],
+      "explanation": "「V-masu(bỏ masu) + ませんか」: Cùng làm gì không? (見ませんか)."
+    },
+    {
+      "id": 14,
+      "mondai": "問題5: （ ）に入れるのに一番いいものを一つ選んでください。",
+      "question": "この部屋は広くて（ ）です。",
+      "type": "single",
+      "options": ["明るい", "明るくて", "明るく", "明るかった"],
+      "answers": [0],
+      "explanation": "Nối tính từ đuôi i: 「広くて、明るいです」 (Rộng và sáng sủa)."
+    },
+    {
+      "id": 15,
+      "mondai": "問題5: （ ）に入れるのに一番いいものを一つ選んでください。",
+      "question": "図書館では静かに（ ）ください。",
+      "type": "single",
+      "options": ["して", "する", "します", "した"],
+      "answers": [0],
+      "explanation": "「～てください」: Xin hãy (静かにしてください: Hãy giữ trật tự)."
+    },
+    {
+      "id": 16,
+      "mondai": "問題5: （ ）に入れるのに一番いいものを一つ選んでください。",
+      "question": "わたしはすし（ ）好きです。",
+      "type": "single",
+      "options": ["が", "を", "に", "で"],
+      "answers": [0],
+      "explanation": "「～が好きです」: Thích cái gì (dùng trợ từ が)."
+    },
+    {
+      "id": 17,
+      "mondai": "問題5: （ ）に入れるのに一番いいものを一つ選んでください。",
+      "question": "教室にテレビが２（ ）あります。",
+      "type": "single",
+      "options": ["台（だい）", "枚（まい）", "本（ほん）", "冊（さつ）"],
+      "answers": [0],
+      "explanation": "Đơn vị đếm máy móc, tivi, xe cộ: 「台（だい）」."
+    },
+    {
+      "id": 18,
+      "mondai": "問題5: （ ）に入れるのに一番いいものを一つ選んでください。",
+      "question": "あしたは休みですから、どこへも（ ）。",
+      "type": "single",
+      "options": ["行きません", "行きます", "行きました", "行った"],
+      "answers": [0],
+      "explanation": "「どこへも + Phủ định」: Không đi đâu cả (行きません)."
+    },
+    {
+      "id": 19,
+      "mondai": "問題6: ★ に入るものはどれですか。",
+      "question": "わたしは ＿＿ ＿＿ ★ ＿＿ が好きです。\n1. を　2. 日本語　3. 勉強する　4. こと",
+      "type": "single",
+      "options": ["1 (を)", "2 (日本語)", "3 (勉強する)", "4 (こと)"],
+      "answers": [2],
+      "explanation": "Cấu trúc: わたしは [2. 日本語] [1. を] ★[3. 勉強する] [4. こと] が好きです。"
+    },
+    {
+      "id": 20,
+      "mondai": "問題6: ★ に入るものはどれですか。",
+      "question": "机の上に ＿＿ ＿＿ ★ ＿＿ あります。\n1. ペンが　2. 本と　3. ２冊　4. ３本",
+      "type": "single",
+      "options": ["1 (ペンが)", "2 (本と)", "3 (２冊)", "4 (３本)"],
+      "answers": [0],
+      "explanation": "Cấu trúc: [2. 本と] [3. ２冊] ★[1. ペンが] [4. ３本] あります。"
+    }
+  ],
+  "passages": [
+    {
+      "kind": "passage",
+      "id": "passage-n5-01",
+      "mondai": "問題8: 文章を読んで、質問に答えてください。",
+      "passageTitle": "【短文】わたしの１日",
+      "passageText": "わたしは毎朝６時半に起きます。朝ごはんを食べてから、８時に家を出ます。会社まで電車で４０分かかります。会社は９時から５時までです。仕事が終わったあと、スーパーで買い物をして家に帰ります。夜は日本語の勉強を１時間します。１１時に寝ます。",
+      "questions": [
+        {
+          "id": 21,
+          "question": "この人は家から会社まで何分かかりますか。",
+          "type": "single",
+          "options": ["４０分", "３０分", "５０分", "６０分"],
+          "answers": [0],
+          "explanation": "Trong bài viết: 「会社まで電車で４０分かかります」."
+        },
+        {
+          "id": 22,
+          "question": "この人は夜に何をしますか。",
+          "type": "single",
+          "options": [
+            "日本語の勉強を１時間する。",
+            "会社で残業をする。",
+            "映画を見に行く。",
+            "８時に家を出る。"
+          ],
+          "answers": [0],
+          "explanation": "Trong bài viết: 「夜は日本語の勉強を１時間します」."
+        }
+      ]
+    }
+  ]
+}

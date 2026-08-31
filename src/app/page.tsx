@@ -60,8 +60,14 @@ export default function HomePage() {
 
           <div className="flex flex-wrap gap-3 mt-6">
             <Link
+              href="/exam"
+              className="px-5 py-2.5 bg-white text-indigo-700 font-extrabold rounded-2xl shadow-md hover:bg-indigo-50 transition-all text-xs sm:text-sm flex items-center gap-1.5 active:scale-98"
+            >
+              <span>📝</span> Luyện Thi JLPT
+            </Link>
+            <Link
               href="/curriculum"
-              className="px-5 py-2.5 bg-white text-indigo-700 font-bold rounded-2xl shadow-md hover:bg-indigo-50 transition-colors text-xs sm:text-sm"
+              className="px-5 py-2.5 bg-white/15 hover:bg-white/25 backdrop-blur-md text-white font-bold rounded-2xl border border-white/20 transition-colors text-xs sm:text-sm"
             >
               📚 Xem Lộ trình Bài học
             </Link>

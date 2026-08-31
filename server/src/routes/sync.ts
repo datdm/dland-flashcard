@@ -64,6 +64,8 @@ router.post('/upload', authenticate, async (req: AuthRequest, res: Response) => 
       'flashcash-streak',
       'flashcash-is-daily-50',
       'dland_nav_menu_settings',
+      'dland_custom_exams',
+      'dland_exam_results',
     ];
 
     // First, backup current data before overwriting (skip if auto-sync)
@@ -280,6 +282,8 @@ router.post('/import-full', authenticate, async (req: AuthRequest, res: Response
       'flashcash-streak',
       'flashcash-is-daily-50',
       'dland_nav_menu_settings',
+      'dland_custom_exams',
+      'dland_exam_results',
     ];
 
     if (mode === 'replace') {

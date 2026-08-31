@@ -363,6 +363,8 @@ export async function downloadFromServer(): Promise<{ success: boolean; error?: 
       window.dispatchEvent(new CustomEvent('settings-updated'));
       window.dispatchEvent(new CustomEvent('nav-menu-settings-changed'));
       window.dispatchEvent(new CustomEvent('language-changed'));
+      window.dispatchEvent(new CustomEvent('exams-updated'));
+      window.dispatchEvent(new CustomEvent('exam-results-updated'));
       window.dispatchEvent(new CustomEvent('storage'));
     }
 

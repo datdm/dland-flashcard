@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Vocabulary, VocabProgress, FIELD_LABELS, WORD_TYPE_STYLES } from "@/types";
+import { Vocabulary, VocabProgress, FIELD_LABELS, WORD_TYPE_STYLES, WordType } from "@/types";
 
 interface VocabularyListItemProps {
   vocab: Vocabulary;
@@ -59,11 +59,13 @@ export default function VocabularyListItem({
                   </span>
                 )}
                 {/* Word Type Badge */}
-                {vocab.wordType && (() => {
-                  const s = WORD_TYPE_STYLES[vocab.wordType];
+                {(() => {
+                  const currentWordType = vocab.wordType || (vocab.sourceType === "notebook" || !vocab.sourceType ? "Danh từ" : undefined);
+                  if (!currentWordType) return null;
+                  const s = WORD_TYPE_STYLES[currentWordType as WordType] || WORD_TYPE_STYLES["Danh từ"];
                   return (
                     <span className={`text-[10px] font-bold px-2 py-0.5 rounded-lg border ${s.bg} ${s.text} ${s.border}`}>
-                      {vocab.wordType}
+                      {currentWordType}
                     </span>
                   );
                 })()}
@@ -184,12 +186,14 @@ export default function VocabularyListItem({
           </div>
         )}
         {/* Word Type Badge in list view */}
-        {vocab.wordType && (() => {
-          const s = WORD_TYPE_STYLES[vocab.wordType];
+        {(() => {
+          const currentWordType = vocab.wordType || (vocab.sourceType === "notebook" || !vocab.sourceType ? "Danh từ" : undefined);
+          if (!currentWordType) return null;
+          const s = WORD_TYPE_STYLES[currentWordType as WordType] || WORD_TYPE_STYLES["Danh từ"];
           return (
             <div className="hidden sm:block">
               <span className={`text-[10px] font-bold px-2 py-0.5 rounded-lg border ${s.bg} ${s.text} ${s.border}`}>
-                {vocab.wordType}
+                {currentWordType}
               </span>
             </div>
           );

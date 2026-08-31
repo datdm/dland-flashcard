@@ -190,7 +190,11 @@ export function useNotebooks() {
       skipSync: boolean = false
     ): Promise<Vocabulary | null> => {
       const vocabId = generateId("v");
-      const vocab: Vocabulary = { id: vocabId, ...fields };
+      const vocab: Vocabulary = {
+        id: vocabId,
+        wordType: fields.wordType || "Danh từ",
+        ...fields,
+      };
 
       if (skipSync) {
         setAllNotebooks((prev) => {
@@ -512,6 +516,7 @@ export function useNotebooks() {
               onyomi: vocab.onyomi,
               meaning: vocab.meaning,
               phonetic: vocab.phonetic,
+              wordType: vocab.wordType || "Danh từ",
             };
             toAdd.push(newVocab);
             added++;
@@ -563,6 +568,7 @@ export function useNotebooks() {
             onyomi: v.onyomi,
             meaning: v.meaning,
             phonetic: v.phonetic,
+            wordType: v.wordType || "Danh từ",
           };
           toAdd.push(entry);
           count++;

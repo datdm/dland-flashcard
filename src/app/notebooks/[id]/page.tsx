@@ -606,11 +606,12 @@ export default function NotebookDetailPage() {
                               )}
                             </div>
                             <div className="flex items-center gap-1.5 mt-1 flex-wrap">
-                              {v.wordType && (() => {
-                                const s = WORD_TYPE_STYLES[v.wordType];
+                              {(() => {
+                                const currentWordType: WordType = (v.wordType as WordType) || "Danh từ";
+                                const s = WORD_TYPE_STYLES[currentWordType] || WORD_TYPE_STYLES["Danh từ"];
                                 return (
                                   <span className={`px-2 py-0.5 rounded-lg text-[10px] font-bold border ${s.bg} ${s.text} ${s.border}`}>
-                                    {v.wordType}
+                                    {currentWordType}
                                   </span>
                                 );
                               })()}
