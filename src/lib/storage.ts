@@ -36,6 +36,7 @@ export const StorageKeys = {
   NAV_MENU_SETTINGS: NAV_MENU_SETTINGS_KEY,
   CUSTOM_EXAMS: CUSTOM_EXAMS_KEY,
   EXAM_RESULTS: EXAM_RESULTS_KEY,
+  EXAM_PROGRESS_PREFIX: "dland_exam_progress_",
 } as const;
 
 export const ALL_STORAGE_KEYS = [

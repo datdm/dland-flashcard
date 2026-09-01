@@ -4,8 +4,8 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import AuthGuard from "@/components/AuthGuard";
-import { getAllExams, getAllResults, deleteCustomExam } from "@/lib/examStorage";
-import { StoredExam, ExamResult } from "@/types/exam";
+import { getAllExams, getAllResults, deleteCustomExam, getExamProgress, clearExamProgress } from "@/lib/examStorage";
+import { StoredExam, ExamResult, ExamProgress } from "@/types/exam";
 import ExamUploadModal from "@/components/exam/ExamUploadModal";
 import ExamStructureModal from "@/components/exam/ExamStructureModal";
 import { useLanguageSetting } from "@/hooks/useLanguageSetting";
@@ -25,23 +25,33 @@ export default function ExamHubPage() {
   const { user } = useAuth();
   const [exams, setExams] = useState<StoredExam[]>([]);
   const [results, setResults] = useState<ExamResult[]>([]);
+  const [progressMap, setProgressMap] = useState<Record<string, ExamProgress | null>>({});
   const [selectedLevel, setSelectedLevel] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [showUploadModal, setShowUploadModal] = useState<boolean>(false);
   const [showStructureModal, setShowStructureModal] = useState<boolean>(false);
 
   const loadData = () => {
-    setExams(getAllExams());
+    const allExams = getAllExams();
+    setExams(allExams);
     setResults(getAllResults());
+
+    const pMap: Record<string, ExamProgress | null> = {};
+    allExams.forEach((e) => {
+      pMap[e.id] = getExamProgress(e.id);
+    });
+    setProgressMap(pMap);
   };
 
   useEffect(() => {
     loadData();
     window.addEventListener("exams-updated", loadData);
     window.addEventListener("exam-results-updated", loadData);
+    window.addEventListener("exam-progress-updated", loadData);
     return () => {
       window.removeEventListener("exams-updated", loadData);
       window.removeEventListener("exam-results-updated", loadData);
+      window.removeEventListener("exam-progress-updated", loadData);
     };
   }, []);
 
@@ -210,6 +220,16 @@ export default function ExamHubPage() {
             const pastResults = results.filter((r) => r.examId === exam.id);
             const bestResult = pastResults.sort((a, b) => b.scorePercentage - a.scorePercentage)[0];
 
+            // Check draft progress
+            const currentProgress = progressMap[exam.id];
+            const hasDraft =
+              currentProgress &&
+              (Object.keys(currentProgress.answers || {}).length > 0 ||
+                (currentProgress.timeRemaining > 0 && currentProgress.timeRemaining < meta.timeLimit));
+            const answeredCount = hasDraft ? Object.keys(currentProgress.answers || {}).length : 0;
+            const minsLeft = hasDraft ? Math.floor(currentProgress.timeRemaining / 60) : 0;
+            const secsLeft = hasDraft ? currentProgress.timeRemaining % 60 : 0;
+
             return (
               <div
                 key={exam.id}
@@ -268,8 +288,20 @@ export default function ExamHubPage() {
                 </div>
 
                 <div>
+                  {/* Draft in-progress badge */}
+                  {hasDraft && (
+                    <div className="mb-3 px-3.5 py-2.5 bg-amber-50 border border-amber-200/90 rounded-2xl flex items-center justify-between text-xs">
+                      <span className="text-amber-900 font-extrabold flex items-center gap-1.5">
+                        <span className="text-sm">⏳</span> Đang làm dở dang:
+                      </span>
+                      <span className="text-amber-800 font-bold">
+                        {answeredCount}/{meta.totalQuestions} câu • Còn {minsLeft}:{secsLeft < 10 ? `0${secsLeft}` : secsLeft}
+                      </span>
+                    </div>
+                  )}
+
                   {/* Past score badge if attempted */}
-                  {bestResult && (
+                  {bestResult && !hasDraft && (
                     <div className="mb-3 px-3 py-2 bg-emerald-50 border border-emerald-200/80 rounded-2xl flex items-center justify-between text-xs">
                       <span className="text-emerald-800 font-bold flex items-center gap-1">
                         <span>🎖️</span> Điểm cao nhất:
@@ -281,21 +313,52 @@ export default function ExamHubPage() {
                     </div>
                   )}
 
-                  <div className="flex items-center gap-2.5">
-                    <Link
-                      href={`/exam/${exam.id}`}
-                      className="flex-1 py-3 px-4 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs shadow-md shadow-indigo-200 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-98"
-                    >
-                      <span>✍️</span>
-                      <span>Vào Làm Bài Thi →</span>
-                    </Link>
+                  <div className="flex flex-col sm:flex-row items-center gap-2">
+                    {hasDraft ? (
+                      <>
+                        <Link
+                          href={`/exam/${exam.id}`}
+                          className="w-full sm:flex-1 py-3 px-4 rounded-2xl bg-amber-500 hover:bg-amber-600 text-white font-black text-xs shadow-md shadow-amber-200 transition-all flex items-center justify-center gap-1.5 cursor-pointer active:scale-98"
+                        >
+                          <span>▶️</span>
+                          <span>Tiếp Tục Làm Bài</span>
+                        </Link>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (
+                              confirm(
+                                `Bạn có chắc muốn xóa bản lưu tạm và bắt đầu lại bài thi "${meta.title}" từ đầu?`
+                              )
+                            ) {
+                              clearExamProgress(exam.id);
+                              router.push(`/exam/${exam.id}`);
+                            }
+                          }}
+                          className="w-full sm:w-auto py-3 px-3.5 rounded-2xl bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xs transition-colors flex items-center justify-center gap-1 cursor-pointer shrink-0"
+                          title="Làm lại đề thi từ đầu"
+                        >
+                          <span>🔄</span>
+                          <span className="sm:hidden">Làm mới</span>
+                        </button>
+                      </>
+                    ) : (
+                      <Link
+                        href={`/exam/${exam.id}`}
+                        className="flex-1 w-full py-3 px-4 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs shadow-md shadow-indigo-200 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-98"
+                      >
+                        <span>✍️</span>
+                        <span>Vào Làm Bài Thi →</span>
+                      </Link>
+                    )}
 
                     {bestResult && (
                       <Link
                         href={`/exam/result/${bestResult.id}`}
-                        className="py-3 px-4 rounded-2xl bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xs transition-colors shrink-0"
+                        className="py-3 px-3.5 rounded-2xl bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xs transition-colors shrink-0 flex items-center justify-center"
+                        title="Xem lịch sử kết quả thi"
                       >
-                        📊 Kết quả
+                        📊 <span className="hidden sm:inline ml-1">Kết quả</span>
                       </Link>
                     )}
                   </div>

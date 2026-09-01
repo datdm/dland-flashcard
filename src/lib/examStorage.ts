@@ -105,6 +105,13 @@ export function getExamProgress(examId: string): ExamProgress | null {
   }
 }
 
+export function hasExamProgress(examId: string): boolean {
+  const progress = getExamProgress(examId);
+  if (!progress) return false;
+  const hasAnswers = Object.keys(progress.answers || {}).length > 0;
+  return hasAnswers && progress.timeRemaining > 0;
+}
+
 export function saveExamProgress(progress: ExamProgress): void {
   if (typeof window === "undefined") return;
   try {
@@ -112,6 +119,8 @@ export function saveExamProgress(progress: ExamProgress): void {
       `${STORAGE_KEYS.PROGRESS_PREFIX}${progress.examId}`,
       JSON.stringify(progress)
     );
+    window.dispatchEvent(new CustomEvent("exam-progress-updated", { detail: { examId: progress.examId } }));
+    autoSync();
   } catch {}
 }
 
@@ -119,6 +128,8 @@ export function clearExamProgress(examId: string): void {
   if (typeof window === "undefined") return;
   try {
     localStorage.removeItem(`${STORAGE_KEYS.PROGRESS_PREFIX}${examId}`);
+    window.dispatchEvent(new CustomEvent("exam-progress-updated", { detail: { examId } }));
+    autoSync();
   } catch {}
 }
 

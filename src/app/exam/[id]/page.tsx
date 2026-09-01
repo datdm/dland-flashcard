@@ -39,6 +39,7 @@ export default function ExamTakingPage({ params }: Props) {
   const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
   const [showStructureModal, setShowStructureModal] = useState<boolean>(false);
   const [selectedMajorTab, setSelectedMajorTab] = useState<string>("all");
+  const [isRestoredDraft, setIsRestoredDraft] = useState<boolean>(false);
 
   // Mazii Quick Lookup Modal state
   const [maziiState, setMaziiState] = useState<{
@@ -53,6 +54,7 @@ export default function ExamTakingPage({ params }: Props) {
   answersRef.current = answers;
   const timeRef = useRef(timeRemaining);
   timeRef.current = timeRemaining;
+  const isLeavingRef = useRef<boolean>(false);
 
   // Load exam and progress
   useEffect(() => {
@@ -64,9 +66,14 @@ export default function ExamTakingPage({ params }: Props) {
     setExam(loaded);
 
     const savedProgress = getExamProgress(id);
-    if (savedProgress) {
+    if (
+      savedProgress &&
+      (Object.keys(savedProgress.answers || {}).length > 0 ||
+        (savedProgress.timeRemaining > 0 && savedProgress.timeRemaining < loaded.data.meta.timeLimit))
+    ) {
       setAnswers(savedProgress.answers || {});
       setTimeRemaining(savedProgress.timeRemaining);
+      setIsRestoredDraft(true);
     } else {
       setTimeRemaining(loaded.data.meta.timeLimit);
     }
@@ -89,14 +96,44 @@ export default function ExamTakingPage({ params }: Props) {
   // Warn before leaving page if unsubmitted
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      if (!submitted) {
+      if (!submitted && !isLeavingRef.current) {
+        saveExamProgress({
+          examId: id,
+          answers: answersRef.current,
+          startedAt: Date.now(),
+          timeRemaining: timeRef.current,
+        });
         e.preventDefault();
         e.returnValue = "";
       }
     };
     window.addEventListener("beforeunload", handleBeforeUnload);
     return () => window.removeEventListener("beforeunload", handleBeforeUnload);
-  }, [submitted]);
+  }, [submitted, id]);
+
+  const handleSaveAndExit = useCallback(() => {
+    isLeavingRef.current = true;
+    saveExamProgress({
+      examId: id,
+      answers: answersRef.current,
+      startedAt: Date.now(),
+      timeRemaining: timeRef.current,
+    });
+    alert("✅ Đã lưu tạm bài làm thành công! Bạn có thể quay lại làm bài tiếp bất kỳ lúc nào.");
+    router.push("/exam");
+  }, [id, router]);
+
+  const handleResetProgress = useCallback(() => {
+    if (!exam) return;
+    if (confirm("Bạn có chắc chắn muốn làm lại từ đầu? Mọi câu trả lời đã lưu tạm sẽ bị xóa.")) {
+      clearExamProgress(id);
+      setAnswers({});
+      answersRef.current = {};
+      setTimeRemaining(exam.data.meta.timeLimit);
+      timeRef.current = exam.data.meta.timeLimit;
+      setIsRestoredDraft(false);
+    }
+  }, [exam, id]);
 
   // Track currently visible question on scroll
   useEffect(() => {
@@ -126,9 +163,17 @@ export default function ExamTakingPage({ params }: Props) {
   const handleAnswerChange = useCallback((qid: number, selected: number[]) => {
     setAnswers((prev) => {
       const next = { ...prev, [qid]: selected };
+      answersRef.current = next;
+      // Auto-save immediately on answer change
+      saveExamProgress({
+        examId: id,
+        answers: next,
+        startedAt: Date.now(),
+        timeRemaining: timeRef.current,
+      });
       return next;
     });
-  }, []);
+  }, [id]);
 
   const navigateToQuestion = (qid: number) => {
     setIsDrawerOpen(false);
@@ -361,6 +406,16 @@ export default function ExamTakingPage({ params }: Props) {
 
               <button
                 type="button"
+                onClick={handleSaveAndExit}
+                className="px-3 sm:px-4 py-2 rounded-2xl bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-xs shadow-md shadow-amber-200 transition-all flex items-center gap-1.5 cursor-pointer active:scale-98"
+                title="Lưu tạm tiến độ bài làm và thoát ra ngoài"
+              >
+                <span>💾</span>
+                <span className="hidden sm:inline">Lưu & Tạm dừng</span>
+              </button>
+
+              <button
+                type="button"
                 onClick={() => setShowConfirmModal(true)}
                 className="px-3 sm:px-4 py-2 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs shadow-md shadow-indigo-200 transition-all flex items-center gap-1.5 cursor-pointer active:scale-98"
               >
@@ -412,6 +467,42 @@ export default function ExamTakingPage({ params }: Props) {
             })}
           </div>
         </header>
+
+        {/* Restored Draft Banner */}
+        {isRestoredDraft && (
+          <div className="max-w-[1600px] w-full mx-auto px-3.5 sm:px-6 lg:px-8 pt-4">
+            <div className="bg-amber-50 border border-amber-200/80 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs shadow-xs">
+              <div className="flex items-center gap-2.5">
+                <span className="text-xl">✨</span>
+                <div>
+                  <span className="text-amber-900 font-extrabold block sm:inline">
+                    Đã tự động khôi phục bài làm dang dở của bạn!
+                  </span>{" "}
+                  <span className="text-amber-700">
+                    (Đã làm <strong>{answeredCount}/{totalCount}</strong> câu • Thời gian còn lại: <strong>{Math.floor(timeRemaining / 60)} phút {timeRemaining % 60} giây</strong>)
+                  </span>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 shrink-0 self-end sm:self-auto">
+                <button
+                  type="button"
+                  onClick={handleResetProgress}
+                  className="px-3 py-1.5 bg-white hover:bg-amber-100/70 text-amber-900 border border-amber-300 font-bold text-xs rounded-xl transition-all cursor-pointer shadow-3xs"
+                >
+                  🔄 Làm lại từ đầu
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setIsRestoredDraft(false)}
+                  className="text-amber-600 hover:text-amber-800 p-1.5 text-xs font-bold"
+                  title="Đóng thông báo"
+                >
+                  ✕
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Main Content Layout */}
         <div className="flex-1 max-w-[1600px] w-full mx-auto p-3.5 sm:p-6 lg:p-8 flex gap-5 lg:gap-7 items-start">
