@@ -50,7 +50,7 @@ export default function ExamPassageCard({
             </div>
 
             <div className="max-h-[45vh] sm:max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar">
-              <p className="whitespace-pre-wrap text-xs sm:text-sm leading-loose text-gray-800 font-medium tracking-wide select-text">
+              <p className="whitespace-pre-wrap text-sm sm:text-base leading-loose text-gray-900 font-medium tracking-wide select-text">
                 {passage.passageText}
               </p>
             </div>

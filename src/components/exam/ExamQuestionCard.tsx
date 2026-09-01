@@ -67,7 +67,7 @@ export default function ExamQuestionCard({
       {/* Question Title */}
       <div className="flex items-start gap-3 mb-4">
         <span
-          className={`px-3 py-1 rounded-xl text-xs font-black shrink-0 tracking-wide ${
+          className={`px-3 py-1 rounded-xl text-xs sm:text-sm font-black shrink-0 tracking-wide ${
             showResult
               ? isCorrect
                 ? "bg-emerald-600 text-white"
@@ -82,7 +82,7 @@ export default function ExamQuestionCard({
 
         <div className="flex-1">
           <p
-            className="text-sm sm:text-base font-bold text-gray-900 leading-relaxed tracking-wide select-text"
+            className="text-base sm:text-lg font-bold text-gray-900 leading-relaxed tracking-wide select-text"
             dangerouslySetInnerHTML={{
               __html: question.question
                 // Strip redundant leading numbering (e.g. "1. ", "52. ") since we already have "Câu X" badge
@@ -95,7 +95,7 @@ export default function ExamQuestionCard({
                 // Highlight star in Mondai 8
                 .replace(
                   /★/g,
-                  '<span class="text-amber-500 font-extrabold text-base px-0.5">★</span>'
+                  '<span class="text-amber-500 font-extrabold text-lg px-0.5">★</span>'
                 ),
             }}
           />
@@ -103,7 +103,7 @@ export default function ExamQuestionCard({
       </div>
 
       {/* Options List */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mb-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
         {question.options.map((opt, idx) => {
           const isSelected = selected.includes(idx);
           const isRightAnswer = showResult && question.answers.includes(idx);
@@ -129,22 +129,22 @@ export default function ExamQuestionCard({
               type="button"
               onClick={() => handleSelect(idx)}
               disabled={showResult}
-              className={`w-full text-left p-3.5 rounded-2xl border transition-all flex items-start gap-2.5 cursor-pointer text-xs leading-relaxed active:scale-99 ${optionStyle}`}
+              className={`w-full text-left p-3.5 sm:p-4 rounded-2xl border transition-all flex items-start gap-3 cursor-pointer text-sm sm:text-base leading-relaxed active:scale-99 ${optionStyle}`}
             >
               <span
-                className={`w-5 h-5 rounded-lg flex items-center justify-center font-bold text-xs shrink-0 ${
+                className={`w-6 h-6 rounded-lg flex items-center justify-center font-bold text-xs sm:text-sm shrink-0 ${
                   isSelected && !showResult
                     ? "bg-white/20 text-white"
                     : isRightAnswer
                     ? "bg-emerald-600 text-white"
-                    : "bg-gray-200/70 text-gray-700"
+                    : "bg-gray-200/80 text-gray-700"
                 }`}
               >
                 {OPTION_PREFIXES[idx] || idx + 1}
               </span>
-              <span className="flex-1 mt-0.5 select-text">{opt}</span>
-              {showResult && isRightAnswer && <span className="text-sm shrink-0">✅</span>}
-              {showResult && isWrongSelection && <span className="text-sm shrink-0">❌</span>}
+              <span className="flex-1 mt-0.5 select-text font-medium text-sm sm:text-base">{opt}</span>
+              {showResult && isRightAnswer && <span className="text-base shrink-0">✅</span>}
+              {showResult && isWrongSelection && <span className="text-base shrink-0">❌</span>}
             </button>
           );
         })}
@@ -152,12 +152,12 @@ export default function ExamQuestionCard({
 
       {/* Explanation in Review mode */}
       {showResult && question.explanation && (
-        <div className="mt-3 p-3.5 bg-amber-50/80 border border-amber-200/80 rounded-2xl text-xs text-amber-950 leading-relaxed">
-          <div className="flex items-center gap-1.5 font-black text-amber-800 mb-1">
+        <div className="mt-3 p-4 bg-amber-50/90 border border-amber-200/90 rounded-2xl text-xs sm:text-sm text-amber-950 leading-relaxed">
+          <div className="flex items-center gap-1.5 font-black text-amber-900 mb-1.5">
             <span>💡</span>
             <span>Giải thích chi tiết (解説):</span>
           </div>
-          <p className="select-text whitespace-pre-wrap">{question.explanation}</p>
+          <p className="select-text whitespace-pre-wrap leading-relaxed">{question.explanation}</p>
         </div>
       )}
     </div>
