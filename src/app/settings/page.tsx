@@ -11,6 +11,7 @@ import { useLanguageSetting } from "@/hooks/useLanguageSetting";
 import { useFlashCardSettings } from "@/hooks/useFlashCardSettings";
 import { useNavMenuSettings } from "@/hooks/useNavMenuSettings";
 import { getCurriculumRepository } from "@/lib/repositories";
+import { useAuth } from "@/context/AuthContext";
 
 function CurriculumDisplaySettings() {
   const { settings, saveSettings } = useFlashCardSettings();
@@ -335,8 +336,7 @@ function ResetHistorySettingsPanel() {
 }
 
 export default function SettingsPage() {
-  const isAuthenticated = syncService.checkAuthStatus();
-  const user = syncService.getUser();
+  const { user, isAuthenticated } = useAuth();
   const [showPasswordDialog, setShowPasswordDialog] = useState(false);
 
   const {
@@ -559,13 +559,15 @@ export default function SettingsPage() {
           </div>
         </div>
 
-        {/* Export/Import Section */}
-        <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-2xs">
-          <ExportImportPanel />
-        </div>
+        {/* Export/Import Section - Admin only */}
+        {user?.isAdmin && (
+          <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-2xs">
+            <ExportImportPanel />
+          </div>
+        )}
 
-        {/* Backup History Section */}
-        {isAuthenticated && (
+        {/* Backup History Section - Admin only */}
+        {user?.isAdmin && (
           <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-2xs">
             <BackupHistoryPanel />
           </div>

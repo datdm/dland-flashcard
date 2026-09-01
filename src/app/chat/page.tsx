@@ -224,53 +224,55 @@ export default function ChatPage() {
 
   return (
     <AuthGuard featureName="Gia Sư AI 24/7" description="Đăng nhập để luyện giao tiếp, giải thích ngữ pháp, phân tích từ vựng và lưu hội thoại cùng Gia sư AI.">
-      <div className="w-full max-w-[1600px] mx-auto h-[calc(100vh-2.5rem)] md:h-[calc(100vh-2.5rem)] -mt-2 -mb-20 md:-mb-6 flex flex-col px-3.5 sm:px-6 lg:px-8">
-        {/* Header */}
-      <div className={`rounded-t-3xl p-4 shadow-xs z-10 flex items-center justify-between gap-3 text-white transition-all duration-300 bg-gradient-to-r ${
-        activeLanguage.code === "en"
-          ? "from-indigo-900 via-purple-900 to-blue-900"
-          : activeLanguage.code === "de"
-          ? "from-amber-950 via-red-950 to-stone-900"
-          : "from-teal-800 via-indigo-900 to-purple-800"
-      }`}>
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-white text-xl shadow-sm">
-            🤖
-          </div>
-          <div>
-            <span className="px-2.5 py-0.5 bg-white/20 backdrop-blur-md rounded-full text-[9px] font-bold tracking-widest uppercase mb-0.5 inline-block">
-              {activeLanguage.name} ({activeLanguage.code.toUpperCase()})
-            </span>
-            <h1 className="text-sm font-bold">{headerTitle}</h1>
-            <p className="text-[10px] text-indigo-100">Được cung cấp bởi Google Gemini</p>
+      <div className="w-full max-w-[1600px] mx-auto px-3.5 sm:px-6 lg:px-8 py-4 sm:py-6 min-h-screen pb-28 space-y-6">
+        {/* Header Banner */}
+        <div className={`rounded-2xl sm:rounded-3xl p-5 sm:p-8 text-white shadow-xl mb-6 transition-all duration-300 bg-gradient-to-r ${
+          activeLanguage.code === "en"
+            ? "from-indigo-900 via-purple-900 to-blue-900"
+            : activeLanguage.code === "de"
+            ? "from-amber-950 via-red-950 to-stone-900"
+            : "from-teal-800 via-indigo-900 to-purple-800"
+        }`}>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-bold tracking-widest uppercase">
+                {activeLanguage.name} ({activeLanguage.code.toUpperCase()})
+              </span>
+              <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight mt-2">{headerTitle}</h1>
+              <p className="text-xs sm:text-sm text-indigo-100 mt-2 leading-relaxed">
+                Luyện giao tiếp, phân tích Hán tự/từ vựng, giải thích ngữ pháp 24/7 cùng Google Gemini AI
+              </p>
+            </div>
+
+            {/* Gemini Live Voice Toggle & Live Page Link */}
+            <div className="flex items-center gap-2.5 flex-wrap self-start sm:self-auto shrink-0">
+              <Link
+                href="/chat/live"
+                className="px-4 py-3 rounded-2xl bg-white text-indigo-950 font-extrabold text-xs shadow-lg hover:bg-gray-100 transition-all flex items-center gap-1.5 cursor-pointer active:scale-98"
+                title="Đàm thoại hai chiều thời gian thực bằng giọng nói"
+              >
+                <span>🎙️</span>
+                <span>Gemini Live Voice</span>
+              </Link>
+              <button
+                onClick={() => setAutoSpeak(!autoSpeak)}
+                className={`px-4 py-3 rounded-2xl font-bold text-xs border transition-all flex items-center gap-1.5 cursor-pointer ${
+                  autoSpeak
+                    ? "bg-white/20 border-white/40 text-white shadow-sm font-extrabold"
+                    : "bg-white/10 border-white/20 text-white/70 hover:bg-white/20"
+                }`}
+                title="Tự động phát âm thanh phản hồi từ AI"
+              >
+                <span>{autoSpeak ? "🔊 Tự phát âm: Bật" : "🔇 Tự phát âm: Tắt"}</span>
+              </button>
+            </div>
           </div>
         </div>
 
-        {/* Gemini Live Voice Toggle & Live Page Link */}
-        <div className="flex items-center gap-2">
-          <Link
-            href="/chat/live"
-            className="text-xs font-bold bg-white text-indigo-950 hover:bg-gray-100 transition-all px-3 py-1.5 rounded-full shadow-sm flex items-center gap-1 cursor-pointer"
-            title="Đàm thoại hai chiều thời gian thực bằng giọng nói"
-          >
-            🎙️ Gemini Live
-          </Link>
-          <button
-            onClick={() => setAutoSpeak(!autoSpeak)}
-            className={`text-xs font-bold transition-all flex items-center gap-1.5 px-3 py-1.5 rounded-full border cursor-pointer ${
-              autoSpeak
-                ? "bg-white/20 border-white/30 text-white font-extrabold"
-                : "bg-white/5 border-white/10 text-white/60 hover:bg-white/15"
-            }`}
-            title="Tự động phát âm thanh phản hồi từ AI"
-          >
-            <span>{autoSpeak ? "🔊 Auto: Bật" : "🔇 Auto: Tắt"}</span>
-          </button>
-        </div>
-      </div>
-
-      {/* Chat Area */}
-      <div className="flex-1 overflow-y-auto bg-gray-50/50 p-4 space-y-6">
+        {/* Chat Container Box */}
+        <div className="bg-white rounded-3xl shadow-xs border border-gray-100 overflow-hidden flex flex-col h-[calc(100vh-20rem)] min-h-[520px]">
+          {/* Chat Area */}
+          <div className="flex-1 overflow-y-auto bg-gray-50/50 p-4 sm:p-6 space-y-6">
         {messages.map((msg, idx) => (
           <div key={idx} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
             <div
@@ -368,7 +370,8 @@ export default function ChatPage() {
           >
             ➤
           </button>
-        </form>
+          </form>
+        </div>
       </div>
     </div>
   </AuthGuard>

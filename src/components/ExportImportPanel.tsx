@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { exportDataByScope, importScopedData, ImportResult } from "@/lib/storage";
 import * as syncService from "@/lib/syncService";
+import { useAuth } from "@/context/AuthContext";
 
 interface ExportImportPanelProps {
   onImportSuccess?: () => void;
@@ -20,6 +21,7 @@ const SCOPE_OPTIONS: { id: ExportScope; name: string; icon: string; desc: string
 ];
 
 export default function ExportImportPanel({ onImportSuccess }: ExportImportPanelProps) {
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState<"scope" | "full_db">("scope");
   const [selectedScope, setSelectedScope] = useState<ExportScope>("all");
   const [importMode, setImportMode] = useState<"merge" | "replace">("merge");
@@ -27,6 +29,10 @@ export default function ExportImportPanel({ onImportSuccess }: ExportImportPanel
   const [importResult, setImportResult] = useState<ImportResult | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [fullDbMsg, setFullDbMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
+
+  if (!user?.isAdmin) {
+    return null;
+  }
 
   const handleExportScope = async () => {
     if (syncService.checkAuthStatus()) {

@@ -3,14 +3,20 @@
 import { useState, useEffect } from "react";
 import * as syncService from "@/lib/syncService";
 import type { BackupHistoryItem } from "@/lib/syncService";
+import { useAuth } from "@/context/AuthContext";
 
 export default function BackupHistoryPanel() {
+  const { user } = useAuth();
   const [backups, setBackups] = useState<BackupHistoryItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [isCreatingBackup, setIsCreatingBackup] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [restoring, setRestoring] = useState<string | null>(null);
   const [deletingAll, setDeletingAll] = useState(false);
+
+  if (!user?.isAdmin) {
+    return null;
+  }
 
   const loadBackups = async () => {
     if (!syncService.checkAuthStatus()) {

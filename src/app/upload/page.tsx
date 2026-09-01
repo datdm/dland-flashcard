@@ -4,8 +4,31 @@ import Link from "next/link";
 import UploadPanel from "@/components/UploadPanel";
 import ExportImportPanel from "@/components/ExportImportPanel";
 import BackupHistoryPanel from "@/components/BackupHistoryPanel";
+import { useAuth } from "@/context/AuthContext";
 
 export default function UploadPage() {
+  const { user } = useAuth();
+
+  if (!user?.isAdmin) {
+    return (
+      <div className="w-full max-w-[1600px] mx-auto px-3.5 sm:px-6 lg:px-8 py-16 text-center">
+        <div className="bg-white border border-gray-100 shadow-xl rounded-3xl p-8 max-w-md mx-auto">
+          <span className="text-5xl">🔒</span>
+          <h2 className="text-lg font-bold text-gray-900 mt-4">Chỉ Dành Cho Quản Trị Viên</h2>
+          <p className="text-xs text-gray-500 mt-2 leading-relaxed">
+            Các tính năng Tải lên (Upload), Nhập/Xuất (Import/Export) và Sao lưu Snapshot dữ liệu yêu cầu quyền Quản Trị Viên (Admin).
+          </p>
+          <Link
+            href="/"
+            className="inline-block mt-5 px-6 py-2.5 bg-indigo-600 text-white font-bold text-xs rounded-xl hover:bg-indigo-700 transition-all shadow-md shadow-indigo-200"
+          >
+            ← Quay về Trang Chủ
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full max-w-[1600px] mx-auto px-3.5 sm:px-6 lg:px-8 py-4 sm:py-6 min-h-screen pb-28 space-y-6">
       <div className="flex items-center justify-between">
