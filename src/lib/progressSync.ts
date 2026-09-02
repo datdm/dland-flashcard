@@ -1,5 +1,5 @@
 // Sync curriculum progress between localStorage and server database
-import { getAuthToken } from "./auth";
+import { getAuthToken } from "./syncService";
 
 const SYNC_QUEUE_KEY = "flashcash-progress-sync-queue";
 const LAST_SYNC_KEY = "flashcash-last-progress-sync";

@@ -148,6 +148,35 @@ export default function ExportImportPanel({ onImportSuccess }: ExportImportPanel
     }
   };
 
+  const handleMigrateLocalStorage = async () => {
+    if (!syncService.checkAuthStatus()) {
+      alert("Vui lòng đăng nhập tài khoản để chuyển dữ liệu lên Database!");
+      return;
+    }
+
+    if (!confirm("Hệ thống sẽ quét toàn bộ dữ liệu đang lưu trên trình duyệt (LocalStorage) và đẩy lên Database máy chủ PostgreSQL. Bạn có muốn tiếp tục?")) {
+      return;
+    }
+
+    setIsProcessing(true);
+    setFullDbMsg(null);
+    try {
+      const res = await syncService.migrateAllLocalStorageToDatabase();
+      if (!res.success) {
+        throw new Error(res.error || "Lỗi khi chuyển dữ liệu lên Database");
+      }
+      setFullDbMsg({
+        type: "success",
+        text: res.message || `Đã chuyển toàn bộ ${res.totalKeys} nhóm dữ liệu LocalStorage lên Database thành công!`,
+      });
+      onImportSuccess?.();
+    } catch (err: any) {
+      setFullDbMsg({ type: "error", text: err?.message || "Lỗi khi chuyển dữ liệu" });
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
   const handleImportFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     setImportError(null);
     setImportResult(null);
@@ -346,17 +375,28 @@ export default function ExportImportPanel({ onImportSuccess }: ExportImportPanel
             <div className="flex items-center gap-2 flex-wrap">
               <button
                 type="button"
+                onClick={handleMigrateLocalStorage}
+                disabled={isProcessing}
+                className="flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-xs font-black shadow-md shadow-blue-200 transition-all cursor-pointer disabled:opacity-50"
+                title="Quét và tải toàn bộ mọi dữ liệu trong LocalStorage lên máy chủ PostgreSQL"
+              >
+                <span>🚀</span>
+                <span>Chuyển LocalStorage Lên Database</span>
+              </button>
+
+              <button
+                type="button"
                 onClick={handleExportFullDatabase}
                 disabled={isProcessing}
-                className="flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-gradient-to-r from-indigo-700 to-purple-700 hover:from-indigo-800 hover:to-purple-800 text-white text-xs font-extrabold shadow-md shadow-indigo-200 transition-all cursor-pointer disabled:opacity-50"
+                className="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-gradient-to-r from-indigo-700 to-purple-700 hover:from-indigo-800 hover:to-purple-800 text-white text-xs font-extrabold shadow-md shadow-indigo-200 transition-all cursor-pointer disabled:opacity-50"
               >
                 <span>📥</span>
-                <span>Xuất File Toàn Bộ Database (.json)</span>
+                <span>Xuất File Database (.json)</span>
               </button>
 
               <label className="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl border border-indigo-200 bg-white text-indigo-700 hover:bg-indigo-50 text-xs font-extrabold cursor-pointer transition-all shadow-3xs">
                 <span>📤</span>
-                <span>Nạp & Phục Hồi Full Database</span>
+                <span>Nạp Full Database</span>
                 <input
                   type="file"
                   accept=".json,application/json"
@@ -371,7 +411,7 @@ export default function ExportImportPanel({ onImportSuccess }: ExportImportPanel
               type="button"
               onClick={handleFullSyncNow}
               disabled={isProcessing}
-              className="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-extrabold transition-all shadow-md shadow-emerald-200 cursor-pointer disabled:opacity-50"
+              className="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-extrabold transition-all shadow-md shadow-emerald-200 cursor-pointer disabled:opacity-50 shrink-0"
             >
               <span>🔄</span>
               <span>Đồng Bộ 2 Chiều Cloud</span>

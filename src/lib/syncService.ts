@@ -275,13 +275,24 @@ export async function uploadToServer(skipBackup: boolean = false): Promise<{ suc
   if (!token) return { success: false, error: 'Not authenticated' };
 
   try {
-    // Collect all localStorage data
+    // Collect all localStorage data (defined keys + all dynamic app keys)
     const data: Record<string, any> = {};
-    const keys = Object.values(StorageKeys);
-    
-    for (const key of keys) {
+    const keySet = new Set<string>(Object.values(StorageKeys));
+
+    if (typeof window !== 'undefined') {
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (k && (k.startsWith('flashcash-') || k.startsWith('dland_') || k.startsWith('dland'))) {
+          if (k !== AUTH_TOKEN_KEY && k !== USER_KEY && k !== LAST_SYNC_KEY) {
+            keySet.add(k);
+          }
+        }
+      }
+    }
+
+    for (const key of keySet) {
       const value = localStorage.getItem(key);
-      if (value) {
+      if (value !== null) {
         try {
           data[key] = JSON.parse(value);
         } catch {
@@ -301,17 +312,86 @@ export async function uploadToServer(skipBackup: boolean = false): Promise<{ suc
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
+      const errorData = await response.json().catch(() => ({}));
       return { success: false, error: errorData.error || 'Upload failed' };
     }
 
     const result = await response.json();
-    localStorage.setItem(LAST_SYNC_KEY, result.timestamp);
+    localStorage.setItem(LAST_SYNC_KEY, result.timestamp || new Date().toISOString());
 
     return { success: true };
   } catch (error) {
     console.error('Upload error:', error);
     return { success: false, error: 'Network error' };
+  }
+}
+
+// Migrate/Push all localStorage data to database immediately
+export async function migrateAllLocalStorageToDatabase(): Promise<{
+  success: boolean;
+  totalKeys: number;
+  message?: string;
+  error?: string;
+}> {
+  const token = getAuthToken();
+  if (!token) return { success: false, totalKeys: 0, error: 'Bạn cần đăng nhập để chuyển dữ liệu lên database' };
+
+  try {
+    const data: Record<string, any> = {};
+    const keySet = new Set<string>(Object.values(StorageKeys));
+
+    if (typeof window !== 'undefined') {
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (k && (k.startsWith('flashcash-') || k.startsWith('dland_') || k.startsWith('dland'))) {
+          if (k !== AUTH_TOKEN_KEY && k !== USER_KEY && k !== LAST_SYNC_KEY) {
+            keySet.add(k);
+          }
+        }
+      }
+    }
+
+    for (const key of keySet) {
+      const value = localStorage.getItem(key);
+      if (value !== null) {
+        try {
+          data[key] = JSON.parse(value);
+        } catch {
+          data[key] = value;
+        }
+      }
+    }
+
+    const totalKeys = Object.keys(data).length;
+    if (totalKeys === 0) {
+      return { success: true, totalKeys: 0, message: 'LocalStorage hiện tại không có dữ liệu để đồng bộ' };
+    }
+
+    const response = await trackedFetch(`${API_URL}/api/sync/upload`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify({ data }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      return { success: false, totalKeys, error: errorData.error || 'Lỗi khi đẩy dữ liệu lên database' };
+    }
+
+    const result = await response.json();
+    localStorage.setItem(LAST_SYNC_KEY, result.timestamp || new Date().toISOString());
+
+    return {
+      success: true,
+      totalKeys,
+      message: `Đã chuyển toàn bộ ${totalKeys} nhóm dữ liệu từ LocalStorage lên Database thành công!`,
+    };
+  } catch (error: any) {
+    console.error('Migrate all localStorage to database error:', error);
+    return { success: false, totalKeys: 0, error: error?.message || 'Lỗi kết nối mạng khi tải lên database' };
   }
 }
 

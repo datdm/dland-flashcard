@@ -100,7 +100,12 @@ router.post('/upload', authenticate, async (req: AuthRequest, res: Response) => 
 
     // Now upload new data
     for (const [key, value] of Object.entries(data)) {
-      if (!validKeys.includes(key)) {
+      const isValid =
+        validKeys.includes(key) ||
+        key.startsWith('flashcash-') ||
+        key.startsWith('dland_') ||
+        key.startsWith('dland');
+      if (!isValid) {
         continue;
       }
 
