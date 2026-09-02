@@ -95,7 +95,7 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
         prompt = `Bạn là chuyên gia dịch thuật ${targetLangName}.
 Hãy tạo đúng 4 câu bài tập Luyện dịch 2 chiều cấp độ ${targetLevel} thuộc chủ đề "${topic}".
 Bối cảnh cụ thể của bài luyện hôm nay là: "${chosenContext}". Hãy điều chỉnh bối cảnh phù hợp với các quốc gia nói ${targetLangName}.
-Yêu cầu: Phải có đúng 2 câu dịch từ ${targetLangName} sang Việt (direction là ja-vi) và đúng 2 câu dịch từ Việt sang ${targetLangName} (direction là vi-ja) để chia đều phản xạ dịch.
+Yêu cầu: Phải có đúng 2 câu dịch từ ${targetLangName} sang Việt (direction là ja-vi) và đúng 2 câu dịch từ Việt sang ${targetLangName} (direction là vi-ja) để chia đều phản xạ dịch 2 chiều.
 (Mã ngẫu nhiên cho buổi học này để tạo nội dung khác biệt: ${randomSeed} - Hãy tạo câu độc đáo, khác biệt so với các lần trước).
 Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc trong markdown block, không có bất kỳ chữ nào nằm ngoài cặp ngoặc nhọn JSON, phải là JSON hợp lệ):
 {
@@ -158,7 +158,7 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
         prompt = `Bạn là chuyên gia ôn luyện đọc hiểu ${targetLangName} trình độ ${targetLevel}.
 Hãy tạo 1 bài đọc hiểu trình độ ${targetLevel} thuộc chủ đề "${topic}".
 Bối cảnh cụ thể của bài học hôm nay là: "${chosenContext}". Hãy điều chỉnh bối cảnh phù hợp với các quốc gia nói ${targetLangName}.
-Bài đọc hiểu phải bao gồm một đoạn văn ${targetLangName} (khoảng 6-8 câu dài), CÂU HỎI BẰNG ${targetLangName.toUpperCase()}, 4 ĐÁP ÁN LỰA CHỌN BẰNG ${targetLangName.toUpperCase()}, bản dịch tiếng Việt của đoạn văn, và danh sách các từ vựng chính xuất hiện trong bài đọc.
+Bài đọc hiểu phải bao gồm một đoạn văn ${targetLangName} (khoảng 6-8 câu dài), CÂU HỎI BẰNG ${targetLangName.toUpperCase()}, 4 ĐÁP ÁN LỰA CHỌN BẰNG ${targetLangName}, bản dịch tiếng Việt trọn vẹn, giải thích chi tiết và danh sách từ vựng quan trọng.
 (Mã ngẫu nhiên để tạo bài đọc mới lạ: ${randomSeed} - Hãy tạo bài đọc độc đáo, khác biệt so với các lần trước).
 Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc trong markdown block, không có bất kỳ chữ nào ngoài cặp ngoặc nhọn JSON, phải là JSON hợp lệ):
 {
@@ -209,7 +209,7 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
         prompt = `Bạn là chuyên gia dịch thuật tiếng Nhật.
 Hãy tạo đúng 4 câu bài tập Luyện dịch 2 chiều cấp độ ${level} thuộc chủ đề "${topic}".
 Bối cảnh cụ thể của bài luyện hôm nay là: "${chosenContext}".
-Yêu cầu: Phải có đúng 2 câu dịch từ Nhật sang Việt (direction là ja-vi) và đúng 2 câu dịch từ Việt sang Nhật (direction là vi-ja) để chia đều phản xạ dịch.
+Yêu cầu: Phải có đúng 2 câu dịch từ Nhật sang Việt (direction là ja-vi) và đúng 2 câu dịch từ Việt sang Nhật (direction là vi-ja) để chia đều phản xạ dịch 2 chiều.
 (Mã ngẫu nhiên cho buổi học này để tạo nội dung khác biệt: ${randomSeed} - Hãy tạo câu độc đáo, khác biệt so với các lần trước).
 Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc trong markdown block, không có bất kỳ chữ nào nằm ngoài cặp ngoặc nhọn JSON, phải là JSON hợp lệ):
 {
@@ -256,7 +256,7 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
       "title_vietnamese": "Dịch nghĩa tiêu đề Slide 2 sang tiếng Việt",
       "bullets": [
         "Ý chính thứ nhất bằng tiếng Nhật của Slide 2",
-        "Ý chính thứ hai bằng tiếng Nhật của Slide 2",
+        "Ý ch��nh thứ hai bằng tiếng Nhật của Slide 2",
         "Ý chính thứ ba bằng tiếng Nhật của Slide 2"
       ],
       "bullets_vietnamese": [
@@ -269,10 +269,10 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
 }`;
       } else if (type === "kaiwa") {
         prompt = `Bạn là chuyên gia giảng dạy giao tiếp Kaiwa tiếng Nhật trình độ JLPT N2 tự nhiên và chuẩn mực.
-Hãy tạo 1 đoạn hội thoại Kaiwa trình độ N2 gồm ĐÚNG 10 LƯỢT LỜI HỘI THOẠI (10 câu) giữa 2 nhân vật (ví dụ: 田中 và 山田, hoặc tiền bối - hậu bối, sếp - nhân viên, đối tác, bạn bè) theo chủ đề "${topic}".
+Hãy tạo 1 đoạn hội thoại Kaiwa trình độ N2 gồm ĐÚNG 10 LƯỢT LỜI HỘI THOẠI (10 câu) giữa 2 nhân vật (ví dụ: 田中 và 山田, hoặc tiền bối - hậu bối ở công sở, hoặc bạn - bạn, v.v.).
 Bối cảnh cụ thể của đoạn hội thoại là: "${chosenContext}".
 Sử dụng các cấu trúc ngữ pháp N2, từ vựng phong phú, kính ngữ (Keigo) hoặc cách nói tự nhiên nơi công sở/đời sống của người Nhật.
-Sau 10 câu hội thoại, hãy tạo ĐÚNG 2 CÂU HỎI TRẮC NGHIỆM ĐỌC HIỂU/HỎI ĐÁP về nội dung mà 2 nhân vật vừa trao đổi (mỗi câu hỏi có 4 đáp án lựa chọn và giải thích chi tiết đáp án đúng bằng tiếng Việt).
+Sau 10 câu hội thoại, hãy tạo ĐÚNG 2 CÂU HỎI TRẮC NGHIỆM ĐỌC HIỂU/HỎI ĐÁP về nội dung mà 2 nhân vật vừa trao đổi (mỗi câu hỏi có 4 đáp án lựa chọn, 1 đáp án đúng, 3 đáp án sai).
 (Mã ngẫu nhiên: ${randomSeed} - Hãy tạo tình huống và đối thoại độc đáo, khác biệt hoàn toàn).
 Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc trong markdown block, không có bất kỳ chữ nào ngoài cặp ngoặc nhọn JSON, phải là JSON hợp lệ):
 {
@@ -403,13 +403,13 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
         prompt = `Bạn là chuyên gia ôn luyện đọc hiểu JLPT N2.
 Hãy tạo 1 bài đọc hiểu trình độ N2 (đáp ứng đúng tiêu chuẩn kỳ thi JLPT N2) thuộc chủ đề "${topic}".
 Bối cảnh cụ thể của bài học hôm nay là: "${chosenContext}".
-Bài đọc hiểu phải bao gồm một đoạn văn tiếng Nhật (khoảng 6-8 câu dài), CÂU HỎI BẰNG TIẾNG NHẬT, 4 ĐÁP ÁN LỰA CHỌN BẰNG TIẾNG NHẬT, bản dịch tiếng Việt của đoạn văn, và danh sách các từ vựng chính xuất hiện trong bài đọc.
+Bài đọc hiểu phải bao gồm một đoạn văn tiếng Nhật (khoảng 6-8 câu dài), CÂU HỎI BẰNG TIẾNG NHẬT, 4 ĐÁP ÁN LỰA CHỌN BẰNG TIẾNG NHẬT, bản dịch tiếng Việt trọn vẹn, giải thích chi tiết và danh sách từ vựng quan trọng.
 (Mã ngẫu nhiên để tạo bài đọc mới lạ: ${randomSeed} - Hãy tạo bài đọc độc đáo, khác biệt so với các lần trước).
 Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc trong markdown block, không có bất kỳ chữ nào ngoài cặp ngoặc nhọn JSON, phải là JSON hợp lệ):
 {
   "reading": {
     "passage": "đoạn văn tiếng Nhật chuẩn N2 không có thẻ HTML",
-    "passage_ruby": "đoạn văn tiếng Nhật N2 bọc thẻ <ruby> và <rt> hiển thị Furigana trên đầu mọi chữ Hán tự để người dùng dễ đọc, ví dụ: <ruby>東京<rt>とうきょう</rt></ruby>にある...",
+    "passage_ruby": "đoạn văn tiếng Nhật N2 bọc thẻ <ruby> và <rt> hiển thị Furigana trên đầu mọi chữ Hán tự để người dùng dễ đọc, ví dụ: <ruby>東京<rt>とうきょう</rt></ruby>...",
     "passage_translation": "Bản dịch nghĩa tiếng Việt trọn vẹn và tự nhiên của đoạn văn trên",
     "question": "Câu hỏi đọc hiểu hoàn toàn bằng TIẾNG NHẬT (Không dùng tiếng Việt)",
     "options": [
@@ -431,7 +431,8 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
       }
     }
 
-    const candidateModels = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash"];
+    // Updated to latest 2025 Gemini models
+    const candidateModels = ["gemini-3.5-flash", "gemini-3.1-flash", "gemini-2.5-flash"];
     let text = "";
     let lastError: any = null;
 
