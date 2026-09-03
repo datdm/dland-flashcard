@@ -71,7 +71,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Use latest Gemini Flash models with fallback (updated for 2025)
-    const candidateModels = ["gemini-3.5-flash", "gemini-3.1-flash", "gemini-2.5-flash"];
+    const candidateModels = ["gemini-3.5-flash", "gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash"];
     let lastError: any = null;
 
     for (const modelName of candidateModels) {

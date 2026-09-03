@@ -88,6 +88,8 @@ export function getStructuredMajorSections(examData: ExamData): ExamMajorSection
 
     if (fallbackMajorId === "listening" || mondaiStr.includes("聴解") || mondaiStr.toLowerCase().includes("listening")) {
       majorId = "listening";
+    } else if (fallbackMajorId === "reading" || mondaiStr.includes("読解") || mondaiStr.toLowerCase().includes("reading")) {
+      majorId = "reading";
     } else if (typeof num === "number" && !isNaN(num)) {
       if (level === "N1") {
         if (num >= 1 && num <= 4) majorId = "vocab";
@@ -148,14 +150,18 @@ export function getStructuredMajorSections(examData: ExamData): ExamMajorSection
 
   // 1. Process questions
   questions.forEach((q) => {
-    // Check if question belongs to a defined section
-    let assignedSection = sections.find((s) => s.questionIds?.includes(q.id));
-    let fallbackMajor = "vocab";
+    // Check if question belongs to a defined section or has majorSection explicitly
+    let fallbackMajor = (q as any).majorSection || "vocab";
+    const assignedSection = sections.find((s) => s.questionIds?.includes(q.id));
     if (assignedSection) {
-      if (assignedSection.name.includes("文法") || (assignedSection.mondai && assignedSection.mondai.includes("7"))) {
-        fallbackMajor = "grammar";
+      if (assignedSection.name.includes("聴解") || assignedSection.name.toLowerCase().includes("listening")) {
+        fallbackMajor = "listening";
       } else if (assignedSection.name.includes("読解") || (assignedSection.mondai && assignedSection.mondai.includes("10"))) {
         fallbackMajor = "reading";
+      } else if (assignedSection.name.includes("文法") || (assignedSection.mondai && assignedSection.mondai.includes("7"))) {
+        fallbackMajor = "grammar";
+      } else if (assignedSection.name.includes("文字") || assignedSection.name.includes("語彙")) {
+        fallbackMajor = "vocab";
       }
     }
 

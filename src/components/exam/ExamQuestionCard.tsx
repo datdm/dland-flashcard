@@ -2,6 +2,7 @@
 
 import React from "react";
 import { ExamQuestion, ExamSubQuestion } from "@/types/exam";
+import AudioSeekPlayer from "@/components/AudioSeekPlayer";
 
 interface Props {
   question: ExamQuestion | ExamSubQuestion;
@@ -24,26 +25,7 @@ export default function ExamQuestionCard({
   showMondaiBadge = false,
   onOpenMazii,
 }: Props) {
-  const [isPlayingAudio, setIsPlayingAudio] = React.useState(false);
   const [showScript, setShowScript] = React.useState(false);
-
-  const handleToggleAudio = () => {
-    if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
-    if (isPlayingAudio) {
-      window.speechSynthesis.cancel();
-      setIsPlayingAudio(false);
-      return;
-    }
-    window.speechSynthesis.cancel();
-    const scriptToSpeak = (question as any).audioScript || question.question;
-    const utterance = new SpeechSynthesisUtterance(scriptToSpeak);
-    utterance.lang = "ja-JP";
-    utterance.rate = 1.0;
-    utterance.onend = () => setIsPlayingAudio(false);
-    utterance.onerror = () => setIsPlayingAudio(false);
-    setIsPlayingAudio(true);
-    window.speechSynthesis.speak(utterance);
-  };
 
   const handleSelect = (idx: number) => {
     if (showResult) return;
@@ -123,28 +105,20 @@ export default function ExamQuestionCard({
         </div>
       </div>
 
-      {/* Audio Playback for Listening questions */}
+      {/* Audio Playback for Listening questions with seek timeline */}
       {((question as any).audioScript || (question as any).majorSection === "listening") && (
-        <div className="flex items-center gap-3 mb-4 p-3 bg-amber-500/10 border border-amber-200/80 rounded-2xl flex-wrap">
-          <button
-            type="button"
-            onClick={handleToggleAudio}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-xs flex items-center gap-2 cursor-pointer ${
-              isPlayingAudio
-                ? "bg-rose-500 text-white animate-pulse"
-                : "bg-amber-600 hover:bg-amber-700 text-white"
-            }`}
-          >
-            <span>{isPlayingAudio ? "⏹ Dừng nghe" : "▶️ Nghe bài đọc (Audio)"}</span>
-          </button>
-          
+        <div className="mb-4 space-y-2">
+          <AudioSeekPlayer
+            textToSpeak={(question as any).audioScript || question.question}
+            title={(question as any).mondai ? `${(question as any).mondai} - Câu ${index}` : `Câu hỏi ${index}`}
+          />
           {showResult && (question as any).audioScript && (
             <button
               type="button"
               onClick={() => setShowScript((prev) => !prev)}
-              className="px-3 py-2 bg-white hover:bg-gray-50 border border-amber-200 text-amber-900 rounded-xl text-xs font-bold transition-colors cursor-pointer"
+              className="px-3.5 py-1.5 bg-white hover:bg-gray-50 border border-amber-200 text-amber-900 rounded-xl text-xs font-bold transition-colors cursor-pointer"
             >
-              {showScript ? "Ẩn kịch bản (Script)" : "Xem kịch bản (Script)"}
+              {showScript ? "Ẩn kịch bản (Script)" : "👁️ Xem kịch bản (Script) & Dịch nghĩa"}
             </button>
           )}
         </div>

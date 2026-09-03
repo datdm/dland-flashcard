@@ -10,6 +10,7 @@ import MaziiQuickLookupModal from "@/components/MaziiQuickLookupModal";
 import SelectionLookupTooltip from "@/components/SelectionLookupTooltip";
 import AuthGuard from "@/components/AuthGuard";
 import { autoSync } from "@/lib/syncService";
+import AudioSeekPlayer from "@/components/AudioSeekPlayer";
 import {
   getReadingMondaisForLevel as getReadingMondaiConfigs,
   getListeningMondaisForLevel as getListeningMondaiConfigs,
