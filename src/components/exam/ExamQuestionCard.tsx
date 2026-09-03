@@ -24,6 +24,27 @@ export default function ExamQuestionCard({
   showMondaiBadge = false,
   onOpenMazii,
 }: Props) {
+  const [isPlayingAudio, setIsPlayingAudio] = React.useState(false);
+  const [showScript, setShowScript] = React.useState(false);
+
+  const handleToggleAudio = () => {
+    if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
+    if (isPlayingAudio) {
+      window.speechSynthesis.cancel();
+      setIsPlayingAudio(false);
+      return;
+    }
+    window.speechSynthesis.cancel();
+    const scriptToSpeak = (question as any).audioScript || question.question;
+    const utterance = new SpeechSynthesisUtterance(scriptToSpeak);
+    utterance.lang = "ja-JP";
+    utterance.rate = 1.0;
+    utterance.onend = () => setIsPlayingAudio(false);
+    utterance.onerror = () => setIsPlayingAudio(false);
+    setIsPlayingAudio(true);
+    window.speechSynthesis.speak(utterance);
+  };
+
   const handleSelect = (idx: number) => {
     if (showResult) return;
     if (question.type === "multiple") {
@@ -101,6 +122,49 @@ export default function ExamQuestionCard({
           />
         </div>
       </div>
+
+      {/* Audio Playback for Listening questions */}
+      {((question as any).audioScript || (question as any).majorSection === "listening") && (
+        <div className="flex items-center gap-3 mb-4 p-3 bg-amber-500/10 border border-amber-200/80 rounded-2xl flex-wrap">
+          <button
+            type="button"
+            onClick={handleToggleAudio}
+            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-xs flex items-center gap-2 cursor-pointer ${
+              isPlayingAudio
+                ? "bg-rose-500 text-white animate-pulse"
+                : "bg-amber-600 hover:bg-amber-700 text-white"
+            }`}
+          >
+            <span>{isPlayingAudio ? "⏹ Dừng nghe" : "▶️ Nghe bài đọc (Audio)"}</span>
+          </button>
+          
+          {showResult && (question as any).audioScript && (
+            <button
+              type="button"
+              onClick={() => setShowScript((prev) => !prev)}
+              className="px-3 py-2 bg-white hover:bg-gray-50 border border-amber-200 text-amber-900 rounded-xl text-xs font-bold transition-colors cursor-pointer"
+            >
+              {showScript ? "Ẩn kịch bản (Script)" : "Xem kịch bản (Script)"}
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* Collapsible Listening Script */}
+      {showScript && (question as any).audioScript && (
+        <div className="mb-4 p-4 rounded-2xl bg-amber-50/70 border border-amber-200 text-xs text-amber-950 space-y-2 select-text">
+          <div className="font-extrabold text-amber-900">Kịch bản bài nghe (Script):</div>
+          <div className="whitespace-pre-wrap leading-loose font-medium text-gray-900">
+            {(question as any).audioScript}
+          </div>
+          {(question as any).vietnameseTranslation && (
+            <div className="pt-2 border-t border-amber-200 text-gray-700 italic">
+              <span className="font-bold not-italic text-amber-900">Dịch nghĩa: </span>
+              {(question as any).vietnameseTranslation}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Options List */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">

@@ -10,6 +10,11 @@ import MaziiQuickLookupModal from "@/components/MaziiQuickLookupModal";
 import SelectionLookupTooltip from "@/components/SelectionLookupTooltip";
 import AuthGuard from "@/components/AuthGuard";
 import { autoSync } from "@/lib/syncService";
+import {
+  getReadingMondaisForLevel as getReadingMondaiConfigs,
+  getListeningMondaisForLevel as getListeningMondaiConfigs,
+  JLPTMondaiInfo,
+} from "@/lib/jlptMondaiConfig";
 import { JLPT_LISTENING_QUESTIONS, JLPTListeningQuestion } from "@/data/jlptListeningPractice";
 import {
   getAllExtractedReadingPassages,
@@ -42,13 +47,78 @@ interface ReadingOption {
   isCorrect: boolean;
 }
 
-interface ReadingItem {
-  passage: string;
-  passage_ruby: string;
-  passage_translation: string;
+export interface ReadingQuestionItem {
+  id: string;
   question: string;
+  question_vietnamese?: string;
   options: ReadingOption[];
   explanation: string;
+}
+
+export interface ReadingItem {
+  mondaiNumber?: number;
+  mondaiName?: string;
+  mondaiSubtitle?: string;
+  title?: string;
+  passage?: string;
+  passage_ruby?: string;
+  passage_translation?: string;
+  passageA?: {
+    title?: string;
+    text: string;
+    text_ruby: string;
+    translation: string;
+  };
+  passageB?: {
+    title?: string;
+    text: string;
+    text_ruby: string;
+    translation: string;
+  };
+  notice?: {
+    title: string;
+    content: string;
+    content_ruby: string;
+    translation: string;
+    scenario?: string;
+  };
+  questions?: ReadingQuestionItem[];
+  question?: string;
+  options?: ReadingOption[];
+  explanation?: string;
+  vocabulary?: {
+    kanji: string;
+    hiragana: string;
+    meaning: string;
+  }[];
+}
+
+export interface GeneratedListeningQuestion {
+  id: string;
+  question: string;
+  question_vietnamese?: string;
+  options: string[];
+  correctAnswer: number;
+  explanation: string;
+}
+
+export interface GeneratedListeningItem {
+  id: string;
+  level: string;
+  mondaiNumber: number;
+  mondaiName: string;
+  mondaiSubtitle: string;
+  title: string;
+  situation: string;
+  situation_translation?: string;
+  audioScript: string;
+  audioScript_ruby?: string;
+  vietnameseTranslation: string;
+  questions?: GeneratedListeningQuestion[];
+  question?: string;
+  options?: string[];
+  correctAnswer?: number;
+  explanation?: string;
   vocabulary?: {
     kanji: string;
     hiragana: string;
@@ -240,6 +310,7 @@ export default function PracticeHubPage() {
     setIsAutoplayingKaiwa(false);
     setKaiwaPlayingIdx(null);
     setListeningPlayingId(null);
+    setIsGenListeningPlaying(false);
     if (typeof window !== "undefined" && "speechSynthesis" in window) {
       window.speechSynthesis.cancel();
     }
@@ -250,6 +321,108 @@ export default function PracticeHubPage() {
       stopAllAudio();
     };
   }, []);
+
+  // Effect to auto-select valid mondai when level changes
+  useEffect(() => {
+    if (selectedLang === "ja") {
+      const rList = getReadingMondaiConfigs(selectedLevel);
+      if (rList.length > 0 && !rList.some((m) => m.mondaiNumber === selectedReadingMondai)) {
+        setSelectedReadingMondai(rList[0].mondaiNumber);
+      }
+      const lList = getListeningMondaiConfigs(selectedLevel);
+      if (lList.length > 0 && !lList.some((m) => m.mondaiNumber === selectedListeningMondai)) {
+        setSelectedListeningMondai(lList[0].mondaiNumber);
+      }
+    }
+  }, [selectedLevel, selectedLang]);
+
+  // Audio player for AI generated listening
+  const playGeneratedListeningAudio = (item: GeneratedListeningItem) => {
+    if (typeof window === "undefined") return;
+    if (isGenListeningPlaying) {
+      window.speechSynthesis.cancel();
+      setIsGenListeningPlaying(false);
+      return;
+    }
+
+    stopAllAudio();
+    setIsGenListeningPlaying(true);
+
+    let textToSpeak = "";
+    if (item.mondaiNumber === 1 || item.mondaiNumber === 2) {
+      const qText = item.questions?.[0]?.question || item.question || "";
+      textToSpeak = `${item.situation}。\n質問：${qText}。\n${item.audioScript}。\n質問：${qText}`;
+    } else if (item.mondaiNumber === 3) {
+      const qText = item.questions?.[0]?.question || item.question || "";
+      textToSpeak = `${item.situation}。\n${item.audioScript}。\n質問：${qText}`;
+    } else if (item.mondaiNumber === 4) {
+      const opts = (item.questions?.[0]?.options || item.options || []).map((o, idx) => `${idx + 1}、${o}`).join("。\n");
+      textToSpeak = `${item.situation}。\n${item.audioScript}。\n${opts}`;
+    } else if (item.mondaiNumber === 5) {
+      const q1 = item.questions?.[0]?.question ? `質問1：${item.questions[0].question}` : "";
+      const q2 = item.questions?.[1]?.question ? `質問2：${item.questions[1].question}` : "";
+      textToSpeak = `${item.situation}。\n${item.audioScript}。\n${q1}。\n${q2}`;
+    } else {
+      textToSpeak = `${item.situation}。\n${item.audioScript}。\n質問：${item.question || ""}`;
+    }
+
+    const utterance = new SpeechSynthesisUtterance(textToSpeak);
+    utterance.lang = "ja-JP";
+    utterance.rate = playbackRate;
+    utterance.onend = () => {
+      setIsGenListeningPlaying(false);
+    };
+    utterance.onerror = () => {
+      setIsGenListeningPlaying(false);
+    };
+    window.speechSynthesis.speak(utterance);
+  };
+
+  // Check generated reading answer
+  const checkGeneratedReadingAnswer = (qItem: ReadingQuestionItem) => {
+    const selectedOptId = readingAnswers[qItem.id];
+    if (!selectedOptId) return;
+
+    setReadingChecked((prev) => ({ ...prev, [qItem.id]: true }));
+    const correctOpt = qItem.options.find((o) => o.isCorrect);
+    const isCorrect = selectedOptId === correctOpt?.id;
+    const score = isCorrect ? 100 : 0;
+
+    const chosenOpt = qItem.options.find((o) => o.id === selectedOptId);
+
+    recordPracticeHistory({
+      type: "reading",
+      typeName: `📚 Đọc hiểu JLPT ${selectedLevel} (Mondai ${readingData?.mondaiNumber || selectedReadingMondai})`,
+      topic: readingData?.title || activeTopic,
+      lang: "ja",
+      score,
+      userAnswer: chosenOpt?.text || selectedOptId,
+      correctAnswer: correctOpt?.text || "Đáp án đúng",
+      feedback: isCorrect ? "Chính xác! Bạn phân tích bài đọc rất tốt." : (qItem.explanation || "Chưa chính xác. Hãy đọc lại dẫn chứng trong bài."),
+    });
+  };
+
+  // Check generated listening answer
+  const checkGeneratedListeningAnswer = (qItem: GeneratedListeningQuestion) => {
+    const selectedIdx = genListeningAnswers[qItem.id];
+    if (selectedIdx === undefined) return;
+
+    setGenListeningChecked((prev) => ({ ...prev, [qItem.id]: true }));
+    const isCorrect = selectedIdx === qItem.correctAnswer;
+    const score = isCorrect ? 100 : 0;
+
+    recordPracticeHistory({
+      type: "shadowing",
+      typeName: `🎧 Nghe hiểu JLPT ${selectedLevel} (Mondai ${generatedListeningData?.mondaiNumber || selectedListeningMondai})`,
+      topic: generatedListeningData?.title || activeTopic,
+      lang: "ja",
+      score,
+      userAnswer: qItem.options[selectedIdx] || `Lựa chọn ${selectedIdx + 1}`,
+      correctAnswer: qItem.options[qItem.correctAnswer] || `Lựa chọn ${qItem.correctAnswer + 1}`,
+      feedback: isCorrect ? "Chính xác! Bạn nghe bắt thông tin rất chuẩn." : (qItem.explanation || "Chưa chính xác. Hãy mở kịch bản (Script) để nghe lại kỹ."),
+    });
+  };
+
 
   useEffect(() => {
     stopAllAudio();
@@ -288,8 +461,17 @@ export default function PracticeHubPage() {
   const [readingScore, setReadingScore] = useState<{ score: number; optionId: string } | null>(null);
 
   // JLPT Reading & Listening by Mondai states (Japanese only)
-  const [selectedReadingMondai, setSelectedReadingMondai] = useState<number | "all">("all");
-  const [selectedListeningMondai, setSelectedListeningMondai] = useState<number | "all">("all");
+  const [selectedReadingMondai, setSelectedReadingMondai] = useState<number | "all">(10);
+  const [selectedListeningMondai, setSelectedListeningMondai] = useState<number | "all">(1);
+  const [generatedListeningData, setGeneratedListeningData] = useState<GeneratedListeningItem | null>(null);
+  const [readingAnswers, setReadingAnswers] = useState<Record<string, string>>({});
+  const [readingChecked, setReadingChecked] = useState<Record<string, boolean>>({});
+  const [genListeningAnswers, setGenListeningAnswers] = useState<Record<string, number>>({});
+  const [genListeningChecked, setGenListeningChecked] = useState<Record<string, boolean>>({});
+  const [showGenListeningScript, setShowGenListeningScript] = useState<boolean>(false);
+  const [isGenListeningPlaying, setIsGenListeningPlaying] = useState<boolean>(false);
+  const [readingViewMode, setReadingViewMode] = useState<"ai" | "extracted">("ai");
+  const [listeningViewMode, setListeningViewMode] = useState<"ai" | "extracted">("ai");
   const [examReadingAnswers, setExamReadingAnswers] = useState<Record<number, number>>({});
   const [examReadingChecked, setExamReadingChecked] = useState<Record<number, boolean>>({});
 
@@ -312,8 +494,8 @@ export default function PracticeHubPage() {
   }, [selectedLang, selectedLevel]);
 
   const filteredReadingPassages = useMemo(() => {
-    if (selectedReadingMondai === "all") return allReadingPassages;
-    return allReadingPassages.filter((p) => p.mondaiNumber === selectedReadingMondai);
+    const list = allReadingPassages.filter((p) => p.mondaiNumber === selectedReadingMondai);
+    return list.length > 0 ? list : allReadingPassages;
   }, [allReadingPassages, selectedReadingMondai]);
 
   // Memos for Listening questions & Mondais
@@ -343,8 +525,8 @@ export default function PracticeHubPage() {
   }, [allListeningQuestions, selectedLang]);
 
   const filteredListeningQuestions = useMemo(() => {
-    if (selectedListeningMondai === "all") return allListeningQuestions;
-    return allListeningQuestions.filter((q) => q.mondaiNumber === selectedListeningMondai);
+    const list = allListeningQuestions.filter((q) => q.mondaiNumber === selectedListeningMondai);
+    return list.length > 0 ? list : allListeningQuestions;
   }, [allListeningQuestions, selectedListeningMondai]);
 
   // Play audio for JLPT Listening
@@ -546,6 +728,12 @@ ${item.audioScript}。
     setShowAnswerIdx({});
     setTranslationInputs({});
     setShowPassageTranslation(false);
+    setReadingAnswers({});
+    setReadingChecked({});
+    setGenListeningAnswers({});
+    setGenListeningChecked({});
+    setShowGenListeningScript(false);
+    setIsGenListeningPlaying(false);
 
     // Reset Kaiwa states
     setKaiwaData(null);
@@ -576,6 +764,7 @@ ${item.audioScript}。
           topic: activeTopic,
           level: selectedLevel,
           lang: selectedLang,
+          mondaiNumber: selectedType === "reading" ? (selectedReadingMondai === "all" ? 10 : selectedReadingMondai) : selectedType === "listening" ? (selectedListeningMondai === "all" ? 1 : selectedListeningMondai) : undefined,
           seed: Math.floor(Math.random() * 1000000),
           nonce: Date.now(),
         }),
@@ -595,6 +784,10 @@ ${item.audioScript}。
           setTranslationData(resData.data.translation || []);
         } else if (selectedType === "reading") {
           setReadingData(resData.data.reading || null);
+          setReadingViewMode("ai");
+        } else if (selectedType === "listening") {
+          setGeneratedListeningData(resData.data.listening || null);
+          setListeningViewMode("ai");
         } else if (selectedType === "presentation") {
           setSlides(resData.data.slides || []);
         }
@@ -965,7 +1158,7 @@ ${item.audioScript}。
         lang: selectedLang,
         score: score,
         userAnswer: opt.text,
-        correctAnswer: readingData.options.find((o) => o.isCorrect)?.text || opt.text,
+        correctAnswer: readingData.options?.find((o) => o.isCorrect)?.text || opt.text,
         feedback: readingData.explanation || (opt.isCorrect ? "Trả lời chính xác!" : "Đáp án chưa chính xác, hãy xem lại phần giải thích."),
       });
     }
@@ -2070,168 +2263,545 @@ ${item.audioScript}。
                 </div>
               )}
 
-              {/* N2 READING DISPLAY */}
-              {selectedType === "reading" && readingData && (
-                <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-2xs space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="px-3 py-1 bg-purple-100 text-purple-800 text-[10px] font-bold rounded-lg uppercase tracking-wider">
-                      Bài đọc hiểu {selectedLevel}
-                    </span>
-                    <div className="flex gap-3">
+              {/* N2 & JLPT READING DISPLAY */}
+              {selectedType === "reading" && (
+                <div className="space-y-6">
+                  {/* Mode Switcher when Japanese */}
+                  {selectedLang === "ja" && (
+                    <div className="flex items-center gap-2 p-1.5 bg-gray-100/90 rounded-2xl w-fit flex-wrap">
                       <button
-                        onClick={() => playSentence(readingData.passage)}
-                        className="text-xs text-teal-600 hover:text-teal-800 font-bold flex items-center gap-1 cursor-pointer"
-                      >
-                        🔊 Nghe bài đọc
-                      </button>
-                      <button
-                        onClick={() => setShowPassageTranslation((prev) => !prev)}
-                        className={`text-xs font-bold flex items-center gap-1 px-2 py-0.5 rounded-lg transition-colors cursor-pointer ${
-                          showPassageTranslation
-                            ? "bg-teal-100 text-teal-800"
-                            : "text-teal-600 hover:text-teal-800"
+                        type="button"
+                        onClick={() => setReadingViewMode("ai")}
+                        className={`px-4 py-2 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center gap-2 ${
+                          readingViewMode === "ai"
+                            ? "bg-white text-teal-800 shadow-xs ring-1 ring-black/5"
+                            : "text-gray-600 hover:text-gray-900"
                         }`}
                       >
-                        🌐 {showPassageTranslation ? "Ẩn dịch" : "Dịch nghĩa"}
+                        <span>🤖 Bài AI biên soạn Mondai {selectedReadingMondai}</span>
+                        {readingData && <span className="w-2 h-2 rounded-full bg-teal-500 animate-pulse" />}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setReadingViewMode("extracted")}
+                        className={`px-4 py-2 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center gap-2 ${
+                          readingViewMode === "extracted"
+                            ? "bg-white text-teal-800 shadow-xs ring-1 ring-black/5"
+                            : "text-gray-600 hover:text-gray-900"
+                        }`}
+                      >
+                        <span>📑 Đề thi thật trích xuất ({filteredReadingPassages.length} bài)</span>
                       </button>
                     </div>
-                  </div>
+                  )}
 
-                  {/* Reading Passage with soft paper style and Ruby text */}
-                  <div className="bg-amber-50/30 p-5 rounded-2xl border border-amber-100/50 leading-loose text-base text-gray-800 font-semibold tracking-wide space-y-2">
-                    <div className="flex items-center justify-between flex-wrap gap-2 mb-1">
-                      <div className="text-[10px] text-amber-600 font-bold uppercase tracking-wider">Bài đọc (Passage):</div>
-                      <span className="text-[10px] text-amber-700 bg-amber-100/80 px-2.5 py-0.5 rounded-full font-bold">
-                        💡 Bôi đen từ vựng để hiện nút tra Mazii
-                      </span>
-                    </div>
-                    <div 
-                      className="whitespace-pre-line text-gray-900 leading-loose ruby-box select-text"
-                      dangerouslySetInnerHTML={{ __html: readingData.passage_ruby }}
-                    />
+                  {/* AI Generated Reading View */}
+                  {readingViewMode === "ai" && (
+                    <>
+                      {readingData ? (
+                        <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-2xs space-y-5">
+                          {/* Header Bar */}
+                          <div className="flex items-center justify-between flex-wrap gap-2 pb-3 border-b border-gray-100">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <span className="px-3 py-1 bg-teal-50 text-teal-800 border border-teal-200 text-xs font-black rounded-lg">
+                                {readingData.mondaiName || `問題 ${selectedReadingMondai}`}
+                              </span>
+                              {readingData.mondaiSubtitle && (
+                                <span className="text-xs font-bold text-gray-700">
+                                  {readingData.mondaiSubtitle}
+                                </span>
+                              )}
+                              {readingData.title && (
+                                <span className="text-xs text-gray-500">
+                                  • {readingData.title}
+                                </span>
+                              )}
+                            </div>
+                            <div className="flex items-center gap-2">
+                              {readingData.passage && (
+                                <button
+                                  type="button"
+                                  onClick={() => playSentence(readingData.passage || "")}
+                                  className="text-xs text-teal-700 hover:text-teal-900 font-bold flex items-center gap-1 cursor-pointer bg-teal-50 px-3 py-1.5 rounded-xl border border-teal-200 shadow-3xs"
+                                >
+                                  🔊 Nghe bài đọc (TTS)
+                                </button>
+                              )}
+                              <button
+                                type="button"
+                                onClick={() => setShowPassageTranslation((prev) => !prev)}
+                                className={`text-xs font-bold flex items-center gap-1 px-3 py-1.5 rounded-xl transition-colors cursor-pointer border ${
+                                  showPassageTranslation
+                                    ? "bg-teal-100 border-teal-300 text-teal-900"
+                                    : "bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100"
+                                }`}
+                              >
+                                🌐 {showPassageTranslation ? "Ẩn dịch" : "Dịch nghĩa"}
+                              </button>
+                            </div>
+                          </div>
 
-                    {/* Passage Vietnamese Translation Toggle */}
-                    {showPassageTranslation && (
-                      <div className="mt-4 pt-3 border-t border-amber-200/50 text-xs text-gray-700 leading-relaxed italic">
-                        <span className="font-extrabold text-teal-800 not-italic block mb-1">Bản dịch tiếng Việt:</span>
-                        {readingData.passage_translation}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Vocabulary Extracted List */}
-                  {readingData.vocabulary && readingData.vocabulary.length > 0 && (
-                    <div className="bg-gray-50/60 p-4 rounded-2xl border border-gray-100/80">
-                      <div className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-2">
-                        Từ vựng trong bài đọc:
-                      </div>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                        {readingData.vocabulary.map((vocabItem: any, vIdx: number) => (
-                          <div key={vIdx} className="bg-white p-3 rounded-xl border border-gray-100/60 flex items-center justify-between gap-2 shadow-3xs">
-                            <div>
-                              <div className="flex items-baseline gap-1.5 flex-wrap">
-                                <span className="text-xs font-bold text-gray-900">{vocabItem.kanji}</span>
-                                {vocabItem.kanji !== vocabItem.hiragana && (
-                                  <span className="text-[10px] text-indigo-600 font-semibold font-mono">({vocabItem.hiragana})</span>
+                          {/* Passage Body: Comparison vs Notice vs Standard */}
+                          {readingData.passageA && readingData.passageB ? (
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              {/* Passage A */}
+                              <div className="bg-amber-50/40 p-5 rounded-2xl border border-amber-200/80 space-y-3">
+                                <div className="flex items-center justify-between">
+                                  <span className="px-2.5 py-1 bg-amber-500 text-white text-xs font-black rounded-lg">
+                                    {readingData.passageA.title || "【文章 A】"}
+                                  </span>
+                                  <button
+                                    type="button"
+                                    onClick={() => playSentence(readingData.passageA!.text)}
+                                    className="text-xs text-amber-800 hover:text-amber-950 font-bold flex items-center gap-1 cursor-pointer bg-white px-2.5 py-1 rounded-lg border border-amber-200 shadow-3xs"
+                                  >
+                                    🔊 Nghe A
+                                  </button>
+                                </div>
+                                <div
+                                  className="whitespace-pre-line text-gray-900 leading-loose ruby-box select-text text-sm font-medium"
+                                  dangerouslySetInnerHTML={{ __html: readingData.passageA.text_ruby || readingData.passageA.text }}
+                                />
+                                {showPassageTranslation && readingData.passageA.translation && (
+                                  <div className="mt-3 pt-2.5 border-t border-amber-200/60 text-xs text-gray-700 leading-relaxed italic">
+                                    <span className="font-extrabold text-teal-800 not-italic block mb-1">Dịch nghĩa A:</span>
+                                    {readingData.passageA.translation}
+                                  </div>
                                 )}
                               </div>
-                              <div className="text-[10px] text-emerald-700 font-medium mt-0.5">{vocabItem.meaning}</div>
+
+                              {/* Passage B */}
+                              <div className="bg-indigo-50/40 p-5 rounded-2xl border border-indigo-200/80 space-y-3">
+                                <div className="flex items-center justify-between">
+                                  <span className="px-2.5 py-1 bg-indigo-600 text-white text-xs font-black rounded-lg">
+                                    {readingData.passageB.title || "【文章 B】"}
+                                  </span>
+                                  <button
+                                    type="button"
+                                    onClick={() => playSentence(readingData.passageB!.text)}
+                                    className="text-xs text-indigo-800 hover:text-indigo-950 font-bold flex items-center gap-1 cursor-pointer bg-white px-2.5 py-1 rounded-lg border border-indigo-200 shadow-3xs"
+                                  >
+                                    🔊 Nghe B
+                                  </button>
+                                </div>
+                                <div
+                                  className="whitespace-pre-line text-gray-900 leading-loose ruby-box select-text text-sm font-medium"
+                                  dangerouslySetInnerHTML={{ __html: readingData.passageB.text_ruby || readingData.passageB.text }}
+                                />
+                                {showPassageTranslation && readingData.passageB.translation && (
+                                  <div className="mt-3 pt-2.5 border-t border-indigo-200/60 text-xs text-gray-700 leading-relaxed italic">
+                                    <span className="font-extrabold text-indigo-800 not-italic block mb-1">Dịch nghĩa B:</span>
+                                    {readingData.passageB.translation}
+                                  </div>
+                                )}
+                              </div>
                             </div>
-                            <div className="flex items-center gap-1 shrink-0">
-                              <button
-                                onClick={() => {
-                                  setMaziiLookupState({
-                                    isOpen: true,
-                                    queryWord: vocabItem.kanji || vocabItem.hiragana,
-                                    initialFurigana: vocabItem.hiragana,
-                                    initialMeaning: vocabItem.meaning,
-                                  });
-                                }}
-                                className="px-2 py-1 bg-amber-50 hover:bg-amber-100 text-amber-800 text-[10px] font-bold rounded-lg transition-all cursor-pointer border border-amber-200/60"
-                                title="Tra cứu chi tiết trên Mazii"
-                              >
-                                🔍 Mazii
-                              </button>
-                              <button
-                                onClick={() => {
-                                  setSelectedWordForNotebook(vocabItem);
-                                  setDuplicateError(null);
-                                }}
-                                className="px-2 py-1 bg-purple-50 hover:bg-purple-100 text-purple-700 text-[10px] font-bold rounded-lg transition-all cursor-pointer"
-                              >
-                                + Sổ tay
-                              </button>
+                          ) : readingData.notice ? (
+                            <div className="space-y-4">
+                              <div className="bg-blue-50/40 p-5 rounded-2xl border-2 border-blue-200 space-y-3">
+                                <div className="flex items-center justify-between flex-wrap gap-2">
+                                  <div className="text-sm font-black text-blue-900 flex items-center gap-2">
+                                    <span>📢</span>
+                                    <span>{readingData.notice.title || "Bảng thông báo / Tờ rơi tra cứu thông tin"}</span>
+                                  </div>
+                                  <button
+                                    type="button"
+                                    onClick={() => playSentence(readingData.notice!.content)}
+                                    className="text-xs text-blue-800 hover:text-blue-950 font-bold flex items-center gap-1 cursor-pointer bg-white px-2.5 py-1 rounded-lg border border-blue-200 shadow-3xs"
+                                  >
+                                    🔊 Nghe thông báo
+                                  </button>
+                                </div>
+                                <div
+                                  className="whitespace-pre-line text-gray-900 leading-loose ruby-box select-text text-sm bg-white p-4 rounded-xl border border-blue-100 font-medium"
+                                  dangerouslySetInnerHTML={{ __html: readingData.notice.content_ruby || readingData.notice.content }}
+                                />
+                                {readingData.notice.scenario && (
+                                  <div className="p-3.5 bg-amber-50 rounded-xl border border-amber-200 text-xs text-amber-950 font-semibold">
+                                    <div className="font-extrabold text-amber-900 mb-0.5">📌 Tình huống tra cứu:</div>
+                                    <div>{readingData.notice.scenario}</div>
+                                  </div>
+                                )}
+                                {showPassageTranslation && readingData.notice.translation && (
+                                  <div className="pt-2.5 border-t border-blue-200 text-xs text-gray-700 leading-relaxed italic">
+                                    <span className="font-extrabold text-blue-900 not-italic block mb-1">Dịch nghĩa thông báo:</span>
+                                    {readingData.notice.translation}
+                                  </div>
+                                )}
+                              </div>
                             </div>
+                          ) : (
+                            <div className="bg-amber-50/30 p-5 rounded-2xl border border-amber-100/50 leading-loose text-base text-gray-800 font-semibold tracking-wide space-y-2">
+                              <div className="flex items-center justify-between flex-wrap gap-2 mb-1">
+                                <div className="text-[10px] text-amber-600 font-bold uppercase tracking-wider">Bài đọc (Passage):</div>
+                                <span className="text-[10px] text-amber-700 bg-amber-100/80 px-2.5 py-0.5 rounded-full font-bold">
+                                  💡 Bôi đen từ vựng để hiện nút tra Mazii
+                                </span>
+                              </div>
+                              <div 
+                                className="whitespace-pre-line text-gray-900 leading-loose ruby-box select-text font-medium"
+                                dangerouslySetInnerHTML={{ __html: readingData.passage_ruby || readingData.passage || "" }}
+                              />
+                              {showPassageTranslation && readingData.passage_translation && (
+                                <div className="mt-4 pt-3 border-t border-amber-200/50 text-xs text-gray-700 leading-relaxed italic">
+                                  <span className="font-extrabold text-teal-800 not-italic block mb-1">Bản dịch tiếng Việt:</span>
+                                  {readingData.passage_translation}
+                                </div>
+                              )}
+                            </div>
+                          )}
+
+                          {/* Vocabulary Extracted List */}
+                          {readingData.vocabulary && readingData.vocabulary.length > 0 && (
+                            <div className="bg-gray-50/60 p-4 rounded-2xl border border-gray-100/80">
+                              <div className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-2">
+                                Từ vựng quan trọng trong bài đọc:
+                              </div>
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                {readingData.vocabulary.map((vocabItem: any, vIdx: number) => (
+                                  <div key={vIdx} className="bg-white p-3 rounded-xl border border-gray-100/60 flex items-center justify-between gap-2 shadow-3xs">
+                                    <div>
+                                      <div className="flex items-baseline gap-1.5 flex-wrap">
+                                        <span className="text-xs font-bold text-gray-900">{vocabItem.kanji}</span>
+                                        {vocabItem.kanji !== vocabItem.hiragana && (
+                                          <span className="text-[10px] text-indigo-600 font-semibold font-mono">({vocabItem.hiragana})</span>
+                                        )}
+                                      </div>
+                                      <div className="text-[10px] text-emerald-700 font-medium mt-0.5">{vocabItem.meaning}</div>
+                                    </div>
+                                    <div className="flex items-center gap-1 shrink-0">
+                                      <button
+                                        type="button"
+                                        onClick={() => {
+                                          setMaziiLookupState({
+                                            isOpen: true,
+                                            queryWord: vocabItem.kanji || vocabItem.hiragana,
+                                            initialFurigana: vocabItem.hiragana,
+                                            initialMeaning: vocabItem.meaning,
+                                          });
+                                        }}
+                                        className="px-2 py-1 bg-amber-50 hover:bg-amber-100 text-amber-800 text-[10px] font-bold rounded-lg transition-all cursor-pointer border border-amber-200/60"
+                                        title="Tra cứu chi tiết trên Mazii"
+                                      >
+                                        🔍 Mazii
+                                      </button>
+                                      <button
+                                        type="button"
+                                        onClick={() => {
+                                          setSelectedWordForNotebook(vocabItem);
+                                          setDuplicateError(null);
+                                        }}
+                                        className="px-2 py-1 bg-purple-50 hover:bg-purple-100 text-purple-700 text-[10px] font-bold rounded-lg transition-all cursor-pointer"
+                                      >
+                                        + Sổ tay
+                                      </button>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Questions List (Supports multi-questions) */}
+                          <div className="space-y-4 pt-2">
+                            <div className="text-xs font-bold text-gray-500 uppercase tracking-wider">
+                              Câu hỏi đọc hiểu ({readingData.questions?.length || (readingData.options ? 1 : 0)} câu):
+                            </div>
+
+                            {readingData.questions && readingData.questions.length > 0 ? (
+                              readingData.questions.map((q, qIdx) => {
+                                const isChecked = !!readingChecked[q.id];
+                                const userAnsId = readingAnswers[q.id];
+                                const correctOpt = q.options.find((o) => o.isCorrect);
+                                const isCorrect = userAnsId !== undefined && userAnsId === correctOpt?.id;
+
+                                return (
+                                  <div key={q.id || qIdx} className="p-5 rounded-2xl bg-gray-50/80 border border-gray-200/80 space-y-3">
+                                    <div className="text-sm font-extrabold text-gray-900">
+                                      ❓ Câu {qIdx + 1}: {q.question}
+                                    </div>
+                                    {q.question_vietnamese && (
+                                      <div className="text-xs text-gray-500 italic">
+                                        ({q.question_vietnamese})
+                                      </div>
+                                    )}
+
+                                    {/* Options */}
+                                    <div className="grid grid-cols-1 gap-2">
+                                      {q.options.map((opt, optIdx) => {
+                                        const isSelected = userAnsId === opt.id;
+                                        let optStyle = "border-gray-200 bg-white text-gray-800 hover:bg-gray-100";
+                                        if (isChecked) {
+                                          if (opt.isCorrect) {
+                                            optStyle = "border-emerald-500 bg-emerald-50 text-emerald-900 font-bold ring-2 ring-emerald-300";
+                                          } else if (isSelected) {
+                                            optStyle = "border-rose-500 bg-rose-50 text-rose-900 font-bold ring-2 ring-rose-300";
+                                          } else {
+                                            optStyle = "border-gray-100 bg-gray-50 text-gray-400 opacity-60";
+                                          }
+                                        } else if (isSelected) {
+                                          optStyle = "border-teal-500 bg-teal-50 text-teal-900 font-bold ring-2 ring-teal-300";
+                                        }
+
+                                        return (
+                                          <button
+                                            key={opt.id}
+                                            type="button"
+                                            disabled={isChecked}
+                                            onClick={() => setReadingAnswers((prev) => ({ ...prev, [q.id]: opt.id }))}
+                                            className={`p-3.5 rounded-xl border text-left text-sm transition-all cursor-pointer flex items-start gap-2.5 ${optStyle}`}
+                                          >
+                                            <span className="w-6 h-6 rounded-full bg-black/5 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
+                                              {optIdx + 1}
+                                            </span>
+                                            <span className="leading-relaxed flex-1">{opt.text}</span>
+                                          </button>
+                                        );
+                                      })}
+                                    </div>
+
+                                    {/* Check button & Feedback */}
+                                    <div className="pt-2">
+                                      {!isChecked ? (
+                                        <button
+                                          type="button"
+                                          disabled={!userAnsId}
+                                          onClick={() => checkGeneratedReadingAnswer(q)}
+                                          className="px-5 py-2.5 bg-teal-600 hover:bg-teal-700 disabled:opacity-40 text-white rounded-xl text-xs font-bold transition-all shadow-xs cursor-pointer"
+                                        >
+                                          Kiểm tra đáp án
+                                        </button>
+                                      ) : (
+                                        <div className={`p-4 rounded-xl border text-xs leading-relaxed space-y-1.5 ${
+                                          isCorrect ? "bg-emerald-50 border-emerald-200 text-emerald-900" : "bg-rose-50 border-rose-200 text-rose-900"
+                                        }`}>
+                                          <div className="font-extrabold flex items-center gap-1.5 text-sm">
+                                            <span>{isCorrect ? "✓ Chính xác!" : "✕ Chưa chính xác"}</span>
+                                            {!isCorrect && (
+                                              <span className="text-xs font-semibold">
+                                                (Đáp án đúng: {correctOpt?.text})
+                                              </span>
+                                            )}
+                                          </div>
+                                          {q.explanation && (
+                                            <div className="text-[11px] text-gray-700 pt-1 border-t border-black/10">
+                                              <strong>💡 Giải thích:</strong> {q.explanation}
+                                            </div>
+                                          )}
+                                        </div>
+                                      )}
+                                    </div>
+                                  </div>
+                                );
+                              })
+                            ) : readingData.options ? (
+                              /* Fallback single question */
+                              <div className="p-5 rounded-2xl bg-gray-50/80 border border-gray-200/80 space-y-3">
+                                <div className="text-sm font-extrabold text-gray-900">
+                                  ❓ {readingData.question}
+                                </div>
+                                <div className="grid grid-cols-1 gap-2">
+                                  {readingData.options.map((opt, optIdx) => {
+                                    const isAnswered = selectedOptionId !== null;
+                                    const isThisSelected = selectedOptionId === opt.id;
+                                    let btnStyle = "border-gray-200 bg-white hover:bg-gray-50 text-gray-700 cursor-pointer";
+                                    if (isAnswered) {
+                                      if (opt.isCorrect) {
+                                        btnStyle = "border-emerald-500 bg-emerald-50 text-emerald-800 font-bold ring-2 ring-emerald-300";
+                                      } else if (isThisSelected) {
+                                        btnStyle = "border-red-500 bg-red-50 text-red-800 font-bold ring-2 ring-red-300";
+                                      } else {
+                                        btnStyle = "border-gray-100 bg-gray-50/50 text-gray-400 opacity-60";
+                                      }
+                                    }
+                                    return (
+                                      <button
+                                        key={opt.id}
+                                        disabled={isAnswered}
+                                        onClick={() => handleSelectReadingOption(opt)}
+                                        className={`w-full p-4 rounded-xl border text-left text-xs transition-all flex items-center justify-between ${btnStyle}`}
+                                      >
+                                        <span>{optIdx + 1}. {opt.text}</span>
+                                        {isAnswered && opt.isCorrect && <span className="text-emerald-600 font-extrabold text-sm">✓</span>}
+                                        {isAnswered && isThisSelected && !opt.isCorrect && <span className="text-red-600 font-extrabold text-sm">✕</span>}
+                                      </button>
+                                    );
+                                  })}
+                                </div>
+                                {selectedOptionId && readingData.explanation && (
+                                  <div className="mt-3 p-4 bg-teal-50/40 rounded-xl border border-teal-200 text-xs text-gray-700 leading-relaxed">
+                                    <strong>💡 Giải thích:</strong> {readingData.explanation}
+                                  </div>
+                                )}
+                              </div>
+                            ) : null}
                           </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Question */}
-                  <div className="text-xs font-extrabold text-gray-900 bg-gray-50 p-3 rounded-xl border border-gray-100">
-                    ❓ Câu hỏi: {readingData.question}
-                  </div>
-
-                  {/* Multiple choice options */}
-                  <div className="grid grid-cols-1 gap-2.5">
-                    {readingData.options.map((opt) => {
-                      const isAnswered = selectedOptionId !== null;
-                      const isThisSelected = selectedOptionId === opt.id;
-                      let btnStyle = "border-gray-200 bg-white hover:bg-gray-50 text-gray-700 cursor-pointer";
-
-                      if (isAnswered) {
-                        if (opt.isCorrect) {
-                          btnStyle = "border-emerald-500 bg-emerald-50 text-emerald-800 font-bold ring-2 ring-emerald-300";
-                        } else if (isThisSelected) {
-                          btnStyle = "border-red-500 bg-red-50 text-red-800 font-bold ring-2 ring-red-300";
-                        } else {
-                          btnStyle = "border-gray-100 bg-gray-50/50 text-gray-400 opacity-60";
-                        }
-                      }
-
-                      return (
-                        <button
-                          key={opt.id}
-                          disabled={isAnswered}
-                          onClick={() => handleSelectReadingOption(opt)}
-                          className={`w-full p-4 rounded-xl border text-left text-xs transition-all flex items-center justify-between ${btnStyle}`}
-                        >
-                          <span>{opt.text}</span>
-                          {isAnswered && opt.isCorrect && <span className="text-emerald-600 font-extrabold text-sm">✓</span>}
-                          {isAnswered && isThisSelected && !opt.isCorrect && <span className="text-red-600 font-extrabold text-sm">✕</span>}
-                        </button>
-                      );
-                    })}
-                  </div>
-
-                  {/* Reading Score Result */}
-                  {readingScore && (
-                    <div className={`p-4 rounded-2xl border text-xs flex items-center justify-between ${
-                      readingScore.score === 100 
-                        ? "bg-emerald-50 border-emerald-200 text-emerald-900" 
-                        : "bg-red-50 border-red-200 text-red-900"
-                    }`}>
-                      <div className="flex items-center gap-2.5">
-                        <span className="text-xl">{readingScore.score === 100 ? "🎉" : "❌"}</span>
-                        <div>
-                          <div className="font-black text-sm">
-                            {readingScore.score === 100 ? "Chính xác! Điểm: 100/100" : "Chưa chính xác! Điểm: 0/100"}
-                          </div>
-                          <div className="text-[10px] opacity-80">Đã ghi nhận kết quả bài đọc vào lịch sử</div>
                         </div>
-                      </div>
-                      <span className="text-xs font-extrabold">{readingScore.score}/100</span>
-                    </div>
+                      ) : (
+                        <div className="bg-white rounded-3xl p-10 border border-gray-100 text-center space-y-4 shadow-2xs">
+                          <div className="text-4xl">📚</div>
+                          <h3 className="text-base font-extrabold text-gray-900">
+                            Luyện Chuyên Sâu Đọc Hiểu JLPT {selectedLevel} (Mondai {selectedReadingMondai})
+                          </h3>
+                          <p className="text-xs text-gray-500 max-w-md mx-auto leading-relaxed">
+                            Hãy chọn chủ đề và nhấn nút <strong>"✨ Biên soạn Đọc hiểu Mondai {selectedReadingMondai}"</strong> ở bảng bên trái để AI tạo bài đọc và câu hỏi trắc nghiệm chuẩn mẫu nhé!
+                          </p>
+                          <button
+                            type="button"
+                            onClick={handleGenerate}
+                            disabled={generating}
+                            className="px-6 py-3 bg-gradient-to-r from-teal-600 to-indigo-600 hover:opacity-95 text-white font-bold text-xs rounded-2xl shadow-md shadow-teal-200 transition-all cursor-pointer"
+                          >
+                            {generating ? "🤖 Đang biên soạn bài đọc..." : `✨ Tạo bài đọc Mondai ${selectedReadingMondai} ngay`}
+                          </button>
+                        </div>
+                      )}
+                    </>
                   )}
 
-                  {/* Explanation reveal */}
-                  {selectedOptionId && (
-                    <div className="mt-4 p-4 bg-teal-50/30 rounded-2xl border border-teal-100/50 text-xs leading-relaxed space-y-2">
-                      <div className="font-extrabold text-teal-800 flex items-center gap-1">
-                        <span>💡</span> Hướng dẫn giải nghĩa & Ngữ pháp {selectedLevel}:
+                  {/* Extracted Past Exam Reading View */}
+                  {readingViewMode === "extracted" && selectedLang === "ja" && (
+                    <div className="space-y-6">
+                      <div className="bg-gradient-to-r from-teal-600 to-emerald-600 rounded-3xl p-6 text-white shadow-md shadow-teal-200">
+                        <div className="flex items-center justify-between flex-wrap gap-2 mb-2">
+                          <span className="px-3 py-1 bg-white/20 text-white rounded-lg text-xs font-black uppercase">
+                            📚 Đọc hiểu Đề thi thật {selectedLevel}
+                          </span>
+                          <span className="text-xs bg-white/10 px-3 py-1 rounded-lg">
+                            {filteredReadingPassages.length} đoạn văn
+                          </span>
+                        </div>
+                        <h3 className="text-lg font-black">Kho Đọc Hiểu Trích Xuất Từ Đề Thi Chính Thức</h3>
+                        <p className="text-xs text-white/90 mt-1 leading-relaxed">
+                          Các bài đọc hiểu được trích xuất từ đề thi thật (N2 07/2025, N3 Mock, N5 Mock) phân theo từng Mondai.
+                        </p>
                       </div>
-                      <p className="text-gray-700 whitespace-pre-line">{readingData.explanation}</p>
+
+                      {filteredReadingPassages.length === 0 ? (
+                        <div className="bg-white rounded-3xl p-10 border border-gray-100 text-center space-y-3">
+                          <div className="text-3xl">📖</div>
+                          <h4 className="text-sm font-bold text-gray-900">
+                            Chưa có bài đọc trích xuất cho Mondai này ở cấp độ {selectedLevel}
+                          </h4>
+                          <p className="text-xs text-gray-500 max-w-md mx-auto">
+                            Hãy chuyển sang tab "Đề AI biên soạn" ở trên để AI tạo bài đọc chuẩn cho bạn luyện tập ngay nhé!
+                          </p>
+                        </div>
+                      ) : (
+                        <div className="space-y-6">
+                          {filteredReadingPassages.map((p) => (
+                            <div key={p.id} className="bg-white rounded-3xl p-6 border border-gray-100 shadow-2xs space-y-5">
+                              <div className="flex items-center justify-between flex-wrap gap-2 pb-3 border-b border-gray-100">
+                                <div className="flex items-center gap-2 flex-wrap">
+                                  <span className="px-2.5 py-1 bg-teal-50 text-teal-800 border border-teal-200 text-[10px] font-black rounded-lg">
+                                    {p.mondaiName}: {p.mondaiSubtitle}
+                                  </span>
+                                  <span className="px-2.5 py-1 bg-indigo-50 text-indigo-700 text-[10px] font-bold rounded-lg">
+                                    {p.examTitle}
+                                  </span>
+                                  {p.passageTitle && (
+                                    <span className="text-xs font-black text-gray-900">
+                                      {p.passageTitle}
+                                    </span>
+                                  )}
+                                </div>
+                                <button
+                                  type="button"
+                                  onClick={() => playSentence(p.passageText)}
+                                  className="text-xs text-teal-600 hover:text-teal-800 font-bold flex items-center gap-1 cursor-pointer bg-teal-50 px-3 py-1 rounded-xl"
+                                >
+                                  🔊 Nghe bài đọc (TTS)
+                                </button>
+                              </div>
+
+                              <div className="bg-amber-50/20 p-5 rounded-2xl border border-amber-100 text-base text-gray-900 leading-loose whitespace-pre-line select-text font-medium">
+                                {p.passageText}
+                              </div>
+
+                              <div className="space-y-4 pt-2">
+                                <div className="text-xs font-bold text-gray-500 uppercase tracking-wider">
+                                  Câu hỏi đọc hiểu ({p.questions.length} câu):
+                                </div>
+                                {p.questions.map((q) => {
+                                  const isChecked = !!examReadingChecked[q.id];
+                                  const userAns = examReadingAnswers[q.id];
+                                  const isCorrect = userAns !== undefined && q.answers.includes(userAns);
+
+                                  return (
+                                    <div key={q.id} className="p-5 rounded-2xl bg-gray-50/80 border border-gray-200/80 space-y-3">
+                                      <div className="text-sm font-extrabold text-gray-900">
+                                        ❓ Câu hỏi {q.id}: {q.question}
+                                      </div>
+                                      <div className="grid grid-cols-1 gap-2">
+                                        {q.options.map((optText, optIdx) => {
+                                          const isSelected = userAns === optIdx;
+                                          let optStyle = "border-gray-200 bg-white text-gray-800 hover:bg-gray-100";
+                                          if (isChecked) {
+                                            if (q.answers.includes(optIdx)) {
+                                              optStyle = "border-emerald-500 bg-emerald-50 text-emerald-900 font-bold ring-2 ring-emerald-300";
+                                            } else if (isSelected) {
+                                              optStyle = "border-rose-500 bg-rose-50 text-rose-900 font-bold ring-2 ring-rose-300";
+                                            } else {
+                                              optStyle = "border-gray-100 bg-gray-50 text-gray-400 opacity-60";
+                                            }
+                                          } else if (isSelected) {
+                                            optStyle = "border-teal-500 bg-teal-50 text-teal-900 font-bold ring-2 ring-teal-300";
+                                          }
+
+                                          return (
+                                            <button
+                                              key={optIdx}
+                                              type="button"
+                                              disabled={isChecked}
+                                              onClick={() => setExamReadingAnswers((prev) => ({ ...prev, [q.id]: optIdx }))}
+                                              className={`p-3.5 rounded-xl border text-left text-sm transition-all cursor-pointer flex items-start gap-2.5 ${optStyle}`}
+                                            >
+                                              <span className="w-6 h-6 rounded-full bg-black/5 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
+                                                {optIdx + 1}
+                                              </span>
+                                              <span className="leading-relaxed">{optText}</span>
+                                            </button>
+                                          );
+                                        })}
+                                      </div>
+                                      <div className="pt-2">
+                                        {!isChecked ? (
+                                          <button
+                                            type="button"
+                                            disabled={userAns === undefined}
+                                            onClick={() => checkExamReadingAnswer(q.id, q.answers, q.question, q.explanation)}
+                                            className="px-5 py-2.5 bg-teal-600 hover:bg-teal-700 disabled:opacity-40 text-white rounded-xl text-xs font-bold transition-all shadow-xs cursor-pointer"
+                                          >
+                                            Kiểm tra đáp án
+                                          </button>
+                                        ) : (
+                                          <div className={`p-4 rounded-xl border text-xs leading-relaxed space-y-1.5 ${
+                                            isCorrect ? "bg-emerald-50 border-emerald-200 text-emerald-900" : "bg-rose-50 border-rose-200 text-rose-900"
+                                          }`}>
+                                            <div className="font-extrabold flex items-center gap-1.5 text-sm">
+                                              <span>{isCorrect ? "✓ Chính xác!" : "✕ Chưa chính xác"}</span>
+                                              {!isCorrect && (
+                                                <span className="text-xs font-semibold">
+                                                  (Đáp án đúng: Lựa chọn {q.answers.map((a) => a + 1).join(", ")})
+                                                </span>
+                                              )}
+                                            </div>
+                                            {q.explanation && (
+                                              <div className="text-[11px] text-gray-700 pt-1 border-t border-black/10">
+                                                <strong>💡 Giải thích:</strong> {q.explanation}
+                                              </div>
+                                            )}
+                                          </div>
+                                        )}
+                                      </div>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
@@ -2477,194 +3047,6 @@ ${item.audioScript}。
                           🎙️ Trình bày lại (Lần 2)
                         </button>
                       </div>
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* JLPT READING PRACTICE BY MONDAI (When Japanese & Reading & no AI readingData active) */}
-              {selectedLang === "ja" && selectedType === "reading" && !readingData && (
-                <div className="space-y-6">
-                  {/* Header Banner */}
-                  <div className="bg-gradient-to-r from-teal-600 to-emerald-600 rounded-3xl p-6 text-white shadow-md shadow-teal-200">
-                    <div className="flex items-center justify-between flex-wrap gap-2 mb-2">
-                      <span className="px-3 py-1 bg-white/20 text-white rounded-lg text-xs font-black uppercase">
-                        📚 Đọc hiểu JLPT {selectedLevel}
-                      </span>
-                      <span className="text-xs bg-white/10 px-3 py-1 rounded-lg">
-                        {filteredReadingPassages.length} đoạn văn trắc nghiệm
-                      </span>
-                    </div>
-                    <h3 className="text-lg font-black">Luyện Đọc Hiểu Theo Từng Mondai Chuẩn Đề Thi</h3>
-                    <p className="text-xs text-white/90 mt-1 leading-relaxed">
-                      Các bài đọc hiểu được trích xuất trực tiếp từ các đề thi JLPT chính thức (như Đề thi chính thức N2 07/2025, N3 Mock, N5 Mock) và phân loại theo từng Mondai: Đoạn ngắn, Đoạn trung, So sánh, Đoạn dài và Tìm kiếm thông tin.
-                    </p>
-
-                    {/* Filter Pills */}
-                    <div className="flex items-center gap-1.5 flex-wrap pt-4">
-                      <button
-                        type="button"
-                        onClick={() => setSelectedReadingMondai("all")}
-                        className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                          selectedReadingMondai === "all"
-                            ? "bg-white text-teal-900 shadow-xs"
-                            : "bg-white/20 text-white hover:bg-white/30"
-                        }`}
-                      >
-                        Tất cả Mondai ({allReadingPassages.length})
-                      </button>
-                      {readingMondais.map((m) => (
-                        <button
-                          key={m.mondaiNumber}
-                          type="button"
-                          onClick={() => setSelectedReadingMondai(m.mondaiNumber)}
-                          className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                            selectedReadingMondai === m.mondaiNumber
-                              ? "bg-white text-teal-900 shadow-xs"
-                              : "bg-white/20 text-white hover:bg-white/30"
-                          }`}
-                        >
-                          {m.mondaiName}: {m.mondaiSubtitle} ({m.count})
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Passages List */}
-                  {filteredReadingPassages.length === 0 ? (
-                    <div className="bg-white rounded-3xl p-10 border border-gray-100 text-center space-y-3">
-                      <div className="text-3xl">📖</div>
-                      <h4 className="text-sm font-bold text-gray-900">
-                        Chưa có bài đọc trích xuất cho Mondai này ở cấp độ {selectedLevel}
-                      </h4>
-                      <p className="text-xs text-gray-500 max-w-md mx-auto">
-                        Hãy chọn cấp độ khác (như N2 có đầy đủ 11 đoạn văn chính thức) hoặc nhấn nút "Tạo thêm bài đọc bằng AI" ở cột bên trái để học ngay nhé!
-                      </p>
-                    </div>
-                  ) : (
-                    <div className="space-y-6">
-                      {filteredReadingPassages.map((p, pIdx) => (
-                        <div key={p.id} className="bg-white rounded-3xl p-6 border border-gray-100 shadow-2xs space-y-5">
-                          {/* Passage Header */}
-                          <div className="flex items-center justify-between flex-wrap gap-2 pb-3 border-b border-gray-100">
-                            <div className="flex items-center gap-2 flex-wrap">
-                              <span className="px-2.5 py-1 bg-teal-50 text-teal-800 border border-teal-200 text-[10px] font-black rounded-lg">
-                                {p.mondaiName}: {p.mondaiSubtitle}
-                              </span>
-                              <span className="px-2.5 py-1 bg-indigo-50 text-indigo-700 text-[10px] font-bold rounded-lg">
-                                {p.examTitle}
-                              </span>
-                              {p.passageTitle && (
-                                <span className="text-xs font-black text-gray-900">
-                                  {p.passageTitle}
-                                </span>
-                              )}
-                            </div>
-
-                            <button
-                              type="button"
-                              onClick={() => playSentence(p.passageText)}
-                              className="text-xs text-teal-600 hover:text-teal-800 font-bold flex items-center gap-1 cursor-pointer bg-teal-50 px-3 py-1 rounded-xl"
-                            >
-                              🔊 Nghe bài đọc (TTS)
-                            </button>
-                          </div>
-
-                          {/* Passage Body */}
-                          <div className="bg-amber-50/20 p-5 rounded-2xl border border-amber-100 text-base text-gray-900 leading-loose whitespace-pre-line select-text font-medium">
-                            {p.passageText}
-                          </div>
-
-                          {/* Questions for this passage */}
-                          <div className="space-y-4 pt-2">
-                            <div className="text-xs font-bold text-gray-500 uppercase tracking-wider">
-                              Câu hỏi đọc hiểu ({p.questions.length} câu):
-                            </div>
-
-                            {p.questions.map((q) => {
-                              const isChecked = !!examReadingChecked[q.id];
-                              const userAns = examReadingAnswers[q.id];
-                              const isCorrect = userAns !== undefined && q.answers.includes(userAns);
-
-                              return (
-                                <div key={q.id} className="p-5 rounded-2xl bg-gray-50/80 border border-gray-200/80 space-y-3">
-                                  <div className="text-sm font-extrabold text-gray-900">
-                                    ❓ Câu hỏi {q.id}: {q.question}
-                                  </div>
-
-                                  {/* Options */}
-                                  <div className="grid grid-cols-1 gap-2">
-                                    {q.options.map((optText, optIdx) => {
-                                      const isSelected = userAns === optIdx;
-                                      const isRight = q.answers.includes(optIdx);
-
-                                      let optStyle = "border-gray-200 bg-white text-gray-800 hover:bg-gray-100";
-                                      if (isChecked) {
-                                        if (isRight) {
-                                          optStyle = "border-emerald-500 bg-emerald-50 text-emerald-900 font-bold ring-2 ring-emerald-300";
-                                        } else if (isSelected) {
-                                          optStyle = "border-rose-500 bg-rose-50 text-rose-900 font-bold ring-2 ring-rose-300";
-                                        } else {
-                                          optStyle = "border-gray-100 bg-gray-50 text-gray-400 opacity-60";
-                                        }
-                                      } else if (isSelected) {
-                                        optStyle = "border-teal-500 bg-teal-50 text-teal-900 font-bold ring-2 ring-teal-300";
-                                      }
-
-                                      return (
-                                        <button
-                                          key={optIdx}
-                                          type="button"
-                                          disabled={isChecked}
-                                          onClick={() => setExamReadingAnswers((prev) => ({ ...prev, [q.id]: optIdx }))}
-                                          className={`p-3.5 rounded-xl border text-left text-sm transition-all cursor-pointer flex items-start gap-2.5 ${optStyle}`}
-                                        >
-                                          <span className="w-6 h-6 rounded-full bg-black/5 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
-                                            {optIdx + 1}
-                                          </span>
-                                          <span className="leading-relaxed">{optText}</span>
-                                        </button>
-                                      );
-                                    })}
-                                  </div>
-
-                                  {/* Action & Feedback */}
-                                  <div className="pt-2">
-                                    {!isChecked ? (
-                                      <button
-                                        type="button"
-                                        disabled={userAns === undefined}
-                                        onClick={() => checkExamReadingAnswer(q.id, q.answers, q.question, q.explanation)}
-                                        className="px-5 py-2.5 bg-teal-600 hover:bg-teal-700 disabled:opacity-40 text-white rounded-xl text-xs font-bold transition-all shadow-xs cursor-pointer"
-                                      >
-                                        Kiểm tra đáp án
-                                      </button>
-                                    ) : (
-                                      <div className={`p-4 rounded-xl border text-xs leading-relaxed space-y-1.5 ${
-                                        isCorrect ? "bg-emerald-50 border-emerald-200 text-emerald-900" : "bg-rose-50 border-rose-200 text-rose-900"
-                                      }`}>
-                                        <div className="font-extrabold flex items-center gap-1.5 text-sm">
-                                          <span>{isCorrect ? "✓ Chính xác!" : "✕ Chưa chính xác"}</span>
-                                          {!isCorrect && (
-                                            <span className="text-xs font-semibold">
-                                              (Đáp án đúng: Lựa chọn {q.answers.map((a) => a + 1).join(", ")})
-                                            </span>
-                                          )}
-                                        </div>
-                                        {q.explanation && (
-                                          <div className="text-[11px] text-gray-700 pt-1 border-t border-black/10">
-                                            <strong>💡 Giải thích:</strong> {q.explanation}
-                                          </div>
-                                        )}
-                                      </div>
-                                    )}
-                                  </div>
-                                </div>
-                              );
-                            })}
-                          </div>
-                        </div>
-                      ))}
                     </div>
                   )}
                 </div>

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { buildJLPTListeningPrompt, buildJLPTReadingPrompt } from "@/lib/jlptPromptBuilder";
 
 const apiKey = process.env.GEMINI_API_KEY;
 const genAI = apiKey ? new GoogleGenerativeAI(apiKey) : null;
@@ -13,7 +14,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const { type, topic, level = "N2", lang = "ja" } = await req.json();
+    const { type, topic, level = "N2", lang = "ja", mondaiNumber, mondaiSubtitle } = await req.json();
 
     // Map main topics to a collection of sub-situations/contexts to guarantee diversity
     const subContextsMap: Record<string, string[]> = {
@@ -398,41 +399,28 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
     ]
   }
 }`;
+      } else if (type === "listening") {
+        prompt = buildJLPTListeningPrompt({
+          level,
+          topic,
+          chosenContext,
+          mondaiNumber,
+          randomSeed,
+        });
       } else {
-        // reading N2
-        prompt = `Bạn là chuyên gia ôn luyện đọc hiểu JLPT N2.
-Hãy tạo 1 bài đọc hiểu trình độ N2 (đáp ứng đúng tiêu chuẩn kỳ thi JLPT N2) thuộc chủ đề "${topic}".
-Bối cảnh cụ thể của bài học hôm nay là: "${chosenContext}".
-Bài đọc hiểu phải bao gồm một đoạn văn tiếng Nhật (khoảng 6-8 câu dài), CÂU HỎI BẰNG TIẾNG NHẬT, 4 ĐÁP ÁN LỰA CHỌN BẰNG TIẾNG NHẬT, bản dịch tiếng Việt trọn vẹn, giải thích chi tiết và danh sách từ vựng quan trọng.
-(Mã ngẫu nhiên để tạo bài đọc mới lạ: ${randomSeed} - Hãy tạo bài đọc độc đáo, khác biệt so với các lần trước).
-Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc trong markdown block, không có bất kỳ chữ nào ngoài cặp ngoặc nhọn JSON, phải là JSON hợp lệ):
-{
-  "reading": {
-    "passage": "đoạn văn tiếng Nhật chuẩn N2 không có thẻ HTML",
-    "passage_ruby": "đoạn văn tiếng Nhật N2 bọc thẻ <ruby> và <rt> hiển thị Furigana trên đầu mọi chữ Hán tự để người dùng dễ đọc, ví dụ: <ruby>東京<rt>とうきょう</rt></ruby>...",
-    "passage_translation": "Bản dịch nghĩa tiếng Việt trọn vẹn và tự nhiên của đoạn văn trên",
-    "question": "Câu hỏi đọc hiểu hoàn toàn bằng TIẾNG NHẬT (Không dùng tiếng Việt)",
-    "options": [
-      { "id": "opt_1", "text": "lựa chọn đáp án 1 bằng tiếng Nhật (là đáp án đúng)", "isCorrect": true },
-      { "id": "opt_2", "text": "lựa chọn đáp án 2 bằng tiếng Nhật (là đáp án sai)", "isCorrect": false },
-      { "id": "opt_3", "text": "lựa chọn đáp án 3 bằng tiếng Nhật (là đáp án sai)", "isCorrect": false },
-      { "id": "opt_4", "text": "lựa chọn đáp án 4 bằng tiếng Nhật (là đáp án sai)", "isCorrect": false }
-    ],
-    "explanation": "giải thích chi tiết ý nghĩa đoạn văn, cấu trúc ngữ pháp N2 dùng trong bài và lý do đúng/sai bằng tiếng Việt",
-    "vocabulary": [
-      {
-        "kanji": "chữ Hán tự chính được trích xuất từ bài đọc (ví dụ: 医師)",
-        "hiragana": "cách đọc chữ Hán tự đó (ví dụ: いし)",
-        "meaning": "nghĩa của từ đó bằng tiếng Việt (ví dụ: Bác sĩ)"
-      }
-    ]
-  }
-}`;
+        // reading by Mondai
+        prompt = buildJLPTReadingPrompt({
+          level,
+          topic,
+          chosenContext,
+          mondaiNumber,
+          randomSeed,
+        });
       }
     }
 
-    // Updated to latest 2025 Gemini models
-    const candidateModels = ["gemini-3.5-flash", "gemini-3.1-flash", "gemini-2.5-flash"];
+    // Updated Gemini models with fallback
+    const candidateModels = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash", "gemini-3.5-flash", "gemini-3.1-flash"];
     let text = "";
     let lastError: any = null;
 
@@ -469,6 +457,43 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
       cleaned = cleaned.substring(startIdx, endIdx + 1);
     }
     const data = JSON.parse(cleaned);
+
+    // Normalize reading & listening data structures for consistent rendering
+    if (data.reading) {
+      if (data.reading.questions && data.reading.questions.length > 0) {
+        if (!data.reading.question) data.reading.question = data.reading.questions[0].question;
+        if (!data.reading.options) data.reading.options = data.reading.questions[0].options;
+        if (!data.reading.explanation) data.reading.explanation = data.reading.questions[0].explanation;
+      } else if (data.reading.question) {
+        data.reading.questions = [
+          {
+            id: "q_1",
+            question: data.reading.question,
+            options: data.reading.options || [],
+            explanation: data.reading.explanation || "",
+          },
+        ];
+      }
+    }
+
+    if (data.listening) {
+      if (data.listening.questions && data.listening.questions.length > 0) {
+        if (!data.listening.question) data.listening.question = data.listening.questions[0].question;
+        if (!data.listening.options) data.listening.options = data.listening.questions[0].options;
+        if (data.listening.correctAnswer === undefined) data.listening.correctAnswer = data.listening.questions[0].correctAnswer;
+        if (!data.listening.explanation) data.listening.explanation = data.listening.questions[0].explanation;
+      } else if (data.listening.question) {
+        data.listening.questions = [
+          {
+            id: "q_1",
+            question: data.listening.question,
+            options: data.listening.options || [],
+            correctAnswer: data.listening.correctAnswer ?? 0,
+            explanation: data.listening.explanation || "",
+          },
+        ];
+      }
+    }
 
     return NextResponse.json({ success: true, data });
   } catch (error: any) {

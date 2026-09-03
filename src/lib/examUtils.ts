@@ -86,7 +86,9 @@ export function getStructuredMajorSections(examData: ExamData): ExamMajorSection
     const num = match ? parseInt(match[1], 10) : "";
     let majorId = fallbackMajorId;
 
-    if (typeof num === "number" && !isNaN(num)) {
+    if (fallbackMajorId === "listening" || mondaiStr.includes("聴解") || mondaiStr.toLowerCase().includes("listening")) {
+      majorId = "listening";
+    } else if (typeof num === "number" && !isNaN(num)) {
       if (level === "N1") {
         if (num >= 1 && num <= 4) majorId = "vocab";
         else if (num >= 5 && num <= 7) majorId = "grammar";
