@@ -5,9 +5,12 @@ import { autoSync } from "@/lib/syncService";
 
 const STORAGE_KEY = "dland_nav_menu_settings";
 const ADMIN_DEV_KEY = "dland_admin_dev_features_enabled";
+const ADMIN_DEV_ITEMS_KEY = "dland_admin_dev_item_overrides";
 
 // Per-language map of href → visible (true = show)
 export type NavMenuSettings = Record<string, Record<string, boolean>>;
+// Per-language map of href → isDevOnly override (true = dev only, false = regular)
+export type NavMenuDevOverrides = Record<string, Record<string, boolean>>;
 
 function loadSettings(): NavMenuSettings {
   if (typeof window === "undefined") return {};
@@ -39,13 +42,31 @@ export function saveDevFeaturesEnabled(enabled: boolean) {
   window.dispatchEvent(new CustomEvent("nav-menu-settings-changed"));
 }
 
+export function loadDevItemOverrides(): NavMenuDevOverrides {
+  if (typeof window === "undefined") return {};
+  try {
+    const raw = localStorage.getItem(ADMIN_DEV_ITEMS_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch {
+    return {};
+  }
+}
+
+export function saveDevItemOverrides(overrides: NavMenuDevOverrides) {
+  if (typeof window === "undefined") return;
+  localStorage.setItem(ADMIN_DEV_ITEMS_KEY, JSON.stringify(overrides));
+  window.dispatchEvent(new CustomEvent("nav-menu-settings-changed"));
+}
+
 export function useNavMenuSettings() {
   const [settings, setSettings] = useState<NavMenuSettings>(() => loadSettings());
   const [devFeaturesEnabled, setDevFeaturesEnabledState] = useState<boolean>(() => loadDevFeaturesEnabled());
+  const [devItemOverrides, setDevItemOverrides] = useState<NavMenuDevOverrides>(() => loadDevItemOverrides());
 
   useEffect(() => {
     setSettings(loadSettings());
     setDevFeaturesEnabledState(loadDevFeaturesEnabled());
+    setDevItemOverrides(loadDevItemOverrides());
   }, []);
 
   const isVisible = useCallback(
@@ -78,6 +99,37 @@ export function useNavMenuSettings() {
     []
   );
 
+  const isItemDevOnly = useCallback(
+    (langCode: string, href: string, defaultDevOnly: boolean = false): boolean => {
+      const langOverrides = devItemOverrides[langCode];
+      if (langOverrides && langOverrides[href] !== undefined) {
+        return langOverrides[href];
+      }
+      return defaultDevOnly;
+    },
+    [devItemOverrides]
+  );
+
+  const toggleItemDevOnly = useCallback(
+    (langCode: string, href: string, defaultDevOnly: boolean = false) => {
+      setDevItemOverrides((prev) => {
+        const langOverrides = prev[langCode] ?? {};
+        const current = langOverrides[href] !== undefined ? langOverrides[href] : defaultDevOnly;
+        const updated: NavMenuDevOverrides = {
+          ...prev,
+          [langCode]: {
+            ...langOverrides,
+            [href]: !current,
+          },
+        };
+        saveDevItemOverrides(updated);
+        autoSync();
+        return updated;
+      });
+    },
+    []
+  );
+
   const setDevFeaturesEnabled = useCallback((enabled: boolean) => {
     saveDevFeaturesEnabled(enabled);
     setDevFeaturesEnabledState(enabled);
@@ -98,10 +150,21 @@ export function useNavMenuSettings() {
     const handler = () => {
       setSettings(loadSettings());
       setDevFeaturesEnabledState(loadDevFeaturesEnabled());
+      setDevItemOverrides(loadDevItemOverrides());
     };
     window.addEventListener("nav-menu-settings-changed", handler);
     return () => window.removeEventListener("nav-menu-settings-changed", handler);
   }, []);
 
-  return { settings, isVisible, toggleItem, resetLang, devFeaturesEnabled, setDevFeaturesEnabled };
+  return {
+    settings,
+    isVisible,
+    toggleItem,
+    resetLang,
+    devFeaturesEnabled,
+    setDevFeaturesEnabled,
+    isItemDevOnly,
+    toggleItemDevOnly,
+    devItemOverrides,
+  };
 }

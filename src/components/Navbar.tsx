@@ -108,6 +108,9 @@ export function getNavItemsForLanguage(langCode: string): NavItem[] {
         { href: "/flashcard/all", label: "Ôn tập Flashcard", icon: "🎴" },
         { href: "/history", label: "Lịch sử học tập", icon: "📊" },
         { href: "/settings", label: "Cài đặt Ngôn ngữ", icon: "⚙️" },
+        { href: "/chat/live", label: "Gia Sư Voice AI (Live)", icon: "🎙️", isComingSoon: false, isDevOnly: true },
+        { href: "/practice/ai-voice-room", label: "Phòng Luyện Voice AI", icon: "🎙️", isComingSoon: true, isDevOnly: true },
+        { href: "/practice/mock-interview", label: "Phỏng Vấn Xin Việc AI", icon: "💼", isComingSoon: true, isDevOnly: true },
       ];
   }
 }
@@ -120,9 +123,10 @@ export default function Navbar() {
   const mobileNavRef = useRef<HTMLDivElement>(null);
 
   const navItems = getNavItemsForLanguage(activeLanguage.code);
-  const { isVisible, devFeaturesEnabled } = useNavMenuSettings();
+  const { isVisible, devFeaturesEnabled, isItemDevOnly } = useNavMenuSettings();
   const visibleNavItems = navItems.filter((item) => {
-    if (item.isDevOnly && !devFeaturesEnabled) return false;
+    const isDev = isItemDevOnly(activeLanguage.code, item.href, !!item.isDevOnly);
+    if (isDev && !devFeaturesEnabled) return false;
     return isVisible(activeLanguage.code, item.href);
   });
 

@@ -124,8 +124,16 @@ export function useCurriculums() {
   useEffect(() => {
     const checkHideSetting = () => {
       const saved = getItem<FlashCardSettings>(StorageKeys.SETTINGS);
-      setHideSuperMaster(!!saved?.hideSuperMasterN5);
-      setHiddenCurriculumIds(saved?.hiddenCurriculumIds || []);
+      let adminHidden: string[] = [];
+      if (typeof window !== "undefined") {
+        try {
+          const raw = localStorage.getItem("dland_admin_hidden_curriculums");
+          if (raw) adminHidden = JSON.parse(raw);
+        } catch {}
+      }
+      const combined = Array.from(new Set([...(saved?.hiddenCurriculumIds || []), ...adminHidden]));
+      setHideSuperMaster(!!saved?.hideSuperMasterN5 || combined.includes("default-n5-super-master-tango"));
+      setHiddenCurriculumIds(combined);
     };
 
     checkHideSetting();

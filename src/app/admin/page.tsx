@@ -6,11 +6,10 @@ import { checkAuthStatus, getUser } from "@/lib/syncService";
 import { fetchAdminUsers, fetchAdminUserDetail, AdminUser, AdminUserDetail } from "@/lib/adminService";
 import { DEFAULT_VOCABULARY } from "@/data";
 import { SUPPORTED_LANGUAGES } from "@/hooks/useLanguageSetting";
-import { useNavMenuSettings } from "@/hooks/useNavMenuSettings";
+import CurriculumDisplaySettings from "@/components/CurriculumDisplaySettings";
+import NavMenuSettingsPanel from "@/components/NavMenuSettingsPanel";
 
 export default function AdminDashboardPage() {
-  const { devFeaturesEnabled, setDevFeaturesEnabled } = useNavMenuSettings();
-
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [users, setUsers] = useState<AdminUser[]>([]);
@@ -20,6 +19,7 @@ export default function AdminDashboardPage() {
   const [loadingDetail, setLoadingDetail] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [adminView, setAdminView] = useState<"users" | "config">("users");
 
   // Curriculum detail tab state inside user detail
   const [activeDetailTab, setActiveDetailTab] = useState<"curriculum" | "timeline" | "notebook">("curriculum");
@@ -366,8 +366,43 @@ export default function AdminDashboardPage() {
         </div>
       )}
 
-      {/* Main Grid: User List & Detail */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      {/* View Switcher Tabs */}
+      <div className="flex items-center gap-2 border-b border-gray-200/80 pb-3">
+        <button
+          type="button"
+          onClick={() => setAdminView("users")}
+          className={`px-4 py-2 rounded-xl font-bold text-xs transition-all cursor-pointer flex items-center gap-2 ${
+            adminView === "users"
+              ? "bg-indigo-600 text-white shadow-sm"
+              : "bg-white text-gray-700 hover:bg-gray-100 border border-gray-200"
+          }`}
+        >
+          <span>👥</span>
+          <span>Học viên & Tiến độ</span>
+          <span className={`px-1.5 py-0.2 rounded-md text-[10px] font-bold ${
+            adminView === "users" ? "bg-indigo-500 text-white" : "bg-gray-150 text-gray-600"
+          }`}>
+            {filteredUsers.length}
+          </span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setAdminView("config")}
+          className={`px-4 py-2 rounded-xl font-bold text-xs transition-all cursor-pointer flex items-center gap-2 ${
+            adminView === "config"
+              ? "bg-indigo-600 text-white shadow-sm"
+              : "bg-white text-gray-700 hover:bg-gray-100 border border-gray-200"
+          }`}
+        >
+          <span>⚙️</span>
+          <span>Cấu hình Hệ thống & Giáo trình mẫu</span>
+        </button>
+      </div>
+
+      {adminView === "users" ? (
+        /* Main Grid: User List & Detail */
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         
         {/* Left column: Users list (4 columns wide on lg) */}
         <div className="lg:col-span-4 space-y-4">
@@ -733,8 +768,17 @@ export default function AdminDashboardPage() {
             </div>
           )}
         </div>
-
       </div>
+      ) : (
+        /* System Configuration View */
+        <div className="space-y-6">
+          {/* Nav Menu Settings Panel (with dev features controls) */}
+          <NavMenuSettingsPanel />
+
+          {/* Sample Curriculum Display Settings */}
+          <CurriculumDisplaySettings />
+        </div>
+      )}
     </div>
   );
 }
