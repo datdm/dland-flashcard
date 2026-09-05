@@ -206,9 +206,12 @@ const POPULAR_TOPICS_BY_LANG: Record<string, { id: string; name: string; icon: s
   ja: [
     { id: "daily", name: "Sinh hoạt & Đời sống", icon: "🏡" },
     { id: "business", name: "Kinh doanh & Công sở", icon: "💼" },
-    { id: "it", name: "Công nghệ & IT", icon: "💻" },
+    { id: "it", name: "Công nghệ & AI", icon: "💻" },
+    { id: "society", name: "Môi trường & Xã hội", icon: "🌿" },
     { id: "travel", name: "Du lịch & Ẩm thực", icon: "🍣" },
-    { id: "news", name: "Tin tức & Xã hội", icon: "📰" },
+    { id: "health", name: "Y tế & Sức khỏe", icon: "🩺" },
+    { id: "education", name: "Giáo dục & Tâm lý", icon: "🎓" },
+    { id: "news", name: "Tin tức & Thời sự", icon: "📰" },
   ],
   en: [
     { id: "daily", name: "Daily Life & Habits", icon: "☕" },
@@ -1477,109 +1480,206 @@ ${item.audioScript}。
               </div>
             </div>
 
-            {/* Step 3: Select Mondai for JLPT Reading / Listening OR Select Topic */}
+            {/* Step 3: Select Mondai for JLPT Reading / Listening */}
             {selectedLang === "ja" && selectedType === "reading" ? (
-              <div className="space-y-2 pt-2 border-t border-gray-100">
+              <div className="space-y-3 pt-2 border-t border-gray-100">
                 <div className="flex items-center justify-between">
                   <label className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">
-                    3. Chọn Mondai Đọc hiểu ({selectedLevel}):
+                    3. Chọn Mondai Đọc hiểu ({selectedLevel}) - Chọn 1:
                   </label>
                   <span className="text-[10px] text-teal-600 font-bold">
-                    {filteredReadingPassages.length} bài
+                    Mondai {selectedReadingMondai}
                   </span>
                 </div>
                 <div className="grid grid-cols-1 gap-1.5">
-                  <button
-                    type="button"
-                    onClick={() => setSelectedReadingMondai("all")}
-                    className={`px-3 py-2 rounded-xl text-left text-xs font-bold border transition-all cursor-pointer flex items-center justify-between ${
-                      selectedReadingMondai === "all"
-                        ? "bg-teal-600 border-teal-600 text-white shadow-xs"
-                        : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
-                    }`}
-                  >
-                    <span>📑 Tất cả Mondai</span>
-                    <span className="text-[10px] opacity-80">{allReadingPassages.length} bài</span>
-                  </button>
-                  {readingMondais.map((m) => (
-                    <button
-                      key={m.mondaiNumber}
-                      type="button"
-                      onClick={() => setSelectedReadingMondai(m.mondaiNumber)}
-                      className={`px-3 py-2 rounded-xl text-left text-xs font-bold border transition-all cursor-pointer flex items-center justify-between ${
-                        selectedReadingMondai === m.mondaiNumber
-                          ? "bg-teal-600 border-teal-600 text-white shadow-xs"
-                          : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
-                      }`}
-                    >
-                      <div>
-                        <div>{m.mondaiName}</div>
-                        <div className="text-[10px] font-normal opacity-80">{m.mondaiSubtitle}</div>
-                      </div>
-                      <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-black/10">
-                        {m.count}
-                      </span>
-                    </button>
-                  ))}
+                  {readingMondais.map((m) => {
+                    const isSelected = selectedReadingMondai === m.mondaiNumber;
+                    return (
+                      <button
+                        key={m.mondaiNumber}
+                        type="button"
+                        onClick={() => setSelectedReadingMondai(m.mondaiNumber)}
+                        className={`px-3.5 py-2.5 rounded-2xl text-left text-xs font-bold border transition-all cursor-pointer flex items-center justify-between ${
+                          isSelected
+                            ? "bg-teal-600 border-teal-600 text-white shadow-xs ring-2 ring-teal-200"
+                            : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
+                        }`}
+                      >
+                        <div>
+                          <div className="flex items-center gap-1.5">
+                            <span>{isSelected ? "🔘" : "⚪"}</span>
+                            <span>{m.mondaiName}</span>
+                          </div>
+                          <div className={`text-[10px] font-normal mt-0.5 pl-5 ${isSelected ? "text-teal-100" : "text-gray-500"}`}>
+                            {m.mondaiSubtitle}
+                          </div>
+                        </div>
+                        <span className={`text-[10px] px-2 py-0.5 rounded-lg font-bold ${isSelected ? "bg-white/20 text-white" : "bg-gray-100 text-gray-600"}`}>
+                          {m.count} bài
+                        </span>
+                      </button>
+                    );
+                  })}
                 </div>
 
+                {/* Step 4: Topic Selection for Reading */}
+                <div className="space-y-2 pt-2 border-t border-gray-100">
+                  <div className="flex items-center justify-between">
+                    <label className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">
+                      4. Chọn chủ đề bài đọc:
+                    </label>
+                    <span className="text-[10px] text-teal-700 font-bold bg-teal-50 px-2 py-0.5 rounded-lg border border-teal-200/60">
+                      {activeTopic}
+                    </span>
+                  </div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {(POPULAR_TOPICS_BY_LANG[selectedLang] || POPULAR_TOPICS_BY_LANG.ja).map((t) => (
+                      <button
+                        key={t.id}
+                        type="button"
+                        onClick={() => {
+                          setSelectedTopic(t.name);
+                          setCustomTopic("");
+                        }}
+                        className={`px-2.5 py-1.5 rounded-xl text-[11px] font-bold border transition-all cursor-pointer ${
+                          selectedTopic === t.name && !customTopic
+                            ? "bg-teal-600 border-teal-600 text-white shadow-xs"
+                            : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50"
+                        }`}
+                      >
+                        {t.icon} {t.name}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="space-y-1 pt-1">
+                    <label className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">
+                      Hoặc tự nhập chủ đề theo ý muốn:
+                    </label>
+                    <input
+                      type="text"
+                      value={customTopic}
+                      onChange={(e) => setCustomTopic(e.target.value)}
+                      placeholder="Ví dụ: Phỏng vấn xin việc, AI và việc làm, Lễ hội Nhật Bản..."
+                      className="w-full rounded-xl border border-gray-200 p-2.5 text-xs focus:outline-none focus:border-teal-500 shadow-3xs"
+                    />
+                  </div>
+                </div>
+
+                {/* Step 5: AI Generate Button */}
                 <button
                   type="button"
                   onClick={handleGenerate}
                   disabled={generating}
-                  className="w-full mt-2 py-3 rounded-2xl text-xs font-bold text-white bg-gradient-to-r from-teal-600 to-indigo-600 hover:opacity-95 shadow-md shadow-teal-100 transition-all cursor-pointer"
+                  className="w-full mt-1 py-3.5 rounded-2xl text-xs font-bold text-white bg-gradient-to-r from-teal-600 to-indigo-600 hover:opacity-95 shadow-md shadow-teal-200 transition-all cursor-pointer disabled:opacity-50"
                 >
-                  {generating ? "🤖 Đang biên soạn..." : "✨ Tạo thêm bài đọc bằng AI"}
+                  <div className="flex items-center justify-center gap-1.5">
+                    <span>{generating ? "🤖 Đang biên soạn..." : "✨ Biên soạn Đọc hiểu bằng AI"}</span>
+                  </div>
+                  <span className="block text-[10px] font-normal opacity-90 mt-0.5">
+                    Mondai {selectedReadingMondai} • Chủ đề: {activeTopic}
+                  </span>
                 </button>
               </div>
             ) : selectedLang === "ja" && selectedType === "listening" ? (
-              <div className="space-y-2 pt-2 border-t border-gray-100">
+              <div className="space-y-3 pt-2 border-t border-gray-100">
                 <div className="flex items-center justify-between">
                   <label className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">
-                    3. Chọn Mondai Nghe hiểu ({selectedLevel}):
+                    3. Chọn Mondai Nghe hiểu ({selectedLevel}) - Chọn 1:
                   </label>
                   <span className="text-[10px] text-amber-600 font-bold">
-                    {filteredListeningQuestions.length} câu
+                    Mondai {selectedListeningMondai}
                   </span>
                 </div>
                 <div className="grid grid-cols-1 gap-1.5">
-                  <button
-                    type="button"
-                    onClick={() => setSelectedListeningMondai("all")}
-                    className={`px-3 py-2 rounded-xl text-left text-xs font-bold border transition-all cursor-pointer flex items-center justify-between ${
-                      selectedListeningMondai === "all"
-                        ? "bg-amber-600 border-amber-600 text-white shadow-xs"
-                        : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
-                    }`}
-                  >
-                    <span>🎧 Tất cả Mondai</span>
-                    <span className="text-[10px] opacity-80">{allListeningQuestions.length} câu</span>
-                  </button>
-                  {listeningMondais.map((m) => (
-                    <button
-                      key={m.mondaiNumber}
-                      type="button"
-                      onClick={() => setSelectedListeningMondai(m.mondaiNumber)}
-                      className={`px-3 py-2 rounded-xl text-left text-xs font-bold border transition-all cursor-pointer flex items-center justify-between ${
-                        selectedListeningMondai === m.mondaiNumber
-                          ? "bg-amber-600 border-amber-600 text-white shadow-xs"
-                          : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
-                      }`}
-                    >
-                      <div>
-                        <div>{m.mondaiName}</div>
-                        <div className="text-[10px] font-normal opacity-80">{m.mondaiSubtitle}</div>
-                      </div>
-                      <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-black/10">
-                        {m.count}
-                      </span>
-                    </button>
-                  ))}
+                  {listeningMondais.map((m) => {
+                    const isSelected = selectedListeningMondai === m.mondaiNumber;
+                    return (
+                      <button
+                        key={m.mondaiNumber}
+                        type="button"
+                        onClick={() => setSelectedListeningMondai(m.mondaiNumber)}
+                        className={`px-3.5 py-2.5 rounded-2xl text-left text-xs font-bold border transition-all cursor-pointer flex items-center justify-between ${
+                          isSelected
+                            ? "bg-amber-600 border-amber-600 text-white shadow-xs ring-2 ring-amber-200"
+                            : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
+                        }`}
+                      >
+                        <div>
+                          <div className="flex items-center gap-1.5">
+                            <span>{isSelected ? "🔘" : "⚪"}</span>
+                            <span>{m.mondaiName}</span>
+                          </div>
+                          <div className={`text-[10px] font-normal mt-0.5 pl-5 ${isSelected ? "text-amber-100" : "text-gray-500"}`}>
+                            {m.mondaiSubtitle}
+                          </div>
+                        </div>
+                        <span className={`text-[10px] px-2 py-0.5 rounded-lg font-bold ${isSelected ? "bg-white/20 text-white" : "bg-gray-100 text-gray-600"}`}>
+                          {m.count} câu
+                        </span>
+                      </button>
+                    );
+                  })}
                 </div>
 
-                <div className="p-3 bg-amber-50/70 border border-amber-200/60 rounded-2xl text-[11px] text-amber-900">
-                  💡 Chọn bài nghe ở danh sách bên phải và nhấn <strong>▶️ Phát bài nghe</strong> để luyện phản xạ!
+                {/* Step 4: Topic Selection for Listening */}
+                <div className="space-y-2 pt-2 border-t border-gray-100">
+                  <div className="flex items-center justify-between">
+                    <label className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">
+                      4. Chọn chủ đề bài nghe:
+                    </label>
+                    <span className="text-[10px] text-amber-700 font-bold bg-amber-50 px-2 py-0.5 rounded-lg border border-amber-200/60">
+                      {activeTopic}
+                    </span>
+                  </div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {(POPULAR_TOPICS_BY_LANG[selectedLang] || POPULAR_TOPICS_BY_LANG.ja).map((t) => (
+                      <button
+                        key={t.id}
+                        type="button"
+                        onClick={() => {
+                          setSelectedTopic(t.name);
+                          setCustomTopic("");
+                        }}
+                        className={`px-2.5 py-1.5 rounded-xl text-[11px] font-bold border transition-all cursor-pointer ${
+                          selectedTopic === t.name && !customTopic
+                            ? "bg-amber-600 border-amber-600 text-white shadow-xs"
+                            : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50"
+                        }`}
+                      >
+                        {t.icon} {t.name}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="space-y-1 pt-1">
+                    <label className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">
+                      Hoặc tự nhập chủ đề theo ý muốn:
+                    </label>
+                    <input
+                      type="text"
+                      value={customTopic}
+                      onChange={(e) => setCustomTopic(e.target.value)}
+                      placeholder="Ví dụ: Đặt bàn ăn, Chuyển nhà trọ, Họp công ty, Mất ví tiền..."
+                      className="w-full rounded-xl border border-gray-200 p-2.5 text-xs focus:outline-none focus:border-amber-500 shadow-3xs"
+                    />
+                  </div>
                 </div>
+
+                {/* Step 5: AI Generate Button */}
+                <button
+                  type="button"
+                  onClick={handleGenerate}
+                  disabled={generating}
+                  className="w-full mt-1 py-3.5 rounded-2xl text-xs font-bold text-white bg-gradient-to-r from-amber-600 to-orange-600 hover:opacity-95 shadow-md shadow-amber-200 transition-all cursor-pointer disabled:opacity-50"
+                >
+                  <div className="flex items-center justify-center gap-1.5">
+                    <span>{generating ? "🤖 Đang biên soạn..." : "🎧 Biên soạn Nghe hiểu bằng AI"}</span>
+                  </div>
+                  <span className="block text-[10px] font-normal opacity-90 mt-0.5">
+                    Mondai {selectedListeningMondai} • Chủ đề: {activeTopic}
+                  </span>
+                </button>
               </div>
             ) : (
               <>
@@ -1591,6 +1691,7 @@ ${item.audioScript}。
                     {(POPULAR_TOPICS_BY_LANG[selectedLang] || POPULAR_TOPICS_BY_LANG.ja).map((t) => (
                       <button
                         key={t.id}
+                        type="button"
                         onClick={() => {
                           setSelectedTopic(t.name);
                           setCustomTopic("");
@@ -1623,6 +1724,7 @@ ${item.audioScript}。
                 </div>
 
                 <button
+                  type="button"
                   onClick={handleGenerate}
                   disabled={generating}
                   className={`w-full py-3.5 rounded-2xl text-xs font-bold text-white transition-all shadow-md cursor-pointer ${
