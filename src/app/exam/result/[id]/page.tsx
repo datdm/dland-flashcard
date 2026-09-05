@@ -11,6 +11,7 @@ import ExamPassageCard from "@/components/exam/ExamPassageCard";
 import ExamSectionNav from "@/components/exam/ExamSectionNav";
 import MaziiQuickLookupModal from "@/components/MaziiQuickLookupModal";
 import SelectionLookupTooltip from "@/components/SelectionLookupTooltip";
+import AddToNotebookModal from "@/components/AddToNotebookModal";
 import { getStructuredMajorSections } from "@/lib/examUtils";
 
 interface Props {
@@ -25,6 +26,8 @@ export default function ExamResultPage({ params }: Props) {
   const [exam, setExam] = useState<StoredExam | null>(null);
   const [showFullReview, setShowFullReview] = useState<boolean>(true);
   const [selectedReviewTab, setSelectedReviewTab] = useState<string>("all");
+  const [selectedWordForNotebook, setSelectedWordForNotebook] = useState<any | null>(null);
+  const [saveSuccessMsg, setSaveSuccessMsg] = useState<string | null>(null);
 
   // Mazii Quick Lookup Modal state
   const [maziiState, setMaziiState] = useState<{
@@ -49,10 +52,17 @@ export default function ExamResultPage({ params }: Props) {
     }
   }, [id, router]);
 
-  const majorSections = useMemo<ExamMajorSection[]>(() => {
+  const allMajorSections = useMemo<ExamMajorSection[]>(() => {
     if (!exam) return [];
     return getStructuredMajorSections(exam.data);
   }, [exam]);
+
+  const availableMajorSections = useMemo<ExamMajorSection[]>(() => {
+    if (result?.selectedSectionIds && result.selectedSectionIds.length > 0) {
+      return allMajorSections.filter((sec) => result.selectedSectionIds!.includes(sec.id));
+    }
+    return allMajorSections;
+  }, [allMajorSections, result]);
 
   if (!result || !exam) {
     return (
@@ -101,15 +111,25 @@ export default function ExamResultPage({ params }: Props) {
   const passageMap = new Map<string, any>();
   (exam.data.passages || []).forEach((p) => passageMap.set(p.id, p));
 
-  const filteredMajorSections = majorSections.filter(
+  const filteredMajorSections = availableMajorSections.filter(
     (major) => selectedReviewTab === "all" || major.id === selectedReviewTab
   );
 
-  const scaledScore = Math.round((result.correctCount / result.totalQuestions) * 180);
+  const maxScore = result.maxScore || 180;
+  const scaledScore =
+    result.scaledScore ??
+    Math.round((result.correctCount / (result.totalQuestions || 1)) * maxScore);
+
+  const isCustomSectionExam = Boolean(
+    result.selectedSectionIds &&
+    result.selectedSectionIds.length > 0 &&
+    allMajorSections.length > 0 &&
+    result.selectedSectionIds.length < allMajorSections.length
+  );
 
   return (
     <AuthGuard featureName="Kết Quả Thi JLPT">
-      <div className="min-h-screen bg-gray-50/60 pb-28">
+      <div className="min-h-screen bg-gray-50/60 pb-8 md:pb-4">
         <SelectionLookupTooltip
           onLookup={(text) => setMaziiState({ isOpen: true, queryWord: text })}
         />
@@ -137,9 +157,24 @@ export default function ExamResultPage({ params }: Props) {
           </div>
         </header>
 
-        <div className="max-w-[1600px] mx-auto p-3.5 sm:p-6 lg:p-8 space-y-6 sm:space-y-8">
+        <div className="max-w-[1600px] mx-auto px-3 sm:px-4 lg:px-6 py-3 sm:py-4 space-y-4 sm:space-y-5">
           {/* Main Score Hero Card */}
-          <div className="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-8 border border-gray-100 shadow-xl text-center relative overflow-hidden">
+          <div className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-sm text-center relative overflow-hidden">
+            {isCustomSectionExam && (
+              <div className="mb-2.5">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-50 text-amber-800 rounded-full text-xs font-bold border border-amber-200">
+                  <span>🎯</span>
+                  <span>
+                    Bài thi tùy chọn: {result.selectedSectionIds?.length} phần đã làm (
+                    {result.selectedSectionIds
+                      ?.map((sid) => allMajorSections.find((s) => s.id === sid)?.name || sid)
+                      .join(", ")}
+                    )
+                  </span>
+                </span>
+              </div>
+            )}
+
             <div className="flex items-center justify-center gap-2 mb-2">
               <span className="px-3 py-1 bg-indigo-50 text-indigo-700 rounded-full text-xs font-extrabold border border-indigo-100">
                 JLPT {result.level}
@@ -158,9 +193,9 @@ export default function ExamResultPage({ params }: Props) {
             </h1>
 
             {/* Score Ring / Badge */}
-            <div className="my-6 inline-flex flex-col items-center justify-center">
+            <div className="my-5 inline-flex flex-col items-center justify-center">
               <div
-                className={`w-36 h-36 rounded-full flex flex-col items-center justify-center border-8 shadow-inner ${
+                className={`w-32 h-32 rounded-full flex flex-col items-center justify-center border-8 shadow-inner ${
                   result.passed
                     ? "bg-emerald-50 border-emerald-500 text-emerald-700"
                     : "bg-rose-50 border-rose-500 text-rose-700"
@@ -173,9 +208,9 @@ export default function ExamResultPage({ params }: Props) {
               </div>
             </div>
 
-            <div className="flex items-center justify-center gap-3 flex-wrap mb-4">
+            <div className="flex items-center justify-center gap-2.5 flex-wrap mb-2">
               <span
-                className={`px-5 py-2 rounded-2xl text-sm font-black tracking-wide shadow-sm flex items-center gap-2 ${
+                className={`px-4 py-1.5 rounded-xl text-xs font-black tracking-wide shadow-xs flex items-center gap-1.5 ${
                   result.passed
                     ? "bg-emerald-600 text-white shadow-emerald-200"
                     : "bg-rose-600 text-white shadow-rose-200"
@@ -187,26 +222,26 @@ export default function ExamResultPage({ params }: Props) {
                 </span>
               </span>
 
-              <span className="px-4 py-2 rounded-2xl bg-gray-100 text-gray-700 text-xs font-bold flex items-center gap-1.5">
+              <span className="px-3.5 py-1.5 rounded-xl bg-gray-100 text-gray-700 text-xs font-bold flex items-center gap-1.5">
                 <span>⏱️</span>
                 <span>Thời gian: {formatTime(result.timeTaken)}</span>
               </span>
 
-              <span className="px-4 py-2 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 text-xs font-black flex items-center gap-1.5">
+              <span className="px-3.5 py-1.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs font-black flex items-center gap-1.5">
                 <span>🎯</span>
-                <span>Điểm quy đổi: {scaledScore}/180 điểm</span>
+                <span>Điểm quy đổi: {scaledScore}/{maxScore} điểm</span>
               </span>
             </div>
           </div>
 
           {/* Section & Mondai Results Breakdown */}
-          <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-2xs space-y-5">
-            <h2 className="text-base font-extrabold text-gray-900 flex items-center gap-2">
+          <div className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-xs space-y-4">
+            <h2 className="text-sm sm:text-base font-extrabold text-gray-900 flex items-center gap-2">
               <span>📊</span>
               <span>Chi Tiết Điểm Số Theo Mục Lớn & Mondai</span>
             </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {result.sectionResults.map((sec, idx) => {
                 const secPct =
                   sec.total > 0 ? Math.round((sec.correct / sec.total) * 100) : 0;
@@ -215,7 +250,7 @@ export default function ExamResultPage({ params }: Props) {
                 return (
                   <div
                     key={idx}
-                    className="bg-gray-50/80 rounded-2xl p-5 border border-gray-100 space-y-3 flex flex-col justify-between"
+                    className="bg-gray-50/80 rounded-xl p-4 border border-gray-100 space-y-2.5 flex flex-col justify-between"
                   >
                     <div className="space-y-2">
                       <div className="flex items-center justify-between text-xs font-extrabold">
@@ -225,7 +260,7 @@ export default function ExamResultPage({ params }: Props) {
                         </span>
                       </div>
 
-                      <div className="w-full h-2.5 bg-gray-200 rounded-full overflow-hidden">
+                      <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
                         <div
                           className={`h-full rounded-full transition-all ${
                             secPct >= 60
@@ -246,14 +281,14 @@ export default function ExamResultPage({ params }: Props) {
 
                     {/* Mondai Breakdown Mini List */}
                     {sec.mondaiResults && sec.mondaiResults.length > 0 && (
-                      <div className="pt-3 border-t border-gray-200/60 space-y-1.5">
-                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1">
+                      <div className="pt-2.5 border-t border-gray-200/60 space-y-1">
+                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-0.5">
                           Chi tiết các Mondai:
                         </span>
                         {sec.mondaiResults.map((m, mIdx) => (
                           <div
                             key={mIdx}
-                            className="flex items-center justify-between text-[11px] text-gray-600 bg-white px-2.5 py-1 rounded-lg border border-gray-100"
+                            className="flex items-center justify-between text-[11px] text-gray-600 bg-white px-2 py-1 rounded-lg border border-gray-100"
                           >
                             <span className="truncate max-w-[170px] font-medium">{m.mondaiTitle}</span>
                             <span className="font-extrabold text-indigo-700 shrink-0">
@@ -270,11 +305,11 @@ export default function ExamResultPage({ params }: Props) {
           </div>
 
           {/* Major Section Filter Tabs for Review */}
-          <div className="flex items-center justify-between gap-4 flex-wrap">
-            <div className="flex items-center gap-2 overflow-x-auto">
+          <div className="flex items-center justify-between gap-3 flex-wrap">
+            <div className="flex items-center gap-1.5 overflow-x-auto">
               <button
                 onClick={() => setSelectedReviewTab("all")}
-                className={`px-4 py-2 rounded-2xl text-xs font-black transition-all shrink-0 cursor-pointer ${
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
                   selectedReviewTab === "all"
                     ? "bg-indigo-600 text-white shadow-xs"
                     : "bg-white text-gray-600 border border-gray-200 hover:bg-gray-50"
@@ -283,13 +318,13 @@ export default function ExamResultPage({ params }: Props) {
                 🌟 Tất cả câu hỏi ({result.totalQuestions})
               </button>
 
-              {majorSections.map((major) => {
+              {availableMajorSections.map((major) => {
                 const isSelected = selectedReviewTab === major.id;
                 return (
                   <button
                     key={major.id}
                     onClick={() => setSelectedReviewTab(major.id)}
-                    className={`px-4 py-2 rounded-2xl text-xs font-black transition-all shrink-0 cursor-pointer flex items-center gap-1.5 ${
+                    className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer flex items-center gap-1.5 ${
                       isSelected
                         ? "bg-indigo-600 text-white shadow-xs"
                         : "bg-white text-gray-600 border border-gray-200 hover:bg-gray-50"
@@ -305,7 +340,7 @@ export default function ExamResultPage({ params }: Props) {
             <button
               type="button"
               onClick={() => setShowFullReview((prev) => !prev)}
-              className="px-4 py-2 rounded-2xl bg-gray-200 hover:bg-gray-300 text-gray-800 font-extrabold text-xs transition-all cursor-pointer"
+              className="px-3 py-1.5 rounded-xl bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold text-xs transition-all cursor-pointer"
             >
               {showFullReview ? "▲ Thu gọn bài thi" : "▼ Xem toàn bộ câu hỏi"}
             </button>
@@ -313,26 +348,26 @@ export default function ExamResultPage({ params }: Props) {
 
           {/* Full Exam Review Layout */}
           {showFullReview && (
-            <div className="flex flex-col lg:flex-row gap-6 items-start">
+            <div className="flex flex-col lg:flex-row gap-5 items-start">
               {/* Questions Stream grouped by Major Section & Mondai with Explanations */}
-              <div className="flex-1 min-w-0 space-y-8">
+              <div className="flex-1 min-w-0 space-y-5">
                 {filteredMajorSections.map((major) => (
                   <section
                     key={major.id}
                     id={`major-review-${major.id}`}
-                    className="space-y-6 scroll-mt-28"
+                    className="space-y-4 scroll-mt-24"
                   >
                     {/* Major Section Header */}
-                    <div className="bg-gradient-to-r from-indigo-900 via-indigo-800 to-purple-900 rounded-3xl p-5 sm:p-6 text-white shadow-md flex items-center justify-between">
+                    <div className="bg-gradient-to-r from-indigo-900 via-indigo-800 to-purple-900 rounded-2xl p-4 sm:p-4.5 text-white shadow-xs flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <span className="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-2xl">
+                        <span className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center text-xl">
                           {major.icon}
                         </span>
                         <div>
                           <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-200">
                             {major.japaneseName}
                           </span>
-                          <h2 className="text-lg sm:text-xl font-black">{major.name}</h2>
+                          <h2 className="text-base sm:text-lg font-black">{major.name}</h2>
                         </div>
                       </div>
                     </div>
@@ -342,10 +377,10 @@ export default function ExamResultPage({ params }: Props) {
                       <div
                         key={mondai.id}
                         id={`mondai-review-${mondai.id}`}
-                        className="bg-white rounded-3xl p-5 sm:p-6 border border-gray-200/90 shadow-xs space-y-4 scroll-mt-24"
+                        className="bg-white rounded-2xl p-3.5 sm:p-4 border border-gray-200/90 shadow-xs space-y-3.5 scroll-mt-20"
                       >
                         {/* Mondai Header Card */}
-                        <div className="bg-indigo-50/70 border border-indigo-100 rounded-2xl p-4">
+                        <div className="bg-indigo-50/70 border border-indigo-100 rounded-xl p-3">
                           <span className="text-xs font-black text-indigo-900 flex items-center gap-1.5 mb-1">
                             <span className="w-2 h-2 rounded-full bg-indigo-600" />
                             <span>{mondai.title}</span>
@@ -358,7 +393,7 @@ export default function ExamResultPage({ params }: Props) {
                         </div>
 
                         {/* Questions in this Mondai */}
-                        <div className="space-y-4 pt-1">
+                        <div className="space-y-3 pt-0.5">
                           {(mondai.questionIds || []).map((qid) => {
                             const q = questionMap.get(qid);
                             if (!q) return null;
@@ -404,8 +439,8 @@ export default function ExamResultPage({ params }: Props) {
               </div>
 
               {/* Sidebar Navigator - Sticky */}
-              <div className="hidden lg:block w-80 shrink-0 sticky top-24 bg-white rounded-2xl sm:rounded-3xl p-5 border border-gray-200/80 shadow-xs max-h-[calc(100vh-7rem)] overflow-y-auto custom-scrollbar z-30">
-                <div className="text-xs font-extrabold text-gray-700 pb-3 mb-3 border-b border-gray-100 flex items-center justify-between">
+              <div className="hidden lg:block w-80 shrink-0 sticky top-20 bg-white rounded-2xl p-4 border border-gray-200/80 shadow-xs max-h-[calc(100vh-6rem)] overflow-y-auto custom-scrollbar z-30">
+                <div className="text-xs font-extrabold text-gray-700 pb-2.5 mb-2.5 border-b border-gray-100 flex items-center justify-between">
                   <span>Bảng đáp án</span>
                   <span className="text-emerald-600 font-black">
                     {result.correctCount}/{result.totalQuestions} Đúng
@@ -415,6 +450,7 @@ export default function ExamResultPage({ params }: Props) {
                 <ExamSectionNav
                   examData={exam.data}
                   answers={result.answers}
+                  selectedSectionIds={result.selectedSectionIds}
                   currentQuestionId={null}
                   onNavigate={(qid) => {
                     document.getElementById(`question-${qid}`)?.scrollIntoView({
@@ -446,7 +482,34 @@ export default function ExamResultPage({ params }: Props) {
           isOpen={maziiState.isOpen}
           queryWord={maziiState.queryWord}
           onClose={() => setMaziiState({ isOpen: false, queryWord: "" })}
+          onAddToNotebook={(word) => setSelectedWordForNotebook(word)}
         />
+
+        {/* Add to Notebook Modal */}
+        {selectedWordForNotebook && (
+          <AddToNotebookModal
+            selectedWord={{
+              id: `exam-${Date.now()}`,
+              kanji: selectedWordForNotebook.kanji || selectedWordForNotebook.word || "",
+              hiragana: selectedWordForNotebook.hiragana || selectedWordForNotebook.phonetic || selectedWordForNotebook.reading || "",
+              meaning: selectedWordForNotebook.meaning || selectedWordForNotebook.vietnamese || "",
+            }}
+            onClose={() => setSelectedWordForNotebook(null)}
+            onSuccess={() => {
+              setSelectedWordForNotebook(null);
+              setSaveSuccessMsg("Đã thêm từ vào sổ tay thành công!");
+              setTimeout(() => setSaveSuccessMsg(null), 3000);
+            }}
+          />
+        )}
+
+        {/* Save success toast */}
+        {saveSuccessMsg && (
+          <div className="fixed bottom-6 right-6 z-50 bg-emerald-600 text-white px-4 py-2.5 rounded-xl shadow-lg flex items-center gap-2 text-xs font-bold animate-in fade-in slide-in-from-bottom-3">
+            <span>✓</span>
+            <span>{saveSuccessMsg}</span>
+          </div>
+        )}
       </div>
     </AuthGuard>
   );

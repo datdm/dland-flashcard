@@ -20,6 +20,7 @@ import ExamSectionNav from "@/components/exam/ExamSectionNav";
 import MaziiQuickLookupModal from "@/components/MaziiQuickLookupModal";
 import SelectionLookupTooltip from "@/components/SelectionLookupTooltip";
 import ExamStructureModal from "@/components/exam/ExamStructureModal";
+import AddToNotebookModal from "@/components/AddToNotebookModal";
 import { getStructuredMajorSections } from "@/lib/examUtils";
 
 interface Props {
@@ -40,6 +41,9 @@ export default function ExamTakingPage({ params }: Props) {
   const [showStructureModal, setShowStructureModal] = useState<boolean>(false);
   const [selectedMajorTab, setSelectedMajorTab] = useState<string>("all");
   const [isRestoredDraft, setIsRestoredDraft] = useState<boolean>(false);
+  const [selectedSectionIds, setSelectedSectionIds] = useState<string[]>([]);
+  const [selectedWordForNotebook, setSelectedWordForNotebook] = useState<any | null>(null);
+  const [saveSuccessMsg, setSaveSuccessMsg] = useState<string | null>(null);
 
   // Mazii Quick Lookup Modal state
   const [maziiState, setMaziiState] = useState<{
@@ -55,6 +59,8 @@ export default function ExamTakingPage({ params }: Props) {
   const timeRef = useRef(timeRemaining);
   timeRef.current = timeRemaining;
   const isLeavingRef = useRef<boolean>(false);
+  const selectedSectionIdsRef = useRef(selectedSectionIds);
+  selectedSectionIdsRef.current = selectedSectionIds;
 
   // Load exam and progress
   useEffect(() => {
@@ -65,6 +71,7 @@ export default function ExamTakingPage({ params }: Props) {
     }
     setExam(loaded);
 
+    const sections = getStructuredMajorSections(loaded.data);
     const savedProgress = getExamProgress(id);
     if (
       savedProgress &&
@@ -74,8 +81,14 @@ export default function ExamTakingPage({ params }: Props) {
       setAnswers(savedProgress.answers || {});
       setTimeRemaining(savedProgress.timeRemaining);
       setIsRestoredDraft(true);
+      if (savedProgress.selectedSectionIds && savedProgress.selectedSectionIds.length > 0) {
+        setSelectedSectionIds(savedProgress.selectedSectionIds);
+      } else {
+        setSelectedSectionIds(sections.map((s) => s.id));
+      }
     } else {
       setTimeRemaining(loaded.data.meta.timeLimit);
+      setSelectedSectionIds(sections.map((s) => s.id));
     }
   }, [id, router]);
 
@@ -88,6 +101,7 @@ export default function ExamTakingPage({ params }: Props) {
         answers: answersRef.current,
         startedAt: Date.now(),
         timeRemaining: timeRef.current,
+        selectedSectionIds: selectedSectionIdsRef.current,
       });
     }, 10000);
     return () => clearInterval(interval);
@@ -102,6 +116,7 @@ export default function ExamTakingPage({ params }: Props) {
           answers: answersRef.current,
           startedAt: Date.now(),
           timeRemaining: timeRef.current,
+          selectedSectionIds: selectedSectionIdsRef.current,
         });
         e.preventDefault();
         e.returnValue = "";
@@ -118,6 +133,7 @@ export default function ExamTakingPage({ params }: Props) {
       answers: answersRef.current,
       startedAt: Date.now(),
       timeRemaining: timeRef.current,
+      selectedSectionIds: selectedSectionIdsRef.current,
     });
     alert("✅ Đã lưu tạm bài làm thành công! Bạn có thể quay lại làm bài tiếp bất kỳ lúc nào.");
     router.push("/exam");
@@ -177,6 +193,7 @@ export default function ExamTakingPage({ params }: Props) {
 
   const navigateToQuestion = (qid: number) => {
     setIsDrawerOpen(false);
+    setCurrentQId(qid);
     setTimeout(() => {
       document.getElementById(`question-${qid}`)?.scrollIntoView({
         behavior: "smooth",
@@ -205,6 +222,24 @@ export default function ExamTakingPage({ params }: Props) {
     }, 80);
   };
 
+  const toggleSection = (secId: string) => {
+    setSelectedSectionIds((prev) => {
+      if (prev.includes(secId)) {
+        if (prev.length <= 1) {
+          alert("Bạn cần chọn ít nhất 1 phần thi để làm bài.");
+          return prev;
+        }
+        return prev.filter((id) => id !== secId);
+      } else {
+        return [...prev, secId];
+      }
+    });
+  };
+
+  const selectAllSections = () => {
+    setSelectedSectionIds(majorSections.map((m) => m.id));
+  };
+
   const majorSections = useMemo<ExamMajorSection[]>(() => {
     if (!exam) return [];
     return getStructuredMajorSections(exam.data);
@@ -214,15 +249,16 @@ export default function ExamTakingPage({ params }: Props) {
     (force = false) => {
       if (!exam) return;
 
-      const allQuestions = [
-        ...exam.data.questions,
-        ...(exam.data.passages || []).flatMap((p) => p.questions),
-      ];
-
       const currentAnswers = answersRef.current;
-      let totalCorrect = 0;
+      const currentSelectedIds = selectedSectionIdsRef.current;
+      const activeMajorSections = majorSections.filter((m) =>
+        currentSelectedIds.length > 0 ? currentSelectedIds.includes(m.id) : true
+      );
 
-      const sectionResults: SectionResult[] = majorSections.map((major) => {
+      let totalCorrect = 0;
+      let totalQuestionsCount = 0;
+
+      const sectionResults: SectionResult[] = activeMajorSections.map((major) => {
         let correct = 0;
         let total = 0;
         const mondaiResults: MondaiResult[] = [];
@@ -273,6 +309,7 @@ export default function ExamTakingPage({ params }: Props) {
         });
 
         totalCorrect += correct;
+        totalQuestionsCount += total;
         return {
           name: major.name,
           majorSectionId: major.id,
@@ -284,11 +321,12 @@ export default function ExamTakingPage({ params }: Props) {
         };
       });
 
-      const totalQ = allQuestions.length;
-      const scorePct = totalQ > 0 ? Math.round((totalCorrect / totalQ) * 100) : 0;
-      const passMark = exam.data.meta.passMark || 90;
-      const scaledScore = Math.round((totalCorrect / totalQ) * 180);
-      const passed = scaledScore >= passMark;
+      const totalQ = totalQuestionsCount;
+      const scorePct = totalQ > 0 ? Math.round((totalCorrect / (totalQ || 1)) * 100) : 0;
+      const maxPossibleScore = activeMajorSections.length * 60;
+      const scaledScore = Math.round((totalCorrect / (totalQ || 1)) * maxPossibleScore);
+      const passThreshold = Math.round((maxPossibleScore / 180) * (exam.data.meta.passMark || 90));
+      const passed = scaledScore >= passThreshold;
 
       setSubmitted(true);
       clearExamProgress(id);
@@ -307,6 +345,9 @@ export default function ExamTakingPage({ params }: Props) {
         timeTaken: exam.data.meta.timeLimit - timeRef.current,
         passed,
         scorePercentage: scorePct,
+        selectedSectionIds: currentSelectedIds,
+        maxScore: maxPossibleScore,
+        scaledScore,
       };
 
       saveExamResult(result);
@@ -314,6 +355,32 @@ export default function ExamTakingPage({ params }: Props) {
     },
     [exam, id, router, majorSections]
   );
+
+  const filteredMajorSections = useMemo(() => {
+    return majorSections.filter((major) => {
+      const isSelected = selectedSectionIds.length === 0 || selectedSectionIds.includes(major.id);
+      if (!isSelected) return false;
+      if (selectedMajorTab !== "all" && major.id !== selectedMajorTab) return false;
+      return true;
+    });
+  }, [majorSections, selectedSectionIds, selectedMajorTab]);
+
+  const activeQIds = useMemo(() => {
+    const set = new Set<number>();
+    const activeMajors = majorSections.filter(
+      (m) => selectedSectionIds.length === 0 || selectedSectionIds.includes(m.id)
+    );
+    activeMajors.forEach((major) => {
+      major.mondais.forEach((m) => {
+        (m.questionIds || []).forEach((qid) => set.add(qid));
+        (m.passageIds || []).forEach((pid) => {
+          const pg = (exam?.data.passages || []).find((p) => p.id === pid);
+          pg?.questions.forEach((q) => set.add(q.id));
+        });
+      });
+    });
+    return set;
+  }, [selectedSectionIds, majorSections, exam]);
 
   if (!exam) {
     return (
@@ -326,13 +393,9 @@ export default function ExamTakingPage({ params }: Props) {
     );
   }
 
-  const allQList = [
-    ...exam.data.questions,
-    ...(exam.data.passages || []).flatMap((p) => p.questions),
-  ];
-  const totalCount = allQList.length;
-  const answeredCount = allQList.filter(
-    (q) => answers[q.id] && answers[q.id].length > 0
+  const totalCount = activeQIds.size;
+  const answeredCount = Array.from(activeQIds).filter(
+    (qid) => answers[qid] && answers[qid].length > 0
   ).length;
   const progressPercent =
     totalCount > 0 ? Math.round((answeredCount / totalCount) * 100) : 0;
@@ -350,10 +413,6 @@ export default function ExamTakingPage({ params }: Props) {
   const passageMap = new Map<string, any>();
   (exam.data.passages || []).forEach((p) => passageMap.set(p.id, p));
 
-  const filteredMajorSections = majorSections.filter(
-    (major) => selectedMajorTab === "all" || major.id === selectedMajorTab
-  );
-
   return (
     <AuthGuard featureName="Luyện Thi JLPT">
       <div className="min-h-screen flex flex-col bg-gray-50/50">
@@ -362,7 +421,7 @@ export default function ExamTakingPage({ params }: Props) {
         />
 
         {/* Top Sticky Header */}
-        <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-200 px-3.5 sm:px-6 lg:px-8 py-2.5 sm:py-3.5 shadow-3xs">
+        <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-200 px-3 sm:px-4 lg:px-6 py-2 sm:py-2.5 shadow-3xs">
           <div className="max-w-[1600px] mx-auto flex items-center justify-between gap-3">
             <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
               <Link
@@ -435,43 +494,58 @@ export default function ExamTakingPage({ params }: Props) {
             </div>
           </div>
 
-          {/* Major Sections Filter Tabs */}
-          <div className="max-w-[1600px] mx-auto flex items-center gap-2 pt-2.5 overflow-x-auto custom-scrollbar">
-            <button
-              onClick={() => setSelectedMajorTab("all")}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-extrabold transition-all shrink-0 cursor-pointer ${
-                selectedMajorTab === "all"
-                  ? "bg-indigo-600 text-white shadow-xs"
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-              }`}
-            >
-              🌟 Tất cả các phần
-            </button>
+          {/* Major Sections Checkbox Selection Bar */}
+          <div className="max-w-[1600px] mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-2 border-t border-gray-100 mt-2">
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <span className="text-[11px] font-extrabold text-gray-500 uppercase tracking-wider mr-1 shrink-0 flex items-center gap-1">
+                <span>📋</span>
+                <span>Phần thi làm:</span>
+              </span>
+              {majorSections.map((major) => {
+                const isChecked = selectedSectionIds.includes(major.id);
+                return (
+                  <label
+                    key={major.id}
+                    className={`flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-bold border transition-all cursor-pointer select-none ${
+                      isChecked
+                        ? "bg-indigo-50 border-indigo-300 text-indigo-800 shadow-3xs"
+                        : "bg-gray-50 border-gray-200 text-gray-400 hover:bg-gray-100"
+                    }`}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={isChecked}
+                      onChange={() => toggleSection(major.id)}
+                      className="w-3.5 h-3.5 rounded text-indigo-600 focus:ring-indigo-500 accent-indigo-600 cursor-pointer"
+                    />
+                    <span>{major.icon}</span>
+                    <span>{major.name}</span>
+                  </label>
+                );
+              })}
+            </div>
 
-            {majorSections.map((major) => {
-              const isSelected = selectedMajorTab === major.id;
-              return (
+            <div className="flex items-center gap-2 text-xs font-semibold text-gray-500 self-end sm:self-auto shrink-0">
+              <span>
+                Đang làm: <strong className="text-indigo-600">{selectedSectionIds.length}/{majorSections.length}</strong> phần (<strong>{totalCount}</strong> câu)
+              </span>
+              {selectedSectionIds.length < majorSections.length && (
                 <button
-                  key={major.id}
-                  onClick={() => setSelectedMajorTab(major.id)}
-                  className={`px-3.5 py-1.5 rounded-xl text-xs font-extrabold transition-all shrink-0 cursor-pointer flex items-center gap-1.5 ${
-                    isSelected
-                      ? "bg-indigo-600 text-white shadow-xs"
-                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                  }`}
+                  type="button"
+                  onClick={selectAllSections}
+                  className="text-xs text-indigo-600 hover:text-indigo-800 font-bold underline cursor-pointer"
                 >
-                  <span>{major.icon}</span>
-                  <span>{major.name}</span>
+                  Chọn tất cả
                 </button>
-              );
-            })}
+              )}
+            </div>
           </div>
         </header>
 
         {/* Restored Draft Banner */}
         {isRestoredDraft && (
-          <div className="max-w-[1600px] w-full mx-auto px-3.5 sm:px-6 lg:px-8 pt-4">
-            <div className="bg-amber-50 border border-amber-200/80 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs shadow-xs">
+          <div className="max-w-[1600px] w-full mx-auto px-3 sm:px-4 lg:px-6 pt-3">
+            <div className="bg-amber-50 border border-amber-200/80 rounded-2xl p-3.5 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs shadow-xs">
               <div className="flex items-center gap-2.5">
                 <span className="text-xl">✨</span>
                 <div>
@@ -505,29 +579,29 @@ export default function ExamTakingPage({ params }: Props) {
         )}
 
         {/* Main Content Layout */}
-        <div className="flex-1 max-w-[1600px] w-full mx-auto p-3.5 sm:p-6 lg:p-8 flex gap-5 lg:gap-7 items-start">
+        <div className="flex-1 max-w-[1600px] w-full mx-auto px-3 sm:px-4 lg:px-5 py-3 sm:py-4 flex gap-4 lg:gap-5 items-start">
           {/* Questions Stream grouped by Major Section & Mondai */}
-          <main className="flex-1 min-w-0 space-y-6 sm:space-y-8">
+          <main className="flex-1 min-w-0 space-y-4 sm:space-y-5">
             {filteredMajorSections.map((major) => (
               <section
                 key={major.id}
                 id={`major-section-${major.id}`}
-                className="space-y-4 sm:space-y-6 scroll-mt-28"
+                className="space-y-3 sm:space-y-4 scroll-mt-28"
               >
                 {/* Major Section Banner Header */}
-                <div className="bg-gradient-to-r from-indigo-900 via-indigo-800 to-purple-900 rounded-2xl sm:rounded-3xl p-4 sm:p-6 text-white shadow-md flex items-center justify-between">
+                <div className="bg-gradient-to-r from-indigo-900 via-indigo-800 to-purple-900 rounded-2xl p-3.5 sm:p-4 text-white shadow-md flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <span className="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-2xl">
+                    <span className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center text-xl">
                       {major.icon}
                     </span>
                     <div>
                       <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-200">
                         {major.japaneseName}
                       </span>
-                      <h2 className="text-lg sm:text-xl font-black">{major.name}</h2>
+                      <h2 className="text-base sm:text-lg font-black">{major.name}</h2>
                     </div>
                   </div>
-                  <span className="text-xs font-bold bg-white/15 px-3 py-1 rounded-full border border-white/20">
+                  <span className="text-xs font-bold bg-white/15 px-2.5 py-1 rounded-full border border-white/20">
                     {major.mondais.length} Mondai
                   </span>
                 </div>
@@ -537,7 +611,7 @@ export default function ExamTakingPage({ params }: Props) {
                   <div
                     key={mondai.id}
                     id={`mondai-block-${mondai.id}`}
-                    className="bg-white rounded-3xl p-5 sm:p-6 border border-gray-200/90 shadow-xs space-y-4 scroll-mt-24"
+                    className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-200/90 shadow-xs space-y-3.5 scroll-mt-24"
                   >
                     {/* Mondai Header Card */}
                     <div className="bg-indigo-50/70 border border-indigo-100 rounded-2xl p-4">
@@ -574,6 +648,7 @@ export default function ExamTakingPage({ params }: Props) {
                             key={q.id}
                             question={q}
                             index={qIndex}
+                            isFocused={currentQId === q.id}
                             selected={answers[q.id] || []}
                             onChange={handleAnswerChange}
                             onOpenMazii={(word) =>
@@ -652,6 +727,7 @@ export default function ExamTakingPage({ params }: Props) {
                 onNavigate={navigateToQuestion}
                 onNavigatePassage={navigateToPassage}
                 onNavigateMondai={navigateToMondai}
+                selectedSectionIds={selectedSectionIds}
               />
             </div>
           </aside>
@@ -682,6 +758,7 @@ export default function ExamTakingPage({ params }: Props) {
                   onNavigate={navigateToQuestion}
                   onNavigatePassage={navigateToPassage}
                   onNavigateMondai={navigateToMondai}
+                  selectedSectionIds={selectedSectionIds}
                 />
               </div>
             </div>
@@ -739,7 +816,34 @@ export default function ExamTakingPage({ params }: Props) {
           isOpen={maziiState.isOpen}
           queryWord={maziiState.queryWord}
           onClose={() => setMaziiState({ isOpen: false, queryWord: "" })}
+          onAddToNotebook={(word) => setSelectedWordForNotebook(word)}
         />
+
+        {/* Add to Notebook Modal */}
+        {selectedWordForNotebook && (
+          <AddToNotebookModal
+            selectedWord={{
+              id: `exam-${Date.now()}`,
+              kanji: selectedWordForNotebook.kanji || selectedWordForNotebook.word || "",
+              hiragana: selectedWordForNotebook.hiragana || selectedWordForNotebook.phonetic || selectedWordForNotebook.reading || "",
+              meaning: selectedWordForNotebook.meaning || selectedWordForNotebook.vietnamese || "",
+            }}
+            onClose={() => setSelectedWordForNotebook(null)}
+            onSuccess={() => {
+              setSelectedWordForNotebook(null);
+              setSaveSuccessMsg("Đã thêm từ vựng vào sổ tay thành công!");
+              setTimeout(() => setSaveSuccessMsg(null), 3000);
+            }}
+          />
+        )}
+
+        {/* Success Toast */}
+        {saveSuccessMsg && (
+          <div className="fixed bottom-5 right-5 bg-emerald-600 text-white text-xs font-bold px-4 py-2.5 rounded-2xl shadow-xl z-50 animate-bounce flex items-center gap-1.5">
+            <span>✓</span>
+            <span>{saveSuccessMsg}</span>
+          </div>
+        )}
 
         {/* Structure Modal */}
         <ExamStructureModal

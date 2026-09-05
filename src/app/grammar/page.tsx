@@ -176,24 +176,24 @@ export default function GrammarHubPage() {
   };
 
   return (
-    <div className="w-full max-w-[1600px] mx-auto px-3.5 sm:px-6 lg:px-8 py-4 sm:py-6 min-h-screen pb-28 space-y-6">
+    <div className="w-full max-w-[1600px] mx-auto px-3 sm:px-4 lg:px-6 py-3 sm:py-4 space-y-4 sm:space-y-5 pb-8 md:pb-4">
       {/* Header Banner */}
-      <div className={`rounded-2xl sm:rounded-3xl p-5 sm:p-8 text-white shadow-xl relative overflow-hidden transition-all duration-300 bg-gradient-to-r ${
+      <div className={`rounded-2xl p-4 sm:p-5 text-white shadow-md relative overflow-hidden transition-all duration-300 bg-gradient-to-r ${
         activeLanguage.code === "en"
           ? "from-indigo-900 via-purple-900 to-blue-900"
           : activeLanguage.code === "de"
           ? "from-amber-950 via-red-950 to-stone-900"
           : "from-teal-800 via-indigo-900 to-purple-800"
       }`}>
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 relative z-10">
           <div>
-            <div className="flex items-center gap-2 mb-1.5">
+            <div className="flex items-center gap-2 mb-1">
               <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-bold tracking-widest uppercase">
                 {activeLanguage.name} ({activeLanguage.code.toUpperCase()})
               </span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight mt-1">{headerTitle}</h1>
-            <p className="text-xs sm:text-sm text-indigo-100/90 mt-1.5 max-w-2xl leading-relaxed">
+            <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight mt-1">{headerTitle}</h1>
+            <p className="text-xs sm:text-sm text-indigo-100/90 mt-1 max-w-2xl leading-relaxed">
               {headerSubtitle}
             </p>
           </div>
@@ -201,9 +201,9 @@ export default function GrammarHubPage() {
           <div className="flex items-center gap-2 self-start sm:self-auto">
             <button
               onClick={() => setActiveTab("library")}
-              className={`px-4 py-2.5 rounded-2xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-3xs ${
+              className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-3xs ${
                 activeTab === "library"
-                  ? "bg-white text-indigo-900 shadow-md"
+                  ? "bg-white text-indigo-900 shadow-sm"
                   : "bg-white/15 text-white hover:bg-white/25 border border-white/20"
               }`}
             >
@@ -212,9 +212,9 @@ export default function GrammarHubPage() {
             </button>
             <button
               onClick={() => setActiveTab("collections")}
-              className={`px-4 py-2.5 rounded-2xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-3xs ${
+              className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-3xs ${
                 activeTab === "collections"
-                  ? "bg-white text-indigo-900 shadow-md"
+                  ? "bg-white text-indigo-900 shadow-sm"
                   : "bg-white/15 text-white hover:bg-white/25 border border-white/20"
               }`}
             >
@@ -227,7 +227,7 @@ export default function GrammarHubPage() {
 
       {/* TAB 1: LIBRARY & SEARCH */}
       {activeTab === "library" && (
-        <div className="space-y-5 animate-in fade-in duration-200">
+        <div className="space-y-4 animate-in fade-in duration-200">
           {/* Search Input Bar */}
           <div className="relative">
             <input
@@ -244,7 +244,7 @@ export default function GrammarHubPage() {
               }}
               placeholder={searchPlaceholder}
               autoFocus
-              className="w-full rounded-2xl border border-indigo-200 bg-white px-5 py-4 text-base focus:outline-none focus:border-indigo-600 focus:ring-4 focus:ring-indigo-100 shadow-sm transition-all"
+              className="w-full rounded-xl border border-indigo-200 bg-white px-4 py-2.5 sm:py-3 text-sm sm:text-base focus:outline-none focus:border-indigo-600 focus:ring-4 focus:ring-indigo-100 shadow-xs transition-all"
             />
             {searchQuery ? (
               <button

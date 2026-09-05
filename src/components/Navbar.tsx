@@ -13,6 +13,8 @@ export interface NavItem {
   href: string;
   label: string;
   icon: string;
+  isComingSoon?: boolean;
+  isDevOnly?: boolean;
 }
 
 export function getNavItemsForLanguage(langCode: string): NavItem[] {
@@ -33,6 +35,8 @@ export function getNavItemsForLanguage(langCode: string): NavItem[] {
         { href: "/flashcard/all", label: "Ôn tập Flashcard", icon: "🎴" },
         { href: "/history", label: "Lịch sử học tập", icon: "📊" },
         { href: "/settings", label: "Cài đặt Ngôn ngữ", icon: "⚙️" },
+        { href: "/practice/ai-voice-room", label: "Phòng Luyện Voice AI", icon: "🎙️", isComingSoon: true, isDevOnly: true },
+        { href: "/practice/mock-interview", label: "Phỏng Vấn Xin Việc AI", icon: "💼", isComingSoon: true, isDevOnly: true },
       ];
 
     case "de":
@@ -116,8 +120,11 @@ export default function Navbar() {
   const mobileNavRef = useRef<HTMLDivElement>(null);
 
   const navItems = getNavItemsForLanguage(activeLanguage.code);
-  const { isVisible } = useNavMenuSettings();
-  const visibleNavItems = navItems.filter((item) => isVisible(activeLanguage.code, item.href));
+  const { isVisible, devFeaturesEnabled } = useNavMenuSettings();
+  const visibleNavItems = navItems.filter((item) => {
+    if (item.isDevOnly && !devFeaturesEnabled) return false;
+    return isVisible(activeLanguage.code, item.href);
+  });
 
   const activeNavItem = navItems.find((item) =>
     item.href === "/" ? pathname === "/" : pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href))
@@ -279,23 +286,40 @@ export default function Navbar() {
                 Danh mục {activeLanguage.name}
               </div>
             )}
-            {visibleNavItems.map(({ href, label, icon }) => {
+            {visibleNavItems.map((item) => {
+              const { href, label, icon } = item;
               const isActive = pathname === href || (href !== "/" && pathname.startsWith(href));
               return (
                 <Link
                   key={href + label}
-                  href={href}
-                  title={isCollapsed ? label : undefined}
+                  href={item.isComingSoon ? "#" : href}
+                  onClick={(e) => {
+                    if (item.isComingSoon) {
+                      e.preventDefault();
+                    }
+                  }}
+                  title={isCollapsed ? (item.isComingSoon ? `${label} (Sắp ra mắt)` : label) : undefined}
                   className={`flex items-center gap-3 py-2 rounded-2xl text-xs font-semibold transition-all ${
                     isCollapsed ? 'justify-center px-0' : 'px-3'
                   } ${
-                    isActive
+                    item.isComingSoon
+                      ? "opacity-50 cursor-not-allowed text-gray-400"
+                      : isActive
                       ? "bg-indigo-600 text-white shadow-md shadow-indigo-200"
                       : "text-gray-600 hover:text-indigo-600 hover:bg-gray-50"
                   }`}
                 >
                   <span className="text-base shrink-0">{icon}</span>
-                  {!isCollapsed && <span className="whitespace-nowrap overflow-hidden text-ellipsis">{label}</span>}
+                  {!isCollapsed && (
+                    <div className="flex items-center justify-between gap-1.5 flex-1 min-w-0">
+                      <span className="whitespace-nowrap overflow-hidden text-ellipsis">{label}</span>
+                      {item.isComingSoon && (
+                        <span className="px-1.5 py-0.2 bg-amber-100 text-amber-800 text-[9px] font-bold rounded shrink-0">
+                          Sắp ra mắt
+                        </span>
+                      )}
+                    </div>
+                  )}
                 </Link>
               );
             })}
@@ -411,23 +435,32 @@ export default function Navbar() {
         ref={mobileNavRef}
         className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white border-t border-gray-200 flex flex-nowrap h-14 overflow-x-auto scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden px-2 touch-pan-x [webkit-overflow-scrolling:touch] cursor-grab active:cursor-grabbing select-none"
       >
-        {visibleNavItems.map(({ href, label, icon }) => {
+        {visibleNavItems.map((item) => {
+              const { href, label, icon } = item;
           const isActive = pathname === href || (href !== "/" && pathname.startsWith(href));
           return (
             <Link
-              key={href + label}
-              href={href}
-              aria-label={label}
-              title={label}
-              className={`flex flex-col items-center justify-center py-1 px-3 shrink-0 min-w-[68px] transition-colors ${
-                isActive
-                  ? "text-indigo-700 font-bold"
-                  : "text-gray-400 hover:text-indigo-600"
-              }`}
-            >
-              <span className="text-lg leading-none">{icon}</span>
-              <span className="text-[10px] mt-0.5 whitespace-nowrap">{label.split(" ")[0]}</span>
-            </Link>
+                key={href + label}
+                href={item.isComingSoon ? "#" : href}
+                onClick={(e) => {
+                  if (item.isComingSoon) e.preventDefault();
+                }}
+                className={`flex items-center gap-2 px-3.5 py-2 rounded-2xl text-xs font-semibold whitespace-nowrap transition-all select-none ${
+                  item.isComingSoon
+                    ? "opacity-50 cursor-not-allowed text-gray-400"
+                    : isActive
+                    ? "bg-indigo-600 text-white shadow-md shadow-indigo-200"
+                    : "text-gray-600 hover:text-indigo-600 hover:bg-gray-50 border border-gray-100"
+                }`}
+              >
+                <span>{icon}</span>
+                <span>{label}</span>
+                {item.isComingSoon && (
+                  <span className="px-1 py-0.2 bg-amber-100 text-amber-800 text-[8px] font-bold rounded">
+                    Soon
+                  </span>
+                )}
+              </Link>
           );
         })}
       </nav>

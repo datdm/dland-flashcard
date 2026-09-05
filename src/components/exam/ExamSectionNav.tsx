@@ -12,6 +12,7 @@ interface Props {
   onNavigatePassage?: (pid: string) => void;
   onNavigateMondai?: (mondaiId: string) => void;
   resultsMap?: Record<number, boolean>; // for review mode
+  selectedSectionIds?: string[];
 }
 
 export default function ExamSectionNav({
@@ -22,15 +23,20 @@ export default function ExamSectionNav({
   onNavigatePassage,
   onNavigateMondai,
   resultsMap,
+  selectedSectionIds,
 }: Props) {
   if (!examData) return null;
 
   const majorSections: ExamMajorSection[] = getStructuredMajorSections(examData);
   const passages: ExamPassageGroup[] = examData.passages || [];
 
+  const displayedMajors = selectedSectionIds && selectedSectionIds.length > 0
+    ? majorSections.filter((m) => selectedSectionIds.includes(m.id))
+    : majorSections;
+
   return (
     <div className="space-y-4">
-      {majorSections.map((major) => {
+      {displayedMajors.map((major) => {
         // Calculate progress for this major section
         let totalMajorQ = 0;
         let answeredMajorQ = 0;

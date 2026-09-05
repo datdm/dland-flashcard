@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { autoSync } from "@/lib/syncService";
 
 const STORAGE_KEY = "dland_nav_menu_settings";
+const ADMIN_DEV_KEY = "dland_admin_dev_features_enabled";
 
 // Per-language map of href → visible (true = show)
 export type NavMenuSettings = Record<string, Record<string, boolean>>;
@@ -23,18 +24,30 @@ function saveSettingsToStorage(settings: NavMenuSettings) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
 }
 
+export function loadDevFeaturesEnabled(): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    return localStorage.getItem(ADMIN_DEV_KEY) === "true";
+  } catch {
+    return false;
+  }
+}
+
+export function saveDevFeaturesEnabled(enabled: boolean) {
+  if (typeof window === "undefined") return;
+  localStorage.setItem(ADMIN_DEV_KEY, enabled ? "true" : "false");
+  window.dispatchEvent(new CustomEvent("nav-menu-settings-changed"));
+}
+
 export function useNavMenuSettings() {
   const [settings, setSettings] = useState<NavMenuSettings>(() => loadSettings());
+  const [devFeaturesEnabled, setDevFeaturesEnabledState] = useState<boolean>(() => loadDevFeaturesEnabled());
 
-  // Re-read from storage on mount (SSR safe)
   useEffect(() => {
     setSettings(loadSettings());
+    setDevFeaturesEnabledState(loadDevFeaturesEnabled());
   }, []);
 
-  /**
-   * Is a menu item visible for a given language?
-   * Defaults to true (visible) if no setting saved yet.
-   */
   const isVisible = useCallback(
     (langCode: string, href: string): boolean => {
       const langSettings = settings[langCode];
@@ -44,9 +57,6 @@ export function useNavMenuSettings() {
     [settings]
   );
 
-  /**
-   * Toggle one menu item for a given language.
-   */
   const toggleItem = useCallback(
     (langCode: string, href: string) => {
       setSettings((prev) => {
@@ -60,7 +70,6 @@ export function useNavMenuSettings() {
           },
         };
         saveSettingsToStorage(updated);
-        // Dispatch event so Navbar re-reads immediately
         window.dispatchEvent(new CustomEvent("nav-menu-settings-changed"));
         autoSync();
         return updated;
@@ -69,9 +78,11 @@ export function useNavMenuSettings() {
     []
   );
 
-  /**
-   * Reset all menu items for a language back to visible.
-   */
+  const setDevFeaturesEnabled = useCallback((enabled: boolean) => {
+    saveDevFeaturesEnabled(enabled);
+    setDevFeaturesEnabledState(enabled);
+  }, []);
+
   const resetLang = useCallback((langCode: string) => {
     setSettings((prev) => {
       const updated = { ...prev };
@@ -83,12 +94,14 @@ export function useNavMenuSettings() {
     });
   }, []);
 
-  // Listen for changes from other components / tabs
   useEffect(() => {
-    const handler = () => setSettings(loadSettings());
+    const handler = () => {
+      setSettings(loadSettings());
+      setDevFeaturesEnabledState(loadDevFeaturesEnabled());
+    };
     window.addEventListener("nav-menu-settings-changed", handler);
     return () => window.removeEventListener("nav-menu-settings-changed", handler);
   }, []);
 
-  return { settings, isVisible, toggleItem, resetLang };
+  return { settings, isVisible, toggleItem, resetLang, devFeaturesEnabled, setDevFeaturesEnabled };
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import ExportImportPanel from "@/components/ExportImportPanel";
 import BackupHistoryPanel from "@/components/BackupHistoryPanel";
@@ -16,27 +16,46 @@ import { useAuth } from "@/context/AuthContext";
 function CurriculumDisplaySettings() {
   const { settings, saveSettings } = useFlashCardSettings();
   const { activeLanguage } = useLanguageSetting();
-  const [defaultBooks, setDefaultBooks] = useState<any[]>([]);
+  const [groups, setGroups] = useState<any[]>([]);
+  const [selectedLevel, setSelectedLevel] = useState<string>("all");
 
   useEffect(() => {
     async function loadDefaultBooks() {
       try {
         const repo = getCurriculumRepository();
-        const groups = await repo.getCurriculums(activeLanguage.code);
-        const books = groups.flatMap((g) => g.books || []);
-        
-        // Remove duplicate book IDs (in case they are defined across different levels)
-        const uniqueBooks = books.filter(
-          (book, idx, self) => self.findIndex((b) => b.id === book.id) === idx
-        );
-        
-        setDefaultBooks(uniqueBooks);
+        const data = await repo.getCurriculums(activeLanguage.code);
+        setGroups(data);
       } catch (err) {
         console.error("Failed to load default curriculums for settings:", err);
       }
     }
     loadDefaultBooks();
   }, [activeLanguage.code]);
+
+  const availableLevels = useMemo(() => {
+    const list: string[] = [];
+    groups.forEach((g) => {
+      if (g.level && !list.includes(g.level)) {
+        list.push(g.level);
+      }
+    });
+    return list;
+  }, [groups]);
+
+  const filteredBooks = useMemo(() => {
+    const list: any[] = [];
+    const seen = new Set<string>();
+    groups.forEach((g) => {
+      if (selectedLevel !== "all" && g.level !== selectedLevel) return;
+      (g.books || []).forEach((b: any) => {
+        if (!seen.has(b.id)) {
+          seen.add(b.id);
+          list.push({ ...b, level: g.level });
+        }
+      });
+    });
+    return list;
+  }, [groups, selectedLevel]);
 
   const toggleCurriculum = (id: string) => {
     const hiddenIds = settings.hiddenCurriculumIds || [];
@@ -57,18 +76,49 @@ function CurriculumDisplaySettings() {
   };
 
   return (
-    <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-2xs space-y-4">
+    <div className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-xs space-y-3.5">
       <div>
         <h2 className="text-base font-bold text-gray-900 mb-1 flex items-center gap-2">
           <span>🙈</span> Quản Lý Hiển Thị Giáo Trình Mẫu
         </h2>
         <p className="text-xs text-gray-500">
-          Tùy chỉnh ẩn/hiện các bộ giáo trình mẫu mặc định của {activeLanguage.name} để giao diện học tập gọn gàng hơn.
+          Tùy chỉnh ẩn/hiện các bộ giáo trình mẫu mặc định của {activeLanguage.name} theo từng cấp độ để giao diện gọn gàng hơn.
         </p>
       </div>
 
-      <div className="space-y-3">
-        {defaultBooks.map((book) => {
+      {/* Level Filter Tabs */}
+      {availableLevels.length > 0 && (
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1">
+          <button
+            type="button"
+            onClick={() => setSelectedLevel("all")}
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+              selectedLevel === "all"
+                ? "bg-indigo-600 text-white shadow-3xs"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            }`}
+          >
+            Tất cả cấp độ
+          </button>
+          {availableLevels.map((lvl: string) => (
+            <button
+              key={lvl}
+              type="button"
+              onClick={() => setSelectedLevel(lvl)}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                selectedLevel === lvl
+                  ? "bg-indigo-600 text-white shadow-3xs"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              }`}
+            >
+              Cấp độ {lvl}
+            </button>
+          ))}
+        </div>
+      )}
+
+      <div className="space-y-2.5">
+        {filteredBooks.map((book: any) => {
           const isHidden =
             (settings.hiddenCurriculumIds || []).includes(book.id) ||
             (book.id === "default-n5-super-master-tango" && settings.hideSuperMasterN5);
@@ -76,10 +126,17 @@ function CurriculumDisplaySettings() {
           return (
             <div
               key={book.id}
-              className="bg-gray-50 rounded-2xl p-4 flex items-center justify-between gap-4 border border-gray-100"
+              className="bg-gray-50 rounded-2xl p-3.5 sm:p-4 flex items-center justify-between gap-3 border border-gray-100"
             >
               <div>
-                <h3 className="text-xs font-bold text-gray-900">Ẩn giáo trình "{book.name}"</h3>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-bold text-gray-900">Ẩn giáo trình "{book.name}"</span>
+                  {book.level && (
+                    <span className="px-2 py-0.2 rounded-md bg-indigo-100 text-indigo-800 text-[10px] font-bold">
+                      {book.level}
+                    </span>
+                  )}
+                </div>
                 <p className="text-[11px] text-gray-500 mt-0.5">
                   {book.description || `Tạm thời ẩn bộ giáo trình ${book.name} khỏi trang học tập.`}
                 </p>
@@ -101,8 +158,8 @@ function CurriculumDisplaySettings() {
             </div>
           );
         })}
-        {defaultBooks.length === 0 && (
-          <p className="text-xs text-gray-400 italic">Không có giáo trình mẫu nào cho ngôn ngữ này.</p>
+        {filteredBooks.length === 0 && (
+          <p className="text-xs text-gray-400 italic py-4 text-center">Không có giáo trình mẫu nào cho cấp độ này.</p>
         )}
       </div>
     </div>
@@ -116,95 +173,93 @@ const ALWAYS_VISIBLE = new Set(["/", "/settings"]);
 
 function NavMenuSettingsPanel() {
   const { activeLanguage, supportedLanguages } = useLanguageSetting();
-  const { isVisible, toggleItem, resetLang } = useNavMenuSettings();
+  const { isVisible, toggleItem, resetLang, devFeaturesEnabled } = useNavMenuSettings();
   const [previewLang, setPreviewLang] = useState<string>(activeLanguage.code);
 
   const langItems = getNavItemsForLanguage(previewLang);
-  const previewLangInfo = supportedLanguages.find((l) => l.code === previewLang);
   const hiddenCount = langItems.filter((item) => !ALWAYS_VISIBLE.has(item.href) && !isVisible(previewLang, item.href)).length;
 
   return (
-    <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-2xs">
-      <div className="flex items-center justify-between mb-1">
-        <h2 className="text-base font-bold text-gray-900 flex items-center gap-2">
-          <span>📋</span> Tùy Chỉnh Hiển Thị Menu
-        </h2>
+    <div className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-xs space-y-3.5">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-base font-bold text-gray-900 flex items-center gap-2">
+            <span>📋</span> Tùy Chỉnh Hiển Thị Menu
+          </h2>
+          <p className="text-xs text-gray-500 mt-0.5">
+            Bật/tắt các mục menu trên thanh điều hướng cho {activeLanguage.name}.
+          </p>
+        </div>
         {hiddenCount > 0 && (
           <button
             onClick={() => resetLang(previewLang)}
-            className="text-[11px] text-indigo-600 font-bold hover:underline"
+            className="text-xs text-indigo-600 font-bold hover:underline cursor-pointer"
           >
             Hiện lại tất cả
           </button>
         )}
       </div>
-      <p className="text-xs text-gray-500 mb-4">
-        Chọn mục nào xuất hiện trong thanh menu. Mỗi ngôn ngữ có cài đặt riêng.
-      </p>
 
-      {/* Language picker */}
-      <div className="flex flex-wrap gap-2 mb-5">
-        {supportedLanguages
-          .filter((l) => l.status !== "coming_soon")
-          .map((lang) => (
-            <button
-              key={lang.code}
-              onClick={() => setPreviewLang(lang.code)}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold border transition-all ${
-                previewLang === lang.code
-                  ? "bg-indigo-600 text-white border-indigo-600 shadow-md"
-                  : "bg-gray-50 text-gray-600 border-gray-200 hover:border-indigo-300"
-              }`}
-            >
-              <span>{lang.flag}</span>
-              <span>{lang.name}</span>
-              {lang.code === activeLanguage.code && (
-                <span className="text-[9px] opacity-80">★</span>
-              )}
-            </button>
-          ))}
-      </div>
+      {devFeaturesEnabled && (
+        <div className="p-3 bg-amber-50 border border-amber-200/80 rounded-2xl flex items-center gap-2 text-xs text-amber-900">
+          <span>💡</span>
+          <span>Tính năng <strong>Menu Đang Phát Triển</strong> đang được kích hoạt từ Admin. Bạn có thể bật/tắt các menu thử nghiệm bên dưới.</span>
+        </div>
+      )}
 
-      {/* Menu item toggles */}
-      <div className="space-y-2">
-        {langItems.map(({ href, label, icon }) => {
-          const locked = ALWAYS_VISIBLE.has(href);
-          const visible = isVisible(previewLang, href);
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+        {langItems.map((item) => {
+          const isAlways = ALWAYS_VISIBLE.has(item.href);
+          const visible = isAlways ? true : isVisible(previewLang, item.href);
+
           return (
             <div
-              key={href}
-              className={`flex items-center justify-between px-4 py-3 rounded-2xl border transition-all ${
-                visible ? "bg-gray-50 border-gray-100" : "bg-gray-50/50 border-dashed border-gray-200 opacity-60"
+              key={item.href}
+              className={`p-3.5 rounded-2xl border flex items-center justify-between gap-3 ${
+                item.isDevOnly
+                  ? "bg-amber-50/40 border-amber-200"
+                  : "bg-gray-50/70 border-gray-100"
               }`}
             >
-              <div className="flex items-center gap-3 min-w-0">
-                <span className="text-base shrink-0">{icon}</span>
-                <div className="min-w-0">
-                  <p className={`text-xs font-semibold truncate ${visible ? "text-gray-800" : "text-gray-400 line-through"}`}>
-                    {label}
-                  </p>
-                  <p className="text-[10px] text-gray-400 font-mono">{href}</p>
+              <div className="flex items-center gap-2 min-w-0">
+                <span className="text-lg">{item.icon}</span>
+                <div className="truncate">
+                  <span className="text-xs font-bold text-gray-800 block truncate">{item.label}</span>
+                  <div className="flex items-center gap-1 mt-0.5">
+                    <span className="text-[10px] text-gray-400 font-mono truncate">{item.href}</span>
+                    {item.isDevOnly && (
+                      <span className="px-1.5 py-0.2 rounded bg-amber-100 text-amber-800 text-[9px] font-bold">
+                        Đang phát triển
+                      </span>
+                    )}
+                    {item.isComingSoon && (
+                      <span className="px-1.5 py-0.2 rounded bg-gray-200 text-gray-600 text-[9px] font-bold">
+                        Sắp ra mắt
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
-              <button
-                type="button"
-                disabled={locked}
-                onClick={() => !locked && toggleItem(previewLang, href)}
-                title={locked ? "Không thể ẩn trang này" : visible ? "Ẩn khỏi menu" : "Hiện trong menu"}
-                className={`relative inline-flex h-7 w-12 shrink-0 rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out ${
-                  locked
-                    ? "bg-gray-200 cursor-not-allowed opacity-50"
-                    : visible
-                    ? "bg-indigo-600 cursor-pointer"
-                    : "bg-gray-300 cursor-pointer"
-                }`}
-              >
-                <span
-                  className={`pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out ${
-                    visible ? "translate-x-5" : "translate-x-0"
+
+              {isAlways ? (
+                <span className="text-[10px] font-bold text-gray-400 px-2 py-1 bg-gray-100 rounded-lg shrink-0">
+                  Cố định
+                </span>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => toggleItem(previewLang, item.href)}
+                  className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out ${
+                    visible ? "bg-indigo-600" : "bg-gray-200"
                   }`}
-                />
-              </button>
+                >
+                  <span
+                    className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out ${
+                      visible ? "translate-x-5" : "translate-x-0"
+                    }`}
+                  />
+                </button>
+              )}
             </div>
           );
         })}
@@ -212,7 +267,7 @@ function NavMenuSettingsPanel() {
 
       {hiddenCount > 0 && (
         <p className="mt-3 text-[11px] text-amber-600 font-semibold bg-amber-50 border border-amber-100 rounded-xl px-3 py-2">
-          ⚠️ Đang ẩn {hiddenCount} mục trong menu {previewLangInfo?.name}. Menu vẫn hiển thị theo ngôn ngữ đang học.
+          ⚠️ Đang ẩn {hiddenCount} mục trong menu {activeLanguage.name}. Menu vẫn hiển thị theo ngôn ngữ đang học.
         </p>
       )}
     </div>
@@ -222,7 +277,6 @@ function NavMenuSettingsPanel() {
 function ResetHistorySettingsPanel() {
   const [showResetModal, setShowResetModal] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
-  const [isSyncing, setIsSyncing] = useState(false);
 
   const handleResetAllProgress = async () => {
     setIsResetting(true);
@@ -232,55 +286,15 @@ function ResetHistorySettingsPanel() {
     window.location.reload();
   };
 
-  const handleClearLocalAndSync = async () => {
-    if (!confirm("Bạn có chắc chắn muốn xóa toàn bộ bộ nhớ tạm local storage trên trình duyệt này và tải lại dữ liệu mới nhất từ máy chủ không?")) {
-      return;
-    }
-    setIsSyncing(true);
-    try {
-      syncService.clearLocalData();
-      const res = await syncService.downloadFromServer();
-      if (res.success) {
-        alert("Đồng bộ thành công! Bộ nhớ tạm đã được làm sạch và cập nhật dữ liệu mới nhất từ máy chủ.");
-        window.location.reload();
-      } else {
-        alert("Đồng bộ thất bại: " + (res.error || "Không thể tải dữ liệu từ máy chủ."));
-      }
-    } catch (err: any) {
-      console.error(err);
-      alert("Đã xảy ra lỗi trong quá trình đồng bộ dữ liệu.");
-    } finally {
-      setIsSyncing(false);
-    }
-  };
-
   return (
-    <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-2xs space-y-4">
+    <div className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-xs space-y-3.5">
       <div>
         <h2 className="text-base font-bold text-gray-900 mb-1 flex items-center gap-2">
           <span>⚙️</span> Quản Lý & Khôi Phục Dữ Liệu
         </h2>
         <p className="text-xs text-gray-500">
-          Quản lý, làm sạch bộ nhớ tạm local storage hoặc thiết lập đặt lại tiến trình học tập của bạn.
+          Thiết lập đặt lại tiến trình học tập hoặc làm mới dữ liệu của bạn.
         </p>
-      </div>
-
-      <div className="bg-indigo-50/70 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border border-indigo-100">
-        <div>
-          <h3 className="text-xs font-bold text-indigo-900">Xóa bộ nhớ tạm & Đồng bộ từ Cloud</h3>
-          <p className="text-[11px] text-indigo-700 mt-0.5">
-            Xóa dữ liệu cục bộ trên thiết bị này và kéo toàn bộ lịch sử từ vựng, bài học mới nhất từ tài khoản đám mây của bạn.
-          </p>
-        </div>
-
-        <button
-          type="button"
-          onClick={handleClearLocalAndSync}
-          disabled={isSyncing}
-          className="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white rounded-2xl font-bold text-xs shadow-md shadow-indigo-200 transition-all cursor-pointer shrink-0"
-        >
-          {isSyncing ? "🔄 Đang đồng bộ..." : "🔄 Xóa & Đồng bộ từ Cloud"}
-        </button>
       </div>
 
       <div className="bg-rose-50/70 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border border-rose-100">
@@ -350,21 +364,21 @@ export default function SettingsPage() {
   } = useLanguageSetting();
 
   return (
-    <div className="w-full max-w-[1600px] mx-auto px-3.5 sm:px-6 lg:px-8 py-4 sm:py-6 min-h-screen pb-28 space-y-6">
+    <div className="w-full max-w-[1600px] mx-auto px-3 sm:px-4 lg:px-6 py-3 sm:py-4 space-y-4 sm:space-y-5 pb-8 md:pb-4">
       {/* Header Banner */}
-      <div className={`rounded-2xl sm:rounded-3xl p-5 sm:p-8 text-white shadow-lg transition-all duration-300 bg-gradient-to-r ${
+      <div className={`rounded-2xl p-4 sm:p-5 text-white shadow-md transition-all duration-300 bg-gradient-to-r ${
         activeLangCode === "en"
           ? "from-indigo-900 via-purple-900 to-blue-900"
           : activeLangCode === "de"
           ? "from-amber-950 via-red-950 to-stone-900"
           : "from-teal-800 via-indigo-900 to-purple-800"
       }`}>
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-bold tracking-widest uppercase mb-2 inline-block">
+            <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-bold tracking-widest uppercase mb-1.5 inline-block">
               {activeLanguage.name} ({activeLanguage.code.toUpperCase()})
             </span>
-            <h1 className="text-2xl font-bold">Cài Đặt Ngôn Ngữ & Dữ Liệu</h1>
+            <h1 className="text-xl sm:text-2xl font-bold">Cài Đặt Ngôn Ngữ & Dữ Liệu</h1>
             <p className="text-xs text-indigo-100 mt-1">
               Chọn ngôn ngữ mục tiêu học tập (Tiếng Nhật, Tiếng Anh, Tiếng Đức...) và nhấn nút Lưu để áp dụng toàn website
             </p>
@@ -372,9 +386,9 @@ export default function SettingsPage() {
         </div>
       </div>
 
-      <div className="space-y-6">
+      <div className="space-y-4 sm:space-y-5">
         {/* Multilingual Language Mode Selection Section */}
-        <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-2xs">
+        <div className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-xs">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h2 className="text-base font-bold text-gray-900 flex items-center gap-2">
@@ -395,13 +409,17 @@ export default function SettingsPage() {
               return (
                 <div
                   key={lang.code}
-                  onClick={() => selectDraftLanguage(lang.code)}
-                  className={`p-4 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between ${
-                    isDraftSelected
-                      ? "border-indigo-600 bg-indigo-50/40 ring-2 ring-indigo-300 shadow-sm"
-                      : "border-gray-200 bg-white hover:border-indigo-300 hover:bg-gray-50/50"
-                  }`}
-                >
+                  onClick={() => {
+                    if (lang.status === "coming_soon") return;
+                    selectDraftLanguage(lang.code);
+                  }}
+                  className={`p-4 rounded-2xl border transition-all flex flex-col justify-between ${
+                    lang.status === "coming_soon"
+                      ? "opacity-60 cursor-not-allowed bg-gray-50/80 border-gray-200"
+                      : isDraftSelected
+                      ? "border-indigo-600 bg-indigo-50/40 ring-2 ring-indigo-300 shadow-sm cursor-pointer"
+                      : "border-gray-200 bg-white hover:border-indigo-300 hover:bg-gray-50/50 cursor-pointer"
+                  }`}>
                   <div>
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-2">
@@ -488,24 +506,24 @@ export default function SettingsPage() {
 
         {/* Account Info Section */}
         {isAuthenticated && user && (
-          <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-2xs space-y-4">
+          <div className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-xs space-y-3.5">
             <h2 className="text-base font-bold text-gray-900 flex items-center gap-2">
               <span>👤</span> Thông tin tài khoản Dland
             </h2>
-            <div className="bg-gray-50 rounded-2xl p-4 flex items-center justify-between">
+            <div className="bg-gray-50 rounded-xl p-3.5 flex items-center justify-between">
               <div>
                 <p className="text-xs text-gray-400 font-medium">Tên đăng nhập</p>
                 <p className="text-base font-bold text-gray-900">{user.username}</p>
               </div>
               <button
                 onClick={() => setShowPasswordDialog(true)}
-                className="px-4 py-2 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition font-bold text-xs shadow-2xs"
+                className="px-3.5 py-1.5 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition font-bold text-xs shadow-2xs cursor-pointer"
               >
                 🔐 Đổi mật khẩu
               </button>
             </div>
             {user.isAdmin && (
-              <div className="p-4 rounded-2xl bg-indigo-50/50 border border-indigo-100 flex items-center justify-between gap-4">
+              <div className="p-3.5 rounded-xl bg-indigo-50/50 border border-indigo-100 flex items-center justify-between gap-3">
                 <div>
                   <h3 className="text-xs font-bold text-indigo-900">🛡️ Quyền Quản trị viên (Admin)</h3>
                   <p className="text-[10px] text-indigo-700 mt-0.5">
@@ -514,7 +532,7 @@ export default function SettingsPage() {
                 </div>
                 <Link
                   href="/admin"
-                  className="px-4 py-2 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition text-xs shadow-3xs shrink-0"
+                  className="px-3.5 py-1.5 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition text-xs shadow-3xs shrink-0"
                 >
                   Vào Dashboard →
                 </Link>
@@ -524,23 +542,23 @@ export default function SettingsPage() {
         )}
 
         {/* Upload Data Section */}
-        <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-2xs">
+        <div className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-xs">
           <UploadPanel />
         </div>
 
         {/* Format examples */}
-        <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-2xs space-y-4">
+        <div className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-xs space-y-3.5">
           <h2 className="text-base font-bold text-gray-900 flex items-center gap-2">
             <span>📄</span> Các định dạng JSON được hỗ trợ
           </h2>
 
-          <div className="space-y-3">
-            <details className="group border border-gray-100 rounded-2xl p-3 bg-gray-50/50">
+          <div className="space-y-2.5">
+            <details className="group border border-gray-100 rounded-xl p-3 bg-gray-50/50">
               <summary className="cursor-pointer font-bold text-xs text-gray-800 group-hover:text-indigo-600 flex items-center justify-between">
                 <span>📚 Giáo trình (Curriculum)</span>
                 <span className="text-gray-400 group-open:rotate-180 transition-transform">▼</span>
               </summary>
-              <pre className="mt-3 text-[11px] bg-gray-900 text-emerald-400 p-4 rounded-xl overflow-x-auto font-mono leading-relaxed">{`{
+              <pre className="mt-3 text-[11px] bg-gray-900 text-emerald-400 p-3.5 rounded-xl overflow-x-auto font-mono leading-relaxed">{`{
   "curriculum": "Oxford 3000 / Minna",
   "lessons": [
     {
@@ -561,14 +579,14 @@ export default function SettingsPage() {
 
         {/* Export/Import Section - Admin only */}
         {user?.isAdmin && (
-          <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-2xs">
+          <div className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-xs">
             <ExportImportPanel />
           </div>
         )}
 
         {/* Backup History Section - Admin only */}
         {user?.isAdmin && (
-          <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-2xs">
+          <div className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-xs">
             <BackupHistoryPanel />
           </div>
         )}

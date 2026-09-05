@@ -12,6 +12,7 @@ interface Props {
   showResult?: boolean;
   showMondaiBadge?: boolean;
   onOpenMazii?: (word: string) => void;
+  isFocused?: boolean;
 }
 
 const OPTION_PREFIXES = ["①", "②", "③", "④", "⑤"];
@@ -24,6 +25,7 @@ export default function ExamQuestionCard({
   showResult = false,
   showMondaiBadge = false,
   onOpenMazii,
+  isFocused = false,
 }: Props) {
   const [showScript, setShowScript] = React.useState(false);
 
@@ -48,8 +50,10 @@ export default function ExamQuestionCard({
   return (
     <div
       id={`question-${question.id}`}
-      className={`p-4 sm:p-5 rounded-2xl sm:rounded-3xl mb-3.5 sm:mb-4 border transition-all scroll-mt-24 ${
-        showResult
+      className={`p-3.5 sm:p-4 rounded-2xl mb-3 border transition-all duration-300 scroll-mt-28 ${
+        isFocused
+          ? "ring-2 ring-indigo-500 border-indigo-500 shadow-md bg-indigo-50/40"
+          : showResult
           ? isCorrect
             ? "bg-emerald-50/60 border-emerald-200 shadow-xs"
             : hasAnswered
@@ -58,8 +62,7 @@ export default function ExamQuestionCard({
           : hasAnswered
           ? "bg-indigo-50/40 border-indigo-200/80 shadow-xs"
           : "bg-white border-gray-100 shadow-2xs hover:border-gray-200"
-      }`}
-    >
+      }`}>
       {/* Optional standalone Mondai header if requested */}
       {showMondaiBadge && "mondai" in question && question.mondai && (
         <div className="text-[11px] font-bold text-indigo-700 bg-indigo-50 border border-indigo-100/80 px-3 py-1 rounded-xl mb-3 inline-block">
@@ -167,7 +170,7 @@ export default function ExamQuestionCard({
               type="button"
               onClick={() => handleSelect(idx)}
               disabled={showResult}
-              className={`w-full text-left p-3.5 sm:p-4 rounded-2xl border transition-all flex items-start gap-3 cursor-pointer text-sm sm:text-base leading-relaxed active:scale-99 ${optionStyle}`}
+              className={`w-full text-left p-2.5 sm:p-3 rounded-xl border transition-all flex items-start gap-3 cursor-pointer text-xs sm:text-sm leading-relaxed active:scale-99 ${optionStyle}`}
             >
               <span
                 className={`w-6 h-6 rounded-lg flex items-center justify-center font-bold text-xs sm:text-sm shrink-0 ${

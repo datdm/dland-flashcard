@@ -6,8 +6,11 @@ import { checkAuthStatus, getUser } from "@/lib/syncService";
 import { fetchAdminUsers, fetchAdminUserDetail, AdminUser, AdminUserDetail } from "@/lib/adminService";
 import { DEFAULT_VOCABULARY } from "@/data";
 import { SUPPORTED_LANGUAGES } from "@/hooks/useLanguageSetting";
+import { useNavMenuSettings } from "@/hooks/useNavMenuSettings";
 
 export default function AdminDashboardPage() {
+  const { devFeaturesEnabled, setDevFeaturesEnabled } = useNavMenuSettings();
+
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [users, setUsers] = useState<AdminUser[]>([]);

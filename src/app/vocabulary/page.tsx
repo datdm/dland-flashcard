@@ -186,23 +186,23 @@ export default function VocabularyPage() {
   };
 
   return (
-    <div className="w-full max-w-[1600px] mx-auto px-3.5 sm:px-6 lg:px-8 py-4 sm:py-6 min-h-screen pb-28 space-y-6">
+    <div className="w-full max-w-[1600px] mx-auto px-3 sm:px-4 lg:px-6 py-3 sm:py-4 space-y-4 sm:space-y-5 pb-8 md:pb-4">
       {/* Header Banner */}
-      <div className={`rounded-2xl sm:rounded-3xl p-5 sm:p-8 text-white shadow-lg transition-all duration-300 bg-gradient-to-r ${
+      <div className={`rounded-2xl p-4 sm:p-5 text-white shadow-md transition-all duration-300 bg-gradient-to-r ${
         activeLanguage.code === "en"
           ? "from-indigo-900 via-purple-900 to-blue-900"
           : activeLanguage.code === "de"
           ? "from-amber-950 via-red-950 to-stone-900"
           : "from-teal-800 via-indigo-900 to-purple-800"
       }`}>
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <div className="flex items-center gap-2 mb-1">
               <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-bold tracking-widest uppercase">
                 {activeLanguage.name} ({activeLanguage.code.toUpperCase()})
               </span>
             </div>
-            <h1 className="text-2xl font-bold mt-1">Kho Từ Vựng & Sổ Tay</h1>
+            <h1 className="text-xl sm:text-2xl font-bold mt-1">Kho Từ Vựng & Sổ Tay</h1>
             <p className="text-xs text-indigo-100 mt-1">
               {langCode === "en"
                 ? "Quản lý từ vựng bài học IELTS 7.0 (52 Tuần) và các Sổ tay cá nhân"
@@ -216,13 +216,13 @@ export default function VocabularyPage() {
           <div className="flex flex-wrap gap-2">
             <Link
               href="/notebooks"
-              className="px-4 py-2.5 bg-white text-indigo-700 font-bold rounded-2xl text-xs hover:bg-indigo-50 transition-colors shadow-sm flex items-center gap-1.5"
+              className="px-3.5 py-2 bg-white text-indigo-700 font-bold rounded-xl text-xs hover:bg-indigo-50 transition-colors shadow-xs flex items-center gap-1.5"
             >
               <span>📓 Quản lý Sổ tay</span>
             </Link>
             <Link
               href="/search"
-              className="px-4 py-2.5 bg-white/10 hover:bg-white/20 backdrop-blur-md text-white font-bold rounded-2xl border border-white/20 text-xs transition-colors flex items-center gap-1.5"
+              className="px-3.5 py-2 bg-white/10 hover:bg-white/20 backdrop-blur-md text-white font-bold rounded-xl border border-white/20 text-xs transition-colors flex items-center gap-1.5"
             >
               <span>🔍 Tra từ mới</span>
             </Link>
@@ -231,20 +231,20 @@ export default function VocabularyPage() {
       </div>
 
       {allVocabWithSource.length === 0 ? (
-        <div className="bg-white rounded-3xl p-12 text-center text-gray-400 border border-gray-100 shadow-2xs">
-          <div className="text-4xl mb-2">📝</div>
+        <div className="bg-white rounded-2xl p-8 text-center text-gray-400 border border-gray-100 shadow-xs">
+          <div className="text-3xl mb-2">📝</div>
           <p className="font-semibold text-gray-700">Chưa có từ vựng nào trong kho</p>
-          <p className="text-xs text-gray-400 mt-1 mb-4">Bạn có thể tạo sổ tay hoặc upload bài học JSON</p>
-          <div className="flex justify-center gap-3">
+          <p className="text-xs text-gray-400 mt-1 mb-3">Bạn có thể tạo sổ tay hoặc upload bài học JSON</p>
+          <div className="flex justify-center gap-2.5">
             <Link
               href="/notebooks"
-              className="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-bold hover:bg-indigo-700"
+              className="px-3.5 py-1.5 bg-indigo-600 text-white rounded-xl text-xs font-bold hover:bg-indigo-700"
             >
               + Tạo Sổ tay mới
             </Link>
             <Link
               href="/upload"
-              className="px-4 py-2 border border-gray-300 text-gray-700 rounded-xl text-xs font-semibold hover:bg-gray-50"
+              className="px-3.5 py-1.5 border border-gray-300 text-gray-700 rounded-xl text-xs font-semibold hover:bg-gray-50"
             >
               Upload file JSON
             </Link>
@@ -253,7 +253,7 @@ export default function VocabularyPage() {
       ) : (
         <>
           {/* Source Dropdown Filters */}
-          <div className="mb-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
             <div>
               <label className="block text-xs font-semibold text-gray-500 mb-1">Theo Giáo trình:</label>
               <select
@@ -262,7 +262,7 @@ export default function VocabularyPage() {
                   setSelectedCurriculum(e.target.value);
                   if (e.target.value !== "all") setSelectedNotebook("all");
                 }}
-                className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-2.5 text-xs font-semibold text-gray-800 focus:outline-none focus:border-indigo-500 shadow-2xs"
+                className="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 text-xs font-semibold text-gray-800 focus:outline-none focus:border-indigo-500 shadow-3xs"
               >
                 <option value="all">
                   {langCode === "en"
@@ -286,7 +286,7 @@ export default function VocabularyPage() {
                   setSelectedNotebook(e.target.value);
                   if (e.target.value !== "all") setSelectedCurriculum("all");
                 }}
-                className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-2.5 text-xs font-semibold text-gray-800 focus:outline-none focus:border-indigo-500 shadow-2xs"
+                className="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 text-xs font-semibold text-gray-800 focus:outline-none focus:border-indigo-500 shadow-3xs"
               >
                 <option value="all">Tất cả sổ tay ({langNotebooks.length})</option>
                 {langNotebooks.map((nb) => (
@@ -299,7 +299,7 @@ export default function VocabularyPage() {
           </div>
 
           {/* Search Bar & View Mode Toggle */}
-          <div className="mb-4 flex gap-2 items-center">
+          <div className="flex gap-2 items-center">
             <div className="flex-1 relative">
               <input
                 type="text"
@@ -312,7 +312,7 @@ export default function VocabularyPage() {
                     ? "Tìm kiếm từ vựng (vd: Hallo, Danke, Xin chào...)..."
                     : "Tìm kiếm từ vựng (vd: 日本語, にほん, tieng nhat...)..."
                 }
-                className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-2.5 pr-10 text-xs focus:outline-none focus:border-indigo-500 shadow-2xs"
+                className="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 pr-9 text-xs focus:outline-none focus:border-indigo-500 shadow-3xs"
               />
               {searchQuery && (
                 <button
@@ -324,11 +324,11 @@ export default function VocabularyPage() {
               )}
             </div>
 
-            <div className="flex bg-white p-1 border border-gray-200 rounded-2xl">
+            <div className="flex bg-white p-0.5 border border-gray-200 rounded-xl">
               <button
                 onClick={() => setViewMode("card")}
-                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-colors ${
-                  viewMode === "card" ? "bg-indigo-600 text-white" : "text-gray-500 hover:text-gray-700"
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors cursor-pointer ${
+                  viewMode === "card" ? "bg-indigo-600 text-white shadow-3xs" : "text-gray-500 hover:text-gray-700"
                 }`}
                 title="Dạng Thẻ (Grid Card)"
               >
@@ -336,8 +336,8 @@ export default function VocabularyPage() {
               </button>
               <button
                 onClick={() => setViewMode("list")}
-                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-colors ${
-                  viewMode === "list" ? "bg-indigo-600 text-white" : "text-gray-500 hover:text-gray-700"
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors cursor-pointer ${
+                  viewMode === "list" ? "bg-indigo-600 text-white shadow-3xs" : "text-gray-500 hover:text-gray-700"
                 }`}
                 title="Dạng Danh Sách (List)"
               >

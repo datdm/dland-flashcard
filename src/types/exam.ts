@@ -92,6 +92,7 @@ export interface ExamProgress {
   answers: Record<number, number[]>;
   startedAt: number;
   timeRemaining: number;
+  selectedSectionIds?: string[];
 }
 
 export interface MondaiResult {
@@ -125,4 +126,7 @@ export interface ExamResult {
   timeTaken: number;
   passed: boolean;
   scorePercentage: number;
+  selectedSectionIds?: string[];
+  maxScore?: number;
+  scaledScore?: number;
 }

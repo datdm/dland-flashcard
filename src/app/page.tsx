@@ -36,9 +36,9 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="w-full max-w-[1600px] mx-auto px-3.5 sm:px-6 lg:px-8 py-4 sm:py-6 min-h-screen pb-28 space-y-6 sm:space-y-8">
+    <div className="w-full max-w-[1600px] mx-auto px-3 sm:px-4 lg:px-6 py-3 sm:py-4 space-y-4 sm:space-y-5 pb-8 md:pb-4">
       {/* Hero Banner */}
-      <div className={`rounded-2xl sm:rounded-3xl p-5 sm:p-8 text-white shadow-xl bg-gradient-to-r transition-all duration-300 ${
+      <div className={`rounded-2xl p-4 sm:p-5 text-white shadow-lg bg-gradient-to-r transition-all duration-300 ${
         activeLanguage.code === "en"
           ? "from-indigo-900 via-purple-900 to-blue-900"
           : activeLanguage.code === "de"
@@ -52,31 +52,31 @@ export default function HomePage() {
             </span>
           </div>
 
-          <h1 className="text-2xl sm:text-4xl font-extrabold mt-2 tracking-tight leading-tight">
+          <h1 className="text-xl sm:text-3xl font-extrabold mt-1.5 tracking-tight leading-tight">
             Nền Tảng Học Ngôn Ngữ Đa Năng Thông Minh
           </h1>
-          <p className="text-xs sm:text-sm text-indigo-100 mt-2 leading-relaxed">
+          <p className="text-xs sm:text-sm text-indigo-100 mt-1.5 leading-relaxed">
             Học ngôn ngữ với 3 trụ cột vững chắc: <span className="font-bold text-white">Từ vựng Flashcard SRS</span>,{" "}
             <span className="font-bold text-white">Cấu trúc Ngữ pháp</span> và{" "}
             <span className="font-bold text-white">Tra cứu Từ điển Nhật-Việt</span>.
           </p>
 
-          <div className="flex flex-wrap gap-3 mt-6">
+          <div className="flex flex-wrap gap-2.5 mt-4 sm:mt-5">
             <Link
               href="/exam"
-              className="px-5 py-2.5 bg-white text-indigo-700 font-extrabold rounded-2xl shadow-md hover:bg-indigo-50 transition-all text-xs sm:text-sm flex items-center gap-1.5 active:scale-98"
+              className="px-4 py-2 bg-white text-indigo-700 font-extrabold rounded-xl shadow-sm hover:bg-indigo-50 transition-all text-xs sm:text-sm flex items-center gap-1.5 active:scale-98"
             >
               <span>📝</span> Luyện Thi JLPT
             </Link>
             <Link
               href="/curriculum"
-              className="px-5 py-2.5 bg-white/15 hover:bg-white/25 backdrop-blur-md text-white font-bold rounded-2xl border border-white/20 transition-colors text-xs sm:text-sm"
+              className="px-4 py-2 bg-white/15 hover:bg-white/25 backdrop-blur-md text-white font-bold rounded-xl border border-white/20 transition-colors text-xs sm:text-sm"
             >
               📚 Xem Lộ trình Bài học
             </Link>
             <Link
               href="/search"
-              className="px-5 py-2.5 bg-white/10 hover:bg-white/20 backdrop-blur-md text-white font-bold rounded-2xl border border-white/20 transition-colors text-xs sm:text-sm"
+              className="px-4 py-2 bg-white/10 hover:bg-white/20 backdrop-blur-md text-white font-bold rounded-xl border border-white/20 transition-colors text-xs sm:text-sm"
             >
               🔍 Tra cứu Từ điển
             </Link>
@@ -85,18 +85,18 @@ export default function HomePage() {
       </div>
 
       {/* Daily Actions Grid */}
-      <div className={`grid grid-cols-1 ${streak.currentStreak > 0 ? 'md:grid-cols-2' : 'md:grid-cols-1'} gap-4 mb-8`}>
+      <div className={`grid grid-cols-1 ${streak.currentStreak > 0 ? 'md:grid-cols-2' : 'md:grid-cols-1'} gap-3`}>
         {/* Streak section */}
         {streak.currentStreak > 0 && (
-          <div className="bg-gradient-to-r from-orange-400 to-red-500 rounded-2xl p-5 text-white shadow-md flex items-center justify-between">
+          <div className="bg-gradient-to-r from-orange-400 to-red-500 rounded-2xl p-3.5 sm:p-4 text-white shadow-xs flex items-center justify-between">
             <div>
               <p className="text-xs opacity-90">Chuỗi học tập hàng ngày</p>
-              <p className="text-2xl sm:text-3xl font-extrabold mt-0.5">🔥 {streak.currentStreak} ngày</p>
+              <p className="text-xl sm:text-2xl font-extrabold mt-0.5">🔥 {streak.currentStreak} ngày</p>
             </div>
             {streak.longestStreak > 0 && (
               <div className="text-right">
                 <p className="text-xs opacity-90">Kỷ lục</p>
-                <p className="text-xl font-bold">🏆 {streak.longestStreak}</p>
+                <p className="text-lg font-bold">🏆 {streak.longestStreak}</p>
               </div>
             )}
           </div>
@@ -105,42 +105,42 @@ export default function HomePage() {
         {/* Daily 50 Card */}
         <Link 
           href="/flashcard/all?daily50=true"
-          className="bg-gradient-to-r from-emerald-500 to-teal-600 rounded-2xl p-5 text-white shadow-md flex items-center justify-between hover:scale-[1.02] transition-transform"
+          className="bg-gradient-to-r from-emerald-500 to-teal-600 rounded-2xl p-3.5 sm:p-4 text-white shadow-xs flex items-center justify-between hover:scale-[1.01] transition-transform"
         >
           <div>
             <p className="text-xs opacity-90 text-emerald-50 tracking-wide uppercase font-bold">Nhiệm vụ hàng ngày</p>
-            <p className="text-xl sm:text-2xl font-extrabold mt-0.5">🎲 50 Từ vựng ngẫu nhiên</p>
+            <p className="text-lg sm:text-xl font-extrabold mt-0.5">🎲 50 Từ vựng ngẫu nhiên</p>
           </div>
-          <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-teal-600 text-xl font-bold shrink-0 shadow-sm">
+          <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center text-teal-600 text-base font-bold shrink-0 shadow-xs">
             →
           </div>
         </Link>
       </div>
 
       {/* JLPT Level Quick Cards Grid */}
-      <div className="mb-10">
-        <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+      <div className="space-y-3">
+        <h2 className="text-base sm:text-lg font-bold text-gray-900 flex items-center gap-2">
           <span>{activeLanguage.flag}</span> Cấp độ Trình độ {activeLanguage.name}
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           {LEVEL_CARDS.map((card) => (
             <Link
               key={card.level}
-              href="/curriculum"
-              className="group relative overflow-hidden bg-white rounded-3xl p-5 border border-gray-100 shadow-sm hover:shadow-md hover:border-indigo-200 transition-all flex flex-col justify-between"
+              href={`/curriculum?level=${card.level}`}
+              className="group relative overflow-hidden bg-white rounded-2xl p-3.5 sm:p-4 border border-gray-100 shadow-xs hover:shadow-sm hover:border-indigo-200 transition-all flex flex-col justify-between"
             >
               <div>
                 <div
-                  className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${card.color} flex items-center justify-center text-white font-extrabold text-xl shadow-md mb-3`}
+                  className={`w-10 h-10 rounded-xl bg-gradient-to-br ${card.color} flex items-center justify-center text-white font-extrabold text-lg shadow-xs mb-2.5`}
                 >
                   {card.level}
                 </div>
-                <h3 className="font-bold text-gray-900 text-base group-hover:text-indigo-600 transition-colors">
+                <h3 className="font-bold text-gray-900 text-sm group-hover:text-indigo-600 transition-colors">
                   {card.title}
                 </h3>
                 <p className="text-xs text-gray-500 mt-1 leading-relaxed">{card.desc}</p>
               </div>
-              <div className="mt-4 pt-3 border-t border-gray-50 text-xs font-semibold text-indigo-600 flex items-center justify-between">
+              <div className="mt-3 pt-2.5 border-t border-gray-50 text-xs font-semibold text-indigo-600 flex items-center justify-between">
                 <span>Vào lộ trình</span>
                 <span>→</span>
               </div>
@@ -150,14 +150,14 @@ export default function HomePage() {
       </div>
 
       {/* Main Core Modules */}
-      <div className={`grid grid-cols-1 ${activeLanguage.code === "ja" ? "sm:grid-cols-2 lg:grid-cols-4" : "md:grid-cols-3"} gap-5 mb-10`}>
+      <div className={`grid grid-cols-1 ${activeLanguage.code === "ja" ? "sm:grid-cols-2 lg:grid-cols-4" : "md:grid-cols-3"} gap-3.5 sm:gap-4`}>
         <Link
           href="/curriculum"
-          className="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-all group flex flex-col justify-between"
+          className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-xs hover:shadow-sm transition-all group flex flex-col justify-between"
         >
           <div>
-            <div className="text-3xl mb-3">📚</div>
-            <h3 className="font-bold text-gray-900 text-lg group-hover:text-indigo-600 transition-colors">
+            <div className="text-2xl sm:text-3xl mb-2 sm:mb-2.5">📚</div>
+            <h3 className="font-bold text-gray-900 text-base sm:text-lg group-hover:text-indigo-600 transition-colors">
               Giáo trình Bài học
             </h3>
             <p className="text-xs text-gray-500 mt-1 leading-relaxed">
@@ -172,11 +172,11 @@ export default function HomePage() {
 
         <Link
           href="/grammar"
-          className="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-all group flex flex-col justify-between"
+          className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-xs hover:shadow-sm transition-all group flex flex-col justify-between"
         >
           <div>
-            <div className="text-3xl mb-3">📖</div>
-            <h3 className="font-bold text-gray-900 text-lg group-hover:text-purple-600 transition-colors">
+            <div className="text-2xl sm:text-3xl mb-2 sm:mb-2.5">📖</div>
+            <h3 className="font-bold text-gray-900 text-base sm:text-lg group-hover:text-purple-600 transition-colors">
               Thư viện Ngữ pháp
             </h3>
             <p className="text-xs text-gray-500 mt-1 leading-relaxed">
@@ -193,11 +193,11 @@ export default function HomePage() {
           <>
             <Link
               href="/kanji"
-              className="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-all group flex flex-col justify-between"
+              className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-xs hover:shadow-sm transition-all group flex flex-col justify-between"
             >
               <div>
-                <div className="text-3xl mb-3">🉐</div>
-                <h3 className="font-bold text-gray-900 text-lg group-hover:text-emerald-600 transition-colors">
+                <div className="text-2xl sm:text-3xl mb-2 sm:mb-2.5">🉐</div>
+                <h3 className="font-bold text-gray-900 text-base sm:text-lg group-hover:text-emerald-600 transition-colors">
                   Thư viện Kanji SVG
                 </h3>
                 <p className="text-xs text-gray-500 mt-1 leading-relaxed">
@@ -208,11 +208,11 @@ export default function HomePage() {
 
             <Link
               href="/kaiwa"
-              className="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-all group flex flex-col justify-between"
+              className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-xs hover:shadow-sm transition-all group flex flex-col justify-between"
             >
               <div>
-                <div className="text-3xl mb-3">🗣️</div>
-                <h3 className="font-bold text-gray-900 text-lg group-hover:text-rose-600 transition-colors">
+                <div className="text-2xl sm:text-3xl mb-2 sm:mb-2.5">🗣️</div>
+                <h3 className="font-bold text-gray-900 text-base sm:text-lg group-hover:text-rose-600 transition-colors">
                   Hội thoại Kaiwa
                 </h3>
                 <p className="text-xs text-gray-500 mt-1 leading-relaxed">
@@ -224,11 +224,11 @@ export default function HomePage() {
         ) : (
           <Link
             href="/chat"
-            className="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-all group flex flex-col justify-between"
+            className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-xs hover:shadow-sm transition-all group flex flex-col justify-between"
           >
             <div>
-              <div className="text-3xl mb-3">🤖</div>
-              <h3 className="font-bold text-gray-900 text-lg group-hover:text-rose-600 transition-colors">
+              <div className="text-2xl sm:text-3xl mb-2 sm:mb-2.5">🤖</div>
+              <h3 className="font-bold text-gray-900 text-base sm:text-lg group-hover:text-rose-600 transition-colors">
                 Gia sư AI Đàm thoại
               </h3>
               <p className="text-xs text-gray-500 mt-1 leading-relaxed">
@@ -243,23 +243,23 @@ export default function HomePage() {
 
       {/* Notebooks section if any */}
       {notebooks.length > 0 && (
-        <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="font-bold text-gray-900 text-base">📓 Sổ tay cá nhân ({notebooks.length})</h3>
+        <div className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-xs">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="font-bold text-gray-900 text-sm sm:text-base">📓 Sổ tay cá nhân ({notebooks.length})</h3>
             <Link href="/notebooks" className="text-xs text-indigo-600 font-semibold hover:underline">
               Xem tất cả →
             </Link>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
             {notebooks.map((n) => (
               <Link
                 key={n.id}
                 href={`/notebooks/${n.id}`}
-                className="p-4 rounded-2xl bg-gray-50 hover:bg-indigo-50/50 transition-colors flex items-center justify-between"
+                className="p-3 sm:p-3.5 rounded-xl bg-gray-50 hover:bg-indigo-50/50 transition-colors flex items-center justify-between"
               >
                 <div>
-                  <h4 className="font-bold text-sm text-gray-800">{n.name}</h4>
-                  <p className="text-xs text-gray-500 mt-0.5">{n.vocabulary.length} từ vựng</p>
+                  <h4 className="font-bold text-xs sm:text-sm text-gray-800">{n.name}</h4>
+                  <p className="text-[11px] text-gray-500 mt-0.5">{n.vocabulary.length} từ vựng</p>
                 </div>
                 <span className="text-xs text-indigo-600 font-medium">Chi tiết →</span>
               </Link>

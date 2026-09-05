@@ -74,18 +74,18 @@ export default function ExamHubPage() {
       featureName="Luyện Thi & Thi Thử JLPT"
       description="Đăng nhập để làm các đề thi thử JLPT chuẩn cấu trúc N5 - N1, bấm giờ làm bài, chấm điểm và lưu lịch sử kết quả."
     >
-      <div className="w-full max-w-[1600px] mx-auto px-3.5 sm:px-6 lg:px-8 py-4 sm:py-6 min-h-screen pb-28 space-y-6 sm:space-y-8">
+      <div className="w-full max-w-[1600px] mx-auto px-3 sm:px-4 lg:px-6 py-3 sm:py-4 space-y-4 sm:space-y-5 pb-8 md:pb-4">
         {/* Header Hero Banner */}
-        <div className={`rounded-2xl sm:rounded-3xl p-5 sm:p-8 text-white shadow-xl relative overflow-hidden transition-all duration-300 bg-gradient-to-r ${
+        <div className={`rounded-2xl p-4 sm:p-5 text-white shadow-md relative overflow-hidden transition-all duration-300 bg-gradient-to-r ${
           activeLanguage.code === "en"
             ? "from-indigo-900 via-purple-900 to-blue-900"
             : activeLanguage.code === "de"
             ? "from-amber-950 via-red-950 to-stone-900"
             : "from-teal-800 via-indigo-900 to-purple-800"
         }`}>
-          <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
-              <div className="flex items-center gap-2 flex-wrap mb-2">
+              <div className="flex items-center gap-2 flex-wrap mb-1">
                 <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-bold tracking-widest uppercase">
                   {activeLanguage.name} ({activeLanguage.code.toUpperCase()})
                 </span>
@@ -93,19 +93,19 @@ export default function ExamHubPage() {
                   Kỳ thi N1 ➔ N5
                 </span>
               </div>
-              <h1 className="text-2xl sm:text-3xl font-black mt-2">
+              <h1 className="text-xl sm:text-2xl font-black mt-1.5">
                 Luyện Thi & Thi Thử JLPT Trực Tuyến
               </h1>
-              <p className="text-xs sm:text-sm text-indigo-100/90 mt-2 max-w-2xl leading-relaxed">
+              <p className="text-xs sm:text-sm text-indigo-100/90 mt-1 max-w-2xl leading-relaxed">
                 Hệ thống thi thử mô phỏng thời gian thực với đề thi chính thức các năm (07/2025, 12/2024...), chấm điểm tự động, giải thích chi tiết đáp án và tra cứu từ vựng trực tiếp.
               </p>
             </div>
 
-            <div className="flex items-center gap-2.5 flex-wrap self-start md:self-auto shrink-0">
+            <div className="flex items-center gap-2 flex-wrap self-start md:self-auto shrink-0">
               <button
                 type="button"
                 onClick={() => setShowStructureModal(true)}
-                className="px-4 py-3 rounded-2xl bg-white/20 hover:bg-white/30 backdrop-blur-md text-white font-extrabold text-xs border border-white/30 transition-all flex items-center gap-1.5 cursor-pointer active:scale-98"
+                className="px-3.5 py-2 rounded-xl bg-white/20 hover:bg-white/30 backdrop-blur-md text-white font-extrabold text-xs border border-white/30 transition-all flex items-center gap-1.5 cursor-pointer active:scale-98"
               >
                 <span>📋</span>
                 <span>Cấu trúc đề thi N1-N5</span>
@@ -115,7 +115,7 @@ export default function ExamHubPage() {
                 <button
                   type="button"
                   onClick={() => setShowUploadModal(true)}
-                  className="px-4 py-3 rounded-2xl bg-white text-indigo-950 font-extrabold text-xs shadow-lg hover:bg-gray-100 transition-all flex items-center gap-1.5 cursor-pointer active:scale-98"
+                  className="px-3.5 py-2 rounded-xl bg-white text-indigo-950 font-extrabold text-xs shadow-md hover:bg-gray-100 transition-all flex items-center gap-1.5 cursor-pointer active:scale-98"
                 >
                   <span>📥</span>
                   <span>Nhập đề JSON</span>
@@ -126,44 +126,44 @@ export default function ExamHubPage() {
         </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="bg-white rounded-3xl p-5 border border-gray-100 shadow-2xs flex items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-2xl">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div className="bg-white rounded-2xl p-3.5 sm:p-4 border border-gray-100 shadow-xs flex items-center gap-3.5">
+            <div className="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-xl">
               📚
             </div>
             <div>
               <div className="text-gray-400 text-xs font-bold uppercase tracking-wider">
                 Tổng số đề thi
               </div>
-              <div className="text-2xl font-black text-gray-900 mt-0.5">
+              <div className="text-xl sm:text-2xl font-black text-gray-900 mt-0.5">
                 {exams.length} <span className="text-xs font-medium text-gray-400">bộ đề</span>
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-3xl p-5 border border-gray-100 shadow-2xs flex items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-2xl">
+          <div className="bg-white rounded-2xl p-3.5 sm:p-4 border border-gray-100 shadow-xs flex items-center gap-3.5">
+            <div className="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-xl">
               🏆
             </div>
             <div>
               <div className="text-gray-400 text-xs font-bold uppercase tracking-wider">
                 Lượt làm bài thi
               </div>
-              <div className="text-2xl font-black text-emerald-600 mt-0.5">
+              <div className="text-xl sm:text-2xl font-black text-emerald-600 mt-0.5">
                 {totalAttempts} <span className="text-xs font-medium text-gray-400">lần thi</span>
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-3xl p-5 border border-gray-100 shadow-2xs flex items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-100 flex items-center justify-center text-2xl">
+          <div className="bg-white rounded-2xl p-3.5 sm:p-4 border border-gray-100 shadow-xs flex items-center gap-3.5">
+            <div className="w-10 h-10 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center text-xl">
               📈
             </div>
             <div>
               <div className="text-gray-400 text-xs font-bold uppercase tracking-wider">
                 Tỷ lệ thông qua (Đạt)
               </div>
-              <div className="text-2xl font-black text-amber-600 mt-0.5">
+              <div className="text-xl sm:text-2xl font-black text-amber-600 mt-0.5">
                 {passRate}%{" "}
                 <span className="text-xs font-medium text-gray-400">
                   ({passedAttempts}/{totalAttempts})
@@ -174,14 +174,14 @@ export default function ExamHubPage() {
         </div>
 
         {/* Level Filters & Search */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white p-4 rounded-3xl border border-gray-100 shadow-2xs">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 bg-white p-3 sm:p-3.5 rounded-2xl border border-gray-100 shadow-xs">
           {/* Level Tabs */}
           <div className="flex items-center gap-1.5 overflow-x-auto w-full sm:w-auto pb-1 sm:pb-0">
             {["all", "N1", "N2", "N3", "N4", "N5"].map((lvl) => (
               <button
                 key={lvl}
                 onClick={() => setSelectedLevel(lvl)}
-                className={`px-4 py-2 rounded-2xl text-xs font-black transition-all shrink-0 cursor-pointer ${
+                className={`px-3 py-1.5 rounded-xl text-xs font-black transition-all shrink-0 cursor-pointer ${
                   selectedLevel === lvl
                     ? "bg-indigo-600 text-white shadow-xs"
                     : "bg-gray-100 text-gray-600 hover:bg-gray-200"
@@ -199,14 +199,14 @@ export default function ExamHubPage() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Tìm kiếm đề thi..."
-              className="w-full pl-9 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-2xl text-xs text-gray-800 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+              className="w-full pl-8 pr-3.5 py-1.5 bg-gray-50 border border-gray-200 rounded-xl text-xs text-gray-800 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
             />
-            <span className="absolute left-3 top-2.5 text-xs text-gray-400">🔍</span>
+            <span className="absolute left-2.5 top-2 text-xs text-gray-400">🔍</span>
           </div>
         </div>
 
         {/* Exam Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3.5 sm:gap-4">
           {filteredExams.map((exam) => {
             const meta = exam.data.meta;
             const levelStyle =
@@ -233,7 +233,7 @@ export default function ExamHubPage() {
             return (
               <div
                 key={exam.id}
-                className={`bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-6 border border-gray-100 shadow-2xs transition-all duration-200 hover:shadow-md flex flex-col justify-between ${levelStyle.border}`}
+                className={`bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-xs transition-all duration-200 hover:shadow-sm flex flex-col justify-between ${levelStyle.border}`}
               >
                 <div>
                   <div className="flex items-center justify-between gap-3 mb-3">

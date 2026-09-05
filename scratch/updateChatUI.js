@@ -1,18 +1,13 @@
-"use client";
+const fs = require('fs');
+const path = require('path');
 
-import { useState, useRef, useEffect } from "react";
-import ReactMarkdown from "react-markdown";
-import Link from "next/link";
-import { useLanguageSetting } from "@/hooks/useLanguageSetting";
-import AuthGuard from "@/components/AuthGuard";
+const filePath = path.join(__dirname, '..', 'src', 'app', 'chat', 'page.tsx');
+let content = fs.readFileSync(filePath, 'utf8');
 
-type Message = {
-  role: "user" | "model";
-  parts: { text: string }[];
-};
+// Update clear chat function and suggestions
+const oldStateAndHelpersRegex = /  const \[messages, setMessages\] = useState<Message\[\]>\(\[\]\);[\s\S]*?  const speak = \(text: string\) => \{/;
 
-export default function ChatPage() {
-  const [messages, setMessages] = useState<Message[]>([]);
+const newStateAndHelpers = `  const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [copiedIdx, setCopiedIdx] = useState<number | null>(null);
@@ -24,49 +19,8 @@ export default function ChatPage() {
   const autoSpeakRef = useRef(false);
   const [isListening, setIsListening] = useState(false);
   const [recognition, setRecognition] = useState<any>(null);
-  const promptLoaded = useRef(false);
 
   const ttsLang = activeLanguage.code === "de" ? "de-DE" : activeLanguage.code === "en" ? "en-US" : "ja-JP";
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-      if (SpeechRecognition) {
-        const rec = new SpeechRecognition();
-        rec.continuous = false;
-        rec.interimResults = false;
-        rec.lang = activeLanguage.code === "de" ? "de-DE" : activeLanguage.code === "en" ? "en-US" : "ja-JP";
-
-        rec.onstart = () => {
-          setIsListening(true);
-        };
-
-        rec.onend = () => {
-          setIsListening(false);
-        };
-
-        rec.onresult = (event: any) => {
-          const transcript = event.results[0][0].transcript;
-          setInput((prev) => (prev ? `${prev} ${transcript}` : transcript));
-        };
-
-        setRecognition(rec);
-      }
-    }
-  }, [activeLanguage.code]);
-
-  const toggleListening = () => {
-    if (!recognition) {
-      alert("Trình duyệt của bạn chưa hỗ trợ nhận diện giọng nói (Khuyến nghị dùng Google Chrome / Safari / Edge).");
-      return;
-    }
-
-    if (isListening) {
-      recognition.stop();
-    } else {
-      recognition.start();
-    }
-  };
 
   const getGreeting = () => {
     return activeLanguage.code === "de"
@@ -98,142 +52,14 @@ export default function ChatPage() {
     }
   };
 
-  const speak = (text: string) => {
-    if (typeof window === "undefined") return;
-    window.speechSynthesis.cancel();
-    // Clean markdown before speaking
-    const cleanText = text.replace(/[*_#`~>\[\]()-]/g, "");
-    const utterance = new SpeechSynthesisUtterance(cleanText);
-    utterance.lang = ttsLang;
-    window.speechSynthesis.speak(utterance);
-  };
+  const speak = (text: string) => {`;
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
+content = content.replace(oldStateAndHelpersRegex, newStateAndHelpers);
 
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+// Update entire return JSX of ChatPage
+const oldReturnJSXRegex = /return \(\s*<AuthGuard featureName="Gia Sư AI 24\/7"[\s\S]*?<\/AuthGuard>\s*\);/;
 
-  const handleSend = async (text: string) => {
-    if (!text.trim() || isLoading) return;
-
-    // Stop speaking when user sends a new message
-    if (typeof window !== "undefined") {
-      window.speechSynthesis.cancel();
-    }
-
-    const userMsg: Message = { role: "user", parts: [{ text }] };
-    const modelMsg: Message = { role: "model", parts: [{ text: "" }] };
-    
-    setMessages((prev) => [...prev, userMsg, modelMsg]);
-    setInput("");
-    setIsLoading(true);
-
-    try {
-      const historyToSend = messages.slice(1).map(msg => ({
-        role: msg.role,
-        parts: msg.parts,
-      }));
-
-      const res = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          history: historyToSend,
-          message: text,
-          lang: activeLanguage.code,
-        }),
-      });
-
-      if (!res.ok) {
-        throw new Error("Lỗi kết nối");
-      }
-
-      if (!res.body) throw new Error("No response body");
-
-      const reader = res.body.getReader();
-      const decoder = new TextDecoder("utf-8");
-      let fullResponseText = "";
-
-      while (true) {
-        const { value, done } = await reader.read();
-        if (done) break;
-        
-        const chunk = decoder.decode(value, { stream: true });
-        fullResponseText += chunk;
-        
-        setMessages((prev) => {
-          const newMessages = [...prev];
-          const lastIndex = newMessages.length - 1;
-          const lastMsg = { ...newMessages[lastIndex] };
-          lastMsg.parts = [{ text: lastMsg.parts[0].text + chunk }];
-          newMessages[lastIndex] = lastMsg;
-          return newMessages;
-        });
-      }
-
-      if (autoSpeakRef.current) {
-        speak(fullResponseText);
-      }
-    } catch (err: any) {
-      console.error(err);
-      setMessages((prev) => {
-        const newMessages = [...prev];
-        const lastIndex = newMessages.length - 1;
-        newMessages[lastIndex].parts[0].text = "Xin lỗi, đã xảy ra lỗi trong quá trình kết nối. Vui lòng kiểm tra lại GEMINI_API_KEY hoặc thử lại sau.";
-        return newMessages;
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    if (typeof window !== "undefined" && !promptLoaded.current) {
-      const params = new URLSearchParams(window.location.search);
-      const promptParam = params.get("prompt");
-      if (promptParam) {
-        promptLoaded.current = true;
-        handleSend(promptParam);
-        // Clear query parameter to prevent resending on page refresh
-        const newUrl = window.location.pathname;
-        window.history.replaceState({}, document.title, newUrl);
-      }
-    }
-  }, [messages]);
-
-  const SUGGESTIONS_BY_LANG: Record<string, string[]> = {
-    ja: [
-      "📝 Phân tích Kanji: 勉強",
-      "📖 Giải thích ngữ pháp ～てあげる",
-      "🎧 Luyện nghe hội thoại cơ bản",
-      "🗣️ Luyện giao tiếp chủ đề mua sắm"
-    ],
-    en: [
-      "📝 Phân biệt cách dùng: Although vs Despite",
-      "📖 Giải thích ngữ pháp Câu điều kiện loại 3",
-      "🎯 Luyện phát âm & IPA từ vựng IELTS",
-      "🗣️ Luyện nói tiếng Anh chủ đề Job Interview"
-    ],
-    de: [
-      "📝 Phân biệt quán từ giống: Der, Die, Das",
-      "📖 Giải thích cấu trúc ngữ pháp Weil & Dass",
-      "🎯 Luyện chia đuôi tính từ (Adjektivdeklination)",
-      "🗣️ Luyện giao tiếp tiếng Đức chủ đề Im Restaurant"
-    ]
-  };
-
-  const SUGGESTIONS = SUGGESTIONS_BY_LANG[activeLanguage.code] || SUGGESTIONS_BY_LANG.ja;
-
-  const headerTitle = activeLanguage.code === "de"
-    ? "Gia Sư AI Tiếng Đức"
-    : activeLanguage.code === "en"
-    ? "Gia Sư AI Tiếng Anh"
-    : "Gia Sư AI Tiếng Nhật";
-
-  return (
+const newReturnJSX = `return (
     <AuthGuard featureName="Gia Sư AI 24/7" description="Đăng nhập để luyện giao tiếp, giải thích ngữ pháp, phân tích từ vựng và lưu hội thoại cùng Gia sư AI.">
       <div className="w-full max-w-[1400px] mx-auto px-3 sm:px-6 py-4 min-h-screen pb-24 space-y-3">
         {/* Sleek Modern AI Tutor Topbar */}
@@ -276,11 +102,11 @@ export default function ChatPage() {
             <button
               type="button"
               onClick={() => setAutoSpeak(!autoSpeak)}
-              className={`px-3 py-1.5 rounded-xl font-bold text-xs border transition-all flex items-center gap-1 cursor-pointer ${
+              className={\`px-3 py-1.5 rounded-xl font-bold text-xs border transition-all flex items-center gap-1 cursor-pointer \${
                 autoSpeak
                   ? "bg-amber-50 border-amber-300 text-amber-900 font-extrabold"
                   : "bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100"
-              }`}
+              }\`}
               title="Tự động phát âm thanh phản hồi từ AI"
             >
               <span>{autoSpeak ? "🔊 Tự phát âm: Bật" : "🔇 Tự phát âm"}</span>
@@ -303,7 +129,7 @@ export default function ChatPage() {
           {/* Chat Messages Area */}
           <div className="flex-1 overflow-y-auto bg-slate-50/50 p-4 sm:p-5 space-y-4">
             {messages.map((msg, idx) => (
-              <div key={idx} className={`flex gap-2.5 ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
+              <div key={idx} className={\`flex gap-2.5 \${msg.role === "user" ? "justify-end" : "justify-start"}\`}>
                 {msg.role === "model" && (
                   <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-sm shrink-0 shadow-3xs mt-1">
                     🤖
@@ -311,11 +137,11 @@ export default function ChatPage() {
                 )}
 
                 <div
-                  className={`max-w-[88%] sm:max-w-[80%] rounded-2xl p-3.5 sm:p-4 shadow-3xs ${
+                  className={\`max-w-[88%] sm:max-w-[80%] rounded-2xl p-3.5 sm:p-4 shadow-3xs \${
                     msg.role === "user"
                       ? "bg-indigo-600 text-white rounded-tr-xs"
                       : "bg-white text-gray-800 border border-gray-200/80 rounded-tl-xs"
-                  }`}
+                  }\`}
                 >
                   {msg.role === "user" ? (
                     <div className="whitespace-pre-wrap text-sm leading-relaxed">{msg.parts[0].text}</div>
@@ -404,11 +230,11 @@ export default function ChatPage() {
               <button
                 type="button"
                 onClick={toggleListening}
-                className={`w-11 h-11 shrink-0 rounded-2xl flex items-center justify-center transition-all cursor-pointer ${
+                className={\`w-11 h-11 shrink-0 rounded-2xl flex items-center justify-center transition-all cursor-pointer \${
                   isListening
                     ? "bg-red-500 text-white animate-pulse shadow-md shadow-red-200"
                     : "bg-gray-100 text-gray-600 hover:bg-gray-200 border border-gray-200"
-                }`}
+                }\`}
                 title={isListening ? "Đang lắng nghe... Nhấn để dừng" : "Nói để nhập văn bản (STT)"}
               >
                 {isListening ? "🛑" : "🎙️"}
@@ -436,5 +262,8 @@ export default function ChatPage() {
         </div>
       </div>
     </AuthGuard>
-  );
-}
+  );`;
+
+content = content.replace(oldReturnJSXRegex, newReturnJSX);
+fs.writeFileSync(filePath, content, 'utf8');
+console.log("Successfully updated chat/page.tsx with polished AI Tutor interface!");

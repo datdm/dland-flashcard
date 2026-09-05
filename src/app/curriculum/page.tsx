@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { getCurriculumRepository } from "@/lib/repositories";
 import { CurriculumLevelGroup, JLPTLevel } from "@/lib/repositories/types";
@@ -10,9 +11,18 @@ import { useKanjiProgress } from "@/hooks/useKanjiProgress";
 import { useLanguageSetting } from "@/hooks/useLanguageSetting";
 import IeltsRoadmapDashboard from "@/components/IeltsRoadmapDashboard";
 
-export default function CurriculumPage() {
+function CurriculumContent() {
+  const searchParams = useSearchParams();
+  const urlLevel = searchParams.get("level") as JLPTLevel | null;
+
   const [groups, setGroups] = useState<CurriculumLevelGroup[]>([]);
-  const [activeLevel, setActiveLevel] = useState<JLPTLevel>("N5");
+  const [activeLevel, setActiveLevel] = useState<JLPTLevel>(urlLevel || "N5");
+
+  useEffect(() => {
+    if (urlLevel && (["N5", "N4", "N3", "N2", "N1"] as JLPTLevel[]).includes(urlLevel)) {
+      setActiveLevel(urlLevel);
+    }
+  }, [urlLevel]);
   const [activeBookId, setActiveBookId] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const [enData, setEnData] = useState<any>(null);
@@ -173,22 +183,22 @@ export default function CurriculumPage() {
   }, [currentBook, activeLevelStats, progress, grammarProgress, kanjiProgress]);
 
   return (
-    <div className="w-full max-w-[1600px] mx-auto px-3.5 sm:px-6 lg:px-8 py-4 sm:py-6 min-h-screen pb-28 space-y-6">
+    <div className="w-full max-w-[1600px] mx-auto px-3 sm:px-4 lg:px-6 py-3 sm:py-4 space-y-4 sm:space-y-5 pb-8 md:pb-4">
       {/* Header Banner */}
-      <div className={`rounded-2xl sm:rounded-3xl p-5 sm:p-8 text-white shadow-xl mb-6 transition-all duration-300 bg-gradient-to-r ${
+      <div className={`rounded-2xl p-4 sm:p-5 text-white shadow-lg transition-all duration-300 bg-gradient-to-r ${
         activeLanguage.code === "en"
           ? "from-indigo-900 via-purple-900 to-blue-900"
           : activeLanguage.code === "de"
           ? "from-amber-950 via-red-950 to-stone-900"
           : "from-teal-800 via-indigo-900 to-purple-800"
       }`}>
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-bold tracking-widest uppercase">
               {activeLanguage.name} ({activeLanguage.code.toUpperCase()})
             </span>
-            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight mt-2">{headerTitle}</h1>
-            <p className="text-xs sm:text-sm text-indigo-100 mt-2 leading-relaxed">
+            <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight mt-1.5">{headerTitle}</h1>
+            <p className="text-xs sm:text-sm text-indigo-100 mt-1 leading-relaxed">
               {headerSubtitle}
             </p>
           </div>
@@ -197,7 +207,7 @@ export default function CurriculumPage() {
 
       {/* Level Selector Tabs */}
       {!isMultilingual && (
-        <div className="flex items-center gap-2.5 overflow-x-auto no-scrollbar pb-2 mb-6">
+        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
           {(["N5", "N4", "N3", "N2", "N1"] as JLPTLevel[]).map((level) => {
             const group = groups.find((g) => g.level === level);
             const bookCount = group?.books?.length || 1;
@@ -214,15 +224,15 @@ export default function CurriculumPage() {
                     setActiveBookId(targetGroup.books[0].id);
                   }
                 }}
-                className={`px-4 py-2.5 rounded-2xl font-bold text-xs transition-all whitespace-nowrap flex flex-col items-start gap-1 ${
+                className={`px-3.5 py-2 rounded-xl font-bold text-xs transition-all whitespace-nowrap flex flex-col items-start gap-1 cursor-pointer ${
                   activeLevel === level
-                    ? "bg-indigo-600 text-white shadow-md shadow-indigo-200 scale-105"
+                    ? "bg-indigo-600 text-white shadow-xs scale-102"
                     : "bg-white text-gray-700 border border-gray-200 hover:bg-gray-50"
                 }`}
               >
                 <div className="flex items-center justify-between gap-2 w-full">
                   <div className="flex items-center gap-1.5">
-                    <span className="text-sm font-extrabold">{level}</span>
+                    <span className="text-xs sm:text-sm font-extrabold">{level}</span>
                     <span
                       className={`px-2 py-0.5 text-[10px] rounded-full font-bold ${
                         activeLevel === level ? "bg-white/20 text-white" : "bg-gray-100 text-gray-500"
@@ -265,36 +275,36 @@ export default function CurriculumPage() {
           Chưa có bài học nào cho trình độ {activeLevel}
         </div>
       ) : (
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-5">
           {/* Progress Overview Banner for Selected Textbook */}
           {!isMultilingual && activeGroup && (
-            <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-purple-950 rounded-3xl p-5 sm:p-6 text-white shadow-xl border border-indigo-900/50">
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-5">
+            <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-purple-950 rounded-2xl p-4 sm:p-5 text-white shadow-md border border-indigo-900/50">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div className="flex-1">
-                  <div className="flex items-center gap-2 flex-wrap mb-1.5">
-                    <span className="px-3 py-0.5 bg-indigo-500/30 text-indigo-200 border border-indigo-400/30 backdrop-blur-md rounded-full text-xs font-extrabold tracking-wide uppercase">
+                  <div className="flex items-center gap-2 flex-wrap mb-1">
+                    <span className="px-2.5 py-0.5 bg-indigo-500/30 text-indigo-200 border border-indigo-400/30 backdrop-blur-md rounded-full text-xs font-extrabold tracking-wide uppercase">
                       🎯 Progress Tracker — {currentBook?.name || `Trình độ ${activeLevel}`}
                     </span>
                     <span className="px-2.5 py-0.5 bg-amber-400/20 text-amber-300 border border-amber-300/30 rounded-full text-xs font-black">
                       Tiến độ: {currentBookStats.percentage}%
                     </span>
                   </div>
-                  <h2 className="text-lg sm:text-xl font-black tracking-tight text-white mt-1">
+                  <h2 className="text-base sm:text-lg font-black tracking-tight text-white mt-1">
                     Tổng Quan Tiến Độ Học Tập — {currentBook?.name || activeGroup.title}
                   </h2>
-                  <p className="text-xs text-slate-300 mt-1 leading-relaxed">
+                  <p className="text-xs text-slate-300 mt-0.5 leading-relaxed">
                     Theo dõi tiến độ từ vựng, ngữ pháp, kanji và các bài học đã thuộc của giáo trình {currentBook?.name || activeGroup.title}
                   </p>
 
                   {/* Progress Bar */}
-                  <div className="mt-4 space-y-1.5">
+                  <div className="mt-3 space-y-1">
                     <div className="flex justify-between text-[11px] font-bold text-slate-300">
                       <span>Hoàn thành: {currentBookStats.learnedItems} / {currentBookStats.totalItems} mục</span>
                       <span className="text-amber-300 font-extrabold">{currentBookStats.percentage}%</span>
                     </div>
                     <div className="w-full bg-slate-800 rounded-full h-2 overflow-hidden border border-slate-700">
                       <div
-                        className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 h-2 rounded-full transition-all duration-500 shadow-sm"
+                        className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 h-2 rounded-full transition-all duration-500 shadow-xs"
                         style={{ width: `${currentBookStats.percentage}%` }}
                       />
                     </div>
@@ -302,21 +312,21 @@ export default function CurriculumPage() {
                 </div>
 
                 {/* Stats Grid Chips */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 shrink-0 bg-white/5 p-3.5 rounded-2xl border border-white/10">
-                  <div className="text-center p-2.5 rounded-xl bg-white/5">
-                    <div className="text-base sm:text-lg font-black text-indigo-300">{currentBookStats.learnedVocab}/{currentBookStats.totalVocab}</div>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 shrink-0 bg-white/5 p-2.5 rounded-xl border border-white/10">
+                  <div className="text-center p-2 rounded-lg bg-white/5">
+                    <div className="text-sm sm:text-base font-black text-indigo-300">{currentBookStats.learnedVocab}/{currentBookStats.totalVocab}</div>
                     <div className="text-[10px] font-bold text-slate-400 uppercase mt-0.5">📝 Từ vựng</div>
                   </div>
-                  <div className="text-center p-2.5 rounded-xl bg-white/5">
-                    <div className="text-base sm:text-lg font-black text-teal-300">{currentBookStats.learnedGrammar}/{currentBookStats.totalGrammar}</div>
+                  <div className="text-center p-2 rounded-lg bg-white/5">
+                    <div className="text-sm sm:text-base font-black text-teal-300">{currentBookStats.learnedGrammar}/{currentBookStats.totalGrammar}</div>
                     <div className="text-[10px] font-bold text-slate-400 uppercase mt-0.5">📖 Ngữ pháp</div>
                   </div>
-                  <div className="text-center p-2.5 rounded-xl bg-white/5">
-                    <div className="text-base sm:text-lg font-black text-pink-300">{currentBookStats.learnedKanji}/{currentBookStats.totalKanji}</div>
+                  <div className="text-center p-2 rounded-lg bg-white/5">
+                    <div className="text-sm sm:text-base font-black text-pink-300">{currentBookStats.learnedKanji}/{currentBookStats.totalKanji}</div>
                     <div className="text-[10px] font-bold text-slate-400 uppercase mt-0.5">🉐 Kanji</div>
                   </div>
-                  <div className="text-center p-2.5 rounded-xl bg-white/5">
-                    <div className="text-base sm:text-lg font-black text-amber-300">{currentBookStats.completedLessons}/{currentBookStats.totalLessons}</div>
+                  <div className="text-center p-2 rounded-lg bg-white/5">
+                    <div className="text-sm sm:text-base font-black text-amber-300">{currentBookStats.completedLessons}/{currentBookStats.totalLessons}</div>
                     <div className="text-[10px] font-bold text-slate-400 uppercase mt-0.5">✅ Bài học</div>
                   </div>
                 </div>
@@ -327,16 +337,16 @@ export default function CurriculumPage() {
           {/* Textbook Shelf Sub-Selector (Danh sách các giáo trình của cấp độ hiện tại) */}
           {availableBooks.length > 0 && (
             <div>
-              <div className="flex items-center justify-between mb-3 px-1">
+              <div className="flex items-center justify-between mb-2.5 px-1">
                 <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider flex items-center gap-1.5">
                   <span>📚</span> Chọn giáo trình {activeLevel} ({availableBooks.length} đầu sách):
                 </h3>
                 <span className="text-[11px] text-gray-400 font-medium">
-                  Nhấn vào giáo trình để chuyển đổi nội dung
+                  Nhấn vào giáo trình để chuyển đổi
                 </span>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3">
                 {availableBooks.map((book) => {
                   const isSelected = currentBook?.id === book.id;
                   
@@ -361,15 +371,15 @@ export default function CurriculumPage() {
                     <button
                       key={book.id}
                       onClick={() => setActiveBookId(book.id)}
-                      className={`text-left p-4 rounded-2xl border transition-all flex flex-col justify-between relative group ${
+                      className={`text-left p-3 sm:p-3.5 rounded-xl border transition-all flex flex-col justify-between relative group cursor-pointer ${
                         isSelected
-                          ? "bg-indigo-50/80 border-indigo-500 ring-2 ring-indigo-500/20 shadow-md scale-102"
+                          ? "bg-indigo-50/80 border-indigo-500 ring-2 ring-indigo-500/20 shadow-xs scale-101"
                           : "bg-white border-gray-200 hover:border-indigo-300 hover:shadow-xs"
                       }`}
                     >
                       <div>
-                        <div className="flex items-center justify-between gap-1 mb-2">
-                          <span className="text-xl">{book.icon || "📖"}</span>
+                        <div className="flex items-center justify-between gap-1 mb-1.5">
+                          <span className="text-lg">{book.icon || "📖"}</span>
                           {book.tag && (
                             <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full ${
                               isSelected
@@ -384,13 +394,13 @@ export default function CurriculumPage() {
                           {book.name}
                         </h4>
                         {book.publisher && (
-                          <p className="text-[10px] text-gray-400 mt-1 truncate">
+                          <p className="text-[10px] text-gray-400 mt-0.5 truncate">
                             NXB: {book.publisher}
                           </p>
                         )}
                       </div>
 
-                      <div className="mt-3 pt-2.5 border-t border-gray-100 w-full">
+                      <div className="mt-2.5 pt-2 border-t border-gray-100 w-full">
                         <div className="flex items-center justify-between text-[11px] text-gray-500 font-semibold mb-1">
                           <span>{book.totalLessons} bài học</span>
                           <span className={bookPercent > 0 ? "text-indigo-600 font-bold" : "text-gray-400"}>
@@ -415,48 +425,48 @@ export default function CurriculumPage() {
 
           {/* Active Textbook Details Banner */}
           {currentBook && (
-            <div className="bg-gradient-to-r from-indigo-600 via-indigo-700 to-purple-700 rounded-3xl p-6 text-white shadow-lg">
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="bg-gradient-to-r from-indigo-600 via-indigo-700 to-purple-700 rounded-2xl p-4 sm:p-5 text-white shadow-md">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
                 <div>
-                  <div className="flex items-center gap-2 flex-wrap mb-2">
-                    <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-xs font-semibold tracking-wide">
+                  <div className="flex items-center gap-1.5 flex-wrap mb-1.5">
+                    <span className="px-2.5 py-0.5 bg-white/20 backdrop-blur-md rounded-full text-[11px] font-semibold tracking-wide">
                       {isMultilingual ? "TRÌNH ĐỘ SƠ CẤP" : `CẤP ĐỘ ${activeGroup.level}`}
                     </span>
-                    <span className="px-3 py-1 bg-amber-400/30 text-amber-200 border border-amber-300/30 backdrop-blur-md rounded-full text-xs font-bold">
+                    <span className="px-2.5 py-0.5 bg-amber-400/30 text-amber-200 border border-amber-300/30 backdrop-blur-md rounded-full text-[11px] font-bold">
                       {currentBook.icon || "📘"} {currentBook.name}
                     </span>
                     {currentBook.tag && (
-                      <span className="px-2.5 py-0.5 bg-white/15 text-white rounded-full text-[10px] font-bold">
+                      <span className="px-2 py-0.5 bg-white/15 text-white rounded-full text-[10px] font-bold">
                         {currentBook.tag}
                       </span>
                     )}
                   </div>
-                  <h2 className="text-xl font-bold mt-1">{currentBook.name}</h2>
+                  <h2 className="text-lg sm:text-xl font-bold mt-1">{currentBook.name}</h2>
                   <p className="text-xs text-indigo-100 mt-1 max-w-2xl leading-relaxed">
                     {currentBook.description}
                   </p>
                 </div>
                 
-                <div className="flex gap-4 bg-white/10 backdrop-blur-md p-3.5 rounded-2xl text-center shrink-0 self-start md:self-auto">
+                <div className="flex gap-3 bg-white/10 backdrop-blur-md p-2.5 rounded-xl text-center shrink-0 self-start md:self-auto">
                   <div>
-                    <div className="text-lg font-extrabold">{currentBook.totalLessons}</div>
+                    <div className="text-base sm:text-lg font-extrabold">{currentBook.totalLessons}</div>
                     <div className="text-[10px] text-indigo-200 uppercase font-semibold">Bài học</div>
                   </div>
                   <div className="border-r border-white/20" />
                   <div>
-                    <div className="text-lg font-extrabold">{currentBook.totalVocab}</div>
+                    <div className="text-base sm:text-lg font-extrabold">{currentBook.totalVocab}</div>
                     <div className="text-[10px] text-indigo-200 uppercase font-semibold">Từ vựng</div>
                   </div>
                   <div className="border-r border-white/20" />
                   <div>
-                    <div className="text-lg font-extrabold">{currentBook.totalGrammar}</div>
+                    <div className="text-base sm:text-lg font-extrabold">{currentBook.totalGrammar}</div>
                     <div className="text-[10px] text-indigo-200 uppercase font-semibold">Ngữ pháp</div>
                   </div>
                   {!isMultilingual && currentBook.totalKanji > 0 && (
                     <>
                       <div className="border-r border-white/20" />
                       <div>
-                        <div className="text-lg font-extrabold">{currentBook.totalKanji}</div>
+                        <div className="text-base sm:text-lg font-extrabold">{currentBook.totalKanji}</div>
                         <div className="text-[10px] text-indigo-200 uppercase font-semibold">Kanji</div>
                       </div>
                     </>
@@ -467,14 +477,14 @@ export default function CurriculumPage() {
           )}
 
           {/* Lessons List of Selected Textbook */}
-          <div className="space-y-3">
+          <div className="space-y-2.5">
             <div className="flex items-center justify-between px-1">
-              <h3 className="text-sm font-extrabold text-gray-800">
+              <h3 className="text-xs sm:text-sm font-extrabold text-gray-800">
                 Danh sách bài học — {currentBook?.name || activeGroup.title} ({currentBook?.lessons.length || activeGroup.lessons.length} bài)
               </h3>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-3.5">
               {(currentBook?.lessons || activeGroup.lessons).map((lesson) => {
                 const vocabList = lesson.vocabulary || [];
                 const grammarList = lesson.grammarPoints || [];
@@ -492,18 +502,18 @@ export default function CurriculumPage() {
                   <Link
                     key={lesson.id}
                     href={`/curriculum/${lesson.id}`}
-                    className="group bg-white rounded-2xl p-5 border border-gray-100 shadow-sm hover:shadow-md hover:border-indigo-200 transition-all flex flex-col justify-between"
+                    className="group bg-white rounded-xl p-3.5 sm:p-4 border border-gray-100 shadow-xs hover:shadow-sm hover:border-indigo-200 transition-all flex flex-col justify-between"
                   >
                     <div>
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-xs font-semibold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-lg">
+                      <div className="flex items-center justify-between mb-1.5">
+                        <span className="text-[11px] font-semibold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-md">
                           📖 {lesson.curriculum || currentBook?.name || activeGroup.level}
                         </span>
-                        <span className="text-xs text-gray-400 group-hover:text-indigo-600 transition-colors font-medium">
+                        <span className="text-[11px] text-gray-400 group-hover:text-indigo-600 transition-colors font-medium">
                           Vào bài học →
                         </span>
                       </div>
-                      <h3 className="font-bold text-gray-800 text-base group-hover:text-indigo-600 transition-colors">
+                      <h3 className="font-bold text-gray-800 text-sm sm:text-base group-hover:text-indigo-600 transition-colors">
                         {lesson.name}
                       </h3>
                       {lesson.description && (
@@ -513,8 +523,8 @@ export default function CurriculumPage() {
                       )}
                     </div>
 
-                    <div className="mt-4 pt-3 border-t border-gray-50 space-y-2">
-                      <div className="flex items-center justify-between gap-4 text-xs text-gray-500 font-medium">
+                    <div className="mt-3 pt-2.5 border-t border-gray-50 space-y-1.5">
+                      <div className="flex items-center justify-between gap-3 text-xs text-gray-500 font-medium">
                         <span>📝 {learnedVocab}/{vocabList.length} từ</span>
                         <span>📖 {learnedGrammar}/{grammarList.length} ngữ pháp</span>
                         {!isMultilingual && kanjiList.length > 0 && (
@@ -523,7 +533,7 @@ export default function CurriculumPage() {
                       </div>
 
                       {totalLearned > 0 && (
-                        <div className="space-y-1 pt-1">
+                        <div className="space-y-1 pt-0.5">
                           <div className="flex justify-between items-center text-[10px] font-bold">
                             <span className="text-indigo-600">📊 Tiến độ: {percentage}%</span>
                             <span className="text-gray-400">{totalLearned}/{totalItems} mục</span>
@@ -545,5 +555,14 @@ export default function CurriculumPage() {
         </div>
       )}
     </div>
+  );
+}
+
+
+export default function CurriculumPage() {
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center py-20 text-indigo-600 font-medium">Đang tải giáo trình...</div>}>
+      <CurriculumContent />
+    </Suspense>
   );
 }

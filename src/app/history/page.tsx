@@ -55,8 +55,14 @@ export default function HistoryPage() {
   const [systemLessonsList, setSystemLessonsList] = useState<any[]>([]);
   const [practiceHistory, setPracticeHistory] = useState<any[]>([]);
   const [repoBooks, setRepoBooks] = useState<any[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const ITEMS_PER_PAGE = 7;
 
   const effectiveLang = activeLanguage.code;
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [timeFilter, effectiveLang]);
 
   useEffect(() => {
     async function loadRepoBooks() {
@@ -575,6 +581,12 @@ function getItemLevel(c: { id: string; name: string; level?: string }): string {
     return Object.entries(groups);
   }, [filteredTimelineItems]);
 
+  const totalPages = Math.ceil(groupedTimeline.length / ITEMS_PER_PAGE) || 1;
+  const paginatedTimeline = useMemo(() => {
+    const start = (currentPage - 1) * ITEMS_PER_PAGE;
+    return groupedTimeline.slice(start, start + ITEMS_PER_PAGE);
+  }, [groupedTimeline, currentPage]);
+
   const filteredPracticeHistory = useMemo(() => {
     return practiceHistory.filter((item) => {
       if (effectiveLang === "all") return true;
@@ -588,23 +600,23 @@ function getItemLevel(c: { id: string; name: string; level?: string }): string {
 
   return (
     <AuthGuard featureName="Lịch Sử & Nhật Ký Học Tập" description="Đăng nhập để theo dõi bảng tiến độ từ vựng, ngữ pháp, kanji, chuỗi streak và lịch sử học tập cá nhân.">
-      <div className="w-full max-w-[1600px] mx-auto px-3.5 sm:px-6 lg:px-8 py-4 sm:py-6 min-h-screen pb-28 space-y-6">
+      <div className="w-full max-w-[1600px] mx-auto px-3 sm:px-4 lg:px-6 py-3 sm:py-4 space-y-4 sm:space-y-5 pb-8 md:pb-4">
       {/* Header Banner */}
-      <div className={`rounded-2xl sm:rounded-3xl p-5 sm:p-8 text-white shadow-lg transition-all duration-300 bg-gradient-to-r ${
+      <div className={`rounded-2xl p-4 sm:p-5 text-white shadow-md transition-all duration-300 bg-gradient-to-r ${
         activeLanguage.code === "en"
           ? "from-indigo-900 via-purple-900 to-blue-900"
           : activeLanguage.code === "de"
           ? "from-amber-950 via-red-950 to-stone-900"
           : "from-teal-800 via-indigo-900 to-purple-800"
       }`}>
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <div className="flex items-center gap-2 flex-wrap mb-1">
               <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-bold tracking-widest uppercase">
                 {activeLanguage.name} ({activeLanguage.code.toUpperCase()})
               </span>
             </div>
-            <h1 className="text-2xl font-bold mt-2">Lịch Sử & Tiến Độ Học Tập</h1>
+            <h1 className="text-xl sm:text-2xl font-bold mt-1.5">Lịch Sử & Tiến Độ Học Tập</h1>
             <p className="text-xs text-indigo-100 mt-1">
               Theo dõi tiến độ hoàn thành giáo trình, từ vựng và ngữ pháp cho {activeLanguage.name}
             </p>
@@ -613,54 +625,54 @@ function getItemLevel(c: { id: string; name: string; level?: string }): string {
       </div>
 
       {/* Grid Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-        <div className="bg-white rounded-3xl p-5 border border-gray-100 shadow-2xs flex flex-col justify-between">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div className="bg-white rounded-2xl p-3.5 sm:p-4 border border-gray-100 shadow-xs flex flex-col justify-between">
           <div>
             <div className="text-gray-400 text-xs font-semibold uppercase tracking-wider">Từ vựng đã thuộc</div>
-            <div className="flex items-baseline gap-2 mt-2">
-              <span className="text-3xl font-extrabold text-indigo-600">{totalVocabLearned}</span>
+            <div className="flex items-baseline gap-2 mt-1.5">
+              <span className="text-2xl sm:text-3xl font-extrabold text-indigo-600">{totalVocabLearned}</span>
               <span className="text-gray-400 text-xs font-medium">từ vựng</span>
             </div>
           </div>
           {totalVocabLearned > 0 ? (
             <Link
               href="/flashcard/learned"
-              className="mt-3.5 w-full text-center px-4 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold rounded-xl transition-colors text-xs flex items-center justify-center gap-1.5 shadow-3xs"
+              className="mt-3 w-full text-center px-3.5 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold rounded-xl transition-colors text-xs flex items-center justify-center gap-1.5 shadow-3xs"
             >
               🎴 Ôn tập Flashcard
             </Link>
           ) : (
-            <div className="text-[10px] text-gray-400 mt-2">Được lưu trên thiết bị của bạn</div>
+            <div className="text-[10px] text-gray-400 mt-1.5">Được lưu trên thiết bị của bạn</div>
           )}
         </div>
 
-        <div className="bg-white rounded-3xl p-5 border border-gray-100 shadow-2xs flex flex-col justify-between">
+        <div className="bg-white rounded-2xl p-3.5 sm:p-4 border border-gray-100 shadow-xs flex flex-col justify-between">
           <div className="text-gray-400 text-xs font-semibold uppercase tracking-wider">Ngữ pháp đã nắm vững</div>
-          <div className="flex items-baseline gap-2 mt-2">
-            <span className="text-3xl font-extrabold text-purple-600">{totalGrammarLearned}</span>
+          <div className="flex items-baseline gap-2 mt-1.5">
+            <span className="text-2xl sm:text-3xl font-extrabold text-purple-600">{totalGrammarLearned}</span>
             <span className="text-gray-400 text-xs font-medium">cấu trúc</span>
           </div>
-          <div className="text-[10px] text-gray-400 mt-2">Bao gồm các cấu trúc từ bài học</div>
+          <div className="text-[10px] text-gray-400 mt-1.5">Bao gồm các cấu trúc từ bài học</div>
         </div>
 
-        <div className="bg-white rounded-3xl p-5 border border-gray-100 shadow-2xs flex flex-col justify-between">
+        <div className="bg-white rounded-2xl p-3.5 sm:p-4 border border-gray-100 shadow-xs flex flex-col justify-between">
           <div className="text-gray-400 text-xs font-semibold uppercase tracking-wider">Chuỗi streak hiện tại</div>
-          <div className="flex items-baseline gap-2 mt-2">
-            <span className="text-3xl font-extrabold text-orange-500">🔥 {streak.currentStreak}</span>
+          <div className="flex items-baseline gap-2 mt-1.5">
+            <span className="text-2xl sm:text-3xl font-extrabold text-orange-500">🔥 {streak.currentStreak}</span>
             <span className="text-gray-400 text-xs font-medium">ngày</span>
           </div>
-          <div className="text-[10px] text-gray-400 mt-2">Kỷ lục dài nhất: {streak.longestStreak} ngày</div>
+          <div className="text-[10px] text-gray-400 mt-1.5">Kỷ lục dài nhất: {streak.longestStreak} ngày</div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Curriculums Progress */}
-        <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-2xs flex flex-col">
-          <div className="flex items-center justify-between mb-4 pb-2 border-b border-gray-100">
+        <div className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-xs flex flex-col">
+          <div className="flex items-center justify-between mb-3 pb-2 border-b border-gray-100">
             <h2 className="text-base font-bold text-gray-900 flex items-center gap-2">
               <span>📚</span> Tiến độ Giáo trình
             </h2>
-            <span className="text-[10px] font-extrabold text-indigo-700 bg-indigo-50 border border-indigo-100 px-2.5 py-1 rounded-full">
+            <span className="text-[10px] font-extrabold text-indigo-700 bg-indigo-50 border border-indigo-100 px-2.5 py-0.5 rounded-full">
               Phân loại Cấp độ
             </span>
           </div>
@@ -730,25 +742,25 @@ function getItemLevel(c: { id: string; name: string; level?: string }): string {
         </div>
 
         {/* Notebooks Progress */}
-        <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-2xs flex flex-col">
-          <h2 className="text-base font-bold text-gray-900 mb-4 flex items-center gap-2">
+        <div className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-xs flex flex-col">
+          <h2 className="text-base font-bold text-gray-900 mb-3 flex items-center gap-2">
             <span>📓</span> Tiến độ Sổ tay
           </h2>
           {notebookProgresses.length === 0 ? (
             <p className="text-xs text-gray-400 italic">Chưa tạo sổ tay nào.</p>
           ) : (
-            <div className="space-y-4 flex-1">
+            <div className="space-y-3 flex-1">
               {notebookProgresses.map((nb) => (
-                <div key={nb.id} className="space-y-1.5">
+                <div key={nb.id} className="space-y-1">
                   <div className="flex justify-between items-center text-xs">
                     <span className="font-bold text-gray-700 truncate max-w-[200px]">{nb.name}</span>
                     <span className="font-bold text-purple-600 shrink-0">
                       {nb.learned}/{nb.total} từ ({nb.percentage}%)
                     </span>
                   </div>
-                  <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
+                  <div className="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
                     <div
-                      className="bg-purple-600 h-2 rounded-full transition-all duration-300"
+                      className="bg-purple-600 h-1.5 rounded-full transition-all duration-300"
                       style={{ width: `${nb.percentage}%` }}
                     />
                   </div>
@@ -760,7 +772,7 @@ function getItemLevel(c: { id: string; name: string; level?: string }): string {
       </div>
 
       {/* Detailed Curriculum Lessons Progress */}
-      <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-2xs mb-6 space-y-4">
+      <div className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-xs space-y-3.5">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-gray-100">
           <div>
             <h2 className="text-base font-bold text-gray-900 flex items-center gap-2">
@@ -916,7 +928,7 @@ function getItemLevel(c: { id: string; name: string; level?: string }): string {
       </div>
 
       {/* Practice Center Scoring & History Section */}
-      <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-2xs mb-6 space-y-4">
+      <div className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-xs space-y-3.5">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-gray-100">
           <div>
             <h2 className="text-base font-bold text-gray-900 flex items-center gap-2">
@@ -944,9 +956,9 @@ function getItemLevel(c: { id: string; name: string; level?: string }): string {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-3.5">
             {filteredPracticeHistory.slice(0, 8).map((entry) => (
-              <div key={entry.id} className="p-4 rounded-2xl border border-gray-100 bg-gray-50/50 shadow-3xs space-y-2.5">
+              <div key={entry.id} className="p-3 sm:p-3.5 rounded-xl border border-gray-100 bg-gray-50/50 shadow-3xs space-y-2">
                 <div className="flex items-center justify-between flex-wrap gap-2">
                   <div className="flex items-center gap-2">
                     <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-md bg-white border border-gray-200 text-gray-800 shadow-3xs">
@@ -961,7 +973,7 @@ function getItemLevel(c: { id: string; name: string; level?: string }): string {
                   </span>
                 </div>
 
-                <div className="space-y-1.5 text-xs bg-white p-3 rounded-xl border border-gray-100/80">
+                <div className="space-y-1.5 text-xs bg-white p-2.5 rounded-lg border border-gray-100/80">
                   {entry.userAnswer && (
                     <div>
                       <span className="font-bold text-gray-400 text-[10px] uppercase block">Bài làm của bạn:</span>
@@ -991,7 +1003,7 @@ function getItemLevel(c: { id: string; name: string; level?: string }): string {
       </div>
 
       {/* Activity Timeline */}
-      <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-2xs">
+      <div className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-xs space-y-3.5">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
           <h2 className="text-base font-bold text-gray-900 flex items-center gap-2">
             <span>⏱️</span> Nhật ký hoạt động gần đây
@@ -1060,7 +1072,7 @@ function getItemLevel(c: { id: string; name: string; level?: string }): string {
           </div>
         ) : (
           <div className="space-y-8 relative before:absolute before:left-3 before:top-2 before:bottom-2 before:w-0.5 before:bg-gray-100">
-            {groupedTimeline.map(([date, items]) => (
+            {paginatedTimeline.map(([date, items]) => (
               <div key={date} className="relative pl-8">
                 {/* Date bubble */}
                 <div className="absolute left-[3px] top-1.5 w-2 h-2 rounded-full bg-indigo-600 ring-4 ring-indigo-50 z-10" />
@@ -1114,6 +1126,44 @@ function getItemLevel(c: { id: string; name: string; level?: string }): string {
                 </div>
               </div>
             ))}
+
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+              <div className="flex flex-wrap items-center justify-center gap-2 pt-6 border-t border-gray-100">
+                <button
+                  type="button"
+                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                  className="px-3.5 py-1.5 rounded-xl border border-gray-200 text-xs font-bold text-gray-600 hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer transition-all"
+                >
+                  ← Trước
+                </button>
+                <div className="flex items-center gap-1 flex-wrap">
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+                    <button
+                      key={pageNum}
+                      type="button"
+                      onClick={() => setCurrentPage(pageNum)}
+                      className={`w-8 h-8 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                        currentPage === pageNum
+                          ? "bg-indigo-600 text-white shadow-3xs"
+                          : "border border-gray-200 text-gray-600 hover:bg-gray-50"
+                      }`}
+                    >
+                      {pageNum}
+                    </button>
+                  ))}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                  className="px-3.5 py-1.5 rounded-xl border border-gray-200 text-xs font-bold text-gray-600 hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer transition-all"
+                >
+                  Sau →
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>

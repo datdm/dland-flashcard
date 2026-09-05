@@ -1377,28 +1377,28 @@ ${item.audioScript}。
 
   return (
     <AuthGuard featureName="Trung Tâm Luyện Tập & Kỹ Năng">
-      <div className="w-full max-w-[1600px] mx-auto px-3.5 sm:px-6 lg:px-8 py-4 sm:py-6 min-h-screen pb-28 space-y-6">
+      <div className="w-full max-w-[1600px] mx-auto px-3 sm:px-4 lg:px-6 py-3 sm:py-4 space-y-4 sm:space-y-5 pb-8 md:pb-4">
       {/* Header Banner */}
-      <div className={`rounded-2xl sm:rounded-3xl p-5 sm:p-8 text-white shadow-xl mb-6 transition-all duration-300 bg-gradient-to-r ${
+      <div className={`rounded-2xl p-4 sm:p-5 text-white shadow-lg transition-all duration-300 bg-gradient-to-r ${
         selectedLang === "en"
           ? "from-indigo-900 via-purple-900 to-blue-900"
           : selectedLang === "de"
           ? "from-amber-950 via-red-950 to-stone-900"
           : "from-teal-800 via-indigo-900 to-purple-800"
       }`}>
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-bold tracking-widest uppercase">
               {activeLanguage.name} ({activeLanguage.code.toUpperCase()})
             </span>
-            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight mt-2">
+            <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight mt-1.5">
               {selectedLang === "en" 
                 ? "Trung Tâm Luyện Kỹ Năng Tiếng Anh (IELTS)" 
                 : selectedLang === "de" 
                 ? "Trung Tâm Luyện Kỹ Năng Tiếng Đức (Goethe)" 
                 : "Trung Tâm Luyện Kỹ Năng Tiếng Nhật (JLPT)"}
             </h1>
-            <p className="text-xs sm:text-sm text-teal-100/90 mt-2 leading-relaxed max-w-3xl">
+            <p className="text-xs sm:text-sm text-teal-100/90 mt-1 leading-relaxed max-w-3xl">
               {selectedLang === "en"
                 ? "Luyện Shadowing IELTS Speaking chuẩn Oxford/Cambridge, rèn phản xạ dịch 2 chiều Anh-Việt, đọc hiểu IELTS Reading và thuyết trình Speaking Part 2 với AI chấm điểm trực tiếp."
                 : selectedLang === "de"
@@ -1410,7 +1410,7 @@ ${item.audioScript}。
             onClick={() => {
               setShowHistoryModal(true);
             }}
-            className="px-4 py-2.5 bg-white/15 hover:bg-white/25 border border-white/30 backdrop-blur-md rounded-2xl text-xs font-bold flex items-center gap-2 transition-all shrink-0 cursor-pointer shadow-sm self-start sm:self-auto"
+            className="px-3.5 py-2 bg-white/15 hover:bg-white/25 border border-white/30 backdrop-blur-md rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all shrink-0 cursor-pointer shadow-xs self-start sm:self-auto"
           >
             <span>📊</span>
             <span>Lịch Sử Chấm Điểm ({currentLangHistoryCount})</span>
@@ -1418,10 +1418,10 @@ ${item.audioScript}。
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-5">
         {/* Left Control Panel */}
-        <div className="lg:col-span-1 space-y-5">
-          <div className="bg-white rounded-3xl p-5 border border-gray-100 shadow-2xs space-y-4">
+        <div className="lg:col-span-1 space-y-4">
+          <div className="bg-white rounded-2xl p-3.5 sm:p-4 border border-gray-100 shadow-xs space-y-3">
             <h2 className="text-sm font-bold text-gray-900 flex items-center gap-2">
               <span>🛠️</span> Cấu hình bài luyện tập
             </h2>
@@ -1437,7 +1437,7 @@ ${item.audioScript}。
                     key={lvl}
                     type="button"
                     onClick={() => setSelectedLevel(lvl)}
-                    className={`px-3 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer border ${
+                    className={`px-2.5 py-1 rounded-lg text-xs font-black transition-all cursor-pointer border ${
                       selectedLevel === lvl
                         ? selectedLang === "en"
                           ? "bg-indigo-600 border-indigo-600 text-white shadow-xs"
@@ -1458,12 +1458,12 @@ ${item.audioScript}。
               <label className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">
                 2. Chọn Kỹ năng học ({selectedLevel}):
               </label>
-              <div className="grid grid-cols-1 gap-2">
+              <div className="grid grid-cols-1 gap-1.5">
                 {(SKILLS_BY_LANG[selectedLang] || SKILLS_BY_LANG.ja).map((item) => (
                   <button
                     key={item.id}
                     onClick={() => setSelectedType(item.id as any)}
-                    className={`p-3 rounded-2xl border text-left transition-all cursor-pointer ${
+                    className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer ${
                       selectedType === item.id
                         ? selectedLang === "en" 
                           ? "border-indigo-600 bg-indigo-50/50 ring-2 ring-indigo-300"
