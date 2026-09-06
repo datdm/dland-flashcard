@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useEffect, useState, useRef, useCallback, use, useMemo } from "react";
-import { useRouter } from "next/navigation";
+import React, { useEffect, useState, useRef, useCallback, use, useMemo, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import AuthGuard from "@/components/AuthGuard";
 import {
@@ -20,6 +20,7 @@ import ExamSectionNav from "@/components/exam/ExamSectionNav";
 import MaziiQuickLookupModal from "@/components/MaziiQuickLookupModal";
 import SelectionLookupTooltip from "@/components/SelectionLookupTooltip";
 import ExamStructureModal from "@/components/exam/ExamStructureModal";
+import ExamSectionSelectionModal from "@/components/exam/ExamSectionSelectionModal";
 import AddToNotebookModal from "@/components/AddToNotebookModal";
 import { getStructuredMajorSections } from "@/lib/examUtils";
 
@@ -27,9 +28,11 @@ interface Props {
   params: Promise<{ id: string }>;
 }
 
-export default function ExamTakingPage({ params }: Props) {
+function ExamTakingPageContent({ params }: Props) {
   const { id } = use(params);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const urlSections = searchParams.get("sections");
 
   const [exam, setExam] = useState<StoredExam | null>(null);
   const [answers, setAnswers] = useState<Record<number, number[]>>({});
@@ -39,6 +42,7 @@ export default function ExamTakingPage({ params }: Props) {
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
   const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
   const [showStructureModal, setShowStructureModal] = useState<boolean>(false);
+  const [showSelectionModal, setShowSelectionModal] = useState<boolean>(false);
   const [selectedMajorTab, setSelectedMajorTab] = useState<string>("all");
   const [isRestoredDraft, setIsRestoredDraft] = useState<boolean>(false);
   const [selectedSectionIds, setSelectedSectionIds] = useState<string[]>([]);
@@ -73,6 +77,8 @@ export default function ExamTakingPage({ params }: Props) {
 
     const sections = getStructuredMajorSections(loaded.data);
     const savedProgress = getExamProgress(id);
+    const urlSectionList = urlSections ? urlSections.split(",").filter(Boolean) : null;
+
     if (
       savedProgress &&
       (Object.keys(savedProgress.answers || {}).length > 0 ||
@@ -81,16 +87,22 @@ export default function ExamTakingPage({ params }: Props) {
       setAnswers(savedProgress.answers || {});
       setTimeRemaining(savedProgress.timeRemaining);
       setIsRestoredDraft(true);
-      if (savedProgress.selectedSectionIds && savedProgress.selectedSectionIds.length > 0) {
+      if (urlSectionList && urlSectionList.length > 0) {
+        setSelectedSectionIds(urlSectionList);
+      } else if (savedProgress.selectedSectionIds && savedProgress.selectedSectionIds.length > 0) {
         setSelectedSectionIds(savedProgress.selectedSectionIds);
       } else {
         setSelectedSectionIds(sections.map((s) => s.id));
       }
     } else {
       setTimeRemaining(loaded.data.meta.timeLimit);
-      setSelectedSectionIds(sections.map((s) => s.id));
+      if (urlSectionList && urlSectionList.length > 0) {
+        setSelectedSectionIds(urlSectionList);
+      } else {
+        setSelectedSectionIds(sections.map((s) => s.id));
+      }
     }
-  }, [id, router]);
+  }, [id, router, urlSections]);
 
   // Periodic auto-save progress every 10 seconds
   useEffect(() => {
@@ -444,6 +456,17 @@ export default function ExamTakingPage({ params }: Props) {
             </div>
 
             <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+              <button
+                type="button"
+                onClick={() => setShowSelectionModal(true)}
+                className="px-3 py-2 rounded-xl bg-indigo-50 border border-indigo-200 text-indigo-700 hover:bg-indigo-100 font-extrabold text-xs transition-colors flex items-center gap-1.5 cursor-pointer shrink-0"
+                title="Thay đổi các phần thi muốn làm"
+              >
+                <span>⚙️</span>
+                <span className="hidden sm:inline">Chọn phần thi ({selectedSectionIds.length}/{majorSections.length})</span>
+                <span className="sm:hidden">Phần thi</span>
+              </button>
+
               <button
                 type="button"
                 onClick={() => setShowStructureModal(true)}
@@ -851,7 +874,44 @@ export default function ExamTakingPage({ params }: Props) {
           onClose={() => setShowStructureModal(false)}
           initialLevel={exam.data.meta.level}
         />
+
+        {/* Section Selection Modal */}
+        <ExamSectionSelectionModal
+          isOpen={showSelectionModal}
+          onClose={() => setShowSelectionModal(false)}
+          exam={exam}
+          initialSelectedIds={selectedSectionIds}
+          hasDraft={isRestoredDraft}
+          onConfirm={(newSelectedIds) => {
+            setSelectedSectionIds(newSelectedIds);
+            setShowSelectionModal(false);
+            saveExamProgress({
+              examId: id,
+              answers: answersRef.current,
+              startedAt: Date.now(),
+              timeRemaining: timeRef.current,
+              selectedSectionIds: newSelectedIds,
+            });
+          }}
+        />
       </div>
     </AuthGuard>
+  );
+}
+
+export default function ExamTakingPage(props: Props) {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center min-h-[500px]">
+          <div className="flex flex-col items-center gap-3">
+            <div className="w-8 h-8 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin" />
+            <p className="text-xs font-bold text-gray-500">Đang chuẩn bị đề thi...</p>
+          </div>
+        </div>
+      }
+    >
+      <ExamTakingPageContent {...props} />
+    </Suspense>
   );
 }

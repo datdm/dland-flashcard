@@ -346,7 +346,7 @@ function CurriculumContent() {
                 </span>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-2.5">
                 {availableBooks.map((book) => {
                   const isSelected = currentBook?.id === book.id;
                   
@@ -371,50 +371,50 @@ function CurriculumContent() {
                     <button
                       key={book.id}
                       onClick={() => setActiveBookId(book.id)}
-                      className={`text-left p-3 sm:p-3.5 rounded-xl border transition-all flex flex-col justify-between relative group cursor-pointer ${
+                      className={`text-left p-2.5 rounded-xl border transition-all flex flex-col justify-between relative group cursor-pointer ${
                         isSelected
-                          ? "bg-indigo-50/80 border-indigo-500 ring-2 ring-indigo-500/20 shadow-xs scale-101"
-                          : "bg-white border-gray-200 hover:border-indigo-300 hover:shadow-xs"
+                          ? "bg-indigo-50/90 border-indigo-500 ring-2 ring-indigo-500/20 shadow-xs"
+                          : "bg-white border-gray-200 hover:border-indigo-300 hover:bg-gray-50/50"
                       }`}
                     >
                       <div>
-                        <div className="flex items-center justify-between gap-1 mb-1.5">
-                          <span className="text-lg">{book.icon || "📖"}</span>
-                          {book.tag && (
-                            <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full ${
-                              isSelected
-                                ? "bg-indigo-600 text-white"
-                                : "bg-gray-100 text-gray-600 group-hover:bg-indigo-50 group-hover:text-indigo-600"
-                            }`}>
-                              {book.tag}
+                        <div className="flex items-center justify-between gap-1 mb-1">
+                          <div className="flex items-center gap-1.5 min-w-0">
+                            <span className="text-base shrink-0">{book.icon || "📖"}</span>
+                            {book.tag && (
+                              <span className={`text-[9px] font-extrabold px-1.5 py-0.5 rounded-md truncate max-w-[110px] ${
+                                isSelected
+                                  ? "bg-indigo-600 text-white"
+                                  : "bg-gray-100 text-gray-600 group-hover:bg-indigo-50 group-hover:text-indigo-600"
+                              }`}>
+                                {book.tag}
+                              </span>
+                            )}
+                          </div>
+                          {bookPercent > 0 && (
+                            <span className="text-[10px] font-bold text-indigo-600 shrink-0">
+                              {bookPercent}%
                             </span>
                           )}
                         </div>
-                        <h4 className="font-extrabold text-xs text-gray-900 line-clamp-2 leading-tight">
+
+                        <h4 className="font-bold text-xs text-gray-900 line-clamp-1 leading-snug" title={book.name}>
                           {book.name}
                         </h4>
-                        {book.publisher && (
-                          <p className="text-[10px] text-gray-400 mt-0.5 truncate">
-                            NXB: {book.publisher}
-                          </p>
-                        )}
+
+                        <div className="flex items-center justify-between text-[10px] text-gray-400 mt-0.5">
+                          <span>{book.totalLessons} bài</span>
+                          {book.publisher && <span className="truncate max-w-[80px]" title={`NXB: ${book.publisher}`}>{book.publisher}</span>}
+                        </div>
                       </div>
 
-                      <div className="mt-2.5 pt-2 border-t border-gray-100 w-full">
-                        <div className="flex items-center justify-between text-[11px] text-gray-500 font-semibold mb-1">
-                          <span>{book.totalLessons} bài học</span>
-                          <span className={bookPercent > 0 ? "text-indigo-600 font-bold" : "text-gray-400"}>
-                            {bookPercent}%
-                          </span>
-                        </div>
-                        <div className="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
-                          <div
-                            className={`h-1.5 rounded-full transition-all duration-300 ${
-                              isSelected ? "bg-indigo-600" : "bg-indigo-400"
-                            }`}
-                            style={{ width: `${bookPercent}%` }}
-                          />
-                        </div>
+                      <div className="w-full bg-gray-100 rounded-full h-1 mt-1.5 overflow-hidden">
+                        <div
+                          className={`h-1 rounded-full transition-all duration-300 ${
+                            isSelected ? "bg-indigo-600" : "bg-indigo-400"
+                          }`}
+                          style={{ width: `${bookPercent}%` }}
+                        />
                       </div>
                     </button>
                   );

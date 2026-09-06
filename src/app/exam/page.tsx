@@ -8,6 +8,7 @@ import { getAllExams, getAllResults, deleteCustomExam, getExamProgress, clearExa
 import { StoredExam, ExamResult, ExamProgress } from "@/types/exam";
 import ExamUploadModal from "@/components/exam/ExamUploadModal";
 import ExamStructureModal from "@/components/exam/ExamStructureModal";
+import ExamSectionSelectionModal from "@/components/exam/ExamSectionSelectionModal";
 import { useLanguageSetting } from "@/hooks/useLanguageSetting";
 import { useAuth } from "@/context/AuthContext";
 
@@ -30,6 +31,7 @@ export default function ExamHubPage() {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [showUploadModal, setShowUploadModal] = useState<boolean>(false);
   const [showStructureModal, setShowStructureModal] = useState<boolean>(false);
+  const [selectedExamForModal, setSelectedExamForModal] = useState<StoredExam | null>(null);
 
   const loadData = () => {
     const allExams = getAllExams();
@@ -316,13 +318,14 @@ export default function ExamHubPage() {
                   <div className="flex flex-col sm:flex-row items-center gap-2">
                     {hasDraft ? (
                       <>
-                        <Link
-                          href={`/exam/${exam.id}`}
+                        <button
+                          type="button"
+                          onClick={() => setSelectedExamForModal(exam)}
                           className="w-full sm:flex-1 py-3 px-4 rounded-2xl bg-amber-500 hover:bg-amber-600 text-white font-black text-xs shadow-md shadow-amber-200 transition-all flex items-center justify-center gap-1.5 cursor-pointer active:scale-98"
                         >
                           <span>▶️</span>
                           <span>Tiếp Tục Làm Bài</span>
-                        </Link>
+                        </button>
                         <button
                           type="button"
                           onClick={() => {
@@ -332,7 +335,7 @@ export default function ExamHubPage() {
                               )
                             ) {
                               clearExamProgress(exam.id);
-                              router.push(`/exam/${exam.id}`);
+                              setSelectedExamForModal(exam);
                             }
                           }}
                           className="w-full sm:w-auto py-3 px-3.5 rounded-2xl bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xs transition-colors flex items-center justify-center gap-1 cursor-pointer shrink-0"
@@ -343,13 +346,14 @@ export default function ExamHubPage() {
                         </button>
                       </>
                     ) : (
-                      <Link
-                        href={`/exam/${exam.id}`}
+                      <button
+                        type="button"
+                        onClick={() => setSelectedExamForModal(exam)}
                         className="flex-1 w-full py-3 px-4 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs shadow-md shadow-indigo-200 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-98"
                       >
                         <span>✍️</span>
                         <span>Vào Làm Bài Thi →</span>
-                      </Link>
+                      </button>
                     )}
 
                     {bestResult && (
@@ -391,6 +395,25 @@ export default function ExamHubPage() {
           isOpen={showStructureModal}
           onClose={() => setShowStructureModal(false)}
           initialLevel={selectedLevel === "all" ? "N2" : selectedLevel}
+        />
+
+        {/* Modal Section Selection */}
+        <ExamSectionSelectionModal
+          isOpen={!!selectedExamForModal}
+          onClose={() => setSelectedExamForModal(null)}
+          exam={selectedExamForModal}
+          initialSelectedIds={
+            selectedExamForModal && progressMap[selectedExamForModal.id]?.selectedSectionIds
+              ? progressMap[selectedExamForModal.id]!.selectedSectionIds
+              : undefined
+          }
+          hasDraft={selectedExamForModal ? !!progressMap[selectedExamForModal.id] : false}
+          onConfirm={(selectedSectionIds) => {
+            if (!selectedExamForModal) return;
+            const examId = selectedExamForModal.id;
+            setSelectedExamForModal(null);
+            router.push(`/exam/${examId}?sections=${selectedSectionIds.join(",")}`);
+          }}
         />
       </div>
     </AuthGuard>

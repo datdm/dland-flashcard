@@ -235,7 +235,7 @@ export default function ChatPage() {
 
   return (
     <AuthGuard featureName="Gia Sư AI 24/7" description="Đăng nhập để luyện giao tiếp, giải thích ngữ pháp, phân tích từ vựng và lưu hội thoại cùng Gia sư AI.">
-      <div className="w-full max-w-[1400px] mx-auto px-3 sm:px-6 py-4 min-h-screen pb-24 space-y-3">
+      <div className="w-full max-w-[1400px] mx-auto px-3 sm:px-6 py-3 sm:py-4 pb-16 md:pb-6 space-y-3">
         {/* Sleek Modern AI Tutor Topbar */}
         <div className="bg-white rounded-2xl sm:rounded-3xl p-3.5 sm:p-4 border border-gray-100 shadow-xs flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
@@ -299,7 +299,7 @@ export default function ChatPage() {
         </div>
 
         {/* Chat Container Box */}
-        <div className="bg-white rounded-2xl sm:rounded-3xl shadow-xs border border-gray-100 overflow-hidden flex flex-col h-[calc(100vh-14rem)] min-h-[500px]">
+        <div className="bg-white rounded-2xl sm:rounded-3xl shadow-xs border border-gray-100 overflow-hidden flex flex-col h-[calc(100dvh-11.5rem)] min-h-[480px]">
           {/* Chat Messages Area */}
           <div className="flex-1 overflow-y-auto bg-slate-50/50 p-4 sm:p-5 space-y-4">
             {messages.map((msg, idx) => (

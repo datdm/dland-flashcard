@@ -398,7 +398,7 @@ export default function GeminiLivePage() {
 
   return (
     <AuthGuard featureName="Gemini Live Voice Đàm Thoại" description="Đăng nhập để trải nghiệm đàm thoại 2 chiều trực tiếp bằng giọng nói cùng Gia sư bản xứ.">
-      <div className="w-full max-w-[1600px] mx-auto h-[calc(100vh-2.5rem)] md:h-[calc(100vh-2.5rem)] -mt-2 -mb-20 md:-mb-6 flex flex-col gap-3.5 px-3.5 sm:px-6 lg:px-8">
+      <div className="w-full max-w-[1600px] mx-auto min-h-[calc(100dvh-4rem)] pb-16 md:pb-6 flex flex-col gap-3.5 px-3.5 sm:px-6 lg:px-8 py-3">
         {/* Top Header Card */}
         <div className="bg-white rounded-3xl p-4 md:p-5 border border-gray-100 shadow-2xs flex flex-col gap-3 shrink-0">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
