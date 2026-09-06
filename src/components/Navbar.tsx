@@ -437,7 +437,7 @@ export default function Navbar() {
       {/* Mobile Bottom Navigation Bar */}
       <nav 
         ref={mobileNavRef}
-        className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white border-t border-gray-200 flex flex-nowrap h-14 overflow-x-auto scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden px-2 touch-pan-x [webkit-overflow-scrolling:touch] cursor-grab active:cursor-grabbing select-none"
+        className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white border-t border-gray-200 flex items-center justify-around h-14 px-1 select-none"
       >
         {visibleNavItems.map((item) => {
               const { href, label, icon } = item;
@@ -449,21 +449,16 @@ export default function Navbar() {
                 onClick={(e) => {
                   if (item.isComingSoon) e.preventDefault();
                 }}
-                className={`flex items-center gap-2 px-3.5 py-2 rounded-2xl text-xs font-semibold whitespace-nowrap transition-all select-none ${
+                title={item.isComingSoon ? `${label} (Sắp ra mắt)` : label}
+                className={`flex items-center justify-center w-10 h-10 rounded-xl text-lg transition-all ${
                   item.isComingSoon
-                    ? "opacity-50 cursor-not-allowed text-gray-400"
+                    ? "opacity-40 cursor-not-allowed text-gray-400"
                     : isActive
-                    ? "bg-indigo-600 text-white shadow-md shadow-indigo-200"
-                    : "text-gray-600 hover:text-indigo-600 hover:bg-gray-50 border border-gray-100"
+                    ? "bg-indigo-600 text-white shadow-md shadow-indigo-200 scale-110"
+                    : "text-gray-600 hover:text-indigo-600 hover:bg-gray-50"
                 }`}
               >
                 <span>{icon}</span>
-                <span>{label}</span>
-                {item.isComingSoon && (
-                  <span className="px-1 py-0.2 bg-amber-100 text-amber-800 text-[8px] font-bold rounded">
-                    Soon
-                  </span>
-                )}
               </Link>
           );
         })}
