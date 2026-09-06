@@ -437,7 +437,7 @@ export default function Navbar() {
       {/* Mobile Bottom Navigation Bar */}
       <nav 
         ref={mobileNavRef}
-        className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-md border-t border-gray-200 flex items-center gap-1.5 overflow-x-auto no-scrollbar h-12 px-2 select-none shadow-lg"
+        className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-md border-t border-gray-200 flex items-center justify-around w-full h-12 px-1 select-none shadow-lg overflow-x-auto no-scrollbar"
       >
         {visibleNavItems.map((item) => {
           const { href, label, icon } = item;
@@ -450,7 +450,7 @@ export default function Navbar() {
                 if (item.isComingSoon) e.preventDefault();
               }}
               title={item.isComingSoon ? `${label} (Sắp ra mắt)` : label}
-              className={`flex items-center justify-center w-8 h-8 rounded-xl text-base transition-all shrink-0 ${
+              className={`flex-1 min-w-[32px] max-w-[56px] h-9 flex items-center justify-center rounded-xl text-base transition-all shrink-0 ${
                 item.isComingSoon
                   ? "opacity-40 cursor-not-allowed text-gray-400"
                   : isActive
