@@ -517,35 +517,35 @@ function ExamTakingPageContent({ params }: Props) {
             </div>
           </div>
 
-          {/* Major Sections Checkbox Selection Bar */}
+          {/* Major Sections Active Display Bar */}
           <div className="max-w-[1600px] mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-2 border-t border-gray-100 mt-2">
             <div className="flex items-center gap-1.5 flex-wrap">
               <span className="text-[11px] font-extrabold text-gray-500 uppercase tracking-wider mr-1 shrink-0 flex items-center gap-1">
                 <span>📋</span>
                 <span>Phần thi làm:</span>
               </span>
-              {majorSections.map((major) => {
-                const isChecked = selectedSectionIds.includes(major.id);
-                return (
-                  <label
-                    key={major.id}
-                    className={`flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-bold border transition-all cursor-pointer select-none ${
-                      isChecked
-                        ? "bg-indigo-50 border-indigo-300 text-indigo-800 shadow-3xs"
-                        : "bg-gray-50 border-gray-200 text-gray-400 hover:bg-gray-100"
-                    }`}
-                  >
-                    <input
-                      type="checkbox"
-                      checked={isChecked}
-                      onChange={() => toggleSection(major.id)}
-                      className="w-3.5 h-3.5 rounded text-indigo-600 focus:ring-indigo-500 accent-indigo-600 cursor-pointer"
-                    />
-                    <span>{major.icon}</span>
-                    <span>{major.name}</span>
-                  </label>
-                );
-              })}
+              {(selectedSectionIds.length === 0 ? majorSections : majorSections.filter((m) => selectedSectionIds.includes(m.id))).map((major) => (
+                <div
+                  key={major.id}
+                  className="flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-extrabold bg-indigo-50 border border-indigo-200 text-indigo-800 shadow-3xs"
+                >
+                  <span className="text-indigo-600 font-black">✓</span>
+                  <span>{major.icon}</span>
+                  <span>{major.name}</span>
+                </div>
+              ))}
+
+              {selectedSectionIds.length < majorSections.length && (
+                <button
+                  type="button"
+                  onClick={() => setShowSelectionModal(true)}
+                  className="flex items-center gap-1 px-2.5 py-1 rounded-xl text-xs font-bold bg-gray-100 border border-dashed border-gray-300 text-gray-600 hover:bg-gray-200 hover:border-gray-400 transition-all cursor-pointer"
+                  title="Thay đổi hoặc chọn thêm phần thi"
+                >
+                  <span>⚙️</span>
+                  <span>Thay đổi / Thêm phần thi</span>
+                </button>
+              )}
             </div>
 
             <div className="flex items-center gap-2 text-xs font-semibold text-gray-500 self-end sm:self-auto shrink-0">
@@ -558,7 +558,7 @@ function ExamTakingPageContent({ params }: Props) {
                   onClick={selectAllSections}
                   className="text-xs text-indigo-600 hover:text-indigo-800 font-bold underline cursor-pointer"
                 >
-                  Chọn tất cả
+                  Làm tất cả các phần
                 </button>
               )}
             </div>

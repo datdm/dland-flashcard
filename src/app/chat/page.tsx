@@ -9,6 +9,14 @@ import AuthGuard from "@/components/AuthGuard";
 type Message = {
   role: "user" | "model";
   parts: { text: string }[];
+  images?: string[];
+};
+
+type ImageItem = {
+  id: string;
+  url: string;
+  base64: string;
+  mimeType: string;
 };
 
 export default function ChatPage() {
@@ -16,12 +24,21 @@ export default function ChatPage() {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [copiedIdx, setCopiedIdx] = useState<number | null>(null);
+  const [selectedImages, setSelectedImages] = useState<ImageItem[]>([]);
+  const [isDragging, setIsDragging] = useState(false);
+  const [previewModalImg, setPreviewModalImg] = useState<string | null>(null);
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const { activeLanguage } = useLanguageSetting();
 
   // Audio Voice Chat parameters
   const [autoSpeak, setAutoSpeak] = useState(false);
   const autoSpeakRef = useRef(false);
+  useEffect(() => {
+    autoSpeakRef.current = autoSpeak;
+  }, [autoSpeak]);
+
   const [isListening, setIsListening] = useState(false);
   const [recognition, setRecognition] = useState<any>(null);
   const promptLoaded = useRef(false);
@@ -70,10 +87,10 @@ export default function ChatPage() {
 
   const getGreeting = () => {
     return activeLanguage.code === "de"
-      ? "Hallo! Mình là Gia sư AI Tiếng Đức của Dland Language. Mình có thể giúp bạn giải thích từ vựng, ngữ pháp, chia động từ hoặc cùng bạn luyện nói giao tiếp. Bạn cần mình giúp gì hôm nay?"
+      ? "Hallo! Mình là Gia sư AI Tiếng Đức của Dland Language. Bạn có thể hỏi mình từ vựng, ngữ pháp, hoặc dán/tải lên ảnh (Ctrl+V) bài tập, đoạn văn tiếng Đức để mình đọc & phân tích nhé!"
       : activeLanguage.code === "en"
-      ? "Hello! Mình là Gia sư AI Tiếng Anh của Dland Language. Mình có thể giúp bạn giải thích từ vựng, các điểm ngữ pháp, hội thoại hoặc giao tiếp tiếng Anh. Bạn cần mình giúp gì hôm nay?"
-      : "Chào bạn! Mình là Gia sư AI Tiếng Nhật của Dland Language. Mình có thể giúp bạn giải thích từ vựng, phân tích Hán tự, luyện ngữ pháp hoặc giao tiếp phản xạ. Bạn cần mình giúp gì hôm nay?";
+      ? "Hello! Mình là Gia sư AI Tiếng Anh của Dland Language. Bạn có thể hỏi từ vựng, ngữ pháp, hoặc dán/tải lên ảnh (Ctrl+V) tài liệu, bài đọc tiếng Anh để mình phân tích & dịch chi tiết!"
+      : "Chào bạn! Mình là Gia sư AI Tiếng Nhật của Dland Language. Bạn có thể tra Hán tự, giải thích ngữ pháp, dán (Ctrl+V) hoặc tải lên ảnh bài tập, trang sách để mình phân tích & dịch nhé!";
   };
 
   const handleClearChat = () => {
@@ -81,6 +98,7 @@ export default function ChatPage() {
       if (typeof window !== "undefined" && "speechSynthesis" in window) {
         window.speechSynthesis.cancel();
       }
+      setSelectedImages([]);
       setMessages([
         {
           role: "model",
@@ -116,25 +134,127 @@ export default function ChatPage() {
     scrollToBottom();
   }, [messages]);
 
-  const handleSend = async (text: string) => {
-    if (!text.trim() || isLoading) return;
+  // Image upload & paste helpers
+  const processFile = (file: File) => {
+    if (!file.type.startsWith("image/")) {
+      alert("Vui lòng chọn hoặc dán tệp hình ảnh (PNG, JPG, WEBP, GIF).");
+      return;
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      alert("Dung lượng hình ảnh tối đa là 10MB.");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const result = e.target?.result as string;
+      if (result) {
+        const mimeType = file.type || result.match(/^data:(image\/\w+);base64,/)?.[1] || "image/png";
+        setSelectedImages((prev) => [
+          ...prev,
+          {
+            id: `img-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`,
+            url: result,
+            base64: result,
+            mimeType,
+          },
+        ]);
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files) {
+      Array.from(files).forEach(processFile);
+    }
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
+  const handlePaste = (e: React.ClipboardEvent) => {
+    const items = e.clipboardData?.items;
+    if (!items) return;
+
+    let hasImage = false;
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].type.startsWith("image/")) {
+        hasImage = true;
+        const file = items[i].getAsFile();
+        if (file) processFile(file);
+      }
+    }
+    if (hasImage) {
+      e.preventDefault();
+    }
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+
+    const files = e.dataTransfer?.files;
+    if (files && files.length > 0) {
+      Array.from(files).forEach((file) => {
+        if (file.type.startsWith("image/")) {
+          processFile(file);
+        }
+      });
+    }
+  };
+
+  const removeSelectedImage = (id: string) => {
+    setSelectedImages((prev) => prev.filter((img) => img.id !== id));
+  };
+
+  const handleSend = async (text: string, imagesToSend?: ImageItem[]) => {
+    const currentImages = imagesToSend || selectedImages;
+    if ((!text.trim() && currentImages.length === 0) || isLoading) return;
 
     // Stop speaking when user sends a new message
     if (typeof window !== "undefined") {
       window.speechSynthesis.cancel();
     }
 
-    const userMsg: Message = { role: "user", parts: [{ text }] };
+    const promptText = text.trim() || "Phân tích và giải thích chi tiết nội dung trong hình ảnh này giúp tôi.";
+    const imageUrls = currentImages.map((img) => img.url);
+
+    const userMsg: Message = {
+      role: "user",
+      parts: [{ text: promptText }],
+      images: imageUrls.length > 0 ? imageUrls : undefined,
+    };
     const modelMsg: Message = { role: "model", parts: [{ text: "" }] };
-    
+
     setMessages((prev) => [...prev, userMsg, modelMsg]);
     setInput("");
+    setSelectedImages([]);
     setIsLoading(true);
 
     try {
-      const historyToSend = messages.slice(1).map(msg => ({
+      const historyToSend = messages.slice(1).map((msg) => ({
         role: msg.role,
         parts: msg.parts,
+      }));
+
+      const payloadImages = currentImages.map((img) => ({
+        data: img.base64,
+        mimeType: img.mimeType,
       }));
 
       const res = await fetch("/api/chat", {
@@ -142,7 +262,8 @@ export default function ChatPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           history: historyToSend,
-          message: text,
+          message: promptText,
+          images: payloadImages.length > 0 ? payloadImages : undefined,
           lang: activeLanguage.code,
         }),
       });
@@ -160,10 +281,10 @@ export default function ChatPage() {
       while (true) {
         const { value, done } = await reader.read();
         if (done) break;
-        
+
         const chunk = decoder.decode(value, { stream: true });
         fullResponseText += chunk;
-        
+
         setMessages((prev) => {
           const newMessages = [...prev];
           const lastIndex = newMessages.length - 1;
@@ -182,7 +303,8 @@ export default function ChatPage() {
       setMessages((prev) => {
         const newMessages = [...prev];
         const lastIndex = newMessages.length - 1;
-        newMessages[lastIndex].parts[0].text = "Xin lỗi, đã xảy ra lỗi trong quá trình kết nối. Vui lòng kiểm tra lại GEMINI_API_KEY hoặc thử lại sau.";
+        newMessages[lastIndex].parts[0].text =
+          "Xin lỗi, đã xảy ra lỗi trong quá trình kết nối. Vui lòng kiểm tra lại GEMINI_API_KEY hoặc thử lại sau.";
         return newMessages;
       });
     } finally {
@@ -197,7 +319,6 @@ export default function ChatPage() {
       if (promptParam) {
         promptLoaded.current = true;
         handleSend(promptParam);
-        // Clear query parameter to prevent resending on page refresh
         const newUrl = window.location.pathname;
         window.history.replaceState({}, document.title, newUrl);
       }
@@ -206,18 +327,21 @@ export default function ChatPage() {
 
   const SUGGESTIONS_BY_LANG: Record<string, string[]> = {
     ja: [
+      "📸 Dán hoặc tải ảnh bài tập / Kanji để phân tích",
       "📝 Phân tích Kanji: 勉強",
       "📖 Giải thích ngữ pháp ～てあげる",
       "🎧 Luyện nghe hội thoại cơ bản",
       "🗣️ Luyện giao tiếp chủ đề mua sắm"
     ],
     en: [
+      "📸 Dán hoặc tải ảnh đoạn văn / bài đọc tiếng Anh",
       "📝 Phân biệt cách dùng: Although vs Despite",
       "📖 Giải thích ngữ pháp Câu điều kiện loại 3",
       "🎯 Luyện phát âm & IPA từ vựng IELTS",
       "🗣️ Luyện nói tiếng Anh chủ đề Job Interview"
     ],
     de: [
+      "📸 Dán hoặc tải ảnh bài tập / ngữ pháp tiếng Đức",
       "📝 Phân biệt quán từ giống: Der, Die, Das",
       "📖 Giải thích cấu trúc ngữ pháp Weil & Dass",
       "🎯 Luyện chia đuôi tính từ (Adjektivdeklination)",
@@ -234,8 +358,37 @@ export default function ChatPage() {
     : "Gia Sư AI Tiếng Nhật";
 
   return (
-    <AuthGuard featureName="Gia Sư AI 24/7" description="Đăng nhập để luyện giao tiếp, giải thích ngữ pháp, phân tích từ vựng và lưu hội thoại cùng Gia sư AI.">
-      <div className="w-full max-w-[1400px] mx-auto px-3 sm:px-6 py-3 sm:py-4 pb-16 md:pb-6 space-y-3">
+    <AuthGuard featureName="Gia Sư AI 24/7" description="Đăng nhập để luyện giao tiếp, giải thích ngữ pháp, dán ảnh phân tích và lưu hội thoại cùng Gia sư AI.">
+      <div
+        onPaste={handlePaste}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+        className="w-full max-w-[1400px] mx-auto px-3 sm:px-6 py-3 sm:py-4 pb-16 md:pb-6 space-y-3 relative"
+      >
+        {/* Hidden File Input */}
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          multiple
+          onChange={handleFileSelect}
+          className="hidden"
+        />
+
+        {/* Drag & Drop Visual Overlay */}
+        {isDragging && (
+          <div className="fixed inset-0 z-50 bg-indigo-950/70 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in">
+            <div className="bg-white rounded-3xl p-8 border-4 border-dashed border-indigo-400 text-center max-w-md shadow-2xl space-y-3 animate-bounce">
+              <div className="text-5xl">🖼️</div>
+              <h3 className="text-lg font-black text-indigo-900">Thả hình ảnh vào đây</h3>
+              <p className="text-xs text-indigo-600 font-bold">
+                Gia sư AI sẽ lập tức nhận diện chữ, dịch và phân tích ngữ pháp trong ảnh cho bạn!
+              </p>
+            </div>
+          </div>
+        )}
+
         {/* Sleek Modern AI Tutor Topbar */}
         <div className="bg-white rounded-2xl sm:rounded-3xl p-3.5 sm:p-4 border border-gray-100 shadow-xs flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
@@ -255,9 +408,13 @@ export default function ChatPage() {
                 <span className="px-2 py-0.5 bg-indigo-50 text-indigo-700 rounded-full text-[10px] font-bold hidden sm:inline">
                   {activeLanguage.code.toUpperCase()}
                 </span>
+                <span className="px-2 py-0.5 bg-purple-50 text-purple-700 border border-purple-200/60 rounded-full text-[10px] font-extrabold flex items-center gap-1">
+                  <span>📷</span>
+                  <span>Đọc & Phân tích ảnh</span>
+                </span>
               </div>
               <p className="text-[11px] text-gray-500 line-clamp-1">
-                Gia sư thông minh hỗ trợ giải thích ngữ pháp, tra Hán tự, đàm thoại Kaiwa phản xạ
+                Gia sư thông minh hỗ trợ giải thích ngữ pháp, tra Hán tự, đọc ảnh bài tập (Ctrl+V) & Kaiva phản xạ
               </p>
             </div>
           </div>
@@ -317,6 +474,28 @@ export default function ChatPage() {
                       : "bg-white text-gray-800 border border-gray-200/80 rounded-tl-xs"
                   }`}
                 >
+                  {/* Display Attached Images in User Message Bubble */}
+                  {msg.images && msg.images.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mb-2.5">
+                      {msg.images.map((imgUrl, imgIdx) => (
+                        <div
+                          key={imgIdx}
+                          onClick={() => setPreviewModalImg(imgUrl)}
+                          className="relative group rounded-xl overflow-hidden border border-white/30 cursor-pointer shadow-xs max-w-[240px] max-h-[180px]"
+                        >
+                          <img
+                            src={imgUrl}
+                            alt="Ảnh đính kèm"
+                            className="object-cover w-full h-full max-h-[180px] hover:scale-105 transition-transform"
+                          />
+                          <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white text-xs font-bold transition-opacity">
+                            🔍 Xem ảnh lớn
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
                   {msg.role === "user" ? (
                     <div className="whitespace-pre-wrap text-sm leading-relaxed">{msg.parts[0].text}</div>
                   ) : (
@@ -366,12 +545,41 @@ export default function ChatPage() {
                 </div>
                 <div className="bg-white text-indigo-600 border border-gray-200/80 rounded-2xl rounded-tl-xs p-3.5 shadow-3xs flex items-center gap-1.5 text-xs font-bold">
                   <div className="w-2 h-2 rounded-full bg-indigo-600 animate-ping" />
-                  <span>Gia sư AI đang soạn phản hồi...</span>
+                  <span>Gia sư AI đang đọc & phân tích hình ảnh...</span>
                 </div>
               </div>
             )}
             <div ref={messagesEndRef} />
           </div>
+
+          {/* Selected Image Preview Bar Before Sending */}
+          {selectedImages.length > 0 && (
+            <div className="bg-indigo-50/60 border-t border-indigo-100 px-4 py-2 flex items-center gap-2.5 overflow-x-auto">
+              <span className="text-[11px] font-extrabold text-indigo-900 shrink-0 flex items-center gap-1">
+                <span>🖼️</span>
+                <span>Ảnh đã chọn ({selectedImages.length}):</span>
+              </span>
+              {selectedImages.map((img) => (
+                <div
+                  key={img.id}
+                  className="relative group shrink-0 w-14 h-14 rounded-xl overflow-hidden border-2 border-indigo-300 bg-white shadow-3xs"
+                >
+                  <img src={img.url} alt="Preview" className="w-full h-full object-cover" />
+                  <button
+                    type="button"
+                    onClick={() => removeSelectedImage(img.id)}
+                    className="absolute top-0.5 right-0.5 w-4 h-4 rounded-full bg-rose-600 text-white text-[10px] font-black flex items-center justify-center opacity-90 hover:opacity-100 transition-opacity"
+                    title="Xóa ảnh này"
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))}
+              <span className="text-[10px] text-gray-400 font-medium ml-auto shrink-0 hidden sm:inline">
+                💡 Có thể bấm Gửi ngay hoặc nhập thêm câu hỏi
+              </span>
+            </div>
+          )}
 
           {/* Quick Suggestions Horizontal Scroll Bar */}
           <div className="bg-slate-50 border-t border-gray-100 px-3 py-2">
@@ -401,6 +609,7 @@ export default function ChatPage() {
               }}
               className="flex gap-2 items-center"
             >
+              {/* Mic STT Button */}
               <button
                 type="button"
                 onClick={toggleListening}
@@ -414,18 +623,34 @@ export default function ChatPage() {
                 {isListening ? "🛑" : "🎙️"}
               </button>
 
+              {/* Upload Image Button */}
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="w-11 h-11 shrink-0 rounded-2xl bg-indigo-50 text-indigo-600 hover:bg-indigo-100 border border-indigo-200 flex items-center justify-center transition-all cursor-pointer"
+                title="Tải ảnh lên hoặc dán ảnh (Ctrl+V) để Gia sư AI phân tích"
+              >
+                🖼️
+              </button>
+
               <input
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 disabled={isLoading}
-                placeholder={isListening ? "Đang lắng nghe giọng nói của bạn..." : "Hỏi gia sư về ngữ pháp, từ vựng hoặc yêu cầu đối thoại..."}
+                placeholder={
+                  isListening
+                    ? "Đang lắng nghe giọng nói của bạn..."
+                    : selectedImages.length > 0
+                    ? "Nhập câu hỏi kèm ảnh hoặc bấm Gửi để phân tích..."
+                    : "Hỏi gia sư, dán ảnh (Ctrl+V) hoặc kéo thả ảnh vào đây..."
+                }
                 className="flex-1 bg-slate-50 border border-gray-200 rounded-2xl px-4 py-2.5 text-xs sm:text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all"
               />
 
               <button
                 type="submit"
-                disabled={!input.trim() || isLoading}
+                disabled={(!input.trim() && selectedImages.length === 0) || isLoading}
                 className="px-4 h-11 shrink-0 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-40 text-white rounded-2xl font-bold text-xs flex items-center gap-1.5 transition-all shadow-xs cursor-pointer active:scale-95"
               >
                 <span>Gửi</span>
@@ -434,6 +659,29 @@ export default function ChatPage() {
             </form>
           </div>
         </div>
+
+        {/* Fullsize Image Modal */}
+        {previewModalImg && (
+          <div
+            className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in"
+            onClick={() => setPreviewModalImg(null)}
+          >
+            <div className="relative max-w-4xl max-h-[90vh] overflow-hidden rounded-2xl bg-black p-2 border border-white/20">
+              <button
+                type="button"
+                onClick={() => setPreviewModalImg(null)}
+                className="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-black/60 text-white font-bold flex items-center justify-center hover:bg-black transition-colors"
+              >
+                ✕
+              </button>
+              <img
+                src={previewModalImg}
+                alt="Full preview"
+                className="max-w-full max-h-[85vh] object-contain rounded-xl"
+              />
+            </div>
+          </div>
+        )}
       </div>
     </AuthGuard>
   );

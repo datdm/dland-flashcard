@@ -269,6 +269,13 @@ export async function hasServerData(): Promise<{ hasData: boolean; lastSyncAt: s
   }
 }
 
+// Hash tracking for deduplicating redundant auto-sync uploads
+let lastUploadedDataHash: string | null = null;
+
+export function invalidateSyncHash(): void {
+  lastUploadedDataHash = null;
+}
+
 // Upload local data to server
 export async function uploadToServer(skipBackup: boolean = false): Promise<{ success: boolean; error?: string }> {
   const token = getAuthToken();
@@ -301,6 +308,12 @@ export async function uploadToServer(skipBackup: boolean = false): Promise<{ suc
       }
     }
 
+    // Deduplicate auto-sync requests: if data hasn't changed, skip sending HTTP request
+    const currentDataHash = JSON.stringify(data);
+    if (skipBackup && lastUploadedDataHash === currentDataHash) {
+      return { success: true };
+    }
+
     const url = skipBackup ? `${API_URL}/api/sync/upload?skipBackup=true` : `${API_URL}/api/sync/upload`;
     const response = await trackedFetch(url, {
       method: 'POST',
@@ -317,6 +330,7 @@ export async function uploadToServer(skipBackup: boolean = false): Promise<{ suc
     }
 
     const result = await response.json();
+    lastUploadedDataHash = currentDataHash;
     localStorage.setItem(LAST_SYNC_KEY, result.timestamp || new Date().toISOString());
 
     return { success: true };
@@ -458,6 +472,7 @@ export async function downloadFromServer(): Promise<{ success: boolean; error?: 
 // Clear all app data from localStorage (keep auth tokens)
 export function clearLocalData(): void {
   if (typeof window === 'undefined') return;
+  invalidateSyncHash();
   
   const keys = Object.values(StorageKeys);
   for (const key of keys) {

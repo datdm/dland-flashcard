@@ -49,20 +49,22 @@ Nhiệm vụ của bạn là:
 
 export async function POST(req: NextRequest) {
   try {
-    const { history, message, lang = "ja", systemInstruction: customInstruction } = await req.json();
+    const { history, message, images, lang = "ja", systemInstruction: customInstruction } = await req.json();
 
-    if (!message) {
-      return NextResponse.json({ error: "Missing message" }, { status: 400 });
+    if (!message && (!images || images.length === 0)) {
+      return NextResponse.json({ error: "Missing message or image" }, { status: 400 });
     }
 
     const systemInstruction = customInstruction || INSTRUCTIONS[lang] || INSTRUCTIONS.ja;
 
+    const userPrompt = message?.trim() || "Phân tích và giải thích chi tiết nội dung trong hình ảnh này giúp tôi.";
+
     if (!genAI) {
       // Friendly fallback responses if API key is not yet set
       const fallbackReplies: Record<string, string> = {
-        ja: `こんにちは！「${message}」についてですね。日本語の学習を一緒に頑張りましょう！何か質問があれば何でも聞いてくださいね。`,
-        en: `Hello there! Regarding "${message}", I'm here to help you practice English. Feel free to ask me anything or practice speaking!`,
-        de: `Hallo! Zu "${message}" helfe ich dir gerne beim Deutschlernen weiter. Lass uns weiter üben!`,
+        ja: `こんにちは！「${userPrompt}」についてですね。日本語の学習を一緒に頑張りましょう！何か質問があれば何でも聞いてくださいね。`,
+        en: `Hello there! Regarding "${userPrompt}", I'm here to help you practice English. Feel free to ask me anything or practice speaking!`,
+        de: `Hallo! Zu "${userPrompt}" helfe ich dir gerne beim Deutschlernen weiter. Lass uns weiter üben!`,
       };
       const reply = fallbackReplies[lang] || fallbackReplies.ja;
       return new Response(reply, {
@@ -70,7 +72,35 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // Use stable Gemini models
+    // Prepare multimodal user message parts
+    const userParts: any[] = [];
+
+    if (images && Array.isArray(images) && images.length > 0) {
+      images.forEach((img: { data: string; mimeType?: string }) => {
+        const rawData = img.data || "";
+        const base64Data = rawData.replace(/^data:image\/\w+;base64,/, "");
+        const extractedMime = rawData.match(/^data:(image\/\w+);base64,/)?.[1];
+        const mimeType = img.mimeType || extractedMime || "image/png";
+        userParts.push({
+          inlineData: {
+            data: base64Data,
+            mimeType: mimeType,
+          },
+        });
+      });
+    }
+
+    userParts.push({ text: userPrompt });
+
+    // Clean up history to ensure parts are properly formatted
+    const formattedHistory = (history || []).map((h: any) => ({
+      role: h.role === "model" ? "model" : "user",
+      parts: Array.isArray(h.parts)
+        ? h.parts.map((p: any) => (typeof p === "string" ? { text: p } : p))
+        : [{ text: String(h.parts || "") }],
+    }));
+
+    // Use stable Gemini multimodal models
     const candidateModels = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash"];
     let lastError: any = null;
 
@@ -82,10 +112,10 @@ export async function POST(req: NextRequest) {
         });
 
         const chat = model.startChat({
-          history: history || [],
+          history: formattedHistory,
         });
 
-        const result = await chat.sendMessageStream(message);
+        const result = await chat.sendMessageStream(userParts);
 
         const stream = new ReadableStream({
           async start(controller) {
