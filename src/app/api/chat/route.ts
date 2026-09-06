@@ -92,16 +92,39 @@ export async function POST(req: NextRequest) {
 
     userParts.push({ text: userPrompt });
 
-    // Clean up history to ensure parts are properly formatted
-    const formattedHistory = (history || []).map((h: any) => ({
-      role: h.role === "model" ? "model" : "user",
-      parts: Array.isArray(h.parts)
-        ? h.parts.map((p: any) => (typeof p === "string" ? { text: p } : p))
-        : [{ text: String(h.parts || "") }],
-    }));
+    // Clean up history to build valid contents array for generateContentStream
+    const cleanedContents: any[] = [];
 
-    // Use stable Gemini multimodal models
-    const candidateModels = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash"];
+    if (history && Array.isArray(history)) {
+      history.forEach((h: any) => {
+        const role = h.role === "model" ? "model" : "user";
+        let parts: any[] = [];
+        if (Array.isArray(h.parts)) {
+          parts = h.parts.map((p: any) => (typeof p === "string" ? { text: p } : p));
+        } else if (typeof h.parts === "string") {
+          parts = [{ text: h.parts }];
+        } else if (h.text) {
+          parts = [{ text: h.text }];
+        }
+        if (parts.length > 0 && parts[0].text) {
+          cleanedContents.push({ role, parts });
+        }
+      });
+    }
+
+    // Ensure contents starts with 'user' role if history starts with 'model'
+    while (cleanedContents.length > 0 && cleanedContents[0].role === "model") {
+      cleanedContents.shift();
+    }
+
+    // Append current user message turn
+    cleanedContents.push({
+      role: "user",
+      parts: userParts,
+    });
+
+    // Use candidate Gemini models aligned with practice generation
+    const candidateModels = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-pro"];
     let lastError: any = null;
 
     for (const modelName of candidateModels) {
@@ -111,11 +134,9 @@ export async function POST(req: NextRequest) {
           systemInstruction: systemInstruction,
         });
 
-        const chat = model.startChat({
-          history: formattedHistory,
+        const result = await model.generateContentStream({
+          contents: cleanedContents,
         });
-
-        const result = await chat.sendMessageStream(userParts);
 
         const stream = new ReadableStream({
           async start(controller) {
@@ -138,19 +159,20 @@ export async function POST(req: NextRequest) {
             "Transfer-Encoding": "chunked",
           },
         });
-      } catch (err) {
+      } catch (err: any) {
         lastError = err;
-        console.warn(`Model ${modelName} failed, trying next candidate...`, err);
+        console.warn(`Model ${modelName} failed for chat stream, trying next candidate...`, err?.message || err);
       }
     }
 
-    throw lastError || new Error("All Gemini models failed");
+    throw lastError || new Error("Không thể kết nối tới các mô hình Gemini AI.");
 
   } catch (error: any) {
     console.error("Chat API Error:", error);
-    return NextResponse.json(
-      { error: "Đã xảy ra lỗi khi giao tiếp với AI. Vui lòng thử lại sau." },
-      { status: 500 }
-    );
+    const fallbackMsg = `Xin lỗi, đã xảy ra lỗi khi giao tiếp với AI (${error?.message || "Lỗi kết nối"}). Vui lòng kiểm tra lại GEMINI_API_KEY hoặc thử lại sau.`;
+    return new Response(fallbackMsg, {
+      status: 200,
+      headers: { "Content-Type": "text/plain; charset=utf-8" },
+    });
   }
 }
