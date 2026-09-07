@@ -320,7 +320,7 @@ export default function ExamHubPage() {
                       <>
                         <button
                           type="button"
-                          onClick={() => setSelectedExamForModal(exam)}
+                          onClick={() => router.push(`/exam/${exam.id}`)}
                           className="w-full sm:flex-1 py-3 px-4 rounded-2xl bg-amber-500 hover:bg-amber-600 text-white font-black text-xs shadow-md shadow-amber-200 transition-all flex items-center justify-center gap-1.5 cursor-pointer active:scale-98"
                         >
                           <span>▶️</span>

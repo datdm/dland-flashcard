@@ -440,6 +440,70 @@ export const JLPT_LISTENING_MONDAIS: Record<string, JLPTMondaiInfo[]> = {
   ],
 };
 
+export const JLPT_VOCAB_MONDAIS: Record<string, JLPTMondaiInfo[]> = {
+  N1: [
+    { mondaiNumber: 1, mondaiName: "問題 1: 漢字読み (Cách đọc Hán tự)", mondaiSubtitle: "Cách đọc Kanji gạch chân", description: "Chọn Hiragana tương ứng với chữ Hán N1 gạch chân", questionsCount: 5, optionsCount: 4, typeFormat: "short" },
+    { mondaiNumber: 2, mondaiName: "問題 2: 文脈規定 (Điền từ ngữ cảnh)", mondaiSubtitle: "Điền từ vựng hợp bối cảnh", description: "Chọn từ vựng cao cấp N1 điền vào vị trí ngoặc", questionsCount: 5, optionsCount: 4, typeFormat: "short" },
+    { mondaiNumber: 3, mondaiName: "問題 3: 言い換え類義 (Từ đồng nghĩa)", mondaiSubtitle: "Tìm từ/cụm từ tương đương", description: "Chọn từ hoặc câu có ý nghĩa giống nhất với từ gạch chân", questionsCount: 5, optionsCount: 4, typeFormat: "short" },
+    { mondaiNumber: 4, mondaiName: "問題 4: 用法 (Cách dùng từ vựng)", mondaiSubtitle: "Chọn câu dùng từ chuẩn xác", description: "Xác định câu sử dụng từ ngữ cảnh N1 đúng tự nhiên nhất", questionsCount: 5, optionsCount: 4, typeFormat: "short" },
+  ],
+  N2: [
+    { mondaiNumber: 1, mondaiName: "問題 1: 漢字読み (Cách đọc Hán tự)", mondaiSubtitle: "Cách đọc Kanji gạch chân", description: "Chọn Hiragana cho chữ Hán N2 gạch chân", questionsCount: 5, optionsCount: 4, typeFormat: "short" },
+    { mondaiNumber: 2, mondaiName: "問題 2: 表記 (Cách viết Hán tự)", mondaiSubtitle: "Chọn Kanji đúng cho Hiragana", description: "Chọn Hán tự N2 viết chuẩn cho từ Hiragana", questionsCount: 5, optionsCount: 4, typeFormat: "short" },
+    { mondaiNumber: 3, mondaiName: "問題 3: 語形成 (Cấu tạo từ vựng)", mondaiSubtitle: "Tiền tố & Hậu tố tiếng Nhật", description: "Ghép tiền tố/hậu tố cấu tạo từ vựng N2", questionsCount: 5, optionsCount: 4, typeFormat: "short" },
+    { mondaiNumber: 4, mondaiName: "問題 4: 文脈規定 (Điền từ ngữ cảnh)", mondaiSubtitle: "Điền từ vựng đúng bối cảnh", description: "Chọn từ vựng đúng hợp bối cảnh câu", questionsCount: 5, optionsCount: 4, typeFormat: "short" },
+    { mondaiNumber: 5, mondaiName: "問題 5: 言い換え類義 (Từ đồng nghĩa)", mondaiSubtitle: "Tìm cách nói tương đương", description: "Chọn từ đồng nghĩa với từ gạch chân N2", questionsCount: 5, optionsCount: 4, typeFormat: "short" },
+    { mondaiNumber: 6, mondaiName: "問題 6: 用法 (Cách dùng từ vựng)", mondaiSubtitle: "Chọn câu dùng từ chuẩn nhất", description: "Xác định câu dùng từ vựng N2 đúng ngữ pháp và tự nhiên", questionsCount: 5, optionsCount: 4, typeFormat: "short" },
+  ],
+  N3: [
+    { mondaiNumber: 1, mondaiName: "問題 1: 漢字読み (Cách đọc Hán tự)", mondaiSubtitle: "Cách đọc Kanji gạch chân", description: "Chọn Hiragana cho Hán tự N3", questionsCount: 5, optionsCount: 4, typeFormat: "short" },
+    { mondaiNumber: 2, mondaiName: "問題 2: 表記 (Cách viết Hán tự)", mondaiSubtitle: "Chọn Kanji cho Hiragana", description: "Chọn Hán tự N3 chuẩn cho từ Hiragana", questionsCount: 5, optionsCount: 4, typeFormat: "short" },
+    { mondaiNumber: 3, mondaiName: "問題 3: 文脈規定 (Điền từ ngữ cảnh)", mondaiSubtitle: "Điền từ vựng hợp ngữ cảnh", description: "Chọn từ vựng hợp nghĩa câu N3", questionsCount: 5, optionsCount: 4, typeFormat: "short" },
+    { mondaiNumber: 4, mondaiName: "問題 4: 言い換え類義 (Từ đồng nghĩa)", mondaiSubtitle: "Tìm cách nói đồng nghĩa", description: "Chọn từ đồng nghĩa N3", questionsCount: 5, optionsCount: 4, typeFormat: "short" },
+    { mondaiNumber: 5, mondaiName: "問題 5: 用法 (Cách dùng từ vựng)", mondaiSubtitle: "Chọn câu dùng từ đúng", description: "Xác định câu dùng từ vựng N3 chuẩn xác", questionsCount: 5, optionsCount: 4, typeFormat: "short" },
+  ],
+  N4: [
+    { mondaiNumber: 1, mondaiName: "問題 1: 漢字読み (Cách đọc Hán tự)", mondaiSubtitle: "Cách đọc Kanji gạch chân", description: "Chọn cách đọc Hiragana Hán tự N4", questionsCount: 5, optionsCount: 4, typeFormat: "short" },
+    { mondaiNumber: 2, mondaiName: "問題 2: 表記 (Cách viết Hán tự)", mondaiSubtitle: "Chọn Kanji đúng", description: "Chọn Hán tự N4 chuẩn", questionsCount: 5, optionsCount: 4, typeFormat: "short" },
+    { mondaiNumber: 3, mondaiName: "問題 3: 文脈規定 (Điền từ ngữ cảnh)", mondaiSubtitle: "Điền từ vựng bối cảnh", description: "Điền từ vựng N4 vào ô trống", questionsCount: 5, optionsCount: 4, typeFormat: "short" },
+    { mondaiNumber: 4, mondaiName: "問題 4: 言い換え類義 (Từ đồng nghĩa)", mondaiSubtitle: "Từ/cụm từ đồng nghĩa", description: "Chọn câu/từ đồng nghĩa N4", questionsCount: 5, optionsCount: 4, typeFormat: "short" },
+  ],
+  N5: [
+    { mondaiNumber: 1, mondaiName: "問題 1: 漢字読み (Cách đọc Hán tự)", mondaiSubtitle: "Cách đọc Kanji cơ bản", description: "Chọn Hiragana cho Kanji N5", questionsCount: 5, optionsCount: 4, typeFormat: "short" },
+    { mondaiNumber: 2, mondaiName: "問題 2: 表記 (Cách viết Hán tự)", mondaiSubtitle: "Chọn Kanji cơ bản", description: "Chọn Hán tự N5 cho Hiragana", questionsCount: 5, optionsCount: 4, typeFormat: "short" },
+    { mondaiNumber: 3, mondaiName: "問題 3: 文脈規定 (Điền từ ngữ cảnh)", mondaiSubtitle: "Điền từ đời sống", description: "Điền từ vựng N5 hợp cảnh", questionsCount: 5, optionsCount: 4, typeFormat: "short" },
+    { mondaiNumber: 4, mondaiName: "問題 4: 言い換え類義 (Từ đồng nghĩa)", mondaiSubtitle: "Câu đồng nghĩa đơn giản", description: "Chọn câu có nghĩa tương đương N5", questionsCount: 5, optionsCount: 4, typeFormat: "short" },
+  ],
+};
+
+export const JLPT_GRAMMAR_MONDAIS: Record<string, JLPTMondaiInfo[]> = {
+  N1: [
+    { mondaiNumber: 1, mondaiName: "問題 5: 文法形式の判断 (Hình thức ngữ pháp)", mondaiSubtitle: "Chọn mẫu ngữ pháp điền ô trống", description: "Trắc nghiệm chọn ngữ pháp nâng cao N1", questionsCount: 5, optionsCount: 4, typeFormat: "short" },
+    { mondaiNumber: 2, mondaiName: "問題 6: 文の組み立て (Dựng câu dấu sao ★)", mondaiSubtitle: "Sắp xếp 4 cụm từ & tìm vị trí dấu ★", description: "Dựng câu và chọn cụm từ ở vị trí dấu sao ★", questionsCount: 5, optionsCount: 4, typeFormat: "short" },
+    { mondaiNumber: 3, mondaiName: "問題 7: 文章の文法 (Ngữ pháp đoạn văn)", mondaiSubtitle: "Chọn liên từ & kết thúc câu cho đoạn văn", description: "Đọc đoạn văn và chọn ngữ pháp điền chỗ trống", questionsCount: 4, optionsCount: 4, typeFormat: "medium" },
+  ],
+  N2: [
+    { mondaiNumber: 1, mondaiName: "問題 7: 文法形式の判断 (Hình thức ngữ pháp)", mondaiSubtitle: "Chọn mẫu ngữ pháp điền ô trống", description: "Trắc nghiệm chọn ngữ pháp N2", questionsCount: 5, optionsCount: 4, typeFormat: "short" },
+    { mondaiNumber: 2, mondaiName: "問題 8: 文の組み立て (Dựng câu dấu sao ★)", mondaiSubtitle: "Sắp xếp 4 cụm từ & tìm vị trí dấu ★", description: "Dựng câu và chọn cụm từ ở vị trí dấu sao ★", questionsCount: 5, optionsCount: 4, typeFormat: "short" },
+    { mondaiNumber: 3, mondaiName: "問題 9: 文章の文法 (Ngữ pháp đoạn văn)", mondaiSubtitle: "Chọn liên từ & kết thúc câu cho đoạn văn", description: "Đọc đoạn văn và chọn ngữ pháp điền chỗ trống", questionsCount: 4, optionsCount: 4, typeFormat: "medium" },
+  ],
+  N3: [
+    { mondaiNumber: 1, mondaiName: "問題 6: 文法形式の判断 (Hình thức ngữ pháp)", mondaiSubtitle: "Chọn mẫu ngữ pháp điền ô trống", description: "Trắc nghiệm chọn ngữ pháp N3", questionsCount: 5, optionsCount: 4, typeFormat: "short" },
+    { mondaiNumber: 2, mondaiName: "問題 7: 文の組み立て (Dựng câu dấu sao ★)", mondaiSubtitle: "Sắp xếp 4 cụm từ & tìm vị trí dấu ★", description: "Dựng câu và chọn cụm từ ở vị trí dấu sao ★", questionsCount: 5, optionsCount: 4, typeFormat: "short" },
+    { mondaiNumber: 3, mondaiName: "問題 8: 文章の文法 (Ngữ pháp đoạn văn)", mondaiSubtitle: "Chọn liên từ & kết thúc câu cho đoạn văn", description: "Đọc đoạn văn và chọn ngữ pháp điền chỗ trống", questionsCount: 4, optionsCount: 4, typeFormat: "medium" },
+  ],
+  N4: [
+    { mondaiNumber: 1, mondaiName: "問題 5: 文法形式の判断 (Hình thức ngữ pháp)", mondaiSubtitle: "Chọn mẫu ngữ pháp điền ô trống", description: "Trắc nghiệm chọn ngữ pháp N4", questionsCount: 5, optionsCount: 4, typeFormat: "short" },
+    { mondaiNumber: 2, mondaiName: "問題 6: 文の組み立て (Dựng câu dấu sao ★)", mondaiSubtitle: "Sắp xếp 4 cụm từ & tìm vị trí dấu ★", description: "Dựng câu và chọn cụm từ ở vị trí dấu sao ★", questionsCount: 5, optionsCount: 4, typeFormat: "short" },
+    { mondaiNumber: 3, mondaiName: "問題 7: 文章の文法 (Ngữ pháp đoạn văn)", mondaiSubtitle: "Chọn liên từ & kết thúc câu cho đoạn văn", description: "Đọc đoạn văn và chọn ngữ pháp điền chỗ trống", questionsCount: 4, optionsCount: 4, typeFormat: "medium" },
+  ],
+  N5: [
+    { mondaiNumber: 1, mondaiName: "問題 5: 文法形式の判断 (Hình thức ngữ pháp)", mondaiSubtitle: "Chọn mẫu ngữ pháp điền ô trống", description: "Trắc nghiệm chọn ngữ pháp N5", questionsCount: 5, optionsCount: 4, typeFormat: "short" },
+    { mondaiNumber: 2, mondaiName: "問題 6: 文の組み立て (Dựng câu dấu sao ★)", mondaiSubtitle: "Sắp xếp 4 cụm từ & tìm vị trí dấu ★", description: "Dựng câu và chọn cụm từ ở vị trí dấu sao ★", questionsCount: 5, optionsCount: 4, typeFormat: "short" },
+    { mondaiNumber: 3, mondaiName: "問題 7: 文章の文法 (Ngữ pháp đoạn văn)", mondaiSubtitle: "Chọn liên từ & kết thúc câu cho đoạn văn", description: "Đọc đoạn văn và chọn ngữ pháp điền chỗ trống", questionsCount: 4, optionsCount: 4, typeFormat: "medium" },
+  ],
+};
+
 export function getReadingMondaisForLevel(level: string): JLPTMondaiInfo[] {
   const norm = level.toUpperCase();
   return JLPT_READING_MONDAIS[norm] || JLPT_READING_MONDAIS.N2;
@@ -450,6 +514,16 @@ export function getListeningMondaisForLevel(level: string): JLPTMondaiInfo[] {
   return JLPT_LISTENING_MONDAIS[norm] || JLPT_LISTENING_MONDAIS.N2;
 }
 
+export function getVocabMondaisForLevel(level: string): JLPTMondaiInfo[] {
+  const norm = level.toUpperCase();
+  return JLPT_VOCAB_MONDAIS[norm] || JLPT_VOCAB_MONDAIS.N2;
+}
+
+export function getGrammarMondaisForLevel(level: string): JLPTMondaiInfo[] {
+  const norm = level.toUpperCase();
+  return JLPT_GRAMMAR_MONDAIS[norm] || JLPT_GRAMMAR_MONDAIS.N2;
+}
+
 export function getReadingMondaiConfig(level: string, mondaiNumber: number): JLPTMondaiInfo | undefined {
   const list = getReadingMondaisForLevel(level);
   return list.find((m) => m.mondaiNumber === mondaiNumber);
@@ -457,5 +531,15 @@ export function getReadingMondaiConfig(level: string, mondaiNumber: number): JLP
 
 export function getListeningMondaiConfig(level: string, mondaiNumber: number): JLPTMondaiInfo | undefined {
   const list = getListeningMondaisForLevel(level);
+  return list.find((m) => m.mondaiNumber === mondaiNumber);
+}
+
+export function getVocabMondaiConfig(level: string, mondaiNumber: number): JLPTMondaiInfo | undefined {
+  const list = getVocabMondaisForLevel(level);
+  return list.find((m) => m.mondaiNumber === mondaiNumber);
+}
+
+export function getGrammarMondaiConfig(level: string, mondaiNumber: number): JLPTMondaiInfo | undefined {
+  const list = getGrammarMondaisForLevel(level);
   return list.find((m) => m.mondaiNumber === mondaiNumber);
 }

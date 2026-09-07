@@ -526,3 +526,260 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
   }
 }`;
 }
+
+export interface JLPTVocabPromptParams {
+  level: string;
+  topic: string;
+  chosenContext: string;
+  mondaiNumber?: number;
+  randomSeed: string;
+}
+
+export interface JLPTGrammarPromptParams {
+  level: string;
+  topic: string;
+  chosenContext: string;
+  mondaiNumber?: number;
+  randomSeed: string;
+}
+
+export function buildJLPTVocabPrompt({
+  level,
+  topic,
+  chosenContext,
+  mondaiNumber = 1,
+  randomSeed,
+}: JLPTVocabPromptParams): string {
+  const mNum = Number(mondaiNumber) || 1;
+
+  return `Bạn là chuyên gia biên soạn đề thi JLPT phần 言語知識（文字・語彙） cấp độ ${level}.
+Hãy tạo 1 bộ câu hỏi Luyện tập Từ vựng & Kanji CHUẨN XÁC theo Mondai ${mNum} JLPT ${level} thuộc chủ đề "${topic}".
+Bối cảnh bài luyện: "${chosenContext}".
+Mã ngẫu nhiên cho đề thi này: ${randomSeed}.
+
+Yêu cầu cấu trúc bài tập:
+- Tạo đúng 4 câu hỏi trắc nghiệm tiếng Nhật thuộc Mondai ${mNum}.
+- Mỗi câu hỏi gồm câu dẫn tiếng Nhật có từ/cụm từ gạch chân (đánh dấu dạng 【từ】), 4 lựa chọn tiếng Nhật, 1 đáp án đúng, dịch tiếng Việt và giải thích đáp án chi tiết.
+
+Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc trong markdown, phải là JSON hợp lệ):
+{
+  "jlpt_vocab": {
+    "mondaiNumber": ${mNum},
+    "mondaiName": "問題 ${mNum}: Từ vựng & Kanji",
+    "mondaiSubtitle": "Luyện tập Từ vựng & Hán tự JLPT ${level}",
+    "questions": [
+      {
+        "id": "q_1",
+        "question": "Câu tiếng Nhật chứa từ gạch chân 【漢字】",
+        "question_vietnamese": "Dịch toàn câu sang tiếng Việt",
+        "options": [
+          { "id": "opt_1", "text": "lựa chọn 1 (đúng)", "isCorrect": true },
+          { "id": "opt_2", "text": "lựa chọn 2", "isCorrect": false },
+          { "id": "opt_3", "text": "lựa chọn 3", "isCorrect": false },
+          { "id": "opt_4", "text": "lựa chọn 4", "isCorrect": false }
+        ],
+        "explanation": "Giải thích chi tiết nghĩa từ vựng, âm Hán Việt và lý do đúng/sai bằng tiếng Việt"
+      },
+      {
+        "id": "q_2",
+        "question": "Câu tiếng Nhật chứa từ gạch chân 【単語】",
+        "question_vietnamese": "Dịch toàn câu sang tiếng Việt",
+        "options": [
+          { "id": "opt_1", "text": "lựa chọn 1", "isCorrect": false },
+          { "id": "opt_2", "text": "lựa chọn 2 (đúng)", "isCorrect": true },
+          { "id": "opt_3", "text": "lựa chọn 3", "isCorrect": false },
+          { "id": "opt_4", "text": "lựa chọn 4", "isCorrect": false }
+        ],
+        "explanation": "Giải thích chi tiết bằng tiếng Việt"
+      },
+      {
+        "id": "q_3",
+        "question": "Câu tiếng Nhật chứa từ gạch chân 【意味】",
+        "question_vietnamese": "Dịch toàn câu sang tiếng Việt",
+        "options": [
+          { "id": "opt_1", "text": "lựa chọn 1", "isCorrect": false },
+          { "id": "opt_2", "text": "lựa chọn 2", "isCorrect": false },
+          { "id": "opt_3", "text": "lựa chọn 3 (đúng)", "isCorrect": true },
+          { "id": "opt_4", "text": "lựa chọn 4", "isCorrect": false }
+        ],
+        "explanation": "Giải thích chi tiết bằng tiếng Việt"
+      },
+      {
+        "id": "q_4",
+        "question": "Câu tiếng Nhật chứa từ gạch chân 【用法】",
+        "question_vietnamese": "Dịch toàn câu sang tiếng Việt",
+        "options": [
+          { "id": "opt_1", "text": "lựa chọn 1", "isCorrect": false },
+          { "id": "opt_2", "text": "lựa chọn 2", "isCorrect": false },
+          { "id": "opt_3", "text": "lựa chọn 3", "isCorrect": false },
+          { "id": "opt_4", "text": "lựa chọn 4 (đúng)", "isCorrect": true }
+        ],
+        "explanation": "Giải thích chi tiết bằng tiếng Việt"
+      }
+    ],
+    "vocabulary": [
+      { "kanji": "chữ Hán", "hiragana": "cách đọc", "meaning": "nghĩa tiếng Việt" }
+    ]
+  }
+}`;
+}
+
+export function buildJLPTGrammarPrompt({
+  level,
+  topic,
+  chosenContext,
+  mondaiNumber = 1,
+  randomSeed,
+}: JLPTGrammarPromptParams): string {
+  const mNum = Number(mondaiNumber) || 1;
+
+  if (mNum === 2) {
+    return `Bạn là chuyên gia biên soạn đề thi JLPT phần 言語知識（文法） cấp độ ${level}.
+Hãy tạo 1 bộ bài tập DỰNG CÂU DẤU SAO (文の組み立て) CHUẨN XÁC theo Mondai 2 (Dựng câu dấu sao ★) JLPT ${level} thuộc chủ đề "${topic}".
+Bối cảnh bài luyện: "${chosenContext}".
+Mã ngẫu nhiên cho đề thi này: ${randomSeed}.
+
+Đặc trưng cấu trúc Dựng câu dấu sao ★:
+- Mỗi câu gồm một câu tiếng Nhật có 4 vị trí xáo trộn: __ __ ★ __
+- Cung cấp 4 cụm từ xáo trộn (options).
+- Xác định cụm từ đúng phải nằm ở vị trí dấu sao ★.
+- Cung cấp câu hoàn chỉnh đầy đủ sau khi xếp đúng thứ tự.
+
+Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc trong markdown, phải là JSON hợp lệ):
+{
+  "jlpt_grammar": {
+    "mondaiNumber": ${mNum},
+    "mondaiName": "問題 2: 文の組み立て (Dựng câu dấu sao ★)",
+    "mondaiSubtitle": "Sắp xếp 4 cụm từ & tìm vị trí dấu ★",
+    "questions": [
+      {
+        "id": "q_1",
+        "question": "Phần đầu câu __ __ ★ __ phần cuối câu.",
+        "question_vietnamese": "Dịch hoàn chỉnh câu sang tiếng Việt",
+        "fullSentence": "Câu tiếng Nhật hoàn chỉnh sau khi ghép đúng thứ tự",
+        "options": [
+          { "id": "opt_1", "text": "cụm từ 1", "isCorrect": false },
+          { "id": "opt_2", "text": "cụm từ 2 (nằm ở vị trí ★)", "isCorrect": true },
+          { "id": "opt_3", "text": "cụm từ 3", "isCorrect": false },
+          { "id": "opt_4", "text": "cụm từ 4", "isCorrect": false }
+        ],
+        "explanation": "Giải thích chi tiết cấu trúc ngữ pháp và thứ tự sắp xếp câu bằng tiếng Việt"
+      },
+      {
+        "id": "q_2",
+        "question": "Phần đầu câu __ ★ __ __ phần cuối câu.",
+        "question_vietnamese": "Dịch hoàn chỉnh câu sang tiếng Việt",
+        "fullSentence": "Câu tiếng Nhật hoàn chỉnh sau khi ghép đúng thứ tự",
+        "options": [
+          { "id": "opt_1", "text": "cụm từ 1 (nằm ở vị trí ★)", "isCorrect": true },
+          { "id": "opt_2", "text": "cụm từ 2", "isCorrect": false },
+          { "id": "opt_3", "text": "cụm từ 3", "isCorrect": false },
+          { "id": "opt_4", "text": "cụm từ 4", "isCorrect": false }
+        ],
+        "explanation": "Giải thích chi tiết cấu trúc ngữ pháp bằng tiếng Việt"
+      },
+      {
+        "id": "q_3",
+        "question": "Phần đầu câu __ __ __ ★ phần cuối câu.",
+        "question_vietnamese": "Dịch hoàn chỉnh câu sang tiếng Việt",
+        "fullSentence": "Câu tiếng Nhật hoàn chỉnh sau khi ghép đúng thứ tự",
+        "options": [
+          { "id": "opt_1", "text": "cụm từ 1", "isCorrect": false },
+          { "id": "opt_2", "text": "cụm từ 2", "isCorrect": false },
+          { "id": "opt_3", "text": "cụm từ 3 (nằm ở vị trí ★)", "isCorrect": true },
+          { "id": "opt_4", "text": "cụm từ 4", "isCorrect": false }
+        ],
+        "explanation": "Giải thích chi tiết cấu trúc ngữ pháp bằng tiếng Việt"
+      },
+      {
+        "id": "q_4",
+        "question": "Phần đầu câu ★ __ __ __ phần cuối câu.",
+        "question_vietnamese": "Dịch hoàn chỉnh câu sang tiếng Việt",
+        "fullSentence": "Câu tiếng Nhật hoàn chỉnh sau khi ghép đúng thứ tự",
+        "options": [
+          { "id": "opt_1", "text": "cụm từ 1", "isCorrect": false },
+          { "id": "opt_2", "text": "cụm từ 2", "isCorrect": false },
+          { "id": "opt_3", "text": "cụm từ 3", "isCorrect": false },
+          { "id": "opt_4", "text": "cụm từ 4 (nằm ở vị trí ★)", "isCorrect": true }
+        ],
+        "explanation": "Giải thích chi tiết cấu trúc ngữ pháp bằng tiếng Việt"
+      }
+    ],
+    "vocabulary": [
+      { "kanji": "chữ Hán", "hiragana": "cách đọc", "meaning": "nghĩa tiếng Việt" }
+    ]
+  }
+}`;
+  }
+
+  return `Bạn là chuyên gia biên soạn đề thi JLPT phần 言語知識（文法） cấp độ ${level}.
+Hãy tạo 1 bộ bài tập NGỮ PHÁP JLPT CHUẨN XÁC theo Mondai ${mNum} cấp độ ${level} thuộc chủ đề "${topic}".
+Bối cảnh bài luyện: "${chosenContext}".
+Mã ngẫu nhiên cho đề thi này: ${randomSeed}.
+
+Yêu cầu cấu trúc bài tập:
+- Tạo đúng 4 câu hỏi trắc nghiệm ngữ pháp tiếng Nhật.
+- Mỗi câu gồm câu dẫn chứa vị trí trống ( ... ), 4 lựa chọn ngữ pháp tiếng Nhật, 1 đáp án đúng và giải thích ngữ pháp chi tiết.
+
+Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc trong markdown, phải là JSON hợp lệ):
+{
+  "jlpt_grammar": {
+    "mondaiNumber": ${mNum},
+    "mondaiName": "問題 ${mNum}: 文法形式の判断",
+    "mondaiSubtitle": "Lựa chọn mẫu ngữ pháp đúng JLPT ${level}",
+    "questions": [
+      {
+        "id": "q_1",
+        "question": "Câu tiếng Nhật chứa vị trí trống ( ... ) cần điền ngữ pháp",
+        "question_vietnamese": "Dịch nghĩa câu sang tiếng Việt",
+        "options": [
+          { "id": "opt_1", "text": "mẫu ngữ pháp 1 (đúng)", "isCorrect": true },
+          { "id": "opt_2", "text": "mẫu ngữ pháp 2", "isCorrect": false },
+          { "id": "opt_3", "text": "mẫu ngữ pháp 3", "isCorrect": false },
+          { "id": "opt_4", "text": "mẫu ngữ pháp 4", "isCorrect": false }
+        ],
+        "explanation": "Giải thích chi tiết ý nghĩa mẫu ngữ pháp, cách kết hợp từ và lý do chọn đáp án bằng tiếng Việt"
+      },
+      {
+        "id": "q_2",
+        "question": "Câu tiếng Nhật chứa vị trí trống ( ... )",
+        "question_vietnamese": "Dịch nghĩa câu sang tiếng Việt",
+        "options": [
+          { "id": "opt_1", "text": "mẫu ngữ pháp 1", "isCorrect": false },
+          { "id": "opt_2", "text": "mẫu ngữ pháp 2 (đúng)", "isCorrect": true },
+          { "id": "opt_3", "text": "mẫu ngữ pháp 3", "isCorrect": false },
+          { "id": "opt_4", "text": "mẫu ngữ pháp 4", "isCorrect": false }
+        ],
+        "explanation": "Giải thích chi tiết bằng tiếng Việt"
+      },
+      {
+        "id": "q_3",
+        "question": "Câu tiếng Nhật chứa vị trí trống ( ... )",
+        "question_vietnamese": "Dịch nghĩa câu sang tiếng Việt",
+        "options": [
+          { "id": "opt_1", "text": "mẫu ngữ pháp 1", "isCorrect": false },
+          { "id": "opt_2", "text": "mẫu ngữ pháp 2", "isCorrect": false },
+          { "id": "opt_3", "text": "mẫu ngữ pháp 3 (đúng)", "isCorrect": true },
+          { "id": "opt_4", "text": "mẫu ngữ pháp 4", "isCorrect": false }
+        ],
+        "explanation": "Giải thích chi tiết bằng tiếng Việt"
+      },
+      {
+        "id": "q_4",
+        "question": "Câu tiếng Nhật chứa vị trí trống ( ... )",
+        "question_vietnamese": "Dịch nghĩa câu sang tiếng Việt",
+        "options": [
+          { "id": "opt_1", "text": "mẫu ngữ pháp 1", "isCorrect": false },
+          { "id": "opt_2", "text": "mẫu ngữ pháp 2", "isCorrect": false },
+          { "id": "opt_3", "text": "mẫu ngữ pháp 3", "isCorrect": false },
+          { "id": "opt_4", "text": "mẫu ngữ pháp 4 (đúng)", "isCorrect": true }
+        ],
+        "explanation": "Giải thích chi tiết bằng tiếng Việt"
+      }
+    ],
+    "vocabulary": [
+      { "kanji": "chữ Hán", "hiragana": "cách đọc", "meaning": "nghĩa tiếng Việt" }
+    ]
+  }
+}`;
+}

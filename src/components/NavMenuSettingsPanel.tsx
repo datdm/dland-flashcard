@@ -28,17 +28,11 @@ export default function NavMenuSettingsPanel() {
 
   const allLangItems = getNavItemsForLanguage(previewLang);
 
-  // Filter items for regular users when dev features are disabled
-  const displayedItems = allLangItems.filter((item) => {
-    const isDev = isItemDevOnly(previewLang, item.href, !!item.isDevOnly);
-    if (!isAdmin && !devFeaturesEnabled && isDev) {
-      return false;
-    }
-    return true;
-  });
+  // Display all menu items for preview; dev items are locked for regular users
+  const displayedItems = allLangItems;
 
   const hiddenCount = displayedItems.filter(
-    (item) => !ALWAYS_VISIBLE.has(item.href) && !isVisible(previewLang, item.href)
+    (item) => !ALWAYS_VISIBLE.has(item.href) && !isVisible(previewLang, item.href, isAdmin, !!item.isDevOnly)
   ).length;
 
   const currentLangObj = SUPPORTED_LANGUAGES.find((l) => l.code === previewLang) || activeLanguage;
@@ -149,15 +143,15 @@ export default function NavMenuSettingsPanel() {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
         {displayedItems.map((item) => {
           const isAlways = ALWAYS_VISIBLE.has(item.href);
-          const visible = isAlways ? true : isVisible(previewLang, item.href);
           const isDev = isItemDevOnly(previewLang, item.href, !!item.isDevOnly);
+          const visible = isAlways ? true : isVisible(previewLang, item.href, isAdmin, !!item.isDevOnly);
 
           return (
             <div
               key={item.href}
               className={`p-3.5 rounded-2xl border flex flex-col justify-between gap-2.5 transition-all ${
                 isDev
-                  ? "bg-amber-50/40 border-amber-200"
+                  ? "bg-amber-50/50 border-amber-200"
                   : "bg-gray-50/70 border-gray-100 hover:bg-gray-50"
               }`}
             >
@@ -173,8 +167,9 @@ export default function NavMenuSettingsPanel() {
                         {item.href}
                       </span>
                       {isDev && (
-                        <span className="px-1.5 py-0.2 rounded bg-amber-100 text-amber-800 text-[9px] font-bold">
-                          Đang phát triển
+                        <span className="px-1.5 py-0.2 rounded bg-amber-100 text-amber-900 border border-amber-300 text-[9px] font-bold flex items-center gap-1">
+                          <span>🛠️</span>
+                          <span>Đang phát triển</span>
                         </span>
                       )}
                       {item.isComingSoon && (
@@ -186,15 +181,33 @@ export default function NavMenuSettingsPanel() {
                   </div>
                 </div>
 
-                {/* Visibility Switch or Fixed Badge */}
+                {/* Visibility Switch, Fixed Badge, or Locked Dev Badge */}
                 {isAlways ? (
                   <span className="text-[10px] font-bold text-gray-400 px-2 py-1 bg-gray-100 rounded-lg shrink-0">
                     Cố định
                   </span>
+                ) : isDev && !isAdmin ? (
+                  <div
+                    className="flex items-center gap-1.5 shrink-0"
+                    title="Menu đang trong quá trình phát triển. Chỉ Admin mới có quyền bật hiển thị."
+                  >
+                    <span className="text-[10px] font-bold text-amber-800 bg-amber-100/90 border border-amber-300 px-2 py-0.5 rounded-lg flex items-center gap-1 select-none">
+                      <span>🔒</span>
+                      <span>Khóa</span>
+                    </span>
+                    <button
+                      type="button"
+                      disabled
+                      className="relative inline-flex h-6 w-11 shrink-0 cursor-not-allowed opacity-50 rounded-full border-2 border-transparent bg-gray-200"
+                      title="Menu đang phát triển - Không thể bật hiển thị"
+                    >
+                      <span className="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-md ring-0 translate-x-0" />
+                    </button>
+                  </div>
                 ) : (
                   <button
                     type="button"
-                    onClick={() => toggleItem(previewLang, item.href)}
+                    onClick={() => toggleItem(previewLang, item.href, isAdmin, !!item.isDevOnly)}
                     className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out ${
                       visible ? "bg-indigo-600" : "bg-gray-200"
                     }`}

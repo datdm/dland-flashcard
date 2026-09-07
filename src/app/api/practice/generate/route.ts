@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { buildJLPTListeningPrompt, buildJLPTReadingPrompt } from "@/lib/jlptPromptBuilder";
+import { buildJLPTListeningPrompt, buildJLPTReadingPrompt, buildJLPTVocabPrompt, buildJLPTGrammarPrompt } from "@/lib/jlptPromptBuilder";
 
 const apiKey = process.env.GEMINI_API_KEY;
 const genAI = apiKey ? new GoogleGenerativeAI(apiKey) : null;
@@ -401,6 +401,22 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
 }`;
       } else if (type === "listening") {
         prompt = buildJLPTListeningPrompt({
+          level,
+          topic,
+          chosenContext,
+          mondaiNumber,
+          randomSeed,
+        });
+      } else if (type === "jlpt_vocab") {
+        prompt = buildJLPTVocabPrompt({
+          level,
+          topic,
+          chosenContext,
+          mondaiNumber,
+          randomSeed,
+        });
+      } else if (type === "jlpt_grammar") {
+        prompt = buildJLPTGrammarPrompt({
           level,
           topic,
           chosenContext,

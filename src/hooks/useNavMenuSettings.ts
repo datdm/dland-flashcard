@@ -69,20 +69,45 @@ export function useNavMenuSettings() {
     setDevItemOverrides(loadDevItemOverrides());
   }, []);
 
+  const isItemDevOnly = useCallback(
+    (langCode: string, href: string, defaultDevOnly: boolean = false): boolean => {
+      const langOverrides = devItemOverrides[langCode];
+      if (langOverrides && langOverrides[href] !== undefined) {
+        return langOverrides[href];
+      }
+      return defaultDevOnly;
+    },
+    [devItemOverrides]
+  );
+
   const isVisible = useCallback(
-    (langCode: string, href: string): boolean => {
+    (langCode: string, href: string, isAdmin: boolean = false, defaultDevOnly: boolean = false): boolean => {
+      const isDev = isItemDevOnly(langCode, href, defaultDevOnly);
+      if (isDev && !isAdmin && !devFeaturesEnabled) {
+        return false;
+      }
       const langSettings = settings[langCode];
-      if (!langSettings || langSettings[href] === undefined) return true;
+      if (!langSettings || langSettings[href] === undefined) {
+        return isDev && !isAdmin ? false : true;
+      }
+      if (isDev && !isAdmin && !devFeaturesEnabled && langSettings[href] === true) {
+        return false;
+      }
       return langSettings[href];
     },
-    [settings]
+    [settings, isItemDevOnly, devFeaturesEnabled]
   );
 
   const toggleItem = useCallback(
-    (langCode: string, href: string) => {
+    (langCode: string, href: string, isAdmin: boolean = false, defaultDevOnly: boolean = false) => {
+      const isDev = isItemDevOnly(langCode, href, defaultDevOnly);
+      // Non-admin users cannot change an in-development item to visible
+      if (!isAdmin && isDev) {
+        return;
+      }
       setSettings((prev) => {
         const langSettings = prev[langCode] ?? {};
-        const current = langSettings[href] === undefined ? true : langSettings[href];
+        const current = langSettings[href] === undefined ? (isDev && !isAdmin ? false : true) : langSettings[href];
         const updated: NavMenuSettings = {
           ...prev,
           [langCode]: {
@@ -96,18 +121,7 @@ export function useNavMenuSettings() {
         return updated;
       });
     },
-    []
-  );
-
-  const isItemDevOnly = useCallback(
-    (langCode: string, href: string, defaultDevOnly: boolean = false): boolean => {
-      const langOverrides = devItemOverrides[langCode];
-      if (langOverrides && langOverrides[href] !== undefined) {
-        return langOverrides[href];
-      }
-      return defaultDevOnly;
-    },
-    [devItemOverrides]
+    [isItemDevOnly]
   );
 
   const toggleItemDevOnly = useCallback(

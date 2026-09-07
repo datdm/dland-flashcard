@@ -14,6 +14,8 @@ import AudioSeekPlayer from "@/components/AudioSeekPlayer";
 import {
   getReadingMondaisForLevel as getReadingMondaiConfigs,
   getListeningMondaisForLevel as getListeningMondaiConfigs,
+  getVocabMondaisForLevel as getVocabMondaiConfigs,
+  getGrammarMondaisForLevel as getGrammarMondaiConfigs,
   JLPTMondaiInfo,
 } from "@/lib/jlptMondaiConfig";
 import { JLPT_LISTENING_QUESTIONS, JLPTListeningQuestion } from "@/data/jlptListeningPractice";
@@ -22,6 +24,45 @@ import {
   getReadingMondaisForLevel,
   ExtractedReadingPassage,
 } from "@/lib/jlptReadingExtractor";
+
+export interface JLPTVocabQuestionOption {
+  id: string;
+  text: string;
+  isCorrect: boolean;
+}
+
+export interface JLPTVocabQuestionItem {
+  id: string;
+  question: string;
+  question_vietnamese?: string;
+  options: JLPTVocabQuestionOption[];
+  explanation: string;
+}
+
+export interface JLPTVocabData {
+  mondaiNumber: number;
+  mondaiName: string;
+  mondaiSubtitle: string;
+  questions: JLPTVocabQuestionItem[];
+  vocabulary?: { kanji: string; hiragana: string; meaning: string }[];
+}
+
+export interface JLPTGrammarQuestionItem {
+  id: string;
+  question: string;
+  question_vietnamese?: string;
+  fullSentence?: string;
+  options: JLPTVocabQuestionOption[];
+  explanation: string;
+}
+
+export interface JLPTGrammarData {
+  mondaiNumber: number;
+  mondaiName: string;
+  mondaiSubtitle: string;
+  questions: JLPTGrammarQuestionItem[];
+  vocabulary?: { kanji: string; hiragana: string; meaning: string }[];
+}
 
 interface ShadowingItem {
   id: string;
@@ -191,7 +232,7 @@ export interface KaiwaData {
 
 export interface PracticeHistoryEntry {
   id: string;
-  type: "shadowing" | "translation" | "reading" | "presentation" | "ipa" | "kaiwa";
+  type: "shadowing" | "translation" | "reading" | "presentation" | "ipa" | "kaiwa" | "jlpt_vocab" | "jlpt_grammar";
   typeName: string;
   topic: string;
   lang: string;
@@ -229,13 +270,15 @@ const POPULAR_TOPICS_BY_LANG: Record<string, { id: string; name: string; icon: s
   ],
 };
 
-const SKILLS_BY_LANG: Record<string, { id: "kaiwa" | "shadowing" | "translation" | "reading" | "listening" | "presentation"; name: string; desc: string }[]> = {
+const SKILLS_BY_LANG: Record<string, { id: "kaiwa" | "shadowing" | "translation" | "reading" | "listening" | "presentation" | "jlpt_vocab" | "jlpt_grammar"; name: string; desc: string }[]> = {
   ja: [
     { id: "kaiwa", name: "💬 Hội thoại Kaiwa", desc: "10 câu đối thoại 2 người & Trắc nghiệm đọc hiểu" },
-    { id: "shadowing", name: "🗣️ Shadowing JP", desc: "Luyện nghe nói đuổi tiếng Nhật kèm Furigana" },
-    { id: "translation", name: "✍️ Luyện dịch 2 chiều", desc: "Xen kẽ dịch Nhật ➔ Việt & Việt ➔ Nhật" },
+    { id: "jlpt_vocab", name: "🈁 Từ vựng & Kanji JLPT", desc: "Luyện tập Hán tự, đọc Kanji, chọn từ vựng Mondai 1 - 6" },
+    { id: "jlpt_grammar", name: "📐 Ngữ pháp & Dấu ★", desc: "Chọn ngữ pháp, dựng câu dấu sao ★ Mondai 1 - 3" },
     { id: "reading", name: "📚 Đọc hiểu JLPT", desc: "Đoạn văn đề thi JLPT chia theo từng Mondai 10 - 14 & tra Mazii" },
     { id: "listening", name: "🎧 Nghe hiểu JLPT", desc: "Luyện nghe chuẩn đề thi JLPT chia theo từng Mondai 1 - 5" },
+    { id: "shadowing", name: "🗣️ Shadowing JP", desc: "Luyện nghe nói đuổi tiếng Nhật kèm Furigana" },
+    { id: "translation", name: "✍️ Luyện dịch 2 chiều", desc: "Xen kẽ dịch Nhật ➔ Việt & Việt ➔ Nhật" },
     { id: "presentation", name: "🎤 Luyện thuyết trình", desc: "Thuyết trình slide tiếng Nhật, AI sửa lỗi & chấm điểm" },
   ],
   en: [
@@ -249,7 +292,7 @@ const SKILLS_BY_LANG: Record<string, { id: "kaiwa" | "shadowing" | "translation"
     { id: "kaiwa", name: "💬 Hội thoại Kaiwa Deutsch", desc: "10 câu đối thoại 2 người & Đọc hiểu" },
     { id: "shadowing", name: "🗣️ Shadowing Deutsch", desc: "Luyện nghe nói đuổi tiếng Đức chuẩn Goethe" },
     { id: "translation", name: "✍️ Luyện dịch 2 chiều Đức - Việt", desc: "Xen kẽ dịch Đức ➔ Việt & Việt ➔ Đức" },
-    { id: "reading", name: "📚 Đọc hiểu Leseverstehen", desc: "Đọc hiểu tiếng Đức Goethe A1/A2" },
+    { id: "reading", name: "📚 Đọc hiểu Leseverstehen", desc: "Đoạn văn đọc hiểu tiếng Đức Goethe A1/A2" },
     { id: "presentation", name: "🎤 Luyện thuyết trình / Sprechen", desc: "Nói qua micro, AI sửa câu & chấm điểm" },
   ],
 };
@@ -273,7 +316,7 @@ export default function PracticeHubPage() {
     const lang = activeLanguage.code || "ja";
     return lang === "de" ? "A2" : lang === "en" ? "Band 7.0" : "N2";
   });
-  const [selectedType, setSelectedType] = useState<"kaiwa" | "shadowing" | "translation" | "reading" | "listening" | "presentation">("kaiwa");
+  const [selectedType, setSelectedType] = useState<"kaiwa" | "shadowing" | "translation" | "reading" | "listening" | "presentation" | "jlpt_vocab" | "jlpt_grammar">("kaiwa");
   const [selectedTopic, setSelectedTopic] = useState(() => {
     const defaultTopics = POPULAR_TOPICS_BY_LANG[activeLanguage.code || "ja"] || POPULAR_TOPICS_BY_LANG.ja;
     return defaultTopics[0]?.name || "Sinh hoạt & Đời sống";
@@ -337,8 +380,62 @@ export default function PracticeHubPage() {
       if (lList.length > 0 && !lList.some((m) => m.mondaiNumber === selectedListeningMondai)) {
         setSelectedListeningMondai(lList[0].mondaiNumber);
       }
+      const vList = getVocabMondaiConfigs(selectedLevel);
+      if (vList.length > 0 && !vList.some((m) => m.mondaiNumber === selectedVocabMondai)) {
+        setSelectedVocabMondai(vList[0].mondaiNumber);
+      }
+      const gList = getGrammarMondaiConfigs(selectedLevel);
+      if (gList.length > 0 && !gList.some((m) => m.mondaiNumber === selectedGrammarMondai)) {
+        setSelectedGrammarMondai(gList[0].mondaiNumber);
+      }
     }
   }, [selectedLevel, selectedLang]);
+
+  // Check JLPT Vocab answer
+  const checkJlptVocabAnswer = (qItem: JLPTVocabQuestionItem) => {
+    const selectedOptId = vocabAnswers[qItem.id];
+    if (!selectedOptId) return;
+
+    setVocabChecked((prev) => ({ ...prev, [qItem.id]: true }));
+    const correctOpt = qItem.options.find((o) => o.isCorrect);
+    const isCorrect = selectedOptId === correctOpt?.id;
+    const score = isCorrect ? 100 : 0;
+    const chosenOpt = qItem.options.find((o) => o.id === selectedOptId);
+
+    recordPracticeHistory({
+      type: "jlpt_vocab",
+      typeName: `🈁 Từ vựng JLPT ${selectedLevel} (Mondai ${jlptVocabData?.mondaiNumber || selectedVocabMondai})`,
+      topic: activeTopic,
+      lang: "ja",
+      score,
+      userAnswer: chosenOpt?.text || selectedOptId,
+      correctAnswer: correctOpt?.text || "Đáp án đúng",
+      feedback: isCorrect ? "Chính xác! Bạn nắm từ vựng rất vững." : (qItem.explanation || "Chưa chính xác. Xem giải thích chi tiết bên dưới."),
+    });
+  };
+
+  // Check JLPT Grammar answer
+  const checkJlptGrammarAnswer = (qItem: JLPTGrammarQuestionItem) => {
+    const selectedOptId = grammarAnswers[qItem.id];
+    if (!selectedOptId) return;
+
+    setGrammarChecked((prev) => ({ ...prev, [qItem.id]: true }));
+    const correctOpt = qItem.options.find((o) => o.isCorrect);
+    const isCorrect = selectedOptId === correctOpt?.id;
+    const score = isCorrect ? 100 : 0;
+    const chosenOpt = qItem.options.find((o) => o.id === selectedOptId);
+
+    recordPracticeHistory({
+      type: "jlpt_grammar",
+      typeName: `📐 Ngữ pháp JLPT ${selectedLevel} (Mondai ${jlptGrammarData?.mondaiNumber || selectedGrammarMondai})`,
+      topic: activeTopic,
+      lang: "ja",
+      score,
+      userAnswer: chosenOpt?.text || selectedOptId,
+      correctAnswer: correctOpt?.text || "Đáp án đúng",
+      feedback: isCorrect ? "Chính xác! Cấu trúc ngữ pháp hoàn toàn đúng." : (qItem.explanation || "Chưa chính xác. Xem phân tích cấu trúc bên dưới."),
+    });
+  };
 
   // Audio player for AI generated listening
   const playGeneratedListeningAudio = (item: GeneratedListeningItem) => {
@@ -464,14 +561,25 @@ export default function PracticeHubPage() {
   const [shadowingScores, setShadowingScores] = useState<Record<number, { score: number; transcript: string }>>({});
   const [readingScore, setReadingScore] = useState<{ score: number; optionId: string } | null>(null);
 
-  // JLPT Reading & Listening by Mondai states (Japanese only)
+  // JLPT Reading, Listening, Vocab & Grammar by Mondai states (Japanese only)
   const [selectedReadingMondai, setSelectedReadingMondai] = useState<number | "all">(10);
   const [selectedListeningMondai, setSelectedListeningMondai] = useState<number | "all">(1);
+  const [selectedVocabMondai, setSelectedVocabMondai] = useState<number>(1);
+  const [selectedGrammarMondai, setSelectedGrammarMondai] = useState<number>(1);
+
   const [generatedListeningData, setGeneratedListeningData] = useState<GeneratedListeningItem | null>(null);
+  const [jlptVocabData, setJlptVocabData] = useState<JLPTVocabData | null>(null);
+  const [jlptGrammarData, setJlptGrammarData] = useState<JLPTGrammarData | null>(null);
+
   const [readingAnswers, setReadingAnswers] = useState<Record<string, string>>({});
   const [readingChecked, setReadingChecked] = useState<Record<string, boolean>>({});
   const [genListeningAnswers, setGenListeningAnswers] = useState<Record<string, number>>({});
   const [genListeningChecked, setGenListeningChecked] = useState<Record<string, boolean>>({});
+  const [vocabAnswers, setVocabAnswers] = useState<Record<string, string>>({});
+  const [vocabChecked, setVocabChecked] = useState<Record<string, boolean>>({});
+  const [grammarAnswers, setGrammarAnswers] = useState<Record<string, string>>({});
+  const [grammarChecked, setGrammarChecked] = useState<Record<string, boolean>>({});
+
   const [showGenListeningScript, setShowGenListeningScript] = useState<boolean>(false);
   const [isGenListeningPlaying, setIsGenListeningPlaying] = useState<boolean>(false);
   const [readingViewMode, setReadingViewMode] = useState<"ai" | "extracted">("ai");
@@ -495,6 +603,16 @@ export default function PracticeHubPage() {
   const readingMondais = useMemo(() => {
     if (selectedLang !== "ja") return [];
     return getReadingMondaisForLevel(selectedLevel);
+  }, [selectedLang, selectedLevel]);
+
+  const vocabMondais = useMemo(() => {
+    if (selectedLang !== "ja") return [];
+    return getVocabMondaiConfigs(selectedLevel);
+  }, [selectedLang, selectedLevel]);
+
+  const grammarMondais = useMemo(() => {
+    if (selectedLang !== "ja") return [];
+    return getGrammarMondaiConfigs(selectedLevel);
   }, [selectedLang, selectedLevel]);
 
   const filteredReadingPassages = useMemo(() => {
@@ -736,6 +854,10 @@ ${item.audioScript}。
     setReadingChecked({});
     setGenListeningAnswers({});
     setGenListeningChecked({});
+    setVocabAnswers({});
+    setVocabChecked({});
+    setGrammarAnswers({});
+    setGrammarChecked({});
     setShowGenListeningScript(false);
     setIsGenListeningPlaying(false);
 
@@ -746,6 +868,10 @@ ${item.audioScript}。
     setKaiwaPlayingIdx(null);
     setKaiwaMicIdx(null);
     setIsAutoplayingKaiwa(false);
+
+    // Reset JLPT Vocab & Grammar states
+    setJlptVocabData(null);
+    setJlptGrammarData(null);
 
     // Reset presentation states
     setSlides([]);
@@ -768,7 +894,16 @@ ${item.audioScript}。
           topic: activeTopic,
           level: selectedLevel,
           lang: selectedLang,
-          mondaiNumber: selectedType === "reading" ? (selectedReadingMondai === "all" ? 10 : selectedReadingMondai) : selectedType === "listening" ? (selectedListeningMondai === "all" ? 1 : selectedListeningMondai) : undefined,
+          mondaiNumber:
+            selectedType === "reading"
+              ? (selectedReadingMondai === "all" ? 10 : selectedReadingMondai)
+              : selectedType === "listening"
+              ? (selectedListeningMondai === "all" ? 1 : selectedListeningMondai)
+              : selectedType === "jlpt_vocab"
+              ? selectedVocabMondai
+              : selectedType === "jlpt_grammar"
+              ? selectedGrammarMondai
+              : undefined,
           seed: Math.floor(Math.random() * 1000000),
           nonce: Date.now(),
         }),
@@ -792,6 +927,10 @@ ${item.audioScript}。
         } else if (selectedType === "listening") {
           setGeneratedListeningData(resData.data.listening || null);
           setListeningViewMode("ai");
+        } else if (selectedType === "jlpt_vocab") {
+          setJlptVocabData(resData.data.jlpt_vocab || null);
+        } else if (selectedType === "jlpt_grammar") {
+          setJlptGrammarData(resData.data.jlpt_grammar || null);
         } else if (selectedType === "presentation") {
           setSlides(resData.data.slides || []);
         }
@@ -1681,6 +1820,206 @@ ${item.audioScript}。
                   </span>
                 </button>
               </div>
+            ) : selectedLang === "ja" && selectedType === "jlpt_vocab" ? (
+              <div className="space-y-3 pt-2 border-t border-gray-100">
+                <div className="flex items-center justify-between">
+                  <label className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">
+                    3. Chọn Mondai Từ vựng ({selectedLevel}) - Chọn 1:
+                  </label>
+                  <span className="text-[10px] text-indigo-600 font-bold">
+                    Mondai {selectedVocabMondai}
+                  </span>
+                </div>
+                <div className="grid grid-cols-1 gap-1.5">
+                  {vocabMondais.map((m) => {
+                    const isSelected = selectedVocabMondai === m.mondaiNumber;
+                    return (
+                      <button
+                        key={m.mondaiNumber}
+                        type="button"
+                        onClick={() => setSelectedVocabMondai(m.mondaiNumber)}
+                        className={`px-3.5 py-2.5 rounded-2xl text-left text-xs font-bold border transition-all cursor-pointer flex items-center justify-between ${
+                          isSelected
+                            ? "bg-indigo-600 border-indigo-600 text-white shadow-xs ring-2 ring-indigo-200"
+                            : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
+                        }`}
+                      >
+                        <div>
+                          <div className="flex items-center gap-1.5">
+                            <span>{isSelected ? "🔘" : "⚪"}</span>
+                            <span>{m.mondaiName}</span>
+                          </div>
+                          <div className={`text-[10px] font-normal mt-0.5 pl-5 ${isSelected ? "text-indigo-100" : "text-gray-500"}`}>
+                            {m.mondaiSubtitle}
+                          </div>
+                        </div>
+                        <span className={`text-[10px] px-2 py-0.5 rounded-lg font-bold ${isSelected ? "bg-white/20 text-white" : "bg-gray-100 text-gray-600"}`}>
+                          JLPT {selectedLevel}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Step 4: Topic Selection */}
+                <div className="space-y-2 pt-2 border-t border-gray-100">
+                  <div className="flex items-center justify-between">
+                    <label className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">
+                      4. Chọn chủ đề luyện tập:
+                    </label>
+                    <span className="text-[10px] text-indigo-700 font-bold bg-indigo-50 px-2 py-0.5 rounded-lg border border-indigo-200/60">
+                      {activeTopic}
+                    </span>
+                  </div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {(POPULAR_TOPICS_BY_LANG[selectedLang] || POPULAR_TOPICS_BY_LANG.ja).map((t) => (
+                      <button
+                        key={t.id}
+                        type="button"
+                        onClick={() => {
+                          setSelectedTopic(t.name);
+                          setCustomTopic("");
+                        }}
+                        className={`px-2.5 py-1.5 rounded-xl text-[11px] font-bold border transition-all cursor-pointer ${
+                          selectedTopic === t.name && !customTopic
+                            ? "bg-indigo-600 border-indigo-600 text-white shadow-xs"
+                            : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50"
+                        }`}
+                      >
+                        {t.icon} {t.name}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="space-y-1 pt-1">
+                    <label className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">
+                      Hoặc tự nhập chủ đề theo ý muốn:
+                    </label>
+                    <input
+                      type="text"
+                      value={customTopic}
+                      onChange={(e) => setCustomTopic(e.target.value)}
+                      placeholder="Ví dụ: Đời sống công sở, Mua sắm, Động vật, Môi trường..."
+                      className="w-full rounded-xl border border-gray-200 p-2.5 text-xs focus:outline-none focus:border-indigo-500 shadow-3xs"
+                    />
+                  </div>
+                </div>
+
+                {/* Step 5: AI Generate Button */}
+                <button
+                  type="button"
+                  onClick={handleGenerate}
+                  disabled={generating}
+                  className="w-full mt-1 py-3.5 rounded-2xl text-xs font-bold text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:opacity-95 shadow-md shadow-indigo-200 transition-all cursor-pointer disabled:opacity-50"
+                >
+                  <div className="flex items-center justify-center gap-1.5">
+                    <span>{generating ? "🤖 Đang biên soạn..." : "🈁 Biên soạn Từ vựng bằng AI"}</span>
+                  </div>
+                  <span className="block text-[10px] font-normal opacity-90 mt-0.5">
+                    Mondai {selectedVocabMondai} • Chủ đề: {activeTopic}
+                  </span>
+                </button>
+              </div>
+            ) : selectedLang === "ja" && selectedType === "jlpt_grammar" ? (
+              <div className="space-y-3 pt-2 border-t border-gray-100">
+                <div className="flex items-center justify-between">
+                  <label className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">
+                    3. Chọn Mondai Ngữ pháp ({selectedLevel}) - Chọn 1:
+                  </label>
+                  <span className="text-[10px] text-purple-600 font-bold">
+                    Mondai {selectedGrammarMondai}
+                  </span>
+                </div>
+                <div className="grid grid-cols-1 gap-1.5">
+                  {grammarMondais.map((m) => {
+                    const isSelected = selectedGrammarMondai === m.mondaiNumber;
+                    return (
+                      <button
+                        key={m.mondaiNumber}
+                        type="button"
+                        onClick={() => setSelectedGrammarMondai(m.mondaiNumber)}
+                        className={`px-3.5 py-2.5 rounded-2xl text-left text-xs font-bold border transition-all cursor-pointer flex items-center justify-between ${
+                          isSelected
+                            ? "bg-purple-600 border-purple-600 text-white shadow-xs ring-2 ring-purple-200"
+                            : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
+                        }`}
+                      >
+                        <div>
+                          <div className="flex items-center gap-1.5">
+                            <span>{isSelected ? "🔘" : "⚪"}</span>
+                            <span>{m.mondaiName}</span>
+                          </div>
+                          <div className={`text-[10px] font-normal mt-0.5 pl-5 ${isSelected ? "text-purple-100" : "text-gray-500"}`}>
+                            {m.mondaiSubtitle}
+                          </div>
+                        </div>
+                        <span className={`text-[10px] px-2 py-0.5 rounded-lg font-bold ${isSelected ? "bg-white/20 text-white" : "bg-gray-100 text-gray-600"}`}>
+                          JLPT {selectedLevel}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Step 4: Topic Selection */}
+                <div className="space-y-2 pt-2 border-t border-gray-100">
+                  <div className="flex items-center justify-between">
+                    <label className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">
+                      4. Chọn chủ đề luyện tập:
+                    </label>
+                    <span className="text-[10px] text-purple-700 font-bold bg-purple-50 px-2 py-0.5 rounded-lg border border-purple-200/60">
+                      {activeTopic}
+                    </span>
+                  </div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {(POPULAR_TOPICS_BY_LANG[selectedLang] || POPULAR_TOPICS_BY_LANG.ja).map((t) => (
+                      <button
+                        key={t.id}
+                        type="button"
+                        onClick={() => {
+                          setSelectedTopic(t.name);
+                          setCustomTopic("");
+                        }}
+                        className={`px-2.5 py-1.5 rounded-xl text-[11px] font-bold border transition-all cursor-pointer ${
+                          selectedTopic === t.name && !customTopic
+                            ? "bg-purple-600 border-purple-600 text-white shadow-xs"
+                            : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50"
+                        }`}
+                      >
+                        {t.icon} {t.name}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="space-y-1 pt-1">
+                    <label className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">
+                      Hoặc tự nhập chủ đề theo ý muốn:
+                    </label>
+                    <input
+                      type="text"
+                      value={customTopic}
+                      onChange={(e) => setCustomTopic(e.target.value)}
+                      placeholder="Ví dụ: Quan điểm cá nhân, Nhờ vả, Xin lỗi, Giải thích..."
+                      className="w-full rounded-xl border border-gray-200 p-2.5 text-xs focus:outline-none focus:border-purple-500 shadow-3xs"
+                    />
+                  </div>
+                </div>
+
+                {/* Step 5: AI Generate Button */}
+                <button
+                  type="button"
+                  onClick={handleGenerate}
+                  disabled={generating}
+                  className="w-full mt-1 py-3.5 rounded-2xl text-xs font-bold text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-95 shadow-md shadow-purple-200 transition-all cursor-pointer disabled:opacity-50"
+                >
+                  <div className="flex items-center justify-center gap-1.5">
+                    <span>{generating ? "🤖 Đang biên soạn..." : "📐 Biên soạn Ngữ pháp bằng AI"}</span>
+                  </div>
+                  <span className="block text-[10px] font-normal opacity-90 mt-0.5">
+                    Mondai {selectedGrammarMondai} • Chủ đề: {activeTopic}
+                  </span>
+                </button>
+              </div>
             ) : (
               <>
                 <div className="space-y-1.5 pt-2 border-t border-gray-100">
@@ -1761,7 +2100,7 @@ ${item.audioScript}。
           ) : (
             <>
               {/* Top Action Bar when exercise is loaded */}
-              {(kaiwaData || shadowingData.length > 0 || translationData.length > 0 || readingData || slides.length > 0) && (
+              {(kaiwaData || shadowingData.length > 0 || translationData.length > 0 || readingData || generatedListeningData || jlptVocabData || jlptGrammarData || slides.length > 0) && (
                 <div className="bg-white rounded-3xl p-4 sm:p-5 border border-gray-100 shadow-2xs flex flex-wrap items-center justify-between gap-3 mb-4">
                   <div className="flex items-center gap-2 flex-wrap">
                     <span className={`px-3 py-1 text-xs font-black rounded-xl border ${
@@ -3381,8 +3720,398 @@ ${item.audioScript}。
                 </div>
               )}
 
+              {/* JLPT VOCAB PRACTICE DISPLAY */}
+              {selectedType === "jlpt_vocab" && (
+                <div className="space-y-6">
+                  {jlptVocabData ? (
+                    <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-2xs space-y-6">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gray-100 pb-4">
+                        <div>
+                          <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">
+                            🈁 Từ Vựng & Kanji JLPT {selectedLevel}
+                          </span>
+                          <h3 className="text-base font-extrabold text-gray-900 mt-1">
+                            {jlptVocabData.mondaiName}: {jlptVocabData.mondaiSubtitle}
+                          </h3>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={handleGenerate}
+                          disabled={generating}
+                          className="px-4 py-2 rounded-2xl text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 transition-all cursor-pointer shadow-xs"
+                        >
+                          🔄 Luyện bài khác
+                        </button>
+                      </div>
+
+                      {/* Questions list */}
+                      <div className="space-y-6">
+                        {jlptVocabData.questions.map((q, qIdx) => {
+                          const isChecked = !!vocabChecked[q.id];
+                          const userAnsId = vocabAnswers[q.id];
+                          const correctOpt = q.options.find((o) => o.isCorrect);
+                          const isCorrect = userAnsId !== undefined && userAnsId === correctOpt?.id;
+
+                          return (
+                            <div key={q.id || qIdx} className="p-5 rounded-2xl bg-indigo-50/30 border border-indigo-100/80 space-y-4">
+                              <div className="flex items-start justify-between gap-2">
+                                <div className="space-y-1">
+                                  <span className="text-[10px] font-black uppercase text-indigo-600 tracking-wider">
+                                    Câu {qIdx + 1} / {jlptVocabData.questions.length}
+                                  </span>
+                                  <div className="text-base font-extrabold text-gray-900 leading-relaxed">
+                                    {q.question}
+                                  </div>
+                                  {q.question_vietnamese && (
+                                    <div className="text-xs text-gray-600 italic">
+                                      ({q.question_vietnamese})
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+
+                              {/* Options */}
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                                {q.options.map((opt, optIdx) => {
+                                  const isSelected = userAnsId === opt.id;
+                                  let optStyle = "border-gray-200 bg-white text-gray-800 hover:bg-indigo-50/50";
+                                  if (isChecked) {
+                                    if (opt.isCorrect) {
+                                      optStyle = "border-emerald-500 bg-emerald-50 text-emerald-900 font-bold ring-2 ring-emerald-300";
+                                    } else if (isSelected) {
+                                      optStyle = "border-rose-500 bg-rose-50 text-rose-900 font-bold ring-2 ring-rose-300";
+                                    } else {
+                                      optStyle = "border-gray-100 bg-gray-50 text-gray-400 opacity-60";
+                                    }
+                                  } else if (isSelected) {
+                                    optStyle = "border-indigo-500 bg-indigo-50 text-indigo-900 font-bold ring-2 ring-indigo-300";
+                                  }
+
+                                  return (
+                                    <button
+                                      key={opt.id}
+                                      type="button"
+                                      disabled={isChecked}
+                                      onClick={() => setVocabAnswers((prev) => ({ ...prev, [q.id]: opt.id }))}
+                                      className={`p-3.5 rounded-xl border text-left text-sm transition-all cursor-pointer flex items-center gap-3 ${optStyle}`}
+                                    >
+                                      <span className="w-6 h-6 rounded-full bg-black/5 flex items-center justify-center font-bold text-xs shrink-0">
+                                        {optIdx + 1}
+                                      </span>
+                                      <span className="leading-relaxed flex-1 font-medium">{opt.text}</span>
+                                    </button>
+                                  );
+                                })}
+                              </div>
+
+                              {/* Check action & Feedback */}
+                              <div>
+                                {!isChecked ? (
+                                  <button
+                                    type="button"
+                                    disabled={!userAnsId}
+                                    onClick={() => checkJlptVocabAnswer(q)}
+                                    className="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-40 text-white rounded-xl text-xs font-bold transition-all shadow-xs cursor-pointer"
+                                  >
+                                    Kiểm tra đáp án
+                                  </button>
+                                ) : (
+                                  <div className={`p-4 rounded-xl border text-xs leading-relaxed space-y-1.5 ${
+                                    isCorrect ? "bg-emerald-50 border-emerald-200 text-emerald-900" : "bg-rose-50 border-rose-200 text-rose-900"
+                                  }`}>
+                                    <div className="font-extrabold flex items-center gap-1.5 text-sm">
+                                      <span>{isCorrect ? "✓ Chính xác!" : "✕ Chưa chính xác"}</span>
+                                      {!isCorrect && (
+                                        <span className="text-xs font-semibold">
+                                          (Đáp án đúng: {correctOpt?.text})
+                                        </span>
+                                      )}
+                                    </div>
+                                    {q.explanation && (
+                                      <div className="text-[11px] text-gray-700 pt-1 border-t border-black/10">
+                                        <strong>💡 Giải thích:</strong> {q.explanation}
+                                      </div>
+                                    )}
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+
+                      {/* Vocabulary list at bottom */}
+                      {jlptVocabData.vocabulary && jlptVocabData.vocabulary.length > 0 && (
+                        <div className="bg-gray-50/80 p-4 rounded-2xl border border-gray-100 pt-4">
+                          <div className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-2">
+                            Sổ tay từ vựng bài học:
+                          </div>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            {jlptVocabData.vocabulary.map((vocabItem, vIdx) => (
+                              <div key={vIdx} className="bg-white p-3 rounded-xl border border-gray-100 flex items-center justify-between gap-2 shadow-3xs">
+                                <div>
+                                  <div className="flex items-baseline gap-1.5 flex-wrap">
+                                    <span className="text-xs font-bold text-gray-900">{vocabItem.kanji}</span>
+                                    {vocabItem.kanji !== vocabItem.hiragana && (
+                                      <span className="text-[10px] text-indigo-600 font-semibold font-mono">({vocabItem.hiragana})</span>
+                                    )}
+                                  </div>
+                                  <div className="text-[10px] text-emerald-700 font-medium mt-0.5">{vocabItem.meaning}</div>
+                                </div>
+                                <div className="flex items-center gap-1 shrink-0">
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setMaziiLookupState({
+                                        isOpen: true,
+                                        queryWord: vocabItem.kanji || vocabItem.hiragana,
+                                        initialFurigana: vocabItem.hiragana,
+                                        initialMeaning: vocabItem.meaning,
+                                      });
+                                    }}
+                                    className="px-2 py-1 bg-amber-50 hover:bg-amber-100 text-amber-800 text-[10px] font-bold rounded-lg transition-all cursor-pointer border border-amber-200/60"
+                                  >
+                                    🔍 Mazii
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setSelectedWordForNotebook(vocabItem);
+                                      setDuplicateError(null);
+                                    }}
+                                    className="px-2 py-1 bg-purple-50 hover:bg-purple-100 text-purple-700 text-[10px] font-bold rounded-lg transition-all cursor-pointer"
+                                  >
+                                    + Sổ tay
+                                  </button>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="bg-white rounded-3xl p-10 border border-gray-100 text-center space-y-4 shadow-2xs">
+                      <div className="text-4xl">🈁</div>
+                      <h3 className="text-base font-extrabold text-gray-900">
+                        Luyện Chuyên Sâu Từ Vựng & Kanji JLPT {selectedLevel} (Mondai {selectedVocabMondai})
+                      </h3>
+                      <p className="text-xs text-gray-500 max-w-md mx-auto leading-relaxed">
+                        Hãy chọn chủ đề và nhấn nút <strong>"🈁 Biên soạn Từ vựng bằng AI"</strong> ở bảng bên trái để AI tạo bộ câu hỏi trắc nghiệm từ vựng chuẩn thi JLPT nhé!
+                      </p>
+                      <button
+                        type="button"
+                        onClick={handleGenerate}
+                        disabled={generating}
+                        className="px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:opacity-95 text-white font-bold text-xs rounded-2xl shadow-md shadow-indigo-200 transition-all cursor-pointer"
+                      >
+                        {generating ? "🤖 Đang biên soạn bài tập..." : `🈁 Tạo bài tập Mondai ${selectedVocabMondai} ngay`}
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* JLPT GRAMMAR PRACTICE DISPLAY */}
+              {selectedType === "jlpt_grammar" && (
+                <div className="space-y-6">
+                  {jlptGrammarData ? (
+                    <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-2xs space-y-6">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gray-100 pb-4">
+                        <div>
+                          <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-purple-50 text-purple-700 border border-purple-200">
+                            📐 Ngữ Pháp JLPT {selectedLevel}
+                          </span>
+                          <h3 className="text-base font-extrabold text-gray-900 mt-1">
+                            {jlptGrammarData.mondaiName}: {jlptGrammarData.mondaiSubtitle}
+                          </h3>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={handleGenerate}
+                          disabled={generating}
+                          className="px-4 py-2 rounded-2xl text-xs font-bold text-white bg-purple-600 hover:bg-purple-700 transition-all cursor-pointer shadow-xs"
+                        >
+                          🔄 Luyện bài khác
+                        </button>
+                      </div>
+
+                      {/* Questions list */}
+                      <div className="space-y-6">
+                        {jlptGrammarData.questions.map((q, qIdx) => {
+                          const isChecked = !!grammarChecked[q.id];
+                          const userAnsId = grammarAnswers[q.id];
+                          const correctOpt = q.options.find((o) => o.isCorrect);
+                          const isCorrect = userAnsId !== undefined && userAnsId === correctOpt?.id;
+                          const isStarMondai = jlptGrammarData.mondaiNumber === 2 || q.question.includes("★");
+
+                          return (
+                            <div key={q.id || qIdx} className="p-5 rounded-2xl bg-purple-50/30 border border-purple-100/80 space-y-4">
+                              <div className="flex items-start justify-between gap-2">
+                                <div className="space-y-1">
+                                  <span className="text-[10px] font-black uppercase text-purple-600 tracking-wider">
+                                    Câu {qIdx + 1} / {jlptGrammarData.questions.length} {isStarMondai && "⭐ (Dựng câu dấu ★)"}
+                                  </span>
+                                  <div className="text-base font-extrabold text-gray-900 leading-relaxed">
+                                    {q.question}
+                                  </div>
+                                  {q.question_vietnamese && (
+                                    <div className="text-xs text-gray-600 italic">
+                                      ({q.question_vietnamese})
+                                    </div>
+                                  )}
+                                  {isChecked && q.fullSentence && (
+                                    <div className="mt-2 p-3 bg-purple-100/60 rounded-xl text-xs text-purple-950 font-bold border border-purple-200">
+                                      ✨ Câu hoàn chỉnh: {q.fullSentence}
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+
+                              {/* Options */}
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                                {q.options.map((opt, optIdx) => {
+                                  const isSelected = userAnsId === opt.id;
+                                  let optStyle = "border-gray-200 bg-white text-gray-800 hover:bg-purple-50/50";
+                                  if (isChecked) {
+                                    if (opt.isCorrect) {
+                                      optStyle = "border-emerald-500 bg-emerald-50 text-emerald-900 font-bold ring-2 ring-emerald-300";
+                                    } else if (isSelected) {
+                                      optStyle = "border-rose-500 bg-rose-50 text-rose-900 font-bold ring-2 ring-rose-300";
+                                    } else {
+                                      optStyle = "border-gray-100 bg-gray-50 text-gray-400 opacity-60";
+                                    }
+                                  } else if (isSelected) {
+                                    optStyle = "border-purple-500 bg-purple-50 text-purple-900 font-bold ring-2 ring-purple-300";
+                                  }
+
+                                  return (
+                                    <button
+                                      key={opt.id}
+                                      type="button"
+                                      disabled={isChecked}
+                                      onClick={() => setGrammarAnswers((prev) => ({ ...prev, [q.id]: opt.id }))}
+                                      className={`p-3.5 rounded-xl border text-left text-sm transition-all cursor-pointer flex items-center gap-3 ${optStyle}`}
+                                    >
+                                      <span className="w-6 h-6 rounded-full bg-black/5 flex items-center justify-center font-bold text-xs shrink-0">
+                                        {optIdx + 1}
+                                      </span>
+                                      <span className="leading-relaxed flex-1 font-medium">{opt.text}</span>
+                                    </button>
+                                  );
+                                })}
+                              </div>
+
+                              {/* Check action & Feedback */}
+                              <div>
+                                {!isChecked ? (
+                                  <button
+                                    type="button"
+                                    disabled={!userAnsId}
+                                    onClick={() => checkJlptGrammarAnswer(q)}
+                                    className="px-5 py-2.5 bg-purple-600 hover:bg-purple-700 disabled:opacity-40 text-white rounded-xl text-xs font-bold transition-all shadow-xs cursor-pointer"
+                                  >
+                                    Kiểm tra đáp án
+                                  </button>
+                                ) : (
+                                  <div className={`p-4 rounded-xl border text-xs leading-relaxed space-y-1.5 ${
+                                    isCorrect ? "bg-emerald-50 border-emerald-200 text-emerald-900" : "bg-rose-50 border-rose-200 text-rose-900"
+                                  }`}>
+                                    <div className="font-extrabold flex items-center gap-1.5 text-sm">
+                                      <span>{isCorrect ? "✓ Chính xác!" : "✕ Chưa chính xác"}</span>
+                                      {!isCorrect && (
+                                        <span className="text-xs font-semibold">
+                                          (Cụm từ ở vị trí ★: {correctOpt?.text})
+                                        </span>
+                                      )}
+                                    </div>
+                                    {q.explanation && (
+                                      <div className="text-[11px] text-gray-700 pt-1 border-t border-black/10">
+                                        <strong>💡 Phân tích ngữ pháp:</strong> {q.explanation}
+                                      </div>
+                                    )}
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+
+                      {/* Vocabulary list at bottom */}
+                      {jlptGrammarData.vocabulary && jlptGrammarData.vocabulary.length > 0 && (
+                        <div className="bg-gray-50/80 p-4 rounded-2xl border border-gray-100 pt-4">
+                          <div className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-2">
+                            Sổ tay từ vựng bài học:
+                          </div>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            {jlptGrammarData.vocabulary.map((vocabItem, vIdx) => (
+                              <div key={vIdx} className="bg-white p-3 rounded-xl border border-gray-100 flex items-center justify-between gap-2 shadow-3xs">
+                                <div>
+                                  <div className="flex items-baseline gap-1.5 flex-wrap">
+                                    <span className="text-xs font-bold text-gray-900">{vocabItem.kanji}</span>
+                                    {vocabItem.kanji !== vocabItem.hiragana && (
+                                      <span className="text-[10px] text-indigo-600 font-semibold font-mono">({vocabItem.hiragana})</span>
+                                    )}
+                                  </div>
+                                  <div className="text-[10px] text-emerald-700 font-medium mt-0.5">{vocabItem.meaning}</div>
+                                </div>
+                                <div className="flex items-center gap-1 shrink-0">
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setMaziiLookupState({
+                                        isOpen: true,
+                                        queryWord: vocabItem.kanji || vocabItem.hiragana,
+                                        initialFurigana: vocabItem.hiragana,
+                                        initialMeaning: vocabItem.meaning,
+                                      });
+                                    }}
+                                    className="px-2 py-1 bg-amber-50 hover:bg-amber-100 text-amber-800 text-[10px] font-bold rounded-lg transition-all cursor-pointer border border-amber-200/60"
+                                  >
+                                    🔍 Mazii
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setSelectedWordForNotebook(vocabItem);
+                                      setDuplicateError(null);
+                                    }}
+                                    className="px-2 py-1 bg-purple-50 hover:bg-purple-100 text-purple-700 text-[10px] font-bold rounded-lg transition-all cursor-pointer"
+                                  >
+                                    + Sổ tay
+                                  </button>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="bg-white rounded-3xl p-10 border border-gray-100 text-center space-y-4 shadow-2xs">
+                      <div className="text-4xl">📐</div>
+                      <h3 className="text-base font-extrabold text-gray-900">
+                        Luyện Chuyên Sâu Ngữ Pháp JLPT {selectedLevel} (Mondai {selectedGrammarMondai})
+                      </h3>
+                      <p className="text-xs text-gray-500 max-w-md mx-auto leading-relaxed">
+                        Hãy chọn chủ đề và nhấn nút <strong>"📐 Biên soạn Ngữ pháp bằng AI"</strong> ở bảng bên trái để AI tạo bộ câu hỏi trắc nghiệm ngữ pháp chuẩn thi JLPT nhé!
+                      </p>
+                      <button
+                        type="button"
+                        onClick={handleGenerate}
+                        disabled={generating}
+                        className="px-6 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-95 text-white font-bold text-xs rounded-2xl shadow-md shadow-purple-200 transition-all cursor-pointer"
+                      >
+                        {generating ? "🤖 Đang biên soạn bài tập..." : `📐 Tạo bài tập Mondai ${selectedGrammarMondai} ngay`}
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
+
               {/* EMPTY VIEW STATE */}
-              {!kaiwaData && !shadowingData.length && !translationData.length && !readingData && !slides.length && (selectedLang !== "ja" || (selectedType !== "reading" && selectedType !== "listening")) && (
+              {!kaiwaData && !shadowingData.length && !translationData.length && !readingData && !slides.length && (selectedLang !== "ja" || (selectedType !== "reading" && selectedType !== "listening" && selectedType !== "jlpt_vocab" && selectedType !== "jlpt_grammar")) && (
                 <div className="bg-white rounded-3xl p-12 border border-gray-100 text-center text-gray-400 flex flex-col items-center justify-center gap-2">
                   <div className="text-4xl">🏆</div>
                   <h3 className="font-bold text-gray-900 text-sm mt-2">Chưa chọn nội dung học</h3>

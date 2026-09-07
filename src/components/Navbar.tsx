@@ -122,12 +122,15 @@ export default function Navbar() {
   const { activeLanguage } = useLanguageSetting();
   const mobileNavRef = useRef<HTMLDivElement>(null);
 
+  const { user, isAuthenticated, openAuthModal, logout } = useAuth();
+  const isAdmin = !!user?.isAdmin;
+
   const navItems = getNavItemsForLanguage(activeLanguage.code);
   const { isVisible, devFeaturesEnabled, isItemDevOnly } = useNavMenuSettings();
   const visibleNavItems = navItems.filter((item) => {
     const isDev = isItemDevOnly(activeLanguage.code, item.href, !!item.isDevOnly);
-    if (isDev && !devFeaturesEnabled) return false;
-    return isVisible(activeLanguage.code, item.href);
+    if (isDev && !devFeaturesEnabled && !isAdmin) return false;
+    return isVisible(activeLanguage.code, item.href, isAdmin, !!item.isDevOnly);
   });
 
   const activeNavItem = navItems.find((item) =>
@@ -240,8 +243,6 @@ export default function Navbar() {
   const handleSyncClick = () => {
     setShowSyncDialog(true);
   };
-
-  const { user, isAuthenticated, openAuthModal, logout } = useAuth();
 
   const handleLogout = () => {
     if (confirm("Bạn có chắc muốn đăng xuất?")) {
