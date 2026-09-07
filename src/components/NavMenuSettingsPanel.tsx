@@ -186,7 +186,7 @@ export default function NavMenuSettingsPanel() {
                   <span className="text-[10px] font-bold text-gray-400 px-2 py-1 bg-gray-100 rounded-lg shrink-0">
                     Cố định
                   </span>
-                ) : isDev && !isAdmin ? (
+                ) : isDev && !isAdmin && !devFeaturesEnabled ? (
                   <div
                     className="flex items-center gap-1.5 shrink-0"
                     title="Menu đang trong quá trình phát triển. Chỉ Admin mới có quyền bật hiển thị."

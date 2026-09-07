@@ -88,10 +88,7 @@ export function useNavMenuSettings() {
       }
       const langSettings = settings[langCode];
       if (!langSettings || langSettings[href] === undefined) {
-        return isDev && !isAdmin ? false : true;
-      }
-      if (isDev && !isAdmin && !devFeaturesEnabled && langSettings[href] === true) {
-        return false;
+        return true;
       }
       return langSettings[href];
     },
@@ -101,13 +98,13 @@ export function useNavMenuSettings() {
   const toggleItem = useCallback(
     (langCode: string, href: string, isAdmin: boolean = false, defaultDevOnly: boolean = false) => {
       const isDev = isItemDevOnly(langCode, href, defaultDevOnly);
-      // Non-admin users cannot change an in-development item to visible
-      if (!isAdmin && isDev) {
+      // Non-admin users cannot change an in-development item to visible if devFeaturesEnabled is disabled
+      if (!isAdmin && isDev && !devFeaturesEnabled) {
         return;
       }
       setSettings((prev) => {
         const langSettings = prev[langCode] ?? {};
-        const current = langSettings[href] === undefined ? (isDev && !isAdmin ? false : true) : langSettings[href];
+        const current = langSettings[href] === undefined ? true : langSettings[href];
         const updated: NavMenuSettings = {
           ...prev,
           [langCode]: {
@@ -121,7 +118,7 @@ export function useNavMenuSettings() {
         return updated;
       });
     },
-    [isItemDevOnly]
+    [isItemDevOnly, devFeaturesEnabled]
   );
 
   const toggleItemDevOnly = useCallback(
