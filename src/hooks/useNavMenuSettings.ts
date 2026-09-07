@@ -40,6 +40,7 @@ export function saveDevFeaturesEnabled(enabled: boolean) {
   if (typeof window === "undefined") return;
   localStorage.setItem(ADMIN_DEV_KEY, enabled ? "true" : "false");
   window.dispatchEvent(new CustomEvent("nav-menu-settings-changed"));
+  autoSync();
 }
 
 export function loadDevItemOverrides(): NavMenuDevOverrides {
@@ -56,6 +57,7 @@ export function saveDevItemOverrides(overrides: NavMenuDevOverrides) {
   if (typeof window === "undefined") return;
   localStorage.setItem(ADMIN_DEV_ITEMS_KEY, JSON.stringify(overrides));
   window.dispatchEvent(new CustomEvent("nav-menu-settings-changed"));
+  autoSync();
 }
 
 export function useNavMenuSettings() {
@@ -144,6 +146,7 @@ export function useNavMenuSettings() {
   const setDevFeaturesEnabled = useCallback((enabled: boolean) => {
     saveDevFeaturesEnabled(enabled);
     setDevFeaturesEnabledState(enabled);
+    autoSync();
   }, []);
 
   const resetLang = useCallback((langCode: string) => {
