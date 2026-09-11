@@ -1,0 +1,312 @@
+/* Dland Language Extension - Content Script Styles */
+
+/* 1. Floating Selection Tooltip */
+.dland-tooltip-container {
+  position: absolute;
+  z-index: 2147483646;
+  pointer-events: auto;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  animation: dland-fade-in 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.dland-tooltip-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  color: #ffffff !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  padding: 6px 12px !important;
+  border-radius: 9999px !important;
+  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.4), 0 2px 6px rgba(0, 0, 0, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  cursor: pointer !important;
+  line-height: 1.4 !important;
+  transition: transform 0.15s ease, box-shadow 0.15s ease !important;
+  white-space: nowrap !important;
+  text-decoration: none !important;
+}
+
+.dland-tooltip-btn:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 6px 20px rgba(79, 70, 229, 0.55), 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+  background: linear-gradient(135deg, #4338ca 0%, #6d28d9 100%) !important;
+}
+
+.dland-tooltip-btn:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.dland-tooltip-icon {
+  font-size: 13px;
+  line-height: 1;
+}
+
+/* 2. In-Page Modal Overlay & Dialog */
+.dland-modal-overlay {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  background: rgba(15, 23, 42, 0.65) !important;
+  backdrop-filter: blur(4px) !important;
+  z-index: 2147483647 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 16px !important;
+  box-sizing: border-box !important;
+  animation: dland-fade-in 0.2s ease forwards;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+}
+
+.dland-modal-dialog {
+  background: #ffffff !important;
+  width: 100% !important;
+  max-width: 480px !important;
+  border-radius: 24px !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.05) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  animation: dland-scale-in 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  color: #1e293b !important;
+  text-align: left !important;
+  box-sizing: border-box !important;
+}
+
+/* Modal Header */
+.dland-modal-header {
+  padding: 18px 22px !important;
+  background: linear-gradient(to right, #f8fafc, #f1f5f9) !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+
+.dland-modal-title {
+  font-size: 15px !important;
+  font-weight: 800 !important;
+  color: #0f172a !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin: 0 !important;
+}
+
+.dland-modal-close-btn {
+  background: transparent !important;
+  border: none !important;
+  font-size: 18px !important;
+  color: #64748b !important;
+  cursor: pointer !important;
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 10px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.15s !important;
+  padding: 0 !important;
+}
+
+.dland-modal-close-btn:hover {
+  background: #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+/* Modal Body */
+.dland-modal-body {
+  padding: 20px 24px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 14px !important;
+  max-height: 75vh !important;
+  overflow-y: auto !important;
+  box-sizing: border-box !important;
+}
+
+/* Form Groups */
+.dland-form-group {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 5px !important;
+}
+
+.dland-form-label {
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  color: #64748b !important;
+  margin: 0 !important;
+}
+
+.dland-input-text,
+.dland-select,
+.dland-textarea {
+  width: 100% !important;
+  padding: 10px 14px !important;
+  border-radius: 12px !important;
+  border: 1px solid #cbd5e1 !important;
+  background: #ffffff !important;
+  font-size: 13px !important;
+  color: #0f172a !important;
+  outline: none !important;
+  box-sizing: border-box !important;
+  transition: border-color 0.15s, box-shadow 0.15s !important;
+  font-family: inherit !important;
+}
+
+.dland-input-text:focus,
+.dland-select:focus,
+.dland-textarea:focus {
+  border-color: #6366f1 !important;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15) !important;
+}
+
+.dland-textarea {
+  resize: vertical !important;
+  min-height: 60px !important;
+}
+
+/* Quick Mazii Result Preview Box */
+.dland-preview-box {
+  background: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 16px !important;
+  padding: 14px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
+}
+
+.dland-preview-word {
+  font-size: 22px !important;
+  font-weight: 800 !important;
+  color: #1e1b4b !important;
+  line-height: 1.2 !important;
+}
+
+.dland-preview-reading {
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  color: #4f46e5 !important;
+  margin-top: 2px !important;
+}
+
+.dland-speak-btn {
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 12px !important;
+  background: #eef2ff !important;
+  border: 1px solid #c7d2fe !important;
+  color: #4f46e5 !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 16px !important;
+  transition: all 0.15s !important;
+  shrink: 0 !important;
+}
+
+.dland-speak-btn:hover {
+  background: #e0e7ff !important;
+  transform: scale(1.05);
+}
+
+/* Modal Footer */
+.dland-modal-footer {
+  padding: 16px 24px !important;
+  background: #f8fafc !important;
+  border-top: 1px solid #e2e8f0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 10px !important;
+}
+
+.dland-btn-cancel {
+  padding: 10px 18px !important;
+  border-radius: 12px !important;
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #475569 !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  transition: all 0.15s !important;
+}
+
+.dland-btn-cancel:hover {
+  background: #f1f5f9 !important;
+}
+
+.dland-btn-save {
+  padding: 10px 22px !important;
+  border-radius: 12px !important;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  border: none !important;
+  color: #ffffff !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3) !important;
+  transition: all 0.15s !important;
+}
+
+.dland-btn-save:hover {
+  opacity: 0.95 !important;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4) !important;
+}
+
+.dland-btn-save:disabled {
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+}
+
+/* 3. Toast Notifications */
+.dland-toast {
+  position: fixed !important;
+  bottom: 24px !important;
+  right: 24px !important;
+  background: #0f172a !important;
+  color: #ffffff !important;
+  padding: 12px 20px !important;
+  border-radius: 16px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3) !important;
+  z-index: 2147483647 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  animation: dland-slide-up 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+
+/* Animations */
+@keyframes dland-fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes dland-scale-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes dland-slide-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
