@@ -1,48 +1,129 @@
-// Dland Language Flashcard - Content Script
+// Dland Language Flashcard - Content Script (Manifest V3)
 
 (function () {
   let activeTooltip = null;
   let activeModal = null;
   let lastSelectionText = "";
+  let isTooltipEnabled = true;
+
+  // Initialize tooltip enabled state from local storage
+  chrome.storage.local.get(["dland_tooltip_enabled"], (res) => {
+    if (res && res.dland_tooltip_enabled !== undefined) {
+      isTooltipEnabled = Boolean(res.dland_tooltip_enabled);
+    }
+  });
+
+  // Listen for realtime storage changes
+  chrome.storage.onChanged.addListener((changes, namespace) => {
+    if (namespace === "local" && changes.dland_tooltip_enabled) {
+      isTooltipEnabled = changes.dland_tooltip_enabled.newValue !== false;
+      if (!isTooltipEnabled) {
+        removeTooltip();
+      }
+    }
+  });
+
+  // Helper
+  function escapeHtml(str) {
+    if (!str) return "";
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+  // Check if current site is the Dland Web App
+  function isDlandWebApp() {
+    const host = window.location.hostname;
+    const href = window.location.href;
+    return (
+      host === "flashcard-japanese-eight.vercel.app" ||
+      (host === "localhost" && window.location.port === "3000") ||
+      href.includes("flashcard-japanese-eight.vercel.app")
+    );
+  }
 
   // =========================================================================
-  // 1. AUTO-SYNC FROM WEB APP IF CURRENT TAB IS DLAND FLASHCARD (LOCALHOST:3000)
+  // 1. AUTO-SYNC FROM WEB APP (flashcard-japanese-eight.vercel.app / localhost:3000)
   // =========================================================================
+  function extractSessionData() {
+    try {
+      const rawNotebooks = localStorage.getItem("flashcash-notebooks");
+      const authToken = localStorage.getItem("flashcash-auth-token");
+      const rawUser = localStorage.getItem("flashcash-user");
+
+      let notebooks = null;
+      let user = null;
+
+      if (rawNotebooks) {
+        const parsed = JSON.parse(rawNotebooks);
+        notebooks = Array.isArray(parsed) ? parsed : parsed.notebooks || null;
+      }
+      if (rawUser) {
+        user = JSON.parse(rawUser);
+      }
+
+      return { notebooks, authToken, user };
+    } catch (err) {
+      console.warn("[Dland Extension] Error extracting session:", err);
+      return { notebooks: null, authToken: null, user: null };
+    }
+  }
+
   function syncWithDlandWebApp() {
-    if (window.location.hostname === "localhost" && window.location.port === "3000") {
-      try {
-        const rawNotebooks = localStorage.getItem("flashcash-notebooks");
-        const authToken = localStorage.getItem("flashcash-auth-token");
-        const rawUser = localStorage.getItem("flashcash-user");
-
-        let notebooks = null;
-        let user = null;
-
-        if (rawNotebooks) {
-          const parsed = JSON.parse(rawNotebooks);
-          notebooks = Array.isArray(parsed) ? parsed : parsed.notebooks;
-        }
-        if (rawUser) {
-          user = JSON.parse(rawUser);
-        }
-
-        if (notebooks || authToken) {
-          chrome.runtime.sendMessage({
-            action: "SYNC_FROM_WEB_APP",
-            notebooks,
-            authToken,
-            user,
-          });
-        }
-      } catch (e) {
-        console.warn("[Dland Extension] Auto-sync check:", e);
+    if (isDlandWebApp()) {
+      const session = extractSessionData();
+      if (session.notebooks || session.authToken || session.user) {
+        chrome.runtime.sendMessage({
+          action: "SYNC_FROM_WEB_APP",
+          notebooks: session.notebooks,
+          authToken: session.authToken,
+          user: session.user,
+        });
       }
     }
   }
 
-  // Initial sync check
-  syncWithDlandWebApp();
-  window.addEventListener("notebooks-updated", syncWithDlandWebApp);
+  // Initial sync check if browsing web app
+  if (isDlandWebApp()) {
+    syncWithDlandWebApp();
+    window.addEventListener("auth-state-changed", syncWithDlandWebApp);
+    window.addEventListener("notebooks-updated", syncWithDlandWebApp);
+    window.addEventListener("storage", (e) => {
+      if (
+        e.key === "flashcash-auth-token" ||
+        e.key === "flashcash-user" ||
+        e.key === "flashcash-notebooks"
+      ) {
+        syncWithDlandWebApp();
+      }
+    });
+  }
+
+  // Listen for direct request from background
+  chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if (request.action === "EXTRACT_WEBAPP_SESSION") {
+      const session = extractSessionData();
+      sendResponse(session);
+      return true;
+    }
+
+    if (request.action === "OPEN_LOOKUP_DIALOG" && request.selectedText) {
+      openLookupDialog(request.selectedText);
+      return true;
+    }
+
+    if (request.action === "SET_TOOLTIP_ENABLED") {
+      isTooltipEnabled = Boolean(request.enabled);
+      if (!isTooltipEnabled) {
+        removeTooltip();
+      }
+      sendResponse({ success: true, isTooltipEnabled });
+      return true;
+    }
+  });
 
   // =========================================================================
   // 2. TEXT SELECTION & FLOATING TOOLTIP
@@ -55,13 +136,21 @@
   }
 
   function handleSelection(e) {
-    // If clicking inside our own tooltip or modal, do not remove
+    if (!isTooltipEnabled) {
+      removeTooltip();
+      return;
+    }
+
     if (e.target.closest(".dland-tooltip-container") || e.target.closest(".dland-modal-overlay")) {
       return;
     }
 
-    // Small delay to allow selection range to finalize
     setTimeout(() => {
+      if (!isTooltipEnabled) {
+        removeTooltip();
+        return;
+      }
+
       const selection = window.getSelection();
       if (!selection || selection.isCollapsed) {
         removeTooltip();
@@ -69,18 +158,13 @@
       }
 
       const text = selection.toString().trim();
-      if (!text || text.length > 50 || text.includes("\n")) {
+      if (!text || text.length > 60 || text.includes("\n")) {
         removeTooltip();
         return;
       }
 
-      // Check if selection is within an input/textarea
-      const activeEl = document.activeElement;
-      if (activeEl && (activeEl.tagName === "INPUT" || activeEl.tagName === "TEXTAREA")) {
-        // Can still allow if user highlights inside input
-      }
-
       lastSelectionText = text;
+
 
       try {
         const range = selection.getRangeAt(0);
@@ -95,7 +179,7 @@
       } catch (err) {
         removeTooltip();
       }
-    }, 10);
+    }, 15);
   }
 
   function showTooltip(rect, text) {
@@ -129,7 +213,6 @@
     const scrollX = window.scrollX || window.pageXOffset;
     const scrollY = window.scrollY || window.pageYOffset;
 
-    // Position above selection if space available, otherwise below
     let top = rect.top + scrollY - 38;
     if (rect.top < 45) {
       top = rect.bottom + scrollY + 8;
@@ -165,14 +248,16 @@
   async function openLookupDialog(wordToLookup) {
     closeModal();
 
-    // Fetch user's notebooks first
-    const notebooksRes = await new Promise((resolve) => {
+    // Fetch user's notebooks & auth state from extension storage
+    const store = await new Promise((resolve) => {
       chrome.runtime.sendMessage({ action: "GET_NOTEBOOKS" }, (res) => resolve(res || {}));
     });
 
-    const notebooks = notebooksRes.notebooks || [
+    const notebooks = store.notebooks || [
       { id: "nb-default-ja", name: "Sổ tay Tiếng Nhật", lang: "ja", vocabulary: [] },
     ];
+    const user = store.user;
+    const isAuthenticated = !!store.authToken;
 
     // Create Modal Elements
     const overlay = document.createElement("div");
@@ -181,11 +266,18 @@
     const dialog = document.createElement("div");
     dialog.className = "dland-modal-dialog";
 
+    const authBadgeHtml = isAuthenticated
+      ? `<div class="dland-sync-badge synced" title="Dữ liệu sẽ tự động đồng bộ lên Database">☁️ ${escapeHtml(user?.username || "Đã kết nối Database")}</div>`
+      : `<div class="dland-sync-badge local" title="Dữ liệu lưu tại máy. Mở popup để đăng nhập đồng bộ.">💾 Lưu cục bộ</div>`;
+
     dialog.innerHTML = `
       <div class="dland-modal-header">
-        <h3 class="dland-modal-title">
-          <span>📖</span> Tra Mazii & Thêm Vào Sổ Tay
-        </h3>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <h3 class="dland-modal-title">
+            <span>📖</span> Tra Mazii & Thêm Vào Sổ Tay
+          </h3>
+          ${authBadgeHtml}
+        </div>
         <button class="dland-modal-close-btn" title="Đóng">✕</button>
       </div>
 
@@ -327,11 +419,11 @@
           }
 
           displayWord.textContent = d.kanji || wordToLookup;
-          displayReading.textContent = [d.hiragana, d.onyomi ? `[${d.onyomi}]` : ""]
-            .filter(Boolean)
-            .join(" • ") || "Đã tìm thấy từ điển Mazii";
+          displayReading.textContent =
+            [d.hiragana, d.onyomi ? `[${d.onyomi}]` : ""].filter(Boolean).join(" • ") ||
+            "Đã tìm thấy từ điển Mazii";
         } else {
-          displayReading.textContent = "Không tìm thấy trong Mazii, hãy nhập nghĩa bên dưới";
+          displayReading.textContent = "Không tìm thấy trong Mazii, bạn có thể tự nhập nghĩa";
         }
       }
     );
@@ -384,7 +476,13 @@
         (saveRes) => {
           closeModal();
           if (saveRes && saveRes.success) {
-            showToast(`✅ Đã thêm "${kanji || hiragana}" vào sổ tay ${saveRes.notebookName || ""}!`);
+            if (saveRes.synced) {
+              showToast(`✅ Đã lưu "${kanji || hiragana}" và đồng bộ Database!`);
+            } else if (saveRes.syncError) {
+              showToast(`💾 Đã lưu vào sổ tay máy (Chưa đồng bộ DB: ${saveRes.syncError})`);
+            } else {
+              showToast(`✅ Đã lưu "${kanji || hiragana}" vào sổ tay ${saveRes.notebookName || ""}!`);
+            }
           } else {
             showToast(`⚠️ Không thể lưu: ${saveRes?.error || "Đã xảy ra lỗi"}`);
           }
@@ -406,22 +504,4 @@
       }
     }, 3500);
   }
-
-  // Helper
-  function escapeHtml(str) {
-    if (!str) return "";
-    return str
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
-  }
-
-  // Listen for Context Menu trigger
-  chrome.runtime.onMessage.addListener((request) => {
-    if (request.action === "OPEN_LOOKUP_DIALOG" && request.selectedText) {
-      openLookupDialog(request.selectedText);
-    }
-  });
 })();

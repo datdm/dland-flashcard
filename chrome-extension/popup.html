@@ -15,15 +15,41 @@
         <div>
           <h1 class="brand-title">Dland Language</h1>
           <div class="sync-status" id="syncStatus">
-            <span class="status-dot online"></span>
-            <span id="syncStatusText">Sổ Tay Của Bạn</span>
+            <span class="status-dot" id="statusDot"></span>
+            <span id="syncStatusText">Đang tải...</span>
           </div>
         </div>
       </div>
-      <a href="http://localhost:3000/notebooks" target="_blank" class="btn-open-web" title="Mở trang Sổ Tay trên Web">
-        <span>🌐 Web App</span>
-      </a>
+      <div class="header-actions">
+        <button type="button" class="btn-icon" id="btnOpenSettings" title="Cài đặt kết nối & Database">
+          <span>⚙️</span>
+        </button>
+        <a href="https://flashcard-japanese-eight.vercel.app/" target="_blank" class="btn-open-web" id="headerWebLink" title="Mở trang Web App">
+          <span>🌐 Web App</span>
+        </a>
+      </div>
     </header>
+
+    <!-- Auth & Sync Bar -->
+    <div class="auth-bar" id="authBar">
+      <!-- Dynamic content rendered by popup.js: Either logged-in view or guest view -->
+    </div>
+
+    <!-- Quick Tooltip ON/OFF Option Bar -->
+    <div class="quick-options-bar">
+      <div class="option-tool-item">
+        <span class="option-tool-icon">🔍</span>
+        <div class="option-tool-text">
+          <span class="option-tool-title">Tooltip Mazii khi bôi đen</span>
+          <span class="option-tool-status" id="quickTooltipStatusText">Đang BẬT</span>
+        </div>
+      </div>
+      <label class="toggle-switch" title="Bật/Tắt hiển thị Tooltip Mazii nổi khi bôi đen từ vựng tiếng Nhật">
+        <input type="checkbox" id="quickTooltipToggle" checked>
+        <span class="slider round"></span>
+      </label>
+    </div>
+
 
     <!-- Stats Banner -->
     <div class="stats-row">
@@ -53,6 +79,167 @@
         <span>Đang tải danh sách sổ tay...</span>
       </div>
     </div>
+
+    <!-- ================= MODALS ================= -->
+
+    <!-- Login Modal -->
+    <div class="modal-backdrop" id="loginModal" style="display: none;">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h3>🔑 Đăng Nhập Tài Khoản</h3>
+          <button type="button" class="btn-close" id="btnCloseLoginModal">✕</button>
+        </div>
+        <div class="modal-body">
+          <p class="modal-desc">Đăng nhập tài khoản để đồng bộ sổ tay tự động với Database máy chủ.</p>
+          <div id="loginErrorMsg" class="form-error" style="display: none;"></div>
+
+          <div class="api-notice-pill">
+            <span style="font-size: 11px;">🌐 API Server:</span>
+            <code id="loginCurrentApiDisplay">http://localhost:3001</code>
+          </div>
+
+          <label style="margin-top: 6px;">Tên đăng nhập</label>
+          <input type="text" id="loginUsername" placeholder="Nhập username..." />
+
+          <label style="margin-top: 8px;">Mật khẩu</label>
+          <input type="password" id="loginPassword" placeholder="Nhập mật khẩu..." />
+
+          <div class="auth-helper-box">
+            <span class="helper-icon">💡</span>
+            <div class="helper-text">
+              Đang dùng Web App trên Vercel? Bấm <b>"🔗 Đồng bộ từ Web"</b> để tự động nhận phiên đăng nhập mà không cần nhập mật khẩu hay cấu hình server!
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" id="btnSyncFromWebInModal">🔗 Đồng bộ từ Web</button>
+          <button type="button" class="btn-primary" id="btnSubmitLogin">Đăng nhập</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal-backdrop" id="settingsModal" style="display: none;">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h3>⚙️ Cài Đặt Kết Nối & Database</h3>
+          <button type="button" class="btn-close" id="btnCloseSettingsModal">✕</button>
+        </div>
+        <div class="modal-body">
+          <!-- Admin Lock Banner -->
+          <div class="admin-lock-banner" id="adminLockBanner">
+            <div class="admin-banner-left">
+              <span class="admin-badge-icon" id="adminBadgeIcon">🔒</span>
+              <div>
+                <div class="admin-badge-title" id="adminBadgeTitle">Cấu hình URL (Chỉ Admin)</div>
+                <div class="admin-badge-desc" id="adminBadgeDesc">URL Client & API Server chỉ Quản trị viên mới được quyền chỉnh sửa.</div>
+              </div>
+            </div>
+            <button type="button" class="btn-unlock-admin" id="btnUnlockAdmin">
+              <span id="btnUnlockAdminText">🔓 Mở khóa Admin</span>
+            </button>
+          </div>
+
+          <!-- Client URL Setting -->
+          <div class="setting-group" id="groupSettingWebUrl">
+            <div class="label-with-badge">
+              <label>Web App URL (Client)</label>
+              <span class="admin-tag-pill" id="badgeWebUrl">🔒 Chỉ Admin</span>
+            </div>
+            <div class="input-with-presets">
+              <input type="text" id="settingWebUrl" placeholder="https://flashcard-japanese-eight.vercel.app" readonly disabled />
+              <button type="button" class="btn-preset admin-preset" id="presetWebVercel" title="Đặt về Vercel" disabled>Vercel</button>
+              <button type="button" class="btn-preset admin-preset" id="presetWebLocal" title="Đặt về Localhost:3000" disabled>Local</button>
+            </div>
+          </div>
+
+          <!-- API Server URL Setting -->
+          <div class="setting-group" id="groupSettingApiUrl" style="margin-top: 10px;">
+            <div class="label-with-badge">
+              <label>API Server / Database URL</label>
+              <span class="admin-tag-pill" id="badgeApiUrl">🔒 Chỉ Admin</span>
+            </div>
+            <div class="input-with-presets">
+              <input type="text" id="settingApiUrl" placeholder="http://localhost:3001" readonly disabled />
+              <button type="button" class="btn-preset admin-preset" id="presetApiVercel" title="Đặt về Vercel" disabled>Vercel</button>
+              <button type="button" class="btn-preset admin-preset" id="presetApiLocal" title="Đặt về Localhost:3001" disabled>Port 3001</button>
+            </div>
+          </div>
+
+          <!-- Connection test -->
+          <div class="connection-test-row">
+            <button type="button" class="btn-secondary btn-sm" id="btnTestConnection">⚡ Kiểm tra kết nối</button>
+            <span class="test-result-badge" id="testResultBadge">Chưa kiểm tra</span>
+          </div>
+
+          <div class="settings-divider"></div>
+
+          <!-- Switches -->
+          <div class="switch-row">
+            <div>
+              <div class="switch-title">Tự động đồng bộ lên Database</div>
+              <div class="switch-desc">Tải từ vựng mới lên máy chủ ngay khi tra cứu Mazii</div>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="settingAutoSync" checked>
+              <span class="slider round"></span>
+            </label>
+          </div>
+
+          <div class="switch-row">
+            <div>
+              <div class="switch-title">Tooltip tra cứu Mazii</div>
+              <div class="switch-desc">Hiện nút tra từ nổi khi bôi đen chữ tiếng Nhật trên trang web</div>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="settingTooltipEnabled" checked>
+              <span class="slider round"></span>
+            </label>
+          </div>
+
+          <div class="settings-divider"></div>
+
+          <!-- Database Sync actions -->
+          <div class="db-actions-title">Thao tác Dữ liệu Database:</div>
+          <div class="db-actions-row">
+            <button type="button" class="btn-secondary btn-sm" id="btnDownloadFromDb">
+              🔄 Tải lại từ Database
+            </button>
+            <button type="button" class="btn-secondary btn-sm" id="btnUploadToDb">
+              ☁️ Đẩy máy lên Database
+            </button>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" id="btnCancelSettings">Hủy</button>
+          <button type="button" class="btn-primary" id="btnSaveSettings">💾 Lưu Cài Đặt</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Admin Unlock Modal -->
+    <div class="modal-backdrop" id="adminUnlockModal" style="display: none; z-index: 60;">
+      <div class="modal-card modal-card-sm">
+        <div class="modal-header">
+          <h3>👑 Mở Khóa Quyền Quản Trị (Admin)</h3>
+          <button type="button" class="btn-close" id="btnCloseAdminUnlockModal">✕</button>
+        </div>
+        <div class="modal-body">
+          <p class="modal-desc">Nhập mật khẩu Admin hoặc mã quản trị viên để chỉnh sửa URL Client và API Server:</p>
+          <div id="adminUnlockError" class="form-error" style="display: none;"></div>
+          <label>Mã Quản Trị Viên (Admin Key / Password)</label>
+          <input type="password" id="adminPasscodeInput" placeholder="Nhập mã Admin (ví dụ: admin, admin123...)" />
+          <div style="font-size: 10px; color: #64748b; margin-top: 4px;">
+            💡 Nếu bạn đã đăng nhập tài khoản có quyền Admin trên Web App, hãy bấm "Đồng bộ từ Web App" để tự động kích hoạt.
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" id="btnCancelAdminUnlock">Hủy</button>
+          <button type="button" class="btn-primary" id="btnSubmitAdminUnlock">Xác nhận</button>
+        </div>
+      </div>
+    </div>
+
 
     <!-- New Notebook Modal -->
     <div class="modal-backdrop" id="newNbModal" style="display: none;">

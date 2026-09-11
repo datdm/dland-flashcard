@@ -310,3 +310,25 @@
   from { opacity: 0; transform: translateY(16px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* Sync status badge inside modal */
+.dland-sync-badge {
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  padding: 3px 8px !important;
+  border-radius: 20px !important;
+  white-space: nowrap !important;
+}
+
+.dland-sync-badge.synced {
+  background: #dcfce7 !important;
+  color: #15803d !important;
+  border: 1px solid #86efac !important;
+}
+
+.dland-sync-badge.local {
+  background: #f1f5f9 !important;
+  color: #475569 !important;
+  border: 1px solid #cbd5e1 !important;
+}
+

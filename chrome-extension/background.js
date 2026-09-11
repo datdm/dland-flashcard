@@ -1,6 +1,13 @@
-// Dland Language Flashcard - Background Service Worker
+// Dland Language Flashcard - Background Service Worker (Manifest V3)
+
+const DEFAULT_WEB_URL = "https://flashcard-japanese-eight.vercel.app";
+const DEFAULT_API_URL = "http://localhost:3001";
+
+// Default admin passcodes that can unlock Admin-only URL configuration
+const VALID_ADMIN_KEYS = ["admin", "admin123", "dland@admin", "dlandadmin", "secret", "888888"];
 
 const DEFAULT_NOTEBOOK = {
+
   id: "nb-default-ja",
   name: "Sổ tay Tiếng Nhật",
   lang: "ja",
@@ -10,13 +17,33 @@ const DEFAULT_NOTEBOOK = {
 
 // Initialize default storage and context menus
 chrome.runtime.onInstalled.addListener(async () => {
-  const data = await chrome.storage.local.get(["dland_notebooks", "dland_api_url", "dland_web_url"]);
+  const data = await chrome.storage.local.get([
+    "dland_notebooks",
+    "dland_api_url",
+    "dland_web_url",
+    "dland_auto_sync",
+    "dland_tooltip_enabled",
+  ]);
+
+  const toSet = {};
   if (!data.dland_notebooks || !Array.isArray(data.dland_notebooks) || data.dland_notebooks.length === 0) {
-    await chrome.storage.local.set({
-      dland_notebooks: [DEFAULT_NOTEBOOK],
-      dland_api_url: data.dland_api_url || "http://localhost:3001",
-      dland_web_url: data.dland_web_url || "http://localhost:3000",
-    });
+    toSet.dland_notebooks = [DEFAULT_NOTEBOOK];
+  }
+  if (!data.dland_web_url) {
+    toSet.dland_web_url = DEFAULT_WEB_URL;
+  }
+  if (!data.dland_api_url) {
+    toSet.dland_api_url = DEFAULT_API_URL;
+  }
+  if (data.dland_auto_sync === undefined) {
+    toSet.dland_auto_sync = true;
+  }
+  if (data.dland_tooltip_enabled === undefined) {
+    toSet.dland_tooltip_enabled = true;
+  }
+
+  if (Object.keys(toSet).length > 0) {
+    await chrome.storage.local.set(toSet);
   }
 
   // Create context menu for quick right-click lookup
@@ -39,36 +66,130 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 
 // Handle messages from content scripts and popup
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.action === "LOOKUP_MAZII") {
-    handleLookupMazii(request.query)
-      .then((data) => sendResponse({ success: true, data }))
-      .catch((err) => sendResponse({ success: false, error: err.message }));
-    return true; // Keep channel open for async response
-  }
+  switch (request.action) {
+    case "LOOKUP_MAZII":
+      handleLookupMazii(request.query)
+        .then((data) => sendResponse({ success: true, data }))
+        .catch((err) => sendResponse({ success: false, error: err.message }));
+      return true;
 
-  if (request.action === "GET_NOTEBOOKS") {
-    chrome.storage.local.get(["dland_notebooks", "dland_auth_token", "dland_user"]).then((res) => {
-      sendResponse({
-        notebooks: res.dland_notebooks || [DEFAULT_NOTEBOOK],
-        authToken: res.dland_auth_token || null,
-        user: res.dland_user || null,
-      });
-    });
-    return true;
-  }
+    case "GET_NOTEBOOKS":
+      chrome.storage.local
+        .get([
+          "dland_notebooks",
+          "dland_auth_token",
+          "dland_user",
+          "dland_api_url",
+          "dland_web_url",
+          "dland_auto_sync",
+          "dland_tooltip_enabled",
+        ])
+        .then((res) => {
+          sendResponse({
+            notebooks: res.dland_notebooks || [DEFAULT_NOTEBOOK],
+            authToken: res.dland_auth_token || null,
+            user: res.dland_user || null,
+            apiUrl: res.dland_api_url || DEFAULT_API_URL,
+            webUrl: res.dland_web_url || DEFAULT_WEB_URL,
+            autoSync: res.dland_auto_sync !== false,
+            tooltipEnabled: res.dland_tooltip_enabled !== false,
+          });
+        });
+      return true;
 
-  if (request.action === "SAVE_VOCAB") {
-    handleSaveVocab(request.notebookId, request.vocab)
-      .then((res) => sendResponse(res))
-      .catch((err) => sendResponse({ success: false, error: err.message }));
-    return true;
-  }
+    case "SAVE_VOCAB":
+      handleSaveVocab(request.notebookId, request.vocab)
+        .then((res) => sendResponse(res))
+        .catch((err) => sendResponse({ success: false, error: err.message }));
+      return true;
 
-  if (request.action === "SYNC_FROM_WEB_APP") {
-    handleSyncFromWebApp(request.notebooks, request.authToken, request.user)
-      .then((res) => sendResponse(res))
-      .catch((err) => sendResponse({ success: false, error: err.message }));
-    return true;
+    case "SYNC_FROM_WEB_APP":
+      handleSyncFromWebApp(request.notebooks, request.authToken, request.user)
+        .then((res) => sendResponse(res))
+        .catch((err) => sendResponse({ success: false, error: err.message }));
+      return true;
+
+    case "LOGIN_WITH_CREDENTIALS":
+      handleLogin(request.username, request.password)
+        .then((res) => sendResponse(res))
+        .catch((err) => sendResponse({ success: false, error: err.message }));
+      return true;
+
+    case "LOGOUT":
+      handleLogout()
+        .then((res) => sendResponse(res))
+        .catch((err) => sendResponse({ success: false, error: err.message }));
+      return true;
+
+    case "SYNC_FROM_DATABASE_NOW":
+      handleDownloadFromDatabase()
+        .then((res) => sendResponse(res))
+        .catch((err) => sendResponse({ success: false, error: err.message }));
+      return true;
+
+    case "UPLOAD_TO_DATABASE_NOW":
+      handleUploadToDatabase()
+        .then((res) => sendResponse(res))
+        .catch((err) => sendResponse({ success: false, error: err.message }));
+      return true;
+
+    case "SYNC_LOGIN_FROM_OPEN_TABS":
+      handleSyncFromOpenTabs()
+        .then((res) => sendResponse(res))
+        .catch((err) => sendResponse({ success: false, error: err.message }));
+      return true;
+
+    case "TEST_SERVER_CONNECTION":
+      handleTestConnection(request.apiUrl)
+        .then((res) => sendResponse(res))
+        .catch((err) => sendResponse({ success: false, error: err.message }));
+      return true;
+
+    case "SAVE_SETTINGS":
+      handleSaveSettings(request.settings, request.adminKey)
+        .then((res) => sendResponse(res))
+        .catch((err) => sendResponse({ success: false, error: err.message }));
+      return true;
+
+    case "VERIFY_ADMIN_KEY":
+      {
+        const key = String(request.key || "").trim();
+        const isValid = VALID_ADMIN_KEYS.includes(key);
+        sendResponse({ success: true, isValid });
+      }
+      return true;
+
+    case "SET_TOOLTIP_ENABLED":
+      handleSetTooltipEnabled(request.enabled)
+        .then((res) => sendResponse(res))
+        .catch((err) => sendResponse({ success: false, error: err.message }));
+      return true;
+
+    case "GET_SETTINGS":
+      chrome.storage.local
+        .get([
+          "dland_api_url",
+          "dland_web_url",
+          "dland_auto_sync",
+          "dland_tooltip_enabled",
+          "dland_auth_token",
+          "dland_user",
+        ])
+        .then((res) => {
+          sendResponse({
+            apiUrl: res.dland_api_url || DEFAULT_API_URL,
+            webUrl: res.dland_web_url || DEFAULT_WEB_URL,
+            autoSync: res.dland_auto_sync !== false,
+            tooltipEnabled: res.dland_tooltip_enabled !== false,
+            isAuthenticated: !!res.dland_auth_token,
+            user: res.dland_user || null,
+            isAdmin: Boolean(res.dland_user?.isAdmin),
+          });
+        });
+      return true;
+
+    default:
+      break;
   }
 });
 
@@ -133,7 +254,6 @@ async function handleLookupMazii(query) {
       };
     }
 
-    // Fallback if no direct word match
     return {
       kanji: cleanQuery,
       hiragana: cleanQuery,
@@ -153,18 +273,18 @@ async function handleLookupMazii(query) {
   }
 }
 
-// Save Vocabulary to Notebook and Sync to Database
+// Save Vocabulary to Notebook and optionally sync to Database
 async function handleSaveVocab(notebookId, vocab) {
   const store = await chrome.storage.local.get([
     "dland_notebooks",
     "dland_auth_token",
     "dland_api_url",
+    "dland_auto_sync",
   ]);
 
   let notebooks = store.dland_notebooks || [DEFAULT_NOTEBOOK];
   let targetNb = notebooks.find((nb) => nb.id === notebookId);
 
-  // If notebook not found, use first notebook or create one
   if (!targetNb) {
     targetNb = notebooks[0] || DEFAULT_NOTEBOOK;
     notebookId = targetNb.id;
@@ -195,7 +315,6 @@ async function handleSaveVocab(notebookId, vocab) {
   if (!exists) {
     targetNb.vocabulary.unshift(newVocab);
   } else {
-    // Update existing
     const idx = targetNb.vocabulary.findIndex(
       (v) => (v.kanji && v.kanji === newVocab.kanji) || (v.hiragana && v.hiragana === newVocab.hiragana)
     );
@@ -207,12 +326,14 @@ async function handleSaveVocab(notebookId, vocab) {
   // Save in local extension storage
   await chrome.storage.local.set({ dland_notebooks: notebooks });
 
-  // Sync to backend database if token is available
+  // Sync to database if token is available and auto-sync is enabled
   const token = store.dland_auth_token;
-  const apiUrl = store.dland_api_url || "http://localhost:3001";
+  const apiUrl = (store.dland_api_url || DEFAULT_API_URL).replace(/\/$/, "");
+  const autoSync = store.dland_auto_sync !== false;
   let synced = false;
+  let syncError = null;
 
-  if (token) {
+  if (token && autoSync) {
     try {
       const syncRes = await fetch(`${apiUrl}/api/vocab/upload`, {
         method: "POST",
@@ -228,8 +349,12 @@ async function handleSaveVocab(notebookId, vocab) {
 
       if (syncRes.ok) {
         synced = true;
+      } else {
+        const errData = await syncRes.json().catch(() => ({}));
+        syncError = errData.error || `HTTP ${syncRes.status}`;
       }
     } catch (syncErr) {
+      syncError = syncErr.message;
       console.warn("Could not sync to remote API, saved locally:", syncErr);
     }
   }
@@ -239,10 +364,12 @@ async function handleSaveVocab(notebookId, vocab) {
     vocab: newVocab,
     notebookName: targetNb.name,
     synced,
+    syncError,
+    isAuthenticated: !!token,
   };
 }
 
-// Sync notebooks and credentials from Web App (localhost:3000)
+// Sync notebooks and credentials from Web App
 async function handleSyncFromWebApp(notebooks, authToken, user) {
   const updateData = {};
   if (Array.isArray(notebooks) && notebooks.length > 0) {
@@ -256,5 +383,329 @@ async function handleSyncFromWebApp(notebooks, authToken, user) {
   }
 
   await chrome.storage.local.set(updateData);
-  return { success: true, count: notebooks?.length || 0 };
+  return {
+    success: true,
+    count: notebooks?.length || 0,
+    user: user || null,
+    isAuthenticated: !!authToken,
+  };
 }
+
+// Login directly via API
+async function handleLogin(username, password) {
+  if (!username || !password) {
+    throw new Error("Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu");
+  }
+
+  const store = await chrome.storage.local.get(["dland_api_url"]);
+  const apiUrl = (store.dland_api_url || DEFAULT_API_URL).replace(/\/$/, "");
+
+  let response;
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 10000);
+
+    response = await fetch(`${apiUrl}/api/auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username: username.trim(), password: password.trim() }),
+      signal: controller.signal,
+    });
+    clearTimeout(timeout);
+  } catch (netErr) {
+    throw new Error(
+      `Không thể kết nối đến máy chủ API (${apiUrl}). Nếu bạn đang mở Web App trên trình duyệt, hãy bấm '🔗 Đồng bộ từ Web App'. Hoặc kiểm tra lại URL API Server trong Cài đặt (Dành cho Admin).`
+    );
+  }
+
+  let data;
+  try {
+    data = await response.json();
+  } catch (parseErr) {
+    if (response.status === 404) {
+      throw new Error(
+        `Máy chủ (${apiUrl}) không hỗ trợ API /api/auth/login (HTTP 404). Nếu bạn dùng Web App Vercel, vui lòng đăng nhập trên trang web rồi bấm '🔗 Đồng bộ từ Web App'! Hoặc nhờ Admin cấu hình đúng URL API Server.`
+      );
+    }
+    throw new Error(`Máy chủ trả về phản hồi không hợp lệ (HTTP ${response.status}).`);
+  }
+
+  if (!response.ok) {
+    if (response.status === 401) {
+      throw new Error(data.error || "Sai tên đăng nhập hoặc mật khẩu. Vui lòng kiểm tra lại.");
+    }
+    throw new Error(data.error || `Đăng nhập thất bại (HTTP ${response.status}).`);
+  }
+
+
+  const { token, user } = data;
+  if (!token) throw new Error("Không nhận được mã xác thực từ máy chủ");
+
+  // Save auth info
+  await chrome.storage.local.set({
+    dland_auth_token: token,
+    dland_user: user,
+  });
+
+  // Attempt to download user's notebooks from Database immediately
+  let downloadedCount = 0;
+  try {
+    const syncRes = await fetch(`${apiUrl}/api/sync/data`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (syncRes.ok) {
+      const syncJson = await syncRes.json();
+      if (syncJson.success && syncJson.data) {
+        const rawNotebooks = syncJson.data["flashcash-notebooks"];
+        let notebooks = null;
+        if (rawNotebooks) {
+          notebooks = Array.isArray(rawNotebooks) ? rawNotebooks : rawNotebooks.notebooks;
+        }
+        if (Array.isArray(notebooks) && notebooks.length > 0) {
+          await chrome.storage.local.set({ dland_notebooks: notebooks });
+          downloadedCount = notebooks.length;
+        }
+      }
+    }
+  } catch (syncErr) {
+    console.warn("Initial sync after login warning:", syncErr);
+  }
+
+  return {
+    success: true,
+    user,
+    downloadedCount,
+  };
+}
+
+// Logout
+async function handleLogout() {
+  await chrome.storage.local.remove(["dland_auth_token", "dland_user"]);
+  return { success: true };
+}
+
+// Download notebooks from Database
+async function handleDownloadFromDatabase() {
+  const store = await chrome.storage.local.get(["dland_api_url", "dland_auth_token"]);
+  const token = store.dland_auth_token;
+  if (!token) throw new Error("Chưa đăng nhập. Vui lòng đăng nhập trước khi đồng bộ.");
+
+  const apiUrl = (store.dland_api_url || DEFAULT_API_URL).replace(/\/$/, "");
+  const response = await fetch(`${apiUrl}/api/sync/data`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  if (!response.ok) {
+    if (response.status === 401) {
+      await chrome.storage.local.remove(["dland_auth_token", "dland_user"]);
+      throw new Error("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
+    }
+    const errData = await response.json().catch(() => ({}));
+    throw new Error(errData.error || `Lỗi máy chủ (${response.status})`);
+  }
+
+  const json = await response.json();
+  if (!json.success || !json.data) throw new Error("Dữ liệu trả về không hợp lệ");
+
+  const rawNotebooks = json.data["flashcash-notebooks"];
+  let notebooks = [];
+  if (rawNotebooks) {
+    notebooks = Array.isArray(rawNotebooks) ? rawNotebooks : rawNotebooks.notebooks || [];
+  }
+
+  if (Array.isArray(notebooks) && notebooks.length > 0) {
+    await chrome.storage.local.set({ dland_notebooks: notebooks });
+  }
+
+  return {
+    success: true,
+    notebooksCount: notebooks.length,
+    timestamp: json.timestamp || new Date().toISOString(),
+  };
+}
+
+// Upload local notebooks to Database
+async function handleUploadToDatabase() {
+  const store = await chrome.storage.local.get([
+    "dland_api_url",
+    "dland_auth_token",
+    "dland_notebooks",
+  ]);
+
+  const token = store.dland_auth_token;
+  if (!token) throw new Error("Chưa đăng nhập. Vui lòng đăng nhập trước khi tải lên.");
+
+  const apiUrl = (store.dland_api_url || DEFAULT_API_URL).replace(/\/$/, "");
+  const notebooks = store.dland_notebooks || [DEFAULT_NOTEBOOK];
+
+  const response = await fetch(`${apiUrl}/api/sync/upload`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      data: {
+        "flashcash-notebooks": { notebooks },
+      },
+    }),
+  });
+
+  if (!response.ok) {
+    const errData = await response.json().catch(() => ({}));
+    throw new Error(errData.error || `Tải lên thất bại (${response.status})`);
+  }
+
+  return { success: true, count: notebooks.length };
+}
+
+// Check open tabs for Dland Web App and extract active session
+async function handleSyncFromOpenTabs() {
+  const store = await chrome.storage.local.get(["dland_web_url"]);
+  const targetWebUrl = store.dland_web_url || DEFAULT_WEB_URL;
+
+  // Query all tabs to find matches with web app domain
+  const tabs = await chrome.tabs.query({});
+  const matchedTab = tabs.find((t) => {
+    if (!t.url) return false;
+    return (
+      t.url.includes("flashcard-japanese-eight.vercel.app") ||
+      t.url.includes("localhost:3000") ||
+      t.url.startsWith(targetWebUrl)
+    );
+  });
+
+  if (matchedTab && matchedTab.id) {
+    try {
+      const response = await chrome.tabs.sendMessage(matchedTab.id, {
+        action: "EXTRACT_WEBAPP_SESSION",
+      });
+
+      if (response && (response.authToken || response.notebooks)) {
+        await handleSyncFromWebApp(response.notebooks, response.authToken, response.user);
+        return {
+          success: true,
+          user: response.user,
+          notebooksCount: response.notebooks?.length || 0,
+          source: "active_tab",
+        };
+      }
+    } catch (tabErr) {
+      console.warn("Could not message open tab:", tabErr);
+    }
+  }
+
+  // If no active session found or tab not open, open web app tab
+  chrome.tabs.create({ url: targetWebUrl });
+  return {
+    success: false,
+    openedTab: true,
+    message: "Đã mở Web App. Vui lòng đăng nhập trên trang web rồi bấm 'Đồng bộ từ Web App'!",
+  };
+}
+
+// Test server/database connectivity
+async function handleTestConnection(url) {
+  const targetUrl = (url || DEFAULT_API_URL).replace(/\/$/, "");
+  const startTime = Date.now();
+
+  try {
+    // Try pinging auth verify or dictionary or root
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 8000);
+
+    const res = await fetch(`${targetUrl}/api/dictionary?word=test`, {
+      method: "GET",
+      signal: controller.signal,
+    }).catch(async () => {
+      // Fallback test
+      return await fetch(targetUrl, { method: "HEAD", signal: controller.signal });
+    });
+
+    clearTimeout(timeout);
+    const latency = Date.now() - startTime;
+
+    if (res.ok || res.status === 401 || res.status === 404) {
+      return {
+        success: true,
+        status: `Kết nối thành công (${latency}ms)`,
+        latency,
+      };
+    }
+
+    return {
+      success: false,
+      status: `Máy chủ phản hồi HTTP ${res.status}`,
+    };
+  } catch (err) {
+    return {
+      success: false,
+      status: `Không thể kết nối: ${err.message}`,
+    };
+  }
+}
+
+// Toggle Tooltip On/Off and broadcast to all tabs
+async function handleSetTooltipEnabled(enabled) {
+  const isEnabled = Boolean(enabled);
+  await chrome.storage.local.set({ dland_tooltip_enabled: isEnabled });
+
+  // Broadcast to all open tabs immediately
+  try {
+    const tabs = await chrome.tabs.query({});
+    tabs.forEach((tab) => {
+      if (tab.id) {
+        chrome.tabs.sendMessage(tab.id, {
+          action: "SET_TOOLTIP_ENABLED",
+          enabled: isEnabled,
+        }).catch(() => {});
+      }
+    });
+  } catch (err) {
+    console.warn("Could not broadcast tooltip state to tabs:", err);
+  }
+
+  return { success: true, enabled: isEnabled };
+}
+
+// Save Settings (Client URL & API Server URL are strictly restricted to Admin)
+async function handleSaveSettings(settings, adminKey) {
+  const store = await chrome.storage.local.get(["dland_user"]);
+  const currentUser = store.dland_user;
+  const isCurrentAdmin = Boolean(currentUser && currentUser.isAdmin);
+  const isKeyValid = Boolean(adminKey && VALID_ADMIN_KEYS.includes(String(adminKey).trim()));
+  const isAuthorized = isCurrentAdmin || isKeyValid;
+
+  const toUpdate = {};
+
+  // URL SETTINGS: ADMIN ONLY
+  if (settings.apiUrl !== undefined || settings.webUrl !== undefined) {
+    if (!isAuthorized) {
+      throw new Error("⛔ Quyền bị từ chối: Chỉ Quản trị viên (Admin) mới có quyền thay đổi URL Client và URL API Server.");
+    }
+    if (settings.apiUrl !== undefined) {
+      toUpdate.dland_api_url = settings.apiUrl.trim().replace(/\/$/, "");
+    }
+    if (settings.webUrl !== undefined) {
+      toUpdate.dland_web_url = settings.webUrl.trim().replace(/\/$/, "");
+    }
+  }
+
+  if (settings.autoSync !== undefined) {
+    toUpdate.dland_auto_sync = Boolean(settings.autoSync);
+  }
+  if (settings.tooltipEnabled !== undefined) {
+    toUpdate.dland_tooltip_enabled = Boolean(settings.tooltipEnabled);
+  }
+
+  await chrome.storage.local.set(toUpdate);
+
+  if (settings.tooltipEnabled !== undefined) {
+    await handleSetTooltipEnabled(settings.tooltipEnabled);
+  }
+
+  return { success: true, isAdmin: isAuthorized };
+}
+
+

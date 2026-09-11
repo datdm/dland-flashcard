@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Dland Language - Sổ Tay & Tra Mazii",
-  "version": "1.0.0",
-  "description": "Tiện ích mở rộng hiển thị toàn bộ sổ tay, tự động hiện tooltip tra cứu Mazii khi bôi đen từ vựng trên mọi trang web và lưu nhanh vào sổ tay Dland Flashcard.",
+  "version": "1.1.0",
+  "description": "Hiển thị toàn bộ sổ tay, đồng bộ tài khoản & Database với web app Dland Language, tra cứu Mazii nhanh khi bôi đen từ vựng tiếng Nhật trên mọi trang web.",
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
@@ -10,7 +10,7 @@
   },
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Dland Language - Quản Lý Sổ Tay",
+    "default_title": "Dland Language - Sổ Tay & Đồng Bộ Database",
     "default_icon": {
       "16": "icons/icon16.png",
       "48": "icons/icon48.png",
@@ -23,9 +23,11 @@
   "permissions": [
     "storage",
     "contextMenus",
-    "activeTab"
+    "activeTab",
+    "tabs"
   ],
   "host_permissions": [
+    "https://flashcard-japanese-eight.vercel.app/*",
     "https://mazii.net/*",
     "http://localhost:3000/*",
     "http://localhost:3001/*",
