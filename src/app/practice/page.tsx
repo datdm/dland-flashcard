@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useMemo } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useNotebooks } from "@/hooks/useNotebooks";
 import { searchJapaneseDictionary } from "@/lib/services/dictionaryService";
 import { useLanguageSetting } from "@/hooks/useLanguageSetting";
@@ -307,6 +308,11 @@ export default function PracticeHubPage() {
   const { notebooks, addVocab, checkDuplicate } = useNotebooks();
   const recognitionRef = useRef<any>(null);
   const { activeLanguage } = useLanguageSetting();
+  const router = useRouter();
+
+  const handleAiTutorReview = (promptText: string) => {
+    router.push(`/chat?prompt=${encodeURIComponent(promptText)}`);
+  };
 
   // Language state for Practice Center
   const selectedLang = activeLanguage.code || "ja";
@@ -2147,17 +2153,30 @@ ${item.audioScript}。
                         </p>
                       </div>
 
-                      {/* Autoplay Button */}
-                      <button
-                        onClick={playEntireKaiwa}
-                        className={`px-4 py-2.5 rounded-2xl text-xs font-bold transition-all shadow-md flex items-center justify-center gap-2 shrink-0 cursor-pointer ${
-                          isAutoplayingKaiwa
-                            ? "bg-red-500 hover:bg-red-600 text-white shadow-red-200 animate-pulse"
-                            : "bg-gradient-to-r from-teal-600 to-emerald-600 hover:opacity-95 text-white shadow-teal-200"
-                        }`}
-                      >
-                        <span>{isAutoplayingKaiwa ? "⏹️ Dừng phát" : "▶️ Phát toàn bộ (10 câu)"}</span>
-                      </button>
+                      {/* Autoplay & AI Tutor Buttons */}
+                      <div className="flex items-center gap-2 flex-wrap shrink-0">
+                        <button
+                          onClick={playEntireKaiwa}
+                          className={`px-4 py-2.5 rounded-2xl text-xs font-bold transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer ${
+                            isAutoplayingKaiwa
+                              ? "bg-red-500 hover:bg-red-600 text-white shadow-red-200 animate-pulse"
+                              : "bg-gradient-to-r from-teal-600 to-emerald-600 hover:opacity-95 text-white shadow-teal-200"
+                          }`}
+                        >
+                          <span>{isAutoplayingKaiwa ? "⏹️ Dừng phát" : "▶️ Phát toàn bộ (10 câu)"}</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const dialogText = kaiwaData.dialogue.map((t) => `${t.speaker}: ${t.japanese} (${t.meaning})`).join("\n");
+                            const prompt = `Hãy đóng vai Gia sư AI. Giúp tôi phân tích & giải thích chi tiết bài hội thoại sau:\n\nChủ đề: ${kaiwaData.title}\nTình huống: ${kaiwaData.situation}\n\nNội dung hội thoại:\n${dialogText}`;
+                            handleAiTutorReview(prompt);
+                          }}
+                          className="px-4 py-2.5 rounded-2xl text-xs font-bold bg-gradient-to-r from-indigo-600 to-purple-600 hover:opacity-95 text-white shadow-md shadow-indigo-100 flex items-center gap-1.5 cursor-pointer"
+                        >
+                          <span>🤖 Review với Gia sư AI</span>
+                        </button>
+                      </div>
                     </div>
 
                     {/* Speaker Badges & View Options */}
@@ -2471,8 +2490,20 @@ ${item.audioScript}。
                                       {currentAnswer.score === 100 ? "✓ Bạn đã trả lời chính xác (+100 điểm)!" : "✕ Chưa chính xác"}
                                     </span>
                                   </div>
-                                  <div className="text-[11px] text-gray-600 leading-relaxed pt-1 border-t border-emerald-100">
-                                    <strong>Giải thích:</strong> {q.explanation}
+                                  <div className="text-[11px] text-gray-600 leading-relaxed pt-1 border-t border-emerald-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                                    <div><strong>Giải thích:</strong> {q.explanation}</div>
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        const selectedOpt = q.options.find((o) => o.id === currentAnswer?.optionId);
+                                        const correctOpt = q.options.find((o) => o.isCorrect);
+                                        const prompt = `Nhờ Gia sư AI giải thích chi tiết câu hỏi sau trong bài hội thoại "${kaiwaData.title}":\n\nCâu hỏi: ${q.question} (${q.question_vietnamese || ""})\nCác lựa chọn:\n${q.options.map((o, idx) => `${idx + 1}. ${o.text}${o.isCorrect ? " (Đáp án đúng)" : ""}`).join("\n")}\n\nLựa chọn của tôi: ${selectedOpt?.text || "Chưa chọn"}\nĐáp án đúng: ${correctOpt?.text || ""}\nGiải thích: ${q.explanation}\n\nNhờ Gia sư AI giải thích kỹ hơn lý do chọn đáp án đúng và phân tích ngữ pháp liên quan.`;
+                                        handleAiTutorReview(prompt);
+                                      }}
+                                      className="px-3 py-1.5 bg-white hover:bg-indigo-50 text-indigo-700 border border-indigo-200 rounded-xl text-[11px] font-bold transition-all cursor-pointer flex items-center gap-1 shrink-0 shadow-3xs"
+                                    >
+                                      <span>🤖 Hỏi Gia sư AI về câu này</span>
+                                    </button>
                                   </div>
                                 </div>
                               )}
@@ -2543,6 +2574,19 @@ ${item.audioScript}。
                               title="Thu âm đọc lại"
                             >
                               🎙️
+                            </button>
+                            <button
+                              onClick={() => {
+                                const scoreInfo = shadowingScores[idx]
+                                  ? `\nĐiểm phát âm của tôi: ${shadowingScores[idx].score}%\nGiọng nhận diện: "${shadowingScores[idx].transcript}"`
+                                  : "";
+                                const prompt = `Hãy đóng vai Gia sư AI tiếng Nhật. Giải thích chi tiết từ vựng, ngữ pháp, ngữ điệu và ngắt câu của câu Shadowing sau:\n\nCâu tiếng Nhật: ${item.japanese}\nRomaji: ${item.romaji}\nDịch nghĩa: ${item.meaning}${scoreInfo}`;
+                                handleAiTutorReview(prompt);
+                              }}
+                              className="w-10 h-10 rounded-full bg-indigo-50 hover:bg-indigo-100 flex items-center justify-center text-lg text-indigo-600 transition-colors"
+                              title="🤖 Hỏi Gia sư AI phân tích câu này"
+                            >
+                              🤖
                             </button>
                           </div>
                         </div>
@@ -2648,6 +2692,17 @@ ${item.audioScript}。
                           >
                             <span>🎯</span>
                             <span>Chấm điểm & So sánh</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const userDraft = translationInputs[idx] || "";
+                              const prompt = `Nhờ Gia sư AI tiếng Nhật nhận xét và chữa chi tiết bản dịch sau:\n\nHướng dịch: ${item.direction === "ja-vi" ? "Tiếng Nhật ➔ Tiếng Việt" : "Tiếng Việt ➔ Tiếng Nhật"}\nCâu gốc: ${item.source}\n${userDraft ? `Bản dịch của tôi: ${userDraft}\n` : ""}Đáp án tham khảo: ${item.target}\n${item.hint ? `Gợi ý: ${item.hint}\n` : ""}\nNhờ Gia sư AI phân tích cấu trúc, ngữ pháp và gợi ý thêm các bản dịch hay, tự nhiên hơn.`;
+                              handleAiTutorReview(prompt);
+                            }}
+                            className="px-3.5 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl text-xs font-bold hover:opacity-90 transition-all cursor-pointer flex items-center gap-1.5 shadow-2xs"
+                          >
+                            <span>🤖 Hỏi AI sửa bài</span>
                           </button>
                           <button
                             onClick={() =>
@@ -3026,8 +3081,20 @@ ${item.audioScript}。
                                             )}
                                           </div>
                                           {q.explanation && (
-                                            <div className="text-[11px] text-gray-700 pt-1 border-t border-black/10">
-                                              <strong>💡 Giải thích:</strong> {q.explanation}
+                                            <div className="text-[11px] text-gray-700 pt-1 border-t border-black/10 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                                              <div><strong>💡 Giải thích:</strong> {q.explanation}</div>
+                                              <button
+                                                type="button"
+                                                onClick={() => {
+                                                  const userOpt = q.options.find((o) => o.id === userAnsId);
+                                                  const passageContent = readingData?.passage || (readingData?.passageA ? `A: ${readingData.passageA.text}\nB: ${readingData.passageB?.text}` : "");
+                                                  const prompt = `Nhờ Gia sư AI giải thích chi tiết bài đọc hiểu và câu hỏi sau:\n\nTiêu đề/Mondai: ${readingData?.mondaiName || ""} - ${readingData?.title || ""}\nBài đọc:\n${passageContent}\n\nCâu hỏi: ${q.question} (${q.question_vietnamese || ""})\nCác lựa chọn:\n${q.options.map((o, idx) => `${idx + 1}. ${o.text}${o.isCorrect ? " (Đáp án đúng)" : ""}`).join("\n")}\n\nLựa chọn của tôi: ${userOpt?.text || "Chưa chọn"}\nĐáp án đúng: ${correctOpt?.text || ""}\nGiải thích: ${q.explanation}\n\nNhờ Gia sư AI giải thích chi tiết đoạn văn liên quan đến đáp án này.`;
+                                                  handleAiTutorReview(prompt);
+                                                }}
+                                                className="px-3 py-1.5 bg-white hover:bg-indigo-50 text-indigo-700 border border-indigo-200 rounded-xl text-[11px] font-bold transition-all cursor-pointer flex items-center gap-1 shrink-0 shadow-3xs"
+                                              >
+                                                <span>🤖 Hỏi Gia sư AI về câu này</span>
+                                              </button>
                                             </div>
                                           )}
                                         </div>
@@ -3229,8 +3296,20 @@ ${item.audioScript}。
                                               )}
                                             </div>
                                             {q.explanation && (
-                                              <div className="text-[11px] text-gray-700 pt-1 border-t border-black/10">
-                                                <strong>💡 Giải thích:</strong> {q.explanation}
+                                              <div className="text-[11px] text-gray-700 pt-1 border-t border-black/10 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                                                <div><strong>💡 Giải thích:</strong> {q.explanation}</div>
+                                                <button
+                                                  type="button"
+                                                  onClick={() => {
+                                                    const userOptText = userAns !== undefined ? q.options[userAns] : "Chưa chọn";
+                                                    const correctOptTexts = q.answers.map((a) => q.options[a]).join(", ");
+                                                    const prompt = `Nhờ Gia sư AI giải thích chi tiết bài đọc hiểu và câu hỏi sau:\n\nBài đọc:\n${p.passageText}\n\nCâu hỏi: ${q.question}\nCác lựa chọn:\n${q.options.map((optText, idx) => `${idx + 1}. ${optText}${q.answers.includes(idx) ? " (Đáp án đúng)" : ""}`).join("\n")}\n\nLựa chọn của tôi: ${userOptText}\nĐáp án đúng: ${correctOptTexts}\nGiải thích: ${q.explanation}\n\nNhờ Gia sư AI giải thích chi tiết lý do và phân tích bài đọc liên quan.`;
+                                                    handleAiTutorReview(prompt);
+                                                  }}
+                                                  className="px-3 py-1.5 bg-white hover:bg-indigo-50 text-indigo-700 border border-indigo-200 rounded-xl text-[11px] font-bold transition-all cursor-pointer flex items-center gap-1 shrink-0 shadow-3xs"
+                                                >
+                                                  <span>🤖 Hỏi Gia sư AI về câu này</span>
+                                                </button>
                                               </div>
                                             )}
                                           </div>
@@ -3330,13 +3409,25 @@ ${item.audioScript}。
                   </div>
 
                   {/* Submission triggers evaluation */}
-                  <div className="flex justify-center pt-2">
+                  <div className="flex items-center justify-center gap-3 flex-wrap pt-2">
                     <button
                       onClick={handleEvaluatePresentation}
                       disabled={isEvaluating || (!presentationTranscripts[0] && !presentationTranscripts[1])}
-                      className="px-8 py-4 bg-gradient-to-r from-teal-600 to-indigo-600 hover:opacity-95 text-white font-bold rounded-2xl text-xs shadow-md shadow-teal-100 disabled:opacity-50"
+                      className="px-8 py-4 bg-gradient-to-r from-teal-600 to-indigo-600 hover:opacity-95 text-white font-bold rounded-2xl text-xs shadow-md shadow-teal-100 disabled:opacity-50 cursor-pointer"
                     >
                       {isEvaluating ? "🤖 AI Đang chấm điểm và phân tích câu..." : "🔍 Gửi AI nhận xét & Đánh giá"}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const transcriptsText = slides.map((s, idx) => `Slide ${s.slide_number} (${s.title}):\n${presentationTranscripts[idx] || "(Chưa nhập nội dung)"}`).join("\n\n");
+                        const evalText = evaluation ? `\n\nKết quả đánh giá hiện tại (${evaluation.comprehensibility_score}%):\nNhận xét: ${evaluation.feedback_general}` : "";
+                        const prompt = `Hãy đóng vai Gia sư AI tiếng Nhật. Nhờ AI nhận xét, chữa lỗi ngữ pháp, từ vựng và tư vấn cách trình bày bài thuyết trình sau đây cho tự nhiên và thuyết phục hơn:\n\nNội dung các slide:\n${transcriptsText}${evalText}`;
+                        handleAiTutorReview(prompt);
+                      }}
+                      className="px-6 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:opacity-95 text-white font-bold rounded-2xl text-xs shadow-md shadow-indigo-100 cursor-pointer flex items-center gap-2"
+                    >
+                      <span>🤖 Thảo luận chi tiết với Gia sư AI</span>
                     </button>
                   </div>
 
@@ -3706,8 +3797,21 @@ ${item.audioScript}。
                                       </span>
                                     )}
                                   </div>
-                                  <div className="text-[11px] text-gray-700 pt-1 border-t border-black/10">
-                                    <strong>💡 Giải thích:</strong> {item.explanation}
+                                  <div className="text-[11px] text-gray-700 pt-1 border-t border-black/10 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                                    <div><strong>💡 Giải thích:</strong> {item.explanation}</div>
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        const userOptText = userAns !== undefined ? item.options[userAns] : "Chưa chọn";
+                                        const correctOptText = item.options[item.correctAnswer];
+                                        const scriptText = item.audioScript ? `\n\nLời thoại (Script):\n${item.audioScript}\n\nDịch nghĩa:\n${item.vietnameseTranslation}` : "";
+                                        const prompt = `Nhờ Gia sư AI giải thích chi tiết câu hỏi Luyện nghe hiểu JLPT ${item.level} (${item.mondaiName}: ${item.mondaiSubtitle}):\n\nTình huống: ${item.situation}\nTiêu đề/Bài nghe: ${item.title}${scriptText}\n\nCâu hỏi: ${item.question}\nCác lựa chọn:\n${item.options.map((optText, idx) => `${idx + 1}. ${optText}${idx === item.correctAnswer ? " (Đáp án đúng)" : ""}`).join("\n")}\n\nLựa chọn của tôi: ${userOptText}\nĐáp án đúng: Lựa chọn ${item.correctAnswer + 1} (${correctOptText})\nGiải thích: ${item.explanation}\n\nNhờ Gia sư AI phân tích từ vựng quan trọng, bẫy thông tin và mẹo nghe hiệu quả cho dạng bài này.`;
+                                        handleAiTutorReview(prompt);
+                                      }}
+                                      className="px-3 py-1.5 bg-white hover:bg-indigo-50 text-indigo-700 border border-indigo-200 rounded-xl text-[11px] font-bold transition-all cursor-pointer flex items-center gap-1 shrink-0 shadow-3xs"
+                                    >
+                                      <span>🤖 Hỏi Gia sư AI về câu này</span>
+                                    </button>
                                   </div>
                                 </div>
                               )}
@@ -4026,8 +4130,20 @@ ${item.audioScript}。
                                       )}
                                     </div>
                                     {q.explanation && (
-                                      <div className="text-[11px] text-gray-700 pt-1 border-t border-black/10">
-                                        <strong>💡 Phân tích ngữ pháp:</strong> {q.explanation}
+                                      <div className="text-[11px] text-gray-700 pt-1 border-t border-black/10 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                                        <div><strong>💡 Phân tích ngữ pháp:</strong> {q.explanation}</div>
+                                        <button
+                                          type="button"
+                                          onClick={() => {
+                                            const userOpt = q.options.find((o) => o.id === userAnsId);
+                                            const fullSent = q.fullSentence ? `\nCâu hoàn chỉnh: ${q.fullSentence}` : "";
+                                            const prompt = `Nhờ Gia sư AI giải thích chi tiết câu hỏi Ngữ pháp JLPT ${selectedLevel} (${jlptGrammarData.mondaiName}):\n\nCâu hỏi: ${q.question} (${q.question_vietnamese || ""})${fullSent}\nCác lựa chọn:\n${q.options.map((o, idx) => `${idx + 1}. ${o.text}${o.isCorrect ? " (Đáp án đúng)" : ""}`).join("\n")}\n\nLựa chọn của tôi: ${userOpt?.text || "Chưa chọn"}\nĐáp án đúng: ${correctOpt?.text || ""}\nPhân tích có sẵn: ${q.explanation}\n\nNhờ Gia sư AI giải thích chi tiết cấu trúc ngữ pháp này, lý do vị trí sắp xếp câu và đưa ra thêm ví dụ tương tự.`;
+                                            handleAiTutorReview(prompt);
+                                          }}
+                                          className="px-3 py-1.5 bg-white hover:bg-purple-50 text-purple-700 border border-purple-200 rounded-xl text-[11px] font-bold transition-all cursor-pointer flex items-center gap-1 shrink-0 shadow-3xs"
+                                        >
+                                          <span>🤖 Hỏi Gia sư AI về câu này</span>
+                                        </button>
                                       </div>
                                     )}
                                   </div>

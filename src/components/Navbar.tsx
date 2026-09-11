@@ -129,7 +129,7 @@ export default function Navbar() {
   const { isVisible, devFeaturesEnabled, isItemDevOnly } = useNavMenuSettings();
   const visibleNavItems = navItems.filter((item) => {
     const isDev = isItemDevOnly(activeLanguage.code, item.href, !!item.isDevOnly);
-    if (isDev && !devFeaturesEnabled && !isAdmin) return false;
+    if (isDev && !isAdmin) return false;
     return isVisible(activeLanguage.code, item.href, isAdmin, !!item.isDevOnly);
   });
 

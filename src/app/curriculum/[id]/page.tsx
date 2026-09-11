@@ -5,9 +5,9 @@ import Link from "next/link";
 import { getCurriculumRepository, getKanjiRepository } from "@/lib/repositories";
 import { DetailedLesson } from "@/lib/repositories/types";
 import { useProgress } from "@/hooks/useProgress";
-import VocabularyListItem from "@/components/VocabularyListItem";
-import GrammarCard from "@/components/GrammarCard";
-import KanjiStrokeViewer from "@/components/KanjiStrokeViewer";
+import LessonVocabSection from "@/components/curriculum/LessonVocabSection";
+import LessonGrammarSection from "@/components/curriculum/LessonGrammarSection";
+import LessonKanjiSection from "@/components/curriculum/LessonKanjiSection";
 
 import { useGrammarProgress } from "@/hooks/useGrammarProgress";
 import { useKanjiProgress } from "@/hooks/useKanjiProgress";
@@ -28,9 +28,9 @@ export default function CurriculumLessonDetailPage({ params }: Props) {
   const [lesson, setLesson] = useState<DetailedLesson | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<"vocab" | "grammar" | "kanji" | "shadowing" | "translation" | "reading">("vocab");
-  const { getVocabProgress, toggleLearned, toggleFavorite } = useProgress();
-  const { getGrammarProgress, toggleLearned: toggleGrammarLearned, toggleFavorite: toggleGrammarFavorite } = useGrammarProgress();
-  const { getKanjiProgress, toggleLearned: toggleKanjiLearned, toggleFavorite: toggleKanjiFavorite } = useKanjiProgress();
+  const { getVocabProgress, toggleLearned, toggleFavorite, updateProgress } = useProgress();
+  const { getGrammarProgress, toggleLearned: toggleGrammarLearned, toggleFavorite: toggleGrammarFavorite, updateProgress: updateGrammarProgress } = useGrammarProgress();
+  const { getKanjiProgress, toggleLearned: toggleKanjiLearned, toggleFavorite: toggleKanjiFavorite, updateProgress: updateKanjiProgress } = useKanjiProgress();
 
   // AI-generated activities states
   const [activities, setActivities] = useState<{
@@ -445,57 +445,35 @@ export default function CurriculumLessonDetailPage({ params }: Props) {
 
       {/* Tab Content */}
       {activeTab === "vocab" && (
-        <div className="space-y-3">
-          {vocabCount === 0 ? (
-            <div className="text-center py-12 text-gray-400">Không có từ vựng nào trong bài học này</div>
-          ) : (
-            lesson.vocabulary.map((v) => (
-              <VocabularyListItem
-                key={v.id}
-                vocab={v}
-                progress={getVocabProgress(v.id)}
-                onToggleLearned={toggleLearned}
-                onToggleFavorite={toggleFavorite}
-              />
-            ))
-          )}
-        </div>
+        <LessonVocabSection
+          vocabulary={lesson.vocabulary || []}
+          getVocabProgress={getVocabProgress}
+          toggleLearned={toggleLearned}
+          toggleFavorite={toggleFavorite}
+          updateProgress={updateProgress}
+          langCode={langCode}
+        />
       )}
 
       {activeTab === "grammar" && (
-        <div className="space-y-4">
-          {grammarCount === 0 ? (
-            <div className="text-center py-12 text-gray-400">Không có mục ngữ pháp nào trong bài học này</div>
-          ) : (
-            lesson.grammarPoints?.map((grammar) => (
-              <GrammarCard
-                key={grammar.id}
-                grammar={grammar}
-                progress={getGrammarProgress(grammar.id)}
-                onToggleLearned={toggleGrammarLearned}
-                onToggleFavorite={toggleGrammarFavorite}
-              />
-            ))
-          )}
-        </div>
+        <LessonGrammarSection
+          grammarPoints={lesson.grammarPoints || []}
+          getGrammarProgress={getGrammarProgress}
+          toggleGrammarLearned={toggleGrammarLearned}
+          toggleGrammarFavorite={toggleGrammarFavorite}
+          updateGrammarProgress={updateGrammarProgress}
+          langCode={langCode}
+        />
       )}
 
       {activeTab === "kanji" && (
-        <div className="space-y-4">
-          {kanjiCount === 0 ? (
-            <div className="text-center py-12 text-gray-400">Không có chữ Hán nào trong bài học này</div>
-          ) : (
-            lesson.kanjiItems?.map((kanji) => (
-              <KanjiStrokeViewer
-                key={kanji.id}
-                kanji={kanji}
-                progress={getKanjiProgress(kanji.id)}
-                onToggleLearned={toggleKanjiLearned}
-                onToggleFavorite={toggleKanjiFavorite}
-              />
-            ))
-          )}
-        </div>
+        <LessonKanjiSection
+          kanjiItems={lesson.kanjiItems || []}
+          getKanjiProgress={getKanjiProgress}
+          toggleKanjiLearned={toggleKanjiLearned}
+          toggleKanjiFavorite={toggleKanjiFavorite}
+          updateKanjiProgress={updateKanjiProgress}
+        />
       )}
 
       {/* Shadowing Tab */}

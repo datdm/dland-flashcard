@@ -28,8 +28,12 @@ export default function NavMenuSettingsPanel() {
 
   const allLangItems = getNavItemsForLanguage(previewLang);
 
-  // Display all menu items for preview; dev items are locked for regular users
-  const displayedItems = allLangItems;
+  // Regular users will not see "Đang phát triển" items in the settings panel at all
+  const displayedItems = allLangItems.filter((item) => {
+    if (isAdmin) return true;
+    const isDev = isItemDevOnly(previewLang, item.href, !!item.isDevOnly);
+    return !isDev;
+  });
 
   const hiddenCount = displayedItems.filter(
     (item) => !ALWAYS_VISIBLE.has(item.href) && !isVisible(previewLang, item.href, isAdmin, !!item.isDevOnly)

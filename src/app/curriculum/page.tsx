@@ -238,7 +238,7 @@ function CurriculumContent() {
                         activeLevel === level ? "bg-white/20 text-white" : "bg-gray-100 text-gray-500"
                       }`}
                     >
-                      {bookCount} giáo trình
+                      {level === "N1" ? "Đang biên soạn" : `${bookCount} giáo trình`}
                     </span>
                   </div>
                   {stats.percentage > 0 && (
@@ -250,7 +250,7 @@ function CurriculumContent() {
                   )}
                 </div>
                 <span className={`text-[10px] font-medium ${activeLevel === level ? "text-indigo-100" : "text-gray-400"}`}>
-                  📚 {totalLessonCount} bài học tổng hợp
+                  {level === "N1" ? "⏳ Đang cập nhật" : `📚 ${totalLessonCount} bài học tổng hợp`}
                 </span>
               </button>
             );
@@ -271,8 +271,29 @@ function CurriculumContent() {
           mockTests={enData?.mockTests || []}
         />
       ) : !activeGroup || activeGroup.lessons.length === 0 ? (
-        <div className="bg-white rounded-3xl p-8 text-center text-gray-400 border border-gray-100">
-          Chưa có bài học nào cho trình độ {activeLevel}
+        <div className="bg-white rounded-3xl p-10 sm:p-14 text-center border border-gray-100 space-y-3.5 shadow-2xs">
+          <span className="text-4xl block">🚧</span>
+          <h3 className="text-base sm:text-lg font-bold text-gray-900">
+            Giáo trình cấp độ {activeLevel} đang được biên soạn
+          </h3>
+          <p className="text-xs text-gray-500 max-w-md mx-auto leading-relaxed">
+            Dữ liệu bài học, từ vựng và ngữ pháp của cấp độ {activeLevel} đang được đội ngũ chuyên môn kiểm duyệt và chuẩn hóa. Bạn vui lòng quay lại sau hoặc chọn học các cấp độ đã hoàn thiện từ N5 đến N2 nhé!
+          </p>
+          <div className="pt-2">
+            <button
+              onClick={() => {
+                setActiveLevel("N2");
+                const n2Group = groups.find((g) => g.level === "N2");
+                if (n2Group?.books && n2Group.books.length > 0) {
+                  setActiveBookId(n2Group.books[0].id);
+                }
+              }}
+              className="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition-all shadow-xs cursor-pointer inline-flex items-center gap-1.5"
+            >
+              <span>Chuyển sang cấp độ N2</span>
+              <span>→</span>
+            </button>
+          </div>
         </div>
       ) : (
         <div className="space-y-4 sm:space-y-5">

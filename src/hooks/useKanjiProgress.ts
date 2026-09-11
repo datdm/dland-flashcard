@@ -65,6 +65,25 @@ export function useKanjiProgress() {
     };
   }, [reloadProgress]);
 
+  const updateProgress = useCallback(
+    (kanjiId: string, patch: Partial<KanjiProgress>) => {
+      setProgress((prev) => {
+        const current = prev[kanjiId] ?? defaultKanjiProgress();
+        const updated: KanjiProgressMap = {
+          ...prev,
+          [kanjiId]: { ...current, ...patch },
+        };
+        setItem(StorageKeys.KANJI_PROGRESS, updated);
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(new Event("progress-updated"));
+        }
+        autoSync(); // Auto-sync after save
+        return updated;
+      });
+    },
+    []
+  );
+
   const toggleLearned = useCallback(
     (kanjiId: string) => {
       setProgress((prev) => {
@@ -121,6 +140,7 @@ export function useKanjiProgress() {
     progress,
     toggleLearned,
     toggleFavorite,
+    updateProgress,
     getKanjiProgress,
   };
 }

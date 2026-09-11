@@ -85,7 +85,7 @@ export function useNavMenuSettings() {
   const isVisible = useCallback(
     (langCode: string, href: string, isAdmin: boolean = false, defaultDevOnly: boolean = false): boolean => {
       const isDev = isItemDevOnly(langCode, href, defaultDevOnly);
-      if (isDev && !isAdmin && !devFeaturesEnabled) {
+      if (isDev && !isAdmin) {
         return false;
       }
       const langSettings = settings[langCode];
@@ -94,14 +94,14 @@ export function useNavMenuSettings() {
       }
       return langSettings[href];
     },
-    [settings, isItemDevOnly, devFeaturesEnabled]
+    [settings, isItemDevOnly]
   );
 
   const toggleItem = useCallback(
     (langCode: string, href: string, isAdmin: boolean = false, defaultDevOnly: boolean = false) => {
       const isDev = isItemDevOnly(langCode, href, defaultDevOnly);
-      // Non-admin users cannot change an in-development item to visible if devFeaturesEnabled is disabled
-      if (!isAdmin && isDev && !devFeaturesEnabled) {
+      // Non-admin users cannot toggle an in-development item
+      if (!isAdmin && isDev) {
         return;
       }
       setSettings((prev) => {

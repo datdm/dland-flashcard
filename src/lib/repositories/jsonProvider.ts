@@ -15,7 +15,7 @@ const LEVEL_FILES: Record<string, string> = {
   N4: "/data/n4-curriculum.json",
   N3: "/data/n3-curriculum.json",
   N2: "/data/n2-curriculum.json",
-  N1: "/data/n5-curriculum.json",
+  N1: "/data/n1-curriculum.json",
   EN: "/data/en-curriculum.json",
   DE: "/data/de-curriculum.json"
 };
@@ -210,6 +210,21 @@ export class JsonCurriculumRepository implements ICurriculumRepository {
     const levels: JLPTLevel[] = ["N5", "N4", "N3", "N2", "N1"];
 
     for (const level of levels) {
+      if (level === "N1") {
+        groups.push({
+          level: "N1",
+          title: "N1 - Cao cấp (JLPT N1)",
+          description: "Chương trình giáo trình JLPT N1 cao cấp đang được chuẩn hóa và biên soạn nội dung.",
+          totalLessons: 0,
+          totalVocab: 0,
+          totalGrammar: 0,
+          totalKanji: 0,
+          books: [],
+          lessons: []
+        });
+        continue;
+      }
+
       const data = await fetchJsonData<{
         level: JLPTLevel;
         title: string;
@@ -525,43 +540,6 @@ export class JsonCurriculumRepository implements ICurriculumRepository {
                 id: `try-n2-${idx + 1}`,
                 name: `Try! N2 - Chương ${idx + 1}: Ngữ pháp nâng cao`,
                 curriculum: "Try! JLPT N2"
-              }))
-            }
-          );
-        } else {
-          // N1
-          books.push(
-            {
-              id: "n1-shinkanzen",
-              name: "Shinkanzen Master N1 (Cao cấp)",
-              level: "N1",
-              publisher: "3A Corporation",
-              tag: "Chinh phục JLPT N1",
-              icon: "📕",
-              description: "Chuyên khảo ngữ pháp N1 cao cấp, văn phong báo chí, học thuật và đàm phán thương mại Nhật Bản.",
-              totalLessons: data.lessons.length,
-              totalVocab,
-              totalGrammar,
-              totalKanji,
-              lessons: data.lessons
-            },
-            {
-              id: "n1-soumatome",
-              name: "Nihongo Soumatome N1",
-              level: "N1",
-              publisher: "ASK Publishing",
-              tag: "Trọng tâm N1",
-              icon: "📙",
-              description: "Tổng hợp 8 tuần từ vựng và chữ Hán N1 khó và thành ngữ 4 chữ (Yojijukugo).",
-              totalLessons: 8,
-              totalVocab: Math.round(totalVocab * 0.6),
-              totalGrammar: Math.round(totalGrammar * 0.6),
-              totalKanji: 300,
-              lessons: data.lessons.slice(0, 8).map((l, idx) => ({
-                ...l,
-                id: `soumatome-n1-w${idx + 1}`,
-                name: `Soumatome N1 - Tuần ${idx + 1}: Thành ngữ & Ngữ pháp`,
-                curriculum: "Nihongo Soumatome N1"
               }))
             }
           );
