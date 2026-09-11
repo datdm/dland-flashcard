@@ -120,7 +120,7 @@ export function useNavMenuSettings() {
         return updated;
       });
     },
-    [isItemDevOnly, devFeaturesEnabled]
+    [isItemDevOnly]
   );
 
   const toggleItemDevOnly = useCallback(

@@ -28,15 +28,14 @@ export default function NavMenuSettingsPanel() {
 
   const allLangItems = getNavItemsForLanguage(previewLang);
 
-  // Regular users will not see "Đang phát triển" items in the settings panel at all
-  const displayedItems = allLangItems.filter((item) => {
-    if (isAdmin) return true;
-    const isDev = isItemDevOnly(previewLang, item.href, !!item.isDevOnly);
-    return !isDev;
-  });
+  // Hiển thị toàn bộ các mục menu trong cấu hình
+  const displayedItems = allLangItems;
 
   const hiddenCount = displayedItems.filter(
-    (item) => !ALWAYS_VISIBLE.has(item.href) && !isVisible(previewLang, item.href, isAdmin, !!item.isDevOnly)
+    (item) =>
+      !ALWAYS_VISIBLE.has(item.href) &&
+      (!isItemDevOnly(previewLang, item.href, !!item.isDevOnly) || isAdmin) &&
+      !isVisible(previewLang, item.href, isAdmin, !!item.isDevOnly)
   ).length;
 
   const currentLangObj = SUPPORTED_LANGUAGES.find((l) => l.code === previewLang) || activeLanguage;
@@ -133,12 +132,12 @@ export default function NavMenuSettingsPanel() {
         </div>
       )}
 
-      {/* Regular User Notification Banner when Dev Features are Enabled */}
-      {!isAdmin && devFeaturesEnabled && (
-        <div className="p-3 bg-amber-50 border border-amber-200/80 rounded-2xl flex items-center gap-2 text-xs text-amber-900">
-          <span>💡</span>
+      {/* Regular User Notification Banner when Dev Features are Present */}
+      {!isAdmin && displayedItems.some((item) => isItemDevOnly(previewLang, item.href, !!item.isDevOnly)) && (
+        <div className="p-3 bg-amber-50/80 border border-amber-200/80 rounded-2xl flex items-center gap-2.5 text-xs text-amber-900">
+          <span className="text-base shrink-0">🔒</span>
           <span>
-            Tính năng <strong>Menu Đang Phát Triển</strong> đang được kích hoạt từ Quản trị viên. Bạn có thể bật/tắt các menu thử nghiệm bên dưới.
+            Các menu có nhãn <strong>"🔒 Admin khóa"</strong> đang trong quá trình phát triển. Học viên không có quyền thay đổi thành hiển thị.
           </span>
         </div>
       )}
@@ -190,20 +189,21 @@ export default function NavMenuSettingsPanel() {
                   <span className="text-[10px] font-bold text-gray-400 px-2 py-1 bg-gray-100 rounded-lg shrink-0">
                     Cố định
                   </span>
-                ) : isDev && !isAdmin && !devFeaturesEnabled ? (
+                ) : isDev && !isAdmin ? (
                   <div
                     className="flex items-center gap-1.5 shrink-0"
-                    title="Menu đang trong quá trình phát triển. Chỉ Admin mới có quyền bật hiển thị."
+                    title="Menu đang trong quá trình phát triển (do Admin quản lý). Bạn không có quyền bật hiển thị."
                   >
                     <span className="text-[10px] font-bold text-amber-800 bg-amber-100/90 border border-amber-300 px-2 py-0.5 rounded-lg flex items-center gap-1 select-none">
                       <span>🔒</span>
-                      <span>Khóa</span>
+                      <span>Admin khóa</span>
                     </span>
                     <button
                       type="button"
                       disabled
-                      className="relative inline-flex h-6 w-11 shrink-0 cursor-not-allowed opacity-50 rounded-full border-2 border-transparent bg-gray-200"
-                      title="Menu đang phát triển - Không thể bật hiển thị"
+                      aria-disabled="true"
+                      className="relative inline-flex h-6 w-11 shrink-0 cursor-not-allowed opacity-40 rounded-full border-2 border-transparent bg-gray-300"
+                      title="Menu đang phát triển - Bạn không có quyền bật hiển thị"
                     >
                       <span className="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-md ring-0 translate-x-0" />
                     </button>

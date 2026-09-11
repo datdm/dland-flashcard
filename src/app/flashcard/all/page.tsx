@@ -168,7 +168,7 @@ export default function FlashCardAllPage() {
                 Luyện 50 từ ngẫu nhiên mỗi ngày
               </h3>
               <p className="text-[11px] text-gray-500 mt-0.5">
-                Xáo trộn cố định 50 từ trong ngày để tránh quá tải và học tập đều đặn
+                Xáo trộn cố định 50 từ trong ngày (hỗ trợ cả Thẻ Flashcard và Trắc Nghiệm 4 đáp án)
               </p>
             </div>
           </div>
