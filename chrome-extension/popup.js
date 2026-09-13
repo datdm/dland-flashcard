@@ -53,8 +53,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const btnUploadToDb = document.getElementById("btnUploadToDb");
   const presetWebVercel = document.getElementById("presetWebVercel");
   const presetWebLocal = document.getElementById("presetWebLocal");
-  const presetApiVercel = document.getElementById("presetApiVercel");
+  const presetApiRender = document.getElementById("presetApiRender");
   const presetApiLocal = document.getElementById("presetApiLocal");
+
 
   // Admin Lock & Login Notice Elements
   const loginCurrentApiDisplay = document.getElementById("loginCurrentApiDisplay");
@@ -107,9 +108,14 @@ document.addEventListener("DOMContentLoaded", () => {
       authToken = res.authToken || null;
       user = res.user || null;
       settings.webUrl = res.webUrl || "https://flashcard-japanese-eight.vercel.app";
-      settings.apiUrl = res.apiUrl || "http://localhost:3001";
+      let cleanApi = res.apiUrl;
+      if (!cleanApi || cleanApi.includes("vercel.app") || cleanApi.includes("localhost")) {
+        cleanApi = "https://flashcard-japanese-be.onrender.com";
+      }
+      settings.apiUrl = cleanApi;
       settings.autoSync = res.autoSync !== false;
       settings.tooltipEnabled = res.tooltipEnabled !== false;
+
 
       // Update Web App Link
       if (headerWebLink) {
@@ -277,11 +283,12 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("btnOpenLoginModal")?.addEventListener("click", () => {
         loginErrorMsg.style.display = "none";
         if (loginCurrentApiDisplay) {
-          loginCurrentApiDisplay.textContent = settings.apiUrl || "http://localhost:3001";
+          loginCurrentApiDisplay.textContent = settings.apiUrl || "https://flashcard-japanese-be.onrender.com";
         }
         loginModal.style.display = "flex";
         loginUsername.focus();
       });
+
 
       document.getElementById("btnSyncFromWeb")?.addEventListener("click", handleSyncFromWeb);
     }
@@ -528,7 +535,11 @@ document.addEventListener("DOMContentLoaded", () => {
   // =========================================================================
   btnOpenSettings?.addEventListener("click", () => {
     settingWebUrl.value = settings.webUrl || "https://flashcard-japanese-eight.vercel.app";
-    settingApiUrl.value = settings.apiUrl || "http://localhost:3001";
+    let currentApi = settings.apiUrl;
+    if (!currentApi || currentApi.includes("vercel.app") || currentApi.includes("localhost")) {
+      currentApi = "https://flashcard-japanese-be.onrender.com";
+    }
+    settingApiUrl.value = currentApi;
     settingAutoSync.checked = settings.autoSync !== false;
     settingTooltipEnabled.checked = settings.tooltipEnabled !== false;
 
@@ -625,9 +636,9 @@ document.addEventListener("DOMContentLoaded", () => {
       settingWebUrl.value = "http://localhost:3000";
     }
   });
-  presetApiVercel?.addEventListener("click", () => {
-    if (!presetApiVercel.disabled) {
-      settingApiUrl.value = "https://flashcard-japanese-eight.vercel.app";
+  presetApiRender?.addEventListener("click", () => {
+    if (!presetApiRender.disabled) {
+      settingApiUrl.value = "https://flashcard-japanese-be.onrender.com";
     }
   });
   presetApiLocal?.addEventListener("click", () => {
@@ -679,10 +690,11 @@ document.addEventListener("DOMContentLoaded", () => {
   btnSaveSettings?.addEventListener("click", () => {
     const newSettings = {
       webUrl: settingWebUrl.value.trim() || "https://flashcard-japanese-eight.vercel.app",
-      apiUrl: settingApiUrl.value.trim() || "http://localhost:3001",
+      apiUrl: settingApiUrl.value.trim() || "https://flashcard-japanese-be.onrender.com",
       autoSync: settingAutoSync.checked,
       tooltipEnabled: settingTooltipEnabled.checked,
     };
+
 
     // Check if non-admin is trying to modify URL fields
     const urlChanged = (newSettings.webUrl !== settings.webUrl) || (newSettings.apiUrl !== settings.apiUrl);

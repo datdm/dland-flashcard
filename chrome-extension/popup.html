@@ -95,7 +95,7 @@
 
           <div class="api-notice-pill">
             <span style="font-size: 11px;">🌐 API Server:</span>
-            <code id="loginCurrentApiDisplay">http://localhost:3001</code>
+            <code id="loginCurrentApiDisplay">https://flashcard-japanese-be.onrender.com</code>
           </div>
 
           <label style="margin-top: 6px;">Tên đăng nhập</label>
@@ -107,7 +107,7 @@
           <div class="auth-helper-box">
             <span class="helper-icon">💡</span>
             <div class="helper-text">
-              Đang dùng Web App trên Vercel? Bấm <b>"🔗 Đồng bộ từ Web"</b> để tự động nhận phiên đăng nhập mà không cần nhập mật khẩu hay cấu hình server!
+              Bạn có thể đăng nhập bằng tài khoản trên hệ thống hoặc bấm <b>"🔗 Đồng bộ từ Web"</b> nếu tab Web App đang mở!
             </div>
           </div>
         </div>
@@ -160,11 +160,12 @@
               <span class="admin-tag-pill" id="badgeApiUrl">🔒 Chỉ Admin</span>
             </div>
             <div class="input-with-presets">
-              <input type="text" id="settingApiUrl" placeholder="http://localhost:3001" readonly disabled />
-              <button type="button" class="btn-preset admin-preset" id="presetApiVercel" title="Đặt về Vercel" disabled>Vercel</button>
+              <input type="text" id="settingApiUrl" placeholder="https://flashcard-japanese-be.onrender.com" readonly disabled />
+              <button type="button" class="btn-preset admin-preset" id="presetApiRender" title="Đặt về Render Cloud" disabled>Render</button>
               <button type="button" class="btn-preset admin-preset" id="presetApiLocal" title="Đặt về Localhost:3001" disabled>Port 3001</button>
             </div>
           </div>
+
 
           <!-- Connection test -->
           <div class="connection-test-row">

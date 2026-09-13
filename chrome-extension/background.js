@@ -65,6 +65,17 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
   }
 });
 
+// Helper to get sanitized API URL (auto falls back to Render if empty or legacy vercel/localhost)
+async function getStoredApiUrl() {
+  const store = await chrome.storage.local.get(["dland_api_url"]);
+  let apiUrl = store.dland_api_url;
+  if (!apiUrl || apiUrl.includes("vercel.app") || apiUrl.includes("localhost")) {
+    apiUrl = DEFAULT_API_URL;
+    await chrome.storage.local.set({ dland_api_url: DEFAULT_API_URL });
+  }
+  return apiUrl.replace(/\/$/, "");
+}
+
 // Handle messages from content scripts and popup
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   switch (request.action) {
@@ -85,12 +96,17 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
           "dland_auto_sync",
           "dland_tooltip_enabled",
         ])
-        .then((res) => {
+        .then(async (res) => {
+          let apiUrl = res.dland_api_url;
+          if (!apiUrl || apiUrl.includes("vercel.app") || apiUrl.includes("localhost")) {
+            apiUrl = DEFAULT_API_URL;
+            await chrome.storage.local.set({ dland_api_url: DEFAULT_API_URL });
+          }
           sendResponse({
             notebooks: res.dland_notebooks || [DEFAULT_NOTEBOOK],
             authToken: res.dland_auth_token || null,
             user: res.dland_user || null,
-            apiUrl: res.dland_api_url || DEFAULT_API_URL,
+            apiUrl: apiUrl,
             webUrl: res.dland_web_url || DEFAULT_WEB_URL,
             autoSync: res.dland_auto_sync !== false,
             tooltipEnabled: res.dland_tooltip_enabled !== false,
@@ -177,9 +193,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
           "dland_auth_token",
           "dland_user",
         ])
-        .then((res) => {
+        .then(async (res) => {
+          let apiUrl = res.dland_api_url;
+          if (!apiUrl || apiUrl.includes("vercel.app") || apiUrl.includes("localhost")) {
+            apiUrl = DEFAULT_API_URL;
+            await chrome.storage.local.set({ dland_api_url: DEFAULT_API_URL });
+          }
           sendResponse({
-            apiUrl: res.dland_api_url || DEFAULT_API_URL,
+            apiUrl: apiUrl,
             webUrl: res.dland_web_url || DEFAULT_WEB_URL,
             autoSync: res.dland_auto_sync !== false,
             tooltipEnabled: res.dland_tooltip_enabled !== false,
@@ -330,7 +351,7 @@ async function handleSaveVocab(notebookId, vocab) {
 
   // Sync to database if token is available and auto-sync is enabled
   const token = store.dland_auth_token;
-  const apiUrl = (store.dland_api_url || DEFAULT_API_URL).replace(/\/$/, "");
+  const apiUrl = await getStoredApiUrl();
   const autoSync = store.dland_auto_sync !== false;
   let synced = false;
   let syncError = null;
@@ -399,13 +420,13 @@ async function handleLogin(username, password) {
     throw new Error("Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu");
   }
 
-  const store = await chrome.storage.local.get(["dland_api_url"]);
-  const apiUrl = (store.dland_api_url || DEFAULT_API_URL).replace(/\/$/, "");
+  const apiUrl = await getStoredApiUrl();
 
   let response;
   try {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 10000);
+    // Render free-tier instances sleep when inactive and need up to 40s to cold start
+    const timeout = setTimeout(() => controller.abort(), 40000);
 
     response = await fetch(`${apiUrl}/api/auth/login`, {
       method: "POST",
@@ -415,6 +436,11 @@ async function handleLogin(username, password) {
     });
     clearTimeout(timeout);
   } catch (netErr) {
+    if (netErr.name === "AbortError") {
+      throw new Error(
+        `Máy chủ (${apiUrl}) mất quá nhiều thời gian phản hồi (>40s). Máy chủ Render có thể đang thức dậy (cold start). Vui lòng đợi 10-20 giây rồi bấm Đăng nhập lại!`
+      );
+    }
     throw new Error(
       `Không thể kết nối đến máy chủ API (${apiUrl}). Nếu bạn đang mở Web App trên trình duyệt, hãy bấm '🔗 Đồng bộ từ Web App'. Hoặc kiểm tra lại URL API Server trong Cài đặt (Dành cho Admin).`
     );
@@ -489,11 +515,11 @@ async function handleLogout() {
 
 // Download notebooks from Database
 async function handleDownloadFromDatabase() {
-  const store = await chrome.storage.local.get(["dland_api_url", "dland_auth_token"]);
+  const store = await chrome.storage.local.get(["dland_auth_token"]);
   const token = store.dland_auth_token;
   if (!token) throw new Error("Chưa đăng nhập. Vui lòng đăng nhập trước khi đồng bộ.");
 
-  const apiUrl = (store.dland_api_url || DEFAULT_API_URL).replace(/\/$/, "");
+  const apiUrl = await getStoredApiUrl();
   const response = await fetch(`${apiUrl}/api/sync/data`, {
     headers: { Authorization: `Bearer ${token}` },
   });
@@ -530,7 +556,6 @@ async function handleDownloadFromDatabase() {
 // Upload local notebooks to Database
 async function handleUploadToDatabase() {
   const store = await chrome.storage.local.get([
-    "dland_api_url",
     "dland_auth_token",
     "dland_notebooks",
   ]);
@@ -538,7 +563,7 @@ async function handleUploadToDatabase() {
   const token = store.dland_auth_token;
   if (!token) throw new Error("Chưa đăng nhập. Vui lòng đăng nhập trước khi tải lên.");
 
-  const apiUrl = (store.dland_api_url || DEFAULT_API_URL).replace(/\/$/, "");
+  const apiUrl = await getStoredApiUrl();
   const notebooks = store.dland_notebooks || [DEFAULT_NOTEBOOK];
 
   const response = await fetch(`${apiUrl}/api/sync/upload`, {
@@ -609,15 +634,18 @@ async function handleSyncFromOpenTabs() {
 
 // Test server/database connectivity
 async function handleTestConnection(url) {
-  const targetUrl = (url || DEFAULT_API_URL).replace(/\/$/, "");
+  let targetUrl = url ? url.trim().replace(/\/$/, "") : await getStoredApiUrl();
+  if (!targetUrl || targetUrl.includes("vercel.app") || targetUrl.includes("localhost")) {
+    targetUrl = DEFAULT_API_URL;
+  }
   const startTime = Date.now();
 
   try {
-    // Try pinging auth verify or dictionary or root
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 8000);
+    // Render free-tier instances may sleep and need up to 25s to wake up
+    const timeout = setTimeout(() => controller.abort(), 25000);
 
-    const res = await fetch(`${targetUrl}/api/dictionary?word=test`, {
+    const res = await fetch(`${targetUrl}/api/sync/status`, {
       method: "GET",
       signal: controller.signal,
     }).catch(async () => {
@@ -641,6 +669,12 @@ async function handleTestConnection(url) {
       status: `Máy chủ phản hồi HTTP ${res.status}`,
     };
   } catch (err) {
+    if (err.name === "AbortError") {
+      return {
+        success: false,
+        status: "Quá thời gian chờ (Server Render có thể đang ngủ, vui lòng thử lại sau 15-20s)",
+      };
+    }
     return {
       success: false,
       status: `Không thể kết nối: ${err.message}`,
