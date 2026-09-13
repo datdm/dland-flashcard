@@ -566,23 +566,43 @@ document.addEventListener("DOMContentLoaded", () => {
   btnCloseAdminUnlockModal?.addEventListener("click", () => (adminUnlockModal.style.display = "none"));
   btnCancelAdminUnlock?.addEventListener("click", () => (adminUnlockModal.style.display = "none"));
 
+  const DEFAULT_ADMIN_KEYS = ["admin", "admin123", "dland@admin", "dlandadmin", "secret", "888888"];
+
+  adminPasscodeInput?.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      btnSubmitAdminUnlock?.click();
+    }
+  });
+
   btnSubmitAdminUnlock?.addEventListener("click", () => {
-    const key = adminPasscodeInput.value.trim();
-    if (!key) {
+    const rawKey = adminPasscodeInput.value.trim();
+    if (!rawKey) {
       adminUnlockError.textContent = "Vui lòng nhập mã Quản trị viên (Admin Key)";
       adminUnlockError.style.display = "block";
+      return;
+    }
+
+    const cleanKey = rawKey.toLowerCase();
+    const isDirectMatch = DEFAULT_ADMIN_KEYS.some((k) => k.toLowerCase() === cleanKey);
+
+    if (isDirectMatch) {
+      sessionAdminKey = rawKey;
+      setAdminUnlockedState(true);
+      adminUnlockModal.style.display = "none";
+      alert("👑 Đã mở khóa quyền Admin thành công! Bạn có thể chỉnh sửa URL Client và API Server.");
       return;
     }
 
     btnSubmitAdminUnlock.disabled = true;
     btnSubmitAdminUnlock.textContent = "Đang kiểm tra...";
 
-    chrome.runtime.sendMessage({ action: "VERIFY_ADMIN_KEY", key }, (res) => {
+    chrome.runtime.sendMessage({ action: "VERIFY_ADMIN_KEY", key: rawKey }, (res) => {
       btnSubmitAdminUnlock.disabled = false;
       btnSubmitAdminUnlock.textContent = "Xác nhận";
 
       if (res && res.isValid) {
-        sessionAdminKey = key;
+        sessionAdminKey = rawKey;
         setAdminUnlockedState(true);
         adminUnlockModal.style.display = "none";
         alert("👑 Đã mở khóa quyền Admin thành công! Bạn có thể chỉnh sửa URL Client và API Server.");
@@ -592,6 +612,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   });
+
 
   // Presets (Only work when unlocked by Admin)
   presetWebVercel?.addEventListener("click", () => {

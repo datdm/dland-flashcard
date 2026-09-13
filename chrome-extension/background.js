@@ -1,13 +1,12 @@
 // Dland Language Flashcard - Background Service Worker (Manifest V3)
 
 const DEFAULT_WEB_URL = "https://flashcard-japanese-eight.vercel.app";
-const DEFAULT_API_URL = "http://localhost:3001";
+const DEFAULT_API_URL = "https://flashcard-japanese-be.onrender.com";
 
 // Default admin passcodes that can unlock Admin-only URL configuration
 const VALID_ADMIN_KEYS = ["admin", "admin123", "dland@admin", "dlandadmin", "secret", "888888"];
 
 const DEFAULT_NOTEBOOK = {
-
   id: "nb-default-ja",
   name: "Sổ tay Tiếng Nhật",
   lang: "ja",
@@ -32,9 +31,11 @@ chrome.runtime.onInstalled.addListener(async () => {
   if (!data.dland_web_url) {
     toSet.dland_web_url = DEFAULT_WEB_URL;
   }
-  if (!data.dland_api_url) {
+  // Auto migrate or set Render as default API URL
+  if (!data.dland_api_url || data.dland_api_url.includes("localhost") || data.dland_api_url.includes("vercel.app")) {
     toSet.dland_api_url = DEFAULT_API_URL;
   }
+
   if (data.dland_auto_sync === undefined) {
     toSet.dland_auto_sync = true;
   }
@@ -153,11 +154,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
     case "VERIFY_ADMIN_KEY":
       {
-        const key = String(request.key || "").trim();
-        const isValid = VALID_ADMIN_KEYS.includes(key);
+        const key = String(request.key || "").trim().toLowerCase();
+        const isValid = VALID_ADMIN_KEYS.some((k) => k.toLowerCase() === key);
         sendResponse({ success: true, isValid });
       }
       return true;
+
 
     case "SET_TOOLTIP_ENABLED":
       handleSetTooltipEnabled(request.enabled)
@@ -674,8 +676,12 @@ async function handleSaveSettings(settings, adminKey) {
   const store = await chrome.storage.local.get(["dland_user"]);
   const currentUser = store.dland_user;
   const isCurrentAdmin = Boolean(currentUser && currentUser.isAdmin);
-  const isKeyValid = Boolean(adminKey && VALID_ADMIN_KEYS.includes(String(adminKey).trim()));
+  const isKeyValid = Boolean(
+    adminKey &&
+      VALID_ADMIN_KEYS.some((k) => k.toLowerCase() === String(adminKey).trim().toLowerCase())
+  );
   const isAuthorized = isCurrentAdmin || isKeyValid;
+
 
   const toUpdate = {};
 

@@ -27,6 +27,7 @@
     "tabs"
   ],
   "host_permissions": [
+    "https://flashcard-japanese-be.onrender.com/*",
     "https://flashcard-japanese-eight.vercel.app/*",
     "https://mazii.net/*",
     "http://localhost:3000/*",
