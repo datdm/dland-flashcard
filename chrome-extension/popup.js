@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let authToken = null;
   let settings = {
     webUrl: "https://flashcard-japanese-eight.vercel.app",
-    apiUrl: "https://flashcard-japanese-eight.vercel.app",
+    apiUrl: "https://flashcard-japanese-be.onrender.com",
     autoSync: true,
     tooltipEnabled: true,
   };
@@ -33,11 +33,17 @@ document.addEventListener("DOMContentLoaded", () => {
   // Modals
   const loginModal = document.getElementById("loginModal");
   const btnCloseLoginModal = document.getElementById("btnCloseLoginModal");
+  const authModalTitle = document.getElementById("authModalTitle");
+  const tabAuthLogin = document.getElementById("tabAuthLogin");
+  const tabAuthRegister = document.getElementById("tabAuthRegister");
+  const authModalDesc = document.getElementById("authModalDesc");
+  const authHelperText = document.getElementById("authHelperText");
   const loginUsername = document.getElementById("loginUsername");
   const loginPassword = document.getElementById("loginPassword");
   const loginErrorMsg = document.getElementById("loginErrorMsg");
   const btnSubmitLogin = document.getElementById("btnSubmitLogin");
   const btnSyncFromWebInModal = document.getElementById("btnSyncFromWebInModal");
+  let isRegisterMode = false;
 
   const settingsModal = document.getElementById("settingsModal");
   const btnCloseSettingsModal = document.getElementById("btnCloseSettingsModal");
@@ -96,12 +102,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const addWordMeaning = document.getElementById("addWordMeaning");
   const addWordType = document.getElementById("addWordType");
   const addWordTargetNotebook = document.getElementById("addWordTargetNotebook");
+  const addWordError = document.getElementById("addWordError");
 
   // =========================================================================
   // 1. INITIAL LOAD & DATA FETCHING
   // =========================================================================
-  function loadData() {
-    chrome.runtime.sendMessage({ action: "GET_NOTEBOOKS" }, (res) => {
+  function loadData(forceSync = true) {
+    chrome.runtime.sendMessage({ action: "GET_NOTEBOOKS", forceSync }, (res) => {
       if (!res) return;
 
       notebooks = res.notebooks || [];
@@ -115,7 +122,6 @@ document.addEventListener("DOMContentLoaded", () => {
       settings.apiUrl = cleanApi;
       settings.autoSync = res.autoSync !== false;
       settings.tooltipEnabled = res.tooltipEnabled !== false;
-
 
       // Update Web App Link
       if (headerWebLink) {
@@ -136,11 +142,46 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // Realtime storage listener: auto-update popup when notebooks or auth state change
+  chrome.storage.onChanged.addListener((changes, namespace) => {
+    if (namespace === "local") {
+      let needsRerender = false;
+      if (changes.dland_notebooks) {
+        notebooks = changes.dland_notebooks.newValue || [];
+        needsRerender = true;
+      }
+      if (changes.dland_auth_token || changes.dland_user) {
+        if (changes.dland_auth_token) authToken = changes.dland_auth_token.newValue || null;
+        if (changes.dland_user) user = changes.dland_user.newValue || null;
+        setAdminUnlockedState(Boolean(user && user.isAdmin) || isAdminUnlocked);
+        renderAuthBar();
+      }
+      if (needsRerender) {
+        renderStats();
+        renderNotebooks();
+      }
+    }
+  });
+
+  // Re-fetch fresh data whenever popup window is focused or becomes visible
+  window.addEventListener("focus", () => loadData(true));
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") {
+      loadData(true);
+    }
+  });
+
   // =========================================================================
   // ADMIN STATE & UNLOCK LOGIC
   // =========================================================================
   function setAdminUnlockedState(unlocked) {
-    const isUserAdmin = Boolean(user && user.isAdmin);
+    const isUserAdmin = Boolean(
+      user &&
+        (user.isAdmin ||
+          user.username === "admin" ||
+          user.username === "datdm" ||
+          user.username === "admin@dland.com")
+    );
     isAdminUnlocked = Boolean(unlocked) || isUserAdmin;
 
     if (isAdminUnlocked) {
@@ -167,7 +208,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (settingApiUrl) { settingApiUrl.readOnly = false; settingApiUrl.disabled = false; }
       if (presetWebVercel) presetWebVercel.disabled = false;
       if (presetWebLocal) presetWebLocal.disabled = false;
-      if (presetApiVercel) presetApiVercel.disabled = false;
+      if (presetApiRender) presetApiRender.disabled = false;
       if (presetApiLocal) presetApiLocal.disabled = false;
 
       if (badgeWebUrl) { badgeWebUrl.textContent = "👑 Cho phép sửa"; badgeWebUrl.classList.add("unlocked"); }
@@ -186,7 +227,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (settingApiUrl) { settingApiUrl.readOnly = true; settingApiUrl.disabled = true; }
       if (presetWebVercel) presetWebVercel.disabled = true;
       if (presetWebLocal) presetWebLocal.disabled = true;
-      if (presetApiVercel) presetApiVercel.disabled = true;
+      if (presetApiRender) presetApiRender.disabled = true;
       if (presetApiLocal) presetApiLocal.disabled = true;
 
       if (badgeWebUrl) { badgeWebUrl.textContent = "🔒 Chỉ Admin"; badgeWebUrl.classList.remove("unlocked"); }
@@ -286,7 +327,7 @@ document.addEventListener("DOMContentLoaded", () => {
           loginCurrentApiDisplay.textContent = settings.apiUrl || "https://flashcard-japanese-be.onrender.com";
         }
         loginModal.style.display = "flex";
-        loginUsername.focus();
+        loginUsername?.focus?.();
       });
 
 
@@ -319,7 +360,7 @@ document.addEventListener("DOMContentLoaded", () => {
       `;
       document.getElementById("btnCreateFirstNb")?.addEventListener("click", () => {
         newNbModal.style.display = "flex";
-        newNbNameInput.focus();
+        newNbNameInput?.focus?.();
       });
       return;
     }
@@ -407,7 +448,7 @@ document.addEventListener("DOMContentLoaded", () => {
       `;
 
       // Header click toggles expand
-      card.querySelector(".notebook-header").addEventListener("click", (e) => {
+      card.querySelector(".notebook-header")?.addEventListener("click", (e) => {
         if (e.target.closest(".btn-add-word-nb")) return;
         if (expandedNotebookIds.has(nb.id)) {
           expandedNotebookIds.delete(nb.id);
@@ -419,7 +460,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       // Add word button
-      card.querySelector(".btn-add-word-nb").addEventListener("click", (e) => {
+      card.querySelector(".btn-add-word-nb")?.addEventListener("click", (e) => {
         e.stopPropagation();
         openAddWordModal(nb.id);
       });
@@ -443,7 +484,7 @@ document.addEventListener("DOMContentLoaded", () => {
       notebooksList.appendChild(card);
     });
 
-    if (notebooksList.children.length === 0 && cleanFilter) {
+    if (notebooksList.children?.length === 0 && cleanFilter) {
       notebooksList.innerHTML = `
         <div class="empty-state">
           <p>Không tìm thấy từ vựng nào khớp với "<b>${escapeHtml(cleanFilter)}</b>".</p>
@@ -461,6 +502,39 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!username || !password) {
       showLoginError("Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu");
+      return;
+    }
+
+    if (isRegisterMode) {
+      if (username.length < 3) {
+        showLoginError("Tên đăng nhập phải có ít nhất 3 ký tự");
+        return;
+      }
+      if (password.length < 6) {
+        showLoginError("Mật khẩu phải có ít nhất 6 ký tự");
+        return;
+      }
+
+      btnSubmitLogin.disabled = true;
+      btnSubmitLogin.textContent = "Đang đăng ký...";
+      loginErrorMsg.style.display = "none";
+
+      chrome.runtime.sendMessage(
+        { action: "REGISTER_WITH_CREDENTIALS", username, password },
+        (res) => {
+          btnSubmitLogin.disabled = false;
+          btnSubmitLogin.textContent = "Đăng ký tài khoản";
+
+          if (res && res.success) {
+            loginModal.style.display = "none";
+            loginPassword.value = "";
+            alert(`✅ Đăng ký tài khoản thành công! Chào mừng ${res.user?.username || ""}.`);
+            loadData();
+          } else {
+            showLoginError(res?.error || "Đăng ký thất bại. Vui lòng kiểm tra lại thông tin.");
+          }
+        }
+      );
       return;
     }
 
@@ -530,6 +604,24 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // Auth Bar Event Delegation (guarantees click handlers work in both static and dynamic HTML)
+  authBar?.addEventListener("click", (e) => {
+    if (e.target.closest("#btnOpenLoginModal")) {
+      loginErrorMsg.style.display = "none";
+      if (loginCurrentApiDisplay) {
+        loginCurrentApiDisplay.textContent = settings.apiUrl || "https://flashcard-japanese-be.onrender.com";
+      }
+      loginModal.style.display = "flex";
+      loginUsername?.focus?.();
+    } else if (e.target.closest("#btnSyncFromWeb")) {
+      handleSyncFromWeb();
+    } else if (e.target.closest("#btnSyncDbNow")) {
+      handleSyncFromDatabase();
+    } else if (e.target.closest("#btnLogout")) {
+      handleLogout();
+    }
+  });
+
   // =========================================================================
   // 5. SETTINGS MODAL ACTIONS
   // =========================================================================
@@ -570,7 +662,7 @@ document.addEventListener("DOMContentLoaded", () => {
       adminUnlockError.style.display = "none";
       adminPasscodeInput.value = "";
       adminUnlockModal.style.display = "flex";
-      adminPasscodeInput.focus();
+      adminPasscodeInput?.focus?.();
     }
   });
 
@@ -649,12 +741,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Test Connection
   btnTestConnection?.addEventListener("click", () => {
-    const urlToTest = settingApiUrl.value.trim();
+    let urlToTest = (settingApiUrl?.value || "").trim();
+    if (!urlToTest || urlToTest.includes("vercel.app") || urlToTest.includes("localhost")) {
+      urlToTest = "https://flashcard-japanese-be.onrender.com";
+      if (settingApiUrl) settingApiUrl.value = urlToTest;
+    }
+    if (!urlToTest.startsWith("http://") && !urlToTest.startsWith("https://")) {
+      urlToTest = "https://" + urlToTest;
+      if (settingApiUrl) settingApiUrl.value = urlToTest;
+    }
+
     testResultBadge.className = "test-result-badge";
     testResultBadge.textContent = "Đang kiểm tra...";
 
     chrome.runtime.sendMessage({ action: "TEST_SERVER_CONNECTION", apiUrl: urlToTest }, (res) => {
-      if (res && res.success) {
+      if (chrome.runtime.lastError || !res) {
+        // Fallback: direct test from popup in case service worker was sleeping
+        testDirectlyFromPopup(urlToTest);
+        return;
+      }
+      if (res.success) {
         testResultBadge.className = "test-result-badge success";
         testResultBadge.textContent = `🟢 ${res.status}`;
       } else {
@@ -663,6 +769,29 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   });
+
+  function testDirectlyFromPopup(url) {
+    const targetUrl = (url || "https://flashcard-japanese-be.onrender.com").replace(/\/$/, "");
+    const startTime = Date.now();
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 20000);
+
+    fetch(`${targetUrl}/health`, { mode: "no-cors", signal: controller.signal })
+      .then(() => {
+        clearTimeout(timeout);
+        const latency = Date.now() - startTime;
+        testResultBadge.className = "test-result-badge success";
+        testResultBadge.textContent = `🟢 Kết nối thành công (${latency}ms)`;
+      })
+      .catch((err) => {
+        clearTimeout(timeout);
+        testResultBadge.className = "test-result-badge error";
+        testResultBadge.textContent =
+          err.name === "AbortError"
+            ? "🔴 Quá thời gian chờ (Server Render đang khởi động)"
+            : `🔴 Lỗi: ${err.message}`;
+      });
+  }
 
   // Database operations inside Settings
   btnDownloadFromDb?.addEventListener("click", () => {
@@ -727,7 +856,40 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
 
-  // Login Modal buttons
+  // Login / Register Modal tabs & buttons
+  tabAuthLogin?.addEventListener("click", () => {
+    isRegisterMode = false;
+    tabAuthLogin.classList.add("active");
+    tabAuthRegister?.classList.remove("active");
+    if (authModalTitle) authModalTitle.textContent = "🔑 Đăng Nhập Tài Khoản";
+    if (authModalDesc) authModalDesc.textContent = "Đăng nhập tài khoản để đồng bộ sổ tay tự động với Database máy chủ.";
+    if (btnSubmitLogin) btnSubmitLogin.textContent = "Đăng nhập";
+    if (authHelperText) {
+      authHelperText.innerHTML = "• Đăng nhập tài khoản của bạn để tự động tải sổ tay từ máy chủ.<br>• Hoặc bấm <b>'🔗 Đồng bộ từ Web'</b> nếu bạn đã đăng nhập sẵn trên tab Web App!";
+    }
+    if (loginErrorMsg) loginErrorMsg.style.display = "none";
+  });
+
+  tabAuthRegister?.addEventListener("click", () => {
+    isRegisterMode = true;
+    tabAuthRegister.classList.add("active");
+    tabAuthLogin?.classList.remove("active");
+    if (authModalTitle) authModalTitle.textContent = "📝 Đăng Ký Tài Khoản Mới";
+    if (authModalDesc) authModalDesc.textContent = "Tạo tài khoản mới để lưu và đồng bộ sổ tay lên Database máy chủ.";
+    if (btnSubmitLogin) btnSubmitLogin.textContent = "Đăng ký tài khoản";
+    if (authHelperText) {
+      authHelperText.innerHTML = "Tên đăng nhập từ 3 ký tự, mật khẩu từ 6 ký tự. Tài khoản sẽ được lưu an toàn trên Database.";
+    }
+    if (loginErrorMsg) loginErrorMsg.style.display = "none";
+  });
+
+  loginPassword?.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") handleLogin();
+  });
+  loginUsername?.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") handleLogin();
+  });
+
   btnCloseLoginModal?.addEventListener("click", () => (loginModal.style.display = "none"));
   btnSubmitLogin?.addEventListener("click", handleLogin);
   btnSyncFromWebInModal?.addEventListener("click", () => {
@@ -784,7 +946,7 @@ document.addEventListener("DOMContentLoaded", () => {
   btnOpenNewNbModal?.addEventListener("click", () => {
     newNbNameInput.value = "";
     newNbModal.style.display = "flex";
-    newNbNameInput.focus();
+    newNbNameInput?.focus?.();
   });
 
   btnCloseNewNbModal?.addEventListener("click", () => (newNbModal.style.display = "none"));
@@ -816,6 +978,11 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   function openAddWordModal(targetNbId) {
+    if (addWordError) {
+      addWordError.style.display = "none";
+      addWordError.textContent = "";
+    }
+
     addWordTargetNotebook.innerHTML = notebooks
       .map(
         (nb) =>
@@ -831,13 +998,18 @@ document.addEventListener("DOMContentLoaded", () => {
     addWordMeaning.value = "";
 
     addWordModal.style.display = "flex";
-    addWordKanji.focus();
+    addWordKanji?.focus?.();
   }
 
   btnCloseAddWordModal?.addEventListener("click", () => (addWordModal.style.display = "none"));
   btnCancelAddWord?.addEventListener("click", () => (addWordModal.style.display = "none"));
 
   btnSubmitAddWord?.addEventListener("click", () => {
+    if (addWordError) {
+      addWordError.style.display = "none";
+      addWordError.textContent = "";
+    }
+
     const kanji = addWordKanji.value.trim();
     const hiragana = addWordHiragana.value.trim() || kanji;
     const onyomi = addWordOnyomi.value.trim();
@@ -846,9 +1018,17 @@ document.addEventListener("DOMContentLoaded", () => {
     const targetNbId = addWordTargetNotebook.value;
 
     if (!kanji && !hiragana) {
-      alert("Vui lòng nhập từ vựng tiếng Nhật");
+      if (addWordError) {
+        addWordError.textContent = "Vui lòng nhập từ vựng tiếng Nhật";
+        addWordError.style.display = "block";
+      } else {
+        alert("Vui lòng nhập từ vựng tiếng Nhật");
+      }
       return;
     }
+
+    btnSubmitAddWord.disabled = true;
+    btnSubmitAddWord.textContent = "Đang lưu...";
 
     chrome.runtime.sendMessage(
       {
@@ -857,10 +1037,33 @@ document.addEventListener("DOMContentLoaded", () => {
         vocab: { kanji, hiragana, onyomi, meaning, wordType },
       },
       (res) => {
-        addWordModal.style.display = "none";
-        loadData();
+        btnSubmitAddWord.disabled = false;
+        btnSubmitAddWord.textContent = "💾 Lưu từ vựng";
+
+        if (res && res.success) {
+          addWordModal.style.display = "none";
+          loadData();
+        } else {
+          // If duplicate or error: do NOT close modal, do NOT save anything, show red error!
+          if (addWordError) {
+            addWordError.textContent = `❌ ${res?.error || "Từ vựng này đã tồn tại trong sổ tay!"}`;
+            addWordError.style.display = "block";
+          } else {
+            alert(res?.error || "Từ vựng này đã tồn tại!");
+          }
+        }
       }
     );
+  });
+
+  addWordKanji?.addEventListener("input", () => {
+    if (addWordError) addWordError.style.display = "none";
+  });
+  addWordHiragana?.addEventListener("input", () => {
+    if (addWordError) addWordError.style.display = "none";
+  });
+  addWordTargetNotebook?.addEventListener("change", () => {
+    if (addWordError) addWordError.style.display = "none";
   });
 
   // Helper

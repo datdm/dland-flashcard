@@ -15,10 +15,30 @@
 
   // Listen for realtime storage changes
   chrome.storage.onChanged.addListener((changes, namespace) => {
-    if (namespace === "local" && changes.dland_tooltip_enabled) {
-      isTooltipEnabled = changes.dland_tooltip_enabled.newValue !== false;
-      if (!isTooltipEnabled) {
-        removeTooltip();
+    if (namespace === "local") {
+      if (changes.dland_tooltip_enabled) {
+        isTooltipEnabled = changes.dland_tooltip_enabled.newValue !== false;
+        if (!isTooltipEnabled) {
+          removeTooltip();
+        }
+      }
+      if (changes.dland_notebooks && activeModal) {
+        const newNbs = changes.dland_notebooks.newValue;
+        if (Array.isArray(newNbs) && newNbs.length > 0) {
+          const nbSelect = activeModal.querySelector("#dland-select-notebook");
+          if (nbSelect) {
+            const curVal = nbSelect.value;
+            nbSelect.innerHTML = `
+              ${newNbs
+                .map(
+                  (nb) =>
+                    `<option value="${nb.id}" ${nb.id === curVal ? "selected" : ""}>📓 ${escapeHtml(nb.name)} (${nb.vocabulary?.length || 0} từ)</option>`
+                )
+                .join("")}
+              <option value="__NEW__">➕ Tạo sổ tay mới...</option>
+            `;
+          }
+        }
       }
     }
   });
@@ -189,23 +209,32 @@
     container.className = "dland-tooltip-container";
 
     const button = document.createElement("button");
+    button.type = "button";
     button.className = "dland-tooltip-btn";
     button.innerHTML = `
       <span class="dland-tooltip-icon">🔍</span>
       <span>Tra & Thêm Mazii</span>
     `;
 
-    button.addEventListener("mousedown", (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-    });
-
-    button.addEventListener("click", (e) => {
-      e.preventDefault();
-      e.stopPropagation();
+    let opened = false;
+    const triggerOpen = (e) => {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      if (opened) return;
+      opened = true;
       removeTooltip();
       openLookupDialog(text);
+    };
+
+    button.addEventListener("pointerdown", (e) => {
+      e.stopPropagation();
     });
+    button.addEventListener("mousedown", (e) => {
+      e.stopPropagation();
+    });
+    button.addEventListener("click", triggerOpen);
 
     container.appendChild(button);
     document.body.appendChild(container);
@@ -227,13 +256,18 @@
     activeTooltip = container;
   }
 
-  document.addEventListener("mouseup", handleSelection);
-  document.addEventListener("selectionchange", () => {
-    const sel = window.getSelection();
-    if (!sel || sel.isCollapsed) {
-      removeTooltip();
+  // Dismiss tooltip when clicking outside
+  document.addEventListener("pointerdown", (e) => {
+    if (
+      (activeTooltip && activeTooltip.contains(e.target)) ||
+      (activeModal && activeModal.contains(e.target))
+    ) {
+      return;
     }
+    removeTooltip();
   });
+
+  document.addEventListener("mouseup", handleSelection);
 
   // =========================================================================
   // 3. LOOKUP & ADD TO NOTEBOOK MODAL DIALOG
@@ -245,30 +279,20 @@
     }
   }
 
-  async function openLookupDialog(wordToLookup) {
+  function openLookupDialog(wordToLookup) {
     closeModal();
 
-    // Fetch user's notebooks & auth state from extension storage
-    const store = await new Promise((resolve) => {
-      chrome.runtime.sendMessage({ action: "GET_NOTEBOOKS" }, (res) => resolve(res || {}));
-    });
-
-    const notebooks = store.notebooks || [
+    // Default fallback notebooks
+    let notebooks = [
       { id: "nb-default-ja", name: "Sổ tay Tiếng Nhật", lang: "ja", vocabulary: [] },
     ];
-    const user = store.user;
-    const isAuthenticated = !!store.authToken;
 
-    // Create Modal Elements
+    // Create and attach modal IMMEDIATELY to avoid delay or failure
     const overlay = document.createElement("div");
     overlay.className = "dland-modal-overlay";
 
     const dialog = document.createElement("div");
     dialog.className = "dland-modal-dialog";
-
-    const authBadgeHtml = isAuthenticated
-      ? `<div class="dland-sync-badge synced" title="Dữ liệu sẽ tự động đồng bộ lên Database">☁️ ${escapeHtml(user?.username || "Đã kết nối Database")}</div>`
-      : `<div class="dland-sync-badge local" title="Dữ liệu lưu tại máy. Mở popup để đăng nhập đồng bộ.">💾 Lưu cục bộ</div>`;
 
     dialog.innerHTML = `
       <div class="dland-modal-header">
@@ -276,12 +300,14 @@
           <h3 class="dland-modal-title">
             <span>📖</span> Tra Mazii & Thêm Vào Sổ Tay
           </h3>
-          ${authBadgeHtml}
+          <div class="dland-sync-badge local" id="dland-modal-auth-badge">💾 Đang tải...</div>
         </div>
-        <button class="dland-modal-close-btn" title="Đóng">✕</button>
+        <button type="button" class="dland-modal-close-btn" title="Đóng">✕</button>
       </div>
 
       <div class="dland-modal-body">
+        <div class="dland-modal-error" id="dland-modal-error" style="display: none;"></div>
+
         <!-- Preview & Audio -->
         <div class="dland-preview-box">
           <div>
@@ -330,12 +356,7 @@
           <div class="dland-form-group">
             <label class="dland-form-label">Lưu vào Sổ tay</label>
             <select class="dland-select" id="dland-select-notebook">
-              ${notebooks
-                .map(
-                  (nb) =>
-                    `<option value="${nb.id}">📓 ${escapeHtml(nb.name)} (${nb.vocabulary?.length || 0} từ)</option>`
-                )
-                .join("")}
+              <option value="nb-default-ja">📓 Sổ tay Tiếng Nhật</option>
               <option value="__NEW__">➕ Tạo sổ tay mới...</option>
             </select>
           </div>
@@ -373,6 +394,7 @@
     const newNbInput = dialog.querySelector("#dland-input-new-nb");
     const displayWord = dialog.querySelector("#dland-display-word");
     const displayReading = dialog.querySelector("#dland-display-reading");
+    const authBadge = dialog.querySelector("#dland-modal-auth-badge");
 
     // Close handlers
     closeBtn.addEventListener("click", closeModal);
@@ -403,30 +425,106 @@
       }
     });
 
-    // Asynchronously fetch Mazii lookup data
-    chrome.runtime.sendMessage(
-      { action: "LOOKUP_MAZII", query: wordToLookup },
-      (res) => {
-        if (res && res.success && res.data) {
-          const d = res.data;
-          kanjiInput.value = d.kanji || wordToLookup;
-          hiraganaInput.value = d.hiragana || "";
-          onyomiInput.value = d.onyomi || "";
-          meaningInput.value = d.meaning || "";
+    // Check if extension context is valid
+    if (!chrome.runtime?.id) {
+      displayReading.innerHTML = `⚠️ Tiện ích vừa được cập nhật. <a href="javascript:location.reload()" style="color: #4f46e5; text-decoration: underline; font-weight: 700;">Bấm F5 tải lại trang</a> để tra Mazii!`;
+      if (authBadge) {
+        authBadge.textContent = "⚠️ Vui lòng F5";
+        authBadge.className = "dland-sync-badge local";
+      }
+      return;
+    }
 
-          if (d.wordType) {
-            wordTypeSelect.value = d.wordType;
-          }
+    function updateNotebookOptions(list) {
+      if (!Array.isArray(list) || list.length === 0) return;
+      notebooks = list;
+      const curSelected = nbSelect.value;
+      nbSelect.innerHTML = `
+        ${notebooks
+          .map(
+            (nb) =>
+              `<option value="${nb.id}" ${nb.id === curSelected ? "selected" : ""}>📓 ${escapeHtml(nb.name)} (${nb.vocabulary?.length || 0} từ)</option>`
+          )
+          .join("")}
+        <option value="__NEW__">➕ Tạo sổ tay mới...</option>
+      `;
+    }
 
-          displayWord.textContent = d.kanji || wordToLookup;
-          displayReading.textContent =
-            [d.hiragana, d.onyomi ? `[${d.onyomi}]` : ""].filter(Boolean).join(" • ") ||
-            "Đã tìm thấy từ điển Mazii";
+    // 1. Immediately read latest notebooks from storage to populate select without any delay
+    chrome.storage.local.get(["dland_notebooks", "dland_auth_token", "dland_user"], (stored) => {
+      if (stored && stored.dland_notebooks) {
+        updateNotebookOptions(stored.dland_notebooks);
+      }
+      if (stored && authBadge) {
+        if (stored.dland_auth_token) {
+          authBadge.className = "dland-sync-badge synced";
+          authBadge.textContent = `☁️ ${stored.dland_user?.username || "Đã kết nối DB"}`;
+          authBadge.title = "Dữ liệu sẽ tự động đồng bộ lên Database";
         } else {
-          displayReading.textContent = "Không tìm thấy trong Mazii, bạn có thể tự nhập nghĩa";
+          authBadge.className = "dland-sync-badge local";
+          authBadge.textContent = "💾 Lưu cục bộ";
+          authBadge.title = "Dữ liệu lưu tại máy. Mở popup để đăng nhập đồng bộ.";
         }
       }
-    );
+    });
+
+    // 2. Also request fresh sync from Database and background service worker
+    try {
+      chrome.runtime.sendMessage({ action: "GET_NOTEBOOKS", forceSync: true }, (res) => {
+        if (chrome.runtime.lastError || !res) return;
+
+        if (res.notebooks && Array.isArray(res.notebooks) && res.notebooks.length > 0) {
+          updateNotebookOptions(res.notebooks);
+        }
+
+        if (authBadge) {
+          if (res.authToken) {
+            authBadge.className = "dland-sync-badge synced";
+            authBadge.textContent = `☁️ ${res.user?.username || "Đã kết nối DB"}`;
+            authBadge.title = "Dữ liệu sẽ tự động đồng bộ lên Database";
+          } else {
+            authBadge.className = "dland-sync-badge local";
+            authBadge.textContent = "💾 Lưu cục bộ";
+            authBadge.title = "Dữ liệu lưu tại máy. Mở popup để đăng nhập đồng bộ.";
+          }
+        }
+      });
+    } catch (err) {
+      console.warn("[Dland Extension] GET_NOTEBOOKS error:", err);
+    }
+
+    // Asynchronously fetch Mazii lookup data
+    try {
+      chrome.runtime.sendMessage(
+        { action: "LOOKUP_MAZII", query: wordToLookup },
+        (res) => {
+          if (chrome.runtime.lastError || !res) {
+            displayReading.textContent = "Không tìm thấy trong Mazii, bạn có thể tự nhập nghĩa";
+            return;
+          }
+          if (res && res.success && res.data) {
+            const d = res.data;
+            kanjiInput.value = d.kanji || wordToLookup;
+            hiraganaInput.value = d.hiragana || "";
+            onyomiInput.value = d.onyomi || "";
+            meaningInput.value = d.meaning || "";
+
+            if (d.wordType) {
+              wordTypeSelect.value = d.wordType;
+            }
+
+            displayWord.textContent = d.kanji || wordToLookup;
+            displayReading.textContent =
+              [d.hiragana, d.onyomi ? `[${d.onyomi}]` : ""].filter(Boolean).join(" • ") ||
+              "Đã tìm thấy từ điển Mazii";
+          } else {
+            displayReading.textContent = "Không tìm thấy trong Mazii, bạn có thể tự nhập nghĩa";
+          }
+        }
+      );
+    } catch (err) {
+      displayReading.textContent = "Vui lòng bấm F5 tải lại trang để kích hoạt từ điển Mazii";
+    }
 
     // Save handler
     saveBtn.addEventListener("click", async () => {
@@ -459,42 +557,62 @@
         };
         notebooks.push(newNb);
         targetNotebookId = newId;
+        chrome.storage.local.set({ dland_notebooks: notebooks });
       }
 
-      chrome.runtime.sendMessage(
-        {
-          action: "SAVE_VOCAB",
-          notebookId: targetNotebookId,
-          vocab: {
-            kanji,
-            hiragana,
-            onyomi,
-            meaning,
-            wordType,
+      try {
+        chrome.runtime.sendMessage(
+          {
+            action: "SAVE_VOCAB",
+            notebookId: targetNotebookId,
+            vocab: {
+              kanji,
+              hiragana,
+              onyomi,
+              meaning,
+              wordType,
+            },
           },
-        },
-        (saveRes) => {
-          closeModal();
-          if (saveRes && saveRes.success) {
-            if (saveRes.synced) {
-              showToast(`✅ Đã lưu "${kanji || hiragana}" và đồng bộ Database!`);
-            } else if (saveRes.syncError) {
-              showToast(`💾 Đã lưu vào sổ tay máy (Chưa đồng bộ DB: ${saveRes.syncError})`);
+          (saveRes) => {
+            if (saveRes && saveRes.success) {
+              closeModal();
+              if (saveRes.synced) {
+                showToast(`✅ Đã lưu "${kanji || hiragana}" và đồng bộ Database!`);
+              } else if (saveRes.syncError) {
+                showToast(`💾 Đã lưu vào sổ tay máy (Chưa đồng bộ DB: ${saveRes.syncError})`);
+              } else {
+                showToast(`✅ Đã lưu "${kanji || hiragana}" vào sổ tay ${saveRes.notebookName || ""}!`);
+              }
             } else {
-              showToast(`✅ Đã lưu "${kanji || hiragana}" vào sổ tay ${saveRes.notebookName || ""}!`);
+              // Re-enable save button so user can edit
+              saveBtn.disabled = false;
+              saveBtn.textContent = "💾 Lưu vào Sổ tay";
+
+              // Show RED ERROR banner inside the dialog
+              const modalError = dialog.querySelector("#dland-modal-error");
+              if (modalError) {
+                modalError.textContent = `❌ ${saveRes?.error || "Từ vựng này đã tồn tại trong sổ tay!"}`;
+                modalError.style.display = "flex";
+                modalError.scrollIntoView({ behavior: "smooth", block: "nearest" });
+              }
+
+              // Also show a red toast error
+              showToast(`❌ ${saveRes?.error || "Từ vựng này đã tồn tại!"}`, "error");
             }
-          } else {
-            showToast(`⚠️ Không thể lưu: ${saveRes?.error || "Đã xảy ra lỗi"}`);
           }
-        }
-      );
+        );
+      } catch (err) {
+        saveBtn.disabled = false;
+        saveBtn.textContent = "💾 Lưu vào Sổ tay";
+        showToast("⚠️ Vui lòng tải lại trang (F5) để lưu từ vựng!", "error");
+      }
     });
   }
 
-  // Toast Notification
-  function showToast(message) {
+  // Toast Notification (Supports "normal" and "error" types)
+  function showToast(message, type = "normal") {
     const toast = document.createElement("div");
-    toast.className = "dland-toast";
+    toast.className = `dland-toast ${type === "error" ? "error" : ""}`;
     toast.textContent = message;
     document.body.appendChild(toast);
 
@@ -502,6 +620,6 @@
       if (toast.parentNode) {
         toast.parentNode.removeChild(toast);
       }
-    }, 3500);
+    }, 4000);
   }
 })();

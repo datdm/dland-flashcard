@@ -32,7 +32,19 @@
 
     <!-- Auth & Sync Bar -->
     <div class="auth-bar" id="authBar">
-      <!-- Dynamic content rendered by popup.js: Either logged-in view or guest view -->
+      <div class="auth-guest">
+        <div class="guest-info">
+          <span>💾 Lưu cục bộ</span>
+        </div>
+        <div class="guest-actions">
+          <button type="button" class="btn-auth btn-auth-primary" id="btnOpenLoginModal">
+            <span>🔑 Đăng nhập</span>
+          </button>
+          <button type="button" class="btn-auth btn-auth-outline" id="btnSyncFromWeb" title="Tự động đồng bộ từ tab Web App đang mở">
+            <span>🔗 Đồng bộ từ Web App</span>
+          </button>
+        </div>
+      </div>
     </div>
 
     <!-- Quick Tooltip ON/OFF Option Bar -->
@@ -82,15 +94,20 @@
 
     <!-- ================= MODALS ================= -->
 
-    <!-- Login Modal -->
+    <!-- Login / Register Modal -->
     <div class="modal-backdrop" id="loginModal" style="display: none;">
       <div class="modal-card">
         <div class="modal-header">
-          <h3>🔑 Đăng Nhập Tài Khoản</h3>
+          <h3 id="authModalTitle">🔑 Đăng Nhập Tài Khoản</h3>
           <button type="button" class="btn-close" id="btnCloseLoginModal">✕</button>
         </div>
         <div class="modal-body">
-          <p class="modal-desc">Đăng nhập tài khoản để đồng bộ sổ tay tự động với Database máy chủ.</p>
+          <div class="auth-tab-group">
+            <button type="button" class="auth-tab-btn active" id="tabAuthLogin">Đăng nhập</button>
+            <button type="button" class="auth-tab-btn" id="tabAuthRegister">Đăng ký mới</button>
+          </div>
+
+          <p class="modal-desc" id="authModalDesc">Đăng nhập tài khoản để đồng bộ sổ tay tự động với Database máy chủ.</p>
           <div id="loginErrorMsg" class="form-error" style="display: none;"></div>
 
           <div class="api-notice-pill">
@@ -99,15 +116,16 @@
           </div>
 
           <label style="margin-top: 6px;">Tên đăng nhập</label>
-          <input type="text" id="loginUsername" placeholder="Nhập username..." />
+          <input type="text" id="loginUsername" placeholder="Ví dụ: datdm hoặc user..." autocomplete="username" spellcheck="false" />
 
           <label style="margin-top: 8px;">Mật khẩu</label>
-          <input type="password" id="loginPassword" placeholder="Nhập mật khẩu..." />
+          <input type="password" id="loginPassword" placeholder="Nhập mật khẩu..." autocomplete="current-password" spellcheck="false" data-lpignore="true" />
 
           <div class="auth-helper-box">
             <span class="helper-icon">💡</span>
-            <div class="helper-text">
-              Bạn có thể đăng nhập bằng tài khoản trên hệ thống hoặc bấm <b>"🔗 Đồng bộ từ Web"</b> nếu tab Web App đang mở!
+            <div class="helper-text" id="authHelperText">
+              • Đăng nhập tài khoản của bạn để tự động tải sổ tay từ máy chủ.<br>
+              • Hoặc bấm <b>"🔗 Đồng bộ từ Web"</b> nếu bạn đã đăng nhập sẵn trên tab Web App!
             </div>
           </div>
         </div>
@@ -229,7 +247,7 @@
           <p class="modal-desc">Nhập mật khẩu Admin hoặc mã quản trị viên để chỉnh sửa URL Client và API Server:</p>
           <div id="adminUnlockError" class="form-error" style="display: none;"></div>
           <label>Mã Quản Trị Viên (Admin Key / Password)</label>
-          <input type="password" id="adminPasscodeInput" placeholder="Nhập mã Admin (ví dụ: admin, admin123...)" />
+          <input type="password" id="adminPasscodeInput" placeholder="Nhập mã Admin..." autocomplete="off" spellcheck="false" data-lpignore="true" />
           <div style="font-size: 10px; color: #64748b; margin-top: 4px;">
             💡 Nếu bạn đã đăng nhập tài khoản có quyền Admin trên Web App, hãy bấm "Đồng bộ từ Web App" để tự động kích hoạt.
           </div>
@@ -274,6 +292,7 @@
           <button type="button" class="btn-close" id="btnCloseAddWordModal">✕</button>
         </div>
         <div class="modal-body">
+          <div id="addWordError" class="form-error" style="display: none;"></div>
           <label>Từ vựng (Kanji / Từ gốc)</label>
           <input type="text" id="addWordKanji" placeholder="Ví dụ: 約束" />
 

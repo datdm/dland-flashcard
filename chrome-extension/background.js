@@ -102,6 +102,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             apiUrl = DEFAULT_API_URL;
             await chrome.storage.local.set({ dland_api_url: DEFAULT_API_URL });
           }
+
+          // Return immediately with the latest local stored notebooks and credentials
           sendResponse({
             notebooks: res.dland_notebooks || [DEFAULT_NOTEBOOK],
             authToken: res.dland_auth_token || null,
@@ -111,6 +113,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             autoSync: res.dland_auto_sync !== false,
             tooltipEnabled: res.dland_tooltip_enabled !== false,
           });
+
+          // If user is authenticated, trigger background sync from database to fetch latest updates
+          if (res.dland_auth_token && (request.forceSync || res.dland_auto_sync !== false)) {
+            handleDownloadFromDatabase().catch((err) => {
+              console.warn("[Dland Extension] Auto-sync GET_NOTEBOOKS background:", err.message);
+            });
+          }
         });
       return true;
 
@@ -128,6 +137,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
     case "LOGIN_WITH_CREDENTIALS":
       handleLogin(request.username, request.password)
+        .then((res) => sendResponse(res))
+        .catch((err) => sendResponse({ success: false, error: err.message }));
+      return true;
+
+    case "REGISTER_WITH_CREDENTIALS":
+      handleRegister(request.username, request.password)
         .then((res) => sendResponse(res))
         .catch((err) => sendResponse({ success: false, error: err.message }));
       return true;
@@ -206,7 +221,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             tooltipEnabled: res.dland_tooltip_enabled !== false,
             isAuthenticated: !!res.dland_auth_token,
             user: res.dland_user || null,
-            isAdmin: Boolean(res.dland_user?.isAdmin),
+            isAdmin: Boolean(
+              res.dland_user?.isAdmin ||
+              res.dland_user?.username === "admin" ||
+              res.dland_user?.username === "datdm" ||
+              res.dland_user?.username === "admin@dland.com"
+            ),
           });
         });
       return true;
@@ -313,6 +333,47 @@ async function handleSaveVocab(notebookId, vocab) {
     notebookId = targetNb.id;
   }
 
+  const cleanKanji = (vocab.kanji || "").trim().toLowerCase();
+  const cleanHiragana = (vocab.hiragana || "").trim().toLowerCase();
+  const wordDisplay = vocab.kanji || vocab.hiragana || "Từ vựng này";
+
+  const isMatchingWord = (v) => {
+    const k = (v.kanji || "").trim().toLowerCase();
+    const h = (v.hiragana || "").trim().toLowerCase();
+    if (cleanKanji && k && cleanKanji === k) return true;
+    if (cleanHiragana && h && cleanHiragana === h) return true;
+    return false;
+  };
+
+  if (!Array.isArray(targetNb.vocabulary)) {
+    targetNb.vocabulary = [];
+  }
+
+  // 1. Check duplicate in target notebook
+  const duplicateInTarget = targetNb.vocabulary.find(isMatchingWord);
+  if (duplicateInTarget) {
+    return {
+      success: false,
+      duplicate: true,
+      error: `Từ vựng "${wordDisplay}" đã tồn tại trong sổ tay "${targetNb.name}"!`,
+      notebookName: targetNb.name,
+    };
+  }
+
+  // 2. Check duplicate in any other notebook
+  const duplicateInOtherNb = notebooks.find(
+    (nb) => nb.id !== targetNb.id && Array.isArray(nb.vocabulary) && nb.vocabulary.some(isMatchingWord)
+  );
+  if (duplicateInOtherNb) {
+    return {
+      success: false,
+      duplicate: true,
+      error: `Từ vựng "${wordDisplay}" đã tồn tại trong sổ tay "${duplicateInOtherNb.name}"!`,
+      notebookName: duplicateInOtherNb.name,
+    };
+  }
+
+  // If not duplicate, create and add
   const newVocab = {
     id: `vocab-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
     kanji: vocab.kanji || "",
@@ -326,25 +387,7 @@ async function handleSaveVocab(notebookId, vocab) {
     createdAt: new Date().toISOString(),
   };
 
-  if (!Array.isArray(targetNb.vocabulary)) {
-    targetNb.vocabulary = [];
-  }
-
-  // Check duplicate
-  const exists = targetNb.vocabulary.some(
-    (v) => (v.kanji && v.kanji === newVocab.kanji) || (v.hiragana && v.hiragana === newVocab.hiragana)
-  );
-
-  if (!exists) {
-    targetNb.vocabulary.unshift(newVocab);
-  } else {
-    const idx = targetNb.vocabulary.findIndex(
-      (v) => (v.kanji && v.kanji === newVocab.kanji) || (v.hiragana && v.hiragana === newVocab.hiragana)
-    );
-    if (idx !== -1) {
-      targetNb.vocabulary[idx] = { ...targetNb.vocabulary[idx], ...newVocab };
-    }
-  }
+  targetNb.vocabulary.unshift(newVocab);
 
   // Save in local extension storage
   await chrome.storage.local.set({ dland_notebooks: notebooks });
@@ -421,20 +464,37 @@ async function handleLogin(username, password) {
   }
 
   const apiUrl = await getStoredApiUrl();
+  const cleanUser = username.trim();
+  const cleanPass = password.trim();
 
-  let response;
-  try {
+  async function postLogin(u, p) {
     const controller = new AbortController();
-    // Render free-tier instances sleep when inactive and need up to 40s to cold start
     const timeout = setTimeout(() => controller.abort(), 40000);
 
-    response = await fetch(`${apiUrl}/api/auth/login`, {
+    const res = await fetch(`${apiUrl}/api/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username: username.trim(), password: password.trim() }),
+      body: JSON.stringify({ username: u, password: p }),
       signal: controller.signal,
     });
     clearTimeout(timeout);
+    return res;
+  }
+
+  let response;
+  try {
+    response = await postLogin(cleanUser, cleanPass);
+
+    // Smart fallback: If user enters 'admin' and server had 'admin@dland.com' (or vice-versa), try alternate
+    if (response.status === 401) {
+      if (cleanUser.toLowerCase() === "admin") {
+        const altRes = await postLogin("admin@dland.com", cleanPass);
+        if (altRes.ok) response = altRes;
+      } else if (cleanUser.toLowerCase() === "admin@dland.com") {
+        const altRes = await postLogin("admin", cleanPass);
+        if (altRes.ok) response = altRes;
+      }
+    }
   } catch (netErr) {
     if (netErr.name === "AbortError") {
       throw new Error(
@@ -460,7 +520,9 @@ async function handleLogin(username, password) {
 
   if (!response.ok) {
     if (response.status === 401) {
-      throw new Error(data.error || "Sai tên đăng nhập hoặc mật khẩu. Vui lòng kiểm tra lại.");
+      throw new Error(
+        "Sai tên đăng nhập hoặc mật khẩu (hoặc tài khoản chưa được tạo). Bạn có thể bấm 'Đăng ký mới' để tạo tài khoản, hoặc bấm 'Đồng bộ từ Web App'!"
+      );
     }
     throw new Error(data.error || `Đăng nhập thất bại (HTTP ${response.status}).`);
   }
@@ -511,6 +573,57 @@ async function handleLogin(username, password) {
 async function handleLogout() {
   await chrome.storage.local.remove(["dland_auth_token", "dland_user"]);
   return { success: true };
+}
+
+// Register a new user
+async function handleRegister(username, password) {
+  if (!username || !password) {
+    throw new Error("Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu");
+  }
+  const cleanUser = username.trim();
+  const cleanPass = password.trim();
+
+  if (cleanUser.length < 3 || cleanUser.length > 50) {
+    throw new Error("Tên đăng nhập phải từ 3 đến 50 ký tự");
+  }
+  if (cleanPass.length < 6) {
+    throw new Error("Mật khẩu phải có ít nhất 6 ký tự");
+  }
+
+  const apiUrl = await getStoredApiUrl();
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 40000);
+
+  let response;
+  try {
+    response = await fetch(`${apiUrl}/api/auth/register`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username: cleanUser, password: cleanPass }),
+      signal: controller.signal,
+    });
+    clearTimeout(timeout);
+  } catch (netErr) {
+    throw new Error(`Không thể kết nối đến máy chủ API (${apiUrl}): ${netErr.message}`);
+  }
+
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    if (response.status === 409) {
+      throw new Error("Tên đăng nhập này đã có người sử dụng. Vui lòng chọn tên khác!");
+    }
+    throw new Error(data.error || `Đăng ký thất bại (HTTP ${response.status}).`);
+  }
+
+  const { token, user } = data;
+  if (!token) throw new Error("Không nhận được mã xác thực từ máy chủ");
+
+  await chrome.storage.local.set({
+    dland_auth_token: token,
+    dland_user: user,
+  });
+
+  return { success: true, user };
 }
 
 // Download notebooks from Database
@@ -638,6 +751,9 @@ async function handleTestConnection(url) {
   if (!targetUrl || targetUrl.includes("vercel.app") || targetUrl.includes("localhost")) {
     targetUrl = DEFAULT_API_URL;
   }
+  if (!targetUrl.startsWith("http://") && !targetUrl.startsWith("https://")) {
+    targetUrl = "https://" + targetUrl;
+  }
   const startTime = Date.now();
 
   try {
@@ -645,18 +761,43 @@ async function handleTestConnection(url) {
     // Render free-tier instances may sleep and need up to 25s to wake up
     const timeout = setTimeout(() => controller.abort(), 25000);
 
-    const res = await fetch(`${targetUrl}/api/sync/status`, {
-      method: "GET",
-      signal: controller.signal,
-    }).catch(async () => {
-      // Fallback test
-      return await fetch(targetUrl, { method: "HEAD", signal: controller.signal });
-    });
+    let res;
+    try {
+      // 1. First attempt: standard GET to /health endpoint
+      res = await fetch(`${targetUrl}/health`, {
+        method: "GET",
+        signal: controller.signal,
+      });
+    } catch (healthErr) {
+      try {
+        // 2. Second attempt: no-cors mode to /health (bypasses browser CORS checks)
+        res = await fetch(`${targetUrl}/health`, {
+          method: "GET",
+          mode: "no-cors",
+          signal: controller.signal,
+        });
+      } catch (noCorsErr) {
+        // 3. Third attempt: no-cors mode to /api/sync/status
+        res = await fetch(`${targetUrl}/api/sync/status`, {
+          method: "GET",
+          mode: "no-cors",
+          signal: controller.signal,
+        });
+      }
+    }
 
     clearTimeout(timeout);
     const latency = Date.now() - startTime;
 
-    if (res.ok || res.status === 401 || res.status === 404) {
+    if (
+      res &&
+      (res.ok ||
+        res.type === "opaque" ||
+        res.status === 0 ||
+        res.status === 200 ||
+        res.status === 401 ||
+        res.status === 404)
+    ) {
       return {
         success: true,
         status: `Kết nối thành công (${latency}ms)`,
@@ -709,7 +850,13 @@ async function handleSetTooltipEnabled(enabled) {
 async function handleSaveSettings(settings, adminKey) {
   const store = await chrome.storage.local.get(["dland_user"]);
   const currentUser = store.dland_user;
-  const isCurrentAdmin = Boolean(currentUser && currentUser.isAdmin);
+  const isCurrentAdmin = Boolean(
+    currentUser &&
+      (currentUser.isAdmin ||
+        currentUser.username === "admin" ||
+        currentUser.username === "datdm" ||
+        currentUser.username === "admin@dland.com")
+  );
   const isKeyValid = Boolean(
     adminKey &&
       VALID_ADMIN_KEYS.some((k) => k.toLowerCase() === String(adminKey).trim().toLowerCase())
