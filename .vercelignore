@@ -1,5 +1,7 @@
-# Ignore server folder (separate backend)
+# Ignore server, mobile-app, and extension folders
 server/
+mobile-app/
+chrome-extension/
 
 # Ignore development files
 .env.local

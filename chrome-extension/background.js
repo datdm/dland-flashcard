@@ -47,11 +47,13 @@ chrome.runtime.onInstalled.addListener(async () => {
     await chrome.storage.local.set(toSet);
   }
 
-  // Create context menu for quick right-click lookup
-  chrome.contextMenus.create({
-    id: "dland-lookup-mazii",
-    title: "🔍 Tra Mazii & Thêm vào Sổ tay Dland (\"%s\")",
-    contexts: ["selection"],
+  // Create context menu for quick right-click lookup (works on PDFs, Excel, iframes)
+  chrome.contextMenus.removeAll(() => {
+    chrome.contextMenus.create({
+      id: "dland-lookup-mazii",
+      title: "🔍 Tra Mazii & Thêm vào Sổ tay Dland (\"%s\")",
+      contexts: ["selection"],
+    });
   });
 });
 

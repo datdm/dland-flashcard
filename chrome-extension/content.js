@@ -188,7 +188,7 @@
     }
 
     const rawText = selection.toString();
-    const text = rawText.replace(/[\r\n]+/g, " ").trim();
+    const text = rawText.replace(/[\r\n\t\u00A0\u200B]+/g, " ").trim();
     if (!text || text.length > 100) {
       return null;
     }
@@ -197,13 +197,27 @@
       const range = selection.getRangeAt(0);
       let rect = range.getBoundingClientRect();
 
-      // Fallback for elements with empty bounding rect (e.g. SVG, inline wrappers)
+      // Fallback for elements with empty bounding rect (e.g. PDF layers, SVG, inline wrappers)
       if (!rect || (rect.width === 0 && rect.height === 0)) {
         const rects = range.getClientRects();
         if (rects && rects.length > 0) {
-          rect = rects[0];
-        } else if (range.startContainer && range.startContainer.parentElement) {
-          rect = range.startContainer.parentElement.getBoundingClientRect();
+          for (let i = 0; i < rects.length; i++) {
+            if (rects[i].width > 0 || rects[i].height > 0) {
+              rect = rects[i];
+              break;
+            }
+          }
+        }
+      }
+
+      if (!rect || (rect.width === 0 && rect.height === 0)) {
+        const node = selection.anchorNode
+          ? selection.anchorNode.nodeType === 3
+            ? selection.anchorNode.parentElement
+            : selection.anchorNode
+          : null;
+        if (node && typeof node.getBoundingClientRect === "function") {
+          rect = node.getBoundingClientRect();
         }
       }
 
