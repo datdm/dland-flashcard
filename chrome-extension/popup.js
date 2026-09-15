@@ -977,7 +977,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  function openAddWordModal(targetNbId) {
+  function openAddWordModal(targetNbId, initialWord = "") {
     if (addWordError) {
       addWordError.style.display = "none";
       addWordError.textContent = "";
@@ -992,13 +992,26 @@ document.addEventListener("DOMContentLoaded", () => {
       )
       .join("");
 
-    addWordKanji.value = "";
+    addWordKanji.value = initialWord || "";
     addWordHiragana.value = "";
     addWordOnyomi.value = "";
     addWordMeaning.value = "";
 
     addWordModal.style.display = "flex";
     addWordKanji?.focus?.();
+
+    if (initialWord) {
+      chrome.runtime.sendMessage({ action: "LOOKUP_MAZII", query: initialWord }, (res) => {
+        if (res && res.success && res.data) {
+          const d = res.data;
+          addWordKanji.value = d.kanji || initialWord;
+          addWordHiragana.value = d.hiragana || "";
+          addWordOnyomi.value = d.onyomi || "";
+          addWordMeaning.value = d.meaning || "";
+          if (d.wordType && addWordType) addWordType.value = d.wordType;
+        }
+      });
+    }
   }
 
   btnCloseAddWordModal?.addEventListener("click", () => (addWordModal.style.display = "none"));
@@ -1079,4 +1092,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Start App
   loadData();
+
+  // Handle auto-lookup from URL query parameter (e.g. from PDF fallback window)
+  const urlParams = new URLSearchParams(window.location.search);
+  const autoLookupWord = urlParams.get("lookup") || urlParams.get("word");
+  if (autoLookupWord) {
+    setTimeout(() => {
+      const defaultNbId = notebooks[0]?.id || "nb-default-ja";
+      openAddWordModal(defaultNbId, autoLookupWord);
+    }, 350);
+  }
 });

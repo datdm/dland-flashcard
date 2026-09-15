@@ -132,6 +132,7 @@
 
     if (request.action === "OPEN_LOOKUP_DIALOG" && request.selectedText) {
       openLookupDialog(request.selectedText);
+      sendResponse({ success: true });
       return true;
     }
 

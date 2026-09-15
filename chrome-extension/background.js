@@ -57,13 +57,54 @@ chrome.runtime.onInstalled.addListener(async () => {
   });
 });
 
-// Handle Context Menu clicks
+// Helper to open fallback popup window when content script is unavailable (e.g. native Chrome PDF viewer, file:// PDF)
+function openFallbackLookupWindow(selectedText) {
+  if (!selectedText) return;
+  const popupUrl = chrome.runtime.getURL(`popup.html?lookup=${encodeURIComponent(selectedText)}`);
+
+  chrome.windows.getCurrent((currentWindow) => {
+    const width = 450;
+    const height = 620;
+    let left = 100;
+    let top = 100;
+
+    if (currentWindow && currentWindow.width && currentWindow.height) {
+      left = Math.round((currentWindow.left || 0) + (currentWindow.width - width) / 2);
+      top = Math.round((currentWindow.top || 0) + (currentWindow.height - height) / 2);
+    }
+
+    chrome.windows.create({
+      url: popupUrl,
+      type: "popup",
+      width: width,
+      height: height,
+      left: Math.max(0, left),
+      top: Math.max(0, top),
+      focused: true,
+    });
+  });
+}
+
+// Handle Context Menu clicks with automatic fallback for PDFs
 chrome.contextMenus.onClicked.addListener((info, tab) => {
   if (info.menuItemId === "dland-lookup-mazii" && info.selectionText && tab?.id) {
-    chrome.tabs.sendMessage(tab.id, {
-      action: "OPEN_LOOKUP_DIALOG",
-      selectedText: info.selectionText.trim(),
-    });
+    const selectedText = info.selectionText.trim();
+    if (!selectedText) return;
+
+    chrome.tabs.sendMessage(
+      tab.id,
+      {
+        action: "OPEN_LOOKUP_DIALOG",
+        selectedText: selectedText,
+      },
+      (response) => {
+        // If content script is unavailable (e.g. Chrome PDFium viewer, restricted page)
+        if (chrome.runtime.lastError || !response || !response.success) {
+          console.log("[Dland Extension] Opening fallback lookup window for PDF/restricted page");
+          openFallbackLookupWindow(selectedText);
+        }
+      }
+    );
   }
 });
 
