@@ -304,21 +304,22 @@
     button.addEventListener("click", triggerOpen);
 
     container.appendChild(button);
-    document.body.appendChild(container);
+    (document.body || document.documentElement).appendChild(container);
 
-    const scrollX = window.scrollX || window.pageXOffset;
-    const scrollY = window.scrollY || window.pageYOffset;
-
-    let top = rect.top + scrollY - 38;
-    if (rect.top < 45) {
-      top = rect.bottom + scrollY + 8;
+    let top = rect.top - 42;
+    if (rect.top < 50) {
+      top = rect.bottom + 8;
     }
 
-    let left = rect.left + scrollX + rect.width / 2 - 60;
+    let left = rect.left + rect.width / 2 - 60;
+    const maxLeft = Math.max(10, (window.innerWidth || document.documentElement.clientWidth || 360) - 140);
     if (left < 10) left = 10;
+    if (left > maxLeft) left = maxLeft;
 
-    container.style.top = `${top}px`;
+    container.style.position = "fixed";
+    container.style.top = `${Math.max(5, top)}px`;
     container.style.left = `${left}px`;
+    container.style.zIndex = "2147483646";
 
     activeTooltip = container;
   }
@@ -335,6 +336,8 @@
   });
 
   document.addEventListener("mouseup", handleSelection);
+  document.addEventListener("pointerup", handleSelection);
+  document.addEventListener("touchend", handleSelection);
   document.addEventListener("keyup", handleSelection);
   document.addEventListener("dblclick", handleSelection);
   document.addEventListener("selectionchange", () => {
@@ -345,7 +348,7 @@
       if (data && data.text) {
         handleSelection(null);
       }
-    }, 150);
+    }, 120);
   });
 
   // =========================================================================

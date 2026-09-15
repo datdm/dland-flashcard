@@ -2,15 +2,15 @@
 
 /* 1. Floating Selection Tooltip */
 .dland-tooltip-container {
-  position: absolute;
-  z-index: 2147483646;
-  pointer-events: auto;
-  user-select: none;
-  display: flex;
-  align-items: center;
-  gap: 4px;
+  position: fixed !important;
+  z-index: 2147483646 !important;
+  pointer-events: auto !important;
+  user-select: none !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
   animation: dland-fade-in 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
 }
 
 .dland-tooltip-btn {
