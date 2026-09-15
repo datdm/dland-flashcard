@@ -155,51 +155,101 @@
     }
   }
 
+  function getSelectionData(e) {
+    const active = document.activeElement;
+    const target =
+      e && e.target && (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA")
+        ? e.target
+        : active;
+
+    // 1. Check <input> and <textarea> elements (DOM selection API returns empty for form controls)
+    if (
+      target &&
+      (target.tagName === "INPUT" || target.tagName === "TEXTAREA") &&
+      target.type !== "password" &&
+      typeof target.selectionStart === "number" &&
+      typeof target.selectionEnd === "number" &&
+      target.selectionStart !== target.selectionEnd
+    ) {
+      const rawText = target.value.substring(target.selectionStart, target.selectionEnd);
+      const text = rawText.replace(/[\r\n]+/g, " ").trim();
+      if (text && text.length <= 100) {
+        const rect = target.getBoundingClientRect();
+        if (rect && (rect.width > 0 || rect.height > 0)) {
+          return { text, rect };
+        }
+      }
+    }
+
+    // 2. Check standard DOM selection (window.getSelection)
+    const selection = window.getSelection();
+    if (!selection || selection.isCollapsed) {
+      return null;
+    }
+
+    const rawText = selection.toString();
+    const text = rawText.replace(/[\r\n]+/g, " ").trim();
+    if (!text || text.length > 100) {
+      return null;
+    }
+
+    try {
+      const range = selection.getRangeAt(0);
+      let rect = range.getBoundingClientRect();
+
+      // Fallback for elements with empty bounding rect (e.g. SVG, inline wrappers)
+      if (!rect || (rect.width === 0 && rect.height === 0)) {
+        const rects = range.getClientRects();
+        if (rects && rects.length > 0) {
+          rect = rects[0];
+        } else if (range.startContainer && range.startContainer.parentElement) {
+          rect = range.startContainer.parentElement.getBoundingClientRect();
+        }
+      }
+
+      if (!rect || (rect.width === 0 && rect.height === 0)) {
+        return null;
+      }
+
+      return { text, rect };
+    } catch (err) {
+      return null;
+    }
+  }
+
+  let selectionTimer = null;
+
   function handleSelection(e) {
     if (!isTooltipEnabled) {
       removeTooltip();
       return;
     }
 
-    if (e.target.closest(".dland-tooltip-container") || e.target.closest(".dland-modal-overlay")) {
+    if (
+      e &&
+      e.target &&
+      (e.target.closest?.(".dland-tooltip-container") || e.target.closest?.(".dland-modal-overlay"))
+    ) {
       return;
     }
 
-    setTimeout(() => {
+    if (selectionTimer) clearTimeout(selectionTimer);
+
+    selectionTimer = setTimeout(() => {
       if (!isTooltipEnabled) {
         removeTooltip();
         return;
       }
 
-      const selection = window.getSelection();
-      if (!selection || selection.isCollapsed) {
+      const data = getSelectionData(e);
+      if (!data || !data.text) {
         removeTooltip();
         return;
       }
 
-      const text = selection.toString().trim();
-      if (!text || text.length > 60 || text.includes("\n")) {
-        removeTooltip();
-        return;
-      }
-
-      lastSelectionText = text;
-
-
-      try {
-        const range = selection.getRangeAt(0);
-        const rect = range.getBoundingClientRect();
-
-        if (!rect || (rect.width === 0 && rect.height === 0)) {
-          removeTooltip();
-          return;
-        }
-
-        showTooltip(rect, text);
-      } catch (err) {
-        removeTooltip();
-      }
-    }, 15);
+      lastSelectionText = data.text;
+      showTooltip(data.rect, data.text);
+    }, 20);
   }
 
   function showTooltip(rect, text) {
@@ -229,9 +279,11 @@
     };
 
     button.addEventListener("pointerdown", (e) => {
+      e.preventDefault();
       e.stopPropagation();
     });
     button.addEventListener("mousedown", (e) => {
+      e.preventDefault();
       e.stopPropagation();
     });
     button.addEventListener("click", triggerOpen);
@@ -268,6 +320,18 @@
   });
 
   document.addEventListener("mouseup", handleSelection);
+  document.addEventListener("keyup", handleSelection);
+  document.addEventListener("dblclick", handleSelection);
+  document.addEventListener("selectionchange", () => {
+    if (!isTooltipEnabled) return;
+    if (selectionTimer) clearTimeout(selectionTimer);
+    selectionTimer = setTimeout(() => {
+      const data = getSelectionData(null);
+      if (data && data.text) {
+        handleSelection(null);
+      }
+    }, 150);
+  });
 
   // =========================================================================
   // 3. LOOKUP & ADD TO NOTEBOOK MODAL DIALOG

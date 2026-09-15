@@ -56,7 +56,7 @@ export default function GeminiLivePage() {
   const recognitionRef = useRef<any>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const micStreamRef = useRef<MediaStream | null>(null);
-  const silenceTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const silenceTimerRef = useRef<any>(null);
   const currentInterimRef = useRef<string>("");
 
   const ttsLang = activeLanguage.code === "de" ? "de-DE" : activeLanguage.code === "en" ? "en-US" : "ja-JP";

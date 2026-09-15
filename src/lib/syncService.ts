@@ -33,7 +33,7 @@ interface DataResponse {
 
 // Global active request tracking for loading indicator
 let activeRequestsCount = 0;
-let loadingTimeout: NodeJS.Timeout | null = null;
+let loadingTimeout: any = null;
 
 function startTrackingRequest() {
   if (typeof window === 'undefined') return;

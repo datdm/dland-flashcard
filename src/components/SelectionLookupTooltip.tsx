@@ -28,7 +28,7 @@ export default function SelectionLookupTooltip({
   });
 
   const tooltipRef = useRef<HTMLDivElement>(null);
-  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const debounceTimerRef = useRef<any>(null);
 
   useEffect(() => {
     if (disabled) {
@@ -64,6 +64,48 @@ export default function SelectionLookupTooltip({
         return;
       }
 
+      // Check input or textarea element
+      const activeEl = document.activeElement as HTMLInputElement | HTMLTextAreaElement | null;
+      const targetEl = (targetElement && (targetElement.nodeName === "INPUT" || targetElement.nodeName === "TEXTAREA"))
+        ? (targetElement as HTMLInputElement | HTMLTextAreaElement)
+        : activeEl;
+
+      if (
+        targetEl &&
+        (targetEl.tagName === "INPUT" || targetEl.tagName === "TEXTAREA") &&
+        targetEl.type !== "password" &&
+        typeof targetEl.selectionStart === "number" &&
+        typeof targetEl.selectionEnd === "number" &&
+        targetEl.selectionStart !== targetEl.selectionEnd
+      ) {
+        if (isInsideModal(targetEl)) {
+          setTooltip((prev) => (prev.visible ? { ...prev, visible: false } : prev));
+          return;
+        }
+
+        const rawText = targetEl.value.substring(targetEl.selectionStart, targetEl.selectionEnd);
+        const selectedText = rawText.replace(/[\r\n]+/g, " ").trim();
+        if (!selectedText || selectedText.length > 50) {
+          setTooltip((prev) => (prev.visible ? { ...prev, visible: false } : prev));
+          return;
+        }
+
+        const rect = targetEl.getBoundingClientRect();
+        if (rect && (rect.width > 0 || rect.height > 0)) {
+          const scrollY = window.scrollY || window.pageYOffset;
+          const scrollX = window.scrollX || window.pageXOffset;
+
+          setTooltip({
+            visible: true,
+            text: selectedText,
+            x: rect.left + scrollX + rect.width / 2,
+            y: Math.max(10, rect.top + scrollY - 12),
+          });
+          return;
+        }
+      }
+
+      // Standard DOM selection
       const selection = window.getSelection();
       if (!selection || selection.isCollapsed) {
         setTooltip((prev) => (prev.visible ? { ...prev, visible: false } : prev));
@@ -77,9 +119,10 @@ export default function SelectionLookupTooltip({
         return;
       }
 
-      const selectedText = selection.toString().trim();
-      // Only trigger for meaningful Japanese/word selections (1-30 chars, no linebreaks)
-      if (!selectedText || selectedText.length > 30 || selectedText.includes("\n")) {
+      const rawText = selection.toString();
+      const selectedText = rawText.replace(/[\r\n]+/g, " ").trim();
+      // Only trigger for meaningful Japanese/word selections (1-50 chars)
+      if (!selectedText || selectedText.length > 50) {
         setTooltip((prev) => (prev.visible ? { ...prev, visible: false } : prev));
         return;
       }
@@ -94,7 +137,16 @@ export default function SelectionLookupTooltip({
 
       try {
         const range = selection.getRangeAt(0);
-        const rect = range.getBoundingClientRect();
+        let rect = range.getBoundingClientRect();
+
+        if (!rect || (rect.width === 0 && rect.height === 0)) {
+          const rects = range.getClientRects();
+          if (rects && rects.length > 0) {
+            rect = rects[0];
+          } else if (range.startContainer && range.startContainer.parentElement) {
+            rect = range.startContainer.parentElement.getBoundingClientRect();
+          }
+        }
 
         if (rect && (rect.width > 0 || rect.height > 0)) {
           const scrollY = window.scrollY || window.pageYOffset;
