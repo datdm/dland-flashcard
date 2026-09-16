@@ -35,6 +35,7 @@ export function getNavItemsForLanguage(langCode: string): NavItem[] {
         { href: "/flashcard/all", label: "Ôn tập Flashcard", icon: "🎴" },
         { href: "/history", label: "Lịch sử học tập", icon: "📊" },
         { href: "/settings", label: "Cài đặt Ngôn ngữ", icon: "⚙️" },
+        { href: "/admin", label: "Quản trị hệ thống", icon: "🛡️", isDevOnly: true },
         { href: "/practice/ai-voice-room", label: "Phòng Luyện Voice AI", icon: "🎙️", isComingSoon: true, isDevOnly: true },
         { href: "/practice/mock-interview", label: "Phỏng Vấn Xin Việc AI", icon: "💼", isComingSoon: true, isDevOnly: true },
       ];
@@ -54,6 +55,7 @@ export function getNavItemsForLanguage(langCode: string): NavItem[] {
         { href: "/flashcard/all", label: "Ôn tập Flashcard", icon: "🎴" },
         { href: "/history", label: "Lịch sử học tập", icon: "📊" },
         { href: "/settings", label: "Cài đặt Ngôn ngữ", icon: "⚙️" },
+        { href: "/admin", label: "Quản trị hệ thống", icon: "🛡️", isDevOnly: true },
       ];
 
     case "ko":
@@ -70,6 +72,7 @@ export function getNavItemsForLanguage(langCode: string): NavItem[] {
         { href: "/flashcard/all", label: "Ôn tập Flashcard", icon: "🎴" },
         { href: "/history", label: "Lịch sử học tập", icon: "📊" },
         { href: "/settings", label: "Cài đặt Ngôn ngữ", icon: "⚙️" },
+        { href: "/admin", label: "Quản trị hệ thống", icon: "🛡️", isDevOnly: true },
       ];
 
     case "zh":
@@ -87,6 +90,7 @@ export function getNavItemsForLanguage(langCode: string): NavItem[] {
         { href: "/flashcard/all", label: "Ôn tập Flashcard", icon: "🎴" },
         { href: "/history", label: "Lịch sử học tập", icon: "📊" },
         { href: "/settings", label: "Cài đặt Ngôn ngữ", icon: "⚙️" },
+        { href: "/admin", label: "Quản trị hệ thống", icon: "🛡️", isDevOnly: true },
       ];
 
     case "ja":
@@ -108,6 +112,7 @@ export function getNavItemsForLanguage(langCode: string): NavItem[] {
         { href: "/flashcard/all", label: "Ôn tập Flashcard", icon: "🎴" },
         { href: "/history", label: "Lịch sử học tập", icon: "📊" },
         { href: "/settings", label: "Cài đặt Ngôn ngữ", icon: "⚙️" },
+        { href: "/admin", label: "Quản trị hệ thống", icon: "🛡️", isDevOnly: true },
         { href: "/chat/live", label: "Gia Sư Voice AI (Live)", icon: "🎙️", isComingSoon: false, isDevOnly: true },
         { href: "/practice/ai-voice-room", label: "Phòng Luyện Voice AI", icon: "🎙️", isComingSoon: true, isDevOnly: true },
         { href: "/practice/mock-interview", label: "Phỏng Vấn Xin Việc AI", icon: "💼", isComingSoon: true, isDevOnly: true },

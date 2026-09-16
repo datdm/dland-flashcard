@@ -27,9 +27,22 @@ function saveSettingsToStorage(settings: NavMenuSettings) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
 }
 
+function getCookie(name: string): string | null {
+  if (typeof document === "undefined") return null;
+  const match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
+  return match ? decodeURIComponent(match[2]) : null;
+}
+
+function setCookie(name: string, value: string) {
+  if (typeof document === "undefined") return;
+  document.cookie = `${name}=${encodeURIComponent(value)}; path=/; max-age=31536000; SameSite=Lax`;
+}
+
 export function loadDevFeaturesEnabled(): boolean {
   if (typeof window === "undefined") return false;
   try {
+    const fromCookie = getCookie(ADMIN_DEV_KEY);
+    if (fromCookie !== null) return fromCookie === "true";
     return localStorage.getItem(ADMIN_DEV_KEY) === "true";
   } catch {
     return false;
@@ -38,7 +51,9 @@ export function loadDevFeaturesEnabled(): boolean {
 
 export function saveDevFeaturesEnabled(enabled: boolean) {
   if (typeof window === "undefined") return;
-  localStorage.setItem(ADMIN_DEV_KEY, enabled ? "true" : "false");
+  const val = enabled ? "true" : "false";
+  localStorage.setItem(ADMIN_DEV_KEY, val);
+  setCookie(ADMIN_DEV_KEY, val);
   window.dispatchEvent(new CustomEvent("nav-menu-settings-changed"));
   autoSync();
 }
@@ -46,6 +61,8 @@ export function saveDevFeaturesEnabled(enabled: boolean) {
 export function loadDevItemOverrides(): NavMenuDevOverrides {
   if (typeof window === "undefined") return {};
   try {
+    const fromCookie = getCookie(ADMIN_DEV_ITEMS_KEY);
+    if (fromCookie) return JSON.parse(fromCookie);
     const raw = localStorage.getItem(ADMIN_DEV_ITEMS_KEY);
     return raw ? JSON.parse(raw) : {};
   } catch {
@@ -55,7 +72,9 @@ export function loadDevItemOverrides(): NavMenuDevOverrides {
 
 export function saveDevItemOverrides(overrides: NavMenuDevOverrides) {
   if (typeof window === "undefined") return;
-  localStorage.setItem(ADMIN_DEV_ITEMS_KEY, JSON.stringify(overrides));
+  const json = JSON.stringify(overrides);
+  localStorage.setItem(ADMIN_DEV_ITEMS_KEY, json);
+  setCookie(ADMIN_DEV_ITEMS_KEY, json);
   window.dispatchEvent(new CustomEvent("nav-menu-settings-changed"));
   autoSync();
 }
