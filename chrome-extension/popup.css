@@ -1156,3 +1156,130 @@ input:checked + .slider:before {
   display: none !important;
 }
 
+/* Kanji Cards & Related Vocabulary in Popup Modal */
+.dland-kanji-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.dland-kanji-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dland-kanji-char {
+  font-size: 20px;
+  font-weight: 900;
+  color: #4f46e5;
+  background: #eef2ff;
+  border: 1px solid #c7d2fe;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.dland-kanji-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.dland-kanji-han {
+  font-size: 12px;
+  font-weight: 800;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dland-kanji-level-badge {
+  font-size: 9px;
+  font-weight: 700;
+  background: #f1f5f9;
+  color: #475569;
+  padding: 1px 5px;
+  border-radius: 5px;
+  border: 1px solid #cbd5e1;
+}
+
+.dland-kanji-readings {
+  font-size: 10px;
+  color: #64748b;
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.dland-kanji-detail-text {
+  font-size: 10px;
+  color: #334155;
+  line-height: 1.35;
+  background: #ffffff;
+  padding: 5px 8px;
+  border-radius: 6px;
+  border: 1px dashed #cbd5e1;
+}
+
+.dland-kanji-ex-title {
+  font-size: 10px;
+  font-weight: 700;
+  color: #4338ca;
+  margin-top: 2px;
+}
+
+.dland-kanji-ex-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.dland-kanji-ex-chip {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 3px 6px;
+  font-size: 10px;
+  color: #1e293b;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  transition: all 0.15s;
+  text-align: left;
+}
+
+.dland-kanji-ex-chip:hover {
+  border-color: #6366f1;
+  background: #eef2ff;
+  color: #4338ca;
+  transform: translateY(-1px);
+}
+
+.dland-ex-w {
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.dland-ex-p {
+  color: #6366f1;
+  font-weight: 600;
+}
+
+.dland-ex-m {
+  color: #475569;
+}
+

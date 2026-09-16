@@ -360,3 +360,137 @@
   box-shadow: 0 6px 20px rgba(220, 38, 38, 0.45) !important;
 }
 
+/* 5. Kanji & Related Vocabulary Section */
+.dland-kanji-section {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+  margin-top: 4px !important;
+}
+
+.dland-kanji-card {
+  background: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 14px !important;
+  padding: 12px 14px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+}
+
+.dland-kanji-header {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+}
+
+.dland-kanji-char {
+  font-size: 24px !important;
+  font-weight: 900 !important;
+  color: #4f46e5 !important;
+  background: #eef2ff !important;
+  border: 1px solid #c7d2fe !important;
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+}
+
+.dland-kanji-meta {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 2px !important;
+  flex: 1 !important;
+  min-width: 0 !important;
+}
+
+.dland-kanji-han {
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  color: #0f172a !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+
+.dland-kanji-level-badge {
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  background: #f1f5f9 !important;
+  color: #475569 !important;
+  padding: 1px 6px !important;
+  border-radius: 6px !important;
+  border: 1px solid #cbd5e1 !important;
+}
+
+.dland-kanji-readings {
+  font-size: 11px !important;
+  color: #64748b !important;
+  display: flex !important;
+  gap: 8px !important;
+  flex-wrap: wrap !important;
+}
+
+.dland-kanji-detail-text {
+  font-size: 11px !important;
+  color: #334155 !important;
+  line-height: 1.4 !important;
+  background: #ffffff !important;
+  padding: 6px 10px !important;
+  border-radius: 8px !important;
+  border: 1px dashed #cbd5e1 !important;
+}
+
+.dland-kanji-ex-title {
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  color: #4338ca !important;
+  margin-top: 2px !important;
+}
+
+.dland-kanji-ex-grid {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 6px !important;
+}
+
+.dland-kanji-ex-chip {
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 8px !important;
+  padding: 4px 8px !important;
+  font-size: 11px !important;
+  color: #1e293b !important;
+  cursor: pointer !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  transition: all 0.15s !important;
+  text-align: left !important;
+}
+
+.dland-kanji-ex-chip:hover {
+  border-color: #6366f1 !important;
+  background: #eef2ff !important;
+  color: #4338ca !important;
+  transform: translateY(-1px) !important;
+}
+
+.dland-ex-w {
+  font-weight: 800 !important;
+  color: #0f172a !important;
+}
+
+.dland-ex-p {
+  color: #6366f1 !important;
+  font-weight: 600 !important;
+}
+
+.dland-ex-m {
+  color: #475569 !important;
+}
+

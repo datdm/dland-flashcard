@@ -284,6 +284,15 @@ async function handleLookupMazii(query) {
   if (!query || !query.trim()) return null;
   const cleanQuery = query.trim();
 
+  let mainResult = {
+    kanji: cleanQuery,
+    hiragana: cleanQuery,
+    onyomi: "",
+    meaning: "",
+    wordType: "Danh từ",
+    kanjiDetails: [],
+  };
+
   try {
     const res = await fetch("https://mazii.net/api/search", {
       method: "POST",
@@ -298,65 +307,109 @@ async function handleLookupMazii(query) {
       }),
     });
 
-    if (!res.ok) throw new Error("Không thể kết nối đến máy chủ Mazii");
+    if (res.ok) {
+      const json = await res.json();
+      if (json.status === 200 && Array.isArray(json.data) && json.data.length > 0) {
+        const bestMatch = json.data[0];
 
-    const json = await res.json();
-    if (json.status === 200 && Array.isArray(json.data) && json.data.length > 0) {
-      const bestMatch = json.data[0];
+        // Parse meanings
+        const meanings = [];
+        let wordType = "Danh từ";
 
-      // Parse meanings
-      const meanings = [];
-      let wordType = "Danh từ";
+        if (Array.isArray(bestMatch.means)) {
+          bestMatch.means.forEach((m) => {
+            if (m.kind) {
+              const k = m.kind.toLowerCase();
+              if (k.includes("động từ") || k.includes("verb") || k.includes("v")) wordType = "Động từ";
+              else if (k.includes("tính từ") || k.includes("adj")) wordType = "Tính từ";
+              else if (k.includes("phó từ") || k.includes("adv")) wordType = "Phó từ";
+            }
+            if (m.mean) {
+              meanings.push(m.mean);
+            }
+          });
+        }
 
-      if (Array.isArray(bestMatch.means)) {
-        bestMatch.means.forEach((m) => {
-          if (m.kind) {
-            const k = m.kind.toLowerCase();
-            if (k.includes("động từ") || k.includes("verb") || k.includes("v")) wordType = "Động từ";
-            else if (k.includes("tính từ") || k.includes("adj")) wordType = "Tính từ";
-            else if (k.includes("phó từ") || k.includes("adv")) wordType = "Phó từ";
-          }
-          if (m.mean) {
-            meanings.push(m.mean);
-          }
-        });
+        const meaningText = meanings.slice(0, 3).join("; ") || bestMatch.short_mean || "";
+
+        mainResult = {
+          kanji: bestMatch.word || cleanQuery,
+          hiragana: bestMatch.phonetic || bestMatch.word || cleanQuery,
+          onyomi: bestMatch.han || bestMatch.hb || "",
+          meaning: meaningText,
+          wordType: wordType,
+          level: bestMatch.level ? `N${bestMatch.level}` : undefined,
+          allResults: json.data.slice(0, 3).map((item) => ({
+            kanji: item.word,
+            hiragana: item.phonetic,
+            meaning: item.short_mean || (item.means?.[0]?.mean || ""),
+            onyomi: item.han || item.hb || "",
+          })),
+          kanjiDetails: [],
+        };
       }
-
-      const meaningText = meanings.slice(0, 3).join("; ") || bestMatch.short_mean || "";
-
-      return {
-        kanji: bestMatch.word || cleanQuery,
-        hiragana: bestMatch.phonetic || bestMatch.word || cleanQuery,
-        onyomi: bestMatch.han || bestMatch.hb || "",
-        meaning: meaningText,
-        wordType: wordType,
-        level: bestMatch.level ? `N${bestMatch.level}` : undefined,
-        allResults: json.data.slice(0, 3).map((item) => ({
-          kanji: item.word,
-          hiragana: item.phonetic,
-          meaning: item.short_mean || (item.means?.[0]?.mean || ""),
-          onyomi: item.han || item.hb || "",
-        })),
-      };
     }
-
-    return {
-      kanji: cleanQuery,
-      hiragana: cleanQuery,
-      onyomi: "",
-      meaning: "",
-      wordType: "Danh từ",
-    };
   } catch (error) {
-    console.error("Mazii lookup error:", error);
-    return {
-      kanji: cleanQuery,
-      hiragana: cleanQuery,
-      onyomi: "",
-      meaning: "",
-      wordType: "Danh từ",
-    };
+    console.error("Mazii word lookup error:", error);
   }
+
+  // Extract Kanji characters from word (Unicode Kanji range)
+  const targetText = mainResult.kanji || cleanQuery;
+  const kanjiChars = Array.from(new Set(targetText.match(/[\u4e00-\u9faf\u3400-\u4dbf]/g) || [])).slice(0, 5);
+
+  if (kanjiChars.length > 0) {
+    try {
+      const kanjiPromises = kanjiChars.map(async (kChar) => {
+        try {
+          const kRes = await fetch("https://mazii.net/api/search", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              query: kChar,
+              dict: "javi",
+              type: "kanji",
+              limit: 1,
+            }),
+          });
+
+          if (!kRes.ok) return null;
+          const kJson = await kRes.json();
+          const kData = (kJson.results || kJson.data || [])[0];
+          if (!kData) return null;
+
+          const examples = Array.isArray(kData.examples)
+            ? kData.examples
+                .filter((ex) => ex.w && ex.m)
+                .slice(0, 8)
+                .map((ex) => ({
+                  w: ex.w || "",
+                  p: ex.p || ex.h || "",
+                  m: ex.m || "",
+                }))
+            : [];
+
+          return {
+            kanji: kData.kanji || kChar,
+            han: kData.mean || kData.han || "",
+            on: kData.on || "",
+            kun: kData.kun || "",
+            detail: kData.detail || "",
+            level: Array.isArray(kData.level) ? kData.level.join(", ") : kData.level,
+            examples,
+          };
+        } catch {
+          return null;
+        }
+      });
+
+      const kanjiResults = await Promise.all(kanjiPromises);
+      mainResult.kanjiDetails = kanjiResults.filter(Boolean);
+    } catch (kErr) {
+      console.error("Mazii kanji lookup error:", kErr);
+    }
+  }
+
+  return mainResult;
 }
 
 // Save Vocabulary to Notebook and optionally sync to Database

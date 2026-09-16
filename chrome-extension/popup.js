@@ -977,7 +977,73 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  function openAddWordModal(targetNbId, initialWord = "") {
+  function renderKanjiCards(container, kanjiDetails, onWordClick) {
+    if (!container || !Array.isArray(kanjiDetails) || kanjiDetails.length === 0) {
+      if (container) container.innerHTML = "";
+      return;
+    }
+
+    container.innerHTML = kanjiDetails
+      .map(
+        (k) => `
+        <div class="dland-kanji-card">
+          <div class="dland-kanji-header">
+            <span class="dland-kanji-char">${escapeHtml(k.kanji)}</span>
+            <div class="dland-kanji-meta">
+              <div class="dland-kanji-han">
+                <strong>${escapeHtml(k.han || "HÁN")}</strong>
+                ${k.level ? `<span class="dland-kanji-level-badge">${escapeHtml(k.level)}</span>` : ""}
+              </div>
+              <div class="dland-kanji-readings">
+                ${k.on ? `<span><strong>On:</strong> ${escapeHtml(k.on)}</span>` : ""}
+                ${k.kun ? `<span><strong>Kun:</strong> ${escapeHtml(k.kun)}</span>` : ""}
+              </div>
+            </div>
+          </div>
+          ${k.detail ? `<div class="dland-kanji-detail-text">${escapeHtml(k.detail)}</div>` : ""}
+          ${
+            k.examples && k.examples.length > 0
+              ? `
+            <div class="dland-kanji-ex-title">📚 Từ vựng chứa ${escapeHtml(k.kanji)}:</div>
+            <div class="dland-kanji-ex-grid">
+              ${k.examples
+                .map(
+                  (ex) => `
+                <button type="button" class="dland-kanji-ex-chip" data-word="${escapeHtml(ex.w)}" title="Nhấp để tra từ '${escapeHtml(ex.w)}'">
+                  <span class="dland-ex-w">${escapeHtml(ex.w)}</span>
+                  ${ex.p ? `<span class="dland-ex-p">(${escapeHtml(ex.p)})</span>` : ""}
+                  <span class="dland-ex-m">: ${escapeHtml(ex.m)}</span>
+                </button>
+              `
+                )
+                .join("")}
+            </div>
+          `
+              : ""
+          }
+        </div>
+      `
+      )
+      .join("");
+
+    container.querySelectorAll(".dland-kanji-ex-chip").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const word = btn.getAttribute("data-word");
+        if (word && typeof onWordClick === "function") {
+          onWordClick(word);
+        }
+      });
+    });
+  }
+
+  function openAddWordModal(notebookId, initialWord = "") {
+    const targetNb = notebooks.find((nb) => nb.id === notebookId) || notebooks[0];
+    if (targetNb && addWordTargetNotebook) {
+      addWordTargetNotebook.value = targetNb.id;
+    }
+
     if (addWordError) {
       addWordError.style.display = "none";
       addWordError.textContent = "";
@@ -986,7 +1052,7 @@ document.addEventListener("DOMContentLoaded", () => {
     addWordTargetNotebook.innerHTML = notebooks
       .map(
         (nb) =>
-          `<option value="${nb.id}" ${nb.id === targetNbId ? "selected" : ""}>${escapeHtml(
+          `<option value="${nb.id}" ${nb.id === (targetNb?.id || notebookId) ? "selected" : ""}>📓 ${escapeHtml(
             nb.name
           )}</option>`
       )
@@ -996,6 +1062,11 @@ document.addEventListener("DOMContentLoaded", () => {
     addWordHiragana.value = "";
     addWordOnyomi.value = "";
     addWordMeaning.value = "";
+
+    const addWordKanjiGroup = document.getElementById("addWordKanjiGroup");
+    const addWordKanjiContainer = document.getElementById("addWordKanjiContainer");
+    if (addWordKanjiGroup) addWordKanjiGroup.style.display = "none";
+    if (addWordKanjiContainer) addWordKanjiContainer.innerHTML = "";
 
     addWordModal.style.display = "flex";
     addWordKanji?.focus?.();
@@ -1009,6 +1080,17 @@ document.addEventListener("DOMContentLoaded", () => {
           addWordOnyomi.value = d.onyomi || "";
           addWordMeaning.value = d.meaning || "";
           if (d.wordType && addWordType) addWordType.value = d.wordType;
+
+          if (addWordKanjiGroup && addWordKanjiContainer) {
+            if (d.kanjiDetails && d.kanjiDetails.length > 0) {
+              addWordKanjiGroup.style.display = "block";
+              renderKanjiCards(addWordKanjiContainer, d.kanjiDetails, (clickedWord) => {
+                openAddWordModal(addWordTargetNotebook?.value || "nb-default-ja", clickedWord);
+              });
+            } else {
+              addWordKanjiGroup.style.display = "none";
+            }
+          }
         }
       });
     }

@@ -361,6 +361,67 @@
     }
   }
 
+  function renderKanjiCards(container, kanjiDetails, onWordClick) {
+    if (!container || !Array.isArray(kanjiDetails) || kanjiDetails.length === 0) {
+      if (container) container.innerHTML = "";
+      return;
+    }
+
+    container.innerHTML = kanjiDetails
+      .map(
+        (k) => `
+        <div class="dland-kanji-card">
+          <div class="dland-kanji-header">
+            <span class="dland-kanji-char">${escapeHtml(k.kanji)}</span>
+            <div class="dland-kanji-meta">
+              <div class="dland-kanji-han">
+                <strong>${escapeHtml(k.han || "HÁN")}</strong>
+                ${k.level ? `<span class="dland-kanji-level-badge">${escapeHtml(k.level)}</span>` : ""}
+              </div>
+              <div class="dland-kanji-readings">
+                ${k.on ? `<span><strong>On:</strong> ${escapeHtml(k.on)}</span>` : ""}
+                ${k.kun ? `<span><strong>Kun:</strong> ${escapeHtml(k.kun)}</span>` : ""}
+              </div>
+            </div>
+          </div>
+          ${k.detail ? `<div class="dland-kanji-detail-text">${escapeHtml(k.detail)}</div>` : ""}
+          ${
+            k.examples && k.examples.length > 0
+              ? `
+            <div class="dland-kanji-ex-title">📚 Từ vựng chứa ${escapeHtml(k.kanji)}:</div>
+            <div class="dland-kanji-ex-grid">
+              ${k.examples
+                .map(
+                  (ex) => `
+                <button type="button" class="dland-kanji-ex-chip" data-word="${escapeHtml(ex.w)}" title="Nhấp để tra từ '${escapeHtml(ex.w)}'">
+                  <span class="dland-ex-w">${escapeHtml(ex.w)}</span>
+                  ${ex.p ? `<span class="dland-ex-p">(${escapeHtml(ex.p)})</span>` : ""}
+                  <span class="dland-ex-m">: ${escapeHtml(ex.m)}</span>
+                </button>
+              `
+                )
+                .join("")}
+            </div>
+          `
+              : ""
+          }
+        </div>
+      `
+      )
+      .join("");
+
+    container.querySelectorAll(".dland-kanji-ex-chip").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const word = btn.getAttribute("data-word");
+        if (word && typeof onWordClick === "function") {
+          onWordClick(word);
+        }
+      });
+    });
+  }
+
   function openLookupDialog(wordToLookup) {
     closeModal();
 
@@ -449,6 +510,12 @@
           <label class="dland-form-label">Tên sổ tay mới</label>
           <input type="text" class="dland-input-text" id="dland-input-new-nb" placeholder="Ví dụ: Từ vựng N3 đọc báo..." />
         </div>
+
+        <!-- Kanji & Related Vocabulary Section -->
+        <div class="dland-form-group" id="dland-kanji-group" style="display: none;">
+          <label class="dland-form-label">⛩️ Hán tự & Từ vựng liên quan (Mazii)</label>
+          <div id="dland-kanji-container" class="dland-kanji-section"></div>
+        </div>
       </div>
 
       <div class="dland-modal-footer">
@@ -477,6 +544,8 @@
     const displayWord = dialog.querySelector("#dland-display-word");
     const displayReading = dialog.querySelector("#dland-display-reading");
     const authBadge = dialog.querySelector("#dland-modal-auth-badge");
+    const kanjiGroup = dialog.querySelector("#dland-kanji-group");
+    const kanjiContainer = dialog.querySelector("#dland-kanji-container");
 
     // Close handlers
     closeBtn.addEventListener("click", closeModal);
@@ -599,6 +668,18 @@
             displayReading.textContent =
               [d.hiragana, d.onyomi ? `[${d.onyomi}]` : ""].filter(Boolean).join(" • ") ||
               "Đã tìm thấy từ điển Mazii";
+
+            // Render Kanji & Related Vocabulary Cards
+            if (kanjiGroup && kanjiContainer) {
+              if (d.kanjiDetails && d.kanjiDetails.length > 0) {
+                kanjiGroup.style.display = "flex";
+                renderKanjiCards(kanjiContainer, d.kanjiDetails, (selectedWord) => {
+                  openLookupDialog(selectedWord);
+                });
+              } else {
+                kanjiGroup.style.display = "none";
+              }
+            }
           } else {
             displayReading.textContent = "Không tìm thấy trong Mazii, bạn có thể tự nhập nghĩa";
           }
