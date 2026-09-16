@@ -455,10 +455,10 @@ export default function ChatPage() {
           </div>
         </div>
 
-        {/* Chat Container Box */}
-        <div className="bg-white rounded-2xl sm:rounded-3xl shadow-xs border border-gray-100 overflow-hidden flex flex-col h-[calc(100dvh-11.5rem)] min-h-[480px]">
-          {/* Chat Messages Area */}
-          <div className="flex-1 overflow-y-auto bg-slate-50/50 p-4 sm:p-5 space-y-4">
+        {/* Main Content Area: Messages & Input separated into distinct structural blocks */}
+        <div className="flex flex-col h-[calc(100dvh-10rem)] min-h-[500px] space-y-3">
+          {/* 1. Chat Messages Panel (Separated full-height scrolling view) */}
+          <div className="flex-1 bg-white rounded-2xl sm:rounded-3xl shadow-xs border border-gray-100 overflow-y-auto p-4 sm:p-5 space-y-4">
             {messages.map((msg, idx) => (
               <div key={idx} className={`flex gap-2.5 ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
                 {msg.role === "model" && (
@@ -552,38 +552,39 @@ export default function ChatPage() {
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Selected Image Preview Bar Before Sending */}
-          {selectedImages.length > 0 && (
-            <div className="bg-indigo-50/60 border-t border-indigo-100 px-4 py-2 flex items-center gap-2.5 overflow-x-auto">
-              <span className="text-[11px] font-extrabold text-indigo-900 shrink-0 flex items-center gap-1">
-                <span>🖼️</span>
-                <span>Ảnh đã chọn ({selectedImages.length}):</span>
-              </span>
-              {selectedImages.map((img) => (
-                <div
-                  key={img.id}
-                  className="relative group shrink-0 w-14 h-14 rounded-xl overflow-hidden border-2 border-indigo-300 bg-white shadow-3xs"
-                >
-                  <img src={img.url} alt="Preview" className="w-full h-full object-cover" />
-                  <button
-                    type="button"
-                    onClick={() => removeSelectedImage(img.id)}
-                    className="absolute top-0.5 right-0.5 w-4 h-4 rounded-full bg-rose-600 text-white text-[10px] font-black flex items-center justify-center opacity-90 hover:opacity-100 transition-opacity"
-                    title="Xóa ảnh này"
+          {/* 2. Separated Input Panel (Floating/Independent Card at Bottom) */}
+          <div className="bg-white rounded-2xl sm:rounded-3xl shadow-md border border-gray-200/90 p-3 sm:p-4 shrink-0 space-y-2.5">
+            {/* Selected Image Preview Bar Before Sending */}
+            {selectedImages.length > 0 && (
+              <div className="bg-indigo-50/60 rounded-xl border border-indigo-100 px-3.5 py-2 flex items-center gap-2.5 overflow-x-auto">
+                <span className="text-[11px] font-extrabold text-indigo-900 shrink-0 flex items-center gap-1">
+                  <span>🖼️</span>
+                  <span>Ảnh đã chọn ({selectedImages.length}):</span>
+                </span>
+                {selectedImages.map((img) => (
+                  <div
+                    key={img.id}
+                    className="relative group shrink-0 w-14 h-14 rounded-xl overflow-hidden border-2 border-indigo-300 bg-white shadow-3xs"
                   >
-                    ✕
-                  </button>
-                </div>
-              ))}
-              <span className="text-[10px] text-gray-400 font-medium ml-auto shrink-0 hidden sm:inline">
-                💡 Có thể bấm Gửi ngay hoặc nhập thêm câu hỏi
-              </span>
-            </div>
-          )}
+                    <img src={img.url} alt="Preview" className="w-full h-full object-cover" />
+                    <button
+                      type="button"
+                      onClick={() => removeSelectedImage(img.id)}
+                      className="absolute top-0.5 right-0.5 w-4 h-4 rounded-full bg-rose-600 text-white text-[10px] font-black flex items-center justify-center opacity-90 hover:opacity-100 transition-opacity"
+                      title="Xóa ảnh này"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ))}
+                <span className="text-[10px] text-gray-400 font-medium ml-auto shrink-0 hidden sm:inline">
+                  💡 Có thể bấm Gửi ngay hoặc nhập thêm câu hỏi
+                </span>
+              </div>
+            )}
 
-          {/* Quick Suggestions Horizontal Scroll Bar */}
-          <div className="bg-slate-50 border-t border-gray-100 px-3 py-2">
-            <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+            {/* Quick Suggestions Horizontal Scroll Bar */}
+            <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-0.5">
               <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider shrink-0 mr-1">
                 Gợi ý:
               </span>
@@ -592,22 +593,20 @@ export default function ChatPage() {
                   key={i}
                   type="button"
                   onClick={() => handleSend(sug)}
-                  className="px-3 py-1 bg-white hover:bg-indigo-50 text-gray-700 hover:text-indigo-700 border border-gray-200/80 hover:border-indigo-300 text-xs font-semibold rounded-full whitespace-nowrap transition-all shadow-3xs cursor-pointer shrink-0"
+                  className="px-3 py-1 bg-slate-50 hover:bg-indigo-50 text-gray-700 hover:text-indigo-700 border border-gray-200/80 hover:border-indigo-300 text-xs font-semibold rounded-full whitespace-nowrap transition-all shadow-3xs cursor-pointer shrink-0"
                 >
                   {sug}
                 </button>
               ))}
             </div>
-          </div>
 
-          {/* Input Area */}
-          <div className="bg-white p-3 sm:p-4 border-t border-gray-100">
+            {/* Multi-line Auto-expanding Textarea Form */}
             <form
               onSubmit={(e) => {
                 e.preventDefault();
                 handleSend(input);
               }}
-              className="flex gap-2 items-center"
+              className="flex gap-2 items-end"
             >
               {/* Mic STT Button */}
               <button
@@ -633,19 +632,27 @@ export default function ChatPage() {
                 🖼️
               </button>
 
-              <input
-                type="text"
+              <textarea
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    if ((input.trim() || selectedImages.length > 0) && !isLoading) {
+                      handleSend(input);
+                    }
+                  }
+                }}
                 disabled={isLoading}
+                rows={1}
                 placeholder={
                   isListening
                     ? "Đang lắng nghe giọng nói của bạn..."
                     : selectedImages.length > 0
-                    ? "Nhập câu hỏi kèm ảnh hoặc bấm Gửi để phân tích..."
-                    : "Hỏi gia sư, dán ảnh (Ctrl+V) hoặc kéo thả ảnh vào đây..."
+                    ? "Nhập câu hỏi kèm ảnh (Enter để gửi, Shift+Enter xuống dòng)..."
+                    : "Hỏi gia sư, dán văn bản/ảnh (Ctrl+V)... (Enter để gửi, Shift+Enter xuống dòng)"
                 }
-                className="flex-1 bg-slate-50 border border-gray-200 rounded-2xl px-4 py-2.5 text-xs sm:text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all"
+                className="flex-1 bg-slate-50 border border-gray-200 rounded-2xl px-4 py-2.5 text-xs sm:text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all resize-none min-h-[44px] max-h-36 overflow-y-auto leading-relaxed"
               />
 
               <button

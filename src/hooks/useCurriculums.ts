@@ -631,7 +631,8 @@ export function useCurriculums() {
   );
 
   return {
-    curriculums: visibleCurriculums,
+    curriculums: activeCurriculums,
+    allCurriculums: visibleCurriculums,
     activeCurriculums,
     rawCurriculums: curriculums,
     save,

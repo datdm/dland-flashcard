@@ -63,16 +63,24 @@ function CurriculumContent() {
   // Automatically select first book if activeBookId is not valid for activeGroup
   const currentBook = availableBooks.find((b) => b.id === activeBookId) || availableBooks[0] || null;
 
-  const isMultilingual = activeLanguage.code === "de" || activeLanguage.code === "en";
+  const isMultilingual = activeLanguage.code !== "ja";
   const headerTitle = activeLanguage.code === "de" 
     ? "Kho Giáo Trình Tiếng Đức" 
     : activeLanguage.code === "en" 
     ? "Lộ Trình IELTS 7.0 (12 Tháng / 52 Tuần)" 
+    : activeLanguage.code === "ko"
+    ? "Kho Giáo Trình Tiếng Hàn"
+    : activeLanguage.code === "zh"
+    ? "Kho Giáo Trình Tiếng Trung"
     : "Kho Giáo Trình Tiếng Nhật Theo Cấp Độ";
   const headerSubtitle = activeLanguage.code === "de"
     ? "Chọn giáo trình chuẩn CEFR (Netzwerk Neu A1, Schritte International, Aspekte Neu)"
     : activeLanguage.code === "en"
     ? "Luyện thi IELTS 7.0 bài bản: Foundation ➔ Format ➔ Advanced ➔ Mock Test"
+    : activeLanguage.code === "ko"
+    ? "Lộ trình luyện thi TOPIK & Giao tiếp tiếng Hàn từ sơ cấp đến cao cấp"
+    : activeLanguage.code === "zh"
+    ? "Lộ trình luyện thi HSK & Giao tiếp tiếng Trung chuẩn"
     : "Học bài bản theo Minna no Nihongo, Genki, Soumatome, Shinkanzen Master, Marugoto & Try!";
 
   const getLevelStats = (level: JLPTLevel) => {
@@ -274,26 +282,28 @@ function CurriculumContent() {
         <div className="bg-white rounded-3xl p-10 sm:p-14 text-center border border-gray-100 space-y-3.5 shadow-2xs">
           <span className="text-4xl block">🚧</span>
           <h3 className="text-base sm:text-lg font-bold text-gray-900">
-            Giáo trình cấp độ {activeLevel} đang được biên soạn
+            Giáo trình {activeLanguage.name} đang được cập nhật & biên soạn
           </h3>
           <p className="text-xs text-gray-500 max-w-md mx-auto leading-relaxed">
-            Dữ liệu bài học, từ vựng và ngữ pháp của cấp độ {activeLevel} đang được đội ngũ chuyên môn kiểm duyệt và chuẩn hóa. Bạn vui lòng quay lại sau hoặc chọn học các cấp độ đã hoàn thiện từ N5 đến N2 nhé!
+            Dữ liệu bài học, từ vựng và ngữ pháp của {activeLanguage.name} đang được đội ngũ chuyên môn kiểm duyệt và chuẩn hóa.
           </p>
-          <div className="pt-2">
-            <button
-              onClick={() => {
-                setActiveLevel("N2");
-                const n2Group = groups.find((g) => g.level === "N2");
-                if (n2Group?.books && n2Group.books.length > 0) {
-                  setActiveBookId(n2Group.books[0].id);
-                }
-              }}
-              className="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition-all shadow-xs cursor-pointer inline-flex items-center gap-1.5"
-            >
-              <span>Chuyển sang cấp độ N2</span>
-              <span>→</span>
-            </button>
-          </div>
+          {activeLanguage.code === "ja" && (
+            <div className="pt-2">
+              <button
+                onClick={() => {
+                  setActiveLevel("N2");
+                  const n2Group = groups.find((g) => g.level === "N2");
+                  if (n2Group?.books && n2Group.books.length > 0) {
+                    setActiveBookId(n2Group.books[0].id);
+                  }
+                }}
+                className="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition-all shadow-xs cursor-pointer inline-flex items-center gap-1.5"
+              >
+                <span>Chuyển sang cấp độ N2</span>
+                <span>→</span>
+              </button>
+            </div>
+          )}
         </div>
       ) : (
         <div className="space-y-4 sm:space-y-5">

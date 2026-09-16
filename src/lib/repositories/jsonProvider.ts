@@ -51,7 +51,10 @@ async function fetchJsonData<T>(url: string): Promise<T | null> {
 export class JsonCurriculumRepository implements ICurriculumRepository {
   async getCurriculums(lang?: string): Promise<CurriculumLevelGroup[]> {
     const requestedLang = lang || getActiveLanguageCode();
-    const langCode = (requestedLang === "en" || requestedLang === "de") ? requestedLang : "ja";
+    if (requestedLang !== "ja" && requestedLang !== "en" && requestedLang !== "de") {
+      return [];
+    }
+    const langCode = requestedLang;
     const groups: CurriculumLevelGroup[] = [];
 
     if (langCode === "en") {

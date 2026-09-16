@@ -44,6 +44,7 @@ export interface Curriculum {
   id: string;
   name: string;
   createdAt: string;
+  lang?: string;
   lessons: LessonInCurriculum[];
 }
 

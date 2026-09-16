@@ -4,7 +4,7 @@ import { useMemo, useState, useEffect } from "react";
 import { useProgress } from "@/hooks/useProgress";
 import { useGrammarProgress } from "@/hooks/useGrammarProgress";
 import { useKanjiProgress } from "@/hooks/useKanjiProgress";
-import { useCurriculums } from "@/hooks/useCurriculums";
+import { useCurriculums, isCurriculumMatchLang } from "@/hooks/useCurriculums";
 import { useNotebooks } from "@/hooks/useNotebooks";
 import { useGrammarCollections } from "@/hooks/useGrammarCollections";
 import { useStreak } from "@/hooks/useStreak";
@@ -194,7 +194,12 @@ export default function HistoryPage() {
     const map = new Map<string, { kanji?: string; hiragana?: string; meaning?: string; source: string; lang: string }>();
     
     curriculums.forEach((c) => {
-      const curriculumLang = c.id.startsWith("en-") || c.name.toLowerCase().includes("ielts") ? "en" : c.id.startsWith("de-") || c.name.toLowerCase().includes("deutsch") ? "de" : "ja";
+      const curriculumLang = (c as any).lang || (
+        isCurriculumMatchLang(c, "en") ? "en" :
+        isCurriculumMatchLang(c, "de") ? "de" :
+        isCurriculumMatchLang(c, "ko") ? "ko" :
+        isCurriculumMatchLang(c, "zh") ? "zh" : "ja"
+      );
       c.lessons.forEach((l) => {
         l.vocabulary?.forEach((v) => {
           map.set(v.id, {
@@ -299,10 +304,7 @@ function getItemLevel(c: { id: string; name: string; level?: string }): string {
   const curriculumProgresses = useMemo(() => {
     const filteredCurriculums = activeRepoBooks.filter((c) => {
       if (effectiveLang === "all") return true;
-      if (effectiveLang === "ja") return !c.id.startsWith("en-") && !c.id.startsWith("de-");
-      if (effectiveLang === "en") return c.id.startsWith("en-") || c.name.toLowerCase().includes("ielts") || c.name.toLowerCase().includes("english");
-      if (effectiveLang === "de") return c.id.startsWith("de-") || c.name.toLowerCase().includes("deutsch") || c.name.toLowerCase().includes("đức");
-      return true;
+      return isCurriculumMatchLang(c, effectiveLang);
     });
 
     return filteredCurriculums.map((c) => {
@@ -402,19 +404,23 @@ function getItemLevel(c: { id: string; name: string; level?: string }): string {
     Object.entries(progress).forEach(([id, p]) => {
       if (p.learned && p.learnedAt) {
         const details = vocabLookup.get(id);
-        if (details) {
-          if (effectiveLang === "all" || details.lang === effectiveLang) {
-            items.push({
-              id,
-              type: "vocab",
-              title: details.kanji || details.hiragana || "Từ vựng",
-              subTitle: details.kanji ? details.hiragana : undefined,
-              meaning: details.meaning || "",
-              learnedAt: p.learnedAt,
-              source: details.source,
-              lang: details.lang
-            });
-          }
+        const itemLang = details?.lang || (
+          id.startsWith("en-") ? "en" :
+          id.startsWith("de-") ? "de" :
+          id.startsWith("ko-") ? "ko" :
+          id.startsWith("zh-") ? "zh" : "ja"
+        );
+        if (effectiveLang === "all" || itemLang === effectiveLang) {
+          items.push({
+            id,
+            type: "vocab",
+            title: details?.kanji || details?.hiragana || "Từ vựng",
+            subTitle: details?.kanji ? details?.hiragana : undefined,
+            meaning: details?.meaning || "",
+            learnedAt: p.learnedAt,
+            source: details?.source || "Từ vựng cá nhân",
+            lang: itemLang
+          });
         }
       }
     });
@@ -423,18 +429,22 @@ function getItemLevel(c: { id: string; name: string; level?: string }): string {
     Object.entries(grammarProgress).forEach(([id, p]) => {
       if (p.learned && p.learnedAt) {
         const details = grammarLookup.get(id);
-        if (details) {
-          if (effectiveLang === "all" || details.lang === effectiveLang) {
-            items.push({
-              id,
-              type: "grammar",
-              title: details.structure,
-              meaning: details.meaning,
-              learnedAt: p.learnedAt,
-              source: details.source,
-              lang: details.lang
-            });
-          }
+        const itemLang = details?.lang || (
+          id.startsWith("en-") ? "en" :
+          id.startsWith("de-") ? "de" :
+          id.startsWith("ko-") ? "ko" :
+          id.startsWith("zh-") ? "zh" : "ja"
+        );
+        if (effectiveLang === "all" || itemLang === effectiveLang) {
+          items.push({
+            id,
+            type: "grammar",
+            title: details?.structure || "Ngữ pháp",
+            meaning: details?.meaning || "",
+            learnedAt: p.learnedAt,
+            source: details?.source || "Ngữ pháp cá nhân",
+            lang: itemLang
+          });
         }
       }
     });
@@ -452,7 +462,7 @@ function getItemLevel(c: { id: string; name: string; level?: string }): string {
 
     const filteredLessons = effectiveLang === "all"
       ? systemLessonsList
-      : systemLessonsList.filter((l) => l.lang === effectiveLang);
+      : systemLessonsList.filter((l) => isCurriculumMatchLang({ id: l.id || "", name: l.curriculumName || l.curriculumTitle || "", lang: l.lang }, effectiveLang));
 
     const lessonItems = filteredLessons.map((lesson) => {
       const vocabList = lesson.vocabulary || [];
@@ -590,7 +600,14 @@ function getItemLevel(c: { id: string; name: string; level?: string }): string {
   const filteredPracticeHistory = useMemo(() => {
     return practiceHistory.filter((item) => {
       if (effectiveLang === "all") return true;
-      return item.lang === effectiveLang;
+      const itemLang = item.lang || (
+        item.id?.startsWith("en-") || item.topic?.toLowerCase().includes("ielts") || item.topic?.toLowerCase().includes("english") ? "en" :
+        item.id?.startsWith("de-") || item.topic?.toLowerCase().includes("netzwerk") || item.topic?.toLowerCase().includes("deutsch") ? "de" :
+        item.id?.startsWith("ko-") || item.topic?.toLowerCase().includes("topik") ? "ko" :
+        item.id?.startsWith("zh-") || item.topic?.toLowerCase().includes("hsk") ? "zh" :
+        "ja"
+      );
+      return itemLang === effectiveLang;
     });
   }, [practiceHistory, effectiveLang]);
 
