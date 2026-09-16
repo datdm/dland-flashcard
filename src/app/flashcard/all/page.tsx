@@ -3,6 +3,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { useCurriculums } from "@/hooks/useCurriculums";
 import { useNotebooks } from "@/hooks/useNotebooks";
+import { useLanguageSetting } from "@/hooks/useLanguageSetting";
 import FlashCardViewer from "@/components/FlashCardViewer";
 import Link from "next/link";
 import AuthGuard from "@/components/AuthGuard";
@@ -11,6 +12,7 @@ import { autoSync } from "@/lib/syncService";
 type SourceFilter = "all" | string; // "all" | curriculum-id | notebook-id
 
 export default function FlashCardAllPage() {
+  const { activeLanguage } = useLanguageSetting();
   const { activeCurriculums: curriculums } = useCurriculums();
   const { notebooks } = useNotebooks();
   const [source, setSource] = useState<SourceFilter>("all");
@@ -42,13 +44,17 @@ export default function FlashCardAllPage() {
 
   type SourceFilter = "all" | "all_curriculums" | "all_notebooks" | string;
 
+  const langNotebooks = useMemo(() => {
+    return notebooks.filter((nb) => (nb.lang || "ja") === activeLanguage.code);
+  }, [notebooks, activeLanguage.code]);
+
   const totalCurriculumVocabCount = useMemo(() => {
     return curriculums.reduce((acc, c) => acc + (c.lessons?.reduce((lAcc, l) => lAcc + (l.vocabulary?.length || 0), 0) || 0), 0);
   }, [curriculums]);
 
   const totalNotebookVocabCount = useMemo(() => {
-    return notebooks.reduce((acc, nb) => acc + (nb.vocabulary?.length || 0), 0);
-  }, [notebooks]);
+    return langNotebooks.reduce((acc, nb) => acc + (nb.vocabulary?.length || 0), 0);
+  }, [langNotebooks]);
 
   // Get all vocabulary based on filter
   const allVocab = useMemo(() => {
@@ -61,7 +67,7 @@ export default function FlashCardAllPage() {
         }))
       )
     );
-    const notebookVocab = notebooks.flatMap((nb) =>
+    const notebookVocab = langNotebooks.flatMap((nb) =>
       (nb.vocabulary || []).map((v) => ({
         ...v,
         sourceType: "notebook" as const,
@@ -113,7 +119,7 @@ export default function FlashCardAllPage() {
     }
     
     // Otherwise it's a notebook ID
-    const notebook = notebooks.find((nb) => nb.id === source);
+    const notebook = langNotebooks.find((nb) => nb.id === source);
     if (notebook) {
       return (notebook.vocabulary || []).map((v) => ({
         ...v,
@@ -123,7 +129,7 @@ export default function FlashCardAllPage() {
     }
     
     return [];
-  }, [source, curriculums, notebooks]);
+  }, [source, curriculums, langNotebooks]);
 
   if (curriculums.length === 0 && notebooks.length === 0) {
     return (

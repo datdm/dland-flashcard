@@ -89,7 +89,7 @@ function ResetHistorySettingsPanel() {
 }
 
 export default function SettingsPage() {
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, openAuthModal } = useAuth();
   const [showPasswordDialog, setShowPasswordDialog] = useState(false);
 
   const {
@@ -117,7 +117,9 @@ export default function SettingsPage() {
             <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-bold tracking-widest uppercase mb-1.5 inline-block">
               {activeLanguage.name} ({activeLanguage.code.toUpperCase()})
             </span>
-            <h1 className="text-xl sm:text-2xl font-bold">Cài Đặt Ngôn Ngữ & Dữ Liệu</h1>
+            <h1 className="text-xl sm:text-2xl font-bold">
+              {isAuthenticated ? "Cài Đặt Ngôn Ngữ & Dữ Liệu" : "Cài Đặt Ngôn Ngữ Học Tập"}
+            </h1>
             <p className="text-xs text-indigo-100 mt-1">
               Chọn ngôn ngữ mục tiêu học tập (Tiếng Nhật, Tiếng Anh, Tiếng Đức...) và nhấn nút Lưu để áp dụng toàn website
             </p>
@@ -234,67 +236,70 @@ export default function SettingsPage() {
           </div>
         </div>
 
-        {/* Nav Menu Visibility Settings */}
-        <NavMenuSettingsPanel />
+        {/* Display additional settings ONLY when authenticated */}
+        {isAuthenticated ? (
+          <>
+            {/* Nav Menu Visibility Settings */}
+            <NavMenuSettingsPanel />
 
-        {/* Reset History & Progress Section — only when logged in */}
-        {isAuthenticated && <ResetHistorySettingsPanel />}
+            {/* Reset History & Progress Section */}
+            <ResetHistorySettingsPanel />
 
-        {/* Account Info Section */}
-        {isAuthenticated && user && (
-          <div className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-xs space-y-3.5">
-            <h2 className="text-base font-bold text-gray-900 flex items-center gap-2">
-              <span>👤</span> Thông tin tài khoản Dland
-            </h2>
-            <div className="bg-gray-50 rounded-xl p-3.5 flex items-center justify-between">
-              <div>
-                <p className="text-xs text-gray-400 font-medium">Tên đăng nhập</p>
-                <p className="text-base font-bold text-gray-900">{user.username}</p>
-              </div>
-              <button
-                onClick={() => setShowPasswordDialog(true)}
-                className="px-3.5 py-1.5 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition font-bold text-xs shadow-2xs cursor-pointer"
-              >
-                🔐 Đổi mật khẩu
-              </button>
-            </div>
-            {user.isAdmin && (
-              <div className="p-3.5 rounded-xl bg-indigo-50/50 border border-indigo-100 flex items-center justify-between gap-3">
-                <div>
-                  <h3 className="text-xs font-bold text-indigo-900">🛡️ Quyền Quản trị viên (Admin)</h3>
-                  <p className="text-[10px] text-indigo-700 mt-0.5">
-                    Bạn có quyền truy cập vào bảng điều khiển quản trị viên để theo dõi tiến trình học tập của người dùng.
-                  </p>
+            {/* Account Info Section */}
+            {user && (
+              <div className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-xs space-y-3.5">
+                <h2 className="text-base font-bold text-gray-900 flex items-center gap-2">
+                  <span>👤</span> Thông tin tài khoản Dland
+                </h2>
+                <div className="bg-gray-50 rounded-xl p-3.5 flex items-center justify-between">
+                  <div>
+                    <p className="text-xs text-gray-400 font-medium">Tên đăng nhập</p>
+                    <p className="text-base font-bold text-gray-900">{user.username}</p>
+                  </div>
+                  <button
+                    onClick={() => setShowPasswordDialog(true)}
+                    className="px-3.5 py-1.5 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition font-bold text-xs shadow-2xs cursor-pointer"
+                  >
+                    🔐 Đổi mật khẩu
+                  </button>
                 </div>
-                <Link
-                  href="/admin"
-                  className="px-3.5 py-1.5 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition text-xs shadow-3xs shrink-0"
-                >
-                  Vào Dashboard →
-                </Link>
+                {user.isAdmin && (
+                  <div className="p-3.5 rounded-xl bg-indigo-50/50 border border-indigo-100 flex items-center justify-between gap-3">
+                    <div>
+                      <h3 className="text-xs font-bold text-indigo-900">🛡️ Quyền Quản trị viên (Admin)</h3>
+                      <p className="text-[10px] text-indigo-700 mt-0.5">
+                        Bạn có quyền truy cập vào bảng điều khiển quản trị viên để theo dõi tiến trình học tập của người dùng.
+                      </p>
+                    </div>
+                    <Link
+                      href="/admin"
+                      className="px-3.5 py-1.5 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition text-xs shadow-3xs shrink-0"
+                    >
+                      Vào Dashboard →
+                    </Link>
+                  </div>
+                )}
               </div>
             )}
-          </div>
-        )}
 
-        {/* Upload Data Section */}
-        <div className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-xs">
-          <UploadPanel />
-        </div>
+            {/* Upload Data Section */}
+            <div className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-xs">
+              <UploadPanel />
+            </div>
 
-        {/* Format examples */}
-        <div className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-xs space-y-3.5">
-          <h2 className="text-base font-bold text-gray-900 flex items-center gap-2">
-            <span>📄</span> Các định dạng JSON được hỗ trợ
-          </h2>
+            {/* Format examples */}
+            <div className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-xs space-y-3.5">
+              <h2 className="text-base font-bold text-gray-900 flex items-center gap-2">
+                <span>📄</span> Các định dạng JSON được hỗ trợ
+              </h2>
 
-          <div className="space-y-2.5">
-            <details className="group border border-gray-100 rounded-xl p-3 bg-gray-50/50">
-              <summary className="cursor-pointer font-bold text-xs text-gray-800 group-hover:text-indigo-600 flex items-center justify-between">
-                <span>📚 Giáo trình (Curriculum)</span>
-                <span className="text-gray-400 group-open:rotate-180 transition-transform">▼</span>
-              </summary>
-              <pre className="mt-3 text-[11px] bg-gray-900 text-emerald-400 p-3.5 rounded-xl overflow-x-auto font-mono leading-relaxed">{`{
+              <div className="space-y-2.5">
+                <details className="group border border-gray-100 rounded-xl p-3 bg-gray-50/50">
+                  <summary className="cursor-pointer font-bold text-xs text-gray-800 group-hover:text-indigo-600 flex items-center justify-between">
+                    <span>📚 Giáo trình (Curriculum)</span>
+                    <span className="text-gray-400 group-open:rotate-180 transition-transform">▼</span>
+                  </summary>
+                  <pre className="mt-3 text-[11px] bg-gray-900 text-emerald-400 p-3.5 rounded-xl overflow-x-auto font-mono leading-relaxed">{`{
   "curriculum": "Oxford 3000 / Minna",
   "lessons": [
     {
@@ -309,26 +314,41 @@ export default function SettingsPage() {
     }
   ]
 }`}</pre>
-            </details>
-          </div>
-        </div>
+                </details>
+              </div>
+            </div>
 
-        {/* Sample Curriculum Display Settings Section - Admin only */}
-        {user?.isAdmin && (
-          <CurriculumDisplaySettings />
-        )}
+            {/* Sample Curriculum Display Settings Section - Admin only */}
+            {user?.isAdmin && <CurriculumDisplaySettings />}
 
-        {/* Export/Import Section - Admin only */}
-        {user?.isAdmin && (
-          <div className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-xs">
-            <ExportImportPanel />
-          </div>
-        )}
+            {/* Export/Import Section - Admin only */}
+            {user?.isAdmin && (
+              <div className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-xs">
+                <ExportImportPanel />
+              </div>
+            )}
 
-        {/* Backup History Section - Admin only */}
-        {user?.isAdmin && (
-          <div className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-xs">
-            <BackupHistoryPanel />
+            {/* Backup History Section - Admin only */}
+            {user?.isAdmin && (
+              <div className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-xs">
+                <BackupHistoryPanel />
+              </div>
+            )}
+          </>
+        ) : (
+          <div className="bg-indigo-50/60 rounded-2xl p-4 border border-indigo-100 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+            <div>
+              <h3 className="text-xs font-bold text-indigo-900">🔑 Đăng nhập để sử dụng thêm các tính năng khác</h3>
+              <p className="text-[11px] text-indigo-700 mt-0.5">
+                Đồng bộ tiến độ học tập, quản lý tài khoản, tải lên file dữ liệu JSON và khôi phục lịch sử học tập.
+              </p>
+            </div>
+            <button
+              onClick={() => openAuthModal("Đăng nhập để quản lý tài khoản và đồng bộ dữ liệu học tập")}
+              className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-xs transition-all shrink-0 cursor-pointer"
+            >
+              Đăng nhập ngay
+            </button>
           </div>
         )}
       </div>

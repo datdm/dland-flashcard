@@ -153,48 +153,56 @@ export default function NavMenuSettingsPanel() {
           return (
             <div
               key={item.href}
-              className={`p-3.5 rounded-2xl border flex flex-col justify-between gap-2.5 transition-all ${
+              className={`p-3.5 rounded-2xl border flex items-center justify-between gap-3 transition-all ${
                 isDev
-                  ? "bg-amber-50/50 border-amber-200"
+                  ? "bg-amber-50/40 border-amber-200/80"
                   : "bg-gray-50/70 border-gray-100 hover:bg-gray-50"
               }`}
             >
-              <div className="flex items-center justify-between gap-3 min-w-0">
-                <div className="flex items-center gap-2.5 min-w-0">
-                  <span className="text-xl shrink-0">{item.icon}</span>
-                  <div className="truncate">
-                    <span className="text-xs font-bold text-gray-800 block truncate">
+              <div className="flex items-center gap-2.5 min-w-0">
+                <span className="text-xl shrink-0">{item.icon}</span>
+                <div className="truncate">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-bold text-gray-800 truncate">
                       {item.label}
                     </span>
-                    <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
-                      <span className="text-[10px] text-gray-400 font-mono truncate">
-                        {item.href}
+                    {isDev && (
+                      <span className="px-2 py-0.5 rounded-lg bg-amber-100 text-amber-900 border border-amber-300 text-[10px] font-bold shrink-0">
+                        🛠️ Đang phát triển
                       </span>
-                      {isDev && (
-                        <span className="px-1.5 py-0.2 rounded bg-amber-100 text-amber-900 border border-amber-300 text-[9px] font-bold flex items-center gap-1">
-                          <span>🛠️</span>
-                          <span>Đang phát triển</span>
-                        </span>
-                      )}
-                    </div>
+                    )}
                   </div>
+                  <span className="text-[10px] text-gray-400 font-mono truncate block mt-0.5">
+                    {item.href}
+                  </span>
                 </div>
+              </div>
 
-                {/* Visibility Switch, Fixed Badge, or Locked Dev Badge */}
+              {/* Action Control: Admin Toggle or Regular User Visibility Switch */}
+              <div className="flex items-center gap-2 shrink-0">
                 {isAlways ? (
-                  <span className="text-[10px] font-bold text-gray-400 px-2 py-1 bg-gray-100 rounded-lg shrink-0">
+                  <span className="text-[10px] font-bold text-gray-400 px-2 py-1 bg-gray-100 rounded-lg">
                     Cố định
                   </span>
-                ) : isDev && !isAdmin ? (
-                  <div
-                    className="flex items-center gap-1.5 shrink-0"
-                    title="Menu đang trong quá trình phát triển. Tự động ẩn trên thanh điều hướng của học viên."
+                ) : isAdmin ? (
+                  <button
+                    type="button"
+                    onClick={() => toggleItemDevOnly(previewLang, item.href, defaultDev)}
+                    className={`px-2.5 py-1 rounded-xl text-[10px] font-bold border transition-all cursor-pointer ${
+                      isDev
+                        ? "bg-amber-100 text-amber-900 border-amber-300 hover:bg-amber-200"
+                        : visible
+                        ? "bg-indigo-50 text-indigo-700 border-indigo-200 hover:bg-indigo-100"
+                        : "bg-gray-100 text-gray-500 border-gray-200 hover:bg-gray-200"
+                    }`}
+                    title="Nhấp để bật/tắt trạng thái Đang phát triển cho tính năng này"
                   >
-                    <span className="text-[10px] font-bold text-amber-800 bg-amber-100/90 border border-amber-300 px-2 py-0.5 rounded-lg flex items-center gap-1 select-none">
-                      <span>🛠️</span>
-                      <span>Đang phát triển (Ẩn)</span>
-                    </span>
-                  </div>
+                    {isDev ? "Bỏ Đang phát triển" : "Gán Đang phát triển"}
+                  </button>
+                ) : isDev ? (
+                  <span className="text-[10px] font-semibold text-gray-400 italic">
+                    (Không hiển thị)
+                  </span>
                 ) : (
                   <button
                     type="button"
@@ -212,27 +220,6 @@ export default function NavMenuSettingsPanel() {
                   </button>
                 )}
               </div>
-
-              {/* Admin Special Controls for Setting Đang Phát Triển */}
-              {isAdmin && !isAlways && (
-                <div className="pt-2 border-t border-gray-100/80 flex items-center justify-between gap-2">
-                  <span className="text-[10px] text-gray-400 font-medium">
-                    Setting Đang phát triển:
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => toggleItemDevOnly(previewLang, item.href, defaultDev)}
-                    className={`px-2 py-0.5 rounded-lg text-[10px] font-bold border transition-all cursor-pointer flex items-center gap-1 ${
-                      isDev
-                        ? "bg-amber-100 text-amber-900 border-amber-300 hover:bg-amber-200"
-                        : "bg-gray-100 text-gray-600 border-gray-200 hover:bg-gray-200"
-                    }`}
-                    title="Nhấp để chuyển đổi setting Đang phát triển cho tính năng này"
-                  >
-                    <span>{isDev ? "🛠️ Đang phát triển" : "✓ Bình thường"}</span>
-                  </button>
-                </div>
-              )}
             </div>
           );
         })}

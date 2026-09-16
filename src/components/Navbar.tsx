@@ -131,11 +131,12 @@ export default function Navbar() {
   const isAdmin = !!user?.isAdmin;
 
   const navItems = getNavItemsForLanguage(activeLanguage.code);
-  const { isVisible, devFeaturesEnabled, isItemDevOnly } = useNavMenuSettings();
+  const { isVisible, isItemDevOnly } = useNavMenuSettings();
   const visibleNavItems = navItems.filter((item) => {
     const defaultDev = !!item.isDevOnly || !!item.isComingSoon;
     const isDev = isItemDevOnly(activeLanguage.code, item.href, defaultDev);
-    if (isDev && !isAdmin) return false;
+    // Items in development are never displayed in the navigation menu
+    if (isDev) return false;
     return isVisible(activeLanguage.code, item.href, isAdmin, defaultDev);
   });
 

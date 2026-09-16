@@ -57,62 +57,115 @@ export default function SettingsScreen() {
     }
   };
 
+  const [selectedLang, setSelectedLang] = useState('ja');
+
+  const languages = [
+    { code: 'ja', name: 'Tiếng Nhật', flag: '🇯🇵' },
+    { code: 'en', name: 'Tiếng Anh', flag: '🇬🇧' },
+    { code: 'de', name: 'Tiếng Đức', flag: '🇩🇪' },
+    { code: 'ko', name: 'Tiếng Hàn', flag: '🇰🇷' },
+    { code: 'zh', name: 'Tiếng Trung', flag: '🇨🇳' },
+  ];
+
   const syncTime = lastSyncAt
     ? new Date(lastSyncAt).toLocaleString('vi-VN')
     : 'Chưa đồng bộ';
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <View style={styles.userCard}>
-        <View style={styles.avatar}>
-          <Text style={styles.avatarText}>
-            {user?.username?.charAt(0).toUpperCase()}
-          </Text>
-        </View>
-        <View>
-          <Text style={styles.username}>{user?.username}</Text>
-          <Text style={styles.userRole}>{user?.isAdmin ? '👑 Admin' : '👤 Thành viên'}</Text>
-        </View>
+      {/* Target Language Selection Section */}
+      <Text style={styles.sectionTitle}>Ngôn ngữ học tập (Target Language)</Text>
+      <View style={styles.section}>
+        {languages.map((lang, index) => {
+          const isSelected = selectedLang === lang.code;
+          return (
+            <TouchableOpacity
+              key={lang.code}
+              style={[
+                styles.menuItem,
+                index === languages.length - 1 && { borderBottomWidth: 0 },
+                isSelected && { backgroundColor: Colors.primary + '10' },
+              ]}
+              onPress={() => setSelectedLang(lang.code)}
+            >
+              <Text style={{ fontSize: 20 }}>{lang.flag}</Text>
+              <Text style={[styles.menuText, isSelected && { fontWeight: 'bold', color: Colors.primary }]}>
+                {lang.name}
+              </Text>
+              {isSelected ? (
+                <Ionicons name="checkmark-circle" size={20} color={Colors.primary} style={{ marginLeft: 'auto' }} />
+              ) : null}
+            </TouchableOpacity>
+          );
+        })}
       </View>
 
-      <Text style={styles.sectionTitle}>Đồng bộ</Text>
-      <View style={styles.section}>
-        <View style={styles.syncInfo}>
-          <Ionicons name="time-outline" size={16} color={Colors.textMuted} />
-          <Text style={styles.syncInfoText}>Đồng bộ lần cuối: {syncTime}</Text>
-        </View>
-        <TouchableOpacity
-          style={[styles.menuItem, isSyncing && { opacity: 0.6 }]}
-          onPress={syncFromServer}
-          disabled={isSyncing}
-        >
-          <Ionicons name="cloud-download-outline" size={20} color={Colors.primary} />
-          <Text style={styles.menuText}>Tải từ server</Text>
-          {isSyncing && <ActivityIndicator size="small" color={Colors.primary} />}
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.menuItem, isSyncing && { opacity: 0.6 }]}
-          onPress={syncToServer}
-          disabled={isSyncing}
-        >
-          <Ionicons name="cloud-upload-outline" size={20} color={Colors.primary} />
-          <Text style={styles.menuText}>Tải lên server</Text>
-          {isSyncing && <ActivityIndicator size="small" color={Colors.primary} />}
-        </TouchableOpacity>
-      </View>
+      {user ? (
+        <>
+          <View style={styles.userCard}>
+            <View style={styles.avatar}>
+              <Text style={styles.avatarText}>
+                {user.username?.charAt(0).toUpperCase()}
+              </Text>
+            </View>
+            <View>
+              <Text style={styles.username}>{user.username}</Text>
+              <Text style={styles.userRole}>{user.isAdmin ? '👑 Admin' : '👤 Thành viên'}</Text>
+            </View>
+          </View>
 
-      <Text style={styles.sectionTitle}>Tài khoản</Text>
-      <View style={styles.section}>
-        <TouchableOpacity style={styles.menuItem} onPress={() => setShowChangePwd(true)}>
-          <Ionicons name="lock-closed-outline" size={20} color={Colors.text} />
-          <Text style={styles.menuText}>Đổi mật khẩu</Text>
-          <Ionicons name="chevron-forward" size={16} color={Colors.textMuted} style={{ marginLeft: 'auto' }} />
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.menuItem, styles.logoutItem]} onPress={handleLogout}>
-          <Ionicons name="log-out-outline" size={20} color={Colors.error} />
-          <Text style={[styles.menuText, { color: Colors.error }]}>Đăng xuất</Text>
-        </TouchableOpacity>
-      </View>
+          <Text style={styles.sectionTitle}>Đồng bộ</Text>
+          <View style={styles.section}>
+            <View style={styles.syncInfo}>
+              <Ionicons name="time-outline" size={16} color={Colors.textMuted} />
+              <Text style={styles.syncInfoText}>Đồng bộ lần cuối: {syncTime}</Text>
+            </View>
+            <TouchableOpacity
+              style={[styles.menuItem, isSyncing && { opacity: 0.6 }]}
+              onPress={syncFromServer}
+              disabled={isSyncing}
+            >
+              <Ionicons name="cloud-download-outline" size={20} color={Colors.primary} />
+              <Text style={styles.menuText}>Tải từ server</Text>
+              {isSyncing && <ActivityIndicator size="small" color={Colors.primary} />}
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.menuItem, isSyncing && { opacity: 0.6 }]}
+              onPress={syncToServer}
+              disabled={isSyncing}
+            >
+              <Ionicons name="cloud-upload-outline" size={20} color={Colors.primary} />
+              <Text style={styles.menuText}>Tải lên server</Text>
+              {isSyncing && <ActivityIndicator size="small" color={Colors.primary} />}
+            </TouchableOpacity>
+          </View>
+
+          <Text style={styles.sectionTitle}>Tài khoản</Text>
+          <View style={styles.section}>
+            <TouchableOpacity style={styles.menuItem} onPress={() => setShowChangePwd(true)}>
+              <Ionicons name="lock-closed-outline" size={20} color={Colors.text} />
+              <Text style={styles.menuText}>Đổi mật khẩu</Text>
+              <Ionicons name="chevron-forward" size={16} color={Colors.textMuted} style={{ marginLeft: 'auto' }} />
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.menuItem, styles.logoutItem]} onPress={handleLogout}>
+              <Ionicons name="log-out-outline" size={20} color={Colors.error} />
+              <Text style={[styles.menuText, { color: Colors.error }]}>Đăng xuất</Text>
+            </TouchableOpacity>
+          </View>
+        </>
+      ) : (
+        <View style={styles.section}>
+          <TouchableOpacity
+            style={[styles.menuItem, { borderBottomWidth: 0, justifyContent: 'center', paddingVertical: 16 }]}
+            onPress={() => router.replace('/(auth)/login')}
+          >
+            <Ionicons name="log-in-outline" size={22} color={Colors.primary} />
+            <Text style={[styles.menuText, { color: Colors.primary, fontWeight: 'bold' }]}>
+              🔑 Đăng nhập / Đăng ký tài khoản
+            </Text>
+          </TouchableOpacity>
+        </View>
+      )}
 
       <Text style={styles.sectionTitle}>Thông tin</Text>
       <View style={styles.section}>

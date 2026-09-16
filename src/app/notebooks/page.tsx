@@ -107,6 +107,9 @@ export default function NotebooksPage() {
 
   const filteredNotebooks = useMemo(() => {
     return notebooks.filter((nb) => {
+      const nbLang = nb.lang || "ja";
+      if (nbLang !== activeLanguage.code) return false;
+
       if (!searchQuery.trim()) return true;
       const query = searchQuery.toLowerCase();
 
@@ -121,7 +124,7 @@ export default function NotebooksPage() {
           v.phonetic?.toLowerCase().includes(query)
       );
     });
-  }, [notebooks, searchQuery]);
+  }, [notebooks, searchQuery, activeLanguage.code]);
 
   useEffect(() => {
     if (!previewNotebookIdsRef.current) return;
