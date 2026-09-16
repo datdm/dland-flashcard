@@ -614,9 +614,9 @@ export class JsonCurriculumRepository implements ICurriculumRepository {
 }
 
 export class JsonVocabularyRepository implements IVocabularyRepository {
-  async getAllVocabulary(level?: JLPTLevel): Promise<Vocabulary[]> {
+  async getAllVocabulary(level?: JLPTLevel, lang?: string): Promise<Vocabulary[]> {
     const curriculumRepo = new JsonCurriculumRepository();
-    const groups = await curriculumRepo.getAllCurriculums();
+    const groups = await curriculumRepo.getCurriculums(lang);
     let result: Vocabulary[] = [];
     const seenIds = new Set<string>();
 
@@ -646,8 +646,8 @@ export class JsonVocabularyRepository implements IVocabularyRepository {
     return result;
   }
 
-  async searchVocabulary(query: string): Promise<Vocabulary[]> {
-    const all = await this.getAllVocabulary();
+  async searchVocabulary(query: string, lang?: string): Promise<Vocabulary[]> {
+    const all = await this.getAllVocabulary(undefined, lang);
     const q = query.toLowerCase().trim();
     if (!q) return all;
     return all.filter(
@@ -662,9 +662,9 @@ export class JsonVocabularyRepository implements IVocabularyRepository {
 }
 
 export class JsonGrammarRepository implements IGrammarRepository {
-  async getAllGrammar(level?: JLPTLevel): Promise<GrammarPoint[]> {
+  async getAllGrammar(level?: JLPTLevel, lang?: string): Promise<GrammarPoint[]> {
     const curriculumRepo = new JsonCurriculumRepository();
-    const groups = await curriculumRepo.getAllCurriculums();
+    const groups = await curriculumRepo.getCurriculums(lang);
     let result: GrammarPoint[] = [];
     const seenIds = new Set<string>();
 
@@ -699,8 +699,8 @@ export class JsonGrammarRepository implements IGrammarRepository {
     return all.find((g) => g.id === id) || null;
   }
 
-  async searchGrammar(query: string): Promise<GrammarPoint[]> {
-    const all = await this.getAllGrammar();
+  async searchGrammar(query: string, lang?: string): Promise<GrammarPoint[]> {
+    const all = await this.getAllGrammar(undefined, lang);
     const cleanQuery = query.trim();
     if (!cleanQuery) return all;
 

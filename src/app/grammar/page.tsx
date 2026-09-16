@@ -56,7 +56,7 @@ export default function GrammarHubPage() {
     async function loadGrammar() {
       setLoading(true);
       const repo = getGrammarRepository();
-      const data = await repo.getAllGrammar();
+      const data = await repo.getAllGrammar(undefined, langCode);
       setAllGrammarList(data);
       setLoading(false);
     }

@@ -133,11 +133,11 @@ export default function NavMenuSettingsPanel() {
       )}
 
       {/* Regular User Notification Banner when Dev Features are Present */}
-      {!isAdmin && displayedItems.some((item) => isItemDevOnly(previewLang, item.href, !!item.isDevOnly)) && (
+      {!isAdmin && displayedItems.some((item) => isItemDevOnly(previewLang, item.href, !!item.isDevOnly || !!item.isComingSoon)) && (
         <div className="p-3 bg-amber-50/80 border border-amber-200/80 rounded-2xl flex items-center gap-2.5 text-xs text-amber-900">
-          <span className="text-base shrink-0">🔒</span>
+          <span className="text-base shrink-0">🛠️</span>
           <span>
-            Các menu có nhãn <strong>"🔒 Admin khóa"</strong> đang trong quá trình phát triển. Học viên không có quyền thay đổi thành hiển thị.
+            Các menu có nhãn <strong>"🛠️ Đang phát triển"</strong> đang trong quá trình xây dựng và sẽ không hiển thị trên thanh điều hướng đối với học viên.
           </span>
         </div>
       )}
@@ -146,8 +146,9 @@ export default function NavMenuSettingsPanel() {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
         {displayedItems.map((item) => {
           const isAlways = ALWAYS_VISIBLE.has(item.href);
-          const isDev = isItemDevOnly(previewLang, item.href, !!item.isDevOnly);
-          const visible = isAlways ? true : isVisible(previewLang, item.href, isAdmin, !!item.isDevOnly);
+          const defaultDev = !!item.isDevOnly || !!item.isComingSoon;
+          const isDev = isItemDevOnly(previewLang, item.href, defaultDev);
+          const visible = isAlways ? true : isVisible(previewLang, item.href, isAdmin, defaultDev);
 
           return (
             <div
@@ -175,11 +176,6 @@ export default function NavMenuSettingsPanel() {
                           <span>Đang phát triển</span>
                         </span>
                       )}
-                      {item.isComingSoon && (
-                        <span className="px-1.5 py-0.2 rounded bg-gray-200 text-gray-600 text-[9px] font-bold">
-                          Sắp ra mắt
-                        </span>
-                      )}
                     </div>
                   </div>
                 </div>
@@ -192,26 +188,17 @@ export default function NavMenuSettingsPanel() {
                 ) : isDev && !isAdmin ? (
                   <div
                     className="flex items-center gap-1.5 shrink-0"
-                    title="Menu đang trong quá trình phát triển (do Admin quản lý). Bạn không có quyền bật hiển thị."
+                    title="Menu đang trong quá trình phát triển. Tự động ẩn trên thanh điều hướng của học viên."
                   >
                     <span className="text-[10px] font-bold text-amber-800 bg-amber-100/90 border border-amber-300 px-2 py-0.5 rounded-lg flex items-center gap-1 select-none">
-                      <span>🔒</span>
-                      <span>Admin khóa</span>
+                      <span>🛠️</span>
+                      <span>Đang phát triển (Ẩn)</span>
                     </span>
-                    <button
-                      type="button"
-                      disabled
-                      aria-disabled="true"
-                      className="relative inline-flex h-6 w-11 shrink-0 cursor-not-allowed opacity-40 rounded-full border-2 border-transparent bg-gray-300"
-                      title="Menu đang phát triển - Bạn không có quyền bật hiển thị"
-                    >
-                      <span className="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-md ring-0 translate-x-0" />
-                    </button>
                   </div>
                 ) : (
                   <button
                     type="button"
-                    onClick={() => toggleItem(previewLang, item.href, isAdmin, !!item.isDevOnly)}
+                    onClick={() => toggleItem(previewLang, item.href, isAdmin, defaultDev)}
                     className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out ${
                       visible ? "bg-indigo-600" : "bg-gray-200"
                     }`}
@@ -234,7 +221,7 @@ export default function NavMenuSettingsPanel() {
                   </span>
                   <button
                     type="button"
-                    onClick={() => toggleItemDevOnly(previewLang, item.href, !!item.isDevOnly)}
+                    onClick={() => toggleItemDevOnly(previewLang, item.href, defaultDev)}
                     className={`px-2 py-0.5 rounded-lg text-[10px] font-bold border transition-all cursor-pointer flex items-center gap-1 ${
                       isDev
                         ? "bg-amber-100 text-amber-900 border-amber-300 hover:bg-amber-200"

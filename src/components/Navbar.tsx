@@ -133,9 +133,10 @@ export default function Navbar() {
   const navItems = getNavItemsForLanguage(activeLanguage.code);
   const { isVisible, devFeaturesEnabled, isItemDevOnly } = useNavMenuSettings();
   const visibleNavItems = navItems.filter((item) => {
-    const isDev = isItemDevOnly(activeLanguage.code, item.href, !!item.isDevOnly);
+    const defaultDev = !!item.isDevOnly || !!item.isComingSoon;
+    const isDev = isItemDevOnly(activeLanguage.code, item.href, defaultDev);
     if (isDev && !isAdmin) return false;
-    return isVisible(activeLanguage.code, item.href, isAdmin, !!item.isDevOnly);
+    return isVisible(activeLanguage.code, item.href, isAdmin, defaultDev);
   });
 
   const activeNavItem = navItems.find((item) =>
@@ -302,19 +303,12 @@ export default function Navbar() {
               return (
                 <Link
                   key={href + label}
-                  href={item.isComingSoon ? "#" : href}
-                  onClick={(e) => {
-                    if (item.isComingSoon) {
-                      e.preventDefault();
-                    }
-                  }}
-                  title={isCollapsed ? (item.isComingSoon ? `${label} (Sắp ra mắt)` : label) : undefined}
+                  href={href}
+                  title={isCollapsed ? label : undefined}
                   className={`flex items-center gap-3 py-2 rounded-2xl text-xs font-semibold transition-all ${
                     isCollapsed ? 'justify-center px-0' : 'px-3'
                   } ${
-                    item.isComingSoon
-                      ? "opacity-50 cursor-not-allowed text-gray-400"
-                      : isActive
+                    isActive
                       ? "bg-indigo-600 text-white shadow-md shadow-indigo-200"
                       : "text-gray-600 hover:text-indigo-600 hover:bg-gray-50"
                   }`}
@@ -323,11 +317,6 @@ export default function Navbar() {
                   {!isCollapsed && (
                     <div className="flex items-center justify-between gap-1.5 flex-1 min-w-0">
                       <span className="whitespace-nowrap overflow-hidden text-ellipsis">{label}</span>
-                      {item.isComingSoon && (
-                        <span className="px-1.5 py-0.2 bg-amber-100 text-amber-800 text-[9px] font-bold rounded shrink-0">
-                          Sắp ra mắt
-                        </span>
-                      )}
                     </div>
                   )}
                 </Link>
@@ -451,15 +440,10 @@ export default function Navbar() {
           return (
             <Link
               key={href + label}
-              href={item.isComingSoon ? "#" : href}
-              onClick={(e) => {
-                if (item.isComingSoon) e.preventDefault();
-              }}
-              title={item.isComingSoon ? `${label} (Sắp ra mắt)` : label}
+              href={href}
+              title={label}
               className={`flex-1 min-w-[32px] max-w-[56px] h-9 flex items-center justify-center rounded-xl text-base transition-all shrink-0 ${
-                item.isComingSoon
-                  ? "opacity-40 cursor-not-allowed text-gray-400"
-                  : isActive
+                isActive
                   ? "bg-indigo-600 text-white shadow-md shadow-indigo-200 scale-105"
                   : "text-gray-600 hover:text-indigo-600 hover:bg-gray-50"
               }`}

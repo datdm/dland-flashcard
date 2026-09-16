@@ -48,7 +48,13 @@ export function useNotebooks() {
     return [];
   });
 
-  const activeLang = getActiveLanguageCode();
+  const [activeLang, setActiveLang] = useState<string>(() => getActiveLanguageCode());
+
+  useEffect(() => {
+    const handleStorage = () => setActiveLang(getActiveLanguageCode());
+    window.addEventListener("storage", handleStorage);
+    return () => window.removeEventListener("storage", handleStorage);
+  }, []);
 
   const notebooks = useMemo(() => {
     return allNotebooks.filter((nb) => (nb.lang || "ja") === activeLang);

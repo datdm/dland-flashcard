@@ -56,14 +56,14 @@ export interface ICurriculumRepository {
 }
 
 export interface IVocabularyRepository {
-  getAllVocabulary(level?: JLPTLevel): Promise<Vocabulary[]>;
-  searchVocabulary(query: string): Promise<Vocabulary[]>;
+  getAllVocabulary(level?: JLPTLevel, lang?: string): Promise<Vocabulary[]>;
+  searchVocabulary(query: string, lang?: string): Promise<Vocabulary[]>;
 }
 
 export interface IGrammarRepository {
-  getAllGrammar(level?: JLPTLevel): Promise<GrammarPoint[]>;
+  getAllGrammar(level?: JLPTLevel, lang?: string): Promise<GrammarPoint[]>;
   getGrammarById(id: string): Promise<GrammarPoint | null>;
-  searchGrammar(query: string): Promise<GrammarPoint[]>;
+  searchGrammar(query: string, lang?: string): Promise<GrammarPoint[]>;
 }
 
 export interface IKanjiRepository {

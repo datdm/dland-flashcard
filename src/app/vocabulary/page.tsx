@@ -38,7 +38,7 @@ export default function VocabularyPage() {
     async function loadCurriculumBooks() {
       try {
         const repo = getCurriculumRepository();
-        const groups = await repo.getCurriculums();
+        const groups = await repo.getCurriculums(langCode);
         const allBooks = groups.flatMap((g) => g.books || []);
         setRepoBooks(allBooks);
       } catch (err) {

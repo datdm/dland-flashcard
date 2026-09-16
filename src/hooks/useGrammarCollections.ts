@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { GrammarCollection, GrammarCollectionsData, GrammarPoint, GrammarExample } from "@/types";
 import { getItem, setItem, StorageKeys } from "@/lib/storage";
 import { autoSync, checkAuthStatus, loadGrammarCollectionsFromServer } from "@/lib/syncService";
@@ -341,8 +341,40 @@ export function useGrammarCollections() {
     [collections]
   );
 
+  const [activeLang, setActiveLang] = useState<string>("ja");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const getLang = () => {
+        const saved = localStorage.getItem("dland_target_language");
+        if (saved) {
+          try { return JSON.parse(saved); } catch { return saved; }
+        }
+        return "ja";
+      };
+      setActiveLang(getLang());
+      const handleStorage = () => setActiveLang(getLang());
+      window.addEventListener("storage", handleStorage);
+      return () => window.removeEventListener("storage", handleStorage);
+    }
+  }, []);
+
+  const activeCollections = useMemo(() => {
+    return collections.filter((c) => {
+      const collectionLang = (c as any).lang || (
+        c.id.startsWith("en-") || c.name.toLowerCase().includes("english") ? "en" :
+        c.id.startsWith("de-") || c.name.toLowerCase().includes("deutsch") ? "de" :
+        c.id.startsWith("ko-") || c.name.toLowerCase().includes("topik") ? "ko" :
+        c.id.startsWith("zh-") || c.name.toLowerCase().includes("hsk") ? "zh" :
+        "ja"
+      );
+      return collectionLang === activeLang;
+    });
+  }, [collections, activeLang]);
+
   return {
-    collections,
+    collections: activeCollections,
+    rawCollections: collections,
     isLoading,
     save,
     addCollection,
