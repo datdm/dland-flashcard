@@ -1,8 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { getItem, setItem } from "@/lib/storage";
-import { autoSync } from "@/lib/syncService";
+import { uploadToServer } from "@/lib/syncService";
 
 export interface LanguageOption {
   code: string;
@@ -64,17 +63,46 @@ export const SUPPORTED_LANGUAGES: LanguageOption[] = [
 
 const LANGUAGE_STORAGE_KEY = "dland_target_language";
 
+export function getSavedLanguage(): string {
+  if (typeof window === "undefined") return "ja";
+  try {
+    // 1. Check cookie first
+    const match = document.cookie.match(new RegExp("(^| )" + LANGUAGE_STORAGE_KEY + "=([^;]+)"));
+    if (match) {
+      const val = decodeURIComponent(match[2]);
+      if (SUPPORTED_LANGUAGES.some((l) => l.code === val)) {
+        return val;
+      }
+    }
+    // 2. Check localStorage (supports both raw string and JSON-stringified)
+    const raw = localStorage.getItem(LANGUAGE_STORAGE_KEY);
+    if (raw) {
+      try {
+        const parsed = JSON.parse(raw);
+        if (typeof parsed === "string" && SUPPORTED_LANGUAGES.some((l) => l.code === parsed)) {
+          return parsed;
+        }
+      } catch {
+        if (SUPPORTED_LANGUAGES.some((l) => l.code === raw)) {
+          return raw;
+        }
+      }
+    }
+  } catch {
+    return "ja";
+  }
+  return "ja";
+}
+
 export function useLanguageSetting() {
-  const [activeLangCode, setActiveLangCode] = useState<string>("ja");
-  const [draftLangCode, setDraftLangCode] = useState<string>("ja");
+  const [activeLangCode, setActiveLangCode] = useState<string>(() => getSavedLanguage());
+  const [draftLangCode, setDraftLangCode] = useState<string>(() => getSavedLanguage());
 
   useEffect(() => {
     const handleLangUpdate = () => {
-      const saved = getItem<string>(LANGUAGE_STORAGE_KEY);
-      if (saved && SUPPORTED_LANGUAGES.some((l) => l.code === saved)) {
-        setActiveLangCode(saved);
-        setDraftLangCode(saved);
-      }
+      const saved = getSavedLanguage();
+      setActiveLangCode(saved);
+      setDraftLangCode(saved);
     };
 
     handleLangUpdate();
@@ -91,12 +119,21 @@ export function useLanguageSetting() {
     setDraftLangCode(code);
   }, []);
 
-  const saveLanguage = useCallback(() => {
+  const saveLanguage = useCallback(async () => {
     setActiveLangCode(draftLangCode);
-    setItem<string>(LANGUAGE_STORAGE_KEY, draftLangCode);
     if (typeof window !== "undefined") {
+      localStorage.setItem(LANGUAGE_STORAGE_KEY, JSON.stringify(draftLangCode));
+      document.cookie = `${LANGUAGE_STORAGE_KEY}=${encodeURIComponent(draftLangCode)}; path=/; max-age=31536000; SameSite=Lax`;
+
       window.dispatchEvent(new Event("language-changed"));
-      autoSync();
+
+      // Sync immediately to server before reload so DB holds new target language
+      try {
+        await uploadToServer(true);
+      } catch (err) {
+        console.error("Failed to sync language setting to server:", err);
+      }
+
       window.location.reload();
     }
   }, [draftLangCode]);
@@ -117,3 +154,4 @@ export function useLanguageSetting() {
     saveLanguage,
   };
 }
+
