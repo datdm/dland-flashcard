@@ -115,4 +115,39 @@ router.get('/users/:userId', authenticate, requireAdmin, async (req: AuthRequest
   }
 });
 
+// GET /api/admin/nav-dev-overrides - Public endpoint: fetch admin's nav dev item overrides
+// All users (including unauthenticated) can read this to know which items are dev-only
+router.get('/nav-dev-overrides', async (req: AuthRequest, res: Response) => {
+  try {
+    const result = await pool.query(
+      `SELECT value FROM app_settings WHERE key = 'nav_dev_item_overrides'`
+    );
+    const overrides = result.rows[0]?.value ?? {};
+    res.json({ success: true, overrides });
+  } catch (error) {
+    console.error('Get nav dev overrides error:', error);
+    res.status(500).json({ error: 'Failed to load nav dev overrides' });
+  }
+});
+
+// PUT /api/admin/nav-dev-overrides - Admin only: save nav dev item overrides to DB
+router.put('/nav-dev-overrides', authenticate, requireAdmin, async (req: AuthRequest, res: Response) => {
+  const { overrides } = req.body;
+  if (!overrides || typeof overrides !== 'object') {
+    return res.status(400).json({ error: 'Invalid overrides payload' });
+  }
+  try {
+    await pool.query(
+      `INSERT INTO app_settings (key, value, updated_at)
+       VALUES ('nav_dev_item_overrides', $1, NOW())
+       ON CONFLICT (key) DO UPDATE SET value = $1, updated_at = NOW()`,
+      [JSON.stringify(overrides)]
+    );
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Save nav dev overrides error:', error);
+    res.status(500).json({ error: 'Failed to save nav dev overrides' });
+  }
+});
+
 export default router;

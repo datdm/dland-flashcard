@@ -1,17 +1,18 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { autoSync } from "@/lib/syncService";
+import { autoSync, getAuthToken } from "@/lib/syncService";
 
+// User-specific show/hide preferences (per-user, localStorage is fine)
 const STORAGE_KEY = "dland_nav_menu_settings";
-const ADMIN_DEV_KEY = "dland_admin_dev_features_enabled";
-const ADMIN_DEV_ITEMS_KEY = "dland_admin_dev_item_overrides";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
 // Per-language map of href → visible (true = show)
 export type NavMenuSettings = Record<string, Record<string, boolean>>;
 // Per-language map of href → isDevOnly override (true = dev only, false = regular)
 export type NavMenuDevOverrides = Record<string, Record<string, boolean>>;
 
+// ── User visibility settings (localStorage, per user) ────────────────────────
 function loadSettings(): NavMenuSettings {
   if (typeof window === "undefined") return {};
   try {
@@ -27,67 +28,49 @@ function saveSettingsToStorage(settings: NavMenuSettings) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
 }
 
-function getCookie(name: string): string | null {
-  if (typeof document === "undefined") return null;
-  const match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
-  return match ? decodeURIComponent(match[2]) : null;
-}
-
-function setCookie(name: string, value: string) {
-  if (typeof document === "undefined") return;
-  document.cookie = `${name}=${encodeURIComponent(value)}; path=/; max-age=31536000; SameSite=Lax`;
-}
-
-export function loadDevFeaturesEnabled(): boolean {
-  if (typeof window === "undefined") return false;
+// ── Admin dev overrides — SERVER ONLY, shared across all users ────────────────
+/** Fetch overrides from server — single source of truth for all users */
+export async function fetchDevItemOverridesFromServer(): Promise<NavMenuDevOverrides> {
   try {
-    const fromCookie = getCookie(ADMIN_DEV_KEY);
-    if (fromCookie !== null) return fromCookie === "true";
-    return localStorage.getItem(ADMIN_DEV_KEY) === "true";
-  } catch {
-    return false;
-  }
-}
-
-export function saveDevFeaturesEnabled(enabled: boolean) {
-  if (typeof window === "undefined") return;
-  const val = enabled ? "true" : "false";
-  localStorage.setItem(ADMIN_DEV_KEY, val);
-  setCookie(ADMIN_DEV_KEY, val);
-  window.dispatchEvent(new CustomEvent("nav-menu-settings-changed"));
-  autoSync();
-}
-
-export function loadDevItemOverrides(): NavMenuDevOverrides {
-  if (typeof window === "undefined") return {};
-  try {
-    const fromCookie = getCookie(ADMIN_DEV_ITEMS_KEY);
-    if (fromCookie) return JSON.parse(fromCookie);
-    const raw = localStorage.getItem(ADMIN_DEV_ITEMS_KEY);
-    return raw ? JSON.parse(raw) : {};
+    const res = await fetch(`${API_URL}/api/admin/nav-dev-overrides`);
+    if (!res.ok) return {};
+    const data = await res.json();
+    return data.overrides || {};
   } catch {
     return {};
   }
 }
 
-export function saveDevItemOverrides(overrides: NavMenuDevOverrides) {
-  if (typeof window === "undefined") return;
-  const json = JSON.stringify(overrides);
-  localStorage.setItem(ADMIN_DEV_ITEMS_KEY, json);
-  setCookie(ADMIN_DEV_ITEMS_KEY, json);
-  window.dispatchEvent(new CustomEvent("nav-menu-settings-changed"));
-  autoSync();
+/** Save overrides to server (admin only) */
+export async function saveDevItemOverridesToServer(overrides: NavMenuDevOverrides): Promise<void> {
+  const token = getAuthToken();
+  if (!token) return;
+  await fetch(`${API_URL}/api/admin/nav-dev-overrides`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ overrides }),
+  });
 }
 
+// ── Hook ─────────────────────────────────────────────────────────────────────
 export function useNavMenuSettings() {
   const [settings, setSettings] = useState<NavMenuSettings>(() => loadSettings());
-  const [devFeaturesEnabled, setDevFeaturesEnabledState] = useState<boolean>(() => loadDevFeaturesEnabled());
-  const [devItemOverrides, setDevItemOverrides] = useState<NavMenuDevOverrides>(() => loadDevItemOverrides());
+  // Start empty — populated from server only
+  const [devItemOverrides, setDevItemOverrides] = useState<NavMenuDevOverrides>({});
 
+  // Hydrate user-specific settings from localStorage
   useEffect(() => {
     setSettings(loadSettings());
-    setDevFeaturesEnabledState(loadDevFeaturesEnabled());
-    setDevItemOverrides(loadDevItemOverrides());
+  }, []);
+
+  // Fetch admin dev overrides from server on mount — shared for ALL users
+  useEffect(() => {
+    fetchDevItemOverridesFromServer().then((overrides) => {
+      setDevItemOverrides(overrides);
+    });
   }, []);
 
   const isItemDevOnly = useCallback(
@@ -104,13 +87,9 @@ export function useNavMenuSettings() {
   const isVisible = useCallback(
     (langCode: string, href: string, isAdmin: boolean = false, defaultDevOnly: boolean = false): boolean => {
       const isDev = isItemDevOnly(langCode, href, defaultDevOnly);
-      if (isDev && !isAdmin) {
-        return false;
-      }
+      if (isDev && !isAdmin) return false;
       const langSettings = settings[langCode];
-      if (!langSettings || langSettings[href] === undefined) {
-        return true;
-      }
+      if (!langSettings || langSettings[href] === undefined) return true;
       return langSettings[href];
     },
     [settings, isItemDevOnly]
@@ -119,19 +98,13 @@ export function useNavMenuSettings() {
   const toggleItem = useCallback(
     (langCode: string, href: string, isAdmin: boolean = false, defaultDevOnly: boolean = false) => {
       const isDev = isItemDevOnly(langCode, href, defaultDevOnly);
-      // Non-admin users cannot toggle an in-development item
-      if (!isAdmin && isDev) {
-        return;
-      }
+      if (!isAdmin && isDev) return; // non-admin cannot toggle dev item
       setSettings((prev) => {
         const langSettings = prev[langCode] ?? {};
         const current = langSettings[href] === undefined ? true : langSettings[href];
         const updated: NavMenuSettings = {
           ...prev,
-          [langCode]: {
-            ...langSettings,
-            [href]: !current,
-          },
+          [langCode]: { ...langSettings, [href]: !current },
         };
         saveSettingsToStorage(updated);
         window.dispatchEvent(new CustomEvent("nav-menu-settings-changed"));
@@ -142,6 +115,7 @@ export function useNavMenuSettings() {
     [isItemDevOnly]
   );
 
+  /** Admin toggles dev status — saves to server only, no localStorage */
   const toggleItemDevOnly = useCallback(
     (langCode: string, href: string, defaultDevOnly: boolean = false) => {
       setDevItemOverrides((prev) => {
@@ -149,24 +123,18 @@ export function useNavMenuSettings() {
         const current = langOverrides[href] !== undefined ? langOverrides[href] : defaultDevOnly;
         const updated: NavMenuDevOverrides = {
           ...prev,
-          [langCode]: {
-            ...langOverrides,
-            [href]: !current,
-          },
+          [langCode]: { ...langOverrides, [href]: !current },
         };
-        saveDevItemOverrides(updated);
-        autoSync();
+        // Save to server only — no localStorage
+        saveDevItemOverridesToServer(updated).catch(() => {
+          // On error: revert state
+          setDevItemOverrides(prev);
+        });
         return updated;
       });
     },
     []
   );
-
-  const setDevFeaturesEnabled = useCallback((enabled: boolean) => {
-    saveDevFeaturesEnabled(enabled);
-    setDevFeaturesEnabledState(enabled);
-    autoSync();
-  }, []);
 
   const resetLang = useCallback((langCode: string) => {
     setSettings((prev) => {
@@ -179,12 +147,9 @@ export function useNavMenuSettings() {
     });
   }, []);
 
+  // Re-hydrate user settings on cross-tab events
   useEffect(() => {
-    const handler = () => {
-      setSettings(loadSettings());
-      setDevFeaturesEnabledState(loadDevFeaturesEnabled());
-      setDevItemOverrides(loadDevItemOverrides());
-    };
+    const handler = () => setSettings(loadSettings());
     window.addEventListener("nav-menu-settings-changed", handler);
     return () => window.removeEventListener("nav-menu-settings-changed", handler);
   }, []);
@@ -194,10 +159,12 @@ export function useNavMenuSettings() {
     isVisible,
     toggleItem,
     resetLang,
-    devFeaturesEnabled,
-    setDevFeaturesEnabled,
     isItemDevOnly,
     toggleItemDevOnly,
     devItemOverrides,
+    // Compat stubs (feature removed)
+    devFeaturesEnabled: false,
+    setDevFeaturesEnabled: (_enabled: boolean) => {},
   };
 }
+ 

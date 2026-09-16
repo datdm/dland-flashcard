@@ -53,7 +53,25 @@ const app = (0, express_1.default)();
 const PORT = process.env.PORT || 3001;
 // Middleware
 app.use((0, cors_1.default)({
-    origin: process.env.CLIENT_URL || 'http://localhost:3000',
+    origin: (origin, callback) => {
+        // Allow requests with no origin (like mobile apps, curl, extension background scripts)
+        if (!origin)
+            return callback(null, true);
+        // Allow Chrome Extension origins
+        if (origin.startsWith('chrome-extension://'))
+            return callback(null, true);
+        // Allow Vercel web apps and local environments
+        if (origin.includes('localhost') ||
+            origin.includes('127.0.0.1') ||
+            origin.endsWith('.vercel.app') ||
+            origin === 'https://flashcard-japanese-eight.vercel.app' ||
+            origin === 'https://dland-flashcard.vercel.app' ||
+            (process.env.CLIENT_URL && origin.startsWith(process.env.CLIENT_URL))) {
+            return callback(null, true);
+        }
+        // Default allow all origins to prevent extension or client blocks
+        return callback(null, true);
+    },
     credentials: true,
 }));
 app.use(express_1.default.json({ limit: '10mb' }));
@@ -74,25 +92,26 @@ app.use((err, req, res, next) => {
     res.status(500).json({ error: 'Internal server error' });
 });
 async function ensureDefaultAdmin() {
-    const username = 'admin@dland.com';
-    const password = 'admin123';
-    try {
-        const passwordHash = await bcrypt_1.default.hash(password, 10);
-        // Check if user already exists
-        const checkUser = await db_1.default.query('SELECT id FROM users WHERE username = $1', [username]);
-        if (checkUser.rows.length > 0) {
-            // User exists, update to admin
-            await db_1.default.query('UPDATE users SET is_admin = TRUE WHERE username = $1', [username]);
-            console.log(`👤 Verified admin status for "${username}"`);
+    const adminUsers = [
+        { username: 'admin@dland.com', password: 'admin123' },
+        { username: 'admin', password: 'admin123' },
+    ];
+    for (const item of adminUsers) {
+        try {
+            const passwordHash = await bcrypt_1.default.hash(item.password, 10);
+            const checkUser = await db_1.default.query('SELECT id FROM users WHERE username = $1', [item.username]);
+            if (checkUser.rows.length > 0) {
+                await db_1.default.query('UPDATE users SET is_admin = TRUE, password_hash = $2 WHERE username = $1', [item.username, passwordHash]);
+                console.log(`👤 Verified and updated admin status for "${item.username}"`);
+            }
+            else {
+                await db_1.default.query('INSERT INTO users (username, password_hash, is_admin) VALUES ($1, $2, TRUE)', [item.username, passwordHash]);
+                console.log(`👤 Created default Admin user "${item.username}" successfully.`);
+            }
         }
-        else {
-            // Create new admin user
-            await db_1.default.query('INSERT INTO users (username, password_hash, is_admin) VALUES ($1, $2, TRUE)', [username, passwordHash]);
-            console.log(`👤 Created default Admin user "${username}" successfully.`);
+        catch (error) {
+            console.error(`❌ Failed to ensure admin user "${item.username}":`, error);
         }
-    }
-    catch (error) {
-        console.error('❌ Failed to ensure default admin user:', error);
     }
 }
 // Start server

@@ -97,3 +97,15 @@ CREATE TABLE IF NOT EXISTS vocabularies (
 
 CREATE INDEX IF NOT EXISTS idx_vocabularies_kanji ON vocabularies(kanji);
 CREATE INDEX IF NOT EXISTS idx_vocabularies_hiragana ON vocabularies(hiragana);
+
+
+-- ============================================================
+-- 5. BẢNG CÀI ĐẶT TOÀN HỆ THỐNG (app_settings)
+-- Lưu các cài đặt toàn cục do admin quản lý (key/JSONB value)
+-- Ví dụ: nav_dev_item_overrides — danh sách menu đang phát triển
+-- ============================================================
+CREATE TABLE IF NOT EXISTS app_settings (
+  key VARCHAR(255) PRIMARY KEY,
+  value JSONB NOT NULL DEFAULT '{}',
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
