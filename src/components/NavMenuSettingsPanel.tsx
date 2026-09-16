@@ -28,14 +28,18 @@ export default function NavMenuSettingsPanel() {
 
   const allLangItems = getNavItemsForLanguage(previewLang);
 
-  // Hiển thị toàn bộ các mục menu trong cấu hình
-  const displayedItems = allLangItems;
+  // Admin thấy toàn bộ menu; user thường không thấy các mục "Đang phát triển"
+  const displayedItems = isAdmin
+    ? allLangItems
+    : allLangItems.filter((item) => {
+        const defaultDev = !!item.isDevOnly || !!item.isComingSoon;
+        return !isItemDevOnly(previewLang, item.href, defaultDev);
+      });
 
   const hiddenCount = displayedItems.filter(
     (item) =>
       !ALWAYS_VISIBLE.has(item.href) &&
-      (!isItemDevOnly(previewLang, item.href, !!item.isDevOnly) || isAdmin) &&
-      !isVisible(previewLang, item.href, isAdmin, !!item.isDevOnly)
+      !isVisible(previewLang, item.href, isAdmin, !!item.isDevOnly || !!item.isComingSoon)
   ).length;
 
   const currentLangObj = SUPPORTED_LANGUAGES.find((l) => l.code === previewLang) || activeLanguage;
@@ -129,16 +133,6 @@ export default function NavMenuSettingsPanel() {
               }`}
             />
           </button>
-        </div>
-      )}
-
-      {/* Regular User Notification Banner when Dev Features are Present */}
-      {!isAdmin && displayedItems.some((item) => isItemDevOnly(previewLang, item.href, !!item.isDevOnly || !!item.isComingSoon)) && (
-        <div className="p-3 bg-amber-50/80 border border-amber-200/80 rounded-2xl flex items-center gap-2.5 text-xs text-amber-900">
-          <span className="text-base shrink-0">🛠️</span>
-          <span>
-            Các menu có nhãn <strong>"🛠️ Đang phát triển"</strong> đang trong quá trình xây dựng và sẽ không hiển thị trên thanh điều hướng đối với học viên.
-          </span>
         </div>
       )}
 
