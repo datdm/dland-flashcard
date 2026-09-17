@@ -494,3 +494,79 @@
   color: #475569 !important;
 }
 
+/* 6. Translation Tooltip Buttons & Translate Dialog */
+.dland-tooltip-btn-primary {
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%) !important;
+}
+
+.dland-tooltip-btn-secondary {
+  background: linear-gradient(135deg, #0d9488 0%, #0284c7 100%) !important;
+}
+
+.dland-tooltip-btn-secondary:hover {
+  background: linear-gradient(135deg, #0f766e 0%, #0369a1 100%) !important;
+}
+
+.dland-translate-lang-bar {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
+  background: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 14px !important;
+  padding: 8px 12px !important;
+}
+
+.dland-select-sm {
+  flex: 1 !important;
+  padding: 6px 10px !important;
+  border-radius: 10px !important;
+  border: 1px solid #cbd5e1 !important;
+  background: #ffffff !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  color: #0f172a !important;
+  outline: none !important;
+}
+
+.dland-translate-arrow {
+  font-weight: 900 !important;
+  color: #64748b !important;
+}
+
+.dland-icon-btn {
+  background: #f1f5f9 !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #475569 !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  padding: 3px 8px !important;
+  border-radius: 8px !important;
+  cursor: pointer !important;
+  transition: all 0.15s !important;
+}
+
+.dland-icon-btn:hover {
+  background: #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+.dland-translate-result-box {
+  background: #f8fafc !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 12px !important;
+  padding: 12px 14px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: #0f172a !important;
+  min-height: 80px !important;
+  line-height: 1.5 !important;
+  word-break: break-word !important;
+}
+
+.dland-translate-loading {
+  color: #6366f1 !important;
+  font-weight: 700 !important;
+}
+

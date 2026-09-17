@@ -136,6 +136,12 @@
       return true;
     }
 
+    if (request.action === "OPEN_TRANSLATE_DIALOG" && request.selectedText) {
+      openTranslateDialog(request.selectedText);
+      sendResponse({ success: true });
+      return true;
+    }
+
     if (request.action === "SET_TOOLTIP_ENABLED") {
       isTooltipEnabled = Boolean(request.enabled);
       if (!isTooltipEnabled) {
@@ -273,16 +279,26 @@
     const container = document.createElement("div");
     container.className = "dland-tooltip-container";
 
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = "dland-tooltip-btn";
-    button.innerHTML = `
+    // Button 1: Mazii Lookup & Add
+    const btnMazii = document.createElement("button");
+    btnMazii.type = "button";
+    btnMazii.className = "dland-tooltip-btn dland-tooltip-btn-primary";
+    btnMazii.innerHTML = `
       <span class="dland-tooltip-icon">🔍</span>
-      <span>Tra & Thêm Mazii</span>
+      <span>Tra Mazii</span>
+    `;
+
+    // Button 2: Translate to Vietnamese
+    const btnTranslate = document.createElement("button");
+    btnTranslate.type = "button";
+    btnTranslate.className = "dland-tooltip-btn dland-tooltip-btn-secondary";
+    btnTranslate.innerHTML = `
+      <span class="dland-tooltip-icon">🌐</span>
+      <span>Dịch Tiếng Việt</span>
     `;
 
     let opened = false;
-    const triggerOpen = (e) => {
+    const triggerMazii = (e) => {
       if (e) {
         e.preventDefault();
         e.stopPropagation();
@@ -293,17 +309,39 @@
       openLookupDialog(text);
     };
 
-    button.addEventListener("pointerdown", (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-    });
-    button.addEventListener("mousedown", (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-    });
-    button.addEventListener("click", triggerOpen);
+    const triggerTranslate = (e) => {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      if (opened) return;
+      opened = true;
+      removeTooltip();
+      openTranslateDialog(text);
+    };
 
-    container.appendChild(button);
+    btnMazii.addEventListener("pointerdown", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+    });
+    btnMazii.addEventListener("mousedown", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+    });
+    btnMazii.addEventListener("click", triggerMazii);
+
+    btnTranslate.addEventListener("pointerdown", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+    });
+    btnTranslate.addEventListener("mousedown", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+    });
+    btnTranslate.addEventListener("click", triggerTranslate);
+
+    container.appendChild(btnMazii);
+    container.appendChild(btnTranslate);
     (document.body || document.documentElement).appendChild(container);
 
     let top = rect.top - 42;
@@ -311,8 +349,8 @@
       top = rect.bottom + 8;
     }
 
-    let left = rect.left + rect.width / 2 - 60;
-    const maxLeft = Math.max(10, (window.innerWidth || document.documentElement.clientWidth || 360) - 140);
+    let left = rect.left + rect.width / 2 - 110;
+    const maxLeft = Math.max(10, (window.innerWidth || document.documentElement.clientWidth || 360) - 230);
     if (left < 10) left = 10;
     if (left > maxLeft) left = maxLeft;
 
@@ -354,10 +392,189 @@
   // =========================================================================
   // 3. LOOKUP & ADD TO NOTEBOOK MODAL DIALOG
   // =========================================================================
-  function closeModal() {
-    if (activeModal && activeModal.parentNode) {
-      activeModal.parentNode.removeChild(activeModal);
-      activeModal = null;
+  function openTranslateDialog(textToTranslate) {
+    closeModal();
+
+    const overlay = document.createElement("div");
+    overlay.className = "dland-modal-overlay";
+
+    const dialog = document.createElement("div");
+    dialog.className = "dland-modal-dialog dland-translate-dialog";
+
+    dialog.innerHTML = `
+      <div class="dland-modal-header">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <h3 class="dland-modal-title">
+            <span>🌐</span> Dịch Văn Bản Sang Tiếng Việt
+          </h3>
+          <span class="dland-sync-badge synced" id="dland-translate-provider">Đang dịch...</span>
+        </div>
+        <button type="button" class="dland-modal-close-btn" title="Đóng">✕</button>
+      </div>
+
+      <div class="dland-modal-body">
+        <!-- Language selector bar -->
+        <div class="dland-translate-lang-bar">
+          <select class="dland-select-sm" id="dland-translate-src-lang">
+            <option value="auto" selected>⚡ Tự động nhận diện</option>
+            <option value="ja">🇯🇵 Tiếng Nhật</option>
+            <option value="en">🇬🇧 Tiếng Anh</option>
+            <option value="de">🇩🇪 Tiếng Đức</option>
+            <option value="ko">🇰🇷 Tiếng Hàn</option>
+            <option value="zh">🇨🇳 Tiếng Trung</option>
+          </select>
+          <span class="dland-translate-arrow">➔</span>
+          <select class="dland-select-sm" id="dland-translate-tgt-lang">
+            <option value="vi" selected>🇻🇳 Tiếng Việt</option>
+            <option value="en">🇬🇧 Tiếng Anh</option>
+            <option value="ja">🇯🇵 Tiếng Nhật</option>
+          </select>
+        </div>
+
+        <!-- Source Text Box -->
+        <div class="dland-form-group">
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <label class="dland-form-label">Văn bản gốc</label>
+            <button type="button" class="dland-icon-btn" id="dland-speak-src-btn" title="Phát âm gốc">🔊 Nghe</button>
+          </div>
+          <textarea class="dland-textarea" id="dland-translate-src-input" rows="3" placeholder="Nhập hoặc dán văn bản cần dịch...">${escapeHtml(textToTranslate)}</textarea>
+        </div>
+
+        <!-- Translated Result Box -->
+        <div class="dland-form-group">
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <label class="dland-form-label">Bản dịch Tiếng Việt</label>
+            <div style="display: flex; gap: 6px;">
+              <button type="button" class="dland-icon-btn" id="dland-speak-tgt-btn" title="Phát âm bản dịch">🔊 Nghe</button>
+              <button type="button" class="dland-icon-btn" id="dland-copy-tgt-btn" title="Sao chép">📋 Sao chép</button>
+            </div>
+          </div>
+          <div class="dland-translate-result-box" id="dland-translate-result-box">
+            <span class="dland-translate-loading">⏳ Đang dịch...</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dland-modal-footer" style="justify-content: space-between;">
+        <button type="button" class="dland-btn-cancel" id="dland-translate-add-nb-btn">📓 Thêm vào Sổ tay</button>
+        <div style="display: flex; gap: 8px;">
+          <button type="button" class="dland-btn-cancel" id="dland-translate-close-btn">Đóng</button>
+          <button type="button" class="dland-btn-save" id="dland-translate-btn">⚡ Dịch lại</button>
+        </div>
+      </div>
+    `;
+
+    overlay.appendChild(dialog);
+    document.body.appendChild(overlay);
+    activeModal = overlay;
+
+    // Elements
+    const closeBtn = dialog.querySelector(".dland-modal-close-btn");
+    const cancelBtn = dialog.querySelector("#dland-translate-close-btn");
+    const translateBtn = dialog.querySelector("#dland-translate-btn");
+    const addNbBtn = dialog.querySelector("#dland-translate-add-nb-btn");
+    const srcInput = dialog.querySelector("#dland-translate-src-input");
+    const srcLangSelect = dialog.querySelector("#dland-translate-src-lang");
+    const tgtLangSelect = dialog.querySelector("#dland-translate-tgt-lang");
+    const resultBox = dialog.querySelector("#dland-translate-result-box");
+    const providerBadge = dialog.querySelector("#dland-translate-provider");
+    const speakSrcBtn = dialog.querySelector("#dland-speak-src-btn");
+    const speakTgtBtn = dialog.querySelector("#dland-speak-tgt-btn");
+    const copyTgtBtn = dialog.querySelector("#dland-copy-tgt-btn");
+
+    let currentTranslation = "";
+
+    closeBtn.addEventListener("click", closeModal);
+    cancelBtn.addEventListener("click", closeModal);
+    overlay.addEventListener("click", (e) => {
+      if (e.target === overlay) closeModal();
+    });
+
+    // Translation function
+    const runTranslation = () => {
+      const q = srcInput.value.trim();
+      if (!q) {
+        resultBox.innerHTML = `<span style="color: #94a3b8;">Vui lòng nhập văn bản...</span>`;
+        return;
+      }
+
+      resultBox.innerHTML = `<span class="dland-translate-loading">⏳ Đang dịch văn bản...</span>`;
+      providerBadge.textContent = "⏳ Đang kết nối...";
+
+      chrome.runtime.sendMessage(
+        {
+          action: "TRANSLATE_TEXT",
+          text: q,
+          source: srcLangSelect.value,
+          target: tgtLangSelect.value,
+        },
+        (res) => {
+          if (chrome.runtime.lastError || !res) {
+            resultBox.innerHTML = `<span style="color: #ef4444;">❌ Lỗi kết nối. Vui lòng bấm F5!</span>`;
+            providerBadge.textContent = "❌ Lỗi";
+            return;
+          }
+          if (res && res.success && res.data) {
+            currentTranslation = res.data.translatedText || "";
+            resultBox.innerHTML = escapeHtml(currentTranslation).replace(/\n/g, "<br>");
+            providerBadge.textContent = res.data.provider
+              ? `⚡ AI ${res.data.provider.toUpperCase()}`
+              : "✅ Thành công";
+          } else {
+            resultBox.innerHTML = `<span style="color: #ef4444;">❌ ${escapeHtml(res?.error || "Không thể dịch")}</span>`;
+            providerBadge.textContent = "❌ Lỗi dịch";
+          }
+        }
+      );
+    };
+
+    translateBtn.addEventListener("click", runTranslation);
+    srcLangSelect.addEventListener("change", runTranslation);
+    tgtLangSelect.addEventListener("change", runTranslation);
+
+    // TTS Source
+    speakSrcBtn.addEventListener("click", () => {
+      const txt = srcInput.value.trim();
+      if (txt && "speechSynthesis" in window) {
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(txt);
+        const l = srcLangSelect.value;
+        u.lang = l === "ja" ? "ja-JP" : l === "en" ? "en-US" : l === "de" ? "de-DE" : l === "ko" ? "ko-KR" : "vi-VN";
+        window.speechSynthesis.speak(u);
+      }
+    });
+
+    // TTS Target
+    speakTgtBtn.addEventListener("click", () => {
+      if (currentTranslation && "speechSynthesis" in window) {
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(currentTranslation);
+        u.lang = "vi-VN";
+        window.speechSynthesis.speak(u);
+      }
+    });
+
+    // Copy Target
+    copyTgtBtn.addEventListener("click", () => {
+      if (currentTranslation) {
+        navigator.clipboard.writeText(currentTranslation).then(() => {
+          const orig = copyTgtBtn.textContent;
+          copyTgtBtn.textContent = "✅ Đã chép!";
+          setTimeout(() => (copyTgtBtn.textContent = orig), 2000);
+        });
+      }
+    });
+
+    // Add to notebook button: closes translate modal & opens Mazii lookup with meaning pre-filled
+    addNbBtn.addEventListener("click", () => {
+      const txt = srcInput.value.trim();
+      closeModal();
+      openLookupDialog(txt);
+    });
+
+    // Initial translation run
+    if (textToTranslate) {
+      runTranslation();
     }
   }
 

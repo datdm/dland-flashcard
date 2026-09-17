@@ -2,16 +2,20 @@
 
 import { useEffect, useState, useRef } from "react";
 
+import QuickTranslateModal from "@/components/QuickTranslateModal";
+
 interface SelectionLookupTooltipProps {
   containerRef?: React.RefObject<HTMLElement | null>;
   disabled?: boolean;
   onLookup: (word: string, furigana?: string, meaning?: string) => void;
+  onTranslate?: (text: string) => void;
 }
 
 export default function SelectionLookupTooltip({
   containerRef,
   disabled = false,
   onLookup,
+  onTranslate,
 }: SelectionLookupTooltipProps) {
   const [tooltip, setTooltip] = useState<{
     visible: boolean;
@@ -27,8 +31,12 @@ export default function SelectionLookupTooltip({
     y: 0,
   });
 
+  const [translateModalText, setTranslateModalText] = useState<string>("");
+  const [isTranslateOpen, setIsTranslateOpen] = useState<boolean>(false);
+
   const tooltipRef = useRef<HTMLDivElement>(null);
   const debounceTimerRef = useRef<any>(null);
+  const isMouseDownRef = useRef<boolean>(false);
 
   useEffect(() => {
     if (disabled) {
@@ -43,8 +51,12 @@ export default function SelectionLookupTooltip({
       while (el) {
         if (
           el.getAttribute("role") === "dialog" ||
+          el.getAttribute("aria-modal") === "true" ||
           el.getAttribute("data-modal") === "true" ||
-          (el.classList && (el.classList.contains("fixed") || el.classList.contains("z-50")))
+          (el.classList &&
+            (el.classList.contains("modal-overlay") ||
+              el.classList.contains("modal-container") ||
+              (el.classList.contains("fixed") && el.classList.contains("inset-0"))))
         ) {
           return true;
         }
@@ -85,7 +97,7 @@ export default function SelectionLookupTooltip({
 
         const rawText = targetEl.value.substring(targetEl.selectionStart, targetEl.selectionEnd);
         const selectedText = rawText.replace(/[\r\n]+/g, " ").trim();
-        if (!selectedText || selectedText.length > 50) {
+        if (!selectedText || selectedText.length > 200) {
           setTooltip((prev) => (prev.visible ? { ...prev, visible: false } : prev));
           return;
         }
@@ -121,8 +133,8 @@ export default function SelectionLookupTooltip({
 
       const rawText = selection.toString();
       const selectedText = rawText.replace(/[\r\n]+/g, " ").trim();
-      // Only trigger for meaningful Japanese/word selections (1-50 chars)
-      if (!selectedText || selectedText.length > 50) {
+      // Only trigger for meaningful selections (1-200 chars)
+      if (!selectedText || selectedText.length > 200) {
         setTooltip((prev) => (prev.visible ? { ...prev, visible: false } : prev));
         return;
       }
@@ -165,16 +177,19 @@ export default function SelectionLookupTooltip({
     };
 
     const handleMouseUp = (e: MouseEvent) => {
-      processSelection(e.target as Node);
+      isMouseDownRef.current = false;
+      setTimeout(() => {
+        processSelection(e.target as Node);
+      }, 10);
     };
 
     const handleTouchEnd = (e: TouchEvent) => {
+      isMouseDownRef.current = false;
       const target = e.target as Node;
       if (tooltipRef.current && tooltipRef.current.contains(target)) {
         return;
       }
 
-      // Short delay to let mobile OS finish text selection range adjustment
       setTimeout(() => {
         processSelection(target);
       }, 150);
@@ -190,15 +205,23 @@ export default function SelectionLookupTooltip({
         if (!selection || selection.isCollapsed) {
           setTooltip((prev) => (prev.visible ? { ...prev, visible: false } : prev));
         } else {
-          processSelection(selection.anchorNode);
+          // Do not interrupt active dragging while mouse is down
+          if (!isMouseDownRef.current) {
+            processSelection(selection.anchorNode);
+          }
         }
       }, 200);
     };
 
     const handlePointerDown = (e: Event) => {
+      isMouseDownRef.current = true;
       if (tooltipRef.current && !tooltipRef.current.contains(e.target as Node)) {
         setTooltip((prev) => (prev.visible ? { ...prev, visible: false } : prev));
       }
+    };
+
+    const handleWindowBlur = () => {
+      isMouseDownRef.current = false;
     };
 
     document.addEventListener("mouseup", handleMouseUp);
@@ -206,6 +229,7 @@ export default function SelectionLookupTooltip({
     document.addEventListener("touchend", handleTouchEnd);
     document.addEventListener("touchstart", handlePointerDown);
     document.addEventListener("selectionchange", handleSelectionChange);
+    window.addEventListener("blur", handleWindowBlur);
 
     return () => {
       if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
@@ -214,48 +238,81 @@ export default function SelectionLookupTooltip({
       document.removeEventListener("touchend", handleTouchEnd);
       document.removeEventListener("touchstart", handlePointerDown);
       document.removeEventListener("selectionchange", handleSelectionChange);
+      window.removeEventListener("blur", handleWindowBlur);
     };
   }, [containerRef, disabled]);
-
-  if (disabled || !tooltip.visible || !tooltip.text) return null;
 
   const triggerLookup = (e: React.SyntheticEvent) => {
     e.preventDefault();
     e.stopPropagation();
     const word = tooltip.text;
     setTooltip({ visible: false, text: "", x: 0, y: 0 });
-    // Clear text selection
     window.getSelection()?.removeAllRanges();
     onLookup(word, tooltip.furigana, tooltip.meaning);
   };
 
-  return (
-    <div
-      ref={tooltipRef}
-      style={{
-        position: "absolute",
-        left: `${tooltip.x}px`,
-        top: `${tooltip.y}px`,
-        transform: "translate(-50%, -100%)",
-        zIndex: 9999,
-      }}
-      className="animate-in fade-in zoom-in-90 duration-150 pointer-events-auto select-none touch-manipulation"
-    >
-      <button
-        type="button"
-        onClick={triggerLookup}
-        onTouchEnd={triggerLookup}
-        className="flex items-center gap-1.5 px-3.5 py-1.5 bg-gradient-to-r from-amber-600 via-orange-600 to-amber-700 text-white rounded-full text-xs font-extrabold shadow-2xl hover:scale-105 active:scale-95 transition-all cursor-pointer border border-amber-300/40 backdrop-blur-md"
-      >
-        <span className="text-sm">🔍</span>
-        <span>Tra Mazii: <span className="underline decoration-amber-200">{tooltip.text}</span></span>
-        <span className="text-[10px] text-amber-200 font-bold ml-0.5">↗</span>
-      </button>
+  const triggerTranslate = (e: React.SyntheticEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const selectedText = tooltip.text;
+    setTooltip({ visible: false, text: "", x: 0, y: 0 });
+    window.getSelection()?.removeAllRanges();
 
-      {/* Little arrow indicator */}
-      <div 
-        className="w-2 h-2 bg-amber-700 rotate-45 mx-auto -mt-1 border-r border-b border-amber-400/40"
+    if (onTranslate) {
+      onTranslate(selectedText);
+    } else {
+      setTranslateModalText(selectedText);
+      setIsTranslateOpen(true);
+    }
+  };
+
+  return (
+    <>
+      {tooltip.visible && tooltip.text && !disabled && (
+        <div
+          ref={tooltipRef}
+          style={{
+            position: "absolute",
+            left: `${tooltip.x}px`,
+            top: `${tooltip.y}px`,
+            transform: "translate(-50%, -100%)",
+            zIndex: 9999,
+          }}
+          className="animate-in fade-in zoom-in-90 duration-150 pointer-events-auto select-none touch-manipulation flex flex-col items-center"
+        >
+          <div className="flex items-center gap-1.5 p-1 bg-gray-900/90 text-white rounded-full shadow-2xl backdrop-blur-md border border-white/20">
+            <button
+              type="button"
+              onClick={triggerLookup}
+              onTouchEnd={triggerLookup}
+              className="flex items-center gap-1 px-3 py-1 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white rounded-full text-xs font-extrabold shadow-sm hover:scale-105 active:scale-95 transition-all cursor-pointer"
+            >
+              <span>🔍</span>
+              <span>Tra Mazii</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={triggerTranslate}
+              onTouchEnd={triggerTranslate}
+              className="flex items-center gap-1 px-3 py-1 bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-500 hover:to-cyan-500 text-white rounded-full text-xs font-extrabold shadow-sm hover:scale-105 active:scale-95 transition-all cursor-pointer"
+            >
+              <span>🌐</span>
+              <span>Dịch Tiếng Việt</span>
+            </button>
+          </div>
+
+          {/* Arrow indicator */}
+          <div className="w-2 h-2 bg-gray-900/90 rotate-45 mx-auto -mt-1 border-r border-b border-white/20" />
+        </div>
+      )}
+
+      {/* Quick Translate Modal */}
+      <QuickTranslateModal
+        isOpen={isTranslateOpen}
+        onClose={() => setIsTranslateOpen(false)}
+        text={translateModalText}
       />
-    </div>
+    </>
   );
 }

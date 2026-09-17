@@ -47,11 +47,16 @@ chrome.runtime.onInstalled.addListener(async () => {
     await chrome.storage.local.set(toSet);
   }
 
-  // Create context menu for quick right-click lookup (works on PDFs, Excel, iframes)
+  // Create context menus for quick right-click lookup and translation
   chrome.contextMenus.removeAll(() => {
     chrome.contextMenus.create({
       id: "dland-lookup-mazii",
-      title: "🔍 Tra Mazii & Thêm vào Sổ tay Dland (\"%s\")",
+      title: "🔍 Tra Mazii & Thêm vào Sổ tay (\"%s\")",
+      contexts: ["selection"],
+    });
+    chrome.contextMenus.create({
+      id: "dland-translate-text",
+      title: "🌐 Dịch sang Tiếng Việt (\"%s\")",
       contexts: ["selection"],
     });
   });
@@ -85,12 +90,40 @@ function openFallbackLookupWindow(selectedText) {
   });
 }
 
+function openFallbackTranslateWindow(selectedText) {
+  if (!selectedText) return;
+  const popupUrl = chrome.runtime.getURL(`popup.html?translate=${encodeURIComponent(selectedText)}`);
+
+  chrome.windows.getCurrent((currentWindow) => {
+    const width = 450;
+    const height = 620;
+    let left = 100;
+    let top = 100;
+
+    if (currentWindow && currentWindow.width && currentWindow.height) {
+      left = Math.round((currentWindow.left || 0) + (currentWindow.width - width) / 2);
+      top = Math.round((currentWindow.top || 0) + (currentWindow.height - height) / 2);
+    }
+
+    chrome.windows.create({
+      url: popupUrl,
+      type: "popup",
+      width: width,
+      height: height,
+      left: Math.max(0, left),
+      top: Math.max(0, top),
+      focused: true,
+    });
+  });
+}
+
 // Handle Context Menu clicks with automatic fallback for PDFs
 chrome.contextMenus.onClicked.addListener((info, tab) => {
-  if (info.menuItemId === "dland-lookup-mazii" && info.selectionText && tab?.id) {
-    const selectedText = info.selectionText.trim();
-    if (!selectedText) return;
+  if (!info.selectionText || !tab?.id) return;
+  const selectedText = info.selectionText.trim();
+  if (!selectedText) return;
 
+  if (info.menuItemId === "dland-lookup-mazii") {
     chrome.tabs.sendMessage(
       tab.id,
       {
@@ -98,10 +131,21 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
         selectedText: selectedText,
       },
       (response) => {
-        // If content script is unavailable (e.g. Chrome PDFium viewer, restricted page)
         if (chrome.runtime.lastError || !response || !response.success) {
-          console.log("[Dland Extension] Opening fallback lookup window for PDF/restricted page");
           openFallbackLookupWindow(selectedText);
+        }
+      }
+    );
+  } else if (info.menuItemId === "dland-translate-text") {
+    chrome.tabs.sendMessage(
+      tab.id,
+      {
+        action: "OPEN_TRANSLATE_DIALOG",
+        selectedText: selectedText,
+      },
+      (response) => {
+        if (chrome.runtime.lastError || !response || !response.success) {
+          openFallbackTranslateWindow(selectedText);
         }
       }
     );
@@ -124,6 +168,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   switch (request.action) {
     case "LOOKUP_MAZII":
       handleLookupMazii(request.query)
+        .then((data) => sendResponse({ success: true, data }))
+        .catch((err) => sendResponse({ success: false, error: err.message }));
+      return true;
+
+    case "TRANSLATE_TEXT":
+      handleTranslateText(request.text, request.source, request.target)
         .then((data) => sendResponse({ success: true, data }))
         .catch((err) => sendResponse({ success: false, error: err.message }));
       return true;
@@ -410,6 +460,94 @@ async function handleLookupMazii(query) {
   }
 
   return mainResult;
+}
+
+// Multi-source Text Translation Handler (Google GTX -> MyMemory -> Dland Server API)
+async function handleTranslateText(text, source = "auto", target = "vi") {
+  if (!text || !text.trim()) return null;
+  const cleanText = text.trim();
+  const sourceLang = source || "auto";
+  const targetLang = target || "vi";
+
+  // 1. Try Google Translate Free GTX API
+  try {
+    const gtxUrl = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${encodeURIComponent(
+      sourceLang
+    )}&tl=${encodeURIComponent(targetLang)}&dt=t&q=${encodeURIComponent(cleanText)}`;
+    const res = await fetch(gtxUrl);
+    if (res.ok) {
+      const data = await res.json();
+      if (Array.isArray(data[0])) {
+        const translatedText = data[0].map((item) => item[0]).join("");
+        const detectedLang = data[2] || sourceLang;
+        if (translatedText) {
+          return {
+            originalText: cleanText,
+            translatedText,
+            sourceLang: detectedLang,
+            targetLang,
+            provider: "google",
+          };
+        }
+      }
+    }
+  } catch (err) {
+    console.warn("[Dland Extension] Google GTX translation error:", err);
+  }
+
+  // 2. Fallback to MyMemory Free Translation API
+  try {
+    const pair = `${sourceLang === "auto" ? "autodetect" : sourceLang}|${targetLang}`;
+    const mmUrl = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(
+      cleanText
+    )}&langpair=${encodeURIComponent(pair)}`;
+    const mmRes = await fetch(mmUrl);
+    if (mmRes.ok) {
+      const mmData = await mmRes.json();
+      if (mmData.responseData && mmData.responseData.translatedText) {
+        return {
+          originalText: cleanText,
+          translatedText: mmData.responseData.translatedText,
+          sourceLang,
+          targetLang,
+          provider: "mymemory",
+        };
+      }
+    }
+  } catch (mmErr) {
+    console.warn("[Dland Extension] MyMemory translation error:", mmErr);
+  }
+
+  // 3. Fallback to Dland Server API (/api/translate)
+  try {
+    const apiUrl = await getStoredApiUrl();
+    const serverRes = await fetch(`${apiUrl}/api/translate`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        q: cleanText,
+        source: sourceLang,
+        target: targetLang,
+        format: "text",
+      }),
+    });
+    if (serverRes.ok) {
+      const serverData = await serverRes.json();
+      if (serverData.translatedText) {
+        return {
+          originalText: cleanText,
+          translatedText: serverData.translatedText,
+          sourceLang,
+          targetLang,
+          provider: serverData.provider || "dland-server",
+        };
+      }
+    }
+  } catch (serverErr) {
+    console.warn("[Dland Extension] Server API translation error:", serverErr);
+  }
+
+  throw new Error("Không thể dịch đoạn văn bản này. Vui lòng thử lại sau.");
 }
 
 // Save Vocabulary to Notebook and optionally sync to Database

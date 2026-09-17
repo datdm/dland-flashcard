@@ -1175,13 +1175,26 @@ document.addEventListener("DOMContentLoaded", () => {
   // Start App
   loadData();
 
-  // Handle auto-lookup from URL query parameter (e.g. from PDF fallback window)
+  // Handle auto-lookup or auto-translate from URL query parameter (e.g. from PDF fallback window)
   const urlParams = new URLSearchParams(window.location.search);
   const autoLookupWord = urlParams.get("lookup") || urlParams.get("word");
+  const autoTranslateText = urlParams.get("translate");
+
   if (autoLookupWord) {
     setTimeout(() => {
       const defaultNbId = notebooks[0]?.id || "nb-default-ja";
       openAddWordModal(defaultNbId, autoLookupWord);
+    }, 350);
+  } else if (autoTranslateText) {
+    setTimeout(() => {
+      chrome.runtime.sendMessage(
+        { action: "TRANSLATE_TEXT", text: autoTranslateText, source: "auto", target: "vi" },
+        (res) => {
+          if (res && res.success && res.data) {
+            alert(`🌐 Bản dịch Tiếng Việt:\n\n"${res.data.translatedText}"`);
+          }
+        }
+      );
     }, 350);
   }
 });
