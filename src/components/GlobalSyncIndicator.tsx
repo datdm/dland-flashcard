@@ -74,15 +74,16 @@ export default function GlobalSyncIndicator() {
 
   return (
     <>
-      {/* Full-screen Loading Overlay */}
+      {/* Top Progress Loading Bar & Floating Sync Badge */}
       {isLoading && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex flex-col items-center justify-center z-[9999] transition-opacity duration-300">
-          <div className="bg-white/10 p-6 rounded-3xl backdrop-blur-md border border-white/10 flex flex-col items-center">
-            <div className="w-12 h-12 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
-            <p className="text-white text-xs font-bold mt-4 tracking-wider uppercase">Đang đồng bộ dữ liệu...</p>
-            <p className="text-white/60 text-[10px] mt-1">Vui lòng đợi trong giây lát</p>
+        <>
+          <div className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-cyan-400 z-[99999] animate-pulse shadow-xs" />
+          
+          <div className="fixed top-3 left-1/2 -translate-x-1/2 z-[99999] bg-gray-900/90 text-white text-[11px] font-extrabold px-3.5 py-1.5 rounded-full shadow-2xl backdrop-blur-md border border-white/20 flex items-center gap-2 animate-in fade-in zoom-in-95 duration-150 pointer-events-none tracking-wide">
+            <div className="w-3.5 h-3.5 border-2 border-indigo-200 border-t-indigo-500 rounded-full animate-spin shrink-0" />
+            <span>⚡ Đang kết nối & tải dữ liệu từ Server...</span>
           </div>
-        </div>
+        </>
       )}
 
       {/* Toast Notification Container in Top-Right */}

@@ -39,9 +39,10 @@ function startTrackingRequest() {
   if (typeof window === 'undefined') return;
   activeRequestsCount++;
   if (activeRequestsCount === 1) {
+    if (loadingTimeout) clearTimeout(loadingTimeout);
     loadingTimeout = setTimeout(() => {
       window.dispatchEvent(new CustomEvent('sync-loading-start'));
-    }, 5000);
+    }, 100);
   }
 }
 
@@ -290,7 +291,7 @@ export async function uploadToServer(skipBackup: boolean = false): Promise<{ suc
       for (let i = 0; i < localStorage.length; i++) {
         const k = localStorage.key(i);
         if (k && (k.startsWith('flashcash-') || k.startsWith('dland_') || k.startsWith('dland'))) {
-          if (k !== AUTH_TOKEN_KEY && k !== USER_KEY && k !== LAST_SYNC_KEY) {
+          if (k !== AUTH_TOKEN_KEY && k !== USER_KEY && k !== LAST_SYNC_KEY && !k.startsWith('dland_exam_progress_')) {
             keySet.add(k);
           }
         }
@@ -544,7 +545,7 @@ export async function autoSync(): Promise<void> {
       console.error('Auto-sync error:', error);
       // Silently fail - don't disrupt user experience
     }
-  }, 2000);
+  }, 5000);
 }
 
 

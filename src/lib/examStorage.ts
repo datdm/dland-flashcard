@@ -120,7 +120,6 @@ export function saveExamProgress(progress: ExamProgress): void {
       JSON.stringify(progress)
     );
     window.dispatchEvent(new CustomEvent("exam-progress-updated", { detail: { examId: progress.examId } }));
-    autoSync();
   } catch {}
 }
 
@@ -180,6 +179,24 @@ export function saveExamResult(result: ExamResult): void {
     autoSync();
   } catch (e) {
     console.error("Failed to save exam result:", e);
+  }
+}
+
+export function getResultsByExamId(examId: string): ExamResult[] {
+  const list = getAllResults();
+  return list.filter((r) => r.examId === examId);
+}
+
+export function deleteExamResult(id: string): void {
+  if (typeof window === "undefined") return;
+  try {
+    const list = getAllResults();
+    const updated = list.filter((r) => r.id !== id);
+    localStorage.setItem(STORAGE_KEYS.RESULTS, JSON.stringify(updated));
+    window.dispatchEvent(new CustomEvent("exam-results-updated"));
+    autoSync();
+  } catch (e) {
+    console.error("Failed to delete exam result:", e);
   }
 }
 

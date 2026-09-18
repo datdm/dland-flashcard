@@ -9,6 +9,7 @@ import { StoredExam, ExamResult, ExamProgress } from "@/types/exam";
 import ExamUploadModal from "@/components/exam/ExamUploadModal";
 import ExamStructureModal from "@/components/exam/ExamStructureModal";
 import ExamSectionSelectionModal from "@/components/exam/ExamSectionSelectionModal";
+import ExamHistoryModal from "@/components/exam/ExamHistoryModal";
 import { useLanguageSetting } from "@/hooks/useLanguageSetting";
 import { useAuth } from "@/context/AuthContext";
 
@@ -32,6 +33,10 @@ export default function ExamHubPage() {
   const [showUploadModal, setShowUploadModal] = useState<boolean>(false);
   const [showStructureModal, setShowStructureModal] = useState<boolean>(false);
   const [selectedExamForModal, setSelectedExamForModal] = useState<StoredExam | null>(null);
+  const [historyModalConfig, setHistoryModalConfig] = useState<{
+    isOpen: boolean;
+    exam?: StoredExam | null;
+  }>({ isOpen: false, exam: null });
 
   const loadData = () => {
     const allExams = getAllExams();
@@ -106,6 +111,15 @@ export default function ExamHubPage() {
             <div className="flex items-center gap-2 flex-wrap self-start md:self-auto shrink-0">
               <button
                 type="button"
+                onClick={() => setHistoryModalConfig({ isOpen: true, exam: null })}
+                className="px-3.5 py-2 rounded-xl bg-amber-400/30 hover:bg-amber-400/40 backdrop-blur-md text-amber-100 font-extrabold text-xs border border-amber-300/30 transition-all flex items-center gap-1.5 cursor-pointer active:scale-98"
+              >
+                <span>📜</span>
+                <span>Lịch sử thi ({results.length})</span>
+              </button>
+
+              <button
+                type="button"
                 onClick={() => setShowStructureModal(true)}
                 className="px-3.5 py-2 rounded-xl bg-white/20 hover:bg-white/30 backdrop-blur-md text-white font-extrabold text-xs border border-white/30 transition-all flex items-center gap-1.5 cursor-pointer active:scale-98"
               >
@@ -143,18 +157,26 @@ export default function ExamHubPage() {
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl p-3.5 sm:p-4 border border-gray-100 shadow-xs flex items-center gap-3.5">
-            <div className="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-xl">
-              🏆
-            </div>
-            <div>
-              <div className="text-gray-400 text-xs font-bold uppercase tracking-wider">
-                Lượt làm bài thi
+          <div
+            onClick={() => setHistoryModalConfig({ isOpen: true, exam: null })}
+            className="bg-white rounded-2xl p-3.5 sm:p-4 border border-gray-100 shadow-xs flex items-center justify-between gap-3.5 cursor-pointer hover:border-emerald-200 transition-all"
+          >
+            <div className="flex items-center gap-3.5">
+              <div className="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-xl">
+                🏆
               </div>
-              <div className="text-xl sm:text-2xl font-black text-emerald-600 mt-0.5">
-                {totalAttempts} <span className="text-xs font-medium text-gray-400">lần thi</span>
+              <div>
+                <div className="text-gray-400 text-xs font-bold uppercase tracking-wider">
+                  Lượt làm bài thi
+                </div>
+                <div className="text-xl sm:text-2xl font-black text-emerald-600 mt-0.5">
+                  {totalAttempts} <span className="text-xs font-medium text-gray-400">lần thi</span>
+                </div>
               </div>
             </div>
+            <span className="text-xs font-extrabold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-xl border border-emerald-200 shrink-0">
+              Xem hết ➔
+            </span>
           </div>
 
           <div className="bg-white rounded-2xl p-3.5 sm:p-4 border border-gray-100 shadow-xs flex items-center gap-3.5">
@@ -218,9 +240,9 @@ export default function ExamHubPage() {
               };
             const timeMins = Math.round(meta.timeLimit / 60);
 
-            // Find best score for this exam
+            // Find best score & all past attempts for this exam
             const pastResults = results.filter((r) => r.examId === exam.id);
-            const bestResult = pastResults.sort((a, b) => b.scorePercentage - a.scorePercentage)[0];
+            const bestResult = [...pastResults].sort((a, b) => b.scorePercentage - a.scorePercentage)[0];
 
             // Check draft progress
             const currentProgress = progressMap[exam.id];
@@ -302,16 +324,26 @@ export default function ExamHubPage() {
                     </div>
                   )}
 
-                  {/* Past score badge if attempted */}
+                  {/* Past score badge & attempt history link */}
                   {bestResult && !hasDraft && (
-                    <div className="mb-3 px-3 py-2 bg-emerald-50 border border-emerald-200/80 rounded-2xl flex items-center justify-between text-xs">
-                      <span className="text-emerald-800 font-bold flex items-center gap-1">
-                        <span>🎖️</span> Điểm cao nhất:
-                      </span>
-                      <span className="text-emerald-700 font-black">
-                        {bestResult.correctCount}/{bestResult.totalQuestions} ({bestResult.scorePercentage}%) —{" "}
-                        {bestResult.passed ? "Đạt" : "Chưa đạt"}
-                      </span>
+                    <div className="mb-3 px-3 py-2 bg-emerald-50/80 border border-emerald-200/80 rounded-2xl flex items-center justify-between text-xs">
+                      <div>
+                        <span className="text-emerald-900 font-bold flex items-center gap-1 text-[11px]">
+                          <span>🎖️</span> Cao nhất: {bestResult.correctCount}/{bestResult.totalQuestions} ({bestResult.scorePercentage}%) — {bestResult.passed ? "Đạt" : "Chưa đạt"}
+                        </span>
+                        <span className="text-emerald-700 text-[10px] font-semibold">
+                          Đã thi {pastResults.length} lần
+                        </span>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() => setHistoryModalConfig({ isOpen: true, exam })}
+                        className="px-2.5 py-1 bg-white hover:bg-emerald-100 text-emerald-800 rounded-xl text-[11px] font-extrabold border border-emerald-200 shadow-3xs transition-all cursor-pointer shrink-0"
+                        title="Xem tất cả các lần thi của đề này"
+                      >
+                        📜 Lịch sử ({pastResults.length})
+                      </button>
                     </div>
                   )}
 
@@ -348,22 +380,26 @@ export default function ExamHubPage() {
                     ) : (
                       <button
                         type="button"
-                        onClick={() => setSelectedExamForModal(exam)}
+                        onClick={() => {
+                          clearExamProgress(exam.id);
+                          setSelectedExamForModal(exam);
+                        }}
                         className="flex-1 w-full py-3 px-4 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs shadow-md shadow-indigo-200 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-98"
                       >
                         <span>✍️</span>
-                        <span>Vào Làm Bài Thi →</span>
+                        <span>{pastResults.length > 0 ? "Thi Lại Bài Này →" : "Vào Làm Bài Thi →"}</span>
                       </button>
                     )}
 
-                    {bestResult && (
-                      <Link
-                        href={`/exam/result/${bestResult.id}`}
-                        className="py-3 px-3.5 rounded-2xl bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xs transition-colors shrink-0 flex items-center justify-center"
-                        title="Xem lịch sử kết quả thi"
+                    {pastResults.length > 0 && (
+                      <button
+                        type="button"
+                        onClick={() => setHistoryModalConfig({ isOpen: true, exam })}
+                        className="py-3 px-3.5 rounded-2xl bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xs transition-colors shrink-0 flex items-center justify-center cursor-pointer"
+                        title="Xem lịch sử tất cả các lượt thi"
                       >
-                        📊 <span className="hidden sm:inline ml-1">Kết quả</span>
-                      </Link>
+                        📜 <span className="hidden sm:inline ml-1">Lịch sử ({pastResults.length})</span>
+                      </button>
                     )}
                   </div>
                 </div>
@@ -413,6 +449,21 @@ export default function ExamHubPage() {
             const examId = selectedExamForModal.id;
             setSelectedExamForModal(null);
             router.push(`/exam/${examId}?sections=${selectedSectionIds.join(",")}`);
+          }}
+        />
+
+        {/* Modal History */}
+        <ExamHistoryModal
+          isOpen={historyModalConfig.isOpen}
+          onClose={() => setHistoryModalConfig({ isOpen: false, exam: null })}
+          exam={historyModalConfig.exam}
+          results={results}
+          onRetakeExam={(examId) => {
+            clearExamProgress(examId);
+            const targetExam = exams.find((e) => e.id === examId);
+            if (targetExam) {
+              setSelectedExamForModal(targetExam);
+            }
           }}
         />
       </div>

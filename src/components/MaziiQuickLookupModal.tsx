@@ -63,6 +63,25 @@ export default function MaziiQuickLookupModal({
             setResults(list);
           }
           setLoading(false);
+
+          // Save to shared Mazii lookup history for sync between Web App and Chrome Extension
+          try {
+            const rawHist = localStorage.getItem("dland_mazii_history");
+            const hist = rawHist ? JSON.parse(rawHist) : [];
+            const topItem = list[0] || {};
+            const newEntry = {
+              query: cleanWord,
+              kanji: topItem.kanji || cleanWord,
+              hiragana: topItem.hiragana || initialFurigana || "",
+              meaning: topItem.meaning || initialMeaning || "",
+              timestamp: new Date().toISOString(),
+            };
+            const updatedHist = [newEntry, ...hist.filter((h: any) => h.query !== cleanWord)].slice(0, 50);
+            localStorage.setItem("dland_mazii_history", JSON.stringify(updatedHist));
+            window.dispatchEvent(new CustomEvent("mazii-history-updated"));
+          } catch (e) {
+            console.warn("Error saving Mazii history:", e);
+          }
         }
       } catch (err) {
         console.error("Mazii lookup error:", err);

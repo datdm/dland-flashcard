@@ -73,9 +73,11 @@
       const rawNotebooks = localStorage.getItem("flashcash-notebooks");
       const authToken = localStorage.getItem("flashcash-auth-token");
       const rawUser = localStorage.getItem("flashcash-user");
+      const rawMaziiHistory = localStorage.getItem("dland_mazii_history");
 
       let notebooks = null;
       let user = null;
+      let maziiHistory = null;
 
       if (rawNotebooks) {
         const parsed = JSON.parse(rawNotebooks);
@@ -84,23 +86,29 @@
       if (rawUser) {
         user = JSON.parse(rawUser);
       }
+      if (rawMaziiHistory) {
+        try {
+          maziiHistory = JSON.parse(rawMaziiHistory);
+        } catch {}
+      }
 
-      return { notebooks, authToken, user };
+      return { notebooks, authToken, user, maziiHistory };
     } catch (err) {
       console.warn("[Dland Extension] Error extracting session:", err);
-      return { notebooks: null, authToken: null, user: null };
+      return { notebooks: null, authToken: null, user: null, maziiHistory: null };
     }
   }
 
   function syncWithDlandWebApp() {
     if (isDlandWebApp()) {
       const session = extractSessionData();
-      if (session.notebooks || session.authToken || session.user) {
+      if (session.notebooks || session.authToken || session.user || session.maziiHistory) {
         chrome.runtime.sendMessage({
           action: "SYNC_FROM_WEB_APP",
           notebooks: session.notebooks,
           authToken: session.authToken,
           user: session.user,
+          maziiHistory: session.maziiHistory,
         });
       }
     }
@@ -111,11 +119,13 @@
     syncWithDlandWebApp();
     window.addEventListener("auth-state-changed", syncWithDlandWebApp);
     window.addEventListener("notebooks-updated", syncWithDlandWebApp);
+    window.addEventListener("mazii-history-updated", syncWithDlandWebApp);
     window.addEventListener("storage", (e) => {
       if (
         e.key === "flashcash-auth-token" ||
         e.key === "flashcash-user" ||
-        e.key === "flashcash-notebooks"
+        e.key === "flashcash-notebooks" ||
+        e.key === "dland_mazii_history"
       ) {
         syncWithDlandWebApp();
       }

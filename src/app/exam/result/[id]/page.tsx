@@ -4,7 +4,7 @@ import React, { useEffect, useState, use, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import AuthGuard from "@/components/AuthGuard";
-import { getResultById, getExamById } from "@/lib/examStorage";
+import { getResultById, getExamById, getAllResults, clearExamProgress } from "@/lib/examStorage";
 import { ExamResult, StoredExam, ExamMajorSection } from "@/types/exam";
 import ExamQuestionCard from "@/components/exam/ExamQuestionCard";
 import ExamPassageCard from "@/components/exam/ExamPassageCard";
@@ -12,6 +12,7 @@ import ExamSectionNav from "@/components/exam/ExamSectionNav";
 import MaziiQuickLookupModal from "@/components/MaziiQuickLookupModal";
 import SelectionLookupTooltip from "@/components/SelectionLookupTooltip";
 import AddToNotebookModal from "@/components/AddToNotebookModal";
+import ExamHistoryModal from "@/components/exam/ExamHistoryModal";
 import { getStructuredMajorSections } from "@/lib/examUtils";
 
 interface Props {
@@ -24,6 +25,8 @@ export default function ExamResultPage({ params }: Props) {
 
   const [result, setResult] = useState<ExamResult | null>(null);
   const [exam, setExam] = useState<StoredExam | null>(null);
+  const [allResults, setAllResults] = useState<ExamResult[]>([]);
+  const [showHistoryModal, setShowHistoryModal] = useState<boolean>(false);
   const [showFullReview, setShowFullReview] = useState<boolean>(true);
   const [selectedReviewTab, setSelectedReviewTab] = useState<string>("all");
   const [selectedWordForNotebook, setSelectedWordForNotebook] = useState<any | null>(null);
@@ -38,7 +41,7 @@ export default function ExamResultPage({ params }: Props) {
     queryWord: "",
   });
 
-  useEffect(() => {
+  const loadData = () => {
     const loadedResult = getResultById(id);
     if (!loadedResult) {
       router.push("/exam");
@@ -50,6 +53,15 @@ export default function ExamResultPage({ params }: Props) {
     if (loadedExam) {
       setExam(loadedExam);
     }
+    setAllResults(getAllResults());
+  };
+
+  useEffect(() => {
+    loadData();
+    window.addEventListener("exam-results-updated", loadData);
+    return () => {
+      window.removeEventListener("exam-results-updated", loadData);
+    };
   }, [id, router]);
 
   const allMajorSections = useMemo<ExamMajorSection[]>(() => {
@@ -146,13 +158,26 @@ export default function ExamResultPage({ params }: Props) {
             </Link>
 
             <div className="flex items-center gap-2">
-              <Link
-                href={`/exam/${result.examId}`}
-                className="px-4 py-2 rounded-xl bg-indigo-50 text-indigo-700 hover:bg-indigo-100 text-xs font-extrabold transition-colors flex items-center gap-1.5"
+              <button
+                type="button"
+                onClick={() => setShowHistoryModal(true)}
+                className="px-3.5 py-2 rounded-xl bg-amber-50 text-amber-800 border border-amber-200 hover:bg-amber-100 text-xs font-extrabold transition-colors flex items-center gap-1.5 cursor-pointer"
+              >
+                <span>📜</span>
+                <span>Lịch sử các lần thi ({allResults.filter((r) => r.examId === result.examId).length})</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  clearExamProgress(result.examId);
+                  router.push(`/exam/${result.examId}`);
+                }}
+                className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white shadow-xs text-xs font-extrabold transition-colors flex items-center gap-1.5 cursor-pointer active:scale-98"
               >
                 <span>🔄</span>
-                <span>Làm lại đề thi</span>
-              </Link>
+                <span>Thi lại bài này →</span>
+              </button>
             </div>
           </div>
         </header>
@@ -510,6 +535,18 @@ export default function ExamResultPage({ params }: Props) {
             <span>{saveSuccessMsg}</span>
           </div>
         )}
+
+        {/* Exam History Modal */}
+        <ExamHistoryModal
+          isOpen={showHistoryModal}
+          onClose={() => setShowHistoryModal(false)}
+          exam={exam}
+          results={allResults}
+          onRetakeExam={(examId) => {
+            clearExamProgress(examId);
+            router.push(`/exam/${examId}`);
+          }}
+        />
       </div>
     </AuthGuard>
   );

@@ -223,7 +223,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       return true;
 
     case "SYNC_FROM_WEB_APP":
-      handleSyncFromWebApp(request.notebooks, request.authToken, request.user)
+      handleSyncFromWebApp(request.notebooks, request.authToken, request.user, request.maziiHistory)
         .then((res) => sendResponse(res))
         .catch((err) => sendResponse({ success: false, error: err.message }));
       return true;
@@ -669,8 +669,8 @@ async function handleSaveVocab(notebookId, vocab) {
   };
 }
 
-// Sync notebooks and credentials from Web App
-async function handleSyncFromWebApp(notebooks, authToken, user) {
+// Sync notebooks, credentials, and Mazii history from Web App
+async function handleSyncFromWebApp(notebooks, authToken, user, maziiHistory) {
   const updateData = {};
   if (Array.isArray(notebooks) && notebooks.length > 0) {
     updateData.dland_notebooks = notebooks;
@@ -680,6 +680,9 @@ async function handleSyncFromWebApp(notebooks, authToken, user) {
   }
   if (user) {
     updateData.dland_user = user;
+  }
+  if (Array.isArray(maziiHistory) && maziiHistory.length > 0) {
+    updateData.dland_mazii_history = maziiHistory;
   }
 
   await chrome.storage.local.set(updateData);
