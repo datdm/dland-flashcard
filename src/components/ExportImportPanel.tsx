@@ -30,7 +30,7 @@ export default function ExportImportPanel({ onImportSuccess }: ExportImportPanel
   const [isProcessing, setIsProcessing] = useState(false);
   const [fullDbMsg, setFullDbMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
-  if (!user?.isAdmin) {
+  if (!user && !syncService.checkAuthStatus()) {
     return null;
   }
 

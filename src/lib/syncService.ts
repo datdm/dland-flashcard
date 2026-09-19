@@ -1051,120 +1051,6 @@ export async function patchProgressOnServer(
   }
 }
 
-// Export entire database (Cloud server data + local state)
-export async function exportFullDatabase(): Promise<{ success: boolean; data?: any; error?: string }> {
-  const token = getAuthToken();
-  
-  if (token) {
-    try {
-      const response = await trackedFetch(`${API_URL}/api/sync/export-full`, {
-        headers: { 'Authorization': `Bearer ${token}` },
-      });
-      if (response.ok) {
-        const fullData = await response.json();
-        return { success: true, data: fullData };
-      }
-    } catch (err) {
-      console.warn('Server full export failed, falling back to local dump:', err);
-    }
-  }
-
-  // Fallback / offline export from all local keys
-  try {
-    const localData: Record<string, any> = {};
-    const keys = Object.values(StorageKeys);
-    for (const key of keys) {
-      const val = localStorage.getItem(key);
-      if (val) {
-        try {
-          localData[key] = JSON.parse(val);
-        } catch {
-          localData[key] = val;
-        }
-      }
-    }
-
-    const payload = {
-      success: true,
-      version: '2.0-database-dump-local',
-      exportedAt: new Date().toISOString(),
-      metadata: {
-        totalDataKeys: Object.keys(localData).length,
-        totalBackups: 0,
-      },
-      userData: localData,
-      backupHistory: [],
-    };
-    return { success: true, data: payload };
-  } catch (err: any) {
-    return { success: false, error: err?.message || 'Không thể xuất dữ liệu' };
-  }
-}
-
-// Import entire database (Restore to Cloud server + Local storage)
-export async function importFullDatabase(
-  jsonString: string,
-  mode: 'merge' | 'replace' = 'merge'
-): Promise<{ success: boolean; message?: string; error?: string }> {
-  try {
-    const parsed = JSON.parse(jsonString);
-    const userData = parsed.userData || (parsed.data ? parsed.data : parsed);
-
-    if (!userData || typeof userData !== 'object') {
-      return { success: false, error: 'File sao lưu không đúng định dạng database dump' };
-    }
-
-    // 1. Update localStorage
-    if (mode === 'replace') {
-      clearLocalData();
-    }
-
-    for (const [key, value] of Object.entries(userData)) {
-      if (typeof value === 'string') {
-        localStorage.setItem(key, value);
-      } else {
-        localStorage.setItem(key, JSON.stringify(value));
-      }
-    }
-
-    // 2. If logged in, sync to server
-    const token = getAuthToken();
-    if (token) {
-      try {
-        await trackedFetch(`${API_URL}/api/sync/import-full`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            userData,
-            backupHistory: parsed.backupHistory || [],
-            mode,
-          }),
-        });
-      } catch (serverErr) {
-        console.warn('Server sync during import warning:', serverErr);
-      }
-    }
-
-    // 3. Dispatch browser events
-    if (typeof window !== 'undefined') {
-      window.dispatchEvent(new CustomEvent('notebooks-updated'));
-      window.dispatchEvent(new CustomEvent('practice-history-updated'));
-      window.dispatchEvent(new CustomEvent('curriculum-updated'));
-      window.dispatchEvent(new CustomEvent('settings-updated'));
-      window.dispatchEvent(new CustomEvent('storage'));
-    }
-
-    return {
-      success: true,
-      message: `Đã khôi phục thành công toàn bộ Database (${Object.keys(userData).length} nhóm dữ liệu)!`,
-    };
-  } catch (err: any) {
-    return { success: false, error: err?.message || 'File JSON không hợp lệ' };
-  }
-}
 
 // Reset all learning history & progress (Local + Cloud server sync)
 export async function resetAllLearningProgress(): Promise<{ success: boolean; error?: string }> {
@@ -1209,6 +1095,146 @@ export async function resetAllLearningProgress(): Promise<{ success: boolean; er
   } catch (err: any) {
     console.error('Reset all learning progress error:', err);
     return { success: false, error: err?.message || 'Lỗi khi reset tiến độ' };
+  }
+}
+
+// Export FULL Database Dump (All local keys + cloud server state) for migrating to a new Database
+export async function exportFullDatabase(): Promise<{ success: boolean; data?: any; error?: string }> {
+  const token = getAuthToken();
+
+  try {
+    const data: Record<string, any> = {};
+    const keySet = new Set<string>(Object.values(StorageKeys));
+
+    if (typeof window !== 'undefined') {
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (k && (k.startsWith('flashcash-') || k.startsWith('dland_') || k.startsWith('dland'))) {
+          if (k !== AUTH_TOKEN_KEY && k !== USER_KEY && k !== LAST_SYNC_KEY) {
+            keySet.add(k);
+          }
+        }
+      }
+    }
+
+    for (const key of keySet) {
+      const value = localStorage.getItem(key);
+      if (value !== null) {
+        try {
+          data[key] = JSON.parse(value);
+        } catch {
+          data[key] = value;
+        }
+      }
+    }
+
+    // Try fetching remote backups & cloud data if logged in
+    let remoteBackups: any[] = [];
+    if (token) {
+      try {
+        const res = await trackedFetch(`${API_URL}/api/backup/all`, {
+          headers: { 'Authorization': `Bearer ${token}` },
+        });
+        if (res.ok) {
+          const bData = await res.json();
+          remoteBackups = bData.backups || [];
+        }
+      } catch (err) {
+        console.warn('Export full database - remote backup fetch warning:', err);
+      }
+    }
+
+    const currentUser = getUser();
+    const dump = {
+      version: '2.0.0',
+      type: 'FULL_DATABASE_DUMP',
+      exportedAt: new Date().toISOString(),
+      metadata: {
+        app: 'Dland Flashcard Multilingual',
+        exportedBy: currentUser?.username || 'Guest',
+        totalDataKeys: Object.keys(data).length,
+        totalBackups: remoteBackups.length,
+      },
+      data,
+      remoteBackups,
+    };
+
+    return { success: true, data: dump };
+  } catch (err: any) {
+    console.error('Export full database error:', err);
+    return { success: false, error: err?.message || 'Lỗi xuất database' };
+  }
+}
+
+// Import FULL Database Dump to migrate/restore into local & cloud database
+export async function importFullDatabase(
+  jsonStr: string,
+  mode: 'merge' | 'replace' = 'merge'
+): Promise<{ success: boolean; message?: string; error?: string }> {
+  try {
+    const parsed = JSON.parse(jsonStr);
+    if (!parsed || (parsed.type !== 'FULL_DATABASE_DUMP' && !parsed.data)) {
+      return { success: false, error: 'File JSON không đúng định dạng Full Database Dump' };
+    }
+
+    const dumpData: Record<string, any> = parsed.data || {};
+    const keys = Object.keys(dumpData);
+    if (keys.length === 0) {
+      return { success: false, error: 'File Database không chứa nhóm dữ liệu nào' };
+    }
+
+    if (mode === 'replace') {
+      clearLocalData();
+    }
+
+    // Write keys to localStorage
+    let importedCount = 0;
+    for (const [key, value] of Object.entries(dumpData)) {
+      if (typeof value === 'string') {
+        localStorage.setItem(key, value);
+      } else {
+        localStorage.setItem(key, JSON.stringify(value));
+      }
+      importedCount++;
+    }
+
+    // Synchronize to cloud database if logged in
+    const token = getAuthToken();
+    let cloudSynced = false;
+    if (token) {
+      try {
+        const upRes = await uploadToServer(true);
+        cloudSynced = upRes.success;
+      } catch (e) {
+        console.warn('Import full database - cloud sync warning:', e);
+      }
+    }
+
+    // Fire all UI reactivity events
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('notebooks-updated'));
+      window.dispatchEvent(new CustomEvent('practice-history-updated'));
+      window.dispatchEvent(new CustomEvent('curriculum-updated'));
+      window.dispatchEvent(new CustomEvent('curriculum-history-updated'));
+      window.dispatchEvent(new CustomEvent('progress-updated'));
+      window.dispatchEvent(new CustomEvent('settings-updated'));
+      window.dispatchEvent(new CustomEvent('nav-menu-settings-changed'));
+      window.dispatchEvent(new CustomEvent('language-changed'));
+      window.dispatchEvent(new CustomEvent('exams-updated'));
+      window.dispatchEvent(new CustomEvent('exam-results-updated'));
+      window.dispatchEvent(new CustomEvent('storage'));
+    }
+
+    const modeText = mode === 'replace' ? 'Ghi đè 100%' : 'Gộp dữ liệu';
+    const cloudText = cloudSynced ? ' và đã đồng bộ thành công lên Cloud Database!' : '.';
+
+    return {
+      success: true,
+      message: `Đã phục hồi thành công ${importedCount} bảng dữ liệu (${modeText})${cloudText}`,
+    };
+  } catch (err: any) {
+    console.error('Import full database error:', err);
+    return { success: false, error: err?.message || 'File JSON không hợp lệ' };
   }
 }
 

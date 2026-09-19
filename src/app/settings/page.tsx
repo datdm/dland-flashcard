@@ -321,12 +321,10 @@ export default function SettingsPage() {
             {/* Sample Curriculum Display Settings Section - Admin only */}
             {user?.isAdmin && <CurriculumDisplaySettings />}
 
-            {/* Export/Import Section - Admin only */}
-            {user?.isAdmin && (
-              <div className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-xs">
-                <ExportImportPanel />
-              </div>
-            )}
+            {/* Export/Import Section - Database Migration */}
+            <div className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-xs">
+              <ExportImportPanel />
+            </div>
 
             {/* Backup History Section - Admin only */}
             {user?.isAdmin && (
