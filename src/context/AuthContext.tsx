@@ -67,6 +67,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setIsLoading(true);
     }
 
+    // Safety timeout: Ensure initial isLoading is released within 3s max
+    const safetyTimeout = setTimeout(() => {
+      setIsLoading(false);
+    }, 3000);
+
     try {
       const { valid, user: verifiedUser } = await syncService.validateSession();
       if (valid && verifiedUser) {
@@ -96,6 +101,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setIsAuthenticated(false);
       }
     } finally {
+      clearTimeout(safetyTimeout);
       setIsLoading(false);
     }
   }, []);

@@ -34,6 +34,7 @@ interface DataResponse {
 // Global active request tracking for loading indicator
 let activeRequestsCount = 0;
 let loadingTimeout: any = null;
+let maxLoadingSafetyTimer: any = null;
 
 function startTrackingRequest() {
   if (typeof window === 'undefined') return;
@@ -43,6 +44,17 @@ function startTrackingRequest() {
     loadingTimeout = setTimeout(() => {
       window.dispatchEvent(new CustomEvent('sync-loading-start'));
     }, 100);
+
+    // Safety fallback: Never keep global loading indicator active for > 4000ms
+    if (maxLoadingSafetyTimer) clearTimeout(maxLoadingSafetyTimer);
+    maxLoadingSafetyTimer = setTimeout(() => {
+      activeRequestsCount = 0;
+      if (loadingTimeout) {
+        clearTimeout(loadingTimeout);
+        loadingTimeout = null;
+      }
+      window.dispatchEvent(new CustomEvent('sync-loading-stop'));
+    }, 4000);
   }
 }
 
@@ -53,6 +65,10 @@ function stopTrackingRequest() {
     if (loadingTimeout) {
       clearTimeout(loadingTimeout);
       loadingTimeout = null;
+    }
+    if (maxLoadingSafetyTimer) {
+      clearTimeout(maxLoadingSafetyTimer);
+      maxLoadingSafetyTimer = null;
     }
     window.dispatchEvent(new CustomEvent('sync-loading-stop'));
   }
@@ -89,8 +105,19 @@ export function handleSessionExpired(customMessage?: string) {
 
 async function trackedFetch(input: RequestInfo | URL, init?: RequestInit): Promise<Response> {
   startTrackingRequest();
+
+  // 5-second fetch timeout to prevent hanging network calls
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+  const fetchOptions: RequestInit = {
+    ...init,
+    signal: init?.signal || controller.signal,
+  };
+
   try {
-    const response = await fetch(input, init);
+    const response = await fetch(input, fetchOptions);
+    clearTimeout(timeoutId);
     if (!response.ok) {
       if (response.status === 401) {
         handleSessionExpired();
@@ -104,8 +131,13 @@ async function trackedFetch(input: RequestInfo | URL, init?: RequestInit): Promi
       }
     }
     return response;
-  } catch (error) {
-    triggerErrorNotification('Không thể kết nối tới máy chủ. Vui lòng kiểm tra mạng.');
+  } catch (error: any) {
+    clearTimeout(timeoutId);
+    if (error.name === 'AbortError') {
+      console.warn('API fetch timed out after 5s:', input);
+    } else {
+      triggerErrorNotification('Không thể kết nối tới máy chủ. Vui lòng kiểm tra mạng.');
+    }
     throw error;
   } finally {
     stopTrackingRequest();

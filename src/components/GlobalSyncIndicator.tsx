@@ -13,8 +13,20 @@ export default function GlobalSyncIndicator() {
   const [toasts, setToasts] = useState<Toast[]>([]);
 
   useEffect(() => {
-    const handleLoadingStart = () => setIsLoading(true);
-    const handleLoadingStop = () => setIsLoading(false);
+    let safetyTimer: NodeJS.Timeout | null = null;
+
+    const handleLoadingStart = () => {
+      setIsLoading(true);
+      if (safetyTimer) clearTimeout(safetyTimer);
+      safetyTimer = setTimeout(() => {
+        setIsLoading(false);
+      }, 4000);
+    };
+
+    const handleLoadingStop = () => {
+      if (safetyTimer) clearTimeout(safetyTimer);
+      setIsLoading(false);
+    };
 
     const handleShowToast = (e: Event) => {
       const customEvent = e as CustomEvent<{ id: number; message: string; type?: "error" | "success" | "loading" }>;
@@ -60,6 +72,7 @@ export default function GlobalSyncIndicator() {
     window.addEventListener("remove-toast", handleRemoveToast);
 
     return () => {
+      if (safetyTimer) clearTimeout(safetyTimer);
       window.removeEventListener("sync-loading-start", handleLoadingStart);
       window.removeEventListener("sync-loading-stop", handleLoadingStop);
       window.removeEventListener("sync-error", handleError);
