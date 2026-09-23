@@ -1266,14 +1266,31 @@ export async function importFullDatabase(
 ): Promise<{ success: boolean; message?: string; error?: string }> {
   try {
     const parsed = JSON.parse(jsonStr);
-    if (!parsed || (parsed.type !== 'FULL_DATABASE_DUMP' && !parsed.data)) {
-      return { success: false, error: 'File JSON không đúng định dạng Full Database Dump' };
+    if (!parsed || typeof parsed !== 'object') {
+      return { success: false, error: 'File JSON không hợp lệ' };
     }
 
-    const dumpData: Record<string, any> = parsed.data || {};
-    const keys = Object.keys(dumpData);
-    if (keys.length === 0) {
-      return { success: false, error: 'File Database không chứa nhóm dữ liệu nào' };
+    let dumpData: Record<string, any> = {};
+
+    if (parsed.data && typeof parsed.data === 'object' && !Array.isArray(parsed.data)) {
+      dumpData = parsed.data;
+    } else if (parsed.userData && typeof parsed.userData === 'object' && !Array.isArray(parsed.userData)) {
+      dumpData = parsed.userData;
+    } else if (parsed.backup_data && typeof parsed.backup_data === 'object' && !Array.isArray(parsed.backup_data)) {
+      dumpData = parsed.backup_data;
+    } else if (parsed.backupData && typeof parsed.backupData === 'object' && !Array.isArray(parsed.backupData)) {
+      dumpData = parsed.backupData;
+    } else if (typeof parsed === 'object' && !Array.isArray(parsed)) {
+      dumpData = parsed;
+    }
+
+    // Filter valid keys (exclude metadata header fields if raw object was parsed)
+    const validEntries = Object.entries(dumpData).filter(([k]) => {
+      return k !== 'version' && k !== 'type' && k !== 'exportedAt' && k !== 'metadata' && k !== 'remoteBackups' && k !== 'success';
+    });
+
+    if (validEntries.length === 0) {
+      return { success: false, error: 'File JSON không chứa nhóm dữ liệu nào hợp lệ để khôi phục' };
     }
 
     if (mode === 'replace') {
@@ -1282,7 +1299,7 @@ export async function importFullDatabase(
 
     // Write keys to localStorage
     let importedCount = 0;
-    for (const [key, value] of Object.entries(dumpData)) {
+    for (const [key, value] of validEntries) {
       if (typeof value === 'string') {
         localStorage.setItem(key, value);
       } else {
