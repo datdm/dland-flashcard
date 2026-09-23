@@ -109,6 +109,67 @@ router.post('/upload', auth_1.authenticate, async (req, res) => {
         client.release();
     }
 });
+// Dedicated auto-sync endpoint (lightweight background sync without backup overhead)
+const handleAutoSync = async (req, res) => {
+    const { data } = req.body;
+    if (!data || typeof data !== 'object') {
+        return res.status(400).json({ error: 'Invalid data format' });
+    }
+    const client = await db_1.default.connect();
+    try {
+        await client.query('BEGIN');
+        const validKeys = [
+            'flashcash-lessons',
+            'flashcash-progress',
+            'flashcash-settings',
+            'flashcash-notebooks',
+            'flashcash-curriculums',
+            'flashcash-grammar-collections',
+            'flashcash-grammar-progress',
+            'flashcash-kanji-progress',
+            'flashcash-curriculum-history',
+            'flashcash-practice-history',
+            'dland_target_language',
+            'dland_kaiwa_completed',
+            'flashcash-streak',
+            'flashcash-is-daily-50',
+            'dland_nav_menu_settings',
+            'dland_custom_exams',
+            'dland_exam_results',
+        ];
+        for (const [key, value] of Object.entries(data)) {
+            const isValid = validKeys.includes(key) ||
+                key.startsWith('flashcash-') ||
+                key.startsWith('dland_') ||
+                key.startsWith('dland');
+            if (!isValid) {
+                continue;
+            }
+            const jsonString = JSON.stringify(value);
+            await client.query(`INSERT INTO user_data (user_id, data_key, data_value, updated_at)
+         VALUES ($1, $2, $3::jsonb, NOW())
+         ON CONFLICT (user_id, data_key)
+         DO UPDATE SET data_value = $3::jsonb, updated_at = NOW()`, [req.userId, key, jsonString]);
+        }
+        await client.query('UPDATE users SET last_sync_at = NOW() WHERE id = $1', [req.userId]);
+        await client.query('COMMIT');
+        res.json({
+            success: true,
+            message: 'Auto sync completed successfully',
+            timestamp: new Date().toISOString(),
+        });
+    }
+    catch (error) {
+        await client.query('ROLLBACK');
+        console.error('Auto sync error:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+    finally {
+        client.release();
+    }
+};
+router.post('/auto', auth_1.authenticate, handleAutoSync);
+router.post('/auto-sync', auth_1.authenticate, handleAutoSync);
 // Reset learning progress & history on server
 router.post('/reset-progress', auth_1.authenticate, async (req, res) => {
     const client = await db_1.default.connect();

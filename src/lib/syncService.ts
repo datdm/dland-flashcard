@@ -559,10 +559,71 @@ export async function changePassword(currentPassword: string, newPassword: strin
   }
 }
 
+// Dedicated auto-sync to server endpoint (/api/sync/auto)
+export async function autoSyncToServer(): Promise<{ success: boolean; error?: string }> {
+  const token = getAuthToken();
+  if (!token) return { success: false, error: 'Not authenticated' };
+
+  try {
+    const data: Record<string, any> = {};
+    const keySet = new Set<string>(Object.values(StorageKeys));
+
+    if (typeof window !== 'undefined') {
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (k && (k.startsWith('flashcash-') || k.startsWith('dland_') || k.startsWith('dland'))) {
+          if (k !== AUTH_TOKEN_KEY && k !== USER_KEY && k !== LAST_SYNC_KEY && !k.startsWith('dland_exam_progress_')) {
+            keySet.add(k);
+          }
+        }
+      }
+    }
+
+    for (const key of keySet) {
+      const value = localStorage.getItem(key);
+      if (value !== null) {
+        try {
+          data[key] = JSON.parse(value);
+        } catch {
+          data[key] = value;
+        }
+      }
+    }
+
+    const currentDataHash = JSON.stringify(data);
+    if (lastUploadedDataHash === currentDataHash) {
+      return { success: true };
+    }
+
+    const response = await trackedFetch(`${API_URL}/api/sync/auto`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify({ data }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      return { success: false, error: errorData.error || 'Auto sync failed' };
+    }
+
+    const result = await response.json();
+    lastUploadedDataHash = currentDataHash;
+    localStorage.setItem(LAST_SYNC_KEY, result.timestamp || new Date().toISOString());
+
+    return { success: true };
+  } catch (error) {
+    console.error('Auto sync error:', error);
+    return { success: false, error: 'Network error' };
+  }
+}
+
 // Debounce timer for auto-sync to avoid spamming the database
 let autoSyncTimeout: any = null;
 
-// Auto-sync helper - silently sync data to server if authenticated with debouncing
+// Auto-sync helper - silently sync data to server via dedicated /api/sync/auto endpoint
 export async function autoSync(): Promise<void> {
   if (!checkAuthStatus()) return;
   
@@ -572,7 +633,7 @@ export async function autoSync(): Promise<void> {
 
   autoSyncTimeout = setTimeout(async () => {
     try {
-      await uploadToServer(true); // Skip backup for auto-sync
+      await autoSyncToServer();
     } catch (error) {
       console.error('Auto-sync error:', error);
       // Silently fail - don't disrupt user experience

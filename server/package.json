@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "ts-node src/server.ts",
     "build": "tsc",
-    "start": "node dist/server.js"
+    "start": "node dist/server.js",
+    "migrate": "ts-node src/scripts/runMigrations.ts",
+    "seed:admin": "ts-node src/scripts/createAdmin.ts"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
