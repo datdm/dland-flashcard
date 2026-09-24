@@ -4,17 +4,19 @@ import { useState, useMemo, useEffect } from "react";
 import { useCurriculums } from "@/hooks/useCurriculums";
 import { useNotebooks } from "@/hooks/useNotebooks";
 import { useLanguageSetting } from "@/hooks/useLanguageSetting";
+import { useProgress } from "@/hooks/useProgress";
 import FlashCardViewer from "@/components/FlashCardViewer";
 import Link from "next/link";
 import AuthGuard from "@/components/AuthGuard";
 import { autoSync } from "@/lib/syncService";
 
-type SourceFilter = "all" | string; // "all" | curriculum-id | notebook-id
+type SourceFilter = "all" | "all_curriculums" | "all_notebooks" | string;
 
 export default function FlashCardAllPage() {
   const { activeLanguage } = useLanguageSetting();
   const { activeCurriculums: curriculums } = useCurriculums();
   const { notebooks } = useNotebooks();
+  const { progress } = useProgress();
   const [source, setSource] = useState<SourceFilter>("all");
   const [isDaily50, setIsDaily50] = useState(false);
 
@@ -41,8 +43,6 @@ export default function FlashCardAllPage() {
       autoSync();
     }
   };
-
-  type SourceFilter = "all" | "all_curriculums" | "all_notebooks" | string;
 
   const langNotebooks = useMemo(() => {
     return notebooks.filter((nb) => (nb.lang || "ja") === activeLanguage.code);
@@ -131,6 +131,34 @@ export default function FlashCardAllPage() {
     return [];
   }, [source, curriculums, langNotebooks]);
 
+  const todayDateStr = useMemo(() => new Date().toDateString(), []);
+
+  const currentVocabIds = useMemo(() => {
+    return new Set(allVocab.map((v) => v.id));
+  }, [allVocab]);
+
+  const daily50Progress = useMemo(() => {
+    const learnedTodayList = Object.entries(progress).filter(([id, p]) => {
+      if (!p.learned || !p.learnedAt) return false;
+      const isToday = new Date(p.learnedAt).toDateString() === todayDateStr;
+      if (!isToday) return false;
+      return currentVocabIds.size === 0 || currentVocabIds.has(id);
+    });
+
+    const learnedCount = learnedTodayList.length;
+    const target = 50;
+    const remaining = Math.max(0, target - learnedCount);
+    const percentage = Math.min(100, Math.round((learnedCount / target) * 100));
+
+    return {
+      learnedCount,
+      target,
+      remaining,
+      percentage,
+      isCompleted: learnedCount >= target,
+    };
+  }, [progress, todayDateStr, currentVocabIds]);
+
   if (curriculums.length === 0 && notebooks.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px] gap-4 bg-white rounded-3xl border border-gray-100 shadow-2xs p-8 max-w-2xl mx-auto mt-8">
@@ -164,33 +192,119 @@ export default function FlashCardAllPage() {
         </div>
 
         {/* Daily 50 Toggle Card */}
-        <div className="bg-white rounded-3xl p-5 sm:p-6 border border-gray-100 shadow-2xs mb-4 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg shrink-0">
-              🎲
+        <div
+          className={`bg-white rounded-3xl p-5 sm:p-6 border transition-all duration-300 shadow-2xs mb-4 ${
+            isDaily50
+              ? "border-amber-200/90 bg-gradient-to-b from-amber-50/40 via-white to-white ring-1 ring-amber-200/50"
+              : "border-gray-100"
+          }`}
+        >
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div
+                className={`w-11 h-11 rounded-2xl flex items-center justify-center text-xl shrink-0 transition-all ${
+                  isDaily50
+                    ? "bg-amber-500 text-white shadow-md shadow-amber-200"
+                    : "bg-amber-50 text-amber-600"
+                }`}
+              >
+                🎲
+              </div>
+              <div>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <h3 className="text-xs sm:text-sm font-bold text-gray-900">
+                    Luyện 50 từ ngẫu nhiên mỗi ngày
+                  </h3>
+                  {isDaily50 && (
+                    <span
+                      className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider border ${
+                        daily50Progress.isCompleted
+                          ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                          : "bg-amber-50 text-amber-800 border-amber-200/80"
+                      }`}
+                    >
+                      {daily50Progress.isCompleted ? "🎉 Đã hoàn thành" : "Đang thực hiện"}
+                    </span>
+                  )}
+                </div>
+                <p className="text-[11px] text-gray-500 mt-0.5">
+                  Xáo trộn cố định 50 từ trong ngày (hỗ trợ cả Thẻ Flashcard và Trắc Nghiệm 4 đáp án)
+                </p>
+              </div>
             </div>
-            <div>
-              <h3 className="text-xs sm:text-sm font-bold text-gray-900">
-                Luyện 50 từ ngẫu nhiên mỗi ngày
-              </h3>
-              <p className="text-[11px] text-gray-500 mt-0.5">
-                Xáo trộn cố định 50 từ trong ngày (hỗ trợ cả Thẻ Flashcard và Trắc Nghiệm 4 đáp án)
-              </p>
-            </div>
-          </div>
-          
-          <button
-            onClick={handleToggleDaily50}
-            className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-hidden ${
-              isDaily50 ? "bg-amber-500" : "bg-gray-200"
-            }`}
-          >
-            <span
-              className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out ${
-                isDaily50 ? "translate-x-5" : "translate-x-0"
+
+            <button
+              onClick={handleToggleDaily50}
+              aria-label="Bật hoặc tắt chế độ 50 từ ngẫu nhiên"
+              className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-hidden ${
+                isDaily50 ? "bg-amber-500" : "bg-gray-200"
               }`}
-            />
-          </button>
+            >
+              <span
+                className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out ${
+                  isDaily50 ? "translate-x-5" : "translate-x-0"
+                }`}
+              />
+            </button>
+          </div>
+
+          {/* Progress của 50 từ nếu chọn 50 từ ngẫu nhiên */}
+          {isDaily50 && (
+            <div className="mt-5 pt-4 border-t border-amber-100/90 space-y-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-bold text-gray-700 flex items-center gap-1.5">
+                    <span>📊</span> Tiến độ mục tiêu 50 từ hôm nay:
+                  </span>
+                  <span className="px-2.5 py-0.5 rounded-lg text-xs font-black bg-amber-100 text-amber-950 border border-amber-200">
+                    {daily50Progress.learnedCount} / 50 từ
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-2 text-xs">
+                  {daily50Progress.isCompleted ? (
+                    <span className="text-emerald-600 font-extrabold flex items-center gap-1">
+                      <span>✨</span> Xuất sắc! Đã đạt 100% mục tiêu hôm nay
+                    </span>
+                  ) : (
+                    <span className="text-gray-500 font-medium">
+                      Còn lại: <strong className="text-amber-800 font-bold">{daily50Progress.remaining} từ</strong>
+                    </span>
+                  )}
+                  <span className="text-gray-300 hidden sm:inline">•</span>
+                  <span className="font-black text-amber-700">{daily50Progress.percentage}%</span>
+                </div>
+              </div>
+
+              {/* Thanh tiến độ */}
+              <div className="w-full bg-gray-100 rounded-full h-3 overflow-hidden p-0.5 border border-gray-200/50">
+                <div
+                  className={`h-full rounded-full transition-all duration-500 ease-out ${
+                    daily50Progress.isCompleted
+                      ? "bg-gradient-to-r from-emerald-500 to-teal-500 shadow-xs"
+                      : "bg-gradient-to-r from-amber-400 via-orange-500 to-amber-500"
+                  }`}
+                  style={{ width: `${daily50Progress.percentage}%` }}
+                />
+              </div>
+
+              {/* Thống kê 3 chỉ số */}
+              <div className="grid grid-cols-3 gap-2.5 pt-1 text-center">
+                <div className="bg-white/90 rounded-2xl p-2.5 border border-gray-100 shadow-3xs">
+                  <div className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">Mục tiêu</div>
+                  <div className="text-xs sm:text-sm font-black text-gray-800 mt-0.5">50 từ</div>
+                </div>
+                <div className="bg-white/90 rounded-2xl p-2.5 border border-gray-100 shadow-3xs">
+                  <div className="text-[10px] text-emerald-600 font-bold uppercase tracking-wider">Đã học hôm nay</div>
+                  <div className="text-xs sm:text-sm font-black text-emerald-700 mt-0.5">{daily50Progress.learnedCount} từ</div>
+                </div>
+                <div className="bg-white/90 rounded-2xl p-2.5 border border-gray-100 shadow-3xs">
+                  <div className="text-[10px] text-amber-600 font-bold uppercase tracking-wider">Cần học thêm</div>
+                  <div className="text-xs sm:text-sm font-black text-amber-700 mt-0.5">{daily50Progress.remaining} từ</div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Filter Section */}

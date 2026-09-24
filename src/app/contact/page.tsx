@@ -24,9 +24,9 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8 sm:py-12">
+    <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6">
       {/* Header */}
-      <div className="bg-white rounded-3xl p-6 sm:p-10 border border-gray-100 shadow-xl mb-8">
+      <div className="bg-white rounded-3xl p-6 sm:p-10 border border-gray-100 shadow-xl">
         <div className="flex items-center gap-3 mb-2">
           <span className="p-3 bg-indigo-50 border border-indigo-100 rounded-2xl text-2xl">📬</span>
           <div>
@@ -54,8 +54,8 @@ export default function ContactPage() {
                 <span className="text-base">📧</span>
                 <div>
                   <strong className="block text-gray-900">Email Hỗ Trợ:</strong>
-                  <a href="mailto:support@dland.com" className="text-indigo-600 font-medium hover:underline">
-                    support@dland.com
+                  <a href="mailto:dangminhdat.qnam@gmail.com" className="text-indigo-600 font-medium hover:underline">
+                    dangminhdat.qnam@gmail.com
                   </a>
                 </div>
               </div>

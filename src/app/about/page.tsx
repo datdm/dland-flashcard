@@ -8,9 +8,9 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8 sm:py-12">
+    <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6">
       {/* Header Banner */}
-      <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-700 text-white rounded-3xl p-8 sm:p-12 shadow-2xl mb-8 relative overflow-hidden">
+      <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-700 text-white rounded-3xl p-8 sm:p-12 shadow-2xl relative overflow-hidden">
         <div className="relative z-10 max-w-2xl space-y-4">
           <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-xs font-bold tracking-wide border border-white/30">
             💡 Về Dự Án Dland Language

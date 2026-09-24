@@ -570,3 +570,23 @@
   font-weight: 700 !important;
 }
 
+/* 7. AI Analysis Tooltip & Modal Styles */
+.dland-tooltip-btn-ai {
+  background: linear-gradient(135deg, #7c3aed 0%, #c026d3 100%) !important;
+}
+
+.dland-tooltip-btn-ai:hover {
+  background: linear-gradient(135deg, #6d28d9 0%, #a21caf 100%) !important;
+}
+
+.dland-ai-dialog {
+  max-width: 520px !important;
+}
+
+.dland-ai-result-box {
+  line-height: 1.6 !important;
+  font-size: 13px !important;
+  color: #334155 !important;
+  white-space: pre-wrap !important;
+}
+

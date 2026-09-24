@@ -8,9 +8,9 @@ export const metadata: Metadata = {
 
 export default function PrivacyPolicyPage() {
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8 sm:py-12">
+    <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6">
       {/* Header */}
-      <div className="bg-white rounded-3xl p-6 sm:p-10 border border-gray-100 shadow-xl mb-8">
+      <div className="bg-white rounded-3xl p-6 sm:p-10 border border-gray-100 shadow-xl">
         <div className="flex items-center gap-3 mb-4">
           <span className="p-3 bg-indigo-50 border border-indigo-100 rounded-2xl text-2xl">🔒</span>
           <div>
@@ -109,7 +109,7 @@ export default function PrivacyPolicyPage() {
             Nếu bạn có bất kỳ câu hỏi hoặc đóng góp ý kiến nào liên quan đến Chính sách quyền riêng tư này, vui lòng liên hệ với chúng tôi qua:
           </p>
           <div className="bg-gray-50 rounded-2xl p-4 border border-gray-100 text-xs space-y-1">
-            <p><strong>Email hỗ trợ:</strong> <a href="mailto:support@dland.com" className="text-indigo-600 font-bold hover:underline">support@dland.com</a></p>
+            <p><strong>Email hỗ trợ:</strong> <a href="mailto:dangminhdat.qnam@gmail.com" className="text-indigo-600 font-bold hover:underline">dangminhdat.qnam@gmail.com</a></p>
             <p><strong>Trang hỗ trợ:</strong> <Link href="/contact" className="text-indigo-600 font-bold hover:underline">Gửi tin nhắn tại trang Liên hệ</Link></p>
           </div>
         </section>

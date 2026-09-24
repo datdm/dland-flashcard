@@ -41,6 +41,7 @@ function ExamTakingPageContent({ params }: Props) {
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
   const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
+  const [showExitModal, setShowExitModal] = useState<boolean>(false);
   const [showStructureModal, setShowStructureModal] = useState<boolean>(false);
   const [showSelectionModal, setShowSelectionModal] = useState<boolean>(false);
   const [selectedMajorTab, setSelectedMajorTab] = useState<string>("all");
@@ -151,15 +152,22 @@ function ExamTakingPageContent({ params }: Props) {
     router.push("/exam");
   }, [id, router]);
 
+  const handleExitWithoutSave = useCallback(() => {
+    isLeavingRef.current = true;
+    clearExamProgress(id);
+    router.push("/exam");
+  }, [id, router]);
+
   const handleResetProgress = useCallback(() => {
     if (!exam) return;
-    if (confirm("Bạn có chắc chắn muốn làm lại từ đầu? Mọi câu trả lời đã lưu tạm sẽ bị xóa.")) {
+    if (confirm("Bạn có chắc chắn muốn xóa bản lưu tạm và làm lại bài thi từ đầu?")) {
       clearExamProgress(id);
       setAnswers({});
       answersRef.current = {};
       setTimeRemaining(exam.data.meta.timeLimit);
       timeRef.current = exam.data.meta.timeLimit;
       setIsRestoredDraft(false);
+      setShowExitModal(false);
     }
   }, [exam, id]);
 
@@ -436,13 +444,14 @@ function ExamTakingPageContent({ params }: Props) {
         <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-200 px-3 sm:px-4 lg:px-6 py-2 sm:py-2.5 shadow-3xs">
           <div className="max-w-[1600px] mx-auto flex items-center justify-between gap-3">
             <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
-              <Link
-                href="/exam"
-                className="p-1.5 sm:p-2 rounded-xl text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors shrink-0"
-                title="Quay lại danh sách đề thi"
+              <button
+                type="button"
+                onClick={() => setShowExitModal(true)}
+                className="p-1.5 sm:p-2 rounded-xl text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors shrink-0 cursor-pointer text-base font-bold"
+                title="Quay lại danh sách đề thi / Thoát"
               >
                 ←
-              </Link>
+              </button>
               <div className="min-w-0">
                 <div className="flex items-center gap-2">
                   <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-rose-100 text-rose-800 border border-rose-200 shrink-0">
@@ -488,12 +497,12 @@ function ExamTakingPageContent({ params }: Props) {
 
               <button
                 type="button"
-                onClick={handleSaveAndExit}
+                onClick={() => setShowExitModal(true)}
                 className="px-3 sm:px-4 py-2 rounded-2xl bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-xs shadow-md shadow-amber-200 transition-all flex items-center gap-1.5 cursor-pointer active:scale-98"
-                title="Lưu tạm tiến độ bài làm và thoát ra ngoài"
+                title="Tùy chọn lưu nháp, xóa nháp hoặc thoát"
               >
                 <span>💾</span>
-                <span className="hidden sm:inline">Lưu & Tạm dừng</span>
+                <span className="hidden sm:inline">Lưu / Thoát</span>
               </button>
 
               <button
@@ -894,6 +903,78 @@ function ExamTakingPageContent({ params }: Props) {
             });
           }}
         />
+
+        {/* Exit Confirmation Modal */}
+        {showExitModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4">
+            <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-5 animate-in fade-in zoom-in-95 duration-150 border border-gray-100">
+              <div className="flex items-center gap-3 text-amber-600">
+                <span className="text-3xl">🚪</span>
+                <div>
+                  <h3 className="text-lg font-black text-gray-900">Thoát bài thi thi thử</h3>
+                  <p className="text-xs text-gray-500">Bạn muốn xử lý tiến độ bài làm dở dang này như thế nào?</p>
+                </div>
+              </div>
+
+              <div className="space-y-2.5">
+                <button
+                  type="button"
+                  onClick={handleSaveAndExit}
+                  className="w-full p-3.5 rounded-2xl bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-xs shadow-md shadow-amber-200 transition-all text-left flex items-center justify-between cursor-pointer"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <span className="text-lg">💾</span>
+                    <div>
+                      <div className="font-extrabold">Lưu nháp & Thoát</div>
+                      <div className="text-[11px] font-normal text-amber-100">Lưu lại tiến độ để quay lại làm tiếp bất kỳ lúc nào</div>
+                    </div>
+                  </div>
+                  <span>➔</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleExitWithoutSave}
+                  className="w-full p-3.5 rounded-2xl bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-800 font-extrabold text-xs transition-all text-left flex items-center justify-between cursor-pointer"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <span className="text-lg">🗑️</span>
+                    <div>
+                      <div className="font-extrabold">Xóa nháp & Thoát (Không lưu)</div>
+                      <div className="text-[11px] font-normal text-rose-600">Xóa tiến độ dở dang và quay ra danh sách đề thi</div>
+                    </div>
+                  </div>
+                  <span>➔</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleResetProgress}
+                  className="w-full p-3.5 rounded-2xl bg-gray-50 hover:bg-gray-100 border border-gray-200 text-gray-700 font-extrabold text-xs transition-all text-left flex items-center justify-between cursor-pointer"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <span className="text-lg">🔄</span>
+                    <div>
+                      <div className="font-extrabold">Xóa nháp & Thi lại từ đầu</div>
+                      <div className="text-[11px] font-normal text-gray-500">Reset toàn bộ câu chọn và bắt đầu làm lại ngay</div>
+                    </div>
+                  </div>
+                  <span>➔</span>
+                </button>
+              </div>
+
+              <div className="pt-2 border-t border-gray-100 flex justify-end">
+                <button
+                  type="button"
+                  onClick={() => setShowExitModal(false)}
+                  className="px-4 py-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xs transition-colors cursor-pointer"
+                >
+                  ✕ Hủy (Ở lại làm bài)
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </AuthGuard>
   );

@@ -47,7 +47,7 @@ chrome.runtime.onInstalled.addListener(async () => {
     await chrome.storage.local.set(toSet);
   }
 
-  // Create context menus for quick right-click lookup and translation
+  // Create context menus for quick right-click lookup, translation, and AI analysis
   chrome.contextMenus.removeAll(() => {
     chrome.contextMenus.create({
       id: "dland-lookup-mazii",
@@ -57,6 +57,11 @@ chrome.runtime.onInstalled.addListener(async () => {
     chrome.contextMenus.create({
       id: "dland-translate-text",
       title: "🌐 Dịch sang Tiếng Việt (\"%s\")",
+      contexts: ["selection"],
+    });
+    chrome.contextMenus.create({
+      id: "dland-ai-analyze",
+      title: "🤖 Nhờ AI Phân tích từ vựng & ngữ pháp (\"%s\")",
       contexts: ["selection"],
     });
   });
@@ -117,6 +122,33 @@ function openFallbackTranslateWindow(selectedText) {
   });
 }
 
+function openFallbackAiWindow(selectedText) {
+  if (!selectedText) return;
+  const popupUrl = chrome.runtime.getURL(`popup.html?ai=${encodeURIComponent(selectedText)}`);
+
+  chrome.windows.getCurrent((currentWindow) => {
+    const width = 480;
+    const height = 650;
+    let left = 100;
+    let top = 100;
+
+    if (currentWindow && currentWindow.width && currentWindow.height) {
+      left = Math.round((currentWindow.left || 0) + (currentWindow.width - width) / 2);
+      top = Math.round((currentWindow.top || 0) + (currentWindow.height - height) / 2);
+    }
+
+    chrome.windows.create({
+      url: popupUrl,
+      type: "popup",
+      width: width,
+      height: height,
+      left: Math.max(0, left),
+      top: Math.max(0, top),
+      focused: true,
+    });
+  });
+}
+
 // Handle Context Menu clicks with automatic fallback for PDFs
 chrome.contextMenus.onClicked.addListener((info, tab) => {
   if (!info.selectionText || !tab?.id) return;
@@ -149,6 +181,19 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
         }
       }
     );
+  } else if (info.menuItemId === "dland-ai-analyze") {
+    chrome.tabs.sendMessage(
+      tab.id,
+      {
+        action: "OPEN_AI_ANALYSIS_DIALOG",
+        selectedText: selectedText,
+      },
+      (response) => {
+        if (chrome.runtime.lastError || !response || !response.success) {
+          openFallbackAiWindow(selectedText);
+        }
+      }
+    );
   }
 });
 
@@ -174,6 +219,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
     case "TRANSLATE_TEXT":
       handleTranslateText(request.text, request.source, request.target)
+        .then((data) => sendResponse({ success: true, data }))
+        .catch((err) => sendResponse({ success: false, error: err.message }));
+      return true;
+
+    case "AI_ANALYZE_TEXT":
+      handleAiAnalyzeText(request.text)
         .then((data) => sendResponse({ success: true, data }))
         .catch((err) => sendResponse({ success: false, error: err.message }));
       return true;
@@ -548,6 +599,52 @@ async function handleTranslateText(text, source = "auto", target = "vi") {
   }
 
   throw new Error("Không thể dịch đoạn văn bản này. Vui lòng thử lại sau.");
+}
+
+// AI Japanese Grammar & Vocabulary Analysis Handler
+async function handleAiAnalyzeText(text) {
+  if (!text || !text.trim()) return null;
+  const cleanText = text.trim();
+  const apiUrl = await getStoredApiUrl();
+
+  const systemInstruction = `Bạn là gia sư AI cao cấp chuyên phân tích Ngữ Pháp & Từ Vựng Tiếng Nhật của ứng dụng Dland Language.
+Hãy phân tích chi tiết văn bản/từ vựng/câu tiếng Nhật sau: "${cleanText}".
+
+Vui lòng trình bày rõ ràng bằng tiếng Việt, Markdown đẹp mắt, cấu trúc gồm 4 phần:
+1. 🎯 **Dịch nghĩa & Ý nghĩa ngữ cảnh**: Bản dịch tự nhiên và ngữ cảnh sử dụng.
+2. 🈁 **Phân tích từ vựng (Word Breakdown)**: Liệt kê từng từ vựng/chữ Hán trong câu (gồm Kanji, Hiragana, Âm Hán Việt Onyomi, nghĩa).
+3. 📚 **Phân tích ngữ pháp & Trợ từ**: Phân tích cấu trúc câu, trợ từ (は, が, を, に, で, と...), thể động từ (て, た, thụ động, sai khiến, kính ngữ...).
+4. 💡 **Lưu ý sắc thái & Ví dụ minh họa**: 1-2 câu ví dụ tương tự kèm dịch nghĩa.`;
+
+  try {
+    const res = await fetch(`${apiUrl}/api/chat`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        message: `Phân tích từ vựng và ngữ pháp đoạn văn bản này giúp tôi: "${cleanText}"`,
+        lang: "ja",
+        systemInstruction: systemInstruction,
+      }),
+    });
+
+    if (res.ok) {
+      const resultText = await res.text();
+      return {
+        originalText: cleanText,
+        analysisText: resultText,
+        provider: "gemini-ai",
+      };
+    }
+  } catch (err) {
+    console.warn("[Dland Extension] AI analyze error:", err);
+  }
+
+  // Fallback if server/API is unreachable
+  return {
+    originalText: cleanText,
+    analysisText: `🎯 **Dịch nghĩa**: ${cleanText}\n\n🈁 **Phân tích từ vựng**: "${cleanText}"\n\n📚 **Phân tích ngữ pháp**: Vui lòng kiểm tra kết nối API Server hoặc mở ứng dụng Web App Dland Language để xem phân tích AI đầy đủ nhất!`,
+    provider: "fallback",
+  };
 }
 
 // Save Vocabulary to Notebook and optionally sync to Database

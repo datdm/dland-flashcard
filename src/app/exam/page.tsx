@@ -314,13 +314,28 @@ export default function ExamHubPage() {
                 <div>
                   {/* Draft in-progress badge */}
                   {hasDraft && (
-                    <div className="mb-3 px-3.5 py-2.5 bg-amber-50 border border-amber-200/90 rounded-2xl flex items-center justify-between text-xs">
-                      <span className="text-amber-900 font-extrabold flex items-center gap-1.5">
-                        <span className="text-sm">⏳</span> Đang làm dở dang:
+                    <div className="mb-3 px-3.5 py-2.5 bg-amber-50 border border-amber-200/90 rounded-2xl flex items-center justify-between text-xs gap-2">
+                      <span className="text-amber-900 font-extrabold flex items-center gap-1.5 shrink-0">
+                        <span className="text-sm">⏳</span> Đang làm dở:
                       </span>
-                      <span className="text-amber-800 font-bold">
-                        {answeredCount}/{meta.totalQuestions} câu • Còn {minsLeft}:{secsLeft < 10 ? `0${secsLeft}` : secsLeft}
-                      </span>
+                      <div className="flex items-center gap-2 overflow-hidden">
+                        <span className="text-amber-800 font-bold truncate">
+                          {answeredCount}/{meta.totalQuestions} câu • Còn {minsLeft}:{secsLeft < 10 ? `0${secsLeft}` : secsLeft}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (confirm(`Bạn có chắc muốn xóa bản làm dở của bài thi "${meta.title}" không?`)) {
+                              clearExamProgress(exam.id);
+                            }
+                          }}
+                          className="px-2 py-0.5 bg-rose-100 hover:bg-rose-200 text-rose-700 rounded-lg text-[11px] font-bold transition-all cursor-pointer shrink-0"
+                          title="Xóa bản lưu tạm này"
+                        >
+                          🗑️ Xóa nháp
+                        </button>
+                      </div>
                     </div>
                   )}
 

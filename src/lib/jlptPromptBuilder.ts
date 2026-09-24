@@ -243,7 +243,8 @@ export function buildJLPTReadingPrompt({
   const isComparison = (level === "N1" && mNum === 11) || (level === "N2" && mNum === 12);
   const isInfoSearch = (level === "N1" && mNum === 13) || (level === "N2" && mNum === 14) || (level === "N3" && mNum === 12) || ((level === "N4" || level === "N5") && mNum === 10);
   const isMedium = (level === "N1" && mNum === 9) || (level === "N2" && mNum === 11) || (level === "N3" && mNum === 10) || ((level === "N4" || level === "N5") && mNum === 9);
-  const isLong = (level === "N1" && (mNum === 10 || mNum === 12)) || (level === "N2" && mNum === 13) || (level === "N3" && mNum === 11);
+  const isLong4 = (level === "N1" && mNum === 12) || (level === "N3" && mNum === 11);
+  const isLong = (level === "N1" && mNum === 10) || (level === "N2" && mNum === 13) || isLong4;
 
   if (isComparison) {
     return `Bạn là chuyên gia ôn luyện đọc hiểu JLPT ${level}.${DIVERSITY_RULE(level, randomSeed)}
@@ -432,21 +433,19 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
   }
 
   if (isLong) {
+    const qCount = isLong4 ? 4 : 3;
     return `Bạn là chuyên gia ôn luyện đọc hiểu JLPT ${level}.${DIVERSITY_RULE(level, randomSeed)}
 Hãy tạo 1 bài đọc hiểu Đoạn văn dài (長文) chuẩn JLPT ${level} thuộc chủ đề "${topic}".
 Bối cảnh cụ thể: "${chosenContext}".
-Đoạn văn tiếng Nhật khoảng 800-950 chữ, lập luận sâu sắc.
-Gồm ĐÚNG 3 CÂU HỎI TRẮC NGHIỆM ĐỌC HIỂU (mỗi câu 4 lựa chọn tiếng Nhật, 1 đúng 3 sai):
-- Câu 1: Phân tích luận điểm ở nửa đầu bài.
-- Câu 2: Phân tích câu nói mấu chốt hoặc ví dụ tác giả đưa ra.
-- Câu 3: Tác giả muốn khẳng định điều gì nhất qua toàn bài văn.
+Đoạn văn tiếng Nhật khoảng 800-1000 chữ, lập luận sâu sắc.
+Gồm ĐÚNG ${qCount} CÂU HỎI TRẮC NGHIỆM ĐỌC HIỂU (mỗi câu 4 lựa chọn tiếng Nhật, 1 đúng 3 sai).
 (Mã ngẫu nhiên: ${randomSeed}).
 Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc trong markdown, phải là JSON hợp lệ):
 {
   "reading": {
     "mondaiNumber": ${mNum},
     "mondaiName": "問題 ${mNum}: 長文",
-    "mondaiSubtitle": "Đoạn văn dài (長文 - 3 câu hỏi)",
+    "mondaiSubtitle": "Đoạn văn dài (長文 - ${qCount} câu hỏi)",
     "title": "Tiêu đề bài đọc",
     "passage": "Đoạn văn tiếng Nhật chuẩn dài",
     "passage_ruby": "Đoạn văn dài có gắn thẻ <ruby> và <rt> Furigana",
@@ -487,7 +486,19 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
           { "id": "opt_4", "text": "lựa chọn 4 (sai)", "isCorrect": false }
         ],
         "explanation": "Giải thích chi tiết câu 3 bằng tiếng Việt"
-      }
+      }${isLong4 ? `,
+      {
+        "id": "q_4",
+        "question": "Câu hỏi 4 bằng TIẾNG NHẬT",
+        "question_vietnamese": "Dịch câu hỏi 4",
+        "options": [
+          { "id": "opt_1", "text": "lựa chọn 1 (đúng)", "isCorrect": true },
+          { "id": "opt_2", "text": "lựa chọn 2 (sai)", "isCorrect": false },
+          { "id": "opt_3", "text": "lựa chọn 3 (sai)", "isCorrect": false },
+          { "id": "opt_4", "text": "lựa chọn 4 (sai)", "isCorrect": false }
+        ],
+        "explanation": "Giải thích chi tiết câu 4 bằng tiếng Việt"
+      }` : ""}
     ],
     "vocabulary": [
       { "kanji": "từ vựng", "hiragana": "cách đọc", "meaning": "nghĩa tiếng Việt" }
@@ -564,8 +575,8 @@ Hãy tạo 1 bộ câu hỏi Luyện tập Từ vựng & Kanji CHUẨN XÁC theo
 Bối cảnh bài luyện: "${chosenContext}".
 Mã ngẫu nhiên cho đề thi này: ${randomSeed}.
 
-Yêu cầu cấu trúc bài tập:
-- Tạo đúng 4 câu hỏi trắc nghiệm tiếng Nhật thuộc Mondai ${mNum}.
+Yêu cầu cấu trúc bài tập BẮT BUỘC:
+- Tạo ĐÚNG 5 CÂU HỎI TRẮC NGHIỆM tiếng Nhật thuộc Mondai ${mNum} (q_1, q_2, q_3, q_4, q_5).
 - Mỗi câu hỏi gồm câu dẫn tiếng Nhật có từ/cụm từ gạch chân (đánh dấu dạng 【từ】), 4 lựa chọn tiếng Nhật, 1 đáp án đúng, dịch tiếng Việt và giải thích đáp án chi tiết.
 
 Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc trong markdown, phải là JSON hợp lệ):
@@ -577,8 +588,8 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
     "questions": [
       {
         "id": "q_1",
-        "question": "Câu tiếng Nhật chứa từ gạch chân 【漢字】",
-        "question_vietnamese": "Dịch toàn câu sang tiếng Việt",
+        "question": "Câu tiếng Nhật thứ 1 chứa từ gạch chân 【漢字】",
+        "question_vietnamese": "Dịch câu 1 sang tiếng Việt",
         "options": [
           { "id": "opt_1", "text": "lựa chọn 1 (đúng)", "isCorrect": true },
           { "id": "opt_2", "text": "lựa chọn 2", "isCorrect": false },
@@ -589,8 +600,8 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
       },
       {
         "id": "q_2",
-        "question": "Câu tiếng Nhật chứa từ gạch chân 【単語】",
-        "question_vietnamese": "Dịch toàn câu sang tiếng Việt",
+        "question": "Câu tiếng Nhật thứ 2 chứa từ gạch chân 【単語】",
+        "question_vietnamese": "Dịch câu 2 sang tiếng Việt",
         "options": [
           { "id": "opt_1", "text": "lựa chọn 1", "isCorrect": false },
           { "id": "opt_2", "text": "lựa chọn 2 (đúng)", "isCorrect": true },
@@ -601,8 +612,8 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
       },
       {
         "id": "q_3",
-        "question": "Câu tiếng Nhật chứa từ gạch chân 【意味】",
-        "question_vietnamese": "Dịch toàn câu sang tiếng Việt",
+        "question": "Câu tiếng Nhật thứ 3 chứa từ gạch chân 【意味】",
+        "question_vietnamese": "Dịch câu 3 sang tiếng Việt",
         "options": [
           { "id": "opt_1", "text": "lựa chọn 1", "isCorrect": false },
           { "id": "opt_2", "text": "lựa chọn 2", "isCorrect": false },
@@ -613,13 +624,25 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
       },
       {
         "id": "q_4",
-        "question": "Câu tiếng Nhật chứa từ gạch chân 【用法】",
-        "question_vietnamese": "Dịch toàn câu sang tiếng Việt",
+        "question": "Câu tiếng Nhật thứ 4 chứa từ gạch chân 【用法】",
+        "question_vietnamese": "Dịch câu 4 sang tiếng Việt",
         "options": [
           { "id": "opt_1", "text": "lựa chọn 1", "isCorrect": false },
           { "id": "opt_2", "text": "lựa chọn 2", "isCorrect": false },
           { "id": "opt_3", "text": "lựa chọn 3", "isCorrect": false },
           { "id": "opt_4", "text": "lựa chọn 4 (đúng)", "isCorrect": true }
+        ],
+        "explanation": "Giải thích chi tiết bằng tiếng Việt"
+      },
+      {
+        "id": "q_5",
+        "question": "Câu tiếng Nhật thứ 5 chứa từ gạch chân 【表現】",
+        "question_vietnamese": "Dịch câu 5 sang tiếng Việt",
+        "options": [
+          { "id": "opt_1", "text": "lựa chọn 1 (đúng)", "isCorrect": true },
+          { "id": "opt_2", "text": "lựa chọn 2", "isCorrect": false },
+          { "id": "opt_3", "text": "lựa chọn 3", "isCorrect": false },
+          { "id": "opt_4", "text": "lựa chọn 4", "isCorrect": false }
         ],
         "explanation": "Giải thích chi tiết bằng tiếng Việt"
       }
@@ -640,6 +663,7 @@ export function buildJLPTGrammarPrompt({
 }: JLPTGrammarPromptParams): string {
   const mNum = Number(mondaiNumber) || 1;
 
+  // Mondai 2: 文の組み立て (Dựng câu dấu sao ★) -> 5 questions
   if (mNum === 2) {
     return `Bạn là chuyên gia biên soạn đề thi JLPT phần 言語知識（文法） cấp độ ${level}.${DIVERSITY_RULE(level, randomSeed)}
 Hãy tạo 1 bộ bài tập DỰNG CÂU DẤU SAO (文の組み立て) CHUẨN XÁC theo Mondai 2 (Dựng câu dấu sao ★) JLPT ${level} thuộc chủ đề "${topic}".
@@ -647,10 +671,11 @@ Bối cảnh bài luyện: "${chosenContext}".
 Mã ngẫu nhiên cho đề thi này: ${randomSeed}.
 
 Đặc trưng cấu trúc Dựng câu dấu sao ★:
+- Tạo ĐÚNG 5 CÂU HỎI TRẮC NGHIỆM (q_1, q_2, q_3, q_4, q_5).
 - Mỗi câu gồm một câu tiếng Nhật có 4 vị trí xáo trộn: __ __ ★ __
 - Cung cấp 4 cụm từ xáo trộn (options).
 - Xác định cụm từ đúng phải nằm ở vị trí dấu sao ★.
-- Cung cấp câu hoàn chỉnh đầy đủ sau khi xếp đúng thứ tự.
+- Cung cấp câu hoàn chỉnh đầy đủ sau khi xếp đúng thứ tự (fullSentence).
 
 Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc trong markdown, phải là JSON hợp lệ):
 {
@@ -710,6 +735,19 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
           { "id": "opt_4", "text": "cụm từ 4 (nằm ở vị trí ★)", "isCorrect": true }
         ],
         "explanation": "Giải thích chi tiết cấu trúc ngữ pháp bằng tiếng Việt"
+      },
+      {
+        "id": "q_5",
+        "question": "Phần đầu câu __ ★ __ __ phần cuối câu.",
+        "question_vietnamese": "Dịch hoàn chỉnh câu sang tiếng Việt",
+        "fullSentence": "Câu tiếng Nhật hoàn chỉnh sau khi ghép đúng thứ tự",
+        "options": [
+          { "id": "opt_1", "text": "cụm từ 1", "isCorrect": false },
+          { "id": "opt_2", "text": "cụm từ 2 (nằm ở vị trí ★)", "isCorrect": true },
+          { "id": "opt_3", "text": "cụm từ 3", "isCorrect": false },
+          { "id": "opt_4", "text": "cụm từ 4", "isCorrect": false }
+        ],
+        "explanation": "Giải thích chi tiết cấu trúc ngữ pháp bằng tiếng Việt"
       }
     ],
     "vocabulary": [
@@ -719,13 +757,91 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
 }`;
   }
 
+  // Mondai 3: 文章の文法 (Ngữ pháp đoạn văn) -> 4 questions
+  if (mNum === 3) {
+    return `Bạn là chuyên gia biên soạn đề thi JLPT phần 言語知識（文法） cấp độ ${level}.${DIVERSITY_RULE(level, randomSeed)}
+Hãy tạo 1 bài tập NGỮ PHÁP ĐOẠN VĂN (文章の文法) CHUẨN XÁC theo Mondai 3 JLPT ${level} thuộc chủ đề "${topic}".
+Bối cảnh bài luyện: "${chosenContext}".
+Mã ngẫu nhiên cho đề thi này: ${randomSeed}.
+
+Đặc trưng cấu trúc Ngữ pháp đoạn văn:
+- Một đoạn văn tiếng Nhật hoàn chỉnh khoảng 300-400 chữ chứa 4 vị trí trống đánh số [1], [2], [3], [4].
+- Tạo ĐÚNG 4 CÂU HỎI TRẮC NGHIỆM (q_1 tương ứng vị trí [1], q_2 tương ứng vị trí [2], q_3 tương ứng vị trí [3], q_4 tương ứng vị trí [4]).
+- Mỗi câu hỏi có 4 lựa chọn liên từ, hình thức ngữ pháp hoặc câu kết đoạn phù hợp bối cảnh.
+
+Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc trong markdown, phải là JSON hợp lệ):
+{
+  "jlpt_grammar": {
+    "mondaiNumber": ${mNum},
+    "mondaiName": "問題 3: 文章の文法 (Ngữ pháp đoạn văn)",
+    "mondaiSubtitle": "Chọn liên từ & mẫu ngữ pháp phù hợp cho đoạn văn",
+    "passage": "Toàn bộ đoạn văn tiếng Nhật chứa 4 ô trống [1], [2], [3], [4]",
+    "passage_translation": "Bản dịch tiếng Việt toàn bộ đoạn văn",
+    "questions": [
+      {
+        "id": "q_1",
+        "question": "Điền vào vị trí [1] trong đoạn văn",
+        "question_vietnamese": "Chọn từ/mẫu ngữ pháp thích hợp điền vào vị trí [1]",
+        "options": [
+          { "id": "opt_1", "text": "lựa chọn 1 (đúng)", "isCorrect": true },
+          { "id": "opt_2", "text": "lựa chọn 2", "isCorrect": false },
+          { "id": "opt_3", "text": "lựa chọn 3", "isCorrect": false },
+          { "id": "opt_4", "text": "lựa chọn 4", "isCorrect": false }
+        ],
+        "explanation": "Giải thích chi tiết lý do chọn ngữ pháp/liên từ này bằng tiếng Việt"
+      },
+      {
+        "id": "q_2",
+        "question": "Điền vào vị trí [2] trong đoạn văn",
+        "question_vietnamese": "Chọn từ/mẫu ngữ pháp thích hợp điền vào vị trí [2]",
+        "options": [
+          { "id": "opt_1", "text": "lựa chọn 1", "isCorrect": false },
+          { "id": "opt_2", "text": "lựa chọn 2 (đúng)", "isCorrect": true },
+          { "id": "opt_3", "text": "lựa chọn 3", "isCorrect": false },
+          { "id": "opt_4", "text": "lựa chọn 4", "isCorrect": false }
+        ],
+        "explanation": "Giải thích chi tiết bằng tiếng Việt"
+      },
+      {
+        "id": "q_3",
+        "question": "Điền vào vị trí [3] trong đoạn văn",
+        "question_vietnamese": "Chọn từ/mẫu ngữ pháp thích hợp điền vào vị trí [3]",
+        "options": [
+          { "id": "opt_1", "text": "lựa chọn 1", "isCorrect": false },
+          { "id": "opt_2", "text": "lựa chọn 2", "isCorrect": false },
+          { "id": "opt_3", "text": "lựa chọn 3 (đúng)", "isCorrect": true },
+          { "id": "opt_4", "text": "lựa chọn 4", "isCorrect": false }
+        ],
+        "explanation": "Giải thích chi tiết bằng tiếng Việt"
+      },
+      {
+        "id": "q_4",
+        "question": "Điền vào vị trí [4] trong đoạn văn",
+        "question_vietnamese": "Chọn từ/mẫu ngữ pháp thích hợp điền vào vị trí [4]",
+        "options": [
+          { "id": "opt_1", "text": "lựa chọn 1", "isCorrect": false },
+          { "id": "opt_2", "text": "lựa chọn 2", "isCorrect": false },
+          { "id": "opt_3", "text": "lựa chọn 3", "isCorrect": false },
+          { "id": "opt_4", "text": "lựa chọn 4 (đúng)", "isCorrect": true }
+        ],
+        "explanation": "Giải thích chi tiết bằng tiếng Việt"
+      }
+    ],
+    "vocabulary": [
+      { "kanji": "chữ Hán", "hiragana": "cách đọc", "meaning": "nghĩa tiếng Việt" }
+    ]
+  }
+}`;
+  }
+
+  // Mondai 1 (Default): 文法形式の判断 -> 5 questions
   return `Bạn là chuyên gia biên soạn đề thi JLPT phần 言語知識（文法） cấp độ ${level}.${DIVERSITY_RULE(level, randomSeed)}
 Hãy tạo 1 bộ bài tập NGỮ PHÁP JLPT CHUẨN XÁC theo Mondai ${mNum} cấp độ ${level} thuộc chủ đề "${topic}".
 Bối cảnh bài luyện: "${chosenContext}".
 Mã ngẫu nhiên cho đề thi này: ${randomSeed}.
 
-Yêu cầu cấu trúc bài tập:
-- Tạo đúng 4 câu hỏi trắc nghiệm ngữ pháp tiếng Nhật.
+Yêu cầu cấu trúc bài tập BẮT BUỘC:
+- Tạo ĐÚNG 5 CÂU HỎI TRẮC NGHIỆM ngữ pháp tiếng Nhật (q_1, q_2, q_3, q_4, q_5).
 - Mỗi câu gồm câu dẫn chứa vị trí trống ( ... ), 4 lựa chọn ngữ pháp tiếng Nhật, 1 đáp án đúng và giải thích ngữ pháp chi tiết.
 
 Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc trong markdown, phải là JSON hợp lệ):
@@ -737,8 +853,8 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
     "questions": [
       {
         "id": "q_1",
-        "question": "Câu tiếng Nhật chứa vị trí trống ( ... ) cần điền ngữ pháp",
-        "question_vietnamese": "Dịch nghĩa câu sang tiếng Việt",
+        "question": "Câu tiếng Nhật thứ 1 chứa vị trí trống ( ... ) cần điền ngữ pháp",
+        "question_vietnamese": "Dịch nghĩa câu 1 sang tiếng Việt",
         "options": [
           { "id": "opt_1", "text": "mẫu ngữ pháp 1 (đúng)", "isCorrect": true },
           { "id": "opt_2", "text": "mẫu ngữ pháp 2", "isCorrect": false },
@@ -749,8 +865,8 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
       },
       {
         "id": "q_2",
-        "question": "Câu tiếng Nhật chứa vị trí trống ( ... )",
-        "question_vietnamese": "Dịch nghĩa câu sang tiếng Việt",
+        "question": "Câu tiếng Nhật thứ 2 chứa vị trí trống ( ... )",
+        "question_vietnamese": "Dịch nghĩa câu 2 sang tiếng Việt",
         "options": [
           { "id": "opt_1", "text": "mẫu ngữ pháp 1", "isCorrect": false },
           { "id": "opt_2", "text": "mẫu ngữ pháp 2 (đúng)", "isCorrect": true },
@@ -761,8 +877,8 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
       },
       {
         "id": "q_3",
-        "question": "Câu tiếng Nhật chứa vị trí trống ( ... )",
-        "question_vietnamese": "Dịch nghĩa câu sang tiếng Việt",
+        "question": "Câu tiếng Nhật thứ 3 chứa vị trí trống ( ... )",
+        "question_vietnamese": "Dịch nghĩa câu 3 sang tiếng Việt",
         "options": [
           { "id": "opt_1", "text": "mẫu ngữ pháp 1", "isCorrect": false },
           { "id": "opt_2", "text": "mẫu ngữ pháp 2", "isCorrect": false },
@@ -773,13 +889,25 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
       },
       {
         "id": "q_4",
-        "question": "Câu tiếng Nhật chứa vị trí trống ( ... )",
-        "question_vietnamese": "Dịch nghĩa câu sang tiếng Việt",
+        "question": "Câu tiếng Nhật thứ 4 chứa vị trí trống ( ... )",
+        "question_vietnamese": "Dịch nghĩa câu 4 sang tiếng Việt",
         "options": [
           { "id": "opt_1", "text": "mẫu ngữ pháp 1", "isCorrect": false },
           { "id": "opt_2", "text": "mẫu ngữ pháp 2", "isCorrect": false },
           { "id": "opt_3", "text": "mẫu ngữ pháp 3", "isCorrect": false },
           { "id": "opt_4", "text": "mẫu ngữ pháp 4 (đúng)", "isCorrect": true }
+        ],
+        "explanation": "Giải thích chi tiết bằng tiếng Việt"
+      },
+      {
+        "id": "q_5",
+        "question": "Câu tiếng Nhật thứ 5 chứa vị trí trống ( ... )",
+        "question_vietnamese": "Dịch nghĩa câu 5 sang tiếng Việt",
+        "options": [
+          { "id": "opt_1", "text": "mẫu ngữ pháp 1 (đúng)", "isCorrect": true },
+          { "id": "opt_2", "text": "mẫu ngữ pháp 2", "isCorrect": false },
+          { "id": "opt_3", "text": "mẫu ngữ pháp 3", "isCorrect": false },
+          { "id": "opt_4", "text": "mẫu ngữ pháp 4", "isCorrect": false }
         ],
         "explanation": "Giải thích chi tiết bằng tiếng Việt"
       }

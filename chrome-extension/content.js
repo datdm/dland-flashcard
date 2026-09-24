@@ -152,6 +152,12 @@
       return true;
     }
 
+    if (request.action === "OPEN_AI_ANALYSIS_DIALOG" && request.selectedText) {
+      openAiAnalysisDialog(request.selectedText);
+      sendResponse({ success: true });
+      return true;
+    }
+
     if (request.action === "SET_TOOLTIP_ENABLED") {
       isTooltipEnabled = Boolean(request.enabled);
       if (!isTooltipEnabled) {
@@ -307,6 +313,15 @@
       <span>Dịch Tiếng Việt</span>
     `;
 
+    // Button 3: AI Analysis
+    const btnAi = document.createElement("button");
+    btnAi.type = "button";
+    btnAi.className = "dland-tooltip-btn dland-tooltip-btn-ai";
+    btnAi.innerHTML = `
+      <span class="dland-tooltip-icon">🤖</span>
+      <span>AI Phân Tích</span>
+    `;
+
     let opened = false;
     const triggerMazii = (e) => {
       if (e) {
@@ -328,6 +343,17 @@
       opened = true;
       removeTooltip();
       openTranslateDialog(text);
+    };
+
+    const triggerAi = (e) => {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      if (opened) return;
+      opened = true;
+      removeTooltip();
+      openAiAnalysisDialog(text);
     };
 
     btnMazii.addEventListener("pointerdown", (e) => {
@@ -354,8 +380,21 @@
     });
     btnTranslate.addEventListener("click", triggerTranslate);
 
+    btnAi.addEventListener("pointerdown", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      triggerAi(e);
+    });
+    btnAi.addEventListener("mousedown", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      triggerAi(e);
+    });
+    btnAi.addEventListener("click", triggerAi);
+
     container.appendChild(btnMazii);
     container.appendChild(btnTranslate);
+    container.appendChild(btnAi);
     (document.body || document.documentElement).appendChild(container);
 
     let top = rect.top - 42;
@@ -599,6 +638,150 @@
     if (textToTranslate) {
       runTranslation();
     }
+  }
+
+  // =========================================================================
+  // 3.5 AI ANALYSIS DIALOG
+  // =========================================================================
+  function openAiAnalysisDialog(textToAnalyze) {
+    closeModal();
+
+    const overlay = document.createElement("div");
+    overlay.className = "dland-modal-overlay";
+
+    const dialog = document.createElement("div");
+    dialog.className = "dland-modal-dialog dland-ai-dialog";
+
+    dialog.innerHTML = `
+      <div class="dland-modal-header" style="background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); color: #ffffff;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <h3 class="dland-modal-title" style="color: #ffffff;">
+            <span>🤖</span> AI Phân Tích Từ Vựng & Ngữ Pháp
+          </h3>
+          <span class="dland-sync-badge synced" id="dland-ai-provider" style="background: rgba(255,255,255,0.2); color: #ffffff; border-color: rgba(255,255,255,0.3);">✨ Gemini AI</span>
+        </div>
+        <button type="button" class="dland-modal-close-btn" style="color: #ffffff;" title="Đóng">✕</button>
+      </div>
+
+      <div class="dland-modal-body">
+        <!-- Source Preview -->
+        <div class="dland-preview-box" style="background: #faf5ff; border-color: #e9d5ff;">
+          <div>
+            <div class="dland-preview-word" style="color: #581c87; font-size: 18px;">${escapeHtml(textToAnalyze)}</div>
+            <div class="dland-preview-reading" style="color: #7e22ce;">Phân tích từ vựng, ngữ pháp & bối cảnh</div>
+          </div>
+          <button type="button" class="dland-speak-btn" id="dland-ai-speak-btn" title="Phát âm tiếng Nhật">🔊</button>
+        </div>
+
+        <!-- AI Output Box -->
+        <div class="dland-form-group">
+          <label class="dland-form-label">Phân tích chi tiết từ AI</label>
+          <div class="dland-translate-result-box dland-ai-result-box" id="dland-ai-result-box" style="min-height: 140px; background: #fafafa;">
+            <span class="dland-translate-loading">⏳ AI đang phân tích chi tiết từ vựng và ngữ pháp...</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dland-modal-footer" style="justify-content: space-between;">
+        <button type="button" class="dland-btn-cancel" id="dland-ai-add-nb-btn">📓 Thêm vào Sổ tay</button>
+        <div style="display: flex; gap: 8px;">
+          <button type="button" class="dland-icon-btn" id="dland-ai-copy-btn">📋 Sao chép</button>
+          <button type="button" class="dland-btn-cancel" id="dland-ai-close-btn">Đóng</button>
+          <button type="button" class="dland-btn-save" id="dland-ai-retry-btn" style="background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);">⚡ Phân tích lại</button>
+        </div>
+      </div>
+    `;
+
+    overlay.appendChild(dialog);
+    document.body.appendChild(overlay);
+    activeModal = overlay;
+
+    const closeBtn = dialog.querySelector(".dland-modal-close-btn");
+    const cancelBtn = dialog.querySelector("#dland-ai-close-btn");
+    const retryBtn = dialog.querySelector("#dland-ai-retry-btn");
+    const addNbBtn = dialog.querySelector("#dland-ai-add-nb-btn");
+    const copyBtn = dialog.querySelector("#dland-ai-copy-btn");
+    const speakBtn = dialog.querySelector("#dland-ai-speak-btn");
+    const resultBox = dialog.querySelector("#dland-ai-result-box");
+    const providerBadge = dialog.querySelector("#dland-ai-provider");
+
+    let rawAnalysisText = "";
+
+    closeBtn.addEventListener("click", closeModal);
+    cancelBtn.addEventListener("click", closeModal);
+    overlay.addEventListener("click", (e) => {
+      if (e.target === overlay) closeModal();
+    });
+
+    const formatMarkdownToHtml = (md) => {
+      if (!md) return "";
+      let html = escapeHtml(md);
+      html = html.replace(/^### (.*$)/gim, '<h4 style="font-size: 13px; font-weight: 800; color: #4c1d95; margin: 12px 0 6px 0;">$1</h4>');
+      html = html.replace(/^## (.*$)/gim, '<h3 style="font-size: 14px; font-weight: 800; color: #4338ca; margin: 14px 0 8px 0;">$1</h3>');
+      html = html.replace(/\*\*(.*?)\*\*/g, '<strong style="color: #1e1b4b; font-weight: 800;">$1</strong>');
+      html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+      html = html.replace(/^\s*[\-\*]\s+(.*$)/gim, '<li style="margin-left: 16px; margin-bottom: 4px; color: #334155;">$1</li>');
+      html = html.replace(/^\s*(\d+)\.\s+(.*$)/gim, '<div style="font-weight: 700; color: #4338ca; margin-top: 10px; margin-bottom: 4px;">$1. $2</div>');
+      html = html.replace(/\n/g, "<br>");
+      return html;
+    };
+
+    const runAnalysis = () => {
+      if (!textToAnalyze) return;
+      resultBox.innerHTML = `<span class="dland-translate-loading">⏳ AI đang phân tích chi tiết từ vựng và ngữ pháp...</span>`;
+      providerBadge.textContent = "⏳ Đang kết nối...";
+
+      chrome.runtime.sendMessage(
+        {
+          action: "AI_ANALYZE_TEXT",
+          text: textToAnalyze,
+        },
+        (res) => {
+          if (chrome.runtime.lastError || !res) {
+            resultBox.innerHTML = `<span style="color: #ef4444;">❌ Lỗi kết nối. Vui lòng bấm F5!</span>`;
+            providerBadge.textContent = "❌ Lỗi";
+            return;
+          }
+          if (res && res.success && res.data) {
+            rawAnalysisText = res.data.analysisText || "";
+            resultBox.innerHTML = formatMarkdownToHtml(rawAnalysisText);
+            providerBadge.textContent = "✨ Gemini AI";
+          } else {
+            resultBox.innerHTML = `<span style="color: #ef4444;">❌ ${escapeHtml(res?.error || "Không thể phân tích")}</span>`;
+            providerBadge.textContent = "❌ Lỗi";
+          }
+        }
+      );
+    };
+
+    retryBtn.addEventListener("click", runAnalysis);
+
+    speakBtn.addEventListener("click", () => {
+      if (textToAnalyze && "speechSynthesis" in window) {
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(textToAnalyze);
+        u.lang = "ja-JP";
+        u.rate = 0.85;
+        window.speechSynthesis.speak(u);
+      }
+    });
+
+    copyBtn.addEventListener("click", () => {
+      if (rawAnalysisText) {
+        navigator.clipboard.writeText(rawAnalysisText).then(() => {
+          const orig = copyBtn.textContent;
+          copyBtn.textContent = "✅ Đã chép!";
+          setTimeout(() => (copyBtn.textContent = orig), 2000);
+        });
+      }
+    });
+
+    addNbBtn.addEventListener("click", () => {
+      closeModal();
+      openLookupDialog(textToAnalyze);
+    });
+
+    runAnalysis();
   }
 
   function renderKanjiCards(container, kanjiDetails, onWordClick) {

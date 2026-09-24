@@ -5,6 +5,7 @@ import { getKanjiRepository } from "@/lib/repositories";
 import { JLPTLevel, KanjiItem } from "@/lib/repositories/types";
 import KanjiStrokeViewer from "@/components/KanjiStrokeViewer";
 import { useLanguageSetting } from "@/hooks/useLanguageSetting";
+import KanjiDrawModal from "@/components/KanjiDrawModal";
 
 export default function KanjiHubPage() {
   const { activeLanguage } = useLanguageSetting();
@@ -12,6 +13,7 @@ export default function KanjiHubPage() {
   const [activeLevel, setActiveLevel] = useState<JLPTLevel | "ALL">("N5");
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
+  const [showDrawModal, setShowDrawModal] = useState(false);
 
   useEffect(() => {
     async function loadKanji() {
@@ -78,22 +80,34 @@ export default function KanjiHubPage() {
       </div>
 
       {/* Search Bar */}
-      <div className="mb-6 relative">
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Tìm kiếm Kanji (vd: 日, NHẬT, Mặt trời, にほん...)..."
-          className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 pr-10 text-sm focus:outline-none focus:border-indigo-500 shadow-2xs"
-        />
-        {searchQuery && (
-          <button
-            onClick={() => setSearchQuery("")}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-base"
-          >
-            ✕
-          </button>
-        )}
+      <div className="mb-6 flex items-center gap-2">
+        <div className="relative flex-1">
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Tìm kiếm Kanji (vd: 日, NHẬT, Mặt trời, にほん...)..."
+            className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 pr-10 text-sm focus:outline-none focus:border-indigo-500 shadow-2xs"
+          />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery("")}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-base cursor-pointer"
+            >
+              ✕
+            </button>
+          )}
+        </div>
+
+        <button
+          type="button"
+          onClick={() => setShowDrawModal(true)}
+          className="py-3 px-4 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs transition-all flex items-center gap-1.5 cursor-pointer shadow-md shadow-indigo-200 shrink-0 active:scale-98"
+          title="Vẽ Kanji để tra từ"
+        >
+          <span>🖌️</span>
+          <span>Vẽ Kanji</span>
+        </button>
       </div>
 
       {/* Kanji Cards Grid */}
@@ -110,6 +124,15 @@ export default function KanjiHubPage() {
           ))}
         </div>
       )}
+
+      {/* Kanji Handwriting Modal */}
+      <KanjiDrawModal
+        isOpen={showDrawModal}
+        onClose={() => setShowDrawModal(false)}
+        onSelectKanji={(kanji) => {
+          setSearchQuery(kanji);
+        }}
+      />
     </div>
   );
 }

@@ -6,6 +6,7 @@ import { useProgress } from "@/hooks/useProgress";
 import { useNotebooks } from "@/hooks/useNotebooks";
 import { useLanguageSetting } from "@/hooks/useLanguageSetting";
 import AddToNotebookModal from "@/components/AddToNotebookModal";
+import KanjiDrawModal from "@/components/KanjiDrawModal";
 
 export default function DictionarySearchPage() {
   const [query, setQuery] = useState("");
@@ -15,6 +16,7 @@ export default function DictionarySearchPage() {
   const [selectedWordForNotebook, setSelectedWordForNotebook] = useState<DictionaryItem | null>(null);
   const [targetNotebookId, setTargetNotebookId] = useState<string>("");
   const [duplicateError, setDuplicateError] = useState<string | null>(null);
+  const [showDrawModal, setShowDrawModal] = useState<boolean>(false);
 
   const { activeLanguage } = useLanguageSetting();
   const langCode = activeLanguage.code;
@@ -137,24 +139,38 @@ export default function DictionarySearchPage() {
       </div>
 
       {/* Search Input Box */}
-      <div className="mb-6 relative">
-        <input
-          type="text"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder={searchPlaceholder}
-          autoFocus
-          className="w-full rounded-2xl border border-indigo-200 bg-white px-5 py-4 text-base focus:outline-none focus:border-indigo-600 focus:ring-4 focus:ring-indigo-100 shadow-sm"
-        />
-        {query ? (
+      <div className="mb-6 flex items-center gap-2">
+        <div className="relative flex-1">
+          <input
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder={searchPlaceholder}
+            autoFocus
+            className="w-full rounded-2xl border border-indigo-200 bg-white px-5 py-4 text-base focus:outline-none focus:border-indigo-600 focus:ring-4 focus:ring-indigo-100 shadow-sm"
+          />
+          {query ? (
+            <button
+              onClick={() => setQuery("")}
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-lg leading-none p-1 cursor-pointer"
+            >
+              ✕
+            </button>
+          ) : (
+            <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xl">🔍</span>
+          )}
+        </div>
+
+        {langCode === "ja" && (
           <button
-            onClick={() => setQuery("")}
-            className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-lg leading-none p-1"
+            type="button"
+            onClick={() => setShowDrawModal(true)}
+            className="py-4 px-4 sm:px-5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs sm:text-sm transition-all flex items-center gap-2 cursor-pointer shadow-md shadow-indigo-200 shrink-0 active:scale-98"
+            title="Vẽ nét chữ Hán Kanji để tra từ"
           >
-            ✕
+            <span className="text-base sm:text-lg">🖌️</span>
+            <span>Vẽ Kanji</span>
           </button>
-        ) : (
-          <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xl">🔍</span>
         )}
       </div>
 
@@ -331,6 +347,15 @@ export default function DictionarySearchPage() {
           onSuccess={() => setSelectedWordForNotebook(null)}
         />
       )}
+
+      {/* Kanji Handwriting Modal */}
+      <KanjiDrawModal
+        isOpen={showDrawModal}
+        onClose={() => setShowDrawModal(false)}
+        onSelectKanji={(kanji) => {
+          setQuery((prev) => (prev ? `${prev}${kanji}` : kanji));
+        }}
+      />
     </div>
   );
 }

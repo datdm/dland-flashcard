@@ -456,11 +456,20 @@ export default function FlashCardViewer({ vocabulary, title, dailyLimit }: Flash
               {/* Progress Section */}
               <div className="px-2">
                 <div className="flex justify-between items-end mb-2">
-                  <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">
-                    {dailyLimit ? "Số từ cần học hôm nay" : "Tiến độ"}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">
+                      {dailyLimit ? "Mục tiêu 50 từ" : "Tiến độ"}
+                    </span>
+                    {dailyLimit && deck.length > 0 && (
+                      <span className="text-[10px] font-extrabold text-amber-800 bg-amber-50 border border-amber-200/80 px-2 py-0.5 rounded-md">
+                        Thẻ {index + 1} / {deck.length}
+                      </span>
+                    )}
+                  </div>
                   <span className="text-sm font-bold text-indigo-600">
-                    {dailyLimit ? `Còn lại: ${deck.length} từ` : `${index + 1} / ${deck.length}`}
+                    {dailyLimit
+                      ? `${originalSessionWords.length > 0 ? Math.max(0, originalSessionWords.length - deck.length) : 0} / ${originalSessionWords.length || dailyLimit} từ (còn ${deck.length} từ)`
+                      : `${index + 1} / ${deck.length}`}
                   </span>
                 </div>
                 <div className="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden">
@@ -616,6 +625,14 @@ export default function FlashCardViewer({ vocabulary, title, dailyLimit }: Flash
                   >
                     Quay lại Thẻ
                   </button>
+                </div>
+
+                {/* Quiz Progress Bar */}
+                <div className="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden -mt-2">
+                  <div
+                    className="bg-gradient-to-r from-emerald-500 to-teal-500 h-full rounded-full transition-all duration-300"
+                    style={{ width: `${quizQuestions.length > 0 ? ((quizIndex + 1) / quizQuestions.length) * 100 : 0}%` }}
+                  />
                 </div>
 
                 {/* Question Box */}

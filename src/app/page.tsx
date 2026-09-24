@@ -7,6 +7,7 @@ import { useProgress } from "@/hooks/useProgress";
 import { useStreak } from "@/hooks/useStreak";
 import { initializeSampleData } from "@/lib/storage";
 import { useLanguageSetting } from "@/hooks/useLanguageSetting";
+import Leaderboard from "@/components/Leaderboard";
 
 export default function HomePage() {
   const { notebooks } = useNotebooks();
@@ -117,156 +118,173 @@ export default function HomePage() {
         </Link>
       </div>
 
-      {/* JLPT Level Quick Cards Grid */}
-      <div className="space-y-3">
-        <h2 className="text-base sm:text-lg font-bold text-gray-900 flex items-center gap-2">
-          <span>{activeLanguage.flag}</span> Cấp độ Trình độ {activeLanguage.name}
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-          {LEVEL_CARDS.map((card) => (
-            <Link
-              key={card.level}
-              href={`/curriculum?level=${card.level}`}
-              className="group relative overflow-hidden bg-white rounded-2xl p-3.5 sm:p-4 border border-gray-100 shadow-xs hover:shadow-sm hover:border-indigo-200 transition-all flex flex-col justify-between"
-            >
-              <div>
-                <div
-                  className={`w-10 h-10 rounded-xl bg-gradient-to-br ${card.color} flex items-center justify-center text-white font-extrabold text-lg shadow-xs mb-2.5`}
+      {/* Main Dashboard Grid: Left Content (Levels + Pillars) & Right Sidebar (Leaderboard + Notebooks) */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-5 items-start">
+        {/* Left Column (2 Cols on lg) */}
+        <div className="lg:col-span-2 space-y-4 sm:space-y-5">
+          {/* JLPT Level Quick Cards Grid */}
+          <div className="space-y-3">
+            <h2 className="text-base sm:text-lg font-bold text-gray-900 flex items-center gap-2">
+              <span>{activeLanguage.flag}</span> Cấp độ Trình độ {activeLanguage.name}
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+              {LEVEL_CARDS.map((card) => (
+                <Link
+                  key={card.level}
+                  href={`/curriculum?level=${card.level}`}
+                  className="group relative overflow-hidden bg-white rounded-2xl p-3.5 sm:p-4 border border-gray-100 shadow-xs hover:shadow-sm hover:border-indigo-200 transition-all flex flex-col justify-between"
                 >
-                  {card.level}
-                </div>
-                <h3 className="font-bold text-gray-900 text-sm group-hover:text-indigo-600 transition-colors">
-                  {card.title}
-                </h3>
-                <p className="text-xs text-gray-500 mt-1 leading-relaxed">{card.desc}</p>
-              </div>
-              <div className="mt-3 pt-2.5 border-t border-gray-50 text-xs font-semibold text-indigo-600 flex items-center justify-between">
-                <span>Vào lộ trình</span>
-                <span>→</span>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </div>
-
-      {/* Main Core Modules */}
-      <div className={`grid grid-cols-1 ${activeLanguage.code === "ja" ? "sm:grid-cols-2 lg:grid-cols-4" : "md:grid-cols-3"} gap-3.5 sm:gap-4`}>
-        <Link
-          href="/curriculum"
-          className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-xs hover:shadow-sm transition-all group flex flex-col justify-between"
-        >
-          <div>
-            <div className="text-2xl sm:text-3xl mb-2 sm:mb-2.5">📚</div>
-            <h3 className="font-bold text-gray-900 text-base sm:text-lg group-hover:text-indigo-600 transition-colors">
-              Giáo trình Bài học
-            </h3>
-            <p className="text-xs text-gray-500 mt-1 leading-relaxed">
-              {activeLanguage.code === "de"
-                ? "Lộ trình học Tiếng Đức trình độ A1 bám sát giáo trình Netzwerk neu."
-                : activeLanguage.code === "en"
-                ? "Lộ trình từ vựng Oxford 3000 và các điểm ngữ pháp Tiếng Anh cốt lõi."
-                : "Học theo từng bài từ Minna no Nihongo I & II cho đến Soumatome và Shinkanzen Master."}
-            </p>
-          </div>
-        </Link>
-
-        <Link
-          href="/grammar"
-          className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-xs hover:shadow-sm transition-all group flex flex-col justify-between"
-        >
-          <div>
-            <div className="text-2xl sm:text-3xl mb-2 sm:mb-2.5">📖</div>
-            <h3 className="font-bold text-gray-900 text-base sm:text-lg group-hover:text-purple-600 transition-colors">
-              Thư viện Ngữ pháp
-            </h3>
-            <p className="text-xs text-gray-500 mt-1 leading-relaxed">
-              {activeLanguage.code === "de"
-                ? "Tra cứu các cấu trúc ngữ pháp Tiếng Đức, chia động từ và cách dùng mạo từ."
-                : activeLanguage.code === "en"
-                ? "Tổng hợp công thức cấu trúc câu, các thì và ngữ pháp Tiếng Anh thông dụng."
-                : "Tra cứu cấu trúc, công thức chia thể, giải thích chi tiết & ví dụ kèm phát âm audio."}
-            </p>
-          </div>
-        </Link>
-
-        {activeLanguage.code === "ja" ? (
-          <>
-            <Link
-              href="/kanji"
-              className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-xs hover:shadow-sm transition-all group flex flex-col justify-between"
-            >
-              <div>
-                <div className="text-2xl sm:text-3xl mb-2 sm:mb-2.5">🉐</div>
-                <h3 className="font-bold text-gray-900 text-base sm:text-lg group-hover:text-emerald-600 transition-colors">
-                  Thư viện Kanji SVG
-                </h3>
-                <p className="text-xs text-gray-500 mt-1 leading-relaxed">
-                  Học 1,000+ chữ Hán từ N5 đến N2, xem nét vẽ SVG thứ tự từng bước & âm Hán Việt.
-                </p>
-              </div>
-            </Link>
-
-            <Link
-              href="/kaiwa"
-              className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-xs hover:shadow-sm transition-all group flex flex-col justify-between"
-            >
-              <div>
-                <div className="text-2xl sm:text-3xl mb-2 sm:mb-2.5">🗣️</div>
-                <h3 className="font-bold text-gray-900 text-base sm:text-lg group-hover:text-rose-600 transition-colors">
-                  Hội thoại Kaiwa
-                </h3>
-                <p className="text-xs text-gray-500 mt-1 leading-relaxed">
-                  Lộ trình 3 tháng luyện phản xạ giao tiếp tự nhiên và nhập vai đối thoại cùng Gia sư AI.
-                </p>
-              </div>
-            </Link>
-          </>
-        ) : (
-          <Link
-            href="/chat"
-            className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-xs hover:shadow-sm transition-all group flex flex-col justify-between"
-          >
-            <div>
-              <div className="text-2xl sm:text-3xl mb-2 sm:mb-2.5">🤖</div>
-              <h3 className="font-bold text-gray-900 text-base sm:text-lg group-hover:text-rose-600 transition-colors">
-                Gia sư AI Đàm thoại
-              </h3>
-              <p className="text-xs text-gray-500 mt-1 leading-relaxed">
-                {activeLanguage.code === "de"
-                  ? "Thực hành đàm thoại, luyện nói tự do và sửa lỗi giao tiếp Tiếng Đức cùng AI."
-                  : "Thực hành phản xạ đàm thoại tiếng Anh giao tiếp tự do 24/7 cùng Gia sư AI."}
-              </p>
+                  <div>
+                    <div
+                      className={`w-10 h-10 rounded-xl bg-gradient-to-br ${card.color} flex items-center justify-center text-white font-extrabold text-lg shadow-xs mb-2.5`}
+                    >
+                      {card.level}
+                    </div>
+                    <h3 className="font-bold text-gray-900 text-sm group-hover:text-indigo-600 transition-colors">
+                      {card.title}
+                    </h3>
+                    <p className="text-xs text-gray-500 mt-1 leading-relaxed">{card.desc}</p>
+                  </div>
+                  <div className="mt-3 pt-2.5 border-t border-gray-50 text-xs font-semibold text-indigo-600 flex items-center justify-between">
+                    <span>Vào lộ trình</span>
+                    <span>→</span>
+                  </div>
+                </Link>
+              ))}
             </div>
-          </Link>
-        )}
-      </div>
-
-      {/* Notebooks section if any */}
-      {notebooks.length > 0 && (
-        <div className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-xs">
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="font-bold text-gray-900 text-sm sm:text-base">📓 Sổ tay cá nhân ({notebooks.length})</h3>
-            <Link href="/notebooks" className="text-xs text-indigo-600 font-semibold hover:underline">
-              Xem tất cả →
-            </Link>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
-            {notebooks.map((n) => (
+
+          {/* Main Core Modules */}
+          <div className="space-y-3">
+            <h2 className="text-base sm:text-lg font-bold text-gray-900 flex items-center gap-2">
+              <span>🚀</span> Trụ cột Học tập
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
               <Link
-                key={n.id}
-                href={`/notebooks/${n.id}`}
-                className="p-3 sm:p-3.5 rounded-xl bg-gray-50 hover:bg-indigo-50/50 transition-colors flex items-center justify-between"
+                href="/curriculum"
+                className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-xs hover:shadow-sm transition-all group flex flex-col justify-between"
               >
                 <div>
-                  <h4 className="font-bold text-xs sm:text-sm text-gray-800">{n.name}</h4>
-                  <p className="text-[11px] text-gray-500 mt-0.5">{n.vocabulary.length} từ vựng</p>
+                  <div className="text-2xl sm:text-3xl mb-2 sm:mb-2.5">📚</div>
+                  <h3 className="font-bold text-gray-900 text-base sm:text-lg group-hover:text-indigo-600 transition-colors">
+                    Giáo trình Bài học
+                  </h3>
+                  <p className="text-xs text-gray-500 mt-1 leading-relaxed">
+                    {activeLanguage.code === "de"
+                      ? "Lộ trình học Tiếng Đức trình độ A1 bám sát giáo trình Netzwerk neu."
+                      : activeLanguage.code === "en"
+                      ? "Lộ trình từ vựng Oxford 3000 và các điểm ngữ pháp Tiếng Anh cốt lõi."
+                      : "Học theo từng bài từ Minna no Nihongo I & II cho đến Soumatome và Shinkanzen Master."}
+                  </p>
                 </div>
-                <span className="text-xs text-indigo-600 font-medium">Chi tiết →</span>
               </Link>
-            ))}
+
+              <Link
+                href="/grammar"
+                className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-xs hover:shadow-sm transition-all group flex flex-col justify-between"
+              >
+                <div>
+                  <div className="text-2xl sm:text-3xl mb-2 sm:mb-2.5">📖</div>
+                  <h3 className="font-bold text-gray-900 text-base sm:text-lg group-hover:text-purple-600 transition-colors">
+                    Thư viện Ngữ pháp
+                  </h3>
+                  <p className="text-xs text-gray-500 mt-1 leading-relaxed">
+                    {activeLanguage.code === "de"
+                      ? "Tra cứu các cấu trúc ngữ pháp Tiếng Đức, chia động từ và cách dùng mạo từ."
+                      : activeLanguage.code === "en"
+                      ? "Tổng hợp công thức cấu trúc câu, các thì và ngữ pháp Tiếng Anh thông dụng."
+                      : "Tra cứu cấu trúc, công thức chia thể, giải thích chi tiết & ví dụ kèm phát âm audio."}
+                  </p>
+                </div>
+              </Link>
+
+              {activeLanguage.code === "ja" ? (
+                <>
+                  <Link
+                    href="/kanji"
+                    className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-xs hover:shadow-sm transition-all group flex flex-col justify-between"
+                  >
+                    <div>
+                      <div className="text-2xl sm:text-3xl mb-2 sm:mb-2.5">🉐</div>
+                      <h3 className="font-bold text-gray-900 text-base sm:text-lg group-hover:text-emerald-600 transition-colors">
+                        Thư viện Kanji SVG
+                      </h3>
+                      <p className="text-xs text-gray-500 mt-1 leading-relaxed">
+                        Học 1,000+ chữ Hán từ N5 đến N2, xem nét vẽ SVG thứ tự từng bước & âm Hán Việt.
+                      </p>
+                    </div>
+                  </Link>
+
+                  <Link
+                    href="/kaiwa"
+                    className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-xs hover:shadow-sm transition-all group flex flex-col justify-between"
+                  >
+                    <div>
+                      <div className="text-2xl sm:text-3xl mb-2 sm:mb-2.5">🗣️</div>
+                      <h3 className="font-bold text-gray-900 text-base sm:text-lg group-hover:text-rose-600 transition-colors">
+                        Hội thoại Kaiwa
+                      </h3>
+                      <p className="text-xs text-gray-500 mt-1 leading-relaxed">
+                        Lộ trình 3 tháng luyện phản xạ giao tiếp tự nhiên và nhập vai đối thoại cùng Gia sư AI.
+                      </p>
+                    </div>
+                  </Link>
+                </>
+              ) : (
+                <Link
+                  href="/chat"
+                  className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-xs hover:shadow-sm transition-all group flex flex-col justify-between"
+                >
+                  <div>
+                    <div className="text-2xl sm:text-3xl mb-2 sm:mb-2.5">🤖</div>
+                    <h3 className="font-bold text-gray-900 text-base sm:text-lg group-hover:text-rose-600 transition-colors">
+                      Gia sư AI Đàm thoại
+                    </h3>
+                    <p className="text-xs text-gray-500 mt-1 leading-relaxed">
+                      {activeLanguage.code === "de"
+                        ? "Thực hành đàm thoại, luyện nói tự do và sửa lỗi giao tiếp Tiếng Đức cùng AI."
+                        : "Thực hành phản xạ đàm thoại tiếng Anh giao tiếp tự do 24/7 cùng Gia sư AI."}
+                    </p>
+                  </div>
+                </Link>
+              )}
+            </div>
           </div>
         </div>
-      )}
+
+        {/* Right Column (1 Col on lg): Leaderboard & Personal Notebooks */}
+        <div className="space-y-4 sm:space-y-5">
+          {/* Leaderboard Card */}
+          <Leaderboard />
+
+          {/* Notebooks section if any */}
+          {notebooks.length > 0 && (
+            <div className="bg-white rounded-3xl p-4 sm:p-5 border border-gray-100 shadow-2xs">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="font-bold text-gray-900 text-sm sm:text-base">📓 Sổ tay cá nhân ({notebooks.length})</h3>
+                <Link href="/notebooks" className="text-xs text-indigo-600 font-semibold hover:underline">
+                  Xem tất cả →
+                </Link>
+              </div>
+              <div className="space-y-2">
+                {notebooks.slice(0, 4).map((n) => (
+                  <Link
+                    key={n.id}
+                    href={`/notebooks/${n.id}`}
+                    className="p-3 rounded-2xl bg-gray-50 hover:bg-indigo-50/50 transition-colors flex items-center justify-between"
+                  >
+                    <div>
+                      <h4 className="font-bold text-xs sm:text-sm text-gray-800">{n.name}</h4>
+                      <p className="text-[11px] text-gray-500 mt-0.5">{n.vocabulary.length} từ vựng</p>
+                    </div>
+                    <span className="text-xs text-indigo-600 font-medium">Chi tiết →</span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import KanjiDrawModal from "@/components/KanjiDrawModal";
 
 export interface MaziiWordResult {
   kanji?: string;
@@ -32,9 +33,17 @@ export default function MaziiQuickLookupModal({
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<MaziiWordResult[]>([]);
   const [activeTab, setActiveTab] = useState<number>(0);
+  const [searchTerm, setSearchTerm] = useState<string>(queryWord);
+  const [showDrawModal, setShowDrawModal] = useState<boolean>(false);
 
   useEffect(() => {
-    if (!isOpen || !queryWord) return;
+    if (queryWord) {
+      setSearchTerm(queryWord);
+    }
+  }, [queryWord]);
+
+  useEffect(() => {
+    if (!isOpen || !searchTerm) return;
 
     let isMounted = true;
     setLoading(true);
@@ -42,7 +51,7 @@ export default function MaziiQuickLookupModal({
 
     async function fetchMazii() {
       try {
-        const cleanWord = queryWord.trim();
+        const cleanWord = searchTerm.trim();
         const res = await fetch(`/api/dictionary?keyword=${encodeURIComponent(cleanWord)}&lang=ja`);
         if (!res.ok) throw new Error("Failed to search dictionary");
         const json = await res.json();
@@ -137,12 +146,23 @@ export default function MaziiQuickLookupModal({
               <p className="text-[10px] text-amber-100 font-medium">Nhật - Việt • Hán Tự • Furigana chuẩn Mazii.net</p>
             </div>
           </div>
-          <button
-            onClick={onClose}
-            className="w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center text-white transition-colors font-bold text-sm cursor-pointer"
-          >
-            ✕
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setShowDrawModal(true)}
+              className="px-2.5 py-1 rounded-xl bg-white/20 hover:bg-white/30 text-white font-bold text-xs transition-colors flex items-center gap-1 cursor-pointer"
+              title="Vẽ Kanji để tra từ"
+            >
+              <span>🖌️</span>
+              <span>Vẽ Kanji</span>
+            </button>
+            <button
+              onClick={onClose}
+              className="w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center text-white transition-colors font-bold text-sm cursor-pointer"
+            >
+              ✕
+            </button>
+          </div>
         </div>
 
         {/* Modal Body */}
@@ -312,6 +332,15 @@ export default function MaziiQuickLookupModal({
           </div>
         </div>
       </div>
+
+      {/* Kanji Handwriting Modal */}
+      <KanjiDrawModal
+        isOpen={showDrawModal}
+        onClose={() => setShowDrawModal(false)}
+        onSelectKanji={(kanji) => {
+          setSearchTerm(kanji);
+        }}
+      />
     </div>
   );
 }
