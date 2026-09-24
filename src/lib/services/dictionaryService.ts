@@ -12,22 +12,25 @@ export interface DictionaryItem {
   source?: string;
 }
 
-export async function searchJapaneseDictionary(query: string, langCode: string = "ja"): Promise<DictionaryItem[]> {
-  return searchMultilingualDictionary(query, langCode);
+export async function searchJapaneseDictionary(query: string, langCode: string = "ja", signal?: AbortSignal): Promise<DictionaryItem[]> {
+  return searchMultilingualDictionary(query, langCode, signal);
 }
 
-export async function searchMultilingualDictionary(query: string, langCode: string = "ja"): Promise<DictionaryItem[]> {
+export async function searchMultilingualDictionary(query: string, langCode: string = "ja", signal?: AbortSignal): Promise<DictionaryItem[]> {
   const q = query.trim().toLowerCase();
   if (!q) return [];
 
   const results: DictionaryItem[] = [];
 
-  // 1. Search Local Repository for active language
+  // 1. Search Local Repository for active language only
   try {
     const vocabRepo = getVocabularyRepository();
-    const localMatches = await vocabRepo.searchVocabulary(q);
+    const localMatches = await vocabRepo.searchVocabulary(q, langCode);
 
-    localMatches.forEach((v) => {
+    // Limit max local matches to avoid memory overload
+    const limitedLocal = localMatches.slice(0, 40);
+
+    limitedLocal.forEach((v) => {
       let lvl = v.id.startsWith("n5") ? "N5" : v.id.startsWith("n4") ? "N4" : v.id.startsWith("n3") ? "N3" : v.id.startsWith("n2") ? "N2" : undefined;
       
       if (langCode === "en") {
@@ -67,9 +70,11 @@ export async function searchMultilingualDictionary(query: string, langCode: stri
     console.error("Local dictionary search error:", err);
   }
 
-  // 2. Fetch Online API for active language
+  if (signal?.aborted) return results;
+
+  // 2. Fetch Online API for active language with AbortSignal support
   try {
-    const res = await fetch(`/api/dictionary?keyword=${encodeURIComponent(q)}&lang=${langCode}`);
+    const res = await fetch(`/api/dictionary?keyword=${encodeURIComponent(q)}&lang=${langCode}`, { signal });
     if (res.ok) {
       const json = await res.json();
       const onlineData = json.data || [];
@@ -97,8 +102,10 @@ export async function searchMultilingualDictionary(query: string, langCode: stri
         }
       });
     }
-  } catch (err) {
-    console.error("Online dictionary search error:", err);
+  } catch (err: any) {
+    if (err.name !== "AbortError") {
+      console.error("Online dictionary search error:", err);
+    }
   }
 
   return results;

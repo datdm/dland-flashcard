@@ -8,6 +8,8 @@ import { DEFAULT_VOCABULARY } from "@/data";
 import { SUPPORTED_LANGUAGES } from "@/hooks/useLanguageSetting";
 import CurriculumDisplaySettings from "@/components/CurriculumDisplaySettings";
 import NavMenuSettingsPanel from "@/components/NavMenuSettingsPanel";
+import ExportImportPanel from "@/components/ExportImportPanel";
+import BackupHistoryPanel from "@/components/BackupHistoryPanel";
 
 export default function AdminDashboardPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -19,7 +21,7 @@ export default function AdminDashboardPage() {
   const [loadingDetail, setLoadingDetail] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const [adminView, setAdminView] = useState<"users" | "config">("users");
+  const [adminView, setAdminView] = useState<"users" | "config" | "backup">("users");
 
   // Curriculum detail tab state inside user detail
   const [activeDetailTab, setActiveDetailTab] = useState<"curriculum" | "timeline" | "notebook">("curriculum");
@@ -396,7 +398,20 @@ export default function AdminDashboardPage() {
           }`}
         >
           <span>⚙️</span>
-          <span>Cấu hình Hệ thống & Giáo trình mẫu</span>
+          <span>Cấu hình Hệ thống</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setAdminView("backup")}
+          className={`px-4 py-2 rounded-xl font-bold text-xs transition-all cursor-pointer flex items-center gap-2 ${
+            adminView === "backup"
+              ? "bg-indigo-600 text-white shadow-sm"
+              : "bg-white text-gray-700 hover:bg-gray-100 border border-gray-200"
+          }`}
+        >
+          <span>💾</span>
+          <span>Sao Lưu, Phục Hồi & Đồng Bộ System DB</span>
         </button>
       </div>
 
@@ -769,7 +784,7 @@ export default function AdminDashboardPage() {
           )}
         </div>
       </div>
-      ) : (
+      ) : adminView === "config" ? (
         /* System Configuration View */
         <div className="space-y-6">
           {/* Nav Menu Settings Panel (with dev features controls) */}
@@ -777,6 +792,24 @@ export default function AdminDashboardPage() {
 
           {/* Sample Curriculum Display Settings */}
           <CurriculumDisplaySettings />
+        </div>
+      ) : (
+        /* Database Backup, Restore & Sync View - Admin Only */
+        <div className="space-y-6">
+          <div className="bg-white rounded-3xl p-6 border border-gray-150 shadow-2xs">
+            <h2 className="text-base font-extrabold text-gray-900 mb-1 flex items-center gap-2">
+              <span>💾</span>
+              <span>Quản Lý Sao Lưu, Phục Hồi & Đồng Bộ System Database</span>
+            </h2>
+            <p className="text-xs text-gray-500 mb-6">
+              Công cụ dành riêng cho Quản trị viên: Xuất/Nhập toàn bộ Database hệ thống (bao gồm tất cả học viên & bảng dữ liệu Cloud), tạo Snapshot và đồng bộ 2 chiều.
+            </p>
+            <ExportImportPanel />
+          </div>
+
+          <div className="bg-white rounded-3xl p-6 border border-gray-150 shadow-2xs">
+            <BackupHistoryPanel />
+          </div>
         </div>
       )}
     </div>

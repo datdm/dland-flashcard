@@ -124,7 +124,7 @@ export async function POST(req: NextRequest) {
     });
 
     // Use latest Gemini 3.5 / 2.5 / 2.0 multimodal models
-    const candidateModels = ["gemini-3.5-flash", "gemini-2.5-flash", "gemini-2.0-flash", "gemini-2.5-pro"];
+    const candidateModels = ["gemini-2.5-flash", "gemini-2.5-pro", "gemini-2.0-flash"];
     let lastError: any = null;
 
     for (const modelName of candidateModels) {

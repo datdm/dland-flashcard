@@ -2,8 +2,6 @@
 
 import Link from "next/link";
 import UploadPanel from "@/components/UploadPanel";
-import ExportImportPanel from "@/components/ExportImportPanel";
-import BackupHistoryPanel from "@/components/BackupHistoryPanel";
 import { useAuth } from "@/context/AuthContext";
 
 export default function UploadPage() {
@@ -188,12 +186,6 @@ export default function UploadPage() {
           </details>
         </div>
       </div>
-
-      {/* Backup History */}
-      <BackupHistoryPanel />
-
-      {/* Export/Import panel */}
-      <ExportImportPanel />
     </div>
   );
 }

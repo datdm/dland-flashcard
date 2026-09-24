@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { searchMultilingualDictionary, DictionaryItem } from "@/lib/services/dictionaryService";
 import { useProgress } from "@/hooks/useProgress";
 import { useNotebooks } from "@/hooks/useNotebooks";
@@ -31,17 +31,33 @@ export default function DictionarySearchPage() {
   useEffect(() => {
     if (!query.trim()) {
       setResults([]);
+      setLoading(false);
       return;
     }
 
+    const controller = new AbortController();
     const timer = setTimeout(async () => {
       setLoading(true);
-      const data = await searchMultilingualDictionary(query, langCode);
-      setResults(data);
-      setLoading(false);
-    }, 300);
+      try {
+        const data = await searchMultilingualDictionary(query, langCode, controller.signal);
+        if (!controller.signal.aborted) {
+          setResults(data);
+        }
+      } catch (err: any) {
+        if (err.name !== "AbortError") {
+          console.error("Search error:", err);
+        }
+      } finally {
+        if (!controller.signal.aborted) {
+          setLoading(false);
+        }
+      }
+    }, 250);
 
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+      controller.abort();
+    };
   }, [query, langCode]);
 
   const speakText = (text: string) => {
@@ -86,10 +102,10 @@ export default function DictionarySearchPage() {
     }
   };
 
-  const filteredResults = results.filter((item) => {
-    if (activeLevel === "ALL") return true;
-    return item.level === activeLevel;
-  });
+  const filteredResults = useMemo(() => {
+    if (activeLevel === "ALL") return results;
+    return results.filter((item) => item.level === activeLevel);
+  }, [results, activeLevel]);
 
   const levelOptions = langCode === "en"
     ? ["ALL", "Band 4.0-4.5", "Band 5.0-5.5", "Band 6.0-6.5", "Band 7.0+"]

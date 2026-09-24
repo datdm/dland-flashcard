@@ -149,5 +149,170 @@ router.put('/nav-dev-overrides', authenticate, requireAdmin, async (req: AuthReq
     res.status(500).json({ error: 'Failed to save nav dev overrides' });
   }
 });
+// GET /api/admin/export-full-db - Admin only: Export full system database (All users, user data, backup history, settings)
+router.get('/export-full-db', authenticate, requireAdmin, async (req: AuthRequest, res: Response) => {
+  try {
+    const usersResult = await pool.query(
+      `SELECT id, username, password_hash, created_at, last_sync_at, is_admin FROM users ORDER BY created_at DESC`
+    );
+    const userDataResult = await pool.query(
+      `SELECT id, user_id, data_key, data_value, updated_at FROM user_data`
+    );
+    const backupHistoryResult = await pool.query(
+      `SELECT id, user_id, backup_data, created_at, backup_type, data_keys, note FROM backup_history ORDER BY created_at DESC`
+    );
+    const appSettingsResult = await pool.query(
+      `SELECT key, value, updated_at FROM app_settings`
+    );
+
+    res.json({
+      success: true,
+      version: '2.0.0',
+      type: 'FULL_SYSTEM_DATABASE_DUMP',
+      exportedAt: new Date().toISOString(),
+      metadata: {
+        exportedBy: req.userId || 'Admin',
+        totalUsers: usersResult.rows.length,
+        totalUserDataRecords: userDataResult.rows.length,
+        totalBackups: backupHistoryResult.rows.length,
+        totalAppSettings: appSettingsResult.rows.length,
+      },
+      users: usersResult.rows,
+      userData: userDataResult.rows,
+      backupHistory: backupHistoryResult.rows,
+      appSettings: appSettingsResult.rows,
+    });
+  } catch (error: any) {
+    console.error('Export full system DB error:', error);
+    res.status(500).json({ error: error.message || 'Lỗi khi xuất toàn bộ database hệ thống' });
+  }
+});
+
+// POST /api/admin/import-full-db - Admin only: Import/Restore full system database (All users, user data, backup history, settings)
+router.post('/import-full-db', authenticate, requireAdmin, async (req: AuthRequest, res: Response) => {
+  const { dump, mode = 'merge' } = req.body;
+  if (!dump || typeof dump !== 'object') {
+    return res.status(400).json({ error: 'Dữ liệu dump không hợp lệ' });
+  }
+
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+
+    if (mode === 'replace') {
+      await client.query('DELETE FROM backup_history');
+      await client.query('DELETE FROM user_data');
+      await client.query('DELETE FROM users WHERE is_admin IS NOT TRUE');
+    }
+
+    let usersImported = 0;
+    let userDataImported = 0;
+    let backupsImported = 0;
+    let settingsImported = 0;
+
+    // Restore users
+    if (Array.isArray(dump.users)) {
+      for (const u of dump.users) {
+        if (!u.id || !u.username) continue;
+        await client.query(
+          `INSERT INTO users (id, username, password_hash, created_at, last_sync_at, is_admin)
+           VALUES ($1, $2, $3, $4, $5, $6)
+           ON CONFLICT (id) DO UPDATE SET
+             username = EXCLUDED.username,
+             last_sync_at = EXCLUDED.last_sync_at,
+             is_admin = EXCLUDED.is_admin`,
+          [
+            u.id,
+            u.username,
+            u.password_hash || '$2b$10$dummyhashforrestoreduser',
+            u.created_at || new Date(),
+            u.last_sync_at || null,
+            !!u.is_admin,
+          ]
+        );
+        usersImported++;
+      }
+    }
+
+    // Restore user_data
+    if (Array.isArray(dump.userData)) {
+      for (const ud of dump.userData) {
+        if (!ud.user_id || !ud.data_key) continue;
+        await client.query(
+          `INSERT INTO user_data (user_id, data_key, data_value, updated_at)
+           VALUES ($1, $2, $3, $4)
+           ON CONFLICT (user_id, data_key) DO UPDATE SET
+             data_value = EXCLUDED.data_value,
+             updated_at = EXCLUDED.updated_at`,
+          [
+            ud.user_id,
+            ud.data_key,
+            typeof ud.data_value === 'string' ? ud.data_value : JSON.stringify(ud.data_value),
+            ud.updated_at || new Date(),
+          ]
+        );
+        userDataImported++;
+      }
+    }
+
+    // Restore backup_history
+    if (Array.isArray(dump.backupHistory)) {
+      for (const bh of dump.backupHistory) {
+        if (!bh.user_id || !bh.backup_data) continue;
+        await client.query(
+          `INSERT INTO backup_history (id, user_id, backup_data, created_at, backup_type, data_keys, note)
+           VALUES (COALESCE($1, gen_random_uuid()), $2, $3, $4, $5, $6, $7)
+           ON CONFLICT (id) DO UPDATE SET
+             backup_data = EXCLUDED.backup_data,
+             note = EXCLUDED.note`,
+          [
+            bh.id || null,
+            bh.user_id,
+            typeof bh.backup_data === 'string' ? bh.backup_data : JSON.stringify(bh.backup_data),
+            bh.created_at || new Date(),
+            bh.backup_type || 'auto',
+            bh.data_keys || [],
+            bh.note || null,
+          ]
+        );
+        backupsImported++;
+      }
+    }
+
+    // Restore app_settings
+    if (Array.isArray(dump.appSettings)) {
+      for (const s of dump.appSettings) {
+        if (!s.key) continue;
+        await client.query(
+          `INSERT INTO app_settings (key, value, updated_at)
+           VALUES ($1, $2, $3)
+           ON CONFLICT (key) DO UPDATE SET
+             value = EXCLUDED.value,
+             updated_at = EXCLUDED.updated_at`,
+          [
+            s.key,
+            typeof s.value === 'string' ? s.value : JSON.stringify(s.value),
+            s.updated_at || new Date(),
+          ]
+        );
+        settingsImported++;
+      }
+    }
+
+    await client.query('COMMIT');
+
+    res.json({
+      success: true,
+      message: `Đã nhập thành công toàn bộ System Database (${usersImported} người dùng, ${userDataImported} bản ghi dữ liệu, ${backupsImported} bản backup, ${settingsImported} cấu hình)!`,
+      stats: { usersImported, userDataImported, backupsImported, settingsImported },
+    });
+  } catch (error: any) {
+    await client.query('ROLLBACK');
+    console.error('Import full system DB error:', error);
+    res.status(500).json({ error: error.message || 'Lỗi khi nhập toàn bộ database hệ thống' });
+  } finally {
+    client.release();
+  }
+});
 
 export default router;

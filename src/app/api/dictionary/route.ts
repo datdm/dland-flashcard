@@ -1,11 +1,26 @@
 import { NextRequest, NextResponse } from "next/server";
 
+// Helper fetch with timeout to prevent hanging API requests
+async function fetchWithTimeout(url: string, options: RequestInit = {}, timeoutMs: number = 3000): Promise<Response> {
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const response = await fetch(url, {
+      ...options,
+      signal: controller.signal,
+    });
+    return response;
+  } finally {
+    clearTimeout(id);
+  }
+}
+
 // Free Google Translate endpoint (English/German -> Vietnamese)
 async function translateToVietnamese(text: string, sourceLang: string = "en"): Promise<string> {
   if (!text) return "";
   try {
     const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sourceLang}&tl=vi&dt=t&q=${encodeURIComponent(text)}`;
-    const res = await fetch(url);
+    const res = await fetchWithTimeout(url, {}, 2500);
     if (res.ok) {
       const data = await res.json();
       if (Array.isArray(data[0])) {
@@ -30,13 +45,12 @@ export async function GET(request: NextRequest) {
   const query = keyword.trim();
   let results: any[] = [];
 
-  // ================= ENGLISH DICTIONARY API (SEPARATE PER API SOURCE) =================
+  // ================= ENGLISH DICTIONARY API =================
   if (lang === "en") {
-    // Fetch FreeDictionaryAPI (IPA, Part of speech, English Definition & Example)
     let globalIpa = "";
     let freeDictItems: any[] = [];
     try {
-      const freeDictRes = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(query)}`);
+      const freeDictRes = await fetchWithTimeout(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(query)}`, {}, 3000);
       if (freeDictRes.ok) {
         const freeDictData = await freeDictRes.json();
         if (Array.isArray(freeDictData) && freeDictData.length > 0) {
@@ -70,10 +84,9 @@ export async function GET(request: NextRequest) {
       console.error("FreeDictionaryAPI error:", err);
     }
 
-    // If globalIpa still empty, fetch IPA from Datamuse IPA API
     if (!globalIpa) {
       try {
-        const datamuseIpaRes = await fetch(`https://api.datamuse.com/words?sp=${encodeURIComponent(query)}&qe=sp&md=r&ipa=1&max=1`);
+        const datamuseIpaRes = await fetchWithTimeout(`https://api.datamuse.com/words?sp=${encodeURIComponent(query)}&qe=sp&md=r&ipa=1&max=1`, {}, 2500);
         if (datamuseIpaRes.ok) {
           const dmData = await datamuseIpaRes.json();
           if (Array.isArray(dmData) && dmData.length > 0) {
@@ -91,7 +104,6 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    // 1. Google Translate API (Anh - Việt)
     try {
       const viMeaning = await translateToVietnamese(query, "en");
       if (viMeaning && viMeaning.toLowerCase() !== query.toLowerCase()) {
@@ -108,7 +120,6 @@ export async function GET(request: NextRequest) {
       console.error("Google Translate error:", err);
     }
 
-    // Add FreeDictionary items (updating globalIpa if acquired from Datamuse)
     freeDictItems.forEach((item) => {
       if (!item.hiragana && globalIpa) {
         item.hiragana = globalIpa;
@@ -116,9 +127,8 @@ export async function GET(request: NextRequest) {
     });
     results.push(...freeDictItems);
 
-    // 3. Datamuse API (IELTS Synonyms / Lexical Resource)
     try {
-      const datamuseRes = await fetch(`https://api.datamuse.com/words?rel_syn=${encodeURIComponent(query)}&max=6`);
+      const datamuseRes = await fetchWithTimeout(`https://api.datamuse.com/words?rel_syn=${encodeURIComponent(query)}&max=6`, {}, 2500);
       if (datamuseRes.ok) {
         const datamuseData = await datamuseRes.json();
         if (Array.isArray(datamuseData) && datamuseData.length > 0) {
@@ -161,20 +171,17 @@ export async function GET(request: NextRequest) {
   }
 
   // ================= JAPANESE DICTIONARY API (MAZII & JISHO) =================
-  // 1. Try Mazii Japanese-Vietnamese API (Word Search)
   try {
-    const maziiRes = await fetch("https://mazii.net/api/search", {
+    const maziiRes = await fetchWithTimeout("https://mazii.net/api/search", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         query: query,
         dict: "javi",
         type: "word",
         limit: 10,
       }),
-    });
+    }, 3000);
 
     if (maziiRes.ok) {
       const maziiJson = await maziiRes.json();
@@ -225,21 +232,18 @@ export async function GET(request: NextRequest) {
     console.error("Mazii Word API error:", err);
   }
 
-  // 2. If single Kanji or 0 word results, try Mazii Kanji search
   if (results.length === 0 || query.length <= 2) {
     try {
-      const kanjiRes = await fetch("https://mazii.net/api/search", {
+      const kanjiRes = await fetchWithTimeout("https://mazii.net/api/search", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           query: query,
           dict: "javi",
           type: "kanji",
           limit: 3,
         }),
-      });
+      }, 3000);
 
       if (kanjiRes.ok) {
         const kanjiJson = await kanjiRes.json();
@@ -266,7 +270,7 @@ export async function GET(request: NextRequest) {
               results.push({
                 kanji: kItem.kanji || query,
                 hiragana: onKun || kItem.kun || kItem.on || query,
-                onyomi: kItem.mean || undefined, // Hán Việt
+                onyomi: kItem.mean || undefined,
                 meaning: kItem.detail || mean,
                 level: kanjiLevel,
                 examples: kanjiExamples,
@@ -281,36 +285,44 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  // 3. Fallback to Jisho + Auto Translation to Vietnamese
+  // 3. Fallback to Jisho + Parallel Auto Translation
   if (results.length === 0) {
     try {
-      const jishoRes = await fetch(
+      const jishoRes = await fetchWithTimeout(
         `https://jisho.org/api/v1/search/words?keyword=${encodeURIComponent(query)}`,
-        { headers: { Accept: "application/json" } }
+        { headers: { Accept: "application/json" } },
+        3000
       );
 
       if (jishoRes.ok) {
         const jishoJson = await jishoRes.json();
-        const jishoData = jishoJson.data || [];
+        const jishoData = (jishoJson.data || []).slice(0, 5);
 
-        for (const item of jishoData.slice(0, 8)) {
-          const japanese = item.japanese?.[0] || {};
-          const senses = item.senses?.[0] || {};
-          const englishMeanings = senses.english_definitions?.join("; ") || "";
-          const jlpt = item.jlpt?.[0]?.replace("jlpt-", "").toUpperCase();
+        const jishoResults = await Promise.all(
+          jishoData.map(async (item: any) => {
+            const japanese = item.japanese?.[0] || {};
+            const senses = item.senses?.[0] || {};
+            const englishMeanings = senses.english_definitions?.join("; ") || "";
+            const jlpt = item.jlpt?.[0]?.replace("jlpt-", "").toUpperCase();
 
-          const translatedMeaning = await translateToVietnamese(englishMeanings, "en");
+            const translatedMeaning = await translateToVietnamese(englishMeanings, "en");
 
-          if (japanese.word || japanese.reading) {
-            results.push({
-              kanji: japanese.word,
-              hiragana: japanese.reading,
-              meaning: translatedMeaning || englishMeanings,
-              level: jlpt,
-              source: "Jisho API",
-            });
-          }
-        }
+            if (japanese.word || japanese.reading) {
+              return {
+                kanji: japanese.word,
+                hiragana: japanese.reading,
+                meaning: translatedMeaning || englishMeanings,
+                level: jlpt,
+                source: "Jisho API",
+              };
+            }
+            return null;
+          })
+        );
+
+        jishoResults.forEach((r) => {
+          if (r) results.push(r);
+        });
       }
     } catch (err) {
       console.error("Jisho API error:", err);

@@ -397,18 +397,6 @@ export default function SettingsPage() {
 
             {/* Sample Curriculum Display Settings Section - Admin only */}
             {user?.isAdmin && <CurriculumDisplaySettings />}
-
-            {/* Export/Import Section - Database Migration */}
-            <div className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-xs">
-              <ExportImportPanel />
-            </div>
-
-            {/* Backup History Section - Admin only */}
-            {user?.isAdmin && (
-              <div className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-xs">
-                <BackupHistoryPanel />
-              </div>
-            )}
           </>
         ) : (
           <div className="bg-indigo-50/60 rounded-2xl p-4 border border-indigo-100 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">

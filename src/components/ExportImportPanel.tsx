@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { exportDataByScope, importScopedData, ImportResult } from "@/lib/storage";
 import * as syncService from "@/lib/syncService";
+import { exportSystemFullDatabase, importSystemFullDatabase } from "@/lib/adminService";
 import { useAuth } from "@/context/AuthContext";
 
 interface ExportImportPanelProps {
@@ -22,7 +23,7 @@ const SCOPE_OPTIONS: { id: ExportScope; name: string; icon: string; desc: string
 
 export default function ExportImportPanel({ onImportSuccess }: ExportImportPanelProps) {
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState<"scope" | "full_db">("scope");
+  const [activeTab, setActiveTab] = useState<"scope" | "full_db">("full_db");
   const [selectedScope, setSelectedScope] = useState<ExportScope>("all");
   const [importMode, setImportMode] = useState<"merge" | "replace">("merge");
   const [importError, setImportError] = useState<string | null>(null);
@@ -60,24 +61,47 @@ export default function ExportImportPanel({ onImportSuccess }: ExportImportPanel
     setIsProcessing(true);
     setFullDbMsg(null);
     try {
-      const res = await syncService.exportFullDatabase();
-      if (!res.success || !res.data) {
-        setFullDbMsg({ type: "error", text: res.error || "Không thể xuất toàn bộ database" });
-        return;
+      // 1. Fetch system database dump (all users & server tables) if admin
+      let systemDump: any = null;
+      if (user?.isAdmin) {
+        const sysRes = await exportSystemFullDatabase();
+        if (sysRes.success) {
+          systemDump = sysRes.data;
+        }
       }
 
-      const jsonStr = JSON.stringify(res.data, null, 2);
+      // 2. Fetch local storage dump
+      const localRes = await syncService.exportFullDatabase();
+      const localData = localRes.data || {};
+
+      const fullDump = {
+        version: "2.0.0",
+        type: "FULL_SYSTEM_DATABASE_DUMP",
+        exportedAt: new Date().toISOString(),
+        metadata: {
+          app: "Dland Flashcard Multilingual",
+          exportedBy: user?.username || "Admin",
+          totalSystemUsers: systemDump?.users?.length || 0,
+          totalSystemRecords: systemDump?.userData?.length || 0,
+          totalSystemBackups: systemDump?.backupHistory?.length || 0,
+        },
+        systemDatabase: systemDump,
+        localDatabase: localData,
+      };
+
+      const jsonStr = JSON.stringify(fullDump, null, 2);
       const blob = new Blob([jsonStr], { type: "application/json" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `dland-FULL-DATABASE-DUMP-${new Date().toISOString().slice(0, 10)}.json`;
+      a.download = `dland-FULL-SYSTEM-DATABASE-DUMP-${new Date().toISOString().slice(0, 10)}.json`;
       a.click();
       URL.revokeObjectURL(url);
 
+      const userCountText = systemDump?.users?.length ? ` (${systemDump.users.length} tài khoản người dùng)` : "";
       setFullDbMsg({
         type: "success",
-        text: `Đã xuất file Full Database Dump thành công (${res.data.metadata?.totalDataKeys || 0} bảng dữ liệu, ${res.data.metadata?.totalBackups || 0} bản snapshot)!`,
+        text: `Đã xuất file Full System Database thành công${userCountText}!`,
       });
     } catch (err: any) {
       setFullDbMsg({ type: "error", text: err?.message || "Lỗi khi xuất toàn bộ database" });
@@ -96,15 +120,34 @@ export default function ExportImportPanel({ onImportSuccess }: ExportImportPanel
     reader.onload = async (ev) => {
       try {
         const text = ev.target?.result as string;
-        const res = await syncService.importFullDatabase(text, importMode);
-        if (!res.success) {
-          setFullDbMsg({ type: "error", text: res.error || "File database không hợp lệ" });
+        const parsed = JSON.parse(text);
+
+        let sysResultMsg = "";
+        if (parsed?.systemDatabase && user?.isAdmin) {
+          const sysRes = await importSystemFullDatabase(parsed.systemDatabase, importMode);
+          if (sysRes.success && sysRes.message) {
+            sysResultMsg = sysRes.message;
+          }
+        } else if (user?.isAdmin && (parsed?.users || parsed?.userData)) {
+          const sysRes = await importSystemFullDatabase(parsed, importMode);
+          if (sysRes.success && sysRes.message) {
+            sysResultMsg = sysRes.message;
+          }
+        }
+
+        const localRes = await syncService.importFullDatabase(
+          parsed?.localDatabase ? JSON.stringify(parsed.localDatabase) : text,
+          importMode
+        );
+
+        if (!localRes.success && !sysResultMsg) {
+          setFullDbMsg({ type: "error", text: localRes.error || "File database không hợp lệ" });
           return;
         }
 
         setFullDbMsg({
           type: "success",
-          text: res.message || "Đã phục hồi toàn bộ Database thành công!",
+          text: sysResultMsg || localRes.message || "Đã phục hồi toàn bộ Database thành công!",
         });
         onImportSuccess?.();
       } catch (err: any) {
