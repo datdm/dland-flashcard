@@ -79,7 +79,7 @@ Hãy đánh giá bài thuyết trình và trả về kết quả dưới dạng 
   ]
 }`;
 
-    const candidateModels = ["gemini-3.6-flash", "gemini-2.5-flash", "gemini-2.5-pro"];
+    const candidateModels = ["gemini-3.6-flash", "gemini-3.1-pro-preview", "gemini-2.5-flash"];
     let text = "";
     let lastError: any = null;
 
