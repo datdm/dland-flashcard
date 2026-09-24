@@ -6,7 +6,6 @@ import GlobalSyncIndicator from "@/components/GlobalSyncIndicator";
 import { AuthProvider } from "@/context/AuthContext";
 import AuthModal from "@/components/AuthModal";
 import Footer from "@/components/Footer";
-import Script from "next/script";
 
 export const metadata: Metadata = {
   title: "Dland Language — Nền tảng học ngôn ngữ đa năng",
@@ -23,11 +22,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600;700&display=swap"
           rel="stylesheet"
         />
-        <Script
+        <script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7251069941916539"
           crossOrigin="anonymous"
-          strategy="afterInteractive"
         />
       </head>
       <body className="min-h-full flex flex-col bg-gray-50 text-gray-900 overflow-x-clip">
