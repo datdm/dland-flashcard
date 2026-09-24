@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
     }
 
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+    const candidateModels = ["gemini-3.6-flash", "gemini-2.5-flash", "gemini-2.5-pro"];
 
     const systemPrompt = `Bạn là chuyên gia biên soạn giáo trình luyện Shadowing video tiếng Nhật / đa ngôn ngữ.
 Nhiệm vụ của bạn là tạo các câu phụ đề chia theo từng câu ngắn (mỗi câu 3-6 giây) chuẩn cho phương pháp Shadowing (Luyện nói đuổi) từ video YouTube có chủ đề: "${title || youtubeUrl}".
@@ -37,9 +37,27 @@ Mỗi câu phụ đề BẮT BUỘC có cấu trúc JSON:
 }
 Chỉ trả về JSON thuần túy, không kèm markdown backticks.`;
 
-    const result = await model.generateContent(systemPrompt);
-    const response = await result.response;
-    let rawText = response.text() || "{}";
+    let rawText = "";
+    let lastError: any = null;
+    for (const modelName of candidateModels) {
+      try {
+        const model = genAI.getGenerativeModel({ model: modelName });
+        const result = await model.generateContent(systemPrompt);
+        const responseText = result.response.text();
+        if (responseText) {
+          rawText = responseText;
+          break;
+        }
+      } catch (mErr) {
+        lastError = mErr;
+        console.warn(`Shadowing transcript route model ${modelName} error:`, mErr);
+      }
+    }
+
+    if (!rawText) {
+      throw lastError || new Error("Không thể tạo phụ đề Shadowing");
+    }
+
     rawText = rawText.replace(/\`\`\`json/g, "").replace(/\`\`\`/g, "").trim();
 
     const data = JSON.parse(rawText);

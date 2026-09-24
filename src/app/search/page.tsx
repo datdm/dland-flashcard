@@ -162,7 +162,6 @@ export default function DictionarySearchPage() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder={searchPlaceholder}
-            autoFocus
             className="w-full rounded-2xl border border-indigo-200 bg-white px-5 py-4 text-base focus:outline-none focus:border-indigo-600 focus:ring-4 focus:ring-indigo-100 shadow-sm"
           />
           {query ? (

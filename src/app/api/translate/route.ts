@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
     const apiKey = process.env.GEMINI_API_KEY;
     if (apiKey) {
       const genAI = new GoogleGenerativeAI(apiKey);
-      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+      const candidateModels = ["gemini-3.6-flash", "gemini-2.5-flash", "gemini-2.5-pro"];
       const prompt = `Bạn là chuyên gia dịch thuật cao cấp. Hãy dịch chính xác, tự nhiên đoạn văn bản sau từ ngôn ngữ ${
         source === "auto" ? "tự động nhận diện" : source
       } sang ngôn ngữ đích ${target}.
@@ -52,12 +52,21 @@ Chỉ trả về DUY NHẤT văn bản đã dịch, không kèm lời giải th�
 
 ${q}`;
 
-      const result = await model.generateContent(prompt);
-      const translatedText = result.response.text().trim();
-      return NextResponse.json({
-        translatedText,
-        provider: "libretranslate-neural-fallback",
-      });
+      for (const modelName of candidateModels) {
+        try {
+          const model = genAI.getGenerativeModel({ model: modelName });
+          const result = await model.generateContent(prompt);
+          const translatedText = result.response.text().trim();
+          if (translatedText) {
+            return NextResponse.json({
+              translatedText,
+              provider: "libretranslate-neural-fallback",
+            });
+          }
+        } catch (mErr) {
+          console.warn(`Translate route model ${modelName} error:`, mErr);
+        }
+      }
     }
 
     throw new Error("Không thể dịch văn bản. Vui lòng thử lại sau.");
