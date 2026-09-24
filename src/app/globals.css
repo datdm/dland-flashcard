@@ -1,7 +1,29 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
+@theme {
+  --font-sans: "Google Sans", Arial, "MS Pゴシック", "MS PGothic", sans-serif, "Noto Color Emoji";
+}
+
 :root {
   --background: #f9fafb;
   --foreground: #111827;
+  --font-sans: "Google Sans", Arial, "MS Pゴシック", "MS PGothic", sans-serif, "Noto Color Emoji";
+}
+
+html,
+body,
+button,
+input,
+optgroup,
+select,
+textarea {
+  font-family: "Google Sans", Arial, "MS Pゴシック", "MS PGothic", sans-serif, "Noto Color Emoji";
+}
+
+/* Ưu tiên font MS Pゴシック cho các khối nội dung tiếng Nhật */
+[lang="ja"],
+.font-japanese,
+.font-jp {
+  font-family: "MS Pゴシック", "MS PGothic", "Google Sans", Arial, sans-serif, "Noto Color Emoji";
 }

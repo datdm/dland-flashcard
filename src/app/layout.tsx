@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Geist } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import AutoImport from "@/components/AutoImport";
@@ -9,8 +8,6 @@ import AuthModal from "@/components/AuthModal";
 import Footer from "@/components/Footer";
 import Script from "next/script";
 
-const geist = Geist({ subsets: ["latin"], variable: "--font-geist-sans" });
-
 export const metadata: Metadata = {
   title: "Dland Language — Nền tảng học ngôn ngữ đa năng",
   description: "Hệ thống học ngôn ngữ đa năng (Tiếng Nhật, Tiếng Anh, Tiếng Đức...) với Flashcard SRS, Ngữ pháp và Tra cứu từ điển",
@@ -18,8 +15,14 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="vi" className={`${geist.variable} antialiased h-full`}>
+    <html lang="vi" className="antialiased h-full">
       <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600;700&display=swap"
+          rel="stylesheet"
+        />
         <Script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7251069941916539"
