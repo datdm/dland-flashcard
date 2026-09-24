@@ -14,6 +14,13 @@ export interface JLPTReadingPromptParams {
   randomSeed: string;
 }
 
+const DIVERSITY_RULE = (level: string, randomSeed: string) => `
+[YÊU CẦU ĐỘC ĐÁO & ĐỔI MỚI TỪ VỰNG TỐI ĐA - BẮT BUỘC]:
+- TỰ ĐỘNG CHỌN TỪ VỰNG MỚI VÀ KHÁC BIỆT: Tuyệt đối KHÔNG lặp lại các từ vựng đơn giản, quen thuộc hoặc sơ cấp đã sử dụng phổ biến (như 行く, 食べる, 会社, 勉強, 友達, 本... trừ khi bối cảnh bắt buộc).
+- Hãy chủ động khai thác các từ vựng cao cấp, chuyên sâu, các cụm từ diễn đạt đa dạng và tự nhiên thuộc trình độ ${level}.
+- Mỗi lần khởi tạo nội dung phải tạo ra một tập hợp từ vựng, mẫu ngữ pháp và tình huống hoàn toàn mới lạ so với các lần trước.
+- Mã định danh biến đổi ngẫu nhiên cho lượt gen này: ${randomSeed}.`;
+
 export function buildJLPTListeningPrompt({
   level,
   topic,
@@ -24,7 +31,7 @@ export function buildJLPTListeningPrompt({
   const mNum = Number(mondaiNumber) || 1;
 
   if (mNum === 1) {
-    return `Bạn là chuyên gia ra đề thi Nghe hiểu JLPT ${level} (聴解).
+    return `Bạn là chuyên gia ra đề thi Nghe hiểu JLPT ${level} (聴解).${DIVERSITY_RULE(level, randomSeed)}
 Hãy biên soạn 1 bài nghe CHUẨN XÁC theo cấu trúc 問題 1: 課題理解 (Hiểu nhiệm vụ tiếp theo) cấp độ ${level} thuộc chủ đề "${topic}".
 Bối cảnh cụ thể: "${chosenContext}".
 Đặc trưng cấu trúc Mondai 1:
@@ -66,7 +73,7 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
   }
 
   if (mNum === 2) {
-    return `Bạn là chuyên gia ra đề thi Nghe hiểu JLPT ${level} (聴解).
+    return `Bạn là chuyên gia ra đề thi Nghe hiểu JLPT ${level} (聴解).${DIVERSITY_RULE(level, randomSeed)}
 Hãy biên soạn 1 bài nghe CHUẨN XÁC theo cấu trúc 問題 2: ポイント理解 (Nắm bắt điểm mấu chốt & lý do) cấp độ ${level} thuộc chủ đề "${topic}".
 Bối cảnh cụ thể: "${chosenContext}".
 Đặc trưng cấu trúc Mondai 2:
@@ -102,7 +109,7 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
   }
 
   if (mNum === 3) {
-    return `Bạn là chuyên gia ra đề thi Nghe hiểu JLPT ${level} (聴解).
+    return `Bạn là chuyên gia ra đề thi Nghe hiểu JLPT ${level} (聴解).${DIVERSITY_RULE(level, randomSeed)}
 Hãy biên soạn 1 bài nghe CHUẨN XÁC theo cấu trúc 問題 3: 概要理解 (Hiểu chủ đề bao quát & quan điểm) cấp độ ${level} thuộc chủ đề "${topic}".
 Bối cảnh cụ thể: "${chosenContext}".
 Đặc trưng cấu trúc Mondai 3:
@@ -138,7 +145,7 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
   }
 
   if (mNum === 4) {
-    return `Bạn là chuyên gia ra đề thi Nghe hiểu JLPT ${level} (聴解).
+    return `Bạn là chuyên gia ra đề thi Nghe hiểu JLPT ${level} (聴解).${DIVERSITY_RULE(level, randomSeed)}
 Hãy biên soạn 1 bài nghe CHUẨN XÁC theo cấu trúc 問題 4: 即時応答 (Phản xạ câu ứng đáp tức thì) cấp độ ${level} thuộc chủ đề "${topic}".
 Bối cảnh cụ thể: "${chosenContext}".
 ĐẶC TRƯNG BẮT BUỘC:
@@ -177,7 +184,7 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
   }
 
   // Mondai 5: 統合理解 (Integrated listening - 2 questions)
-  return `Bạn là chuyên gia ra đề thi Nghe hiểu JLPT ${level} (聴解).
+  return `Bạn là chuyên gia ra đề thi Nghe hiểu JLPT ${level} (聴解).${DIVERSITY_RULE(level, randomSeed)}
 Hãy biên soạn 1 bài nghe CHUẨN XÁC theo cấu trúc 問題 5: 統合理解 (Nghe hiểu tích hợp đối thoại dài) cấp độ ${level} thuộc chủ đề "${topic}".
 Bối cảnh cụ thể: "${chosenContext}".
 ĐẶC TRƯNG:
@@ -239,7 +246,7 @@ export function buildJLPTReadingPrompt({
   const isLong = (level === "N1" && (mNum === 10 || mNum === 12)) || (level === "N2" && mNum === 13) || (level === "N3" && mNum === 11);
 
   if (isComparison) {
-    return `Bạn là chuyên gia ôn luyện đọc hiểu JLPT ${level}.
+    return `Bạn là chuyên gia ôn luyện đọc hiểu JLPT ${level}.${DIVERSITY_RULE(level, randomSeed)}
 Hãy biên soạn 1 bài đọc hiểu CHUẨN XÁC theo cấu trúc Đọc hiểu so sánh (統合理解) cấp độ ${level} thuộc chủ đề "${topic}".
 Bối cảnh cụ thể: "${chosenContext}".
 ĐẶC TRƯNG BẮT BUỘC:
@@ -304,7 +311,7 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
   }
 
   if (isInfoSearch) {
-    return `Bạn là chuyên gia ôn luyện đọc hiểu JLPT ${level}.
+    return `Bạn là chuyên gia ôn luyện đọc hiểu JLPT ${level}.${DIVERSITY_RULE(level, randomSeed)}
 Hãy biên soạn 1 bài đọc hiểu CHUẨN XÁC theo cấu trúc Tìm kiếm thông tin (情報検索) cấp độ ${level} thuộc chủ đề "${topic}".
 Bối cảnh cụ thể: "${chosenContext}".
 ĐẶC TRƯNG BẮT BUỘC:
@@ -360,7 +367,7 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
   }
 
   if (isMedium) {
-    return `Bạn là chuyên gia ôn luyện đọc hiểu JLPT ${level}.
+    return `Bạn là chuyên gia ôn luyện đọc hiểu JLPT ${level}.${DIVERSITY_RULE(level, randomSeed)}
 Hãy tạo 1 bài đọc hiểu Đoạn văn trung (中文) chuẩn JLPT ${level} thuộc chủ đề "${topic}".
 Bối cảnh cụ thể: "${chosenContext}".
 Đoạn văn tiếng Nhật khoảng 450-550 chữ, phát triển ý mạch lạc.
@@ -425,7 +432,7 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
   }
 
   if (isLong) {
-    return `Bạn là chuyên gia ôn luyện đọc hiểu JLPT ${level}.
+    return `Bạn là chuyên gia ôn luyện đọc hiểu JLPT ${level}.${DIVERSITY_RULE(level, randomSeed)}
 Hãy tạo 1 bài đọc hiểu Đoạn văn dài (長文) chuẩn JLPT ${level} thuộc chủ đề "${topic}".
 Bối cảnh cụ thể: "${chosenContext}".
 Đoạn văn tiếng Nhật khoảng 800-950 chữ, lập luận sâu sắc.
@@ -490,7 +497,7 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
   }
 
   // Default: Short passage (短文 - 1 question)
-  return `Bạn là chuyên gia ôn luyện đọc hiểu JLPT ${level}.
+  return `Bạn là chuyên gia ôn luyện đọc hiểu JLPT ${level}.${DIVERSITY_RULE(level, randomSeed)}
 Hãy tạo 1 bài đọc hiểu Đoạn văn ngắn (短文) chuẩn JLPT ${level} thuộc chủ đề "${topic}".
 Bối cảnh cụ thể: "${chosenContext}".
 Đoạn văn tiếng Nhật ngắn gọn khoảng 180-220 chữ.
@@ -552,7 +559,7 @@ export function buildJLPTVocabPrompt({
 }: JLPTVocabPromptParams): string {
   const mNum = Number(mondaiNumber) || 1;
 
-  return `Bạn là chuyên gia biên soạn đề thi JLPT phần 言語知識（文字・語彙） cấp độ ${level}.
+  return `Bạn là chuyên gia biên soạn đề thi JLPT phần 言語知識（文字・語彙） cấp độ ${level}.${DIVERSITY_RULE(level, randomSeed)}
 Hãy tạo 1 bộ câu hỏi Luyện tập Từ vựng & Kanji CHUẨN XÁC theo Mondai ${mNum} JLPT ${level} thuộc chủ đề "${topic}".
 Bối cảnh bài luyện: "${chosenContext}".
 Mã ngẫu nhiên cho đề thi này: ${randomSeed}.
@@ -634,7 +641,7 @@ export function buildJLPTGrammarPrompt({
   const mNum = Number(mondaiNumber) || 1;
 
   if (mNum === 2) {
-    return `Bạn là chuyên gia biên soạn đề thi JLPT phần 言語知識（文法） cấp độ ${level}.
+    return `Bạn là chuyên gia biên soạn đề thi JLPT phần 言語知識（文法） cấp độ ${level}.${DIVERSITY_RULE(level, randomSeed)}
 Hãy tạo 1 bộ bài tập DỰNG CÂU DẤU SAO (文の組み立て) CHUẨN XÁC theo Mondai 2 (Dựng câu dấu sao ★) JLPT ${level} thuộc chủ đề "${topic}".
 Bối cảnh bài luyện: "${chosenContext}".
 Mã ngẫu nhiên cho đề thi này: ${randomSeed}.
@@ -712,7 +719,7 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
 }`;
   }
 
-  return `Bạn là chuyên gia biên soạn đề thi JLPT phần 言語知識（文法） cấp độ ${level}.
+  return `Bạn là chuyên gia biên soạn đề thi JLPT phần 言語知識（文法） cấp độ ${level}.${DIVERSITY_RULE(level, randomSeed)}
 Hãy tạo 1 bộ bài tập NGỮ PHÁP JLPT CHUẨN XÁC theo Mondai ${mNum} cấp độ ${level} thuộc chủ đề "${topic}".
 Bối cảnh bài luyện: "${chosenContext}".
 Mã ngẫu nhiên cho đề thi này: ${randomSeed}.

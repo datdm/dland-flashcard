@@ -10,8 +10,82 @@ import * as syncService from "@/lib/syncService";
 import { useLanguageSetting } from "@/hooks/useLanguageSetting";
 import { useFlashCardSettings } from "@/hooks/useFlashCardSettings";
 import { useAuth } from "@/context/AuthContext";
+import { useNotebooks } from "@/hooks/useNotebooks";
+import { useProgress } from "@/hooks/useProgress";
 import CurriculumDisplaySettings from "@/components/CurriculumDisplaySettings";
 import NavMenuSettingsPanel from "@/components/NavMenuSettingsPanel";
+
+function NotebookProgressSettingsPanel() {
+  const { notebooks } = useNotebooks();
+  const { progress } = useProgress();
+
+  const notebookProgresses = useMemo(() => {
+    return notebooks.map((nb) => {
+      const total = nb.vocabulary.length;
+      const learned = nb.vocabulary.filter((v) => progress[v.id]?.learned).length;
+      const percentage = total > 0 ? Math.round((learned / total) * 100) : 0;
+      return { ...nb, total, learned, percentage };
+    });
+  }, [notebooks, progress]);
+
+  if (notebooks.length === 0) return null;
+
+  return (
+    <div className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-xs space-y-3.5">
+      <div className="flex items-center justify-between flex-wrap gap-2 pb-2 border-b border-gray-100">
+        <div>
+          <h2 className="text-base font-bold text-gray-900 flex items-center gap-2">
+            <span>📓</span> Tiến Độ Sổ Tay & Từ Vựng Đã Học
+          </h2>
+          <p className="text-xs text-gray-500 mt-0.5">
+            Nhấn vào từng sổ tay để mở trực tiếp danh sách các từ vựng đã học / đã thuộc
+          </p>
+        </div>
+        <Link
+          href="/notebooks"
+          className="text-xs font-bold text-indigo-600 hover:text-indigo-800 hover:underline flex items-center gap-1"
+        >
+          <span>Quản lý tất cả sổ tay</span>
+          <span>→</span>
+        </Link>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+        {notebookProgresses.map((nb) => (
+          <Link
+            key={nb.id}
+            href={`/notebooks/${nb.id}?tab=learned`}
+            className="p-3.5 rounded-2xl border border-gray-200/80 bg-gray-50/50 hover:bg-purple-50/40 hover:border-purple-300 transition-all flex flex-col justify-between group shadow-3xs cursor-pointer"
+            title={`Xem từ đã học trong ${nb.name}`}
+          >
+            <div>
+              <div className="flex items-center justify-between gap-2 mb-2">
+                <span className="font-extrabold text-xs text-gray-900 group-hover:text-purple-700 truncate">
+                  {nb.name}
+                </span>
+                <span className="text-[11px] font-bold text-purple-600 bg-purple-50 px-2 py-0.5 rounded-md border border-purple-100 shrink-0">
+                  {nb.learned}/{nb.total} từ ({nb.percentage}%)
+                </span>
+              </div>
+              <div className="w-full bg-gray-200/80 rounded-full h-1.5 overflow-hidden">
+                <div
+                  className="bg-purple-600 h-1.5 rounded-full transition-all duration-300"
+                  style={{ width: `${nb.percentage}%` }}
+                />
+              </div>
+            </div>
+            <div className="mt-2.5 pt-2 border-t border-gray-200/40 flex items-center justify-between text-[11px] text-gray-500 group-hover:text-purple-600 font-semibold">
+              <span className="flex items-center gap-1">
+                <span>{nb.learned > 0 ? "✨ Xem từ vựng đã học" : "Chưa có từ đã học (Xem sổ)"}</span>
+              </span>
+              <span className="group-hover:translate-x-0.5 transition-transform text-xs font-bold text-purple-600">→</span>
+            </div>
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 function ResetHistorySettingsPanel() {
   const [showResetModal, setShowResetModal] = useState(false);
@@ -235,6 +309,9 @@ export default function SettingsPage() {
             </button>
           </div>
         </div>
+
+        {/* Notebooks Progress & Learned Vocabulary */}
+        <NotebookProgressSettingsPanel />
 
         {/* Display additional settings ONLY when authenticated */}
         {isAuthenticated ? (

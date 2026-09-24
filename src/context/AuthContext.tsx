@@ -77,13 +77,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (valid && verifiedUser) {
         setUser(verifiedUser);
         setIsAuthenticated(true);
-
-        // Auto download newest data from cloud on valid session start
-        try {
-          await syncService.downloadFromServer();
-        } catch (syncErr) {
-          console.warn("Initial sync after session validation error:", syncErr);
-        }
       } else {
         // Token was invalid or expired
         setUser(null);
@@ -129,35 +122,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setIsAuthenticated(false);
     };
 
-    // Auto-refresh when tab becomes active / window focused (multi-device sync)
-    const handleWindowFocus = () => {
-      if (syncService.checkAuthStatus()) {
-        const lastSync = syncService.getLastSyncAt();
-        const shouldSync = !lastSync || Date.now() - new Date(lastSync).getTime() > 60000;
-        if (shouldSync) {
-          syncService.downloadFromServer().catch(console.warn);
-        }
-      }
-    };
-
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === "visible") {
-        handleWindowFocus();
-      }
-    };
-
     window.addEventListener("storage", handleStorageChange);
     window.addEventListener("auth-state-changed", handleStorageChange);
     window.addEventListener("auth-session-expired", handleSessionExpired);
-    window.addEventListener("focus", handleWindowFocus);
-    document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
       window.removeEventListener("storage", handleStorageChange);
       window.removeEventListener("auth-state-changed", handleStorageChange);
       window.removeEventListener("auth-session-expired", handleSessionExpired);
-      window.removeEventListener("focus", handleWindowFocus);
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, [validateSessionAndSync]);
 

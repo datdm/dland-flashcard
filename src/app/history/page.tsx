@@ -20,6 +20,9 @@ interface TimelineItem {
   meaning: string;
   learnedAt: string;
   source: string;
+  sourceType?: "curriculum" | "notebook" | "grammar" | "other";
+  sourceId?: string;
+  sourceTitle?: string;
   lang?: string;
 }
 
@@ -49,6 +52,9 @@ export default function HistoryPage() {
 
   const [completedLessons, setCompletedLessons] = useState<CompletedLesson[]>([]);
   const [timeFilter, setTimeFilter] = useState<"all" | "1day" | "3days" | "1month" | "3months" | "1year" | "thisYear" | number>("all");
+  const [sourceTypeFilter, setSourceTypeFilter] = useState<"all" | "notebook" | "curriculum" | "grammar">("all");
+  const [specificSourceFilter, setSpecificSourceFilter] = useState<string>("all");
+  const [selectedCustomDate, setSelectedCustomDate] = useState<string>("");
   const [curriculumTabFilter, setCurriculumTabFilter] = useState<"all" | "in_progress" | "completed">("all");
   const [systemVocabList, setSystemVocabList] = useState<any[]>([]);
   const [systemGrammarList, setSystemGrammarList] = useState<any[]>([]);
@@ -62,7 +68,7 @@ export default function HistoryPage() {
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [timeFilter, effectiveLang]);
+  }, [timeFilter, sourceTypeFilter, specificSourceFilter, selectedCustomDate, effectiveLang]);
 
   useEffect(() => {
     async function loadRepoBooks() {
@@ -191,7 +197,16 @@ export default function HistoryPage() {
 
   // 1. Build lookup tables for vocabulary
   const vocabLookup = useMemo(() => {
-    const map = new Map<string, { kanji?: string; hiragana?: string; meaning?: string; source: string; lang: string }>();
+    const map = new Map<string, { 
+      kanji?: string; 
+      hiragana?: string; 
+      meaning?: string; 
+      source: string; 
+      lang: string;
+      sourceType: "curriculum" | "notebook" | "other";
+      sourceId: string;
+      sourceTitle: string;
+    }>();
     
     curriculums.forEach((c) => {
       const curriculumLang = (c as any).lang || (
@@ -207,7 +222,10 @@ export default function HistoryPage() {
             hiragana: v.hiragana,
             meaning: v.meaning,
             source: `${c.name} • ${l.name}`,
-            lang: curriculumLang
+            lang: curriculumLang,
+            sourceType: "curriculum",
+            sourceId: c.id,
+            sourceTitle: c.name,
           });
         });
       });
@@ -220,26 +238,43 @@ export default function HistoryPage() {
           hiragana: v.hiragana,
           meaning: v.meaning,
           source: `Sổ tay: ${nb.name}`,
-          lang: nb.lang || "ja"
+          lang: nb.lang || "ja",
+          sourceType: "notebook",
+          sourceId: nb.id,
+          sourceTitle: nb.name,
         });
       });
     });
 
     systemVocabList.forEach((v) => {
-      map.set(v.id, {
-        kanji: v.kanji || v.word,
-        hiragana: v.hiragana || v.type || "",
-        meaning: v.meaning,
-        source: v.sourceName,
-        lang: v.lang || "ja"
-      });
+      if (!map.has(v.id)) {
+        const title = v.curriculumName || v.curriculumTitle || (v.sourceName ? v.sourceName.split("•")[0].trim() : "Giáo trình");
+        map.set(v.id, {
+          kanji: v.kanji || v.word,
+          hiragana: v.hiragana || v.type || "",
+          meaning: v.meaning,
+          source: v.sourceName || title,
+          lang: v.lang || "ja",
+          sourceType: "curriculum",
+          sourceId: title,
+          sourceTitle: title,
+        });
+      }
     });
 
     return map;
   }, [curriculums, notebooks, systemVocabList]);
 
   const grammarLookup = useMemo(() => {
-    const map = new Map<string, { structure: string; meaning: string; source: string; lang: string }>();
+    const map = new Map<string, { 
+      structure: string; 
+      meaning: string; 
+      source: string; 
+      lang: string;
+      sourceType: "grammar" | "curriculum" | "other";
+      sourceId: string;
+      sourceTitle: string;
+    }>();
     
     grammarCollections.forEach((c) => {
       c.grammarPoints?.forEach((gp) => {
@@ -247,18 +282,27 @@ export default function HistoryPage() {
           structure: gp.structure,
           meaning: gp.meaning,
           source: `Ngữ pháp: ${c.name}`,
-          lang: (c as any).lang || "ja"
+          lang: (c as any).lang || "ja",
+          sourceType: "grammar",
+          sourceId: c.id,
+          sourceTitle: c.name,
         });
       });
     });
 
     systemGrammarList.forEach((g) => {
-      map.set(g.id, {
-        structure: g.structure,
-        meaning: g.meaning,
-        source: g.sourceName,
-        lang: g.lang || "ja"
-      });
+      if (!map.has(g.id)) {
+        const title = g.curriculumName || g.curriculumTitle || (g.sourceName ? g.sourceName.split("•")[0].trim() : "Giáo trình");
+        map.set(g.id, {
+          structure: g.structure,
+          meaning: g.meaning,
+          source: g.sourceName || title,
+          lang: g.lang || "ja",
+          sourceType: "curriculum",
+          sourceId: title,
+          sourceTitle: title,
+        });
+      }
     });
 
     return map;
@@ -419,6 +463,9 @@ function getItemLevel(c: { id: string; name: string; level?: string }): string {
             meaning: details?.meaning || "",
             learnedAt: p.learnedAt,
             source: details?.source || "Từ vựng cá nhân",
+            sourceType: details?.sourceType || "other",
+            sourceId: details?.sourceId || "",
+            sourceTitle: details?.sourceTitle || details?.source || "Khác",
             lang: itemLang
           });
         }
@@ -443,6 +490,9 @@ function getItemLevel(c: { id: string; name: string; level?: string }): string {
             meaning: details?.meaning || "",
             learnedAt: p.learnedAt,
             source: details?.source || "Ngữ pháp cá nhân",
+            sourceType: details?.sourceType || "grammar",
+            sourceId: details?.sourceId || "",
+            sourceTitle: details?.sourceTitle || details?.source || "Khác",
             lang: itemLang
           });
         }
@@ -534,7 +584,59 @@ function getItemLevel(c: { id: string; name: string; level?: string }): string {
     return Array.from(years).sort((a, b) => b - a);
   }, [timelineItems]);
 
-  // Filter timeline items based on the active timeFilter
+  // Options for the combobox selector (Sổ tay / Giáo trình / Bộ ngữ pháp)
+  const availableSourceOptions = useMemo(() => {
+    const list: { key: string; label: string; group: string; type: "notebook" | "curriculum" | "grammar" }[] = [];
+    const seenKeys = new Set<string>();
+
+    // 1. Notebooks
+    notebooks.forEach((nb) => {
+      const key = `notebook:${nb.id}`;
+      if (!seenKeys.has(key)) {
+        seenKeys.add(key);
+        list.push({ key, label: `📓 ${nb.name}`, group: "Sổ tay cá nhân", type: "notebook" });
+      }
+    });
+
+    // 2. Curriculums
+    activeRepoBooks.forEach((c) => {
+      const key = `curriculum:${c.name}`;
+      if (!seenKeys.has(key)) {
+        seenKeys.add(key);
+        list.push({ key, label: `📚 ${c.name}`, group: "Giáo trình", type: "curriculum" });
+      }
+    });
+
+    // System curriculums fallback
+    systemVocabList.forEach((v) => {
+      const title = v.curriculumTitle || v.curriculumName;
+      if (title) {
+        const key = `curriculum:${title}`;
+        if (!seenKeys.has(key)) {
+          seenKeys.add(key);
+          list.push({ key, label: `📚 ${title}`, group: "Giáo trình", type: "curriculum" });
+        }
+      }
+    });
+
+    // 3. Grammar Collections
+    grammarCollections.forEach((c) => {
+      const key = `grammar:${c.id}`;
+      if (!seenKeys.has(key)) {
+        seenKeys.add(key);
+        list.push({ key, label: `📖 ${c.name}`, group: "Bộ ngữ pháp", type: "grammar" });
+      }
+    });
+
+    return list;
+  }, [notebooks, activeRepoBooks, systemVocabList, grammarCollections]);
+
+  const filteredSourceOptions = useMemo(() => {
+    if (sourceTypeFilter === "all") return availableSourceOptions;
+    return availableSourceOptions.filter((opt) => opt.type === sourceTypeFilter);
+  }, [availableSourceOptions, sourceTypeFilter]);
+
+  // Filter timeline items based on active timeFilter, sourceTypeFilter, specificSourceFilter & selectedCustomDate
   const filteredTimelineItems = useMemo(() => {
     const now = Date.now();
     const oneDayMs = 24 * 60 * 60 * 1000;
@@ -543,21 +645,55 @@ function getItemLevel(c: { id: string; name: string; level?: string }): string {
       const learnedTime = new Date(item.learnedAt).getTime();
       const learnedDateObj = new Date(item.learnedAt);
       
-      if (timeFilter === "all") return true;
-      if (timeFilter === "1day") return (now - learnedTime) <= oneDayMs;
-      if (timeFilter === "3days") return (now - learnedTime) <= 3 * oneDayMs;
-      if (timeFilter === "1month") return (now - learnedTime) <= 30 * oneDayMs;
-      if (timeFilter === "3months") return (now - learnedTime) <= 90 * oneDayMs;
-      if (timeFilter === "1year") return (now - learnedTime) <= 365 * oneDayMs;
-      if (timeFilter === "thisYear") {
-        return learnedDateObj.getFullYear() === new Date().getFullYear();
+      // 1. Source Type Filter
+      if (sourceTypeFilter !== "all" && item.sourceType !== sourceTypeFilter) {
+        return false;
       }
-      if (typeof timeFilter === "number") {
-        return learnedDateObj.getFullYear() === timeFilter;
+
+      // 2. Specific Combobox Source Filter
+      if (specificSourceFilter !== "all") {
+        const colonIdx = specificSourceFilter.indexOf(":");
+        if (colonIdx !== -1) {
+          const targetType = specificSourceFilter.substring(0, colonIdx);
+          const targetValue = specificSourceFilter.substring(colonIdx + 1);
+
+          if (targetType === "notebook" && (item.sourceType !== "notebook" || item.sourceId !== targetValue)) {
+            return false;
+          }
+          if (targetType === "curriculum" && (item.sourceType !== "curriculum" || (item.sourceTitle !== targetValue && item.sourceId !== targetValue && !item.source.includes(targetValue)))) {
+            return false;
+          }
+          if (targetType === "grammar" && (item.sourceType !== "grammar" || item.sourceId !== targetValue)) {
+            return false;
+          }
+        }
       }
+
+      // 3. Custom Date Filter (exact YYYY-MM-DD date)
+      if (selectedCustomDate) {
+        const yyyy = learnedDateObj.getFullYear();
+        const mm = String(learnedDateObj.getMonth() + 1).padStart(2, "0");
+        const dd = String(learnedDateObj.getDate()).padStart(2, "0");
+        const itemDateStr = `${yyyy}-${mm}-${dd}`;
+        if (itemDateStr !== selectedCustomDate) {
+          return false;
+        }
+      }
+
+      // 4. Time Range Filter (only if no specific custom date is selected)
+      if (!selectedCustomDate) {
+        if (timeFilter === "1day" && (now - learnedTime) > oneDayMs) return false;
+        if (timeFilter === "3days" && (now - learnedTime) > 3 * oneDayMs) return false;
+        if (timeFilter === "1month" && (now - learnedTime) > 30 * oneDayMs) return false;
+        if (timeFilter === "3months" && (now - learnedTime) > 90 * oneDayMs) return false;
+        if (timeFilter === "1year" && (now - learnedTime) > 365 * oneDayMs) return false;
+        if (timeFilter === "thisYear" && learnedDateObj.getFullYear() !== new Date().getFullYear()) return false;
+        if (typeof timeFilter === "number" && learnedDateObj.getFullYear() !== timeFilter) return false;
+      }
+
       return true;
     });
-  }, [timelineItems, timeFilter]);
+  }, [timelineItems, sourceTypeFilter, specificSourceFilter, selectedCustomDate, timeFilter]);
 
   // Group timeline by date (e.g. "Hôm nay", "Hôm qua", "DD/MM/YYYY")
   const groupedTimeline = useMemo(() => {
@@ -760,19 +896,30 @@ function getItemLevel(c: { id: string; name: string; level?: string }): string {
 
         {/* Notebooks Progress */}
         <div className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-xs flex flex-col">
-          <h2 className="text-base font-bold text-gray-900 mb-3 flex items-center gap-2">
-            <span>📓</span> Tiến độ Sổ tay
-          </h2>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-base font-bold text-gray-900 flex items-center gap-2">
+              <span>📓</span> Tiến độ Sổ tay
+            </h2>
+            <span className="text-[11px] text-gray-400 font-medium">Nhấn để xem từ đã học</span>
+          </div>
           {notebookProgresses.length === 0 ? (
             <p className="text-xs text-gray-400 italic">Chưa tạo sổ tay nào.</p>
           ) : (
-            <div className="space-y-3 flex-1">
+            <div className="space-y-2 flex-1">
               {notebookProgresses.map((nb) => (
-                <div key={nb.id} className="space-y-1">
-                  <div className="flex justify-between items-center text-xs">
-                    <span className="font-bold text-gray-700 truncate max-w-[200px]">{nb.name}</span>
-                    <span className="font-bold text-purple-600 shrink-0">
-                      {nb.learned}/{nb.total} từ ({nb.percentage}%)
+                <Link
+                  key={nb.id}
+                  href={`/notebooks/${nb.id}?tab=learned`}
+                  className="block p-2.5 rounded-xl hover:bg-purple-50/70 border border-transparent hover:border-purple-200 transition-all group cursor-pointer"
+                  title={`Xem danh sách các từ vựng đã học trong ${nb.name}`}
+                >
+                  <div className="flex justify-between items-center text-xs mb-1.5">
+                    <span className="font-bold text-gray-700 group-hover:text-purple-700 truncate max-w-[200px]">
+                      {nb.name}
+                    </span>
+                    <span className="font-bold text-purple-600 shrink-0 flex items-center gap-1 group-hover:underline">
+                      <span>{nb.learned}/{nb.total} từ ({nb.percentage}%)</span>
+                      <span className="text-[10px] text-purple-400 group-hover:text-purple-600 group-hover:translate-x-0.5 transition-transform">→</span>
                     </span>
                   </div>
                   <div className="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
@@ -781,7 +928,11 @@ function getItemLevel(c: { id: string; name: string; level?: string }): string {
                       style={{ width: `${nb.percentage}%` }}
                     />
                   </div>
-                </div>
+                  <div className="text-[10px] text-gray-400 group-hover:text-purple-600 mt-1 flex items-center justify-between font-medium">
+                    <span>{nb.learned > 0 ? "✨ Xem từ vựng đã học" : "Chưa có từ đã học (xem sổ)"}</span>
+                    <span className="text-[9px] bg-purple-50 group-hover:bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded font-bold">Đã học</span>
+                  </div>
+                </Link>
               ))}
             </div>
           )}
@@ -1020,71 +1171,170 @@ function getItemLevel(c: { id: string; name: string; level?: string }): string {
       </div>
 
       {/* Activity Timeline */}
-      <div className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-xs space-y-3.5">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-          <h2 className="text-base font-bold text-gray-900 flex items-center gap-2">
-            <span>⏱️</span> Nhật ký hoạt động gần đây
-          </h2>
+      <div className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-xs space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-gray-100">
+          <div>
+            <h2 className="text-base font-bold text-gray-900 flex items-center gap-2">
+              <span>⏱️</span> Nhật ký hoạt động gần đây
+            </h2>
+            <p className="text-xs text-gray-500 mt-0.5">
+              Theo dõi lịch sử học từ vựng và ngữ pháp theo thời gian, sổ tay hoặc giáo trình chỉ định
+            </p>
+          </div>
+        </div>
 
-          {/* Time Filter Controls */}
-          <div className="flex flex-wrap gap-1.5 items-center">
-            {[
-              { id: "all", label: "Tất cả" },
-              { id: "1day", label: "1 ngày" },
-              { id: "3days", label: "3 ngày" },
-              { id: "1month", label: "1 tháng" },
-              { id: "3months", label: "3 tháng" },
-              { id: "1year", label: "1 năm" },
-              { id: "thisYear", label: "Năm nay" },
-            ].map((f) => (
-              <button
-                key={f.id}
-                onClick={() => setTimeFilter(f.id as any)}
-                className={`px-2.5 py-1 rounded-xl text-[10px] font-bold transition-all border ${
-                  timeFilter === f.id
-                    ? "bg-indigo-600 text-white border-indigo-600 shadow-3xs"
-                    : "bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100"
-                }`}
-              >
-                {f.label}
-              </button>
-            ))}
+        {/* Filter Controls Panel */}
+        <div className="bg-gray-50/80 rounded-2xl p-3.5 border border-gray-100 space-y-3">
+          {/* Row 1: Source Type Filter & Specific Combobox Selector */}
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+            {/* Source Type Filter Buttons */}
+            <div className="flex flex-wrap items-center gap-1.5">
+              <span className="text-xs font-bold text-gray-500 mr-1 flex items-center gap-1 shrink-0">
+                <span>📂</span> Loại nguồn:
+              </span>
+              {[
+                { id: "all", label: "Tất cả" },
+                { id: "notebook", label: "📓 Sổ tay" },
+                { id: "curriculum", label: "📚 Giáo trình" },
+                { id: "grammar", label: "📖 Ngữ pháp" },
+              ].map((st) => (
+                <button
+                  key={st.id}
+                  onClick={() => {
+                    setSourceTypeFilter(st.id as any);
+                    setSpecificSourceFilter("all");
+                    setCurrentPage(1);
+                  }}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all border cursor-pointer ${
+                    sourceTypeFilter === st.id
+                      ? "bg-indigo-600 text-white border-indigo-600 shadow-3xs"
+                      : "bg-white text-gray-600 border-gray-200 hover:bg-gray-100"
+                  }`}
+                >
+                  {st.label}
+                </button>
+              ))}
+            </div>
 
-            {/* Year Dropdown */}
-            {availableYears.length > 0 && (
+            {/* Combobox Select for Specific Notebook / Curriculum */}
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-bold text-gray-500 shrink-0">Chỉ định:</span>
               <select
-                value={typeof timeFilter === "number" ? timeFilter : ""}
+                value={specificSourceFilter}
                 onChange={(e) => {
-                  const val = e.target.value;
-                  if (val) {
-                    setTimeFilter(parseInt(val));
-                  } else {
-                    setTimeFilter("all");
-                  }
+                  setSpecificSourceFilter(e.target.value);
+                  setCurrentPage(1);
                 }}
-                className={`px-2.5 py-1.5 rounded-xl text-[10px] font-bold transition-all border outline-none cursor-pointer ${
-                  typeof timeFilter === "number"
-                    ? "bg-indigo-600 text-white border-indigo-600 shadow-3xs"
-                    : "bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100"
-                }`}
+                className="px-3 py-1.5 rounded-xl text-xs font-bold bg-white border border-gray-200 text-gray-800 outline-none cursor-pointer focus:ring-2 focus:ring-indigo-500/20 max-w-[260px] truncate shadow-3xs"
               >
-                <option value="" className="text-gray-700 bg-white">Theo năm</option>
-                {availableYears.map((yr) => (
-                  <option key={yr} value={yr} className="text-gray-700 bg-white">
-                    Năm {yr}
+                <option value="all">-- Tất cả Sổ tay & Giáo trình --</option>
+                {filteredSourceOptions.map((opt) => (
+                  <option key={opt.key} value={opt.key}>
+                    {opt.label}
                   </option>
                 ))}
               </select>
-            )}
+            </div>
+          </div>
+
+          {/* Row 2: Preset Time Filters & Custom Date Picker */}
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 pt-2.5 border-t border-gray-200/60">
+            {/* Preset Time Range Filters */}
+            <div className="flex flex-wrap items-center gap-1.5">
+              <span className="text-xs font-bold text-gray-500 mr-1 flex items-center gap-1 shrink-0">
+                <span>⏱️</span> Thời gian:
+              </span>
+              {[
+                { id: "all", label: "Tất cả" },
+                { id: "1day", label: "1 ngày" },
+                { id: "3days", label: "3 ngày" },
+                { id: "1month", label: "1 tháng" },
+                { id: "3months", label: "3 tháng" },
+                { id: "1year", label: "1 năm" },
+                { id: "thisYear", label: "Năm nay" },
+              ].map((f) => (
+                <button
+                  key={f.id}
+                  onClick={() => {
+                    setTimeFilter(f.id as any);
+                    setSelectedCustomDate("");
+                    setCurrentPage(1);
+                  }}
+                  className={`px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all border cursor-pointer ${
+                    timeFilter === f.id && !selectedCustomDate
+                      ? "bg-purple-600 text-white border-purple-600 shadow-3xs"
+                      : "bg-white text-gray-600 border-gray-200 hover:bg-gray-100"
+                  }`}
+                >
+                  {f.label}
+                </button>
+              ))}
+
+              {/* Year Dropdown */}
+              {availableYears.length > 0 && (
+                <select
+                  value={typeof timeFilter === "number" && !selectedCustomDate ? timeFilter : ""}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    if (val) {
+                      setTimeFilter(parseInt(val));
+                      setSelectedCustomDate("");
+                      setCurrentPage(1);
+                    } else {
+                      setTimeFilter("all");
+                    }
+                  }}
+                  className={`px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all border outline-none cursor-pointer ${
+                    typeof timeFilter === "number" && !selectedCustomDate
+                      ? "bg-purple-600 text-white border-purple-600 shadow-3xs"
+                      : "bg-white text-gray-600 border-gray-200 hover:bg-gray-100"
+                  }`}
+                >
+                  <option value="" className="text-gray-700 bg-white">Theo năm</option>
+                  {availableYears.map((yr) => (
+                    <option key={yr} value={yr} className="text-gray-700 bg-white">
+                      Năm {yr}
+                    </option>
+                  ))}
+                </select>
+              )}
+            </div>
+
+            {/* Custom Exact Date Picker */}
+            <div className="flex items-center gap-2 shrink-0">
+              <span className="text-xs font-bold text-gray-500 flex items-center gap-1">
+                📅 Ngày chỉ định:
+              </span>
+              <input
+                type="date"
+                value={selectedCustomDate}
+                onChange={(e) => {
+                  setSelectedCustomDate(e.target.value);
+                  setCurrentPage(1);
+                }}
+                className="px-2.5 py-1.5 rounded-xl text-xs font-bold bg-white border border-gray-200 text-gray-800 outline-none cursor-pointer focus:ring-2 focus:ring-purple-500/20 shadow-3xs"
+              />
+              {selectedCustomDate && (
+                <button
+                  onClick={() => {
+                    setSelectedCustomDate("");
+                    setCurrentPage(1);
+                  }}
+                  className="text-xs font-bold text-red-600 hover:text-red-800 underline cursor-pointer"
+                >
+                  Xóa
+                </button>
+              )}
+            </div>
           </div>
         </div>
 
         {groupedTimeline.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-10 text-center">
             <span className="text-4xl mb-3">🌱</span>
-            <h3 className="font-bold text-gray-700 text-sm">Chưa ghi nhận hoạt động</h3>
+            <h3 className="font-bold text-gray-700 text-sm">Chưa ghi nhận hoạt động phù hợp</h3>
             <p className="text-xs text-gray-400 mt-1 max-w-sm">
-              Hãy bắt đầu đánh dấu các từ vựng hoặc cấu trúc ngữ pháp là "Đã học" để theo dõi lịch sử tại đây!
+              Không tìm thấy từ vựng hoặc ngữ pháp nào khớp với bộ lọc nguồn hoặc ngày chỉ định hiện tại.
             </p>
           </div>
         ) : (
@@ -1093,9 +1343,18 @@ function getItemLevel(c: { id: string; name: string; level?: string }): string {
               <div key={date} className="relative pl-8">
                 {/* Date bubble */}
                 <div className="absolute left-[3px] top-1.5 w-2 h-2 rounded-full bg-indigo-600 ring-4 ring-indigo-50 z-10" />
-                <h3 className="font-extrabold text-xs text-gray-400 uppercase tracking-wider mb-3">
-                  {date}
-                </h3>
+
+                {/* Date Header with Daily Item Count */}
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-extrabold text-xs text-gray-700 uppercase tracking-wider">
+                      {date}
+                    </h3>
+                    <span className="px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 text-[11px] font-black border border-indigo-100/80 shadow-3xs">
+                      📊 {items.length} mục đã học
+                    </span>
+                  </div>
+                </div>
 
                 <div className="space-y-3">
                   {items.map((item) => {

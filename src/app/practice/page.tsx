@@ -587,6 +587,7 @@ export default function PracticeHubPage() {
   const [grammarChecked, setGrammarChecked] = useState<Record<string, boolean>>({});
 
   const [showGenListeningScript, setShowGenListeningScript] = useState<boolean>(false);
+  const [showGenListeningRuby, setShowGenListeningRuby] = useState<boolean>(true);
   const [isGenListeningPlaying, setIsGenListeningPlaying] = useState<boolean>(false);
   const [readingViewMode, setReadingViewMode] = useState<"ai" | "extracted">("ai");
   const [listeningViewMode, setListeningViewMode] = useState<"ai" | "extracted">("ai");
@@ -3588,237 +3589,556 @@ ${item.audioScript}。
               {/* JLPT LISTENING PRACTICE BY MONDAI (When Japanese & Listening) */}
               {selectedLang === "ja" && selectedType === "listening" && (
                 <div className="space-y-6">
-                  {/* Header Banner */}
-                  <div className="bg-gradient-to-r from-amber-600 to-orange-600 rounded-3xl p-6 text-white shadow-md shadow-amber-200">
-                    <div className="flex items-center justify-between flex-wrap gap-2 mb-2">
-                      <span className="px-3 py-1 bg-white/20 text-white rounded-lg text-xs font-black uppercase">
-                        🎧 Nghe hiểu JLPT {selectedLevel}
-                      </span>
-                      <span className="text-xs bg-white/10 px-3 py-1 rounded-lg">
-                        {filteredListeningQuestions.length} câu hỏi chuẩn hóa
-                      </span>
-                    </div>
-                    <h3 className="text-lg font-black">Luyện Nghe Hiểu (聴解) Theo Từng Mondai JLPT</h3>
-                    <p className="text-xs text-white/90 mt-1 leading-relaxed">
-                      Luyện phản xạ và kỹ năng nghe bắt thông tin chuẩn cấu trúc kỳ thi JLPT: Mondai 1 (Hiểu nhiệm vụ), Mondai 2 (Trọng điểm), Mondai 3 (Khái quát ý đồ), Mondai 4 (Phản xạ tức thì) và Mondai 5 (Tổng hợp đối thoại).
-                    </p>
-
-                    {/* Filter Pills */}
-                    <div className="flex items-center gap-1.5 flex-wrap pt-4">
-                      <button
-                        type="button"
-                        onClick={() => setSelectedListeningMondai("all")}
-                        className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                          selectedListeningMondai === "all"
-                            ? "bg-white text-amber-900 shadow-xs"
-                            : "bg-white/20 text-white hover:bg-white/30"
-                        }`}
-                      >
-                        Tất cả Mondai ({allListeningQuestions.length})
-                      </button>
-                      {listeningMondais.map((m) => (
-                        <button
-                          key={m.mondaiNumber}
-                          type="button"
-                          onClick={() => setSelectedListeningMondai(m.mondaiNumber)}
-                          className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                            selectedListeningMondai === m.mondaiNumber
-                              ? "bg-white text-amber-900 shadow-xs"
-                              : "bg-white/20 text-white hover:bg-white/30"
-                          }`}
-                        >
-                          {m.mondaiName}: {m.mondaiSubtitle} ({m.count})
-                        </button>
-                      ))}
-                    </div>
+                  {/* Mode Switcher when Japanese & Listening */}
+                  <div className="flex items-center gap-2 p-1.5 bg-gray-100/90 rounded-2xl w-fit flex-wrap">
+                    <button
+                      type="button"
+                      onClick={() => setListeningViewMode("ai")}
+                      className={`px-4 py-2 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center gap-2 ${
+                        listeningViewMode === "ai"
+                          ? "bg-white text-amber-900 shadow-xs ring-1 ring-black/5"
+                          : "text-gray-600 hover:text-gray-900"
+                      }`}
+                    >
+                      <span>🤖 Bài AI biên soạn Mondai {selectedListeningMondai === "all" ? 1 : selectedListeningMondai}</span>
+                      {generatedListeningData && <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setListeningViewMode("extracted")}
+                      className={`px-4 py-2 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center gap-2 ${
+                        listeningViewMode === "extracted"
+                          ? "bg-white text-amber-900 shadow-xs ring-1 ring-black/5"
+                          : "text-gray-600 hover:text-gray-900"
+                      }`}
+                    >
+                      <span>📑 Đề thi thật trích xuất ({filteredListeningQuestions.length} câu)</span>
+                    </button>
                   </div>
 
-                  {/* Listening Questions List */}
-                  {filteredListeningQuestions.length === 0 ? (
-                    <div className="bg-white rounded-3xl p-10 border border-gray-100 text-center space-y-3">
-                      <div className="text-3xl">🎧</div>
-                      <h4 className="text-sm font-bold text-gray-900">
-                        Chưa có câu hỏi cho Mondai này ở cấp độ {selectedLevel}
-                      </h4>
-                      <p className="text-xs text-gray-500 max-w-md mx-auto">
-                        Vui lòng chuyển sang cấp độ N2, N3 hoặc chọn tab "Tất cả Mondai" để làm bài nhé!
-                      </p>
-                    </div>
-                  ) : (
-                    <div className="space-y-6">
-                      {filteredListeningQuestions.map((item) => {
-                        const isChecked = !!listeningChecked[item.id];
-                        const userAns = listeningAnswers[item.id];
-                        const isCorrect = userAns === item.correctAnswer;
-                        const isPlaying = listeningPlayingId === item.id;
-                        const isScriptOpen = !!showListeningScript[item.id];
-
-                        return (
-                          <div key={item.id} className="bg-white rounded-3xl p-6 border border-gray-100 shadow-2xs space-y-4">
-                            {/* Card Header */}
-                            <div className="flex items-center justify-between flex-wrap gap-2 pb-3 border-b border-gray-100">
-                              <div className="flex items-center gap-2 flex-wrap">
-                                <span className="px-3 py-1 bg-amber-50 text-amber-800 border border-amber-200 text-xs font-black rounded-lg">
-                                  {item.mondaiName}: {item.mondaiSubtitle}
-                                </span>
-                                <span className="text-xs font-bold text-gray-700">
-                                  {item.title}
-                                </span>
-                              </div>
-
-                              <span className="text-[10px] text-gray-400 font-bold">
-                                Cấp độ: {item.level}
+                  {/* 1. AI Generated Listening View */}
+                  {listeningViewMode === "ai" && (
+                    <>
+                      {generatedListeningData ? (
+                        <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-2xs space-y-5">
+                          {/* Card Header Bar */}
+                          <div className="flex items-center justify-between flex-wrap gap-2 pb-3 border-b border-gray-100">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <span className="px-3 py-1 bg-amber-50 text-amber-800 border border-amber-200 text-xs font-black rounded-lg">
+                                {generatedListeningData.mondaiName || `問題 ${selectedListeningMondai}`}
                               </span>
+                              {generatedListeningData.mondaiSubtitle && (
+                                <span className="text-xs font-bold text-gray-700">
+                                  {generatedListeningData.mondaiSubtitle}
+                                </span>
+                              )}
+                              {generatedListeningData.title && (
+                                <span className="text-xs text-gray-500">
+                                  • {generatedListeningData.title}
+                                </span>
+                              )}
                             </div>
 
-                            {/* Situation Box */}
-                            <div className="p-4 rounded-2xl bg-amber-50/60 border border-amber-200/80 text-xs font-bold text-amber-950 flex items-start gap-2">
-                              <span className="text-base">📌</span>
-                              <div className="leading-relaxed">
-                                <span className="text-amber-800 font-bold block mb-0.5">Tình huống (Bối cảnh):</span>
-                                {item.situation}
-                              </div>
-                            </div>
-
-                            {/* Audio Player Controller */}
-                            <div className="p-4 rounded-2xl bg-gray-50 border border-gray-200 flex flex-wrap items-center justify-between gap-3">
+                            <div className="flex items-center gap-2">
                               <button
                                 type="button"
-                                onClick={() => playListeningAudio(item)}
-                                className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-black transition-all cursor-pointer shadow-xs ${
-                                  isPlaying
+                                onClick={() => playGeneratedListeningAudio(generatedListeningData)}
+                                className={`text-xs font-bold flex items-center gap-1.5 px-4 py-2 rounded-xl transition-all cursor-pointer shadow-xs ${
+                                  isGenListeningPlaying
                                     ? "bg-amber-600 text-white animate-pulse shadow-amber-200"
                                     : "bg-teal-600 hover:bg-teal-700 text-white shadow-teal-200"
                                 }`}
                               >
-                                <span>{isPlaying ? "⏸️" : "▶️"}</span>
-                                <span>{isPlaying ? "Đang phát bài nghe... (Nhấn để dừng)" : "Phát bài nghe (Audio giọng Nhật)"}</span>
+                                <span>{isGenListeningPlaying ? "⏸️" : "▶️"}</span>
+                                <span>{isGenListeningPlaying ? "Dừng phát audio" : "Phát bài nghe (TTS giọng Nhật)"}</span>
                               </button>
-
-                              <div className="flex items-center gap-2">
-                                <button
-                                  type="button"
-                                  onClick={() => setShowListeningScript((prev) => ({ ...prev, [item.id]: !prev[item.id] }))}
-                                  className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
-                                    isScriptOpen
-                                      ? "bg-indigo-600 border-indigo-600 text-white"
-                                      : "bg-white text-indigo-700 border-indigo-200 hover:bg-indigo-50"
-                                  }`}
-                                >
-                                  📄 {isScriptOpen ? "Ẩn Kịch Bản (Script)" : "Hiện Kịch Bản (Script) & Dịch"}
-                                </button>
-                              </div>
+                              <button
+                                type="button"
+                                onClick={() => setShowGenListeningScript((prev) => !prev)}
+                                className={`text-xs font-bold flex items-center gap-1 px-3 py-2 rounded-xl transition-colors cursor-pointer border ${
+                                  showGenListeningScript
+                                    ? "bg-indigo-600 border-indigo-600 text-white"
+                                    : "bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100"
+                                }`}
+                              >
+                                📄 {showGenListeningScript ? "Ẩn Kịch bản" : "Hiện Kịch bản (Script)"}
+                              </button>
                             </div>
+                          </div>
 
-                            {/* Script & Translation Accordion */}
-                            {isScriptOpen && (
-                              <div className="p-4 rounded-2xl bg-indigo-50/50 border border-indigo-100 text-xs space-y-3 animate-in fade-in duration-150">
-                                <div>
-                                  <div className="text-[10px] text-indigo-700 font-bold uppercase tracking-wider mb-1">
+                          {/* Situation Box */}
+                          {generatedListeningData.situation && (
+                            <div className="p-4 rounded-2xl bg-amber-50/60 border border-amber-200/80 text-xs text-amber-950 space-y-1">
+                              <div className="flex items-center gap-1.5 font-black text-amber-800">
+                                <span>📌</span>
+                                <span>Tình huống (Bối cảnh bài nghe):</span>
+                              </div>
+                              <p className="font-bold text-sm leading-relaxed select-text">{generatedListeningData.situation}</p>
+                              {generatedListeningData.situation_translation && (
+                                <p className="text-xs text-amber-900/80 italic select-text">{generatedListeningData.situation_translation}</p>
+                              )}
+                            </div>
+                          )}
+
+                          {/* Script & Translation Accordion */}
+                          {showGenListeningScript && (
+                            <div className="p-4 rounded-2xl bg-indigo-50/50 border border-indigo-100 text-xs space-y-3 animate-in fade-in duration-150">
+                              <div>
+                                <div className="flex items-center justify-between mb-1">
+                                  <span className="text-[10px] text-indigo-700 font-bold uppercase tracking-wider">
                                     🎙️ Lời thoại bài nghe (Audio Script):
-                                  </div>
-                                  <div className="whitespace-pre-line text-gray-900 leading-relaxed font-medium pl-2 border-l-2 border-indigo-300">
-                                    {item.audioScript}
-                                  </div>
+                                  </span>
+                                  {generatedListeningData.audioScript_ruby && (
+                                    <button
+                                      type="button"
+                                      onClick={() => setShowGenListeningRuby((prev) => !prev)}
+                                      className="text-[10px] font-bold text-indigo-600 hover:underline cursor-pointer"
+                                    >
+                                      🈳 {showGenListeningRuby ? "Tắt Furigana" : "Bật Furigana"}
+                                    </button>
+                                  )}
                                 </div>
+                                {generatedListeningData.audioScript_ruby && showGenListeningRuby ? (
+                                  <div
+                                    className="whitespace-pre-line text-gray-900 leading-loose font-medium pl-2 border-l-2 border-indigo-300 text-sm select-text"
+                                    dangerouslySetInnerHTML={{ __html: generatedListeningData.audioScript_ruby }}
+                                  />
+                                ) : (
+                                  <div className="whitespace-pre-line text-gray-900 leading-relaxed font-medium pl-2 border-l-2 border-indigo-300 select-text">
+                                    {generatedListeningData.audioScript}
+                                  </div>
+                                )}
+                              </div>
 
+                              {generatedListeningData.vietnameseTranslation && (
                                 <div className="pt-2 border-t border-indigo-100">
                                   <div className="text-[10px] text-indigo-700 font-bold uppercase tracking-wider mb-1">
                                     🌐 Bản dịch tiếng Việt:
                                   </div>
-                                  <div className="whitespace-pre-line text-gray-700 leading-relaxed italic pl-2 border-l-2 border-indigo-300">
-                                    {item.vietnameseTranslation}
-                                  </div>
-                                </div>
-                              </div>
-                            )}
-
-                            {/* Question Box */}
-                            <div className="text-sm font-extrabold text-gray-900 bg-gray-50/80 p-3.5 rounded-xl border border-gray-100">
-                              ❓ Câu hỏi: {item.question}
-                            </div>
-
-                            {/* Options */}
-                            <div className="grid grid-cols-1 gap-2">
-                              {item.options.map((optText, optIdx) => {
-                                const isSelected = userAns === optIdx;
-                                const isRight = optIdx === item.correctAnswer;
-
-                                let optStyle = "border-gray-200 bg-white text-gray-800 hover:bg-gray-50";
-                                if (isChecked) {
-                                  if (isRight) {
-                                    optStyle = "border-emerald-500 bg-emerald-50 text-emerald-900 font-bold ring-2 ring-emerald-300";
-                                  } else if (isSelected) {
-                                    optStyle = "border-rose-500 bg-rose-50 text-rose-900 font-bold ring-2 ring-rose-300";
-                                  } else {
-                                    optStyle = "border-gray-100 bg-gray-50 text-gray-400 opacity-60";
-                                  }
-                                } else if (isSelected) {
-                                  optStyle = "border-amber-500 bg-amber-50 text-amber-900 font-bold ring-2 ring-amber-300";
-                                }
-
-                                return (
-                                  <button
-                                    key={optIdx}
-                                    type="button"
-                                    disabled={isChecked}
-                                    onClick={() => setListeningAnswers((prev) => ({ ...prev, [item.id]: optIdx }))}
-                                    className={`p-3.5 rounded-xl border text-left text-sm transition-all cursor-pointer flex items-start gap-2.5 ${optStyle}`}
-                                  >
-                                    <span className="w-6 h-6 rounded-full bg-black/5 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
-                                      {optIdx + 1}
-                                    </span>
-                                    <span className="leading-relaxed">{optText}</span>
-                                  </button>
-                                );
-                              })}
-                            </div>
-
-                            {/* Check Answer Button & Explanation */}
-                            <div className="pt-2">
-                              {!isChecked ? (
-                                <button
-                                  type="button"
-                                  disabled={userAns === undefined}
-                                  onClick={() => checkListeningAnswer(item)}
-                                  className="px-5 py-2.5 bg-amber-600 hover:bg-amber-700 disabled:opacity-40 text-white rounded-xl text-xs font-bold transition-all shadow-xs cursor-pointer"
-                                >
-                                  Kiểm tra đáp án
-                                </button>
-                              ) : (
-                                <div className={`p-4 rounded-xl border text-xs leading-relaxed space-y-1.5 ${
-                                  isCorrect ? "bg-emerald-50 border-emerald-200 text-emerald-900" : "bg-rose-50 border-rose-200 text-rose-900"
-                                }`}>
-                                  <div className="font-extrabold flex items-center gap-1.5 text-sm">
-                                    <span>{isCorrect ? "✓ Chính xác! (+100 điểm)" : "✕ Chưa chính xác"}</span>
-                                    {!isCorrect && (
-                                      <span className="text-xs font-semibold">
-                                        (Đáp án đúng: Lựa chọn {item.correctAnswer + 1})
-                                      </span>
-                                    )}
-                                  </div>
-                                  <div className="text-[11px] text-gray-700 pt-1 border-t border-black/10 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                                    <div><strong>💡 Giải thích:</strong> {item.explanation}</div>
-                                    <button
-                                      type="button"
-                                      onClick={() => {
-                                        const userOptText = userAns !== undefined ? item.options[userAns] : "Chưa chọn";
-                                        const correctOptText = item.options[item.correctAnswer];
-                                        const scriptText = item.audioScript ? `\n\nLời thoại (Script):\n${item.audioScript}\n\nDịch nghĩa:\n${item.vietnameseTranslation}` : "";
-                                        const prompt = `Nhờ Gia sư AI giải thích chi tiết câu hỏi Luyện nghe hiểu JLPT ${item.level} (${item.mondaiName}: ${item.mondaiSubtitle}):\n\nTình huống: ${item.situation}\nTiêu đề/Bài nghe: ${item.title}${scriptText}\n\nCâu hỏi: ${item.question}\nCác lựa chọn:\n${item.options.map((optText, idx) => `${idx + 1}. ${optText}${idx === item.correctAnswer ? " (Đáp án đúng)" : ""}`).join("\n")}\n\nLựa chọn của tôi: ${userOptText}\nĐáp án đúng: Lựa chọn ${item.correctAnswer + 1} (${correctOptText})\nGiải thích: ${item.explanation}\n\nNhờ Gia sư AI phân tích từ vựng quan trọng, bẫy thông tin và mẹo nghe hiệu quả cho dạng bài này.`;
-                                        handleAiTutorReview(prompt);
-                                      }}
-                                      className="px-3 py-1.5 bg-white hover:bg-indigo-50 text-indigo-700 border border-indigo-200 rounded-xl text-[11px] font-bold transition-all cursor-pointer flex items-center gap-1 shrink-0 shadow-3xs"
-                                    >
-                                      <span>🤖 Hỏi Gia sư AI về câu này</span>
-                                    </button>
+                                  <div className="whitespace-pre-line text-gray-700 leading-relaxed italic pl-2 border-l-2 border-indigo-300 select-text">
+                                    {generatedListeningData.vietnameseTranslation}
                                   </div>
                                 </div>
                               )}
                             </div>
+                          )}
+
+                          {/* Questions Section */}
+                          {(() => {
+                            const genQuestions = generatedListeningData.questions && generatedListeningData.questions.length > 0
+                              ? generatedListeningData.questions
+                              : generatedListeningData.question
+                              ? [
+                                  {
+                                    id: "q_gen_1",
+                                    question: generatedListeningData.question,
+                                    question_vietnamese: (generatedListeningData as any).question_translation || "",
+                                    options: generatedListeningData.options || [],
+                                    correctAnswer: generatedListeningData.correctAnswer ?? 0,
+                                    explanation: generatedListeningData.explanation || "",
+                                  }
+                                ]
+                              : [];
+
+                            return (
+                              <div className="space-y-4">
+                                {genQuestions.map((qItem, qIdx) => {
+                                  const isChecked = !!genListeningChecked[qItem.id];
+                                  const userAns = genListeningAnswers[qItem.id];
+                                  const isCorrect = userAns === qItem.correctAnswer;
+
+                                  return (
+                                    <div key={qItem.id || qIdx} className="p-5 rounded-2xl bg-gray-50/80 border border-gray-200/80 space-y-3">
+                                      <div className="text-sm font-extrabold text-gray-900 select-text">
+                                        ❓ {genQuestions.length > 1 ? `Câu hỏi ${qIdx + 1}: ` : "Câu hỏi: "}{qItem.question}
+                                        {qItem.question_vietnamese && (
+                                          <span className="block text-xs font-normal text-gray-500 mt-0.5 italic">
+                                            {qItem.question_vietnamese}
+                                          </span>
+                                        )}
+                                      </div>
+
+                                      <div className="grid grid-cols-1 gap-2">
+                                        {qItem.options.map((optText, optIdx) => {
+                                          const isSelected = userAns === optIdx;
+                                          const isRight = optIdx === qItem.correctAnswer;
+
+                                          let optStyle = "border-gray-200 bg-white text-gray-800 hover:bg-gray-50";
+                                          if (isChecked) {
+                                            if (isRight) {
+                                              optStyle = "border-emerald-500 bg-emerald-50 text-emerald-900 font-bold ring-2 ring-emerald-300";
+                                            } else if (isSelected) {
+                                              optStyle = "border-rose-400 bg-rose-50 text-rose-800 line-through";
+                                            } else {
+                                              optStyle = "border-gray-200 bg-gray-50 text-gray-400 opacity-60";
+                                            }
+                                          } else if (isSelected) {
+                                            optStyle = "border-amber-600 bg-amber-50 text-amber-900 font-bold ring-2 ring-amber-200";
+                                          }
+
+                                          return (
+                                            <button
+                                              key={optIdx}
+                                              type="button"
+                                              disabled={isChecked}
+                                              onClick={() => setGenListeningAnswers((prev) => ({ ...prev, [qItem.id]: optIdx }))}
+                                              className={`w-full p-3.5 rounded-xl border text-left text-xs font-semibold flex items-center justify-between transition-all cursor-pointer ${optStyle}`}
+                                            >
+                                              <div className="flex items-center gap-2.5">
+                                                <span className="w-5 h-5 rounded-full border flex items-center justify-center text-[10px] shrink-0 font-bold">
+                                                  {optIdx + 1}
+                                                </span>
+                                                <span className="leading-relaxed">{optText}</span>
+                                              </div>
+                                              {isChecked && isRight && <span className="text-emerald-600 font-bold text-xs">✓ Đúng</span>}
+                                              {isChecked && isSelected && !isRight && <span className="text-rose-500 font-bold text-xs">✗ Sai</span>}
+                                            </button>
+                                          );
+                                        })}
+                                      </div>
+
+                                      {/* Check button & Feedback */}
+                                      <div className="pt-2 flex items-center justify-between flex-wrap gap-2">
+                                        {!isChecked ? (
+                                          <button
+                                            type="button"
+                                            disabled={userAns === undefined}
+                                            onClick={() => checkGeneratedListeningAnswer(qItem)}
+                                            className="px-5 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 disabled:opacity-40 text-white font-bold text-xs shadow-xs transition-all cursor-pointer"
+                                          >
+                                            Kiểm tra đáp án
+                                          </button>
+                                        ) : (
+                                          <div className="flex items-center gap-2">
+                                            <span className={`px-3 py-1.5 rounded-lg text-xs font-bold ${
+                                              isCorrect ? "bg-emerald-100 text-emerald-800" : "bg-rose-100 text-rose-800"
+                                            }`}>
+                                              {isCorrect ? "🎉 Chính xác! (+100 điểm)" : `❌ Chưa chính xác (Đáp án đúng: Lựa chọn ${qItem.correctAnswer + 1})`}
+                                            </span>
+                                          </div>
+                                        )}
+
+                                        {isChecked && (
+                                          <button
+                                            type="button"
+                                            onClick={() => {
+                                              const userOptText = userAns !== undefined ? qItem.options[userAns] : "Chưa chọn";
+                                              const correctOptText = qItem.options[qItem.correctAnswer];
+                                              const scriptText = generatedListeningData.audioScript
+                                                ? `\n\nLời thoại (Script):\n${generatedListeningData.audioScript}\n\nDịch nghĩa:\n${generatedListeningData.vietnameseTranslation}`
+                                                : "";
+                                              const prompt = `Nhờ Gia sư AI giải thích chi tiết câu hỏi Luyện nghe hiểu JLPT ${generatedListeningData.level} (${generatedListeningData.mondaiName}: ${generatedListeningData.mondaiSubtitle}):\n\nTình huống: ${generatedListeningData.situation}\nTiêu đề: ${generatedListeningData.title}${scriptText}\n\nCâu hỏi: ${qItem.question}\nCác lựa chọn:\n${qItem.options.map((optText, idx) => `${idx + 1}. ${optText}${idx === qItem.correctAnswer ? " (Đáp án đúng)" : ""}`).join("\n")}\n\nLựa chọn của tôi: ${userOptText}\nĐáp án đúng: Lựa chọn ${qItem.correctAnswer + 1} (${correctOptText})\nGiải thích: ${qItem.explanation || generatedListeningData.explanation}\n\nNhờ Gia sư AI phân tích từ vựng quan trọng, bẫy thông tin và mẹo nghe hiệu quả cho dạng bài này.`;
+                                              handleAiTutorReview(prompt);
+                                            }}
+                                            className="px-3 py-1.5 bg-white hover:bg-indigo-50 text-indigo-700 border border-indigo-200 rounded-xl text-[11px] font-bold transition-all cursor-pointer flex items-center gap-1 shadow-3xs"
+                                          >
+                                            <span>🤖 Hỏi Gia sư AI về câu này</span>
+                                          </button>
+                                        )}
+                                      </div>
+
+                                      {/* Explanation */}
+                                      {isChecked && (qItem.explanation || generatedListeningData.explanation) && (
+                                        <div className="p-3.5 bg-amber-50 rounded-xl border border-amber-200 text-xs text-amber-950 space-y-1 animate-in fade-in">
+                                          <div className="font-bold text-amber-800">💡 Lời giải chi tiết:</div>
+                                          <p className="leading-relaxed">{qItem.explanation || generatedListeningData.explanation}</p>
+                                        </div>
+                                      )}
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            );
+                          })()}
+
+                          {/* Vocabulary List */}
+                          {generatedListeningData.vocabulary && generatedListeningData.vocabulary.length > 0 && (
+                            <div className="p-4 rounded-2xl bg-amber-50/40 border border-amber-200/60 space-y-2">
+                              <span className="text-xs font-black text-amber-900 flex items-center gap-1.5">
+                                <span>📝</span> Từ vựng trọng tâm trong bài nghe:
+                              </span>
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                                {generatedListeningData.vocabulary.map((vocab, vIdx) => (
+                                  <div key={vIdx} className="bg-white p-2.5 rounded-xl border border-amber-100 text-xs flex items-center justify-between">
+                                    <span className="font-bold text-gray-900">{vocab.kanji} ({vocab.hiragana})</span>
+                                    <span className="text-gray-600">{vocab.meaning}</span>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Quick Regenerate CTA */}
+                          <div className="pt-2 flex justify-end">
+                            <button
+                              type="button"
+                              onClick={handleGenerate}
+                              disabled={generating}
+                              className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-600 to-orange-600 hover:opacity-95 text-white font-bold text-xs shadow-xs transition-all cursor-pointer flex items-center gap-1.5"
+                            >
+                              <span>🔄</span>
+                              <span>{generating ? "Đang biên soạn..." : `Tạo bài nghe Mondai ${selectedListeningMondai === "all" ? 1 : selectedListeningMondai} mới`}</span>
+                            </button>
                           </div>
-                        );
-                      })}
+                        </div>
+                      ) : (
+                        <div className="bg-white rounded-3xl p-10 border border-gray-100 text-center space-y-4 shadow-2xs">
+                          <div className="text-4xl">🎧</div>
+                          <h3 className="text-base font-extrabold text-gray-900">
+                            Luyện Chuyên Sâu Nghe Hiểu JLPT {selectedLevel} (Mondai {selectedListeningMondai === "all" ? 1 : selectedListeningMondai})
+                          </h3>
+                          <p className="text-xs text-gray-500 max-w-md mx-auto leading-relaxed">
+                            Hãy chọn chủ đề và nhấn nút <strong>"🎧 Biên soạn Nghe hiểu bằng AI"</strong> ở bảng bên trái để AI tạo bài nghe kèm audio thoại, bối cảnh thực tế và câu hỏi trắc nghiệm chuẩn mẫu nhé!
+                          </p>
+                          <button
+                            type="button"
+                            onClick={handleGenerate}
+                            disabled={generating}
+                            className="px-6 py-3 bg-gradient-to-r from-amber-600 to-orange-600 hover:opacity-95 text-white font-bold text-xs rounded-2xl shadow-md shadow-amber-200 transition-all cursor-pointer"
+                          >
+                            {generating ? "🤖 Đang biên soạn bài nghe..." : `✨ Tạo bài nghe Mondai ${selectedListeningMondai === "all" ? 1 : selectedListeningMondai} ngay`}
+                          </button>
+                        </div>
+                      )}
+                    </>
+                  )}
+
+                  {/* 2. Extracted Past Exam Listening View */}
+                  {listeningViewMode === "extracted" && (
+                    <div className="space-y-6">
+                      {/* Header Banner */}
+                      <div className="bg-gradient-to-r from-amber-600 to-orange-600 rounded-3xl p-6 text-white shadow-md shadow-amber-200">
+                        <div className="flex items-center justify-between flex-wrap gap-2 mb-2">
+                          <span className="px-3 py-1 bg-white/20 text-white rounded-lg text-xs font-black uppercase">
+                            🎧 Nghe hiểu JLPT {selectedLevel}
+                          </span>
+                          <span className="text-xs bg-white/10 px-3 py-1 rounded-lg">
+                            {filteredListeningQuestions.length} câu hỏi chuẩn hóa
+                          </span>
+                        </div>
+                        <h3 className="text-lg font-black">Luyện Nghe Hiểu (聴解) Theo Từng Mondai JLPT</h3>
+                        <p className="text-xs text-white/90 mt-1 leading-relaxed">
+                          Luyện phản xạ và kỹ năng nghe bắt thông tin chuẩn cấu trúc kỳ thi JLPT: Mondai 1 (Hiểu nhiệm vụ), Mondai 2 (Trọng điểm), Mondai 3 (Khái quát ý đồ), Mondai 4 (Phản xạ tức thì) và Mondai 5 (Tổng hợp đối thoại).
+                        </p>
+
+                        {/* Filter Pills */}
+                        <div className="flex items-center gap-1.5 flex-wrap pt-4">
+                          <button
+                            type="button"
+                            onClick={() => setSelectedListeningMondai("all")}
+                            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                              selectedListeningMondai === "all"
+                                ? "bg-white text-amber-900 shadow-xs"
+                                : "bg-white/20 text-white hover:bg-white/30"
+                            }`}
+                          >
+                            Tất cả Mondai ({allListeningQuestions.length})
+                          </button>
+                          {listeningMondais.map((m) => (
+                            <button
+                              key={m.mondaiNumber}
+                              type="button"
+                              onClick={() => setSelectedListeningMondai(m.mondaiNumber)}
+                              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                                selectedListeningMondai === m.mondaiNumber
+                                  ? "bg-white text-amber-900 shadow-xs"
+                                  : "bg-white/20 text-white hover:bg-white/30"
+                              }`}
+                            >
+                              {m.mondaiName}: {m.mondaiSubtitle} ({m.count})
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Listening Questions List */}
+                      {filteredListeningQuestions.length === 0 ? (
+                        <div className="bg-white rounded-3xl p-10 border border-gray-100 text-center space-y-3">
+                          <div className="text-3xl">🎧</div>
+                          <h4 className="text-sm font-bold text-gray-900">
+                            Chưa có câu hỏi cho Mondai này ở cấp độ {selectedLevel}
+                          </h4>
+                          <p className="text-xs text-gray-500 max-w-md mx-auto">
+                            Vui lòng chuyển sang cấp độ N2, N3 hoặc chọn tab "Tất cả Mondai" để làm bài nhé!
+                          </p>
+                        </div>
+                      ) : (
+                        <div className="space-y-6">
+                          {filteredListeningQuestions.map((item) => {
+                            const isChecked = !!listeningChecked[item.id];
+                            const userAns = listeningAnswers[item.id];
+                            const isCorrect = userAns === item.correctAnswer;
+                            const isPlaying = listeningPlayingId === item.id;
+                            const isScriptOpen = !!showListeningScript[item.id];
+
+                            return (
+                              <div key={item.id} className="bg-white rounded-3xl p-6 border border-gray-100 shadow-2xs space-y-4">
+                                {/* Card Header */}
+                                <div className="flex items-center justify-between flex-wrap gap-2 pb-3 border-b border-gray-100">
+                                  <div className="flex items-center gap-2 flex-wrap">
+                                    <span className="px-3 py-1 bg-amber-50 text-amber-800 border border-amber-200 text-xs font-black rounded-lg">
+                                      {item.mondaiName}: {item.mondaiSubtitle}
+                                    </span>
+                                    <span className="text-xs font-bold text-gray-700">
+                                      {item.title}
+                                    </span>
+                                  </div>
+
+                                  <span className="text-[10px] text-gray-400 font-bold">
+                                    Cấp độ: {item.level}
+                                  </span>
+                                </div>
+
+                                {/* Situation Box */}
+                                <div className="p-4 rounded-2xl bg-amber-50/60 border border-amber-200/80 text-xs font-bold text-amber-950 flex items-start gap-2">
+                                  <span className="text-base">📌</span>
+                                  <div className="leading-relaxed">
+                                    <span className="text-amber-800 font-bold block mb-0.5">Tình huống (Bối cảnh):</span>
+                                    {item.situation}
+                                  </div>
+                                </div>
+
+                                {/* Audio Player Controller */}
+                                <div className="p-4 rounded-2xl bg-gray-50 border border-gray-200 flex flex-wrap items-center justify-between gap-3">
+                                  <button
+                                    type="button"
+                                    onClick={() => playListeningAudio(item)}
+                                    className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-black transition-all cursor-pointer shadow-xs ${
+                                      isPlaying
+                                        ? "bg-amber-600 text-white animate-pulse shadow-amber-200"
+                                        : "bg-teal-600 hover:bg-teal-700 text-white shadow-teal-200"
+                                    }`}
+                                  >
+                                    <span>{isPlaying ? "⏸️" : "▶️"}</span>
+                                    <span>{isPlaying ? "Đang phát bài nghe... (Nhấn để dừng)" : "Phát bài nghe (Audio giọng Nhật)"}</span>
+                                  </button>
+
+                                  <div className="flex items-center gap-2">
+                                    <button
+                                      type="button"
+                                      onClick={() => setShowListeningScript((prev) => ({ ...prev, [item.id]: !prev[item.id] }))}
+                                      className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
+                                        isScriptOpen
+                                          ? "bg-indigo-600 border-indigo-600 text-white"
+                                          : "bg-white text-indigo-700 border-indigo-200 hover:bg-indigo-50"
+                                      }`}
+                                    >
+                                      📄 {isScriptOpen ? "Ẩn Kịch Bản (Script)" : "Hiện Kịch Bản (Script) & Dịch"}
+                                    </button>
+                                  </div>
+                                </div>
+
+                                {/* Script & Translation Accordion */}
+                                {isScriptOpen && (
+                                  <div className="p-4 rounded-2xl bg-indigo-50/50 border border-indigo-100 text-xs space-y-3 animate-in fade-in duration-150">
+                                    <div>
+                                      <div className="text-[10px] text-indigo-700 font-bold uppercase tracking-wider mb-1">
+                                        🎙️ Lời thoại bài nghe (Audio Script):
+                                      </div>
+                                      <div className="whitespace-pre-line text-gray-900 leading-relaxed font-medium pl-2 border-l-2 border-indigo-300">
+                                        {item.audioScript}
+                                      </div>
+                                    </div>
+
+                                    <div className="pt-2 border-t border-indigo-100">
+                                      <div className="text-[10px] text-indigo-700 font-bold uppercase tracking-wider mb-1">
+                                        🌐 Bản dịch tiếng Việt:
+                                      </div>
+                                      <div className="whitespace-pre-line text-gray-700 leading-relaxed italic pl-2 border-l-2 border-indigo-300">
+                                        {item.vietnameseTranslation}
+                                      </div>
+                                    </div>
+                                  </div>
+                                )}
+
+                                {/* Question Box */}
+                                <div className="text-sm font-extrabold text-gray-900 bg-gray-50/80 p-3.5 rounded-xl border border-gray-100">
+                                  ❓ Câu hỏi: {item.question}
+                                </div>
+
+                                {/* Options */}
+                                <div className="grid grid-cols-1 gap-2">
+                                  {item.options.map((optText, optIdx) => {
+                                    const isSelected = userAns === optIdx;
+                                    const isRight = optIdx === item.correctAnswer;
+
+                                    let optStyle = "border-gray-200 bg-white text-gray-800 hover:bg-gray-50";
+                                    if (isChecked) {
+                                      if (isRight) {
+                                        optStyle = "border-emerald-500 bg-emerald-50 text-emerald-900 font-bold ring-2 ring-emerald-300";
+                                      } else if (isSelected) {
+                                        optStyle = "border-rose-500 bg-rose-50 text-rose-900 font-bold ring-2 ring-rose-300";
+                                      } else {
+                                        optStyle = "border-gray-100 bg-gray-50 text-gray-400 opacity-60";
+                                      }
+                                    } else if (isSelected) {
+                                      optStyle = "border-amber-500 bg-amber-50 text-amber-900 font-bold ring-2 ring-amber-300";
+                                    }
+
+                                    return (
+                                      <button
+                                        key={optIdx}
+                                        type="button"
+                                        disabled={isChecked}
+                                        onClick={() => setListeningAnswers((prev) => ({ ...prev, [item.id]: optIdx }))}
+                                        className={`p-3.5 rounded-xl border text-left text-sm transition-all cursor-pointer flex items-start gap-2.5 ${optStyle}`}
+                                      >
+                                        <span className="w-6 h-6 rounded-full bg-black/5 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
+                                          {optIdx + 1}
+                                        </span>
+                                        <span className="leading-relaxed">{optText}</span>
+                                      </button>
+                                    );
+                                  })}
+                                </div>
+
+                                {/* Check Answer Button & Explanation */}
+                                <div className="pt-2">
+                                  {!isChecked ? (
+                                    <button
+                                      type="button"
+                                      disabled={userAns === undefined}
+                                      onClick={() => checkListeningAnswer(item)}
+                                      className="px-5 py-2.5 bg-amber-600 hover:bg-amber-700 disabled:opacity-40 text-white rounded-xl text-xs font-bold transition-all shadow-xs cursor-pointer"
+                                    >
+                                      Kiểm tra đáp án
+                                    </button>
+                                  ) : (
+                                    <div className={`p-4 rounded-xl border text-xs leading-relaxed space-y-1.5 ${
+                                      isCorrect ? "bg-emerald-50 border-emerald-200 text-emerald-900" : "bg-rose-50 border-rose-200 text-rose-900"
+                                    }`}>
+                                      <div className="font-extrabold flex items-center gap-1.5 text-sm">
+                                        <span>{isCorrect ? "✓ Chính xác! (+100 điểm)" : "✕ Chưa chính xác"}</span>
+                                        {!isCorrect && (
+                                          <span className="text-xs font-semibold">
+                                            (Đáp án đúng: Lựa chọn {item.correctAnswer + 1})
+                                          </span>
+                                        )}
+                                      </div>
+                                      <div className="text-[11px] text-gray-700 pt-1 border-t border-black/10 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                                        <div><strong>💡 Giải thích:</strong> {item.explanation}</div>
+                                        <button
+                                          type="button"
+                                          onClick={() => {
+                                            const userOptText = userAns !== undefined ? item.options[userAns] : "Chưa chọn";
+                                            const correctOptText = item.options[item.correctAnswer];
+                                            const scriptText = item.audioScript ? `\n\nLời thoại (Script):\n${item.audioScript}\n\nDịch nghĩa:\n${item.vietnameseTranslation}` : "";
+                                            const prompt = `Nhờ Gia sư AI giải thích chi tiết câu hỏi Luyện nghe hiểu JLPT ${item.level} (${item.mondaiName}: ${item.mondaiSubtitle}):\n\nTình huống: ${item.situation}\nTiêu đề/Bài nghe: ${item.title}${scriptText}\n\nCâu hỏi: ${item.question}\nCác lựa chọn:\n${item.options.map((optText, idx) => `${idx + 1}. ${optText}${idx === item.correctAnswer ? " (Đáp án đúng)" : ""}`).join("\n")}\n\nLựa chọn của tôi: ${userOptText}\nĐáp án đúng: Lựa chọn ${item.correctAnswer + 1} (${correctOptText})\nGiải thích: ${item.explanation}\n\nNhờ Gia sư AI phân tích từ vựng quan trọng, bẫy thông tin và mẹo nghe hiệu quả cho dạng bài này.`;
+                                            handleAiTutorReview(prompt);
+                                          }}
+                                          className="px-3 py-1.5 bg-white hover:bg-indigo-50 text-indigo-700 border border-indigo-200 rounded-xl text-[11px] font-bold transition-all cursor-pointer flex items-center gap-1 shrink-0 shadow-3xs"
+                                        >
+                                          <span>🤖 Hỏi Gia sư AI về câu này</span>
+                                        </button>
+                                      </div>
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>

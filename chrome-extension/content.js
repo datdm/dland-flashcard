@@ -333,20 +333,24 @@
     btnMazii.addEventListener("pointerdown", (e) => {
       e.preventDefault();
       e.stopPropagation();
+      triggerMazii(e);
     });
     btnMazii.addEventListener("mousedown", (e) => {
       e.preventDefault();
       e.stopPropagation();
+      triggerMazii(e);
     });
     btnMazii.addEventListener("click", triggerMazii);
 
     btnTranslate.addEventListener("pointerdown", (e) => {
       e.preventDefault();
       e.stopPropagation();
+      triggerTranslate(e);
     });
     btnTranslate.addEventListener("mousedown", (e) => {
       e.preventDefault();
       e.stopPropagation();
+      triggerTranslate(e);
     });
     btnTranslate.addEventListener("click", triggerTranslate);
 
@@ -372,6 +376,14 @@
     activeTooltip = container;
   }
 
+  // Close Modal Helper
+  function closeModal() {
+    if (activeModal && activeModal.parentNode) {
+      activeModal.parentNode.removeChild(activeModal);
+      activeModal = null;
+    }
+  }
+
   // Dismiss tooltip when clicking outside
   document.addEventListener("pointerdown", (e) => {
     if (
@@ -390,6 +402,7 @@
   document.addEventListener("dblclick", handleSelection);
   document.addEventListener("selectionchange", () => {
     if (!isTooltipEnabled) return;
+    if (activeModal) return; // Don't trigger tooltip while modal is open
     if (selectionTimer) clearTimeout(selectionTimer);
     selectionTimer = setTimeout(() => {
       const data = getSelectionData(null);

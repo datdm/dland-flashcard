@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useNotebooks } from "@/hooks/useNotebooks";
 import { useProgress } from "@/hooks/useProgress";
 import FilterBar, { FilterTab } from "@/components/FilterBar";
@@ -37,6 +37,8 @@ function insertDraggedAtIndex(ids: string[], draggedId: string, insertIndex: num
 
 export default function NotebookDetailPage() {
   const { id } = useParams<{ id: string }>();
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const { notebooks, save, addVocab, updateVocab, deleteVocab, moveVocab, moveMultipleVocab, exportNotebook, importVocabFromJson, checkDuplicate } = useNotebooks();
   const { toggleLearned, toggleFavorite, progress } = useProgress();
   const { user } = useAuth();
@@ -51,7 +53,18 @@ export default function NotebookDetailPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [importResult, setImportResult] = useState<{ msg: string; ok: boolean } | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [tab, setTab] = useState<FilterTab>("all");
+  const tabFromQuery = searchParams.get("tab") as FilterTab;
+  const initialTab: FilterTab = ["all", "learned", "unlearned", "favorite"].includes(tabFromQuery)
+    ? tabFromQuery
+    : "all";
+  const [tab, setTab] = useState<FilterTab>(initialTab);
+
+  useEffect(() => {
+    const t = searchParams.get("tab") as FilterTab;
+    if (t && ["all", "learned", "unlearned", "favorite"].includes(t)) {
+      setTab(t);
+    }
+  }, [searchParams]);
   const [draggingVocabId, setDraggingVocabId] = useState<string | null>(null);
   const [previewVocabIds, setPreviewVocabIds] = useState<string[] | null>(null);
   const [dropVocabIndex, setDropVocabIndex] = useState<number | null>(null);
@@ -73,6 +86,31 @@ export default function NotebookDetailPage() {
   const notebook = notebooks.find((nb) => nb.id === id);
   const notebookName = notebook?.name ?? "";
   const notebookVocabulary = notebook?.vocabulary ?? [];
+
+  const currentIndex = notebooks.findIndex((nb) => nb.id === id);
+  const prevNotebook = currentIndex > 0 ? notebooks[currentIndex - 1] : null;
+  const nextNotebook = currentIndex >= 0 && currentIndex < notebooks.length - 1 ? notebooks[currentIndex + 1] : null;
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const activeEl = document.activeElement;
+      const isInputActive =
+        activeEl && (activeEl.tagName === "INPUT" || activeEl.tagName === "TEXTAREA");
+      if (isInputActive) return;
+
+      if (e.key === "ArrowLeft" && (e.altKey || e.ctrlKey)) {
+        if (prevNotebook) {
+          router.push(`/notebooks/${prevNotebook.id}`);
+        }
+      } else if (e.key === "ArrowRight" && (e.altKey || e.ctrlKey)) {
+        if (nextNotebook) {
+          router.push(`/notebooks/${nextNotebook.id}`);
+        }
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [prevNotebook, nextNotebook, router]);
 
   useEffect(() => {
     if (currentPage !== 1) {
@@ -427,11 +465,65 @@ export default function NotebookDetailPage() {
 
   return (
     <div className="w-full max-w-[1600px] mx-auto px-3.5 sm:px-6 lg:px-8 py-4 sm:py-6 min-h-screen pb-28 space-y-5 sm:space-y-6">
-      {/* Back Link */}
-      <div>
-        <Link href="/notebooks" className="text-xs text-indigo-600 font-semibold hover:underline flex items-center gap-1">
-          ← Danh sách Sổ tay
+      {/* Top Navigation: Back to Notebooks & Prev/Next Notebook Switcher */}
+      <div className="flex items-center justify-between flex-wrap gap-3">
+        <Link
+          href="/notebooks"
+          className="text-xs text-indigo-600 font-bold hover:underline flex items-center gap-1.5 py-1"
+        >
+          <span>←</span>
+          <span>Danh sách Sổ tay</span>
         </Link>
+
+        {notebooks.length > 1 && (
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            {prevNotebook ? (
+              <Link
+                href={`/notebooks/${prevNotebook.id}`}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 hover:border-indigo-300 text-xs font-bold text-gray-700 hover:text-indigo-600 transition-all shadow-3xs group"
+                title={`Sổ tay trước: ${prevNotebook.name}`}
+              >
+                <span className="transition-transform group-hover:-translate-x-0.5 font-black">←</span>
+                <span className="hidden sm:inline text-gray-400 font-normal">Sổ trước:</span>
+                <span className="max-w-[120px] sm:max-w-[160px] truncate">{prevNotebook.name}</span>
+              </Link>
+            ) : (
+              <button
+                type="button"
+                disabled
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-gray-100 bg-gray-50 text-xs font-bold text-gray-300 cursor-not-allowed opacity-60"
+              >
+                <span>←</span>
+                <span className="hidden sm:inline">Sổ trước</span>
+              </button>
+            )}
+
+            <span className="text-[11px] font-bold text-gray-500 bg-gray-100 px-2.5 py-1 rounded-lg shrink-0">
+              {currentIndex >= 0 ? currentIndex + 1 : 1} / {notebooks.length}
+            </span>
+
+            {nextNotebook ? (
+              <Link
+                href={`/notebooks/${nextNotebook.id}`}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 hover:border-indigo-300 text-xs font-bold text-gray-700 hover:text-indigo-600 transition-all shadow-3xs group"
+                title={`Sổ tay sau: ${nextNotebook.name}`}
+              >
+                <span className="hidden sm:inline text-gray-400 font-normal">Sổ sau:</span>
+                <span className="max-w-[120px] sm:max-w-[160px] truncate">{nextNotebook.name}</span>
+                <span className="transition-transform group-hover:translate-x-0.5 font-black">→</span>
+              </Link>
+            ) : (
+              <button
+                type="button"
+                disabled
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-gray-100 bg-gray-50 text-xs font-bold text-gray-300 cursor-not-allowed opacity-60"
+              >
+                <span className="hidden sm:inline">Sổ sau</span>
+                <span>→</span>
+              </button>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Header Banner */}
@@ -565,8 +657,28 @@ export default function NotebookDetailPage() {
           <p className="text-xs text-gray-400 mt-1 mb-4">Bấm nút "+ Thêm từ mới" ở trên để bắt đầu thêm từ</p>
         </div>
       ) : filteredVocabulary.length === 0 ? (
-        <div className="bg-white rounded-3xl p-12 text-center text-gray-400 border border-gray-100">
-          Không tìm thấy từ vựng nào phù hợp
+        <div className="bg-white rounded-3xl p-12 text-center border border-gray-100 space-y-3">
+          <div className="text-3xl">
+            {tab === "learned" ? "🎓" : tab === "favorite" ? "⭐" : "🔍"}
+          </div>
+          <div className="font-bold text-gray-700 text-sm">
+            {tab === "learned"
+              ? "Chưa có từ vựng nào được đánh dấu \"Đã học\" trong sổ tay này"
+              : tab === "favorite"
+              ? "Chưa có từ vựng nào trong mục \"Yêu thích\""
+              : tab === "unlearned"
+              ? "Tất cả từ vựng trong sổ này đã được học thuộc!"
+              : "Không tìm thấy từ vựng nào phù hợp"}
+          </div>
+          {tab !== "all" && (
+            <button
+              type="button"
+              onClick={() => setTab("all")}
+              className="text-xs text-indigo-600 font-bold hover:underline cursor-pointer"
+            >
+              ← Xem tất cả từ vựng trong sổ tay
+            </button>
+          )}
         </div>
       ) : (
         <>
@@ -741,6 +853,70 @@ export default function NotebookDetailPage() {
             </div>
           )}
         </>
+      )}
+
+      {/* Bottom Notebook Navigation Card */}
+      {notebooks.length > 1 && (
+        <div className="mt-8 pt-6 border-t border-gray-200/80">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white p-4 sm:p-5 rounded-2xl sm:rounded-3xl border border-gray-100 shadow-2xs">
+            {prevNotebook ? (
+              <Link
+                href={`/notebooks/${prevNotebook.id}`}
+                className="w-full sm:w-auto flex items-center gap-3 p-3 rounded-2xl border border-gray-200/90 hover:border-indigo-300 bg-gray-50/60 hover:bg-indigo-50/40 text-left transition-all group"
+              >
+                <div className="w-9 h-9 rounded-xl bg-white border border-gray-200 flex items-center justify-center text-sm font-black text-gray-700 group-hover:text-indigo-600 shadow-3xs transition-transform group-hover:-translate-x-0.5 shrink-0">
+                  ←
+                </div>
+                <div className="min-w-0">
+                  <div className="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Sổ tay trước</div>
+                  <div className="text-xs font-extrabold text-gray-900 group-hover:text-indigo-600 truncate max-w-[180px] sm:max-w-[220px]">
+                    {prevNotebook.name}
+                  </div>
+                  <div className="text-[10px] text-gray-500 font-medium">
+                    {prevNotebook.vocabulary.length} từ vựng
+                  </div>
+                </div>
+              </Link>
+            ) : (
+              <div className="hidden sm:block opacity-0 pointer-events-none w-44" />
+            )}
+
+            <div className="text-center py-1">
+              <Link
+                href="/notebooks"
+                className="text-xs font-bold text-indigo-600 hover:text-indigo-800 hover:underline flex items-center gap-1.5 justify-center bg-indigo-50/60 hover:bg-indigo-100/60 px-4 py-2 rounded-xl border border-indigo-100 transition-colors"
+              >
+                <span>📚</span>
+                <span>Tất cả Sổ tay ({currentIndex >= 0 ? currentIndex + 1 : 1}/{notebooks.length})</span>
+              </Link>
+              <div className="text-[10px] text-gray-400 mt-1 hidden sm:block">
+                Mẹo: Nhấn <kbd className="px-1.5 py-0.5 bg-gray-100 border border-gray-300 rounded text-[9px] font-mono">Alt + ←</kbd> hoặc <kbd className="px-1.5 py-0.5 bg-gray-100 border border-gray-300 rounded text-[9px] font-mono">Alt + →</kbd> để chuyển nhanh
+              </div>
+            </div>
+
+            {nextNotebook ? (
+              <Link
+                href={`/notebooks/${nextNotebook.id}`}
+                className="w-full sm:w-auto flex items-center justify-end gap-3 p-3 rounded-2xl border border-gray-200/90 hover:border-indigo-300 bg-gray-50/60 hover:bg-indigo-50/40 text-right transition-all group"
+              >
+                <div className="min-w-0 text-right">
+                  <div className="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Sổ tay sau</div>
+                  <div className="text-xs font-extrabold text-gray-900 group-hover:text-indigo-600 truncate max-w-[180px] sm:max-w-[220px]">
+                    {nextNotebook.name}
+                  </div>
+                  <div className="text-[10px] text-gray-500 font-medium">
+                    {nextNotebook.vocabulary.length} từ vựng
+                  </div>
+                </div>
+                <div className="w-9 h-9 rounded-xl bg-white border border-gray-200 flex items-center justify-center text-sm font-black text-gray-700 group-hover:text-indigo-600 shadow-3xs transition-transform group-hover:translate-x-0.5 shrink-0">
+                  →
+                </div>
+              </Link>
+            ) : (
+              <div className="hidden sm:block opacity-0 pointer-events-none w-44" />
+            )}
+          </div>
+        </div>
       )}
 
       {/* Add vocab modal */}

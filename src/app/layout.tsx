@@ -6,6 +6,7 @@ import AutoImport from "@/components/AutoImport";
 import GlobalSyncIndicator from "@/components/GlobalSyncIndicator";
 import { AuthProvider } from "@/context/AuthContext";
 import AuthModal from "@/components/AuthModal";
+import Footer from "@/components/Footer";
 import Script from "next/script";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-geist-sans" });
@@ -33,6 +34,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <GlobalSyncIndicator />
           <AuthModal />
           <main id="main-content" className="flex-1 md:pl-64 pb-24 md:pb-8 transition-all duration-300 ease-in-out w-full min-w-0">{children}</main>
+          <div className="md:pl-64">
+            <Footer />
+          </div>
         </AuthProvider>
       </body>
     </html>

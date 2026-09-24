@@ -25,7 +25,15 @@ export async function POST(req: NextRequest) {
         "Đàm phán thuê một căn hộ mới và thương lượng phí cọc",
         "Bàn luận về sự thay đổi thời tiết bất thường và dị ứng",
         "Đặt bàn trước cho nhóm bạn tại một nhà hàng truyền thống",
-        "Trò chuyện với hàng xóm về quy định phân loại rác thải mới"
+        "Trò chuyện với hàng xóm về quy định phân loại rác thải mới",
+        "Đăng ký thẻ thư viện và mượn sách chuyên ngành",
+        "Thủ tục đăng ký tạm trú và bảo hiểm y tế tại uỷ ban quận",
+        "Đưa thú cưng đi khám bệnh tại phòng khám thú y",
+        "Sửa chữa đồ điện gia dụng bị hỏng và gọi thợ bảo dưỡng",
+        "Tham gia lớp học làm đồ gốm truyền thống cuối tuần",
+        "Tổ chức tiệc tân gia và mời đồng nghiệp đến nhà",
+        "Mua sắm trang phục phỏng vấn tại cửa hàng thời trang",
+        "Đổi trả sản phẩm bị lỗi tại siêu thị điện máy"
       ],
       "Kinh doanh & Công sở": [
         "Họp giao ban báo cáo tiến độ công việc hàng tuần với giám đốc",
@@ -34,7 +42,15 @@ export async function POST(req: NextRequest) {
         "Thảo luận chi tiết về kế hoạch phát hành sản phẩm phần mềm mới",
         "Soạn thư điện tử xin lỗi khách hàng vì chậm trễ vận chuyển linh kiện",
         "Đề đạt xin phép nghỉ phép năm với sếp để đi nghỉ cùng gia đình",
-        "Thuyết trình ngắn về phân tích đối thủ cạnh tranh trên thị trường"
+        "Thuyết trình ngắn về phân tích đối thủ cạnh tranh trên thị trường",
+        "Thương lượng hợp đồng cung ứng vật tư và chiết khấu số lượng lớn",
+        "Phỏng vấn tuyển dụng ứng viên cho vị trí quản lý dự án",
+        "Giải quyết tranh chấp và phản ánh của khách hàng về chất lượng dịch vụ",
+        "Đào tạo nhân viên mới về văn hóa ứng xử và quy trình bảo mật",
+        "Đánh giá hiệu suất làm việc cuối năm và xét tăng lương",
+        "Đề xuất ngân sách tiếp thị cho chiến dịch truyền thông sắp tới",
+        "Chuẩn bị tài liệu và hậu cần cho hội nghị khách hàng toàn quốc",
+        "Đàm phán gia hạn hợp đồng hợp tác chiến lược giữa hai công ty"
       ],
       "Công nghệ & IT": [
         "Triển khai và kiểm thử chức năng xác thực hai yếu tố (2FA)",
@@ -43,7 +59,15 @@ export async function POST(req: NextRequest) {
         "Đưa ứng dụng lên môi trường điện toán đám mây AWS",
         "Thảo luận sôi nổi về việc ứng dụng trí tuệ nhân tạo (AI) trong y tế",
         "Phục hồi sự cố kết nối mạng nội bộ của văn phòng chi nhánh",
-        "Thiết kế cấu trúc bảng cơ sở dữ liệu cho dự án ví điện tử"
+        "Thiết kế cấu trúc bảng cơ sở dữ liệu cho dự án ví điện tử",
+        "Xây dựng quy trình tích hợp và triển khai tự động (CI/CD)",
+        "Đánh giá lỗ hổng bảo mật và phòng chống tấn công mạng",
+        "Tối ưu hóa tốc độ truy vấn cơ sở dữ liệu cho hệ thống lớn",
+        "Chuyển đổi hệ thống cũ (Legacy System) sang kiến trúc Microservices",
+        "Xử lý sự cố sập máy chủ trong giờ cao điểm traffic",
+        "Thảo luận yêu cầu kỹ thuật cho tính năng thanh toán trực tuyến",
+        "Nghiên cứu và thử nghiệm công nghệ blockchain trong quản lý chuỗi cung ứng",
+        "Thiết kế giao diện trải nghiệm người dùng (UX/UI) cho ứng dụng di động"
       ],
       "Du lịch & Ẩm thực": [
         "Đặt phòng tại một khu nghỉ dưỡng suối nước nóng cổ kính hoặc khách sạn lớn",
@@ -51,7 +75,16 @@ export async function POST(req: NextRequest) {
         "Hỏi đường và thông tin vé tham quan di tích lịch sử nổi tiếng",
         "Lựa chọn và thanh toán các món quà bánh lưu niệm đặc sản",
         "Bị lạc và hỏi nhân viên đồn cảnh sát cách quay về ga chính",
-        "Trải nghiệm tắm hơi công cộng hoặc thư giãn chuẩn văn hóa bản xứ"
+        "Trải nghiệm tắm hơi công cộng hoặc thư giãn chuẩn văn hóa bản xứ",
+        "Đặt tour du lịch sinh thái khám phá rừng nguyên sinh",
+        "Trải nghiệm lớp học nấu ăn các món ăn địa phương truyền thống",
+        "Xử lý sự cố thất lạc hành lý tại sân bay quốc tế",
+        "Đánh giá và viết nhận xét về chất lượng phục vụ của nhà hàng 5 sao",
+        "Thuê xe tự lái và tìm hiểu luật giao thông đường bộ bản địa",
+        "Tham gia lễ hội pháo hoa mùa hè và thuê trang phục truyền thống",
+        "Mua vé tàu cao tốc shinkansen và đổi lịch trình chuyến đi",
+        "Khám phá các khu chợ đêm ẩm thực đường phố sầm uất",
+        "Thưởng thức buổi lễ trà đạo truyền thống và tìm hiểu nghệ thuật pha trà"
       ],
       "Tin tức & Xã hội": [
         "Thực trạng già hóa dân số nghiêm trọng và chính sách khuyến khích sinh",
@@ -59,16 +92,45 @@ export async function POST(req: NextRequest) {
         "Lợi ích và khó khăn của xu hướng làm việc từ xa (Work from home) hiện nay",
         "Hệ thống phân loại và tái chế rác cực kỳ nghiêm ngặt tại các đô thị",
         "Tinh thần khởi nghiệp đổi mới sáng tạo của thế hệ trẻ",
-        "Tác động của việc thay đổi số lượng ngày nghỉ lễ trong năm"
+        "Tác động của việc thay đổi số lượng ngày nghỉ lễ trong năm",
+        "Sự gia tăng xu hướng tiêu dùng xanh và sản phẩm thân thiện môi trường",
+        "Chuyển đổi số trong lĩnh vực hành chính công và dịch vụ công trực tuyến",
+        "Vấn đề cân bằng giữa công việc và cuộc sống (Work-Life Balance) ở đô thị",
+        "Ảnh hưởng của mạng xã hội tới tâm lý và thói quen của thanh thiếu niên",
+        "Phát triển giao thông công cộng nhằm giảm ùn tắc và ô nhiễm đô thị",
+        "Biến động giá cả sinh hoạt và ảnh hưởng tới chi tiêu gia đình",
+        "Xu hướng học tập suốt đời và nâng cao kỹ năng nghề nghiệp trong thời đại AI",
+        "Bảo tồn di sản văn hóa phi vật thể trước nguy cơ mai một",
+        "Thúc đẩy bình đẳng giới và cơ hội phát triển trong môi trường làm việc"
       ]
     };
 
-    const contexts = subContextsMap[topic] || [topic];
-    const chosenContext = contexts[Math.floor(Math.random() * contexts.length)];
+    const genericAngles = [
+      "Khía cạnh chuyên sâu ít được đề cập đến",
+      "Tình huống phát sinh sự cố bất ngờ cần giải quyết gấp",
+      "Góc nhìn so sánh và phân tích ưu nhược điểm",
+      "Trải nghiệm thực tế của người mới bắt đầu",
+      "Đối thoại thảo luận chi tiết giữa hai chuyên gia"
+    ];
+
+    const contexts = subContextsMap[topic];
+    let chosenContext = "";
+    if (contexts && contexts.length > 0) {
+      chosenContext = contexts[Math.floor(Math.random() * contexts.length)];
+    } else {
+      const angle = genericAngles[Math.floor(Math.random() * genericAngles.length)];
+      chosenContext = `${topic} (${angle})`;
+    }
     const randomSeed = Math.random().toString(36).substring(2, 7) + "-" + Date.now();
 
     const targetLangName = lang === "de" ? "tiếng Đức" : lang === "en" ? "tiếng Anh" : "tiếng Nhật";
     const targetLevel = lang === "de" || lang === "en" ? (level.startsWith("N") ? "A2" : level) : level;
+
+    const diversityInstruction = `\n[YÊU CẦU ĐỘC ĐÁO & ĐỔI MỚI TỪ VỰNG TỐI ĐA - BẮT BUỘC]:
+- TỰ ĐỘNG CHỌN TỪ VỰNG MỚI VÀ KHÁC BIỆT: Tuyệt đối KHÔNG lặp lại các từ vựng đơn giản, quen thuộc hoặc sơ cấp đã sử dụng phổ biến (như 行く, 食べる, 会社, 勉強, 友達, 本... trừ khi bối cảnh bắt buộc).
+- Hãy chủ động khai thác các từ vựng cao cấp, chuyên sâu, các cụm từ diễn đạt đa dạng và tự nhiên thuộc trình độ ${targetLevel}.
+- Mỗi lần khởi tạo nội dung phải tạo ra một tập hợp từ vựng, mẫu ngữ pháp và tình huống hoàn toàn mới lạ so với các lần trước.
+- Mã định danh biến đổi ngẫu nhiên cho lượt gen này: ${randomSeed}.\n`;
 
     let prompt = "";
 
@@ -446,7 +508,8 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
           model: modelName,
           generationConfig: {
             responseMimeType: "application/json",
-            temperature: 0.7
+            temperature: 0.95,
+            topP: 0.95
           }
         });
 
