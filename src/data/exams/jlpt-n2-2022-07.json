@@ -1,0 +1,1365 @@
+{
+  "meta": {
+    "title": "JLPT N2 — Đề Thi Chính Thức Tháng 07/2022 (言語知識・読解・聴解)",
+    "subject": "Japanese (JLPT N2)",
+    "level": "N2",
+    "exam": "JLPT N2 2022-07",
+    "version": "Official Original Exam Paper (2022年7月)",
+    "totalQuestions": 71,
+    "timeLimit": 6300,
+    "passMark": 90,
+    "year": "2022-07",
+    "description": "Đề thi chính thức JLPT N2 Kỳ thi Tháng 07/2022 đầy đủ phần Chữ hán, Từ vựng, Ngữ pháp, Đọc hiểu và Tra cứu thông tin kèm đáp án & giải thích chi tiết.",
+    "sections": [
+      {
+        "name": "文字・語彙",
+        "mondai": "Mondai 1 - 6 (30 câu)",
+        "questionIds": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
+        "maxScore": 60
+      },
+      {
+        "name": "文法",
+        "mondai": "Mondai 7 - 9 (21 câu)",
+        "questionIds": [31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51],
+        "passageIds": ["passage-n2-2022-p01"],
+        "maxScore": 60
+      },
+      {
+        "name": "読解",
+        "mondai": "Mondai 10 - 14 (20 câu)",
+        "questionIds": [52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71],
+        "passageIds": [
+          "passage-n2-2022-m10-1",
+          "passage-n2-2022-m10-2",
+          "passage-n2-2022-m10-3",
+          "passage-n2-2022-m10-4",
+          "passage-n2-2022-m10-5",
+          "passage-n2-2022-m11-1",
+          "passage-n2-2022-m11-2",
+          "passage-n2-2022-m11-3",
+          "passage-n2-2022-m12-1",
+          "passage-n2-2022-m13-1",
+          "passage-n2-2022-m14-1"
+        ],
+        "maxScore": 60
+      }
+    ]
+  },
+  "questions": [
+    {
+      "id": 1,
+      "mondai": "Mondai 1 - 漢字読み",
+      "mondaiNumber": 1,
+      "majorSection": "vocab",
+      "question": "その当時の【記憶】あまりない。",
+      "type": "single",
+      "options": ["きりょく", "きよく", "きろく", "きおく"],
+      "answers": [3],
+      "explanation": "記憶 (きおく): Ký ức, kỷ niệm, trí nhớ."
+    },
+    {
+      "id": 2,
+      "mondai": "Mondai 1 - 漢字読み",
+      "mondaiNumber": 1,
+      "majorSection": "vocab",
+      "question": "前田さんがそんなに【偉い】人だとは知りませんでした。",
+      "type": "single",
+      "options": ["かしこい", "えらい", "すごい", "するどい"],
+      "answers": [1],
+      "explanation": "偉い (えらい): Vĩ đại, tuyệt vời, có vị thế cao."
+    },
+    {
+      "id": 3,
+      "mondai": "Mondai 1 - 漢字読み",
+      "mondaiNumber": 1,
+      "majorSection": "vocab",
+      "question": "私が仕事の話を始めたら、【途端に】西田さんの機嫌が悪くなった。",
+      "type": "single",
+      "options": ["とたんに", "よたんに", "たんとに", "たんとうに"],
+      "answers": [0],
+      "explanation": "途端に (とたんに): Ngay khi, vừa mới... thì lập tức."
+    },
+    {
+      "id": 4,
+      "mondai": "Mondai 1 - 漢字読み",
+      "mondaiNumber": 1,
+      "majorSection": "vocab",
+      "question": "スピーチ大会の司会を【務める】。",
+      "type": "single",
+      "options": ["まとめる", "やめる", "さだめる", "つとめる"],
+      "answers": [3],
+      "explanation": "務める (つとめる): Đảm nhiệm, giữ vai trò (MC, quản lý)."
+    },
+    {
+      "id": 5,
+      "mondai": "Mondai 1 - 漢字読み",
+      "mondaiNumber": 1,
+      "majorSection": "vocab",
+      "question": "これは特別な【素材】で作られているそうだ。",
+      "type": "single",
+      "options": ["そうざい", "しょうざい", "そざい", "しょざい"],
+      "answers": [2],
+      "explanation": "素材 (そざい): Nguyên liệu, chất liệu."
+    },
+    {
+      "id": 6,
+      "mondai": "Mondai 2 - 表記",
+      "mondaiNumber": 2,
+      "majorSection": "vocab",
+      "question": "いつのまにか太陽が【のぼって】いた。",
+      "type": "single",
+      "options": ["去って", "至って", "昇って", "照って"],
+      "answers": [2],
+      "explanation": "昇る (のぼる): Mặt trời mọc, lên cao."
+    },
+    {
+      "id": 7,
+      "mondai": "Mondai 2 - 表記",
+      "mondaiNumber": 2,
+      "majorSection": "vocab",
+      "question": "【すいちょく】に線を引く。",
+      "type": "single",
+      "options": ["乗頂", "乗直", "垂頂", "垂直"],
+      "answers": [3],
+      "explanation": "垂直 (すいちょく): Thẳng đứng, vuông góc."
+    },
+    {
+      "id": 8,
+      "mondai": "Mondai 2 - 表記",
+      "mondaiNumber": 2,
+      "majorSection": "vocab",
+      "question": "研修生を受け入れるために、【じゅうきょ】を確保する必要がある。",
+      "type": "single",
+      "options": ["住宅", "住居", "住家", "住屋"],
+      "answers": [1],
+      "explanation": "住居 (じゅうきょ): Nơi ở, chỗ ở."
+    },
+    {
+      "id": 9,
+      "mondai": "Mondai 2 - 表記",
+      "mondaiNumber": 2,
+      "majorSection": "vocab",
+      "question": "災害に【そなえる】ことはとても大切だ。",
+      "type": "single",
+      "options": ["備える", "準える", "整える", "控える"],
+      "answers": [0],
+      "explanation": "備える (そなえる): Chuẩn bị, phòng bị trước thảm họa."
+    },
+    {
+      "id": 10,
+      "mondai": "Mondai 2 - 表記",
+      "mondaiNumber": 2,
+      "majorSection": "vocab",
+      "question": "【てんけいてき】な例を挙げて説明した。",
+      "type": "single",
+      "options": ["点型的", "典形的", "点形的", "典型的"],
+      "answers": [3],
+      "explanation": "典型的 (てんけいてき): Điển hình, tiêu biểu."
+    },
+    {
+      "id": 11,
+      "mondai": "Mondai 3 - 語形成",
+      "mondaiNumber": 3,
+      "majorSection": "vocab",
+      "question": "（ ）分野の人と話すのはいい刺激になる。",
+      "type": "single",
+      "options": ["逆", "異", "副", "裏"],
+      "answers": [1],
+      "explanation": "異分野 (いぶんや): Lĩnh vực khác nhau."
+    },
+    {
+      "id": 12,
+      "mondai": "Mondai 3 - 語形成",
+      "mondaiNumber": 3,
+      "majorSection": "vocab",
+      "question": "その店は、よい品物を（ ）価格で売っている。",
+      "type": "single",
+      "options": ["半", "安", "小", "低"],
+      "answers": [3],
+      "explanation": "低価格 (ていかかく): Giá thấp, giá rẻ."
+    },
+    {
+      "id": 13,
+      "mondai": "Mondai 3 - 語形成",
+      "mondaiNumber": 3,
+      "majorSection": "vocab",
+      "question": "運転免許など、顔写真（ ）の身分証明書を見せてください。",
+      "type": "single",
+      "options": ["足し", "載せ", "付き", "含み"],
+      "answers": [2],
+      "explanation": "顔写真付き (かおしゃしんつき): Có dán kèm ảnh chân dung."
+    },
+    {
+      "id": 14,
+      "mondai": "Mondai 4 - 文脈規定",
+      "mondaiNumber": 4,
+      "majorSection": "vocab",
+      "question": "職場環境の問題については、会社との（ ）の結果、改善してもらえることになった。",
+      "type": "single",
+      "options": ["交渉", "授受", "通話", "出願"],
+      "answers": [0],
+      "explanation": "交渉 (こうしょう): Thương lượng, đàm phán."
+    },
+    {
+      "id": 15,
+      "mondai": "Mondai 4 - 文脈規定",
+      "mondaiNumber": 4,
+      "majorSection": "vocab",
+      "question": "この企画を成功させるには、いくつもの課題を（ ）しなければならない。",
+      "type": "single",
+      "options": ["キャンセル", "クリア", "カット", "ブラッシュ"],
+      "answers": [1],
+      "explanation": "クリア (clear): Vượt qua, giải quyết xong vấn đề/thử thách."
+    },
+    {
+      "id": 16,
+      "mondai": "Mondai 4 - 文脈規定",
+      "mondaiNumber": 4,
+      "majorSection": "vocab",
+      "question": "このカメラは小型だが、通常のモデルに比べて性能が（ ）いるわけではない。",
+      "type": "single",
+      "options": ["縮んで", "荒れて", "沈んで", "劣って"],
+      "answers": [3],
+      "explanation": "劣る (おとる): Kém hơn, suy giảm hiệu năng."
+    },
+    {
+      "id": 17,
+      "mondai": "Mondai 4 - 文脈規定",
+      "mondaiNumber": 4,
+      "majorSection": "vocab",
+      "question": "父は手術後、医者も驚くほど（ ）回復した。",
+      "type": "single",
+      "options": ["劇的に", "格別に", "真剣に", "強大に"],
+      "answers": [0],
+      "explanation": "劇的に (げきてきに): Phục hồi một cách kịch tính, kinh ngạc."
+    },
+    {
+      "id": 18,
+      "mondai": "Mondai 4 - 文脈規定",
+      "mondaiNumber": 4,
+      "majorSection": "vocab",
+      "question": "このシステムを利用するには、インターネットに（ ）しているパソコンが必要です。",
+      "type": "single",
+      "options": ["到達", "付属", "接続", "密着"],
+      "answers": [2],
+      "explanation": "接続 (せつぞく): Kết nối (mạng internet)."
+    },
+    {
+      "id": 19,
+      "mondai": "Mondai 4 - 文脈規定",
+      "mondaiNumber": 4,
+      "majorSection": "vocab",
+      "question": "アルバイトの募集は３月末で（ ）ので、もう応募はできません。",
+      "type": "single",
+      "options": ["取り払った", "打ち消した", "締め切った", "引き離した"],
+      "answers": [2],
+      "explanation": "締め切る (しめきる): Hạn chót, đóng sổ đăng ký."
+    },
+    {
+      "id": 20,
+      "mondai": "Mondai 4 - 文脈規定",
+      "mondaiNumber": 4,
+      "majorSection": "vocab",
+      "question": "ガイドの後ろをツアー客たちが、（ ）ついて歩いている。",
+      "type": "single",
+      "options": ["ごくごく", "ぞろぞろ", "ぎしぎし", "じめじめ"],
+      "answers": [1],
+      "explanation": "ぞろぞろ: Nô nức, ùn ùn kéo theo sau."
+    },
+    {
+      "id": 21,
+      "mondai": "Mondai 5 - 類義語",
+      "mondaiNumber": 5,
+      "majorSection": "vocab",
+      "question": "【衝突しそう】になってしまった。",
+      "type": "single",
+      "options": ["ぶつかりそう", "落ちそう", "壊しそう", "破りそう"],
+      "answers": [0],
+      "explanation": "衝突する ＝ ぶつかる (Va chạm, va đập)."
+    },
+    {
+      "id": 22,
+      "mondai": "Mondai 5 - 類義語",
+      "mondaiNumber": 5,
+      "majorSection": "vocab",
+      "question": "彼には【再三】お願いしているです。",
+      "type": "single",
+      "options": ["たまに", "何度か", "何度も", "いつも"],
+      "answers": [2],
+      "explanation": "再三 (さいさん) ＝ 何度も (Nhiều lần)."
+    },
+    {
+      "id": 23,
+      "mondai": "Mondai 5 - 類義語",
+      "mondaiNumber": 5,
+      "majorSection": "vocab",
+      "question": "彼が言っていることは【でたらめだ】。",
+      "type": "single",
+      "options": ["悪口", "わがまま", "うそ", "自慢"],
+      "answers": [2],
+      "explanation": "でたらめ ＝ うそ (Nhảm nhí, dối trá)."
+    },
+    {
+      "id": 24,
+      "mondai": "Mondai 5 - 類義語",
+      "mondaiNumber": 5,
+      "majorSection": "vocab",
+      "question": "すみません、【お勘定】をお願いします。",
+      "type": "single",
+      "options": ["注文", "会計", "予約", "配達"],
+      "answers": [1],
+      "explanation": "お勘定 (おかんじょう) ＝ 会計 (Tính tiền, thanh toán)."
+    },
+    {
+      "id": 25,
+      "mondai": "Mondai 5 - 類義語",
+      "mondaiNumber": 5,
+      "majorSection": "vocab",
+      "question": "今日は、犬がいつもより【さわがしい】。",
+      "type": "single",
+      "options": ["悲しい", "静かだ", "楽しい", "うるさい"],
+      "answers": [3],
+      "explanation": "さわがしい ＝ うるさい (Ồn ào, làm ồn)."
+    },
+    {
+      "id": 26,
+      "mondai": "Mondai 6 - 用法",
+      "mondaiNumber": 6,
+      "majorSection": "vocab",
+      "question": "次の言葉の使い方として最もよいものを一つ選びなさい：【温厚】",
+      "type": "single",
+      "options": [
+        "温厚な伯父は、みんなから愛されている。",
+        "旅行中は、どこに行っても温厚な歓迎を受けてうれしかった。",
+        "今日は気温が下がるようなので、温厚なコートが必要だ。",
+        "雪の日には温厚なスープが飲みたくなる"
+      ],
+      "answers": [0],
+      "explanation": "温厚 (おんこう): Ôn hòa, hiền lành (dùng cho tính cách con người)."
+    },
+    {
+      "id": 27,
+      "mondai": "Mondai 6 - 用法",
+      "mondaiNumber": 6,
+      "majorSection": "vocab",
+      "question": "次の言葉の使い方として最もよいものを一つ選びなさい：【濁る】",
+      "type": "single",
+      "options": [
+        "外と室内の温度の差で窓が濁っている。",
+        "今日は空が雲で暗く濁っている。",
+        "しばらく洗っていないので、車が濁っている。",
+        "大雨で川の水が茶色く濁っている。"
+      ],
+      "answers": [3],
+      "explanation": "濁る (にごる): Đục, bị vẩn đục (dùng cho chất lỏng như nước sông đục)."
+    },
+    {
+      "id": 28,
+      "mondai": "Mondai 6 - 用法",
+      "mondaiNumber": 6,
+      "majorSection": "vocab",
+      "question": "次の言葉の使い方として最もよいものを一つ選びなさい：【世代】",
+      "type": "single",
+      "options": [
+        "野口さんはまだ20代なので、世代を取っているとはいえない。",
+        "先日のパーティーでは私と同じ世代の人がたくさんいて、話が盛り上がった。",
+        "青山さんは今は日本語の先生をしているが、実は英語の先生の世代が長い。",
+        "仕事を頑張るだけでなく、趣味も楽しんで、充実した世代を送りたい。"
+      ],
+      "answers": [1],
+      "explanation": "世代 (せだい): Thế hệ, lứa tuổi (ví dụ: người cùng thế hệ)."
+    },
+    {
+      "id": 29,
+      "mondai": "Mondai 6 - 用法",
+      "mondaiNumber": 6,
+      "majorSection": "vocab",
+      "question": "次の言葉の使い方として最もよいものを一つ選びなさい：【普及】",
+      "type": "single",
+      "options": [
+        "よくないうわさが普及しているので、気をつけてください。",
+        "全員に飲み物が普及したようなので、森さんから乾杯のあいさつをお願いします。",
+        "最近は携帯電話が普及しているので、家に電話を置かない家庭もある。",
+        "先週からインフルエンザが普及していて、小学校が休みになっている。"
+      ],
+      "answers": [2],
+      "explanation": "普及 (ふきゅう): Phổ cập, phổ biến (như điện thoại di động phổ cập)."
+    },
+    {
+      "id": 30,
+      "mondai": "Mondai 6 - 用法",
+      "mondaiNumber": 6,
+      "majorSection": "vocab",
+      "question": "次の言葉の使い方として最もよいものを一つ選びなさい：【生じる】",
+      "type": "single",
+      "options": [
+        "メールシステムに問題が生じて、メールが送れなくなった。",
+        "バターやチーズは牛乳から生じる。",
+        "昨日、姉に2番目の子どもが生じた。",
+        "いくら考えても、いいアイデアが生じない。"
+      ],
+      "answers": [0],
+      "explanation": "生じる (しょうじる): Phát sinh, nảy sinh (vấn đề, sự cố)."
+    },
+    {
+      "id": 31,
+      "mondai": "Mondai 7 - 文法形式の判断",
+      "mondaiNumber": 7,
+      "majorSection": "grammar",
+      "question": "このカレーは15分（ ）あればできるので、よく作る。",
+      "type": "single",
+      "options": ["を", "も", "に", "が"],
+      "answers": [1],
+      "explanation": "15分もあれば: Chỉ cần 15 phút là đủ."
+    },
+    {
+      "id": 32,
+      "mondai": "Mondai 7 - 文法形式の判断",
+      "mondaiNumber": 7,
+      "majorSection": "grammar",
+      "question": "Ａ「新しい携帯電話、ちょっと使いづらいんだよね」\nＢ「使っていれば（ ）慣れるよ」",
+      "type": "single",
+      "options": ["いまにも", "ようやく", "そのうち", "いつのまに"],
+      "answers": [2],
+      "explanation": "そのうち: Chẳng mấy chốc, rồi sẽ (quen thôi)."
+    },
+    {
+      "id": 33,
+      "mondai": "Mondai 7 - 文法形式の判断",
+      "mondaiNumber": 7,
+      "majorSection": "grammar",
+      "question": "今朝は寝坊してしまい、食事をする時間（ ）顔を洗う時間もなかった。",
+      "type": "single",
+      "options": ["すら", "しか", "とはいえ", "どころか"],
+      "answers": [3],
+      "explanation": "〜どころか: Nói gì tới... đến ngay cả... cũng không có."
+    },
+    {
+      "id": 34,
+      "mondai": "Mondai 7 - 文法形式の判断",
+      "mondaiNumber": 7,
+      "majorSection": "grammar",
+      "question": "Ａ「ねえ、経済学のレポート書けた？」\nＢ「うん、難しかったけど、（ ）書いたよ」",
+      "type": "single",
+      "options": ["書けば", "書いてでも", "書くだけは", "書いたわりに"],
+      "answers": [2],
+      "explanation": "VるだけはVた: Dù sao thì cũng đã làm xong (dù chưa biết hay dở)."
+    },
+    {
+      "id": 35,
+      "mondai": "Mondai 7 - 文法形式の判断",
+      "mondaiNumber": 7,
+      "majorSection": "grammar",
+      "question": "情報技術の発展（ ）、コミュニケーションの手段は多様化している。",
+      "type": "single",
+      "options": ["において", "にこたえて", "にあたって", "にともなって"],
+      "answers": [3],
+      "explanation": "〜にともなって: Cùng với, kéo theo sự phát triển của..."
+    },
+    {
+      "id": 36,
+      "mondai": "Mondai 7 - 文法形式の判断",
+      "mondaiNumber": 7,
+      "majorSection": "grammar",
+      "question": "（歯医者のホームページで）\n虫歯が小さい（ ）、簡単な治療で済みます。虫歯かもしれないと思ったら、早めに受診するようにしましょう。",
+      "type": "single",
+      "options": ["うちなら", "うちでも", "だけなら", "だけども"],
+      "answers": [0],
+      "explanation": "〜うちなら: Chừng nào/khi còn (sâu răng nhẹ) thì..."
+    },
+    {
+      "id": 37,
+      "mondai": "Mondai 7 - 文法形式の判断",
+      "mondaiNumber": 7,
+      "majorSection": "grammar",
+      "question": "Ａ水族館では、２か月前にイルカの赤ちゃんが生まれてから来場者が増え、非常に混雑する（ ）、開館時間を早めることを検討している。",
+      "type": "single",
+      "options": ["ようにしたとしても", "ようにしたことから", "ようになったとしても", "ようになったことから"],
+      "answers": [3],
+      "explanation": "〜ようになったことから: Do đã trở nên (đông đúc) nên..."
+    },
+    {
+      "id": 38,
+      "mondai": "Mondai 7 - 文法形式の判断",
+      "mondaiNumber": 7,
+      "majorSection": "grammar",
+      "question": "（ホテルで）\n客「これから西森町に行くんですが、どこかおいしい和食のお店はありませんか」\nフロント「西森町に（ ）、『さくら』はいかがでしょうか。大変人気のあるお店です」",
+      "type": "single",
+      "options": ["伺うんでしたら", "伺いますと", "いらっしゃるんでしたら", "いらっしゃいますと"],
+      "answers": [2],
+      "explanation": "いらっしゃるんでしたら: Nếu quý khách đi tới (tôn kính ngữ)."
+    },
+    {
+      "id": 39,
+      "mondai": "Mondai 7 - 文法形式の判断",
+      "mondaiNumber": 7,
+      "majorSection": "grammar",
+      "question": "田中さんは仕事が忙しいらしく、最近テニスクラブの練習を（ ）だ。",
+      "type": "single",
+      "options": ["休みかねない", "休みがち", "休むとのこと", "休むに違いない"],
+      "answers": [1],
+      "explanation": "〜がち: Có xu hướng, hay (nghỉ tập)."
+    },
+    {
+      "id": 40,
+      "mondai": "Mondai 7 - 文法形式の判断",
+      "mondaiNumber": 7,
+      "majorSection": "grammar",
+      "question": "飼っている犬が最近よくしゃっくりをする。心配になって病院で聞いてみたら、１時間以上続く場合は検査したほうがいいが、すぐに止まるなら（ ）と言われた。",
+      "type": "single",
+      "options": ["心配しなければならない", "心配しないでもない", "心配するわけではない", "心配することはない"],
+      "answers": [3],
+      "explanation": "〜することはない: Không cần thiết phải (lo lắng)."
+    },
+    {
+      "id": 41,
+      "mondai": "Mondai 7 - 文法形式の判断",
+      "mondaiNumber": 7,
+      "majorSection": "grammar",
+      "question": "私が教えている経営学の講義では、去年から、毎回学生に講義の感想や質問を書いて（ ）。そこから気づかされることも多いからだ。",
+      "type": "single",
+      "options": ["出してもらうことにしている", "出してもらうことがある", "出してあげることにしている", "出してあげることがある"],
+      "answers": [0],
+      "explanation": "〜出してもらうことにしている: Tôi quy định/quyết định bảo sinh viên nộp."
+    },
+    {
+      "id": 42,
+      "mondai": "Mondai 7 - 文法形式の判断",
+      "mondaiNumber": 7,
+      "majorSection": "grammar",
+      "question": "Ａ「ねえ、大変。これから行くお寺、見学するには（ ）だよ、ガイドブックのここに書いてある」\nＢ「本当だ。今から予約できるか電話して聞いてみようか」",
+      "type": "single",
+      "options": ["予約しないといけないみたい", "予約しないといけないはず", "予約したくなるみたい", "予約したくなるはず"],
+      "answers": [0],
+      "explanation": "〜ないといけないみたい: Hình như phải đặt trước."
+    },
+    {
+      "id": 43,
+      "mondai": "Mondai 8 - 文の組み立て",
+      "mondaiNumber": 8,
+      "majorSection": "grammar",
+      "question": "この歌を聞く ____ ____ ★ ____ ことだ。彼はカラオケに行くと必ずこの歌を歌っていた。",
+      "type": "single",
+      "options": ["のは", "思い出す", "たびに", "高校時代の友人の"],
+      "answers": [0],
+      "explanation": "Thứ tự sắp xếp: この歌を聞く (3:たびに) (4:高校時代の友人の) ★(1:のは) (2:思い出す) ことだ ➔ Vị trí ★ là (1: のは)."
+    },
+    {
+      "id": 44,
+      "mondai": "Mondai 8 - 文の組み立て",
+      "mondaiNumber": 8,
+      "majorSection": "grammar",
+      "question": "昨日、アルバイトに遅刻しそうだったので ____ ____ ★ ____ 、結局遅刻してしまった。",
+      "type": "single",
+      "options": ["タクシーに乗ったら", "かえって時間がかかり", "急ごうと思って", "道が渋滞していたせいで"],
+      "answers": [1],
+      "explanation": "Thứ tự sắp xếp: (3:急ごうと思って) (1:タクシーに乗ったら) ★(2:かえって時間がかかり) (4:道が渋滞していたせいで) ➔ Vị trí ★ là (2: かえって時間がかかり)."
+    },
+    {
+      "id": 45,
+      "mondai": "Mondai 8 - 文の組み立て",
+      "mondaiNumber": 8,
+      "majorSection": "grammar",
+      "question": "来月結婚する友人に結婚式のスピーチを頼まれた。大勢の前で話すのは ____ ____ ★ ____ 引き受けることにした。",
+      "type": "single",
+      "options": ["悩んだのだが", "と言われて", "どうしても", "苦手なので"],
+      "answers": [2],
+      "explanation": "Thứ tự sắp xếp: (4:苦手なので) (1:悩んだのだが) ★(3:どうしても) (2:と言われて) ➔ Vị trí ★ là (3: どうしても)."
+    },
+    {
+      "id": 46,
+      "mondai": "Mondai 8 - 文の組み立て",
+      "mondaiNumber": 8,
+      "majorSection": "grammar",
+      "question": "先日の政治家Ａ氏の発言はあまりに無責任だ。 ____ ____ ★ ____ と思う。",
+      "type": "single",
+      "options": ["政治家としての", "うえで", "発言しなければならなかった", "自分の立場をよく考えた"],
+      "answers": [0],
+      "explanation": "Thứ tự sắp xếp: (4:自分の立場をよく考えた) (2:うえで) ★(1:政治家としての) (3:発言しなければならなかった) ➔ Vị trí ★ là (1: 政治家としての)."
+    },
+    {
+      "id": 47,
+      "mondai": "Mondai 8 - 文の組み立て",
+      "mondaiNumber": 8,
+      "majorSection": "grammar",
+      "question": "食事や睡眠などの生活習慣は一度乱れてしまうと ____ ____ ★ ____ が大切だ。",
+      "type": "single",
+      "options": ["規則正しい生活を", "戻そうとしても", "普段から意識することが", "なかなか戻せいないので"],
+      "answers": [2],
+      "explanation": "Thứ tự sắp xếp: (2:戻そうとしても) (4:なかなか戻せないので) ★(3:普段から意識することが) (1:規則正しい生活を) ➔ Vị trí ★ là (3: 普段から意識することが)."
+    },
+    {
+      "id": 48,
+      "mondai": "Mondai 9 - 文章の文法",
+      "mondaiNumber": 9,
+      "majorSection": "grammar",
+      "question": "（48）に入る最もよいものを選びなさい。",
+      "type": "single",
+      "options": ["問題だろう", "問題である", "問題とのことだ", "問題ではないか"],
+      "answers": [1],
+      "explanation": "（48）: ...自転車の「問題である」出し。"
+    },
+    {
+      "id": 49,
+      "mondai": "Mondai 9 - 文章の文法",
+      "mondaiNumber": 9,
+      "majorSection": "grammar",
+      "question": "（49）に入る最もよいものを選びなさい。",
+      "type": "single",
+      "options": ["つくられているにすぎない", "つくられているに違いない", "つくられているといってもよい", "つくられているというだけではない"],
+      "answers": [2],
+      "explanation": "（49）: 地下に「つくられているといってもよい」。"
+    },
+    {
+      "id": 50,
+      "mondai": "Mondai 9 - 文章の文法",
+      "mondaiNumber": 9,
+      "majorSection": "grammar",
+      "question": "（50）に入る最もよいものを選びなさい。",
+      "type": "single",
+      "options": ["駐輪場", "ある駐輪場", "このような駐輪場", "そこの駐輪場"],
+      "answers": [2],
+      "explanation": "（50）: 「このような駐輪場」にはさまざまなメリットがある。"
+    },
+    {
+      "id": 51,
+      "mondai": "Mondai 9 - 文章の文法",
+      "mondaiNumber": 9,
+      "majorSection": "grammar",
+      "question": "（51）に入る最もよいものを選びなさい。",
+      "type": "single",
+      "options": ["しても", "するためにも", "なったように", "なってはじめて"],
+      "answers": [1],
+      "explanation": "（51）: より快適で安全な街に「するためにも」..."
+    },
+    {
+      "id": 52,
+      "mondai": "Mondai 10 - 短文読解",
+      "mondaiNumber": 10,
+      "majorSection": "reading",
+      "question": "52 筆者の考えに合うのはどれか。",
+      "type": "single",
+      "options": [
+        "不快な感情を持てば持つほど、人生はより豊かになる。",
+        "不快な感情を取り除ければ、理想の人生が送れる。",
+        "不快な感情が存在する理由を考えることで、人生は豊かになる。",
+        "不快な感情があるからこそ、人生は豊かになる。"
+      ],
+      "answers": [3],
+      "explanation": "Tác giả nhấn mạnh: むしろそういう感情があることが豊かな人生だとさえ言えます ➔ Chính vì có cảm xúc khó chịu nên cuộc sống mới phong phú."
+    },
+    {
+      "id": 53,
+      "mondai": "Mondai 10 - 短文読解",
+      "mondaiNumber": 10,
+      "majorSection": "reading",
+      "question": "53 「花」シリーズを買いたい場合、どうすればいいか。",
+      "type": "single",
+      "options": [
+        "4月1日から15日までの間に特別ショップに行く。",
+        "4月1日から15日までの間に特別ショップか「マリー」各店に行く。",
+        "4月1日から15日までの間は特別ショップに行き、16日以降は「マリー」各店に行く。",
+        "4月16日以降に特別ショップか「マリー」各店に行く。"
+      ],
+      "answers": [0],
+      "explanation": "Thông báo ghi rõ: Dòng sản phẩm 『花』 chỉ bán tại gian hàng đặc biệt (特別ショップ) từ ngày 1/4 đến 15/4."
+    },
+    {
+      "id": 54,
+      "mondai": "Mondai 10 - 短文読解",
+      "mondaiNumber": 10,
+      "majorSection": "reading",
+      "question": "54 本文の内容に合うのはどれか。",
+      "type": "single",
+      "options": [
+        "発芽の三条件がそろった状態で光が当たっても、育たないことがある。",
+        "発芽の三条件がそろって発芽しても、光が当たらなければ成長しにくい。",
+        "発芽の三条件は、光がとのことよりも重要だ。",
+        "発芽の三条件は、光の当たらない場所ではそろいにくい。"
+      ],
+      "answers": [1],
+      "explanation": "Nếu hạt nảy mầm ở nơi không có ánh sáng thì cây con khó lòng phát triển."
+    },
+    {
+      "id": 55,
+      "mondai": "Mondai 10 - 短文読解",
+      "mondaiNumber": 10,
+      "majorSection": "reading",
+      "question": "55 このメールで問い合わせていることは何か。",
+      "type": "single",
+      "options": [
+        "ミラ商会に、最初の予定より早く納品できるか。",
+        "ミラ商会の希望する価格で、納品できるか。",
+        "5月20日に、ミラ商会に80本を納品できるか。",
+        "今週中に、ミラ商会に30本を納品できるか。"
+      ],
+      "answers": [2],
+      "explanation": "Nội dung email hỏi xem có thể tăng số lượng giao từ 50 lên 80 cái vào ngày 20/5 hay không."
+    },
+    {
+      "id": 56,
+      "mondai": "Mondai 10 - 短文読解",
+      "mondaiNumber": 10,
+      "majorSection": "reading",
+      "question": "56 筆者の考えに合うのはどれか。",
+      "type": "single",
+      "options": [
+        "問題に取り組む経験を積むほど、問題に対処できるようになる。",
+        "問題から逃げることも、問題の解決には必要である。",
+        "人生で得をするために、難しい問題に積極的に取り組むべきだ。",
+        "解決できたかどうかより、問題解決に取り組む態度が大切だ。"
+      ],
+      "answers": [0],
+      "explanation": "Tác giả giải thích: Càng giải quyết vấn đề kỹ lưỡng thì kỹ năng xử lý vấn đề càng nâng cao."
+    },
+    {
+      "id": 57,
+      "mondai": "Mondai 11 - 中文読解",
+      "mondaiNumber": 11,
+      "majorSection": "reading",
+      "question": "57 筆者によると、親は何かを描こうとしている子供にどう接したらいいか。",
+      "type": "single",
+      "options": [
+        "さらに描きたい気持ちにさせる。",
+        "描きたがっているのを止めない。",
+        "描いているものを批判しない。",
+        "描く楽しみを教える。"
+      ],
+      "answers": [1],
+      "explanation": "Cha mẹ không nên cấm đoán vô cớ khi con muốn vẽ."
+    },
+    {
+      "id": 58,
+      "mondai": "Mondai 11 - 中文読解",
+      "mondaiNumber": 11,
+      "majorSection": "reading",
+      "question": "58 絵を学ぶ人に対して、筆者が言いたいことは何か。",
+      "type": "single",
+      "options": [
+        "楽をしようと考えなければ、自分を向上させられる。",
+        "画家になりたいという気持ちをもち続けるべきだ。",
+        "不調のときにこそ、自分の芸術を発見できる。",
+        "自ら進んで取り組むことが大切だ。"
+      ],
+      "answers": [3],
+      "explanation": "Điều quan trọng là bản thân phải chủ động và thích thú thực hiện với tinh thần ham học hỏi."
+    },
+    {
+      "id": 59,
+      "mondai": "Mondai 11 - 中文読解",
+      "mondaiNumber": 11,
+      "majorSection": "reading",
+      "question": "59 ①危険とあるが、どのような点が危険か。",
+      "type": "single",
+      "options": [
+        "著者の考えに疑問を持つこと",
+        "著者の考えに支配されてしまうこと",
+        "著者の考えを読み間違えてしまうこと",
+        "著者の考えを理解することで満足してしまうこと"
+      ],
+      "answers": [1],
+      "explanation": "Bị chi phối hoàn toàn bởi suy nghĩ của tác giả mà mất đi suy nghĩ của chính mình."
+    },
+    {
+      "id": 60,
+      "mondai": "Mondai 11 - 中文読解",
+      "mondaiNumber": 11,
+      "majorSection": "reading",
+      "question": "60 ②いいものですとあるが、なぜか。",
+      "type": "single",
+      "options": [
+        "著者の観点がすぐに身につくから",
+        "著者の問題点に気づくようになるから",
+        "自分の考えも深まることがあるから",
+        "自分の考えを著者に近づけることもできるから"
+      ],
+      "answers": [2],
+      "explanation": "Đọc sâu giúp suy nghĩ của chính bản thân mình được đào sâu hơn."
+    },
+    {
+      "id": 61,
+      "mondai": "Mondai 11 - 中文読解",
+      "mondaiNumber": 11,
+      "majorSection": "reading",
+      "question": "61 読書について、筆者の考えに合うのはどれか。",
+      "type": "single",
+      "options": [
+        "視点が偏らないように、さまざまな種類の本を読むことが大切だ。",
+        "思考を深めるには、偏りのない視点・で書かれた本を読むことが必要だ。",
+        "一人の作家を理解するには、その作家の違う類の本を読んだほうがいい。",
+        "作家から影響を受けすぎないように、常に批判的に読まなければいけない。"
+      ],
+      "answers": [0],
+      "explanation": "Nên đọc nhiều loại sách khác nhau để góc nhìn không bị phiến diện."
+    },
+    {
+      "id": 62,
+      "mondai": "Mondai 11 - 中文読解",
+      "mondaiNumber": 11,
+      "majorSection": "reading",
+      "question": "62 ①長く同じ活動を行ってきた組について、筆者が挙げている問題点は何か。",
+      "type": "single",
+      "options": [
+        "組織の中に間違った見方をしている人が多いことに誰も気づかないこと",
+        "組織が非常に危険な状態なのに、そのことを誰も言いだせないこと",
+        "組織全体が同じ見方をしていて、危ない状況であることに誰も気づかないこと",
+        "長く同じ活動を行っていることに、誰も疑問を持とうとしないこと"
+      ],
+      "answers": [2],
+      "explanation": "Cả tổ chức cùng một góc nhìn cố định nên không ai nhận ra tình trạng nguy hiểm."
+    },
+    {
+      "id": 63,
+      "mondai": "Mondai 11 - 中文読解",
+      "mondaiNumber": 11,
+      "majorSection": "reading",
+      "question": "63 ②組織を支配する「気」とはどのようなものか。",
+      "type": "single",
+      "options": [
+        "組織内で無意識に共有されている価値観",
+        "組織内で押しつけられている価値観",
+        "組織内の人が変えたいと思っている価値観",
+        "組織内の人が常に意識している価値観"
+      ],
+      "answers": [0],
+      "explanation": "Giá trị quan được chia sẻ vô thức trong nội bộ tổ chức."
+    },
+    {
+      "id": 64,
+      "mondai": "Mondai 11 - 中文読解",
+      "mondaiNumber": 11,
+      "majorSection": "reading",
+      "question": "64 筆者によると、トップに求められることは何か。",
+      "type": "single",
+      "options": [
+        "これまでの価値観を見直し、その良い点を伸ばした組織にすること",
+        "部下たちの価値観を認め、力を引きだせるような戦略を示すこと",
+        "組織の文化を理解した上で、時代に合った組織をつくること",
+        "組織の文化に流されずに、組織を適切な方向に導くこと"
+      ],
+      "answers": [3],
+      "explanation": "Người lãnh đạo cần không bị cuốn theo văn hóa tổ chức mà dẫn dắt đi đúng hướng."
+    },
+    {
+      "id": 65,
+      "mondai": "Mondai 12 - 比較統合読解",
+      "mondaiNumber": 12,
+      "majorSection": "reading",
+      "question": "65 感謝の手紙を書く際に形式的な表現や文を使うことについて、A と B はどのように述べているか。",
+      "type": "single",
+      "options": [
+        "A も B も、礼儀正しすぎる印象を与えるのであまり使わないほうがいいと述べている。",
+        "A も B も、自分の思いをきちんと伝えるためにできるだけ使ったほうがいいと述べている。",
+        "A は自分をよく見せようとしているだけなので使わないほうがいいと述べ、B は使い方を理解してうまく使ったほうがいいと述べている。",
+        "A は正しく使うのは難しいので使わないほうがいいと述べ、B は真剣な気持ちが伝わるので使ったほうがいいと述べている。"
+      ],
+      "answers": [2],
+      "explanation": "Bài A cho rằng không nên dùng văn mẫu hình thức; Bài B cho rằng nên dùng đúng cách để thể hiện sự chân thành."
+    },
+    {
+      "id": 66,
+      "mondai": "Mondai 12 - 比較統合読解",
+      "mondaiNumber": 12,
+      "majorSection": "reading",
+      "question": "66 感謝の手紙を書くうえで、A と B が共通して大切だと述べていることは何か。",
+      "type": "single",
+      "options": [
+        "自分の思いを自由に表現すること。",
+        "自分らしい文章にすること。",
+        "相手との関係に合わせて書き方を変えること。",
+        "相手の気持ちを考えて書くこと。"
+      ],
+      "answers": [3],
+      "explanation": "Cả hai bài A và B đều thống nhất cần phải suy nghĩ đặt mình vào vị trí cảm xúc người nhận."
+    },
+    {
+      "id": 67,
+      "mondai": "Mondai 13 - 長文読解",
+      "mondaiNumber": 13,
+      "majorSection": "reading",
+      "question": "67 ①なかなか決断できない人とあるが、なぜ決断できないのか。",
+      "type": "single",
+      "options": [
+        "自分が正しい決断ができるとは思えないから",
+        "一度決断したら変えられないと思って迷うから",
+        "その場で決断すべきことかどうかわからないから",
+        "間違った決断をしたくないと思って考えすぎるから"
+      ],
+      "answers": [3],
+      "explanation": "Vì suy nghĩ quá nhiều do không muốn đưa ra quyết định sai lầm."
+    },
+    {
+      "id": 68,
+      "mondai": "Mondai 13 - 長文読解",
+      "mondaiNumber": 13,
+      "majorSection": "reading",
+      "question": "68 ②就活生の例を挙げて、筆者が問題だと述べていることは何か。",
+      "type": "single",
+      "options": [
+        "人の意見を出いて決断すればよかったと思うこと",
+        "悪い結果になったとき、それを認めようとしないこと",
+        "決断を間違えたせいで悪い結果になったと思うこと",
+        "決断は正しかったにもかかわらず、後悔をしていること"
+      ],
+      "answers": [2],
+      "explanation": "Cho rằng kết quả xấu là do đưa ra quyết định sai."
+    },
+    {
+      "id": 69,
+      "mondai": "Mondai 13 - 長文読解",
+      "mondaiNumber": 13,
+      "majorSection": "reading",
+      "question": "69 この文章で筆者が言いたいことは何か。",
+      "type": "single",
+      "options": [
+        "必要なときに決断したうえで、どのように対応するかが重要だ。",
+        "決断する前に、うまくいかなかった場合の対応を考えておくべきだ。",
+        "正しい決断ができるようになるには、決断するという経験を積むべきだ。",
+        "どんな結果になっても後悔しないように、よく考えて決断することが重要だ。"
+      ],
+      "answers": [0],
+      "explanation": "Sau khi đã quyết định lúc cần thiết, cách ứng phó và hành động sau đó mới là quan trọng."
+    },
+    {
+      "id": 70,
+      "mondai": "Mondai 14 - 情報検索",
+      "mondaiNumber": 14,
+      "majorSection": "reading",
+      "question": "70 スマンさんは 3 歳の娘と一緒に 8 月の平日にプールに行き、10 時から 12 時まで遊ぶつもりである。スマンさんたちの料金はいくらになるか。",
+      "type": "single",
+      "options": [
+        "スマンさん 2,800 円、娘 1,000 円から、それぞれ 300 円を引いた金額",
+        "スマンさん 3,000 円、娘 1,300 円から、それぞれ 300 円を引いた金額",
+        "スマンさん 3,500 円、娘 1,800 円から、それぞれ 300 円を引いた金額",
+        "スマンさん 3,500 円、娘 1,800 円"
+      ],
+      "answers": [2],
+      "explanation": "Giá vé đặc biệt tháng 8: Người lớn 3,500 yen, Trẻ em 1,800 yen và ngày thường được giảm 300 yen/người."
+    },
+    {
+      "id": 71,
+      "mondai": "Mondai 14 - 情報検索",
+      "mondaiNumber": 14,
+      "majorSection": "reading",
+      "question": "71 次の四つの団体は、一日パスを購入しようと思っている。この中で、学校団体として割引が適用されるのはどの団体か。",
+      "type": "single",
+      "options": ["① 高下北小学校 (nhiều hơn 20 người nhưng không có giấy tờ)", "② 高下南小学校 (30 người, ngày thường tháng 8, có chứng nhận)", "③ 高下第二中学校 (18 người)", "④ 高学校 (45 người, thứ 7 tháng 8)"],
+      "answers": [1],
+      "explanation": "Đoàn trường học cần từ 20 người trở lên, có giấy chứng nhận và áp dụng ngày thường."
+    }
+  ],
+  "passages": [
+    {
+      "kind": "passage",
+      "id": "passage-n2-2022-p01",
+      "mondaiNumber": 9,
+      "majorSection": "grammar",
+      "passageTitle": "地下駐輪場",
+      "passageText": "誰もが安全に、そして快適に暮らせる街をつくるため、各自治体はさまざまな取り組みを行っている。特に都市部において、駅周辺の整備は重要な課題となる。\n今回取り上げるのは、自転車の（４８）出し。多くの駅には駐輪場が設置されているが、スペースには限りがある。駐輪場を利用できない人が多くなると、道路や歩道など許可されていない場所に置かれる自転車が増え、車両や歩行者の通行の妨げになってしまう。\nそこで有効になるのが地下空間の利用だ。地下に駐輪場があること自体はそれほど珍しくない。だが最近では、新しいタイプの地下駐輪場も見られる。それは、地下に（４９）。全自動式の地下駐輪場なのだ。自転車だけを運ぶエレベーターが設置されており、地上で自転車をエレベーターに乗せてボタンを押すと、機械によって地下の駐輪スペースへと運ばれる。そして、機械が判断して空いている場所へ収納してくれる。取り出すときも、暗証番号を入力すれば、機械が地上へ運んできてくれる。\n（５０）にはさまざまなメリットがある。たとえば、出し入れの手軽さだ。荷物が多い人や子供連れにとっては、駐輪場の中を移動せずに自転車を取り出せるというのは非常に便利だ。また、人が出入りしないので、盗難の心配もない。\n駐輪場不足を解決し、より快適で安全な街に（５１）、全自動式の地下駐輪場の設置は有効な手段の一つといえる。今後も増えていきそうだ。",
+      "questions": [
+        {
+          "id": 48,
+          "question": "（48）に入る最もよいものを選びなさい。",
+          "type": "single",
+          "options": ["問題だろう", "問題である", "問題とのことだ", "問題ではないか"],
+          "answers": [1],
+          "explanation": "48: 問題である"
+        },
+        {
+          "id": 49,
+          "question": "（49）に入る最もよいものを選びなさい。",
+          "type": "single",
+          "options": ["つくられているにすぎない", "つくられているに違いない", "つくられているといってもよい", "つくられているというだけではない"],
+          "answers": [2],
+          "explanation": "49: つくられているといってもよい"
+        },
+        {
+          "id": 50,
+          "question": "（50）に入る最もよいものを選びなさい。",
+          "type": "single",
+          "options": ["駐輪場", "ある駐輪場", "このような駐輪場", "そこの駐輪場"],
+          "answers": [2],
+          "explanation": "50: このような駐輪場"
+        },
+        {
+          "id": 51,
+          "question": "（51）に入る最もよいものを選びなさい。",
+          "type": "single",
+          "options": ["しても", "するためにも", "なったように", "なってはじめて"],
+          "answers": [1],
+          "explanation": "51: するためにも"
+        }
+      ]
+    },
+    {
+      "kind": "passage",
+      "id": "passage-n2-2022-m10-1",
+      "mondaiNumber": 10,
+      "majorSection": "reading",
+      "passageTitle": "短文 (1) - 感情と人生",
+      "passageText": "恐い、恥ずかしい、淋しい、腹が立つなどなどは、不快な感情ではありますが、単に取り除かれればよいもの、存在しなければよいものではありません。それらが一切存在しない理想の人生があると考えるのは間違いで、それらには存在する理由があるのです。どんなに恵まれた人生でも、恐いことはありますし、恥ずかしいこと、淋しいこと、腹が立つことはあります。むしろそういう感情があることが豊かな人生だとさえ言えます。",
+      "questions": [
+        {
+          "id": 52,
+          "question": "52 筆者の考えに合うのはどれか。",
+          "type": "single",
+          "options": [
+            "不快な感情を持てば持つほど、人生はより豊かになる。",
+            "不快な感情を取り除ければ、理想の人生が送れる。",
+            "不快な感情が存在する理由を考えることで、人生は豊かになる。",
+            "不快な感情があるからこそ、人生は豊かになる。"
+          ],
+          "answers": [3],
+          "explanation": "52: むしろそういう感情があることが豊かな人生だとさえ言えます。"
+        }
+      ]
+    },
+    {
+      "kind": "passage",
+      "id": "passage-n2-2022-m10-2",
+      "mondaiNumber": 10,
+      "majorSection": "reading",
+      "passageTitle": "短文 (2) - お知らせ",
+      "passageText": "オリジナル帽子店「マリー」\n期間限定・特別ショップのお知らせ\nこのたび、4月1日から15日までの期間限定で、南野デパートに特別ショップを開店いたします。\n特別ショップでは、通常の商品に加え、春の新商品を販売いたします。\n春の新商品のうち、「花」シリーズは、特別ショップのみでの販売となりますので、ぜひこの機会にご来店ください。\nなお、そのほかの春の新商品は、4月16日から「マリー」各店でも販売を開始いたします。",
+      "questions": [
+        {
+          "id": 53,
+          "question": "53 「花」シリーズを買いたい場合、どうすればいいか。",
+          "type": "single",
+          "options": [
+            "4月1日から15日までの間に特別ショップに行く。",
+            "4月1日から15日までの間に特別ショップか「マリー」各店に行く。",
+            "4月1日から15日までの間は特別ショップに行き、16日以降は「マリー」各店に行く。",
+            "4月16日以降に特別ショップか「マリー」各店に行く。"
+          ],
+          "answers": [0],
+          "explanation": "53: 「花」シリーズは、特別ショップのみでの販売 (4/1 ~ 4/15)"
+        }
+      ]
+    },
+    {
+      "kind": "passage",
+      "id": "passage-n2-2022-m10-3",
+      "mondaiNumber": 10,
+      "majorSection": "reading",
+      "passageTitle": "短文 (3) - 植物の発芽",
+      "passageText": "「適度に暖かく、発芽に使える水があり、呼吸もできるという条件がそろえば、多くの植物のタネは発芽する」と思われがちです。しかし、実際には、そうではありません。多くの植物のタネは、発芽の三条件がそろったからといって、うかつに発芽しないのです。\nなぜなら、発芽の三条件の中には、「光が当たること」という条件が入っていないからです。もし、光の当たらない場所でタネを発芽すれば、発芽した芽生えがどんな運命をたどるかは、容易に想像がつきます。",
+      "questions": [
+        {
+          "id": 54,
+          "question": "54 本文の内容に合うのはどれか。",
+          "type": "single",
+          "options": [
+            "発芽の三条件がそろった状態で光が当たっても、育たないことがある。",
+            "発芽の三条件がそろって発芽しても、光が当たらなければ成長しにくい。",
+            "発芽の三条件は、光が当たることよりも重要だ。",
+            "発芽の三条件は、光の当たらない場所ではそろいにくい。"
+          ],
+          "answers": [1],
+          "explanation": "54: 光が当たらない場所で発芽すると成長しにくい。"
+        }
+      ]
+    },
+    {
+      "kind": "passage",
+      "id": "passage-n2-2022-m10-4",
+      "mondaiNumber": 10,
+      "majorSection": "reading",
+      "passageTitle": "短文 (4) - 納品についてのメール",
+      "passageText": "宛て先：shinji_yasumura@yuukibuitynntamei.co.jp\n件名：「何でもハサミ」のミラ商会への納品について\n日時：4月30日 11:55\n商品管理課安村様\nお疲れさまです。\n6月15日発売の「何でもハサミ」の件ですが、ミラ商会の担当者から連絡がありました。価格についての問題は解決しましたが、納品数については、最初の予定の50本ではなく、80本に変更してほしいとのことです。\n今週中に返答しなければならないのですが、今から30本増やすことは可能でしょうか。\n納品日は5月20日で、変更ありません。ご検討よろしくお願いします。\n営業課 大森",
+      "questions": [
+        {
+          "id": 55,
+          "question": "55 このメールで問い合わせていることは何か。",
+          "type": "single",
+          "options": [
+            "ミラ商会に、最初の予定より早く納品できるか。",
+            "ミラ商会の希望する価格で、納品できるか。",
+            "5月20日に、ミラ商会に80本を納品できるか。",
+            "今週中に、ミラ商会に30本を納品できるか。"
+          ],
+          "answers": [2],
+          "explanation": "55: Hỏi xem ngày 20/5 có thể giao 80 cây kéo cho bên Mira hay không."
+        }
+      ]
+    },
+    {
+      "kind": "passage",
+      "id": "passage-n2-2022-m10-5",
+      "mondaiNumber": 10,
+      "majorSection": "reading",
+      "passageTitle": "短文 (5) - 問題解決のスキル",
+      "passageText": "仕事でも、人生でも、要は降り掛かる問題をいかに解決していくか、という作業の繰り返しだ。ある人は問題から逃げる。これも、その人にとっての解決である。しかし、そう言う人は逃げ続けなければならない。一度きちんと解決をした人は、同じ問題に遭遇したときに対処できる。このようにして、スキルが上がっていき、その後得をするだろう。",
+      "questions": [
+        {
+          "id": 56,
+          "question": "56 筆者の考えに合うのはどれか。",
+          "type": "single",
+          "options": [
+            "問題に取り組む経験を積むほど、問題に対処できるようになる。",
+            "問題から逃げることも、問題の解決には必要である。",
+            "人生で得をするために、難しい問題に積極的に取り組むべきだ。",
+            "解決できたかどうかより、問題解決に取り組む態度が大切だ。"
+          ],
+          "answers": [0],
+          "explanation": "56: Tích lũy kinh nghiệm giải quyết vấn đề giúp nâng cao năng lực ứng phó."
+        }
+      ]
+    },
+    {
+      "kind": "passage",
+      "id": "passage-n2-2022-m11-1",
+      "mondaiNumber": 11,
+      "majorSection": "reading",
+      "passageTitle": "中文 (1) - 子供の絵を描く行為",
+      "passageText": "もの心つくかつかないかというころの子供は、まだ言葉では表現できない自分の感情や欲求を、何らかの方法で吐き出そうとする。身近に鉛筆やクレヨンなどがあれば、そこらに何かを描きなぐるのもその一つだ。注意深く見ていると、その段階ですでに、絵の好きな子は、絵らしきものを描き始めている。そこですぐ、「あ、この子は絵が好きだ。画家にしよう」と考えるのは早すぎるが、大事なことは、「部屋がきたなくなる。そこらを汚す」といって、子供の遊びをやみくもに禁じてしまわないことだ。\n絵を学ぼうとして大学にまで来た人たちは、子供のときに両親から、絵を描くことを禁じられなかった人たちであることは確かである。画家になりたい、自分の芸術を発見したい、というところまでこぎつけた。この人々にとって、あとは自分自身の問題だ。調子よくいったときにどう考えるか、不調のときにどうがんばるか。ただ、私はやはり、彼ら自身も、教える方としても、いやな勉強を無理に続けたり押しつけたりしても、いい結果は得られないと思う。人は、いやなことをさせられれば、早くそこを通りすぎようとばかりするが、自分から喜んで、遊び心をもってやることはよく身につき、蓄積されていくものだ。\n楽しく、遊び心でというのは、楽をするというのとは違う。それ自体は非常に苦しいことでも、自分を一段高いところへ進ませてくれるものだと、どこかで信じていれば、楽しくもなる。",
+      "questions": [
+        {
+          "id": 57,
+          "question": "57 筆者によると、親は何かを描こうとしている子供にどう接したらいいか。",
+          "type": "single",
+          "options": [
+            "さらに描きたい気持ちにさせる。",
+            "描きたがっているのを止めない。",
+            "描いているものを批判しない。",
+            "描く楽しみを教える。"
+          ],
+          "answers": [1],
+          "explanation": "57: Không nên vô cớ ngăn cản hành vi thích vẽ của trẻ."
+        },
+        {
+          "id": 58,
+          "question": "58 絵を学ぶ人に対して、筆者が言いたいことは何か。",
+          "type": "single",
+          "options": [
+            "楽をしようと考えなければ、自分を向上させられる。",
+            "画家になりたいという気持ちをもち続けるべきだ。",
+            "不調のときにこそ、自分の芸術を発見できる。",
+            "自ら進んで取り組むことが大切だ。"
+          ],
+          "answers": [3],
+          "explanation": "58: Chủ động tự nguyện hăng hái thực hiện mới tích lũy được nhiều."
+        }
+      ]
+    },
+    {
+      "kind": "passage",
+      "id": "passage-n2-2022-m11-2",
+      "mondaiNumber": 11,
+      "majorSection": "reading",
+      "passageTitle": "中文 (2) - 読書と世界観",
+      "passageText": "読書は、本の書き手や登場人物のワールドが自分の中に根づくことで、人生を豊かにしていくことができるものです。読書でワールドを増やしていけるのです。\n一方で、他者が自分の中に入り込む怖さもあります。自分よりはるかに思考力がある人の考えを読み、その人が深く入り込んできたら……。自分がなくなってしまうくらい影響を受けるかもしれません。読み方を間違えれば①危険でもあるのです。\n言葉を使っているというのもポイントで、著者の思考をなぞることができてしまう。それだけ深いレベルで影響を受けやすいのです。そう考えると、場合によっては「批判的に読む」ことも必要でしょう。ただ注意したいのは、何でも批判的に、ナナメに読めば思考力が深まるわけではないということです。著者の思考、世界観をいったんはそのまま受け入れるほうが得るものは大きいはずです。\n『どっぷり読書』も、それはそれで②いいものです。その世界にどっぷりはまることで、思考が深まる面もあります。そのうえで批判的に読む。ちょっと離れたところから見るような感じです。この視点は、さまざまな本を読んでいるうちに自然と身につくものでもあります。\n一人の作家に入れ込んで、その作家のものばかり読んでいると、どうしても視点が偏りがちになります。その作家しか受けつけない、というのではやはり思考も深まりません。違うタイプの作家のものを読んだり、違うジャンルの本を読んでいると、同時にいくつかの視点を持てるようになります。",
+      "questions": [
+        {
+          "id": 59,
+          "question": "59 ①危険とあるが、どのような点が危険か。",
+          "type": "single",
+          "options": [
+            "著者の考えに疑問を持つこと",
+            "著者の考えに支配されてしまうこと",
+            "著者の考えを読み間違えてしまうこと",
+            "著者の考えを理解することで満足してしまうこと"
+          ],
+          "answers": [1],
+          "explanation": "59: Nguy hiểm vì bị tư tưởng của tác giả chi phối hoàn toàn."
+        },
+        {
+          "id": 60,
+          "question": "60 ②いいものですとあるが、なぜか。",
+          "type": "single",
+          "options": [
+            "著者の観点がすぐに身につくから",
+            "著者の問題点に気づくようになるから",
+            "自分の考えも深まることがあるから",
+            "自分の考えを著者に近づけることもできるから"
+          ],
+          "answers": [2],
+          "explanation": "60: Vì đắm chìm vào thế giới sách giúp tư duy của bản thân thêm sâu sắc."
+        },
+        {
+          "id": 61,
+          "question": "61 読書について、筆者の考えに合うのはどれか。",
+          "type": "single",
+          "options": [
+            "視点が偏らないように、さまざまな種類の本を読むことが大切だ。",
+            "思考を深めるには、偏りのない視点で書かれた本を読むことが必要だ。",
+            "一人の作家を理解するには、その作家の違う類の本を読んだほうがいい。",
+            "作家から影響を受けすぎないように、常に批判的に読まなければいけない。"
+          ],
+          "answers": [0],
+          "explanation": "61: Nên đọc nhiều thể loại sách để tránh cái nhìn phiến diện."
+        }
+      ]
+    },
+    {
+      "kind": "passage",
+      "id": "passage-n2-2022-m11-3",
+      "mondaiNumber": 11,
+      "majorSection": "reading",
+      "passageTitle": "中文 (3) - 組織と「気」",
+      "passageText": "①長く同じ活動を行ってきた組織には、安定的な動きができるという長所があります。ところが、こういう組織には同時に、ある一つの方向からの固定的な見方しかできないという欠点もあります。この欠点はなかなかやっかいなものです。こうした見方が組織内に一度根づいてしまうと、なかなか変えることができない難しさがあるからです。よそから見れば危険極まりない状態なのに、組織の中では誰もそれにまったく気づかないということが起こるのはそのためです。\nこれは②組織を支配する「気」が原因です。言葉を変えると、囲まれた本人は気づいていない、空気や雰囲気、あるいは文化といったものといえます。企業のように独特の文化を持つ組織の中では、これが原因で気に囲まれた人々が等しくおかしな見方をしてしまうことがよく起こります。組織の中でふだんから慣れ親しんでいる価値観が、いつの間にかその人たちの価値観になってしまうのです。\nこの状況を変えることができるのは、じつはトップだけです。トップがやらなければならないのは、組織全体を包んでいる「気」に惑わされないことです。そしてできれば見たくないものを逆にしっかりと見るようにして、事業の全体像を正確に把握することです。その上でしっかりと価値付けを行い、組織の人たちが正しい方向に動けるように戦略を示すことができたら、いつの時代も最高の力を発揮できる組織をつくることができます。",
+      "questions": [
+        {
+          "id": 62,
+          "question": "62 ①長く同じ活動を行ってきた組について、筆者が挙げている問題点は何か。",
+          "type": "single",
+          "options": [
+            "組織の中に間違った見方をしている人が多いことに誰も気づかないこと",
+            "組織が非常に危険な状態なのに、そのことを誰も言いだせないこと",
+            "組織全体が同じ見方をしていて、危ない状況であることに誰も気づかないこと",
+            "長く同じ活動を行っていることに、誰も疑問を持とうとしないこと"
+          ],
+          "answers": [2],
+          "explanation": "62: Tất cả cùng góc nhìn cố định nên không ai phát giác tình trạng nguy hại."
+        },
+        {
+          "id": 63,
+          "question": "63 ②組織を支配する「気」とはどのようなものか。",
+          "type": "single",
+          "options": [
+            "組織内で無意識に共有されている価値観",
+            "組織内で押しつけられている価値観",
+            "組織内の人が変えたいと思っている価値観",
+            "組織内の人が常に意識している価値観"
+          ],
+          "answers": [0],
+          "explanation": "63: Giá trị quan vô thức lan truyền trong tổ chức."
+        },
+        {
+          "id": 64,
+          "question": "64 筆者によると、トップに求められることは何か。",
+          "type": "single",
+          "options": [
+            "これまでの価値観を見直し、その良い点を伸ばした組織にすること",
+            "部下たちの価値観を認め、力を引きだせるような戦略を示すこと",
+            "組織の文化を理解した上で、時代に合った組織をつくること",
+            "組織の文化に流されずに、組織を適切な方向に導くこと"
+          ],
+          "answers": [3],
+          "explanation": "64: Lãnh đạo cần giữ định kiến không bị cuốn theo bầu không khí tổ chức."
+        }
+      ]
+    },
+    {
+      "kind": "passage",
+      "id": "passage-n2-2022-m12-1",
+      "mondaiNumber": 12,
+      "majorSection": "reading",
+      "passageTitle": "比較統合 (A/B) - 感謝の手紙",
+      "passageText": "【A】感謝の手紙を書くとき、どうしたら相手に自分の思いをうまく伝えられるだろうか。手紙というと、始まりや終わりの決まり文句など、形式的な表現や文を使わなければならないと思われがちだ。そのような表現や文を使うことは、確かに表面上は相手のことを大切と考えているような印象を与えるが、実は失礼にならないように自分を飾っているだけなのではないか。思いを伝えるには、手紙を読んだ相手の気持ちを想像することが大事になる。そのうえで、形式的な表現や文を使わずに自分の言葉で書けば、思いが相手の心にまっすぐ届く。\n\n【B】感謝の思いは、手紙で伝えるのがいいと思う。ふだんとは違う丁寧な文章から、真剣な気持ちが伝わるからだ。手紙で思いを伝えるには、始まりや終わりの決まり文句など、形式的な表現や文を、正しく理解して使ったほうがいい。相手と自分との関係に合わせて適切に使い、相手が読んでどう感じるかもよく考えながら書くことが重要だ。\n手紙は個人的なものだから、どのように書いても自由だと思うかもしれない。しかし、形式的な表現や文を正しく使い、礼儀正しい印象を持ってもらうことで、自分が伝えたいこともしっかり伝わるものだ。",
+      "questions": [
+        {
+          "id": 65,
+          "question": "65 感謝の手紙を書く際に形式的な表現や文を使うことについて、A と B はどのように述べているか。",
+          "type": "single",
+          "options": [
+            "A も B も、礼儀正しすぎる印象を与えるのであまり使わないほうがいいと述べている。",
+            "A も B も、自分の思いをきちんと伝えるためにできるだけ使ったほうがいいと述べている。",
+            "A は自分をよく見せようとしているだけなので使わないほうがいいと述べ、B は使い方を理解してうまく使ったほうがいいと述べている。",
+            "A は正しく使うのは難しいので使わないほうがいいと述べ、B は真剣な気持ちが伝わるので使ったほうがいいと述べている。"
+          ],
+          "answers": [2],
+          "explanation": "65: A khuyên dùng từ tự nhiên thay vì văn mẫu; B khuyên dùng chuẩn mực văn mẫu hợp lý."
+        },
+        {
+          "id": 66,
+          "question": "66 感謝の手紙を書くうえで、A と B が共通して大切だと述べていることは何か。",
+          "type": "single",
+          "options": [
+            "自分の思いを自由に表現すること。",
+            "自分らしい文章にすること。",
+            "相手との関係に合わせて書き方を変えること。",
+            "相手の気持ちを考えて書くこと。"
+          ],
+          "answers": [3],
+          "explanation": "66: Cả A và B đều nhấn mạnh đặt cảm xúc người đọc làm trọng tâm."
+        }
+      ]
+    },
+    {
+      "kind": "passage",
+      "id": "passage-n2-2022-m13-1",
+      "mondaiNumber": 13,
+      "majorSection": "reading",
+      "passageTitle": "長文 - 決断力と行動",
+      "passageText": "決断力がないと、いつも誰かの指示や命令に黙って従って生きていくしかない。そんな人生は誰も望まないだろう。若いうちは人の上に立つ機会は少ないが、決断力のある人をよく観察して、「なるほど、ああいうふうにすればいいのか」などと参考にしたほうがいい。とにかく早くから決断するクセをつけておくことだ。\nどうやって決断力を磨くか。これは難しい問題のようだが、実は簡単で、決断力とは「決断すればいい」だけのこと。要は決断の勇気があるかどうかなのである。たとえば、「行く」「行かない」「断る」など、すべてその場で決める勇気なのだ。\nこのことを理解するためには、逆に①なかなか決断できない人を考えてみればいい。決断しなければならない場面で決断できない人は、何を考えているのだろうか。たとえば「行く」か「行かない」かという決断をするときに、その見通しをつけたいと思っているのだ。行けばどうなるか、行かないとどうか。つまり「正しい決断をしたい」と思っているのだ。だが、この気持ちこそが決断を遅らせる最大の原因である。\n（中略）\nわからないことをわかろうと無理する必要はない。エイヤッと決めてしまえばそれですむ。哲学者のアミエルという人が「決心する前に、完全な見通しをつけようとする者は、決心することができない」といっている。そのとおりなのだ。決断で大切なことは、さっさと自分で「決断する」ことのみである。自分が決断しなければ、人の決断に従うことになる。人の決断に従って、結果が悪ければ、自分ですればよかったと後悔する。あるいは人のせいにする。絶対にそんな人生を送ってはいけない。自分の人生ではないか。\nA社からB社かで悩んだ②就活生がB社を選んだとする。だが、三年で退職する羽目になったとすると「A社にしておけばよかった」と思うかもしれない。だが、A社を選んで同じ結果が出れば、「B社にすればよかった」と思うに決まっている。\nこれは、おかしくないか。どっちを選んでも後悔しているからだ。うまくいかなかった原因は決断にあったのではなく、その後の処し方が悪かったからだ。もし、うまくいっていれば、決断が正しかったと思うだろうが、そうではなく、処し方がよかったのだ。\nこう考えてくると、決断の正体がだんだん見えてくるだろう。決断ですべてが決まるわけではない。決断した後の考え方や行動が大切。だが、決断しないことには何事もはじまらない。物事を前進させるためには決断が不可欠である。何がいけないといって、決断すべきときに決断しないのがいちばんいけない。",
+      "questions": [
+        {
+          "id": 67,
+          "question": "67 ①なかなか決断できない人とあるが、なぜ決断できないのか。",
+          "type": "single",
+          "options": [
+            "自分が正しい決断ができるとは思えないから",
+            "一度決断したら変えられないと思って迷うから",
+            "その場で決断すべきことかどうかわからないから",
+            "間違った決断をしたくないと思って考えすぎるから"
+          ],
+          "answers": [3],
+          "explanation": "67: Do quá cầu toàn sợ đưa ra quyết định sai lầm."
+        },
+        {
+          "id": 68,
+          "question": "68 ②就活生の例を挙げて、筆者が問題だと述べていることは何か。",
+          "type": "single",
+          "options": [
+            "人の意見を出いて決断すればよかったと思うこと",
+            "悪い結果になったとき、それを認めようとしないこと",
+            "決断を間違えたせいで悪い結果になったと思うこと",
+            "決断は正しかったにもかかわらず、後悔をしていること"
+          ],
+          "answers": [2],
+          "explanation": "68: Đổ lỗi kết quả không như ý là do quyết định ban đầu sai."
+        },
+        {
+          "id": 69,
+          "question": "69 この文章で筆者が言いたいことは何か。",
+          "type": "single",
+          "options": [
+            "必要なときに決断したうえで、どのように対応するかが重要だ。",
+            "決断する前に、うまくいかなかった場合の対応を考えておくべきだ。",
+            "正しい決断ができるようになるには、決断するという経験を積むべきだ。",
+            "どんな結果になっても後悔しないように、よく考えて決断することが重要だ。"
+          ],
+          "answers": [0],
+          "explanation": "69: Quyết định dứt khoát khi cần và phương hướng xử lý hành động sau đó mới là quan trọng."
+        }
+      ]
+    },
+    {
+      "kind": "passage",
+      "id": "passage-n2-2022-m14-1",
+      "mondaiNumber": 14,
+      "majorSection": "reading",
+      "passageTitle": "情報検索 - プール料金案内 & 団体割引",
+      "passageText": "【料金案内】\nプールをご利用になる場合は、入場券とプール利用券がセットになった、一日パスまたはショットパスをご購入ください。\n・一日パス：入場券＋プール利用料（9時から20時まで利用可能）\n・ショットパス：入場券＋プール利用料（14時以降のみ利用可能）\n\n【チケット価格】\n・一日パス（通常）：大人 3,000円 / 子供(5-12歳) 2,400円 / 幼児(0-4歳) 1,300円\n・一日パス（特別期間＊1）：大人 3,500円 / 子供 2,900円 / 幼児 1,800円\n・ショットパス（通常）：大人 2,300円 / 子供 1,700円 / 幼児 500円\n・ショットパス（特別期間＊1）：大人 2,800円 / 子供 2,200円 / 幼児 1,000円\n＊1 特別期間：7月1日～8月31日\n＊2 平日限定 割引サービス（特別期間も含める）：一日パス・ショットパスの料金が300円引きとなります。\n\n【団体割引について】\n・20名以上の団体の場合、団体割引が適用されます。一般団体は1割引、学校団体は3割引になります。\n・学校団体とは保育園、幼稚園、小・中学校、高校の児童・生徒による団体を指し、学校が発行する証明書がある場合に限り適用します。\n・特別期間中（7月1日～8月31日）の土日、祝日は、団体割引の対象外となります。",
+      "questions": [
+        {
+          "id": 70,
+          "question": "70 スマンさんは 3 歳の娘と一緒に 8 月の平日にプールに行き、10 時から 12 時まで遊ぶつもりである。スマンさんたちの料金はいくらになるか。",
+          "type": "single",
+          "options": [
+            "スマンさん 2,800 円、娘 1,000 円から、それぞれ 300 円を引いた金額",
+            "スマンさん 3,000 円、娘 1,300 円から、それぞれ 300 円を引いた金額",
+            "スマンさん 3,500 円、娘 1,800 円から、それぞれ 300 円を引いた金額",
+            "スマンさん 3,500 円、娘 1,800 円"
+          ],
+          "answers": [2],
+          "explanation": "70: Người lớn 3,500 yen, Trẻ em 1,800 yen (thời gian đặc biệt 7-8月) và ngày thường được giảm 300 yen/người."
+        },
+        {
+          "id": 71,
+          "question": "71 次の四つの団体は、一日パスを購入しようと思っている。この中で、学校団体として割引が適用されるのはどの団体か。",
+          "type": "single",
+          "options": [
+            "① 高下北小学校 (23名、7月平日、証明書なし)",
+            "② 高下南小学校 (30名、8月平日、証明書あり)",
+            "③ 高下第二中学校 (18名、9月日曜日、証明書あり)",
+            "④ 高学校 (45名、8月土曜日、証明書あり)"
+          ],
+          "answers": [1],
+          "explanation": "71: ② Thỏa mãn 30 người (>=20), có giấy chứng nhận trường học và là ngày thường tháng 8."
+        }
+      ]
+    }
+  ]
+}

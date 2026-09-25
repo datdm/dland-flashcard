@@ -3,6 +3,7 @@ import { autoSync } from "./syncService";
 
 // Built-in exams
 import n2Exam2025 from "@/data/exams/jlpt-n2-2025-07.json";
+import n2Exam2022 from "@/data/exams/jlpt-n2-2022-07.json";
 import n3ExamMock from "@/data/exams/jlpt-n3-mock.json";
 import n5ExamMock from "@/data/exams/jlpt-n5-mock.json";
 
@@ -18,6 +19,12 @@ export const BUILTIN_EXAMS: StoredExam[] = [
     id: "jlpt-n2-2025-07",
     uploadedAt: "2025-07-01T00:00:00Z",
     data: n2Exam2025 as unknown as ExamData,
+    isBuiltin: true,
+  },
+  {
+    id: "jlpt-n2-2022-07",
+    uploadedAt: "2022-07-01T00:00:00Z",
+    data: n2Exam2022 as unknown as ExamData,
     isBuiltin: true,
   },
   {

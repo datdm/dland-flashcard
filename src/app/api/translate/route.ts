@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
     const apiKey = process.env.GEMINI_API_KEY;
     if (apiKey) {
       const genAI = new GoogleGenerativeAI(apiKey);
-      const candidateModels = ["gemini-3.6-flash", "gemini-3.1-pro-preview", "gemini-2.5-flash"];
+      const candidateModels = ["gemini-3.6-flash", "gemini-3.5-flash", "gemini-3.8-flash"];
       const prompt = `Bạn là chuyên gia dịch thuật cao cấp. Hãy dịch chính xác, tự nhiên đoạn văn bản sau từ ngôn ngữ ${
         source === "auto" ? "tự động nhận diện" : source
       } sang ngôn ngữ đích ${target}.

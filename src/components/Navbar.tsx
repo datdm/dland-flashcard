@@ -150,16 +150,20 @@ export default function Navbar() {
     }
   }, [activeNavItem, pathname]);
 
+  const isDraggingRef = useRef(false);
+
   useEffect(() => {
     const el = mobileNavRef.current;
     if (!el) return;
 
     let isDown = false;
-    let startX: number;
-    let scrollLeft: number;
+    let startX = 0;
+    let scrollLeft = 0;
+    const DRAG_THRESHOLD = 6;
 
     const onMouseDown = (e: MouseEvent) => {
       isDown = true;
+      isDraggingRef.current = false;
       startX = e.pageX - el.offsetLeft;
       scrollLeft = el.scrollLeft;
     };
@@ -170,36 +174,21 @@ export default function Navbar() {
 
     const onMouseUp = () => {
       isDown = false;
+      setTimeout(() => {
+        isDraggingRef.current = false;
+      }, 80);
     };
 
     const onMouseMove = (e: MouseEvent) => {
       if (!isDown) return;
-      e.preventDefault();
       const x = e.pageX - el.offsetLeft;
-      const walk = (x - startX) * 1.5;
-      el.scrollLeft = scrollLeft - walk;
-    };
-
-    // Touch drag scroll support
-    let isTouchDown = false;
-    let startTouchX: number;
-    let touchScrollLeft: number;
-
-    const onTouchStart = (e: TouchEvent) => {
-      isTouchDown = true;
-      startTouchX = e.touches[0].pageX - el.offsetLeft;
-      touchScrollLeft = el.scrollLeft;
-    };
-
-    const onTouchEnd = () => {
-      isTouchDown = false;
-    };
-
-    const onTouchMove = (e: TouchEvent) => {
-      if (!isTouchDown) return;
-      const x = e.touches[0].pageX - el.offsetLeft;
-      const walk = (x - startTouchX) * 1.2;
-      el.scrollLeft = touchScrollLeft - walk;
+      const walk = x - startX;
+      // Only prevent default and scroll if actually dragged beyond threshold
+      if (Math.abs(walk) > DRAG_THRESHOLD) {
+        isDraggingRef.current = true;
+        e.preventDefault();
+        el.scrollLeft = scrollLeft - walk;
+      }
     };
 
     el.addEventListener("mousedown", onMouseDown);
@@ -207,19 +196,11 @@ export default function Navbar() {
     el.addEventListener("mouseup", onMouseUp);
     el.addEventListener("mousemove", onMouseMove);
 
-    el.addEventListener("touchstart", onTouchStart, { passive: true });
-    el.addEventListener("touchend", onTouchEnd, { passive: true });
-    el.addEventListener("touchmove", onTouchMove, { passive: true });
-
     return () => {
       el.removeEventListener("mousedown", onMouseDown);
       el.removeEventListener("mouseleave", onMouseLeave);
       el.removeEventListener("mouseup", onMouseUp);
       el.removeEventListener("mousemove", onMouseMove);
-
-      el.removeEventListener("touchstart", onTouchStart);
-      el.removeEventListener("touchend", onTouchEnd);
-      el.removeEventListener("touchmove", onTouchMove);
     };
   }, []);
 
@@ -306,6 +287,11 @@ export default function Navbar() {
                   key={href + label}
                   href={href}
                   title={isCollapsed ? label : undefined}
+                  onClick={() => {
+                    if (typeof document !== "undefined" && document.activeElement instanceof HTMLElement) {
+                      document.activeElement.blur();
+                    }
+                  }}
                   className={`flex items-center gap-3 py-2 rounded-2xl text-xs font-semibold transition-all ${
                     isCollapsed ? 'justify-center px-0' : 'px-3'
                   } ${
@@ -331,6 +317,11 @@ export default function Navbar() {
           <Link
             href="/settings"
             title={isCollapsed ? "Cài đặt & Ngôn ngữ" : undefined}
+            onClick={() => {
+              if (typeof document !== "undefined" && document.activeElement instanceof HTMLElement) {
+                document.activeElement.blur();
+              }
+            }}
             className={`w-full py-2 bg-indigo-50 text-indigo-700 rounded-2xl hover:bg-indigo-100 transition text-xs font-semibold flex items-center ${isCollapsed ? 'justify-center px-0' : 'justify-between px-3'}`}
           >
             {isCollapsed ? (
@@ -443,6 +434,15 @@ export default function Navbar() {
               key={href + label}
               href={href}
               title={label}
+              onClick={(e) => {
+                if (isDraggingRef.current) {
+                  e.preventDefault();
+                  return;
+                }
+                if (typeof document !== "undefined" && document.activeElement instanceof HTMLElement) {
+                  document.activeElement.blur();
+                }
+              }}
               className={`flex-1 min-w-[32px] max-w-[56px] h-9 flex items-center justify-center rounded-xl text-base transition-all shrink-0 ${
                 isActive
                   ? "bg-indigo-600 text-white shadow-md shadow-indigo-200 scale-105"

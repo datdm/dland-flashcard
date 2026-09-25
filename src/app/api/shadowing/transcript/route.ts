@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
     }
 
     const genAI = new GoogleGenerativeAI(apiKey);
-    const candidateModels = ["gemini-3.6-flash", "gemini-3.1-pro-preview", "gemini-2.5-flash"];
+    const candidateModels = ["gemini-3.6-flash", "gemini-3.5-flash", "gemini-3.8-flash"];
 
     const systemPrompt = `Bạn là chuyên gia biên soạn giáo trình luyện Shadowing video tiếng Nhật / đa ngôn ngữ.
 Nhiệm vụ của bạn là tạo các câu phụ đề chia theo từng câu ngắn (mỗi câu 3-6 giây) chuẩn cho phương pháp Shadowing (Luyện nói đuổi) từ video YouTube có chủ đề: "${title || youtubeUrl}".
