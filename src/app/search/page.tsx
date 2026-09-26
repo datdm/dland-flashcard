@@ -167,7 +167,6 @@ export default function DictionarySearchPage() {
             </Link>
           </div>
         </div>
-      </div>
 
       {/* Search Input Box */}
       <div className="mb-6 flex items-center gap-2">
