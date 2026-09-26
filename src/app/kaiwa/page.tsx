@@ -5,6 +5,7 @@ import Link from "next/link";
 import { KAIWA_ROADMAP, KaiwaWeek } from "./roadmapData";
 import { autoSync } from "@/lib/syncService";
 import { useLanguageSetting } from "@/hooks/useLanguageSetting";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
 
 export default function KaiwaRoadmapPage() {
   const { activeLanguage } = useLanguageSetting();
@@ -48,31 +49,27 @@ export default function KaiwaRoadmapPage() {
 
   return (
     <div className="w-full max-w-[1600px] mx-auto px-3.5 sm:px-6 lg:px-8 py-4 sm:py-6 min-h-screen pb-28 space-y-6">
-      {/* Header */}
-      <div className="mb-4">
-        <Link href="/" className="text-xs font-semibold text-indigo-600 hover:underline">
-          ← Quay về Trang chủ
-        </Link>
-      </div>
+      {/* Breadcrumb Bar */}
+      <BreadcrumbNav items={[{ label: "Luyện Kaiwa", icon: "💬" }]} />
 
       {/* Hero Header */}
-      <div className={`rounded-3xl p-6 sm:p-8 text-white shadow-xl mb-8 transition-all duration-300 bg-gradient-to-r ${
+      <div className={`rounded-2xl sm:rounded-3xl p-4 sm:p-5 lg:p-6 text-white shadow-lg mb-6 transition-all duration-300 bg-gradient-to-r ${
         activeLanguage.code === "en"
           ? "from-indigo-900 via-purple-900 to-blue-900"
           : activeLanguage.code === "de"
           ? "from-amber-950 via-red-950 to-stone-900"
           : "from-teal-800 via-indigo-900 to-purple-800"
       }`}>
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="max-w-2xl">
-            <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-bold tracking-widest uppercase">
+            <span className="px-2.5 py-0.5 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-bold tracking-widest uppercase">
               {activeLanguage.name} ({activeLanguage.code.toUpperCase()})
             </span>
-            <h1 className="text-2xl sm:text-3xl font-extrabold mt-3 tracking-tight leading-tight">
+            <h1 className="text-xl sm:text-2xl font-extrabold mt-1.5 tracking-tight leading-tight">
               Lộ Trình Học Kaiwa 3 Tháng
             </h1>
-            <p className="text-xs sm:text-sm text-indigo-100 mt-2 leading-relaxed">
-              Luyện phản xạ giao tiếp tự nhiên từ số 0 đến tự tin nói chuyện đời thường. Học cấu trúc thực tế, từ vựng theo chủ đề, kịch bản nhập vai và đối thoại trực tiếp với Gia sư AI.
+            <p className="text-xs sm:text-sm text-indigo-100 mt-1 leading-relaxed">
+              Luyện phản xạ giao tiếp tự nhiên từ số 0 đến tự tin nói chuyện đời thường.
             </p>
           </div>
 

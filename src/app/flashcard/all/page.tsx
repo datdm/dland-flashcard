@@ -8,6 +8,7 @@ import { useProgress } from "@/hooks/useProgress";
 import FlashCardViewer from "@/components/FlashCardViewer";
 import Link from "next/link";
 import AuthGuard from "@/components/AuthGuard";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
 import { autoSync } from "@/lib/syncService";
 
 type SourceFilter = "all" | "all_curriculums" | "all_notebooks" | string;
@@ -174,20 +175,29 @@ export default function FlashCardAllPage() {
   return (
     <AuthGuard featureName="Ôn Tập Flashcard Tổng Hợp" description="Đăng nhập để lật thẻ Flashcard, ghi nhớ từ vựng và tự động cập nhật độ thông thạo SRS.">
       <div className="w-full max-w-[1600px] mx-auto px-3.5 sm:px-6 lg:px-8 py-4 sm:py-6 min-h-screen pb-28 space-y-6">
+        {/* Breadcrumb Bar */}
+        <BreadcrumbNav items={[{ label: "Ôn Flashcard", icon: "🎴" }]} />
+
         {/* Header Banner */}
-        <div className="bg-gradient-to-r from-indigo-700 via-purple-700 to-pink-700 rounded-2xl sm:rounded-3xl p-5 sm:p-8 text-white shadow-xl">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="bg-gradient-to-r from-indigo-700 via-purple-700 to-pink-700 rounded-2xl sm:rounded-3xl p-4 sm:p-5 lg:p-6 text-white shadow-lg">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
-              <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-bold tracking-widest uppercase">
+              <span className="px-2.5 py-0.5 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-bold tracking-widest uppercase">
                 Flashcard Master
               </span>
-              <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight mt-2">
+              <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight mt-1.5">
                 Ôn Tập Flashcard Tổng Hợp
               </h1>
-              <p className="text-xs sm:text-sm text-indigo-100 mt-2 leading-relaxed max-w-xl">
+              <p className="text-xs sm:text-sm text-indigo-100 mt-1 leading-relaxed max-w-xl">
                 Lọc và ôn tập tất cả từ vựng theo giáo trình hoặc từng sổ tay cá nhân của bạn
               </p>
             </div>
+            <Link
+              href="/"
+              className="px-3.5 py-1.5 rounded-xl bg-white/20 hover:bg-white/30 backdrop-blur-md text-white font-bold text-xs border border-white/30 transition-all flex items-center gap-1.5 active:scale-98 shrink-0 self-start sm:self-auto"
+            >
+              <span>←</span> Về Trang Chủ
+            </Link>
           </div>
         </div>
 

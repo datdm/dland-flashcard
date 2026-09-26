@@ -13,6 +13,7 @@ import ExamSectionSelectionModal from "@/components/exam/ExamSectionSelectionMod
 import ExamHistoryModal from "@/components/exam/ExamHistoryModal";
 import { useLanguageSetting } from "@/hooks/useLanguageSetting";
 import { useAuth } from "@/context/AuthContext";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
 
 const LEVEL_COLORS: Record<string, { badge: string; border: string }> = {
   N1: { badge: "bg-purple-100 text-purple-800 border-purple-200", border: "hover:border-purple-300" },
@@ -83,8 +84,11 @@ export default function ExamHubPage() {
       description="Đăng nhập để làm các đề thi thử JLPT chuẩn cấu trúc N5 - N1, bấm giờ làm bài, chấm điểm và lưu lịch sử kết quả."
     >
       <div className="w-full max-w-[1600px] mx-auto px-3 sm:px-4 lg:px-6 py-3 sm:py-4 space-y-4 sm:space-y-5 pb-8 md:pb-4">
+        {/* Breadcrumb Bar */}
+        <BreadcrumbNav items={[{ label: "Luyện Thi JLPT", icon: "📝" }]} />
+
         {/* Header Hero Banner */}
-        <div className={`rounded-2xl p-4 sm:p-5 text-white shadow-md relative overflow-hidden transition-all duration-300 bg-gradient-to-r ${
+        <div className={`rounded-2xl p-4 sm:p-5 lg:p-6 text-white shadow-md relative overflow-hidden transition-all duration-300 bg-gradient-to-r ${
           activeLanguage.code === "en"
             ? "from-indigo-900 via-purple-900 to-blue-900"
             : activeLanguage.code === "de"

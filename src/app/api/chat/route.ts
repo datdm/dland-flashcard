@@ -123,8 +123,8 @@ export async function POST(req: NextRequest) {
       parts: userParts,
     });
 
-    // Use Gemini 2.5 models
-    const candidateModels = ["gemini-2.5-flash", "gemini-2.5-pro"];
+    // Use Gemini 2.5 Flash model
+    const candidateModels = ["gemini-2.5-flash"];
     let lastError: any = null;
 
     for (const modelName of candidateModels) {

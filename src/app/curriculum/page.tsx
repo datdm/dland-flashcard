@@ -10,6 +10,7 @@ import { useGrammarProgress } from "@/hooks/useGrammarProgress";
 import { useKanjiProgress } from "@/hooks/useKanjiProgress";
 import { useLanguageSetting } from "@/hooks/useLanguageSetting";
 import IeltsRoadmapDashboard from "@/components/IeltsRoadmapDashboard";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
 
 function CurriculumContent() {
   const searchParams = useSearchParams();
@@ -192,8 +193,11 @@ function CurriculumContent() {
 
   return (
     <div className="w-full max-w-[1600px] mx-auto px-3 sm:px-4 lg:px-6 py-3 sm:py-4 space-y-4 sm:space-y-5 pb-8 md:pb-4">
+      {/* Breadcrumb Bar */}
+      <BreadcrumbNav items={[{ label: "Giáo trình học", icon: "📚" }]} />
+
       {/* Header Banner */}
-      <div className={`rounded-2xl p-4 sm:p-5 text-white shadow-lg transition-all duration-300 bg-gradient-to-r ${
+      <div className={`rounded-2xl p-4 sm:p-5 lg:p-6 text-white shadow-lg transition-all duration-300 bg-gradient-to-r ${
         activeLanguage.code === "en"
           ? "from-indigo-900 via-purple-900 to-blue-900"
           : activeLanguage.code === "de"
@@ -202,7 +206,7 @@ function CurriculumContent() {
       }`}>
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-bold tracking-widest uppercase">
+            <span className="px-2.5 py-0.5 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-bold tracking-widest uppercase">
               {activeLanguage.name} ({activeLanguage.code.toUpperCase()})
             </span>
             <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight mt-1.5">{headerTitle}</h1>
@@ -210,6 +214,12 @@ function CurriculumContent() {
               {headerSubtitle}
             </p>
           </div>
+          <Link
+            href="/"
+            className="px-3.5 py-1.5 rounded-xl bg-white/20 hover:bg-white/30 backdrop-blur-md text-white font-bold text-xs border border-white/30 transition-all flex items-center gap-1.5 active:scale-98 shrink-0 self-start sm:self-auto"
+          >
+            <span>←</span> Về Trang Chủ
+          </Link>
         </div>
       </div>
 

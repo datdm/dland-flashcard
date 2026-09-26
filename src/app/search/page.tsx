@@ -9,6 +9,7 @@ import { useLanguageSetting } from "@/hooks/useLanguageSetting";
 import AddToNotebookModal from "@/components/AddToNotebookModal";
 import KanjiDrawModal from "@/components/KanjiDrawModal";
 import MaziiQuickLookupModal from "@/components/MaziiQuickLookupModal";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
 
 export default function DictionarySearchPage() {
   const [query, setQuery] = useState("");
@@ -137,77 +138,30 @@ export default function DictionarySearchPage() {
   return (
     <div className="w-full max-w-[1600px] mx-auto px-3.5 sm:px-6 lg:px-8 py-4 sm:py-6 min-h-screen pb-28 space-y-6">
       {/* Breadcrumb & Screen Navigation Bar */}
-      <div className="flex items-center justify-between gap-3 flex-wrap">
-        <div className="flex items-center gap-2 text-xs font-semibold text-gray-500">
-          <Link href="/" className="hover:text-indigo-600 transition-colors flex items-center gap-1 font-bold">
-            <span>🏠</span> Trang chủ
-          </Link>
-          <span>/</span>
-          <span className="text-indigo-600 font-extrabold">Tra cứu từ điển</span>
-        </div>
-
-        {/* Quick Screen Jump Links */}
-        <div className="flex items-center gap-2 flex-wrap">
-          <Link
-            href="/flashcard/all"
-            className="px-3 py-1.5 bg-white border border-gray-200 hover:border-indigo-400 hover:text-indigo-600 text-gray-700 rounded-xl text-xs font-bold transition-all shadow-3xs flex items-center gap-1.5 active:scale-98"
-          >
-            <span>🎴</span> Ôn Flashcard
-          </Link>
-          <Link
-            href="/curriculum"
-            className="px-3 py-1.5 bg-white border border-gray-200 hover:border-indigo-400 hover:text-indigo-600 text-gray-700 rounded-xl text-xs font-bold transition-all shadow-3xs flex items-center gap-1.5 active:scale-98"
-          >
-            <span>📚</span> Giáo trình
-          </Link>
-          {langCode === "ja" && (
-            <>
-              <Link
-                href="/exam"
-                className="px-3 py-1.5 bg-white border border-gray-200 hover:border-indigo-400 hover:text-indigo-600 text-gray-700 rounded-xl text-xs font-bold transition-all shadow-3xs flex items-center gap-1.5 active:scale-98"
-              >
-                <span>📝</span> Luyện Thi JLPT
-              </Link>
-              <Link
-                href="/kanji"
-                className="px-3 py-1.5 bg-white border border-gray-200 hover:border-indigo-400 hover:text-indigo-600 text-gray-700 rounded-xl text-xs font-bold transition-all shadow-3xs flex items-center gap-1.5 active:scale-98"
-              >
-                <span>🉐</span> Kho Kanji
-              </Link>
-            </>
-          )}
-          <Link
-            href="/notebooks"
-            className="px-3 py-1.5 bg-white border border-gray-200 hover:border-indigo-400 hover:text-indigo-600 text-gray-700 rounded-xl text-xs font-bold transition-all shadow-3xs flex items-center gap-1.5 active:scale-98"
-          >
-            <span>📓</span> Sổ tay
-          </Link>
-        </div>
-      </div>
+      <BreadcrumbNav items={[{ label: "Tra cứu từ điển", icon: "🔍" }]} />
 
       {/* Header Banner */}
-      <div className={`rounded-2xl sm:rounded-3xl p-5 sm:p-8 text-white shadow-xl mb-6 transition-all duration-300 bg-gradient-to-r ${
+      <div className={`rounded-2xl sm:rounded-3xl p-4 sm:p-5 lg:p-6 text-white shadow-lg mb-4 transition-all duration-300 bg-gradient-to-r ${
         activeLanguage.code === "en"
           ? "from-indigo-900 via-purple-900 to-blue-900"
           : activeLanguage.code === "de"
           ? "from-amber-950 via-red-950 to-stone-900"
           : "from-teal-800 via-indigo-900 to-purple-800"
       }`}>
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-bold tracking-widest uppercase">
+            <span className="px-2.5 py-0.5 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-bold tracking-widest uppercase">
               {activeLanguage.name} ({activeLanguage.code.toUpperCase()})
             </span>
-            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight mt-2">{headerTitle}</h1>
-            <p className="text-xs sm:text-sm text-indigo-100 mt-2 leading-relaxed">
+            <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight mt-1.5">{headerTitle}</h1>
+            <p className="text-xs sm:text-sm text-indigo-100 mt-1 leading-relaxed">
               {headerSubtitle}
             </p>
           </div>
 
-          <div className="flex items-center gap-2 self-start sm:self-auto shrink-0">
             <Link
               href="/"
-              className="px-4 py-2 rounded-xl bg-white/20 hover:bg-white/30 backdrop-blur-md text-white font-bold text-xs border border-white/30 transition-all flex items-center gap-1.5 active:scale-98"
+              className="px-3.5 py-1.5 rounded-xl bg-white/20 hover:bg-white/30 backdrop-blur-md text-white font-bold text-xs border border-white/30 transition-all flex items-center gap-1.5 active:scale-98"
             >
               <span>←</span> Về Trang Chủ
             </Link>

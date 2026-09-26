@@ -8,6 +8,7 @@ import GrammarCard from "@/components/GrammarCard";
 import { useLanguageSetting } from "@/hooks/useLanguageSetting";
 import { useGrammarCollections } from "@/hooks/useGrammarCollections";
 import { useGrammarProgress } from "@/hooks/useGrammarProgress";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
 
 function normalizeSearchText(text: string = ""): string {
   return text
@@ -177,8 +178,11 @@ export default function GrammarHubPage() {
 
   return (
     <div className="w-full max-w-[1600px] mx-auto px-3 sm:px-4 lg:px-6 py-3 sm:py-4 space-y-4 sm:space-y-5 pb-8 md:pb-4">
+      {/* Breadcrumb Bar */}
+      <BreadcrumbNav items={[{ label: "Kho Ngữ Pháp", icon: "📖" }]} />
+
       {/* Header Banner */}
-      <div className={`rounded-2xl p-4 sm:p-5 text-white shadow-md relative overflow-hidden transition-all duration-300 bg-gradient-to-r ${
+      <div className={`rounded-2xl p-4 sm:p-5 lg:p-6 text-white shadow-md relative overflow-hidden transition-all duration-300 bg-gradient-to-r ${
         activeLanguage.code === "en"
           ? "from-indigo-900 via-purple-900 to-blue-900"
           : activeLanguage.code === "de"

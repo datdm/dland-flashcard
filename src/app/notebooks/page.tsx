@@ -7,6 +7,7 @@ import { useProgress } from "@/hooks/useProgress";
 import { useLanguageSetting } from "@/hooks/useLanguageSetting";
 import { useAuth } from "@/context/AuthContext";
 import AuthGuard from "@/components/AuthGuard";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
 
 function applySubsetOrder<T extends { id: string }>(source: T[], orderedSubsetIds: string[]) {
   const subsetIdSet = new Set(orderedSubsetIds);
@@ -245,14 +246,17 @@ export default function NotebooksPage() {
   return (
     <AuthGuard featureName="Sổ Tay Từ Vựng Cá Nhân">
       <div className="w-full max-w-[1600px] mx-auto px-3.5 sm:px-6 lg:px-8 py-4 sm:py-6 min-h-screen pb-28 space-y-6">
-      {/* Header Banner */}
-      <div className={`rounded-2xl sm:rounded-3xl p-5 sm:p-8 text-white shadow-lg transition-all duration-300 bg-gradient-to-r ${
-        activeLanguage.code === "en"
-          ? "from-indigo-900 via-purple-900 to-blue-900"
-          : activeLanguage.code === "de"
-          ? "from-amber-950 via-red-950 to-stone-900"
-          : "from-teal-800 via-indigo-900 to-purple-800"
-      }`}>
+        {/* Breadcrumb Bar */}
+        <BreadcrumbNav items={[{ label: "Sổ tay từ vựng", icon: "📓" }]} />
+
+        {/* Header Banner */}
+        <div className={`rounded-2xl sm:rounded-3xl p-4 sm:p-5 lg:p-6 text-white shadow-lg transition-all duration-300 bg-gradient-to-r ${
+          activeLanguage.code === "en"
+            ? "from-indigo-900 via-purple-900 to-blue-900"
+            : activeLanguage.code === "de"
+            ? "from-amber-950 via-red-950 to-stone-900"
+            : "from-teal-800 via-indigo-900 to-purple-800"
+        }`}>
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-bold tracking-widest uppercase mb-2 inline-block">

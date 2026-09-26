@@ -11,6 +11,7 @@ import { useStreak } from "@/hooks/useStreak";
 import { useLanguageSetting } from "@/hooks/useLanguageSetting";
 import Link from "next/link";
 import AuthGuard from "@/components/AuthGuard";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
 
 interface TimelineItem {
   id: string;
@@ -754,8 +755,11 @@ function getItemLevel(c: { id: string; name: string; level?: string }): string {
   return (
     <AuthGuard featureName="Lịch Sử & Nhật Ký Học Tập" description="Đăng nhập để theo dõi bảng tiến độ từ vựng, ngữ pháp, kanji, chuỗi streak và lịch sử học tập cá nhân.">
       <div className="w-full max-w-[1600px] mx-auto px-3 sm:px-4 lg:px-6 py-3 sm:py-4 space-y-4 sm:space-y-5 pb-8 md:pb-4">
-      {/* Header Banner */}
-      <div className={`rounded-2xl p-4 sm:p-5 text-white shadow-md transition-all duration-300 bg-gradient-to-r ${
+        {/* Breadcrumb Bar */}
+        <BreadcrumbNav items={[{ label: "Lịch sử & Tiến độ", icon: "📊" }]} />
+
+        {/* Header Banner */}
+        <div className={`rounded-2xl p-4 sm:p-5 lg:p-6 text-white shadow-md transition-all duration-300 bg-gradient-to-r ${
         activeLanguage.code === "en"
           ? "from-indigo-900 via-purple-900 to-blue-900"
           : activeLanguage.code === "de"

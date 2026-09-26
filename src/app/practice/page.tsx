@@ -10,6 +10,7 @@ import AddToNotebookModal from "@/components/AddToNotebookModal";
 import MaziiQuickLookupModal from "@/components/MaziiQuickLookupModal";
 import SelectionLookupTooltip from "@/components/SelectionLookupTooltip";
 import AuthGuard from "@/components/AuthGuard";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
 import { autoSync } from "@/lib/syncService";
 import AudioSeekPlayer from "@/components/AudioSeekPlayer";
 import {
@@ -1524,8 +1525,11 @@ ${item.audioScript}。
   return (
     <AuthGuard featureName="Trung Tâm Luyện Tập & Kỹ Năng">
       <div className="w-full max-w-[1600px] mx-auto px-3 sm:px-4 lg:px-6 py-3 sm:py-4 space-y-4 sm:space-y-5 pb-8 md:pb-4">
-      {/* Header Banner */}
-      <div className={`rounded-2xl p-4 sm:p-5 text-white shadow-lg transition-all duration-300 bg-gradient-to-r ${
+        {/* Breadcrumb Bar */}
+        <BreadcrumbNav items={[{ label: "Luyện Tập AI", icon: "🏋️" }]} />
+
+        {/* Header Banner */}
+        <div className={`rounded-2xl p-4 sm:p-5 lg:p-6 text-white shadow-lg transition-all duration-300 bg-gradient-to-r ${
         selectedLang === "en"
           ? "from-indigo-900 via-purple-900 to-blue-900"
           : selectedLang === "de"

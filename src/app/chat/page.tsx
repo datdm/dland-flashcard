@@ -5,6 +5,7 @@ import ReactMarkdown from "react-markdown";
 import Link from "next/link";
 import { useLanguageSetting } from "@/hooks/useLanguageSetting";
 import AuthGuard from "@/components/AuthGuard";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
 
 type Message = {
   role: "user" | "model";
@@ -366,6 +367,8 @@ export default function ChatPage() {
         onDrop={handleDrop}
         className="w-full max-w-[1400px] mx-auto px-3 sm:px-6 py-3 sm:py-4 pb-16 md:pb-6 space-y-3 relative"
       >
+        {/* Breadcrumb Bar */}
+        <BreadcrumbNav items={[{ label: "Gia sư AI Chat", icon: "🤖" }]} />
         {/* Hidden File Input */}
         <input
           ref={fileInputRef}

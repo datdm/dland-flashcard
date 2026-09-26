@@ -6,6 +6,7 @@ import { JLPTLevel, KanjiItem } from "@/lib/repositories/types";
 import KanjiStrokeViewer from "@/components/KanjiStrokeViewer";
 import { useLanguageSetting } from "@/hooks/useLanguageSetting";
 import KanjiDrawModal from "@/components/KanjiDrawModal";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
 
 export default function KanjiHubPage() {
   const { activeLanguage } = useLanguageSetting();
@@ -41,21 +42,24 @@ export default function KanjiHubPage() {
 
   return (
     <div className="w-full max-w-[1600px] mx-auto px-3.5 sm:px-6 lg:px-8 py-4 sm:py-6 min-h-screen pb-28 space-y-6">
+      {/* Breadcrumb Bar */}
+      <BreadcrumbNav items={[{ label: "Kho Kanji", icon: "🉐" }]} />
+
       {/* Header Banner */}
-      <div className={`rounded-2xl sm:rounded-3xl p-5 sm:p-8 text-white shadow-xl mb-6 transition-all duration-300 bg-gradient-to-r ${
+      <div className={`rounded-2xl sm:rounded-3xl p-4 sm:p-5 lg:p-6 text-white shadow-lg transition-all duration-300 bg-gradient-to-r ${
         activeLanguage.code === "en"
           ? "from-indigo-900 via-purple-900 to-blue-900"
           : activeLanguage.code === "de"
           ? "from-amber-950 via-red-950 to-stone-900"
           : "from-teal-800 via-indigo-900 to-purple-800"
       }`}>
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-bold tracking-widest uppercase">
+            <span className="px-2.5 py-0.5 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-bold tracking-widest uppercase">
               {activeLanguage.name} ({activeLanguage.code.toUpperCase()})
             </span>
-            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight mt-2">Thư viện Kanji & Nét Vẽ (N5 ➔ N2)</h1>
-            <p className="text-xs sm:text-sm text-indigo-100 mt-2 leading-relaxed">
+            <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight mt-1.5">Thư viện Kanji & Nét Vẽ (N5 ➔ N2)</h1>
+            <p className="text-xs sm:text-sm text-indigo-100 mt-1 leading-relaxed">
               Học âm Hán Việt, âm On/Kun, nét vẽ SVG động và từ ghép theo cấp độ JLPT
             </p>
           </div>
