@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import AuthGuard from "@/components/AuthGuard";
 import { getAllExams, getAllResults, deleteCustomExam, getExamProgress, clearExamProgress } from "@/lib/examStorage";
+import { getExamCategory } from "@/lib/examUtils";
 import { StoredExam, ExamResult, ExamProgress } from "@/types/exam";
 import ExamUploadModal from "@/components/exam/ExamUploadModal";
 import ExamStructureModal from "@/components/exam/ExamStructureModal";
@@ -29,6 +30,7 @@ export default function ExamHubPage() {
   const [results, setResults] = useState<ExamResult[]>([]);
   const [progressMap, setProgressMap] = useState<Record<string, ExamProgress | null>>({});
   const [selectedLevel, setSelectedLevel] = useState<string>("all");
+  const [selectedCategory, setSelectedCategory] = useState<"all" | "real" | "mock">("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [showUploadModal, setShowUploadModal] = useState<boolean>(false);
   const [showStructureModal, setShowStructureModal] = useState<boolean>(false);
@@ -71,6 +73,12 @@ export default function ExamHubPage() {
       (e.data.meta.year && e.data.meta.year.toLowerCase().includes(searchQuery.toLowerCase()));
     return matchLevel && matchQuery;
   });
+
+  const realExams = exams.filter((e) => getExamCategory(e) === "real");
+  const mockExams = exams.filter((e) => getExamCategory(e) === "mock");
+
+  const filteredRealExams = filteredExams.filter((e) => getExamCategory(e) === "real");
+  const filteredMockExams = filteredExams.filter((e) => getExamCategory(e) === "mock");
 
   const totalAttempts = results.length;
   const passedAttempts = results.filter((r) => r.passed).length;
@@ -197,6 +205,66 @@ export default function ExamHubPage() {
           </div>
         </div>
 
+        {/* Category Tabs (Đề thi thật vs Đề thi thử Mock) */}
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
+          <button
+            type="button"
+            onClick={() => setSelectedCategory("all")}
+            className={`px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-extrabold transition-all cursor-pointer flex items-center gap-2 shrink-0 ${
+              selectedCategory === "all"
+                ? "bg-indigo-600 text-white shadow-md shadow-indigo-200"
+                : "bg-white text-gray-700 border border-gray-200 hover:bg-gray-50"
+            }`}
+          >
+            <span>🌟 Tất cả đề thi</span>
+            <span
+              className={`px-2 py-0.5 rounded-full text-[10px] font-black ${
+                selectedCategory === "all" ? "bg-white/20 text-white" : "bg-gray-100 text-gray-600"
+              }`}
+            >
+              {exams.length}
+            </span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setSelectedCategory("real")}
+            className={`px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-extrabold transition-all cursor-pointer flex items-center gap-2 shrink-0 ${
+              selectedCategory === "real"
+                ? "bg-amber-600 text-white shadow-md shadow-amber-200"
+                : "bg-white text-gray-700 border border-gray-200 hover:bg-amber-50/50"
+            }`}
+          >
+            <span>🏛️ Đề thi thật trích xuất</span>
+            <span
+              className={`px-2 py-0.5 rounded-full text-[10px] font-black ${
+                selectedCategory === "real" ? "bg-white/20 text-white" : "bg-amber-100 text-amber-800"
+              }`}
+            >
+              {realExams.length}
+            </span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setSelectedCategory("mock")}
+            className={`px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-extrabold transition-all cursor-pointer flex items-center gap-2 shrink-0 ${
+              selectedCategory === "mock"
+                ? "bg-purple-600 text-white shadow-md shadow-purple-200"
+                : "bg-white text-gray-700 border border-gray-200 hover:bg-purple-50/50"
+            }`}
+          >
+            <span>📝 Đề thi thử (Mock Test)</span>
+            <span
+              className={`px-2 py-0.5 rounded-full text-[10px] font-black ${
+                selectedCategory === "mock" ? "bg-white/20 text-white" : "bg-purple-100 text-purple-800"
+              }`}
+            >
+              {mockExams.length}
+            </span>
+          </button>
+        </div>
+
         {/* Level Filters & Search */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 bg-white p-3 sm:p-3.5 rounded-2xl border border-gray-100 shadow-xs">
           {/* Level Tabs */}
@@ -229,10 +297,11 @@ export default function ExamHubPage() {
           </div>
         </div>
 
-        {/* Exam Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3.5 sm:gap-4">
-          {filteredExams.map((exam) => {
+        {/* Exam Card Component Renderer */}
+        {(() => {
+          const renderExamCard = (exam: StoredExam) => {
             const meta = exam.data.meta;
+            const isReal = getExamCategory(exam) === "real";
             const levelStyle =
               LEVEL_COLORS[meta.level] || {
                 badge: "bg-indigo-100 text-indigo-800 border-indigo-200",
@@ -260,12 +329,23 @@ export default function ExamHubPage() {
                 className={`bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-xs transition-all duration-200 hover:shadow-sm flex flex-col justify-between ${levelStyle.border}`}
               >
                 <div>
-                  <div className="flex items-center justify-between gap-3 mb-3">
-                    <span
-                      className={`px-3 py-1 rounded-full text-xs font-black border ${levelStyle.badge}`}
-                    >
-                      JLPT {meta.level}
-                    </span>
+                  <div className="flex items-center justify-between gap-2 mb-3 flex-wrap">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span
+                        className={`px-3 py-1 rounded-full text-xs font-black border ${levelStyle.badge}`}
+                      >
+                        JLPT {meta.level}
+                      </span>
+                      <span
+                        className={`px-2.5 py-0.5 rounded-full text-[10px] font-black border ${
+                          isReal
+                            ? "bg-amber-50 text-amber-900 border-amber-200"
+                            : "bg-purple-50 text-purple-900 border-purple-200"
+                        }`}
+                      >
+                        {isReal ? "🏛️ Đề thi thật" : "📝 Đề thi thử"}
+                      </span>
+                    </div>
 
                     <div className="flex items-center gap-2">
                       {meta.year && (
@@ -295,7 +375,7 @@ export default function ExamHubPage() {
                   </h3>
 
                   <p className="text-xs text-gray-500 line-clamp-2 leading-relaxed mb-4">
-                    {meta.description || `Đề thi thử ${meta.level} với đầy đủ các phần thi và giải thích đáp án.`}
+                    {meta.description || `Đề thi ${isReal ? "chính thức" : "thi thử"} ${meta.level} với đầy đủ các phần thi và giải thích đáp án.`}
                   </p>
 
                   <div className="flex items-center gap-4 text-xs font-semibold text-gray-600 py-3 border-y border-gray-100 mb-4 flex-wrap">
@@ -399,7 +479,11 @@ export default function ExamHubPage() {
                           clearExamProgress(exam.id);
                           setSelectedExamForModal(exam);
                         }}
-                        className="flex-1 w-full py-3 px-4 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs shadow-md shadow-indigo-200 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-98"
+                        className={`flex-1 w-full py-3 px-4 rounded-2xl text-white font-extrabold text-xs shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-98 ${
+                          isReal
+                            ? "bg-amber-600 hover:bg-amber-700 shadow-amber-200"
+                            : "bg-indigo-600 hover:bg-indigo-700 shadow-indigo-200"
+                        }`}
                       >
                         <span>✍️</span>
                         <span>{pastResults.length > 0 ? "Thi Lại Bài Này →" : "Vào Làm Bài Thi →"}</span>
@@ -420,8 +504,80 @@ export default function ExamHubPage() {
                 </div>
               </div>
             );
-          })}
-        </div>
+          };
+
+          return (
+            <div className="space-y-8">
+              {/* Mục 1: Đề Thi Thật Chính Thức Trích Xuất */}
+              {(selectedCategory === "all" || selectedCategory === "real") && (
+                <div className="space-y-3.5">
+                  <div className="flex items-center justify-between gap-3 flex-wrap pb-2 border-b border-amber-200/70">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center text-base font-bold shadow-3xs">
+                        🏛️
+                      </div>
+                      <div>
+                        <h2 className="text-base sm:text-lg font-black text-gray-900 flex items-center gap-2">
+                          Đề Thi Thật Trích Xuất (Chính Thức)
+                          <span className="text-xs font-bold text-amber-800 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-md">
+                            {filteredRealExams.length} đề
+                          </span>
+                        </h2>
+                        <p className="text-xs text-gray-500">
+                          Bộ đề thi chính thức kỳ thi JLPT các năm trước (đầy đủ Chữ Hán, Từ Vựng, Ngữ Pháp, Đọc Hiểu & Nghe Hiểu kèm giải thích chi tiết)
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {filteredRealExams.length > 0 ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3.5 sm:gap-4">
+                      {filteredRealExams.map(renderExamCard)}
+                    </div>
+                  ) : (
+                    <div className="text-center py-10 bg-amber-50/40 rounded-2xl border border-amber-100 text-amber-900/70 text-xs font-semibold">
+                      Không có đề thi thật nào phù hợp với bộ lọc hiện tại.
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Mục 2: Đề Thi Thử Chuẩn Cấu Trúc (Mock Test) */}
+              {(selectedCategory === "all" || selectedCategory === "mock") && (
+                <div className="space-y-3.5">
+                  <div className="flex items-center justify-between gap-3 flex-wrap pb-2 border-b border-purple-200/70">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 rounded-xl bg-purple-100 text-purple-800 flex items-center justify-center text-base font-bold shadow-3xs">
+                        📝
+                      </div>
+                      <div>
+                        <h2 className="text-base sm:text-lg font-black text-gray-900 flex items-center gap-2">
+                          Đề Thi Thử Chuẩn Cấu Trúc (Mock Test)
+                          <span className="text-xs font-bold text-purple-800 bg-purple-50 border border-purple-200 px-2 py-0.5 rounded-md">
+                            {filteredMockExams.length} đề
+                          </span>
+                        </h2>
+                        <p className="text-xs text-gray-500">
+                          Đề thi thử mô phỏng theo cấu trúc chuẩn quốc tế để rèn luyện kỹ năng giải đề và căn chỉnh thời gian
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {filteredMockExams.length > 0 ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3.5 sm:gap-4">
+                      {filteredMockExams.map(renderExamCard)}
+                    </div>
+                  ) : (
+                    <div className="text-center py-10 bg-purple-50/40 rounded-2xl border border-purple-100 text-purple-900/70 text-xs font-semibold">
+                      Không có đề thi thử nào phù hợp với bộ lọc hiện tại.
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          );
+        })()}
 
         {filteredExams.length === 0 && (
           <div className="text-center py-16 bg-white rounded-3xl border border-gray-100">

@@ -246,11 +246,11 @@ export default function DictionarySearchPage() {
           <button
             type="button"
             onClick={() => setShowDrawModal(true)}
-            className="py-4 px-4 sm:px-5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs sm:text-sm transition-all flex items-center gap-2 cursor-pointer shadow-md shadow-indigo-200 shrink-0 active:scale-98"
+            className="w-14 h-14 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white transition-all flex items-center justify-center cursor-pointer shadow-md shadow-indigo-200 shrink-0 active:scale-95 text-xl"
             title="Vẽ nét chữ Hán Kanji để tra từ"
+            aria-label="Vẽ Kanji để tra từ"
           >
-            <span className="text-base sm:text-lg">🖌️</span>
-            <span>Vẽ Kanji</span>
+            <span>🖌️</span>
           </button>
         )}
       </div>

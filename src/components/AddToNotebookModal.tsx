@@ -130,8 +130,8 @@ export default function AddToNotebookModal({
   const mainWordText = selectedWord.kanji || selectedWord.hiragana || "";
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 z-50 animate-fadeIn">
-      <div className="bg-white rounded-3xl shadow-xl p-6 w-full max-w-sm border border-gray-100">
+    <div onClick={onClose} className="fixed inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 z-50 animate-fadeIn">
+      <div onClick={(e) => e.stopPropagation()} className="bg-white rounded-3xl shadow-xl p-6 w-full max-w-sm border border-gray-100">
         <div className="flex items-center justify-between mb-2">
           <h3 className="font-extrabold text-base text-gray-900 flex items-center gap-1.5">
             <span>📓</span> Thêm từ vào Sổ tay

@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useState, useEffect, useRef } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
 import SyncDialog from "./SyncDialog";
 import * as syncService from "@/lib/syncService";
 import { useLanguageSetting } from "@/hooks/useLanguageSetting";
@@ -122,10 +122,10 @@ export function getNavItemsForLanguage(langCode: string): NavItem[] {
 
 export default function Navbar() {
   const pathname = usePathname();
+  const router = useRouter();
   const [showSyncDialog, setShowSyncDialog] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const { activeLanguage } = useLanguageSetting();
-  const mobileNavRef = useRef<HTMLDivElement>(null);
 
   const { user, isAuthenticated, openAuthModal, logout } = useAuth();
   const isAdmin = !!user?.isAdmin;
@@ -149,60 +149,6 @@ export default function Navbar() {
       document.title = `${activeNavItem.label} | Dland Language`;
     }
   }, [activeNavItem, pathname]);
-
-  const isDraggingRef = useRef(false);
-
-  useEffect(() => {
-    const el = mobileNavRef.current;
-    if (!el) return;
-
-    let isDown = false;
-    let startX = 0;
-    let scrollLeft = 0;
-    const DRAG_THRESHOLD = 6;
-
-    const onMouseDown = (e: MouseEvent) => {
-      isDown = true;
-      isDraggingRef.current = false;
-      startX = e.pageX - el.offsetLeft;
-      scrollLeft = el.scrollLeft;
-    };
-
-    const onMouseLeave = () => {
-      isDown = false;
-    };
-
-    const onMouseUp = () => {
-      isDown = false;
-      setTimeout(() => {
-        isDraggingRef.current = false;
-      }, 80);
-    };
-
-    const onMouseMove = (e: MouseEvent) => {
-      if (!isDown) return;
-      const x = e.pageX - el.offsetLeft;
-      const walk = x - startX;
-      // Only prevent default and scroll if actually dragged beyond threshold
-      if (Math.abs(walk) > DRAG_THRESHOLD) {
-        isDraggingRef.current = true;
-        e.preventDefault();
-        el.scrollLeft = scrollLeft - walk;
-      }
-    };
-
-    el.addEventListener("mousedown", onMouseDown);
-    el.addEventListener("mouseleave", onMouseLeave);
-    el.addEventListener("mouseup", onMouseUp);
-    el.addEventListener("mousemove", onMouseMove);
-
-    return () => {
-      el.removeEventListener("mousedown", onMouseDown);
-      el.removeEventListener("mouseleave", onMouseLeave);
-      el.removeEventListener("mouseup", onMouseUp);
-      el.removeEventListener("mousemove", onMouseMove);
-    };
-  }, []);
 
   useEffect(() => {
     const saved = localStorage.getItem("sidebar_collapsed");
@@ -287,11 +233,7 @@ export default function Navbar() {
                   key={href + label}
                   href={href}
                   title={isCollapsed ? label : undefined}
-                  onClick={() => {
-                    if (typeof document !== "undefined" && document.activeElement instanceof HTMLElement) {
-                      document.activeElement.blur();
-                    }
-                  }}
+                  onClick={() => router.push(href)}
                   className={`flex items-center gap-3 py-2 rounded-2xl text-xs font-semibold transition-all ${
                     isCollapsed ? 'justify-center px-0' : 'px-3'
                   } ${
@@ -317,11 +259,7 @@ export default function Navbar() {
           <Link
             href="/settings"
             title={isCollapsed ? "Cài đặt & Ngôn ngữ" : undefined}
-            onClick={() => {
-              if (typeof document !== "undefined" && document.activeElement instanceof HTMLElement) {
-                document.activeElement.blur();
-              }
-            }}
+            onClick={() => router.push("/settings")}
             className={`w-full py-2 bg-indigo-50 text-indigo-700 rounded-2xl hover:bg-indigo-100 transition text-xs font-semibold flex items-center ${isCollapsed ? 'justify-center px-0' : 'justify-between px-3'}`}
           >
             {isCollapsed ? (
@@ -423,8 +361,8 @@ export default function Navbar() {
 
       {/* Mobile Bottom Navigation Bar */}
       <nav 
-        ref={mobileNavRef}
         className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-md border-t border-gray-200 flex items-center justify-around w-full h-12 px-1 select-none shadow-lg overflow-x-auto no-scrollbar"
+        style={{ WebkitOverflowScrolling: "touch" }}
       >
         {visibleNavItems.map((item) => {
           const { href, label, icon } = item;
@@ -434,16 +372,8 @@ export default function Navbar() {
               key={href + label}
               href={href}
               title={label}
-              onClick={(e) => {
-                if (isDraggingRef.current) {
-                  e.preventDefault();
-                  return;
-                }
-                if (typeof document !== "undefined" && document.activeElement instanceof HTMLElement) {
-                  document.activeElement.blur();
-                }
-              }}
-              className={`flex-1 min-w-[32px] max-w-[56px] h-9 flex items-center justify-center rounded-xl text-base transition-all shrink-0 ${
+              onClick={() => router.push(href)}
+              className={`flex-1 min-w-[32px] max-w-[56px] h-9 flex items-center justify-center rounded-xl text-base transition-all shrink-0 cursor-pointer ${
                 isActive
                   ? "bg-indigo-600 text-white shadow-md shadow-indigo-200 scale-105"
                   : "text-gray-600 hover:text-indigo-600 hover:bg-gray-50"

@@ -498,7 +498,7 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
     }
 
     // Updated Gemini models with fallback
-    const candidateModels = ["gemini-2.0-flash", "gemini-2.5-flash-preview-05-20", "gemini-1.5-flash"];
+    const candidateModels = ["gemini-2.5-flash", "gemini-2.5-pro", "gemini-2.0-flash", "gemini-1.5-flash"];
     let text = "";
     let lastError: any = null;
 

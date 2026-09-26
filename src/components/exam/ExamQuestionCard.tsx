@@ -95,8 +95,9 @@ export default function ExamQuestionCard({
                 .replace(/^[0-9０-９]+[\.\s、\s]+/g, "")
                 // Format bracketed target words [漢字] as underlined JLPT target words
                 .replace(
-                  /\[([^\]]+)\]/g,
-                  '<span class="font-black text-indigo-700 underline decoration-2 decoration-indigo-500 underline-offset-4 px-0.5">$1</span>'
+                  /\[([^\]]+)\]|【([^】]+)】/g,
+                  (_match, p1, p2) =>
+                    `<span class="font-black text-indigo-700 underline decoration-2 decoration-indigo-500 underline-offset-4 px-0.5">${p1 || p2}</span>`
                 )
                 // Highlight star in Mondai 8
                 .replace(

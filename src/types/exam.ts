@@ -36,6 +36,7 @@ export interface ExamMeta {
   passMark?: number; // e.g. 90/180
   description?: string;
   year?: string;
+  category?: "real" | "mock";
 }
 
 export interface ExamQuestion {

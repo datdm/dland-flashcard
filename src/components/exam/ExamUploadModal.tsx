@@ -14,6 +14,7 @@ export default function ExamUploadModal({ isOpen, onClose, onSuccess }: Props) {
   const [jsonText, setJsonText] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [category, setCategory] = useState<"auto" | "real" | "mock">("auto");
 
   if (!isOpen) return null;
 
@@ -48,6 +49,10 @@ export default function ExamUploadModal({ isOpen, onClose, onSuccess }: Props) {
 
       if (!examData.meta || !examData.questions || !Array.isArray(examData.questions)) {
         throw new Error("Cấu trúc JSON không hợp lệ. Cần có trường 'meta' và 'questions'.");
+      }
+
+      if (category !== "auto") {
+        examData.meta.category = category;
       }
 
       const stored = saveCustomExam(examData);
@@ -116,6 +121,47 @@ export default function ExamUploadModal({ isOpen, onClose, onSuccess }: Props) {
               placeholder='{\n  "meta": {\n    "title": "Đề thi JLPT N2...",\n    "level": "N2",\n    ...\n  },\n  "questions": [...]\n}'
               className="w-full font-mono text-[11px] p-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-gray-800"
             />
+          </div>
+
+          <div>
+            <label className="block text-xs font-bold text-gray-700 mb-1.5">
+              3. Phân loại mục đề thi
+            </label>
+            <div className="grid grid-cols-3 gap-2">
+              <button
+                type="button"
+                onClick={() => setCategory("auto")}
+                className={`py-2 px-3 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
+                  category === "auto"
+                    ? "bg-indigo-600 text-white border-indigo-600 shadow-xs"
+                    : "bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100"
+                }`}
+              >
+                ⚡ Tự nhận diện
+              </button>
+              <button
+                type="button"
+                onClick={() => setCategory("real")}
+                className={`py-2 px-3 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
+                  category === "real"
+                    ? "bg-amber-600 text-white border-amber-600 shadow-xs"
+                    : "bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100"
+                }`}
+              >
+                🏛️ Đề thi thật
+              </button>
+              <button
+                type="button"
+                onClick={() => setCategory("mock")}
+                className={`py-2 px-3 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
+                  category === "mock"
+                    ? "bg-purple-600 text-white border-purple-600 shadow-xs"
+                    : "bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100"
+                }`}
+              >
+                📝 Thi thử Mock
+              </button>
+            </div>
           </div>
 
           <div className="flex items-center gap-3 pt-2">

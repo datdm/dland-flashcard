@@ -274,3 +274,38 @@ export function getStructuredMajorSections(examData: ExamData): ExamMajorSection
         },
       ];
 }
+
+/**
+ * Determines whether an exam is an official real exam ("real") or a mock practice exam ("mock")
+ */
+export function getExamCategory(exam: { id?: string; data?: { meta?: { title?: string; year?: string; version?: string; category?: "real" | "mock" } } }): "real" | "mock" {
+  const meta = exam.data?.meta;
+  if (meta?.category === "real") return "real";
+  if (meta?.category === "mock") return "mock";
+
+  const title = (meta?.title || "").toLowerCase();
+  const year = (meta?.year || "").toLowerCase();
+  const version = (meta?.version || "").toLowerCase();
+  const id = (exam.id || "").toLowerCase();
+
+  // Explicit mock signals
+  if (id.includes("mock") || title.includes("thi thử") || title.includes("mock") || year.includes("mock")) {
+    return "mock";
+  }
+
+  // Explicit real / official exam signals
+  if (
+    title.includes("chính thức") ||
+    title.includes("đề thật") ||
+    title.includes("đề thi thật") ||
+    version.includes("official") ||
+    version.includes("original") ||
+    /20\d\d[-_]\d\d/.test(year) ||
+    /20\d\d[-_]\d\d/.test(id)
+  ) {
+    return "real";
+  }
+
+  return "mock";
+}
+

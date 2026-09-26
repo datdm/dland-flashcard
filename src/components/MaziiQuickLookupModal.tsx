@@ -132,7 +132,7 @@ export default function MaziiQuickLookupModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
+    <div onClick={onClose} className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
       <div 
         className="bg-white w-full max-w-lg rounded-3xl shadow-2xl border border-gray-100 overflow-hidden flex flex-col max-h-[85vh] animate-in zoom-in-95 duration-200"
         onClick={(e) => e.stopPropagation()}
@@ -150,11 +150,11 @@ export default function MaziiQuickLookupModal({
             <button
               type="button"
               onClick={() => setShowDrawModal(true)}
-              className="px-2.5 py-1 rounded-xl bg-white/20 hover:bg-white/30 text-white font-bold text-xs transition-colors flex items-center gap-1 cursor-pointer"
+              className="w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 text-white transition-colors flex items-center justify-center text-sm cursor-pointer"
               title="Vẽ Kanji để tra từ"
+              aria-label="Vẽ Kanji để tra từ"
             >
               <span>🖌️</span>
-              <span>Vẽ Kanji</span>
             </button>
             <button
               onClick={onClose}
