@@ -181,45 +181,59 @@ export default function GrammarHubPage() {
       {/* Breadcrumb Bar */}
       <BreadcrumbNav items={[{ label: "Kho Ngữ Pháp", icon: "📖" }]} />
 
-      {/* Header Banner */}
-      <div className={`rounded-2xl p-4 sm:p-5 lg:p-6 text-white shadow-md relative overflow-hidden transition-all duration-300 bg-gradient-to-r ${
+      {/* Header Banner (Compact Minimalist - Light Theme matching background) */}
+      <div className={`rounded-xl sm:rounded-2xl px-3.5 py-2.5 sm:px-5 sm:py-3 shadow-2xs border relative overflow-hidden transition-all duration-300 bg-gradient-to-r ${
         activeLanguage.code === "en"
-          ? "from-indigo-900 via-purple-900 to-blue-900"
+          ? "from-white via-blue-50/40 to-indigo-50/30 border-blue-100/80"
           : activeLanguage.code === "de"
-          ? "from-amber-950 via-red-950 to-stone-900"
-          : "from-teal-800 via-indigo-900 to-purple-800"
+          ? "from-white via-amber-50/40 to-orange-50/30 border-amber-100/80"
+          : activeLanguage.code === "ko"
+          ? "from-white via-rose-50/40 to-pink-50/30 border-rose-100/80"
+          : activeLanguage.code === "zh"
+          ? "from-white via-red-50/40 to-amber-50/30 border-red-100/80"
+          : "from-white via-teal-50/40 to-indigo-50/30 border-teal-100/80"
       }`}>
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 relative z-10">
-          <div>
-            <div className="flex items-center gap-2 mb-1">
-              <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-bold tracking-widest uppercase">
-                {activeLanguage.name} ({activeLanguage.code.toUpperCase()})
-              </span>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 relative z-10">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <span className={`px-2 py-0.5 rounded-md text-[9px] font-bold tracking-wider uppercase shrink-0 border ${
+              activeLanguage.code === "en"
+                ? "bg-blue-50 text-blue-700 border-blue-200/80"
+                : activeLanguage.code === "de"
+                ? "bg-amber-50 text-amber-800 border-amber-200/80"
+                : activeLanguage.code === "ko"
+                ? "bg-rose-50 text-rose-700 border-rose-200/80"
+                : activeLanguage.code === "zh"
+                ? "bg-red-50 text-red-700 border-red-200/80"
+                : "bg-teal-50 text-teal-700 border-teal-200/80"
+            }`}>
+              {activeLanguage.name} ({activeLanguage.code.toUpperCase()})
+            </span>
+            <div className="min-w-0">
+              <h1 className="text-sm sm:text-base font-extrabold text-gray-900 tracking-tight truncate">{headerTitle}</h1>
+              <p className="text-[11px] text-gray-500 truncate hidden sm:block">
+                {headerSubtitle}
+              </p>
             </div>
-            <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight mt-1">{headerTitle}</h1>
-            <p className="text-xs sm:text-sm text-indigo-100/90 mt-1 max-w-2xl leading-relaxed">
-              {headerSubtitle}
-            </p>
           </div>
 
-          <div className="flex items-center gap-2 self-start sm:self-auto">
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             <button
               onClick={() => setActiveTab("library")}
-              className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-3xs ${
+              className={`px-3 py-1.5 rounded-lg sm:rounded-xl text-xs font-bold transition-all flex items-center gap-1 cursor-pointer ${
                 activeTab === "library"
-                  ? "bg-white text-indigo-900 shadow-sm"
-                  : "bg-white/15 text-white hover:bg-white/25 border border-white/20"
+                  ? "bg-indigo-600 text-white shadow-xs"
+                  : "bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 shadow-3xs"
               }`}
             >
               <span>🔍</span>
-              <span>Tra Cứu Kho ({allGrammarList.length})</span>
+              <span>Kho ({allGrammarList.length})</span>
             </button>
             <button
               onClick={() => setActiveTab("collections")}
-              className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-3xs ${
+              className={`px-3 py-1.5 rounded-lg sm:rounded-xl text-xs font-bold transition-all flex items-center gap-1 cursor-pointer ${
                 activeTab === "collections"
-                  ? "bg-white text-indigo-900 shadow-sm"
-                  : "bg-white/15 text-white hover:bg-white/25 border border-white/20"
+                  ? "bg-indigo-600 text-white shadow-xs"
+                  : "bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 shadow-3xs"
               }`}
             >
               <span>📁</span>

@@ -18,6 +18,7 @@ import {
   getListeningMondaisForLevel as getListeningMondaiConfigs,
   getVocabMondaisForLevel as getVocabMondaiConfigs,
   getGrammarMondaisForLevel as getGrammarMondaiConfigs,
+  getMondaiOfficialCount,
   JLPTMondaiInfo,
 } from "@/lib/jlptMondaiConfig";
 import { JLPT_LISTENING_QUESTIONS, JLPTListeningQuestion } from "@/data/jlptListeningPractice";
@@ -97,6 +98,9 @@ export interface ReadingQuestionItem {
   question_vietnamese?: string;
   options: ReadingOption[];
   explanation: string;
+  passage?: string;
+  passage_ruby?: string;
+  passage_translation?: string;
 }
 
 export interface ReadingItem {
@@ -144,6 +148,11 @@ export interface GeneratedListeningQuestion {
   options: string[];
   correctAnswer: number;
   explanation: string;
+  situation?: string;
+  situation_translation?: string;
+  audioScript?: string;
+  audioScript_ruby?: string;
+  vietnameseTranslation?: string;
 }
 
 export interface GeneratedListeningItem {
@@ -365,6 +374,7 @@ export default function PracticeHubPage() {
     setKaiwaPlayingIdx(null);
     setListeningPlayingId(null);
     setIsGenListeningPlaying(false);
+    setPlayingQuestionId(null);
     if (typeof window !== "undefined" && "speechSynthesis" in window) {
       window.speechSynthesis.cancel();
     }
@@ -531,6 +541,51 @@ export default function PracticeHubPage() {
     });
   };
 
+  // Question count mode: Quick (1-5 questions) vs Full (official JLPT exam standard count)
+  const [questionCountMode, setQuestionCountMode] = useState<"quick" | "full">("quick");
+  const [playingQuestionId, setPlayingQuestionId] = useState<string | null>(null);
+  const [showQuestionScripts, setShowQuestionScripts] = useState<Record<string, boolean>>({});
+  const [showQuestionRuby, setShowQuestionRuby] = useState<Record<string, boolean>>({});
+
+  // Play audio for an individual listening question
+  const playQuestionAudio = (qItem: GeneratedListeningQuestion, mondaiNumber: number) => {
+    if (typeof window === "undefined") return;
+    if (playingQuestionId === qItem.id) {
+      window.speechSynthesis.cancel();
+      setPlayingQuestionId(null);
+      return;
+    }
+
+    stopAllAudio();
+    setPlayingQuestionId(qItem.id);
+
+    let textToSpeak = "";
+    if (mondaiNumber === 1 || mondaiNumber === 2) {
+      const sit = qItem.situation ? `${qItem.situation}。\n` : "";
+      textToSpeak = `${sit}質問：${qItem.question}。\n${qItem.audioScript || ""}。\n質問：${qItem.question}`;
+    } else if (mondaiNumber === 3) {
+      const sit = qItem.situation ? `${qItem.situation}。\n` : "";
+      textToSpeak = `${sit}${qItem.audioScript || ""}。\n質問：${qItem.question}`;
+    } else if (mondaiNumber === 4) {
+      const sit = qItem.situation ? `${qItem.situation}。\n` : "";
+      const opts = (qItem.options || []).map((o, idx) => `${idx + 1}、${o}`).join("。\n");
+      textToSpeak = `${sit}${qItem.audioScript || ""}。\n${opts}`;
+    } else {
+      const sit = qItem.situation ? `${qItem.situation}。\n` : "";
+      textToSpeak = `${sit}${qItem.audioScript || ""}。\n質問：${qItem.question}`;
+    }
+
+    const utterance = new SpeechSynthesisUtterance(textToSpeak);
+    utterance.lang = "ja-JP";
+    utterance.rate = playbackRate;
+    utterance.onend = () => {
+      setPlayingQuestionId(null);
+    };
+    utterance.onerror = () => {
+      setPlayingQuestionId(null);
+    };
+    window.speechSynthesis.speak(utterance);
+  };
 
   useEffect(() => {
     stopAllAudio();
@@ -868,6 +923,9 @@ ${item.audioScript}。
     setGrammarChecked({});
     setShowGenListeningScript(false);
     setIsGenListeningPlaying(false);
+    setPlayingQuestionId(null);
+    setShowQuestionScripts({});
+    setShowQuestionRuby({});
 
     // Reset Kaiwa states
     setKaiwaData(null);
@@ -912,6 +970,7 @@ ${item.audioScript}。
               : selectedType === "jlpt_grammar"
               ? selectedGrammarMondai
               : undefined,
+          questionCountMode,
           seed: Math.floor(Math.random() * 1000000),
           nonce: Date.now(),
         }),
@@ -1522,51 +1581,136 @@ ${item.audioScript}。
     });
   };
 
+  const renderQuestionCountModeToggle = (
+    type: "reading" | "listening" | "jlpt_vocab" | "jlpt_grammar",
+    mondaiNum: number,
+    themeColor: "teal" | "amber" | "indigo" | "purple"
+  ) => {
+    const officialCount = getMondaiOfficialCount(type, selectedLevel, mondaiNum);
+    const colorClasses = {
+      teal: {
+        activeText: "text-teal-700",
+        activeRing: "ring-teal-200",
+        badge: "bg-teal-100 text-teal-800",
+      },
+      amber: {
+        activeText: "text-amber-700",
+        activeRing: "ring-amber-200",
+        badge: "bg-amber-100 text-amber-800",
+      },
+      indigo: {
+        activeText: "text-indigo-700",
+        activeRing: "ring-indigo-200",
+        badge: "bg-indigo-100 text-indigo-800",
+      },
+      purple: {
+        activeText: "text-purple-700",
+        activeRing: "ring-purple-200",
+        badge: "bg-purple-100 text-purple-800",
+      },
+    }[themeColor];
+
+    return (
+      <div className="space-y-1.5 pt-2 border-t border-gray-100">
+        <div className="flex items-center justify-between">
+          <label className="text-[10px] text-gray-500 font-bold uppercase tracking-wider flex items-center gap-1">
+            <span>🎯</span> Số lượng câu hỏi:
+          </label>
+          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${colorClasses.badge}`}>
+            {questionCountMode === "full" ? `Full ${officialCount} câu chuẩn đề` : "Luyện nhanh (1-5 câu)"}
+          </span>
+        </div>
+        <div className="grid grid-cols-2 gap-1.5 p-1 bg-gray-100/80 rounded-xl">
+          <button
+            type="button"
+            onClick={() => setQuestionCountMode("quick")}
+            className={`py-2 px-2 rounded-lg text-xs font-bold transition-all text-center flex flex-col items-center gap-0.5 cursor-pointer ${
+              questionCountMode === "quick"
+                ? "bg-white text-gray-900 shadow-xs"
+                : "text-gray-500 hover:text-gray-900"
+            }`}
+          >
+            <span className="flex items-center gap-1">⚡ Luyện nhanh</span>
+            <span className="text-[10px] font-normal text-gray-400">1 - 5 câu (~3s)</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setQuestionCountMode("full")}
+            className={`py-2 px-2 rounded-lg text-xs font-bold transition-all text-center flex flex-col items-center gap-0.5 cursor-pointer ${
+              questionCountMode === "full"
+                ? `bg-white ${colorClasses.activeText} shadow-xs ring-1 ${colorClasses.activeRing}`
+                : "text-gray-500 hover:text-gray-900"
+            }`}
+          >
+            <span className="flex items-center gap-1">🏛️ Chuẩn đề thi</span>
+            <span className="text-[10px] font-semibold text-gray-700">Đủ {officialCount} câu</span>
+          </button>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <AuthGuard featureName="Trung Tâm Luyện Tập & Kỹ Năng">
       <div className="w-full max-w-[1600px] mx-auto px-3 sm:px-4 lg:px-6 py-3 sm:py-4 space-y-4 sm:space-y-5 pb-8 md:pb-4">
         {/* Breadcrumb Bar */}
         <BreadcrumbNav items={[{ label: "Luyện Tập AI", icon: "🏋️" }]} />
 
-        {/* Header Banner */}
-        <div className={`rounded-2xl p-4 sm:p-5 lg:p-6 text-white shadow-lg transition-all duration-300 bg-gradient-to-r ${
-        selectedLang === "en"
-          ? "from-indigo-900 via-purple-900 to-blue-900"
-          : selectedLang === "de"
-          ? "from-amber-950 via-red-950 to-stone-900"
-          : "from-teal-800 via-indigo-900 to-purple-800"
-      }`}>
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div>
-            <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-bold tracking-widest uppercase">
-              {activeLanguage.name} ({activeLanguage.code.toUpperCase()})
-            </span>
-            <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight mt-1.5">
-              {selectedLang === "en" 
-                ? "Trung Tâm Luyện Kỹ Năng Tiếng Anh (IELTS)" 
-                : selectedLang === "de" 
-                ? "Trung Tâm Luyện Kỹ Năng Tiếng Đức (Goethe)" 
-                : "Trung Tâm Luyện Kỹ Năng Tiếng Nhật (JLPT)"}
-            </h1>
-            <p className="text-xs sm:text-sm text-teal-100/90 mt-1 leading-relaxed max-w-3xl">
-              {selectedLang === "en"
-                ? "Luyện Shadowing IELTS Speaking chuẩn Oxford/Cambridge, rèn phản xạ dịch 2 chiều Anh-Việt, đọc hiểu IELTS Reading và thuyết trình Speaking Part 2 với AI chấm điểm trực tiếp."
-                : selectedLang === "de"
-                ? "Luyện Shadowing phát âm tiếng Đức chuẩn Goethe, rèn phản xạ dịch 2 chiều Đức-Việt, đọc hiểu Leseverstehen và thuyết trình Sprechen theo chủ đề với AI chấm điểm."
-                : "Luyện Shadowing phát âm chuẩn Furigana, dịch thuật 2 chiều phản xạ nhanh, đọc hiểu JLPT và thuyết trình slide với AI tự động chấm điểm và lưu lịch sử học tập chi tiết."}
-            </p>
+        {/* Header Banner (Compact Minimalist - Light Theme matching background) */}
+        <div className={`rounded-xl sm:rounded-2xl px-3.5 py-2.5 sm:px-5 sm:py-3 shadow-2xs border transition-all duration-300 bg-gradient-to-r ${
+          selectedLang === "en"
+            ? "from-white via-blue-50/40 to-indigo-50/30 border-blue-100/80"
+            : selectedLang === "de"
+            ? "from-white via-amber-50/40 to-orange-50/30 border-amber-100/80"
+            : selectedLang === "ko"
+            ? "from-white via-rose-50/40 to-pink-50/30 border-rose-100/80"
+            : selectedLang === "zh"
+            ? "from-white via-red-50/40 to-amber-50/30 border-red-100/80"
+            : "from-white via-teal-50/40 to-indigo-50/30 border-teal-100/80"
+        }`}>
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <span className={`px-2 py-0.5 rounded-md text-[9px] font-bold tracking-wider uppercase shrink-0 border ${
+                selectedLang === "en"
+                  ? "bg-blue-50 text-blue-700 border-blue-200/80"
+                  : selectedLang === "de"
+                  ? "bg-amber-50 text-amber-800 border-amber-200/80"
+                  : selectedLang === "ko"
+                  ? "bg-rose-50 text-rose-700 border-rose-200/80"
+                  : selectedLang === "zh"
+                  ? "bg-red-50 text-red-700 border-red-200/80"
+                  : "bg-teal-50 text-teal-700 border-teal-200/80"
+              }`}>
+                {activeLanguage.name} ({activeLanguage.code.toUpperCase()})
+              </span>
+              <div className="min-w-0">
+                <h1 className="text-sm sm:text-base font-extrabold text-gray-900 tracking-tight truncate">
+                  {selectedLang === "en" 
+                    ? "Trung Tâm Luyện Kỹ Năng Tiếng Anh (IELTS)" 
+                    : selectedLang === "de" 
+                    ? "Trung Tâm Luyện Kỹ Năng Tiếng Đức (Goethe)" 
+                    : "Trung Tâm Luyện Kỹ Năng Tiếng Nhật (JLPT)"}
+                </h1>
+                <p className="text-[11px] text-gray-500 truncate hidden sm:block">
+                  {selectedLang === "en"
+                    ? "Luyện Shadowing IELTS Speaking, dịch 2 chiều Anh-Việt, đọc hiểu IELTS Reading."
+                    : selectedLang === "de"
+                    ? "Luyện Shadowing tiếng Đức Goethe, dịch 2 chiều Đức-Việt, đọc hiểu Leseverstehen."
+                    : "Luyện Shadowing Furigana, dịch thuật phản xạ 2 chiều, đọc hiểu JLPT & thuyết trình."}
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={() => {
+                setShowHistoryModal(true);
+              }}
+              className="px-3 py-1.5 bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 rounded-lg sm:rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all shrink-0 cursor-pointer shadow-3xs"
+            >
+              <span>📊</span>
+              <span>Lịch Sử ({currentLangHistoryCount})</span>
+            </button>
           </div>
-          <button
-            onClick={() => {
-              setShowHistoryModal(true);
-            }}
-            className="px-3.5 py-2 bg-white/15 hover:bg-white/25 border border-white/30 backdrop-blur-md rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all shrink-0 cursor-pointer shadow-xs self-start sm:self-auto"
-          >
-            <span>📊</span>
-            <span>Lịch Sử Chấm Điểm ({currentLangHistoryCount})</span>
-          </button>
         </div>
-      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-5">
         {/* Left Control Panel */}
@@ -1716,7 +1860,9 @@ ${item.audioScript}。
                   </div>
                 </div>
 
-                {/* Step 5: AI Generate Button */}
+                {/* Step 5: Mode Selector & AI Generate Button */}
+                {renderQuestionCountModeToggle("reading", Number(selectedReadingMondai), "teal")}
+
                 <button
                   type="button"
                   onClick={handleGenerate}
@@ -1724,10 +1870,16 @@ ${item.audioScript}。
                   className="w-full mt-1 py-3.5 rounded-2xl text-xs font-bold text-white bg-gradient-to-r from-teal-600 to-indigo-600 hover:opacity-95 shadow-md shadow-teal-200 transition-all cursor-pointer disabled:opacity-50"
                 >
                   <div className="flex items-center justify-center gap-1.5">
-                    <span>{generating ? "🤖 Đang biên soạn..." : "✨ Biên soạn Đọc hiểu bằng AI"}</span>
+                    <span>
+                      {generating
+                        ? "🤖 Đang biên soạn..."
+                        : questionCountMode === "full"
+                        ? `✨ Biên soạn Chuẩn đề thi (${getMondaiOfficialCount("reading", selectedLevel, Number(selectedReadingMondai))} câu)`
+                        : "✨ Biên soạn Đọc hiểu bằng AI"}
+                    </span>
                   </div>
                   <span className="block text-[10px] font-normal opacity-90 mt-0.5">
-                    Mondai {selectedReadingMondai} • Chủ đề: {activeTopic}
+                    Mondai {selectedReadingMondai} • {questionCountMode === "full" ? `Full ${getMondaiOfficialCount("reading", selectedLevel, Number(selectedReadingMondai))} câu theo bộ đề` : "Luyện nhanh"} • {activeTopic}
                   </span>
                 </button>
               </div>
@@ -1816,7 +1968,9 @@ ${item.audioScript}。
                   </div>
                 </div>
 
-                {/* Step 5: AI Generate Button */}
+                {/* Step 5: Mode Selector & AI Generate Button */}
+                {renderQuestionCountModeToggle("listening", Number(selectedListeningMondai), "amber")}
+
                 <button
                   type="button"
                   onClick={handleGenerate}
@@ -1824,10 +1978,16 @@ ${item.audioScript}。
                   className="w-full mt-1 py-3.5 rounded-2xl text-xs font-bold text-white bg-gradient-to-r from-amber-600 to-orange-600 hover:opacity-95 shadow-md shadow-amber-200 transition-all cursor-pointer disabled:opacity-50"
                 >
                   <div className="flex items-center justify-center gap-1.5">
-                    <span>{generating ? "🤖 Đang biên soạn..." : "🎧 Biên soạn Nghe hiểu bằng AI"}</span>
+                    <span>
+                      {generating
+                        ? "🤖 Đang biên soạn..."
+                        : questionCountMode === "full"
+                        ? `🎧 Biên soạn Chuẩn đề thi (${getMondaiOfficialCount("listening", selectedLevel, Number(selectedListeningMondai))} câu)`
+                        : "🎧 Biên soạn Nghe hiểu bằng AI"}
+                    </span>
                   </div>
                   <span className="block text-[10px] font-normal opacity-90 mt-0.5">
-                    Mondai {selectedListeningMondai} • Chủ đề: {activeTopic}
+                    Mondai {selectedListeningMondai} • {questionCountMode === "full" ? `Full ${getMondaiOfficialCount("listening", selectedLevel, Number(selectedListeningMondai))} câu theo bộ đề` : "Luyện nhanh"} • {activeTopic}
                   </span>
                 </button>
               </div>
@@ -1916,7 +2076,9 @@ ${item.audioScript}。
                   </div>
                 </div>
 
-                {/* Step 5: AI Generate Button */}
+                {/* Step 5: Mode Selector & AI Generate Button */}
+                {renderQuestionCountModeToggle("jlpt_vocab", selectedVocabMondai, "indigo")}
+
                 <button
                   type="button"
                   onClick={handleGenerate}
@@ -1924,10 +2086,16 @@ ${item.audioScript}。
                   className="w-full mt-1 py-3.5 rounded-2xl text-xs font-bold text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:opacity-95 shadow-md shadow-indigo-200 transition-all cursor-pointer disabled:opacity-50"
                 >
                   <div className="flex items-center justify-center gap-1.5">
-                    <span>{generating ? "🤖 Đang biên soạn..." : "🈁 Biên soạn Từ vựng bằng AI"}</span>
+                    <span>
+                      {generating
+                        ? "🤖 Đang biên soạn..."
+                        : questionCountMode === "full"
+                        ? `🈁 Biên soạn Chuẩn đề thi (${getMondaiOfficialCount("jlpt_vocab", selectedLevel, selectedVocabMondai)} câu)`
+                        : "🈁 Biên soạn Từ vựng bằng AI"}
+                    </span>
                   </div>
                   <span className="block text-[10px] font-normal opacity-90 mt-0.5">
-                    Mondai {selectedVocabMondai} • Chủ đề: {activeTopic}
+                    Mondai {selectedVocabMondai} • {questionCountMode === "full" ? `Full ${getMondaiOfficialCount("jlpt_vocab", selectedLevel, selectedVocabMondai)} câu theo bộ đề` : "Luyện nhanh"} • {activeTopic}
                   </span>
                 </button>
               </div>
@@ -2016,7 +2184,9 @@ ${item.audioScript}。
                   </div>
                 </div>
 
-                {/* Step 5: AI Generate Button */}
+                {/* Step 5: Mode Selector & AI Generate Button */}
+                {renderQuestionCountModeToggle("jlpt_grammar", selectedGrammarMondai, "purple")}
+
                 <button
                   type="button"
                   onClick={handleGenerate}
@@ -2024,10 +2194,16 @@ ${item.audioScript}。
                   className="w-full mt-1 py-3.5 rounded-2xl text-xs font-bold text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-95 shadow-md shadow-purple-200 transition-all cursor-pointer disabled:opacity-50"
                 >
                   <div className="flex items-center justify-center gap-1.5">
-                    <span>{generating ? "🤖 Đang biên soạn..." : "📐 Biên soạn Ngữ pháp bằng AI"}</span>
+                    <span>
+                      {generating
+                        ? "🤖 Đang biên soạn..."
+                        : questionCountMode === "full"
+                        ? `📐 Biên soạn Chuẩn đề thi (${getMondaiOfficialCount("jlpt_grammar", selectedLevel, selectedGrammarMondai)} câu)`
+                        : "📐 Biên soạn Ngữ pháp bằng AI"}
+                    </span>
                   </div>
                   <span className="block text-[10px] font-normal opacity-90 mt-0.5">
-                    Mondai {selectedGrammarMondai} • Chủ đề: {activeTopic}
+                    Mondai {selectedGrammarMondai} • {questionCountMode === "full" ? `Full ${getMondaiOfficialCount("jlpt_grammar", selectedLevel, selectedGrammarMondai)} câu theo bộ đề` : "Luyện nhanh"} • {activeTopic}
                   </span>
                 </button>
               </div>
@@ -2932,7 +3108,7 @@ ${item.audioScript}。
                                 )}
                               </div>
                             </div>
-                          ) : (
+                          ) : (readingData.passage || readingData.passage_ruby) ? (
                             <div className="bg-amber-50/30 p-5 rounded-2xl border border-amber-100/50 leading-loose text-base text-gray-800 font-semibold tracking-wide space-y-2">
                               <div className="flex items-center justify-between flex-wrap gap-2 mb-1">
                                 <div className="text-[10px] text-amber-600 font-bold uppercase tracking-wider">Bài đọc (Passage):</div>
@@ -2951,7 +3127,7 @@ ${item.audioScript}。
                                 </div>
                               )}
                             </div>
-                          )}
+                          ) : null}
 
                           {/* Vocabulary Extracted List */}
                           {readingData.vocabulary && readingData.vocabulary.length > 0 && (
@@ -3019,6 +3195,34 @@ ${item.audioScript}。
 
                                 return (
                                   <div key={q.id || qIdx} className="p-5 rounded-2xl bg-gray-50/80 border border-gray-200/80 space-y-3">
+                                    {q.passage && (
+                                      <div className="p-4 rounded-xl bg-teal-50/50 border border-teal-200/70 text-xs text-gray-900 space-y-2 mb-2 select-text">
+                                        <div className="text-[10px] text-teal-800 font-bold uppercase tracking-wider flex items-center justify-between">
+                                          <span>📖 Đoạn văn câu {qIdx + 1}:</span>
+                                          <button
+                                            type="button"
+                                            onClick={() => playSentence(q.passage || "")}
+                                            className="text-[10px] text-teal-700 hover:text-teal-900 flex items-center gap-1 font-semibold cursor-pointer bg-white px-2 py-0.5 rounded-lg border border-teal-200"
+                                          >
+                                            <span>🔊 Nghe đọc đoạn này</span>
+                                          </button>
+                                        </div>
+                                        <div className="text-xs leading-relaxed font-medium">
+                                          {q.passage_ruby ? (
+                                            <div dangerouslySetInnerHTML={{ __html: q.passage_ruby }} />
+                                          ) : (
+                                            q.passage
+                                          )}
+                                        </div>
+                                        {showPassageTranslation && q.passage_translation && (
+                                          <div className="text-[11px] text-teal-900/80 italic pt-1.5 border-t border-teal-200/50">
+                                            <span className="font-bold not-italic">Dịch nghĩa: </span>
+                                            {q.passage_translation}
+                                          </div>
+                                        )}
+                                      </div>
+                                    )}
+
                                     <div className="text-sm font-extrabold text-gray-900">
                                       ❓ Câu {qIdx + 1}: {q.question}
                                     </div>
@@ -3643,31 +3847,40 @@ ${item.audioScript}。
                               )}
                             </div>
 
-                            <div className="flex items-center gap-2">
-                              <button
-                                type="button"
-                                onClick={() => playGeneratedListeningAudio(generatedListeningData)}
-                                className={`text-xs font-bold flex items-center gap-1.5 px-4 py-2 rounded-xl transition-all cursor-pointer shadow-xs ${
-                                  isGenListeningPlaying
-                                    ? "bg-amber-600 text-white animate-pulse shadow-amber-200"
-                                    : "bg-teal-600 hover:bg-teal-700 text-white shadow-teal-200"
-                                }`}
-                              >
-                                <span>{isGenListeningPlaying ? "⏸️" : "▶️"}</span>
-                                <span>{isGenListeningPlaying ? "Dừng phát audio" : "Phát bài nghe (TTS giọng Nhật)"}</span>
-                              </button>
-                              <button
-                                type="button"
-                                onClick={() => setShowGenListeningScript((prev) => !prev)}
-                                className={`text-xs font-bold flex items-center gap-1 px-3 py-2 rounded-xl transition-colors cursor-pointer border ${
-                                  showGenListeningScript
-                                    ? "bg-indigo-600 border-indigo-600 text-white"
-                                    : "bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100"
-                                }`}
-                              >
-                                📄 {showGenListeningScript ? "Ẩn Kịch bản" : "Hiện Kịch bản (Script)"}
-                              </button>
-                            </div>
+                            {generatedListeningData.audioScript ? (
+                              <div className="flex items-center gap-2">
+                                <button
+                                  type="button"
+                                  onClick={() => playGeneratedListeningAudio(generatedListeningData)}
+                                  className={`text-xs font-bold flex items-center gap-1.5 px-4 py-2 rounded-xl transition-all cursor-pointer shadow-xs ${
+                                    isGenListeningPlaying
+                                      ? "bg-amber-600 text-white animate-pulse shadow-amber-200"
+                                      : "bg-teal-600 hover:bg-teal-700 text-white shadow-teal-200"
+                                  }`}
+                                >
+                                  <span>{isGenListeningPlaying ? "⏸️" : "▶️"}</span>
+                                  <span>{isGenListeningPlaying ? "Dừng phát audio" : "Phát bài nghe (TTS giọng Nhật)"}</span>
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => setShowGenListeningScript((prev) => !prev)}
+                                  className={`text-xs font-bold flex items-center gap-1 px-3 py-2 rounded-xl transition-colors cursor-pointer border ${
+                                    showGenListeningScript
+                                      ? "bg-indigo-600 border-indigo-600 text-white"
+                                      : "bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100"
+                                  }`}
+                                >
+                                  📄 {showGenListeningScript ? "Ẩn Kịch bản" : "Hiện Kịch bản (Script)"}
+                                </button>
+                              </div>
+                            ) : (
+                              <div className="flex items-center gap-2">
+                                <span className="text-xs font-bold text-amber-800 bg-amber-100/90 px-3 py-1.5 rounded-xl border border-amber-200/80 shadow-3xs flex items-center gap-1.5">
+                                  <span>🏛️</span>
+                                  <span>Bộ đề chuẩn thi thật ({generatedListeningData.questions?.length || 0} câu độc lập)</span>
+                                </span>
+                              </div>
+                            )}
                           </div>
 
                           {/* Situation Box */}
@@ -3729,7 +3942,7 @@ ${item.audioScript}。
 
                           {/* Questions Section */}
                           {(() => {
-                            const genQuestions = generatedListeningData.questions && generatedListeningData.questions.length > 0
+                            const genQuestions: GeneratedListeningQuestion[] = generatedListeningData.questions && generatedListeningData.questions.length > 0
                               ? generatedListeningData.questions
                               : generatedListeningData.question
                               ? [
@@ -3740,6 +3953,11 @@ ${item.audioScript}。
                                     options: generatedListeningData.options || [],
                                     correctAnswer: generatedListeningData.correctAnswer ?? 0,
                                     explanation: generatedListeningData.explanation || "",
+                                    audioScript: generatedListeningData.audioScript,
+                                    audioScript_ruby: generatedListeningData.audioScript_ruby,
+                                    vietnameseTranslation: generatedListeningData.vietnameseTranslation,
+                                    situation: generatedListeningData.situation,
+                                    situation_translation: (generatedListeningData as any).situation_translation,
                                   }
                                 ]
                               : [];
@@ -3753,6 +3971,92 @@ ${item.audioScript}。
 
                                   return (
                                     <div key={qItem.id || qIdx} className="p-5 rounded-2xl bg-gray-50/80 border border-gray-200/80 space-y-3">
+                                      {/* Individual Situation if question has its own situation */}
+                                      {qItem.situation && (
+                                        <div className="p-3.5 rounded-xl bg-amber-50/70 border border-amber-200/60 text-xs text-amber-950 space-y-1">
+                                          <div className="font-bold text-amber-800 text-[11px] flex items-center gap-1">
+                                            <span>📌</span> Tình huống câu {qIdx + 1}:
+                                          </div>
+                                          <p className="font-semibold text-xs select-text">{qItem.situation}</p>
+                                          {qItem.situation_translation && (
+                                            <p className="text-[11px] text-amber-900/80 italic select-text">{qItem.situation_translation}</p>
+                                          )}
+                                        </div>
+                                      )}
+
+                                      {/* Individual Audio & Script Controls if question has its own audioScript */}
+                                      {qItem.audioScript && (
+                                        <div className="space-y-2">
+                                          <div className="flex items-center gap-2 flex-wrap">
+                                            <button
+                                              type="button"
+                                              onClick={() => playQuestionAudio(qItem, generatedListeningData.mondaiNumber)}
+                                              className={`text-xs font-bold flex items-center gap-1.5 px-3.5 py-2 rounded-xl transition-all cursor-pointer shadow-3xs ${
+                                                playingQuestionId === qItem.id
+                                                  ? "bg-amber-600 text-white animate-pulse shadow-amber-200"
+                                                  : "bg-teal-600 hover:bg-teal-700 text-white shadow-teal-200"
+                                              }`}
+                                            >
+                                              <span>{playingQuestionId === qItem.id ? "⏸️" : "▶️"}</span>
+                                              <span>{playingQuestionId === qItem.id ? "Dừng audio" : `Nghe câu ${qIdx + 1} (TTS giọng Nhật)`}</span>
+                                            </button>
+                                            <button
+                                              type="button"
+                                              onClick={() => setShowQuestionScripts(prev => ({ ...prev, [qItem.id]: !prev[qItem.id] }))}
+                                              className={`text-xs font-bold flex items-center gap-1 px-3 py-2 rounded-xl transition-colors cursor-pointer border ${
+                                                showQuestionScripts[qItem.id]
+                                                  ? "bg-indigo-600 border-indigo-600 text-white"
+                                                  : "bg-white border-gray-200 text-gray-700 hover:bg-gray-50"
+                                              }`}
+                                            >
+                                              📄 {showQuestionScripts[qItem.id] ? "Ẩn kịch bản câu này" : "Xem kịch bản (Script)"}
+                                            </button>
+                                          </div>
+
+                                          {showQuestionScripts[qItem.id] && (
+                                            <div className="p-3.5 rounded-xl bg-indigo-50/50 border border-indigo-100 text-xs space-y-2 animate-in fade-in">
+                                              <div>
+                                                <div className="flex items-center justify-between mb-1">
+                                                  <span className="text-[10px] text-indigo-700 font-bold uppercase tracking-wider">
+                                                    🎙️ Lời thoại câu {qIdx + 1}:
+                                                  </span>
+                                                  {qItem.audioScript_ruby && (
+                                                    <button
+                                                      type="button"
+                                                      onClick={() => setShowQuestionRuby(prev => ({ ...prev, [qItem.id]: !prev[qItem.id] }))}
+                                                      className="text-[10px] font-bold text-indigo-600 hover:underline cursor-pointer"
+                                                    >
+                                                      🈳 {showQuestionRuby[qItem.id] ? "Tắt Furigana" : "Bật Furigana"}
+                                                    </button>
+                                                  )}
+                                                </div>
+                                                {qItem.audioScript_ruby && showQuestionRuby[qItem.id] ? (
+                                                  <div
+                                                    className="whitespace-pre-line text-gray-900 leading-loose font-medium pl-2 border-l-2 border-indigo-300 text-xs select-text"
+                                                    dangerouslySetInnerHTML={{ __html: qItem.audioScript_ruby }}
+                                                  />
+                                                ) : (
+                                                  <div className="whitespace-pre-line text-gray-900 leading-relaxed font-medium pl-2 border-l-2 border-indigo-300 select-text text-xs">
+                                                    {qItem.audioScript}
+                                                  </div>
+                                                )}
+                                              </div>
+
+                                              {qItem.vietnameseTranslation && (
+                                                <div className="pt-1.5 border-t border-indigo-100">
+                                                  <div className="text-[10px] text-indigo-700 font-bold uppercase tracking-wider mb-0.5">
+                                                    🌐 Bản dịch tiếng Việt:
+                                                  </div>
+                                                  <div className="whitespace-pre-line text-gray-700 leading-relaxed italic pl-2 border-l-2 border-indigo-300 select-text text-[11px]">
+                                                    {qItem.vietnameseTranslation}
+                                                  </div>
+                                                </div>
+                                              )}
+                                            </div>
+                                          )}
+                                        </div>
+                                      )}
+
                                       <div className="text-sm font-extrabold text-gray-900 select-text">
                                         ❓ {genQuestions.length > 1 ? `Câu hỏi ${qIdx + 1}: ` : "Câu hỏi: "}{qItem.question}
                                         {qItem.question_vietnamese && (
@@ -3828,10 +4132,13 @@ ${item.audioScript}。
                                             onClick={() => {
                                               const userOptText = userAns !== undefined ? qItem.options[userAns] : "Chưa chọn";
                                               const correctOptText = qItem.options[qItem.correctAnswer];
-                                              const scriptText = generatedListeningData.audioScript
-                                                ? `\n\nLời thoại (Script):\n${generatedListeningData.audioScript}\n\nDịch nghĩa:\n${generatedListeningData.vietnameseTranslation}`
+                                              const activeAudioScript = qItem.audioScript || generatedListeningData.audioScript;
+                                              const activeTranslation = qItem.vietnameseTranslation || generatedListeningData.vietnameseTranslation;
+                                              const activeSituation = qItem.situation || generatedListeningData.situation;
+                                              const scriptText = activeAudioScript
+                                                ? `\n\nLời thoại (Script):\n${activeAudioScript}\n\nDịch nghĩa:\n${activeTranslation || ""}`
                                                 : "";
-                                              const prompt = `Nhờ Gia sư AI giải thích chi tiết câu hỏi Luyện nghe hiểu JLPT ${generatedListeningData.level} (${generatedListeningData.mondaiName}: ${generatedListeningData.mondaiSubtitle}):\n\nTình huống: ${generatedListeningData.situation}\nTiêu đề: ${generatedListeningData.title}${scriptText}\n\nCâu hỏi: ${qItem.question}\nCác lựa chọn:\n${qItem.options.map((optText, idx) => `${idx + 1}. ${optText}${idx === qItem.correctAnswer ? " (Đáp án đúng)" : ""}`).join("\n")}\n\nLựa chọn của tôi: ${userOptText}\nĐáp án đúng: Lựa chọn ${qItem.correctAnswer + 1} (${correctOptText})\nGiải thích: ${qItem.explanation || generatedListeningData.explanation}\n\nNhờ Gia sư AI phân tích từ vựng quan trọng, bẫy thông tin và mẹo nghe hiệu quả cho dạng bài này.`;
+                                              const prompt = `Nhờ Gia sư AI giải thích chi tiết câu hỏi Luyện nghe hiểu JLPT ${generatedListeningData.level} (${generatedListeningData.mondaiName}: ${generatedListeningData.mondaiSubtitle}):\n\nTình huống: ${activeSituation || ""}\nTiêu đề: ${generatedListeningData.title}${scriptText}\n\nCâu hỏi: ${qItem.question}\nCác lựa chọn:\n${qItem.options.map((optText, idx) => `${idx + 1}. ${optText}${idx === qItem.correctAnswer ? " (Đáp án đúng)" : ""}`).join("\n")}\n\nLựa chọn của tôi: ${userOptText}\nĐáp án đúng: Lựa chọn ${qItem.correctAnswer + 1} (${correctOptText})\nGiải thích: ${qItem.explanation || generatedListeningData.explanation}\n\nNhờ Gia sư AI phân tích từ vựng quan trọng, bẫy thông tin và mẹo nghe hiệu quả cho dạng bài này.`;
                                               handleAiTutorReview(prompt);
                                             }}
                                             className="px-3 py-1.5 bg-white hover:bg-indigo-50 text-indigo-700 border border-indigo-200 rounded-xl text-[11px] font-bold transition-all cursor-pointer flex items-center gap-1 shadow-3xs"

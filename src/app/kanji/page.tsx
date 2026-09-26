@@ -41,27 +41,43 @@ export default function KanjiHubPage() {
   });
 
   return (
-    <div className="w-full max-w-[1600px] mx-auto px-3.5 sm:px-6 lg:px-8 py-4 sm:py-6 min-h-screen pb-28 space-y-6">
+    <div className="w-full max-w-[1600px] mx-auto px-3 sm:px-4 lg:px-6 py-3 sm:py-4 space-y-4 sm:space-y-5 pb-8 md:pb-4">
       {/* Breadcrumb Bar */}
       <BreadcrumbNav items={[{ label: "Kho Kanji", icon: "🉐" }]} />
 
-      {/* Header Banner */}
-      <div className={`rounded-2xl sm:rounded-3xl p-4 sm:p-5 lg:p-6 text-white shadow-lg transition-all duration-300 bg-gradient-to-r ${
+      {/* Header Banner (Compact Minimalist - Light Theme matching background) */}
+      <div className={`rounded-xl sm:rounded-2xl px-3.5 py-2.5 sm:px-5 sm:py-3 shadow-2xs border transition-all duration-300 bg-gradient-to-r ${
         activeLanguage.code === "en"
-          ? "from-indigo-900 via-purple-900 to-blue-900"
+          ? "from-white via-blue-50/40 to-indigo-50/30 border-blue-100/80"
           : activeLanguage.code === "de"
-          ? "from-amber-950 via-red-950 to-stone-900"
-          : "from-teal-800 via-indigo-900 to-purple-800"
+          ? "from-white via-amber-50/40 to-orange-50/30 border-amber-100/80"
+          : activeLanguage.code === "ko"
+          ? "from-white via-rose-50/40 to-pink-50/30 border-rose-100/80"
+          : activeLanguage.code === "zh"
+          ? "from-white via-red-50/40 to-amber-50/30 border-red-100/80"
+          : "from-white via-teal-50/40 to-indigo-50/30 border-teal-100/80"
       }`}>
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div>
-            <span className="px-2.5 py-0.5 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-bold tracking-widest uppercase">
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <span className={`px-2 py-0.5 rounded-md text-[9px] font-bold tracking-wider uppercase shrink-0 border ${
+              activeLanguage.code === "en"
+                ? "bg-blue-50 text-blue-700 border-blue-200/80"
+                : activeLanguage.code === "de"
+                ? "bg-amber-50 text-amber-800 border-amber-200/80"
+                : activeLanguage.code === "ko"
+                ? "bg-rose-50 text-rose-700 border-rose-200/80"
+                : activeLanguage.code === "zh"
+                ? "bg-red-50 text-red-700 border-red-200/80"
+                : "bg-teal-50 text-teal-700 border-teal-200/80"
+            }`}>
               {activeLanguage.name} ({activeLanguage.code.toUpperCase()})
             </span>
-            <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight mt-1.5">Thư viện Kanji & Nét Vẽ (N5 ➔ N2)</h1>
-            <p className="text-xs sm:text-sm text-indigo-100 mt-1 leading-relaxed">
-              Học âm Hán Việt, âm On/Kun, nét vẽ SVG động và từ ghép theo cấp độ JLPT
-            </p>
+            <div className="min-w-0">
+              <h1 className="text-sm sm:text-base font-extrabold text-gray-900 tracking-tight truncate">Thư viện Kanji & Nét Vẽ (N5 ➔ N2)</h1>
+              <p className="text-[11px] text-gray-500 truncate hidden sm:block">
+                Học âm Hán Việt, âm On/Kun, nét vẽ SVG động và từ ghép theo cấp độ JLPT
+              </p>
+            </div>
           </div>
         </div>
       </div>

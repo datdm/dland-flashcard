@@ -48,44 +48,58 @@ export default function KaiwaRoadmapPage() {
   const percentCompleted = Math.round((completedCount / totalWeeks) * 100);
 
   return (
-    <div className="w-full max-w-[1600px] mx-auto px-3.5 sm:px-6 lg:px-8 py-4 sm:py-6 min-h-screen pb-28 space-y-6">
+    <div className="w-full max-w-[1600px] mx-auto px-3 sm:px-4 lg:px-6 py-3 sm:py-4 space-y-4 sm:space-y-5 pb-8 md:pb-4">
       {/* Breadcrumb Bar */}
       <BreadcrumbNav items={[{ label: "Luyện Kaiwa", icon: "💬" }]} />
 
-      {/* Hero Header */}
-      <div className={`rounded-2xl sm:rounded-3xl p-4 sm:p-5 lg:p-6 text-white shadow-lg mb-6 transition-all duration-300 bg-gradient-to-r ${
+      {/* Hero Header (Compact Minimalist - Light Theme matching background) */}
+      <div className={`rounded-xl sm:rounded-2xl px-3.5 py-2.5 sm:px-5 sm:py-3 shadow-2xs mb-3.5 border transition-all duration-300 bg-gradient-to-r ${
         activeLanguage.code === "en"
-          ? "from-indigo-900 via-purple-900 to-blue-900"
+          ? "from-white via-blue-50/40 to-indigo-50/30 border-blue-100/80"
           : activeLanguage.code === "de"
-          ? "from-amber-950 via-red-950 to-stone-900"
-          : "from-teal-800 via-indigo-900 to-purple-800"
+          ? "from-white via-amber-50/40 to-orange-50/30 border-amber-100/80"
+          : activeLanguage.code === "ko"
+          ? "from-white via-rose-50/40 to-pink-50/30 border-rose-100/80"
+          : activeLanguage.code === "zh"
+          ? "from-white via-red-50/40 to-amber-50/30 border-red-100/80"
+          : "from-white via-teal-50/40 to-indigo-50/30 border-teal-100/80"
       }`}>
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="max-w-2xl">
-            <span className="px-2.5 py-0.5 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-bold tracking-widest uppercase">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <span className={`px-2 py-0.5 rounded-md text-[9px] font-bold tracking-wider uppercase shrink-0 border ${
+              activeLanguage.code === "en"
+                ? "bg-blue-50 text-blue-700 border-blue-200/80"
+                : activeLanguage.code === "de"
+                ? "bg-amber-50 text-amber-800 border-amber-200/80"
+                : activeLanguage.code === "ko"
+                ? "bg-rose-50 text-rose-700 border-rose-200/80"
+                : activeLanguage.code === "zh"
+                ? "bg-red-50 text-red-700 border-red-200/80"
+                : "bg-teal-50 text-teal-700 border-teal-200/80"
+            }`}>
               {activeLanguage.name} ({activeLanguage.code.toUpperCase()})
             </span>
-            <h1 className="text-xl sm:text-2xl font-extrabold mt-1.5 tracking-tight leading-tight">
-              Lộ Trình Học Kaiwa 3 Tháng
-            </h1>
-            <p className="text-xs sm:text-sm text-indigo-100 mt-1 leading-relaxed">
-              Luyện phản xạ giao tiếp tự nhiên từ số 0 đến tự tin nói chuyện đời thường.
-            </p>
+            <div className="min-w-0">
+              <h1 className="text-sm sm:text-base font-extrabold text-gray-900 tracking-tight truncate">
+                Lộ Trình Học Kaiwa 3 Tháng
+              </h1>
+              <p className="text-[11px] text-gray-500 truncate hidden sm:block">
+                Luyện phản xạ giao tiếp tự nhiên từ số 0 đến tự tin nói chuyện đời thường
+              </p>
+            </div>
           </div>
 
-          {/* Progress Widget */}
-          <div className="bg-white/5 backdrop-blur-md rounded-2xl p-5 border border-white/10 shrink-0 w-full md:w-64">
-            <div className="flex justify-between items-center mb-2">
-              <span className="text-xs font-medium text-slate-300">Tiến trình học tập</span>
-              <span className="text-sm font-bold text-indigo-300">{completedCount}/{totalWeeks} Tuần</span>
+          {/* Progress Widget (Slim) */}
+          <div className="bg-white rounded-xl px-3.5 py-1.5 border border-gray-200/80 shadow-3xs shrink-0 flex items-center gap-2.5">
+            <div className="text-xs font-semibold text-gray-600 shrink-0">
+              Tiến trình: <span className="text-indigo-600 font-bold">{completedCount}/{totalWeeks} Tuần</span> ({percentCompleted}%)
             </div>
-            <div className="w-full bg-slate-700/50 rounded-full h-2">
+            <div className="w-20 sm:w-28 bg-gray-100 rounded-full h-1.5 overflow-hidden border border-gray-200">
               <div 
-                className="bg-gradient-to-r from-indigo-500 to-pink-500 h-2 rounded-full transition-all duration-500" 
+                className="bg-gradient-to-r from-emerald-500 to-teal-500 h-1.5 rounded-full transition-all duration-500" 
                 style={{ width: `${percentCompleted}%` }}
               ></div>
             </div>
-            <div className="text-[11px] text-slate-400 mt-2 text-right">Hoàn thành {percentCompleted}% chặng đường</div>
           </div>
         </div>
       </div>

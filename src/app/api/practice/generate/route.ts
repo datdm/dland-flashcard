@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { buildJLPTListeningPrompt, buildJLPTReadingPrompt, buildJLPTVocabPrompt, buildJLPTGrammarPrompt } from "@/lib/jlptPromptBuilder";
+import { getMondaiOfficialCount } from "@/lib/jlptMondaiConfig";
 
 const apiKey = process.env.GEMINI_API_KEY;
 const genAI = apiKey ? new GoogleGenerativeAI(apiKey) : null;
@@ -14,7 +15,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const { type, topic, level = "N2", lang = "ja", mondaiNumber, mondaiSubtitle } = await req.json();
+    const { type, topic, level = "N2", lang = "ja", mondaiNumber, mondaiSubtitle, questionCountMode } = await req.json();
 
     // Map main topics to a collection of sub-situations/contexts to guarantee diversity
     const subContextsMap: Record<string, string[]> = {
@@ -461,39 +462,51 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
     ]
   }
 }`;
-      } else if (type === "listening") {
-        prompt = buildJLPTListeningPrompt({
-          level,
-          topic,
-          chosenContext,
-          mondaiNumber,
-          randomSeed,
-        });
-      } else if (type === "jlpt_vocab") {
-        prompt = buildJLPTVocabPrompt({
-          level,
-          topic,
-          chosenContext,
-          mondaiNumber,
-          randomSeed,
-        });
-      } else if (type === "jlpt_grammar") {
-        prompt = buildJLPTGrammarPrompt({
-          level,
-          topic,
-          chosenContext,
-          mondaiNumber,
-          randomSeed,
-        });
-      } else {
-        // reading by Mondai
-        prompt = buildJLPTReadingPrompt({
-          level,
-          topic,
-          chosenContext,
-          mondaiNumber,
-          randomSeed,
-        });
+      } else if (["listening", "jlpt_vocab", "jlpt_grammar", "reading"].includes(type)) {
+        let targetCount: number | undefined = undefined;
+        const currentMNum = Number(mondaiNumber) || (type === "reading" ? 10 : 1);
+        if (questionCountMode === "full") {
+          targetCount = getMondaiOfficialCount(type as any, level, currentMNum);
+        }
+
+        if (type === "listening") {
+          prompt = buildJLPTListeningPrompt({
+            level,
+            topic,
+            chosenContext,
+            mondaiNumber: currentMNum,
+            randomSeed,
+            targetCount,
+          });
+        } else if (type === "jlpt_vocab") {
+          prompt = buildJLPTVocabPrompt({
+            level,
+            topic,
+            chosenContext,
+            mondaiNumber: currentMNum,
+            randomSeed,
+            targetCount,
+          });
+        } else if (type === "jlpt_grammar") {
+          prompt = buildJLPTGrammarPrompt({
+            level,
+            topic,
+            chosenContext,
+            mondaiNumber: currentMNum,
+            randomSeed,
+            targetCount,
+          });
+        } else {
+          // reading by Mondai
+          prompt = buildJLPTReadingPrompt({
+            level,
+            topic,
+            chosenContext,
+            mondaiNumber: currentMNum,
+            randomSeed,
+            targetCount,
+          });
+        }
       }
     }
 

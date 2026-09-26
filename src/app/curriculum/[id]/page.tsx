@@ -307,21 +307,21 @@ export default function CurriculumLessonDetailPage({ params }: Props) {
 
         {/* IELTS 4-Skills Breakdown Widget if present */}
         {(lesson as any).skills && (
-          <div className="mt-5 p-4 bg-slate-900 text-white rounded-2xl border border-slate-800 space-y-2 text-xs">
-            <div className="font-extrabold text-indigo-400 text-sm flex items-center justify-between">
+          <div className="mt-5 p-4 bg-white text-gray-900 rounded-2xl border border-gray-200/80 shadow-2xs space-y-2 text-xs">
+            <div className="font-extrabold text-indigo-700 text-sm flex items-center justify-between">
               <span>🎯 NHIỆM VỤ 4 KỸ NĂNG TUẦN NÀY</span>
-              <span className="text-[10px] bg-indigo-500/20 text-indigo-300 px-2.5 py-0.5 rounded-full border border-indigo-400/30">
+              <span className="text-[10px] bg-indigo-50 text-indigo-700 px-2.5 py-0.5 rounded-full border border-indigo-200">
                 {(lesson as any).duration || "8 - 10h/tuần"}
               </span>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-2 text-slate-300">
-              <div><span className="font-bold text-indigo-400">🎧 Listening:</span> {(lesson as any).skills.listening}</div>
-              <div><span className="font-bold text-indigo-400">📖 Reading:</span> {(lesson as any).skills.reading}</div>
-              <div><span className="font-bold text-indigo-400">✍️ Writing:</span> {(lesson as any).skills.writing}</div>
-              <div><span className="font-bold text-indigo-400">🗣️ Speaking:</span> {(lesson as any).skills.speaking}</div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-2 text-gray-700">
+              <div><span className="font-bold text-indigo-700">🎧 Listening:</span> {(lesson as any).skills.listening}</div>
+              <div><span className="font-bold text-indigo-700">📖 Reading:</span> {(lesson as any).skills.reading}</div>
+              <div><span className="font-bold text-indigo-700">✍️ Writing:</span> {(lesson as any).skills.writing}</div>
+              <div><span className="font-bold text-indigo-700">🗣️ Speaking:</span> {(lesson as any).skills.speaking}</div>
             </div>
-            <div className="pt-2 text-emerald-300 border-t border-slate-800 font-medium">
-              🌟 <span className="font-bold text-emerald-400">KPI Đầu ra:</span> {(lesson as any).skills.kpi}
+            <div className="pt-2 text-emerald-800 border-t border-gray-100 font-medium">
+              🌟 <span className="font-bold text-emerald-700">KPI Đầu ra:</span> {(lesson as any).skills.kpi}
             </div>
           </div>
         )}

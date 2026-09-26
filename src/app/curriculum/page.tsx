@@ -196,29 +196,45 @@ function CurriculumContent() {
       {/* Breadcrumb Bar */}
       <BreadcrumbNav items={[{ label: "Giáo trình học", icon: "📚" }]} />
 
-      {/* Header Banner */}
-      <div className={`rounded-2xl p-4 sm:p-5 lg:p-6 text-white shadow-lg transition-all duration-300 bg-gradient-to-r ${
+      {/* Header Banner (Compact Minimalist - Light Theme matching background) */}
+      <div className={`rounded-xl sm:rounded-2xl px-3.5 py-2.5 sm:px-5 sm:py-3 shadow-2xs border transition-all duration-300 bg-gradient-to-r ${
         activeLanguage.code === "en"
-          ? "from-indigo-900 via-purple-900 to-blue-900"
+          ? "from-white via-blue-50/40 to-indigo-50/30 border-blue-100/80"
           : activeLanguage.code === "de"
-          ? "from-amber-950 via-red-950 to-stone-900"
-          : "from-teal-800 via-indigo-900 to-purple-800"
+          ? "from-white via-amber-50/40 to-orange-50/30 border-amber-100/80"
+          : activeLanguage.code === "ko"
+          ? "from-white via-rose-50/40 to-pink-50/30 border-rose-100/80"
+          : activeLanguage.code === "zh"
+          ? "from-white via-red-50/40 to-amber-50/30 border-red-100/80"
+          : "from-white via-teal-50/40 to-indigo-50/30 border-teal-100/80"
       }`}>
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div>
-            <span className="px-2.5 py-0.5 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-bold tracking-widest uppercase">
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <span className={`px-2 py-0.5 rounded-md text-[9px] font-bold tracking-wider uppercase shrink-0 border ${
+              activeLanguage.code === "en"
+                ? "bg-blue-50 text-blue-700 border-blue-200/80"
+                : activeLanguage.code === "de"
+                ? "bg-amber-50 text-amber-800 border-amber-200/80"
+                : activeLanguage.code === "ko"
+                ? "bg-rose-50 text-rose-700 border-rose-200/80"
+                : activeLanguage.code === "zh"
+                ? "bg-red-50 text-red-700 border-red-200/80"
+                : "bg-teal-50 text-teal-700 border-teal-200/80"
+            }`}>
               {activeLanguage.name} ({activeLanguage.code.toUpperCase()})
             </span>
-            <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight mt-1.5">{headerTitle}</h1>
-            <p className="text-xs sm:text-sm text-indigo-100 mt-1 leading-relaxed">
-              {headerSubtitle}
-            </p>
+            <div className="min-w-0">
+              <h1 className="text-sm sm:text-base font-extrabold text-gray-900 tracking-tight truncate">{headerTitle}</h1>
+              <p className="text-[11px] text-gray-500 truncate hidden sm:block">
+                {headerSubtitle}
+              </p>
+            </div>
           </div>
           <Link
             href="/"
-            className="px-3.5 py-1.5 rounded-xl bg-white/20 hover:bg-white/30 backdrop-blur-md text-white font-bold text-xs border border-white/30 transition-all flex items-center gap-1.5 active:scale-98 shrink-0 self-start sm:self-auto"
+            className="px-3 py-1.5 rounded-lg sm:rounded-xl bg-white hover:bg-gray-50 text-gray-700 font-bold text-xs border border-gray-200 shadow-3xs transition-all flex items-center gap-1 active:scale-98 shrink-0"
           >
-            <span>←</span> Về Trang Chủ
+            <span>←</span> Trang Chủ
           </Link>
         </div>
       </div>
@@ -319,31 +335,31 @@ function CurriculumContent() {
         <div className="space-y-4 sm:space-y-5">
           {/* Progress Overview Banner for Selected Textbook */}
           {!isMultilingual && activeGroup && (
-            <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-purple-950 rounded-2xl p-4 sm:p-5 text-white shadow-md border border-indigo-900/50">
+            <div className="bg-white rounded-2xl p-4 sm:p-5 text-gray-900 shadow-2xs border border-gray-200/80">
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 flex-wrap mb-1">
-                    <span className="px-2.5 py-0.5 bg-indigo-500/30 text-indigo-200 border border-indigo-400/30 backdrop-blur-md rounded-full text-xs font-extrabold tracking-wide uppercase">
+                    <span className="px-2.5 py-0.5 bg-indigo-50 text-indigo-700 border border-indigo-200/80 rounded-full text-xs font-extrabold tracking-wide uppercase">
                       🎯 Progress Tracker — {currentBook?.name || `Trình độ ${activeLevel}`}
                     </span>
-                    <span className="px-2.5 py-0.5 bg-amber-400/20 text-amber-300 border border-amber-300/30 rounded-full text-xs font-black">
+                    <span className="px-2.5 py-0.5 bg-amber-50 text-amber-800 border border-amber-200/80 rounded-full text-xs font-black">
                       Tiến độ: {currentBookStats.percentage}%
                     </span>
                   </div>
-                  <h2 className="text-base sm:text-lg font-black tracking-tight text-white mt-1">
+                  <h2 className="text-base sm:text-lg font-black tracking-tight text-gray-900 mt-1">
                     Tổng Quan Tiến Độ Học Tập — {currentBook?.name || activeGroup.title}
                   </h2>
-                  <p className="text-xs text-slate-300 mt-0.5 leading-relaxed">
+                  <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">
                     Theo dõi tiến độ từ vựng, ngữ pháp, kanji và các bài học đã thuộc của giáo trình {currentBook?.name || activeGroup.title}
                   </p>
 
                   {/* Progress Bar */}
                   <div className="mt-3 space-y-1">
-                    <div className="flex justify-between text-[11px] font-bold text-slate-300">
+                    <div className="flex justify-between text-[11px] font-bold text-gray-600">
                       <span>Hoàn thành: {currentBookStats.learnedItems} / {currentBookStats.totalItems} mục</span>
-                      <span className="text-amber-300 font-extrabold">{currentBookStats.percentage}%</span>
+                      <span className="text-amber-600 font-extrabold">{currentBookStats.percentage}%</span>
                     </div>
-                    <div className="w-full bg-slate-800 rounded-full h-2 overflow-hidden border border-slate-700">
+                    <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden border border-gray-200">
                       <div
                         className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 h-2 rounded-full transition-all duration-500 shadow-xs"
                         style={{ width: `${currentBookStats.percentage}%` }}
@@ -353,22 +369,22 @@ function CurriculumContent() {
                 </div>
 
                 {/* Stats Grid Chips */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 shrink-0 bg-white/5 p-2.5 rounded-xl border border-white/10">
-                  <div className="text-center p-2 rounded-lg bg-white/5">
-                    <div className="text-sm sm:text-base font-black text-indigo-300">{currentBookStats.learnedVocab}/{currentBookStats.totalVocab}</div>
-                    <div className="text-[10px] font-bold text-slate-400 uppercase mt-0.5">📝 Từ vựng</div>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 shrink-0 bg-gray-50/80 p-2.5 rounded-xl border border-gray-200/60">
+                  <div className="text-center p-2 rounded-lg bg-white border border-gray-200/50 shadow-3xs">
+                    <div className="text-sm sm:text-base font-black text-indigo-600">{currentBookStats.learnedVocab}/{currentBookStats.totalVocab}</div>
+                    <div className="text-[10px] font-bold text-gray-400 uppercase mt-0.5">📝 Từ vựng</div>
                   </div>
-                  <div className="text-center p-2 rounded-lg bg-white/5">
-                    <div className="text-sm sm:text-base font-black text-teal-300">{currentBookStats.learnedGrammar}/{currentBookStats.totalGrammar}</div>
-                    <div className="text-[10px] font-bold text-slate-400 uppercase mt-0.5">📖 Ngữ pháp</div>
+                  <div className="text-center p-2 rounded-lg bg-white border border-gray-200/50 shadow-3xs">
+                    <div className="text-sm sm:text-base font-black text-teal-600">{currentBookStats.learnedGrammar}/{currentBookStats.totalGrammar}</div>
+                    <div className="text-[10px] font-bold text-gray-400 uppercase mt-0.5">📖 Ngữ pháp</div>
                   </div>
-                  <div className="text-center p-2 rounded-lg bg-white/5">
-                    <div className="text-sm sm:text-base font-black text-pink-300">{currentBookStats.learnedKanji}/{currentBookStats.totalKanji}</div>
-                    <div className="text-[10px] font-bold text-slate-400 uppercase mt-0.5">🉐 Kanji</div>
+                  <div className="text-center p-2 rounded-lg bg-white border border-gray-200/50 shadow-3xs">
+                    <div className="text-sm sm:text-base font-black text-pink-600">{currentBookStats.learnedKanji}/{currentBookStats.totalKanji}</div>
+                    <div className="text-[10px] font-bold text-gray-400 uppercase mt-0.5">🉐 Kanji</div>
                   </div>
-                  <div className="text-center p-2 rounded-lg bg-white/5">
-                    <div className="text-sm sm:text-base font-black text-amber-300">{currentBookStats.completedLessons}/{currentBookStats.totalLessons}</div>
-                    <div className="text-[10px] font-bold text-slate-400 uppercase mt-0.5">✅ Bài học</div>
+                  <div className="text-center p-2 rounded-lg bg-white border border-gray-200/50 shadow-3xs">
+                    <div className="text-sm sm:text-base font-black text-amber-600">{currentBookStats.completedLessons}/{currentBookStats.totalLessons}</div>
+                    <div className="text-[10px] font-bold text-gray-400 uppercase mt-0.5">✅ Bài học</div>
                   </div>
                 </div>
               </div>
@@ -466,49 +482,49 @@ function CurriculumContent() {
 
           {/* Active Textbook Details Banner */}
           {currentBook && (
-            <div className="bg-gradient-to-r from-indigo-600 via-indigo-700 to-purple-700 rounded-2xl p-4 sm:p-5 text-white shadow-md">
+            <div className="bg-white rounded-2xl p-4 sm:p-5 text-gray-900 shadow-2xs border border-gray-200/80">
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
                 <div>
                   <div className="flex items-center gap-1.5 flex-wrap mb-1.5">
-                    <span className="px-2.5 py-0.5 bg-white/20 backdrop-blur-md rounded-full text-[11px] font-semibold tracking-wide">
+                    <span className="px-2.5 py-0.5 bg-indigo-50 text-indigo-700 border border-indigo-200/70 rounded-full text-[11px] font-semibold tracking-wide">
                       {isMultilingual ? "TRÌNH ĐỘ SƠ CẤP" : `CẤP ĐỘ ${activeGroup.level}`}
                     </span>
-                    <span className="px-2.5 py-0.5 bg-amber-400/30 text-amber-200 border border-amber-300/30 backdrop-blur-md rounded-full text-[11px] font-bold">
+                    <span className="px-2.5 py-0.5 bg-amber-50 text-amber-800 border border-amber-200/70 rounded-full text-[11px] font-bold">
                       {currentBook.icon || "📘"} {currentBook.name}
                     </span>
                     {currentBook.tag && (
-                      <span className="px-2 py-0.5 bg-white/15 text-white rounded-full text-[10px] font-bold">
+                      <span className="px-2 py-0.5 bg-gray-100 text-gray-600 border border-gray-200 rounded-full text-[10px] font-bold">
                         {currentBook.tag}
                       </span>
                     )}
                   </div>
-                  <h2 className="text-lg sm:text-xl font-bold mt-1">{currentBook.name}</h2>
-                  <p className="text-xs text-indigo-100 mt-1 max-w-2xl leading-relaxed">
+                  <h2 className="text-lg sm:text-xl font-bold mt-1 text-gray-900">{currentBook.name}</h2>
+                  <p className="text-xs text-gray-500 mt-1 max-w-2xl leading-relaxed">
                     {currentBook.description}
                   </p>
                 </div>
                 
-                <div className="flex gap-3 bg-white/10 backdrop-blur-md p-2.5 rounded-xl text-center shrink-0 self-start md:self-auto">
+                <div className="flex gap-3 bg-gray-50 p-2.5 rounded-xl border border-gray-200/70 text-center shrink-0 self-start md:self-auto">
                   <div>
-                    <div className="text-base sm:text-lg font-extrabold">{currentBook.totalLessons}</div>
-                    <div className="text-[10px] text-indigo-200 uppercase font-semibold">Bài học</div>
+                    <div className="text-base sm:text-lg font-extrabold text-gray-900">{currentBook.totalLessons}</div>
+                    <div className="text-[10px] text-gray-400 uppercase font-semibold">Bài học</div>
                   </div>
-                  <div className="border-r border-white/20" />
+                  <div className="border-r border-gray-200" />
                   <div>
-                    <div className="text-base sm:text-lg font-extrabold">{currentBook.totalVocab}</div>
-                    <div className="text-[10px] text-indigo-200 uppercase font-semibold">Từ vựng</div>
+                    <div className="text-base sm:text-lg font-extrabold text-indigo-600">{currentBook.totalVocab}</div>
+                    <div className="text-[10px] text-gray-400 uppercase font-semibold">Từ vựng</div>
                   </div>
-                  <div className="border-r border-white/20" />
+                  <div className="border-r border-gray-200" />
                   <div>
-                    <div className="text-base sm:text-lg font-extrabold">{currentBook.totalGrammar}</div>
-                    <div className="text-[10px] text-indigo-200 uppercase font-semibold">Ngữ pháp</div>
+                    <div className="text-base sm:text-lg font-extrabold text-teal-600">{currentBook.totalGrammar}</div>
+                    <div className="text-[10px] text-gray-400 uppercase font-semibold">Ngữ pháp</div>
                   </div>
                   {!isMultilingual && currentBook.totalKanji > 0 && (
                     <>
-                      <div className="border-r border-white/20" />
+                      <div className="border-r border-gray-200" />
                       <div>
-                        <div className="text-base sm:text-lg font-extrabold">{currentBook.totalKanji}</div>
-                        <div className="text-[10px] text-indigo-200 uppercase font-semibold">Kanji</div>
+                        <div className="text-base sm:text-lg font-extrabold text-pink-600">{currentBook.totalKanji}</div>
+                        <div className="text-[10px] text-gray-400 uppercase font-semibold">Kanji</div>
                       </div>
                     </>
                   )}

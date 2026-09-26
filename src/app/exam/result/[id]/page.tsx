@@ -383,16 +383,16 @@ export default function ExamResultPage({ params }: Props) {
                     className="space-y-4 scroll-mt-24"
                   >
                     {/* Major Section Header */}
-                    <div className="bg-gradient-to-r from-indigo-900 via-indigo-800 to-purple-900 rounded-2xl p-4 sm:p-4.5 text-white shadow-xs flex items-center justify-between">
+                    <div className="bg-white rounded-2xl p-4 sm:p-4.5 text-gray-900 shadow-2xs border border-gray-200/80 flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <span className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center text-xl">
+                        <span className="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-xl">
                           {major.icon}
                         </span>
                         <div>
-                          <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-200">
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-600">
                             {major.japaneseName}
                           </span>
-                          <h2 className="text-base sm:text-lg font-black">{major.name}</h2>
+                          <h2 className="text-base sm:text-lg font-black text-gray-900">{major.name}</h2>
                         </div>
                       </div>
                     </div>

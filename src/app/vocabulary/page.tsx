@@ -191,42 +191,56 @@ export default function VocabularyPage() {
       {/* Breadcrumb Bar */}
       <BreadcrumbNav items={[{ label: "Kho Từ Vựng", icon: "📖" }]} />
 
-      {/* Header Banner */}
-      <div className={`rounded-2xl p-4 sm:p-5 lg:p-6 text-white shadow-md transition-all duration-300 bg-gradient-to-r ${
+      {/* Header Banner (Compact Minimalist - Light Theme matching background) */}
+      <div className={`rounded-xl sm:rounded-2xl px-3.5 py-2.5 sm:px-5 sm:py-3 shadow-2xs border transition-all duration-300 bg-gradient-to-r ${
         activeLanguage.code === "en"
-          ? "from-indigo-900 via-purple-900 to-blue-900"
+          ? "from-white via-blue-50/40 to-indigo-50/30 border-blue-100/80"
           : activeLanguage.code === "de"
-          ? "from-amber-950 via-red-950 to-stone-900"
-          : "from-teal-800 via-indigo-900 to-purple-800"
+          ? "from-white via-amber-50/40 to-orange-50/30 border-amber-100/80"
+          : activeLanguage.code === "ko"
+          ? "from-white via-rose-50/40 to-pink-50/30 border-rose-100/80"
+          : activeLanguage.code === "zh"
+          ? "from-white via-red-50/40 to-amber-50/30 border-red-100/80"
+          : "from-white via-teal-50/40 to-indigo-50/30 border-teal-100/80"
       }`}>
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div>
-            <div className="flex items-center gap-2 mb-1">
-              <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-bold tracking-widest uppercase">
-                {activeLanguage.name} ({activeLanguage.code.toUpperCase()})
-              </span>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <span className={`px-2 py-0.5 rounded-md text-[9px] font-bold tracking-wider uppercase shrink-0 border ${
+              activeLanguage.code === "en"
+                ? "bg-blue-50 text-blue-700 border-blue-200/80"
+                : activeLanguage.code === "de"
+                ? "bg-amber-50 text-amber-800 border-amber-200/80"
+                : activeLanguage.code === "ko"
+                ? "bg-rose-50 text-rose-700 border-rose-200/80"
+                : activeLanguage.code === "zh"
+                ? "bg-red-50 text-red-700 border-red-200/80"
+                : "bg-teal-50 text-teal-700 border-teal-200/80"
+            }`}>
+              {activeLanguage.name} ({activeLanguage.code.toUpperCase()})
+            </span>
+            <div className="min-w-0">
+              <h1 className="text-sm sm:text-base font-bold text-gray-900 truncate">Kho Từ Vựng & Sổ Tay</h1>
+              <p className="text-[11px] text-gray-500 truncate hidden md:block">
+                {langCode === "en"
+                  ? "Quản lý từ vựng bài học IELTS 7.0 và các Sổ tay cá nhân"
+                  : langCode === "de"
+                  ? "Quản lý từ vựng bài học Goethe A1 và các Sổ tay cá nhân"
+                  : "Quản lý từ vựng bài học Minna no Nihongo, Soumatome và các Sổ tay cá nhân"}
+              </p>
             </div>
-            <h1 className="text-xl sm:text-2xl font-bold mt-1">Kho Từ Vựng & Sổ Tay</h1>
-            <p className="text-xs text-indigo-100 mt-1">
-              {langCode === "en"
-                ? "Quản lý từ vựng bài học IELTS 7.0 (52 Tuần) và các Sổ tay cá nhân"
-                : langCode === "de"
-                ? "Quản lý từ vựng bài học Goethe A1 (Netzwerk neu) và các Sổ tay cá nhân"
-                : "Quản lý từ vựng bài học Minna no Nihongo, Soumatome và các Sổ tay cá nhân"}
-            </p>
           </div>
 
-          {/* Quick Action Links to Notebooks & Search */}
-          <div className="flex flex-wrap gap-2">
+          {/* Quick Action Links */}
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             <Link
               href="/notebooks"
-              className="px-3.5 py-2 bg-white text-indigo-700 font-bold rounded-xl text-xs hover:bg-indigo-50 transition-colors shadow-xs flex items-center gap-1.5"
+              className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg sm:rounded-xl text-xs transition-colors shadow-xs flex items-center gap-1"
             >
-              <span>📓 Quản lý Sổ tay</span>
+              <span>📓 Sổ tay</span>
             </Link>
             <Link
               href="/search"
-              className="px-3.5 py-2 bg-white/10 hover:bg-white/20 backdrop-blur-md text-white font-bold rounded-xl border border-white/20 text-xs transition-colors flex items-center gap-1.5"
+              className="px-3 py-1.5 bg-white hover:bg-gray-50 text-gray-700 font-semibold rounded-lg sm:rounded-xl border border-gray-200 shadow-3xs text-xs transition-colors flex items-center gap-1"
             >
               <span>🔍 Tra từ mới</span>
             </Link>

@@ -4,6 +4,7 @@ export interface JLPTListeningPromptParams {
   chosenContext: string;
   mondaiNumber?: number;
   randomSeed: string;
+  targetCount?: number;
 }
 
 export interface JLPTReadingPromptParams {
@@ -12,6 +13,7 @@ export interface JLPTReadingPromptParams {
   chosenContext: string;
   mondaiNumber?: number;
   randomSeed: string;
+  targetCount?: number;
 }
 
 const DIVERSITY_RULE = (level: string, randomSeed: string) => `
@@ -27,10 +29,55 @@ export function buildJLPTListeningPrompt({
   chosenContext,
   mondaiNumber = 1,
   randomSeed,
+  targetCount,
 }: JLPTListeningPromptParams): string {
   const mNum = Number(mondaiNumber) || 1;
 
   if (mNum === 1) {
+    if (targetCount && targetCount > 1) {
+      return `Bạn là chuyên gia ra đề thi Nghe hiểu JLPT ${level} (聴解).${DIVERSITY_RULE(level, randomSeed)}
+Hãy biên soạn ĐÚNG ${targetCount} BÀI NGHE ĐỘC LẬP CHUẨN XÁC theo cấu trúc bộ đề thi thật 問題 1: 課題理解 (Hiểu nhiệm vụ tiếp theo) cấp độ ${level} thuộc chủ đề "${topic}".
+Bối cảnh chủ đề: "${chosenContext}".
+Đặc trưng cấu trúc Mondai 1:
+Mỗi câu hỏi là một bài nghe độc lập có tình huống, câu hỏi và kịch bản đối thoại riêng biệt giữa 2 nhân vật (Nam và Nữ). Nhân vật bàn về các nhiệm vụ cần làm, có chi tiết gây nhiễu, xác định rõ việc PHẢI LÀM TRƯỚC TIÊN. Đúng 4 lựa chọn trắc nghiệm tiếng Nhật.
+(Mã ngẫu nhiên: ${randomSeed}).
+Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc trong markdown, phải là JSON hợp lệ):
+{
+  "listening": {
+    "id": "lis_${randomSeed}",
+    "level": "${level}",
+    "mondaiNumber": 1,
+    "mondaiName": "問題 1: 課題理解",
+    "mondaiSubtitle": "Hiểu nhiệm vụ hành động tiếp theo (${targetCount} câu chuẩn đề thi)",
+    "title": "${topic}",
+    "questions": [
+      {
+        "id": "q_1",
+        "situation": "Câu bối cảnh tiếng Nhật mở đầu câu 1 (ví dụ: 会社で女の人と男の人が話しています。)",
+        "situation_translation": "Dịch tiếng Việt câu bối cảnh câu 1",
+        "audioScript": "Toàn bộ đoạn hội thoại tiếng Nhật câu 1 (có nhãn 女: ... và 男: ...)",
+        "audioScript_ruby": "Toàn bộ đoạn hội thoại câu 1 có thẻ <ruby> và <rt> Furigana",
+        "vietnameseTranslation": "Bản dịch tiếng Việt kịch bản câu 1",
+        "question": "Câu hỏi tiếng Nhật câu 1 (ví dụ: 男の人はこのあと、まず何をしますか。)",
+        "question_translation": "Dịch tiếng Việt câu hỏi 1",
+        "options": [
+          "Lựa chọn 1 bằng tiếng Nhật",
+          "Lựa chọn 2 bằng tiếng Nhật",
+          "Lựa chọn 3 bằng tiếng Nhật",
+          "Lựa chọn 4 bằng tiếng Nhật"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Giải thích chi tiết tại sao đáp án đúng và phân tích bẫy câu 1"
+      },
+      ... (BẮT BUỘC TẠO ĐỦ CHÍNH XÁC ${targetCount} CÂU HỎI TỪ q_1 ĐẾN q_${targetCount}, MỖI CÂU ĐỀU CÓ situation, audioScript, audioScript_ruby, vietnameseTranslation, question, options, correctAnswer, explanation RIÊNG BIỆT)
+    ],
+    "vocabulary": [
+      { "kanji": "từ vựng trong các bài nghe", "hiragana": "cách đọc", "meaning": "nghĩa tiếng Việt" }
+    ]
+  }
+}`;
+    }
+
     return `Bạn là chuyên gia ra đề thi Nghe hiểu JLPT ${level} (聴解).${DIVERSITY_RULE(level, randomSeed)}
 Hãy biên soạn 1 bài nghe CHUẨN XÁC theo cấu trúc 問題 1: 課題理解 (Hiểu nhiệm vụ tiếp theo) cấp độ ${level} thuộc chủ đề "${topic}".
 Bối cảnh cụ thể: "${chosenContext}".
@@ -73,6 +120,45 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
   }
 
   if (mNum === 2) {
+    if (targetCount && targetCount > 1) {
+      return `Bạn là chuyên gia ra đề thi Nghe hiểu JLPT ${level} (聴解).${DIVERSITY_RULE(level, randomSeed)}
+Hãy biên soạn ĐÚNG ${targetCount} BÀI NGHE ĐỘC LẬP CHUẨN XÁC theo cấu trúc bộ đề thi thật 問題 2: ポイント理解 (Nắm bắt điểm mấu chốt & lý do) cấp độ ${level} thuộc chủ đề "${topic}".
+Bối cảnh chủ đề: "${chosenContext}".
+Đặc trưng cấu trúc Mondai 2:
+Mỗi câu hỏi là một bài nghe độc lập có tình huống, câu hỏi về lý do then chốt và kịch bản hội thoại/độc thoại riêng. Đúng 4 đáp án tiếng Nhật.
+(Mã ngẫu nhiên: ${randomSeed}).
+Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc trong markdown, phải là JSON hợp lệ):
+{
+  "listening": {
+    "id": "lis_${randomSeed}",
+    "level": "${level}",
+    "mondaiNumber": 2,
+    "mondaiName": "問題 2: ポイント理解",
+    "mondaiSubtitle": "Nắm bắt trọng điểm & lý do (${targetCount} câu chuẩn đề thi)",
+    "title": "${topic}",
+    "questions": [
+      {
+        "id": "q_1",
+        "situation": "Câu bối cảnh tiếng Nhật mở đầu câu 1",
+        "situation_translation": "Dịch nghĩa tiếng Việt bối cảnh câu 1",
+        "audioScript": "Toàn bộ bài nghe tiếng Nhật câu 1",
+        "audioScript_ruby": "Toàn bộ bài nghe câu 1 có thẻ <ruby> và <rt>",
+        "vietnameseTranslation": "Bản dịch tiếng Việt câu 1",
+        "question": "Câu hỏi tiếng Nhật về lý do/điểm mấu chốt của câu 1",
+        "question_translation": "Dịch tiếng Việt câu hỏi 1",
+        "options": ["Lựa chọn 1", "Lựa chọn 2", "Lựa chọn 3", "Lựa chọn 4"],
+        "correctAnswer": 1,
+        "explanation": "Giải thích chi tiết dẫn chứng từ bài nghe câu 1"
+      },
+      ... (BẮT BUỘC TẠO ĐỦ CHÍNH XÁC ${targetCount} CÂU HỎI TỪ q_1 ĐẾN q_${targetCount}, MỖI CÂU CÓ situation, audioScript, audioScript_ruby, vietnameseTranslation, question, options, correctAnswer, explanation RIÊNG BIỆT)
+    ],
+    "vocabulary": [
+      { "kanji": "từ vựng", "hiragana": "cách đọc", "meaning": "nghĩa tiếng Việt" }
+    ]
+  }
+}`;
+    }
+
     return `Bạn là chuyên gia ra đề thi Nghe hiểu JLPT ${level} (聴解).${DIVERSITY_RULE(level, randomSeed)}
 Hãy biên soạn 1 bài nghe CHUẨN XÁC theo cấu trúc 問題 2: ポイント理解 (Nắm bắt điểm mấu chốt & lý do) cấp độ ${level} thuộc chủ đề "${topic}".
 Bối cảnh cụ thể: "${chosenContext}".
@@ -109,6 +195,45 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
   }
 
   if (mNum === 3) {
+    if (targetCount && targetCount > 1) {
+      return `Bạn là chuyên gia ra đề thi Nghe hiểu JLPT ${level} (聴解).${DIVERSITY_RULE(level, randomSeed)}
+Hãy biên soạn ĐÚNG ${targetCount} BÀI NGHE ĐỘC LẬP CHUẨN XÁC theo cấu trúc bộ đề thi thật 問題 3: 概要理解 (Hiểu chủ đề bao quát & quan điểm) cấp độ ${level} thuộc chủ đề "${topic}".
+Bối cảnh chủ đề: "${chosenContext}".
+Đặc trưng cấu trúc Mondai 3:
+Mỗi câu hỏi là một bài độc thoại riêng biệt (6-8 câu dài), câu hỏi xuất hiện ở cuối bài. Đúng 4 đáp án tóm lược nội dung/quan điểm.
+(Mã ngẫu nhiên: ${randomSeed}).
+Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc trong markdown, phải là JSON hợp lệ):
+{
+  "listening": {
+    "id": "lis_${randomSeed}",
+    "level": "${level}",
+    "mondaiNumber": 3,
+    "mondaiName": "問題 3: 概要理解",
+    "mondaiSubtitle": "Hiểu chủ đề bao quát & quan điểm (${targetCount} câu chuẩn đề thi)",
+    "title": "${topic}",
+    "questions": [
+      {
+        "id": "q_1",
+        "situation": "Câu bối cảnh tiếng Nhật mở đầu câu 1 (ví dụ: ラジオでアナウンサーが話しています。)",
+        "situation_translation": "Dịch tiếng Việt bối cảnh 1",
+        "audioScript": "Bài nói độc thoại tiếng Nhật chuẩn ${level} câu 1",
+        "audioScript_ruby": "Bài nói câu 1 có thẻ <ruby> và <rt>",
+        "vietnameseTranslation": "Dịch tiếng Việt bài nói câu 1",
+        "question": "Câu hỏi tổng quát ở cuối bài bằng tiếng Nhật câu 1",
+        "question_translation": "Dịch câu hỏi câu 1",
+        "options": ["Lựa chọn 1", "Lựa chọn 2", "Lựa chọn 3", "Lựa chọn 4"],
+        "correctAnswer": 0,
+        "explanation": "Giải thích tóm lược ý đồ người nói và phân tích từng đáp án câu 1"
+      },
+      ... (BẮT BUỘC TẠO ĐỦ CHÍNH XÁC ${targetCount} CÂU HỎI TỪ q_1 ĐẾN q_${targetCount}, MỖI CÂU CÓ situation, audioScript, question, options RIÊNG BIỆT)
+    ],
+    "vocabulary": [
+      { "kanji": "từ vựng", "hiragana": "cách đọc", "meaning": "nghĩa tiếng Việt" }
+    ]
+  }
+}`;
+    }
+
     return `Bạn là chuyên gia ra đề thi Nghe hiểu JLPT ${level} (聴解).${DIVERSITY_RULE(level, randomSeed)}
 Hãy biên soạn 1 bài nghe CHUẨN XÁC theo cấu trúc 問題 3: 概要理解 (Hiểu chủ đề bao quát & quan điểm) cấp độ ${level} thuộc chủ đề "${topic}".
 Bối cảnh cụ thể: "${chosenContext}".
@@ -145,6 +270,51 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
   }
 
   if (mNum === 4) {
+    if (targetCount && targetCount > 1) {
+      return `Bạn là chuyên gia ra đề thi Nghe hiểu JLPT ${level} (聴解).${DIVERSITY_RULE(level, randomSeed)}
+Hãy biên soạn ĐÚNG ${targetCount} CÂU HỎI ĐỘC LẬP CHUẨN XÁC theo cấu trúc bộ đề thi thật 問題 4: 即時応答 (Phản xạ câu ứng đáp tức thì) cấp độ ${level} thuộc chủ đề "${topic}".
+Bối cảnh chủ đề: "${chosenContext}".
+ĐẶC TRƯNG BẮT BUỘC CỦA TỪNG CÂU:
+1. Một câu nói ngắn của đối phương (tiền bối, cấp trên, khách hàng, bạn bè) chứa kính ngữ, cách nói gián tiếp, nhờ vả, hoặc than phiền.
+2. ĐÚNG 3 LỰA CHỌN PHẢN XẠ (CHỈ CÓ 3 ĐÁP ÁN 1, 2, 3 THEO CHUẨN JLPT, KHÔNG ĐƯỢC CÓ ĐÁP ÁN 4!).
+3. 1 đáp án đối đáp khéo léo, tự nhiên, đúng chuẩn mực; 2 đáp án sai là hiểu nhầm ý hoặc dùng sai kính ngữ.
+(Mã ngẫu nhiên: ${randomSeed}).
+Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc trong markdown, phải là JSON hợp lệ):
+{
+  "listening": {
+    "id": "lis_${randomSeed}",
+    "level": "${level}",
+    "mondaiNumber": 4,
+    "mondaiName": "問題 4: 即時応答",
+    "mondaiSubtitle": "Phản xạ câu ứng đáp tức thì (${targetCount} câu chuẩn đề thi - 3 đáp án)",
+    "title": "${topic}",
+    "questions": [
+      {
+        "id": "q_1",
+        "situation": "Tình huống ngắn câu 1, ví dụ: 先輩から声をかけられました。何と答えますか。",
+        "situation_translation": "Dịch tiếng Việt tình huống",
+        "audioScript": "Câu nói tiếng Nhật của người phát ngôn (chỉ 1 câu)",
+        "audioScript_ruby": "Câu nói có thẻ <ruby> và <rt>",
+        "vietnameseTranslation": "Dịch nghĩa câu nói",
+        "question": "最もよい返答を選びなさい。",
+        "question_translation": "Hãy chọn câu trả lời thích hợp nhất.",
+        "options": [
+          "Câu đáp 1 bằng tiếng Nhật",
+          "Câu đáp 2 bằng tiếng Nhật",
+          "Câu đáp 3 bằng tiếng Nhật"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Giải thích chi tiết sắc thái ngữ cảnh và tại sao phương án này chuẩn mực, tại sao 2 phương án kia sai"
+      },
+      ... (BẮT BUỘC TẠO ĐỦ CHÍNH XÁC ${targetCount} CÂU HỎI TỪ q_1 ĐẾN q_${targetCount}, MỖI CÂU ĐỀU CÓ audioScript 1 câu và ĐÚNG 3 options)
+    ],
+    "vocabulary": [
+      { "kanji": "từ vựng/ngữ pháp", "hiragana": "cách đọc", "meaning": "nghĩa tiếng Việt" }
+    ]
+  }
+}`;
+    }
+
     return `Bạn là chuyên gia ra đề thi Nghe hiểu JLPT ${level} (聴解).${DIVERSITY_RULE(level, randomSeed)}
 Hãy biên soạn 1 bài nghe CHUẨN XÁC theo cấu trúc 問題 4: 即時応答 (Phản xạ câu ứng đáp tức thì) cấp độ ${level} thuộc chủ đề "${topic}".
 Bối cảnh cụ thể: "${chosenContext}".
@@ -183,15 +353,14 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
 }`;
   }
 
-  // Mondai 5: 統合理解 (Integrated listening - 2 questions)
+  // Mondai 5: 統合理解 (Integrated listening - 2 or 3 questions)
+  const q5Count = targetCount && targetCount >= 2 ? targetCount : 2;
   return `Bạn là chuyên gia ra đề thi Nghe hiểu JLPT ${level} (聴解).${DIVERSITY_RULE(level, randomSeed)}
 Hãy biên soạn 1 bài nghe CHUẨN XÁC theo cấu trúc 問題 5: 統合理解 (Nghe hiểu tích hợp đối thoại dài) cấp độ ${level} thuộc chủ đề "${topic}".
 Bối cảnh cụ thể: "${chosenContext}".
 ĐẶC TRƯNG:
-1. Hội thoại dài thảo luận giữa 2-3 người (ví dụ: người giới thiệu 4 gói/phương án 1, 2, 3, 4; sau đó 2 nhân vật bàn luận và đưa ra quyết định).
-2. CÓ ĐÚNG 2 CÂU HỎI TRẮC NGHIỆM LIÊN TIẾP (mỗi câu có 4 lựa chọn):
-   - Câu hỏi 1: Lựa chọn của người thứ nhất.
-   - Câu hỏi 2: Quyết định cuối cùng của người thứ hai.
+1. Hội thoại dài thảo luận giữa 2-3 người (ví dụ: người giới thiệu các gói/phương án; sau đó các nhân vật bàn luận và đưa ra quyết định).
+2. CÓ ĐÚNG ${q5Count} CÂU HỎI TRẮC NGHIỆM LIÊN TIẾP (mỗi câu có 4 lựa chọn).
 (Mã ngẫu nhiên: ${randomSeed}).
 Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc trong markdown, phải là JSON hợp lệ):
 {
@@ -200,7 +369,7 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
     "level": "${level}",
     "mondaiNumber": 5,
     "mondaiName": "問題 5: 統合理解",
-    "mondaiSubtitle": "Nghe hiểu tích hợp đối thoại dài (2 câu hỏi)",
+    "mondaiSubtitle": "Nghe hiểu tích hợp đối thoại dài (${q5Count} câu hỏi)",
     "title": "Chủ đề bài nghe tích hợp",
     "situation": "Câu bối cảnh mở đầu bằng tiếng Nhật",
     "situation_translation": "Dịch bối cảnh",
@@ -238,6 +407,7 @@ export function buildJLPTReadingPrompt({
   chosenContext,
   mondaiNumber = 10,
   randomSeed,
+  targetCount,
 }: JLPTReadingPromptParams): string {
   const mNum = Number(mondaiNumber) || 10;
   const isComparison = (level === "N1" && mNum === 11) || (level === "N2" && mNum === 12);
@@ -507,7 +677,45 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
 }`;
   }
 
-  // Default: Short passage (短文 - 1 question)
+  // Default: Short passage (短文)
+  if (targetCount && targetCount > 1) {
+    return `Bạn là chuyên gia ôn luyện đọc hiểu JLPT ${level}.${DIVERSITY_RULE(level, randomSeed)}
+Hãy tạo ĐÚNG ${targetCount} BÀI ĐỌC HIỂU ĐOẠN VĂN NGẮN (短文) ĐỘC LẬP chuẩn JLPT ${level} thuộc chủ đề "${topic}".
+Bối cảnh cụ thể: "${chosenContext}".
+Mỗi bài đọc gồm 1 đoạn văn ngắn khoảng 150-200 chữ và 1 CÂU HỎI TRẮC NGHIỆM ĐỌC HIỂU (tạo đủ ${targetCount} bài từ q_1 đến q_${targetCount}).
+(Mã ngẫu nhiên: ${randomSeed}).
+Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc trong markdown, phải là JSON hợp lệ):
+{
+  "reading": {
+    "mondaiNumber": ${mNum},
+    "mondaiName": "問題 ${mNum}: 短文",
+    "mondaiSubtitle": "Đoạn văn ngắn (短文 - ${targetCount} bài chuẩn đề thi)",
+    "title": "${topic}",
+    "questions": [
+      {
+        "id": "q_1",
+        "passage": "Đoạn văn ngắn tiếng Nhật cho câu 1 không có thẻ HTML",
+        "passage_ruby": "Đoạn văn ngắn 1 bọc thẻ <ruby> và <rt> Furigana",
+        "passage_translation": "Bản dịch nghĩa tiếng Việt của đoạn 1",
+        "question": "Câu hỏi đọc hiểu bằng TIẾNG NHẬT cho đoạn 1",
+        "question_vietnamese": "Dịch nghĩa câu hỏi 1 sang tiếng Việt",
+        "options": [
+          { "id": "opt_1", "text": "lựa chọn 1 bằng tiếng Nhật (đúng)", "isCorrect": true },
+          { "id": "opt_2", "text": "lựa chọn 2 bằng tiếng Nhật (sai)", "isCorrect": false },
+          { "id": "opt_3", "text": "lựa chọn 3 bằng tiếng Nhật (sai)", "isCorrect": false },
+          { "id": "opt_4", "text": "lựa chọn 4 bằng tiếng Nhật (sai)", "isCorrect": false }
+        ],
+        "explanation": "giải thích chi tiết dẫn chứng trong đoạn 1 và lý do đúng sai bằng tiếng Việt"
+      },
+      ... (BẮT BUỘC TẠO ĐỦ CHÍNH XÁC ${targetCount} BÀI ĐỌC NGẮN TỪ q_1 ĐẾN q_${targetCount}, MỖI BÀI CÓ passage, passage_ruby, passage_translation, question, options RIÊNG BIỆT)
+    ],
+    "vocabulary": [
+      { "kanji": "chữ Hán", "hiragana": "cách đọc", "meaning": "nghĩa tiếng Việt" }
+    ]
+  }
+}`;
+  }
+
   return `Bạn là chuyên gia ôn luyện đọc hiểu JLPT ${level}.${DIVERSITY_RULE(level, randomSeed)}
 Hãy tạo 1 bài đọc hiểu Đoạn văn ngắn (短文) chuẩn JLPT ${level} thuộc chủ đề "${topic}".
 Bối cảnh cụ thể: "${chosenContext}".
@@ -551,6 +759,7 @@ export interface JLPTVocabPromptParams {
   chosenContext: string;
   mondaiNumber?: number;
   randomSeed: string;
+  targetCount?: number;
 }
 
 export interface JLPTGrammarPromptParams {
@@ -559,6 +768,7 @@ export interface JLPTGrammarPromptParams {
   chosenContext: string;
   mondaiNumber?: number;
   randomSeed: string;
+  targetCount?: number;
 }
 
 export function buildJLPTVocabPrompt({
@@ -567,8 +777,10 @@ export function buildJLPTVocabPrompt({
   chosenContext,
   mondaiNumber = 1,
   randomSeed,
+  targetCount,
 }: JLPTVocabPromptParams): string {
   const mNum = Number(mondaiNumber) || 1;
+  const count = targetCount && targetCount > 0 ? targetCount : 5;
 
   return `Bạn là chuyên gia biên soạn đề thi JLPT phần 言語知識（文字・語彙） cấp độ ${level}.${DIVERSITY_RULE(level, randomSeed)}
 Hãy tạo 1 bộ câu hỏi Luyện tập Từ vựng & Kanji CHUẨN XÁC theo Mondai ${mNum} JLPT ${level} thuộc chủ đề "${topic}".
@@ -576,7 +788,7 @@ Bối cảnh bài luyện: "${chosenContext}".
 Mã ngẫu nhiên cho đề thi này: ${randomSeed}.
 
 Yêu cầu cấu trúc bài tập BẮT BUỘC:
-- Tạo ĐÚNG 5 CÂU HỎI TRẮC NGHIỆM tiếng Nhật thuộc Mondai ${mNum} (q_1, q_2, q_3, q_4, q_5).
+- Tạo ĐÚNG ${count} CÂU HỎI TRẮC NGHIỆM tiếng Nhật thuộc Mondai ${mNum} (từ q_1 đến q_${count}).
 - Mỗi câu hỏi gồm câu dẫn tiếng Nhật có từ/cụm từ gạch chân (đánh dấu dạng 【từ】), 4 lựa chọn tiếng Nhật, 1 đáp án đúng, dịch tiếng Việt và giải thích đáp án chi tiết.
 
 Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc trong markdown, phải là JSON hợp lệ):
@@ -584,7 +796,7 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
   "jlpt_vocab": {
     "mondaiNumber": ${mNum},
     "mondaiName": "問題 ${mNum}: Từ vựng & Kanji",
-    "mondaiSubtitle": "Luyện tập Từ vựng & Hán tự JLPT ${level}",
+    "mondaiSubtitle": "Luyện tập Từ vựng & Hán tự JLPT ${level} (${count} câu)",
     "questions": [
       {
         "id": "q_1",
@@ -598,54 +810,7 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
         ],
         "explanation": "Giải thích chi tiết nghĩa từ vựng, âm Hán Việt và lý do đúng/sai bằng tiếng Việt"
       },
-      {
-        "id": "q_2",
-        "question": "Câu tiếng Nhật thứ 2 chứa từ gạch chân 【単語】",
-        "question_vietnamese": "Dịch câu 2 sang tiếng Việt",
-        "options": [
-          { "id": "opt_1", "text": "lựa chọn 1", "isCorrect": false },
-          { "id": "opt_2", "text": "lựa chọn 2 (đúng)", "isCorrect": true },
-          { "id": "opt_3", "text": "lựa chọn 3", "isCorrect": false },
-          { "id": "opt_4", "text": "lựa chọn 4", "isCorrect": false }
-        ],
-        "explanation": "Giải thích chi tiết bằng tiếng Việt"
-      },
-      {
-        "id": "q_3",
-        "question": "Câu tiếng Nhật thứ 3 chứa từ gạch chân 【意味】",
-        "question_vietnamese": "Dịch câu 3 sang tiếng Việt",
-        "options": [
-          { "id": "opt_1", "text": "lựa chọn 1", "isCorrect": false },
-          { "id": "opt_2", "text": "lựa chọn 2", "isCorrect": false },
-          { "id": "opt_3", "text": "lựa chọn 3 (đúng)", "isCorrect": true },
-          { "id": "opt_4", "text": "lựa chọn 4", "isCorrect": false }
-        ],
-        "explanation": "Giải thích chi tiết bằng tiếng Việt"
-      },
-      {
-        "id": "q_4",
-        "question": "Câu tiếng Nhật thứ 4 chứa từ gạch chân 【用法】",
-        "question_vietnamese": "Dịch câu 4 sang tiếng Việt",
-        "options": [
-          { "id": "opt_1", "text": "lựa chọn 1", "isCorrect": false },
-          { "id": "opt_2", "text": "lựa chọn 2", "isCorrect": false },
-          { "id": "opt_3", "text": "lựa chọn 3", "isCorrect": false },
-          { "id": "opt_4", "text": "lựa chọn 4 (đúng)", "isCorrect": true }
-        ],
-        "explanation": "Giải thích chi tiết bằng tiếng Việt"
-      },
-      {
-        "id": "q_5",
-        "question": "Câu tiếng Nhật thứ 5 chứa từ gạch chân 【表現】",
-        "question_vietnamese": "Dịch câu 5 sang tiếng Việt",
-        "options": [
-          { "id": "opt_1", "text": "lựa chọn 1 (đúng)", "isCorrect": true },
-          { "id": "opt_2", "text": "lựa chọn 2", "isCorrect": false },
-          { "id": "opt_3", "text": "lựa chọn 3", "isCorrect": false },
-          { "id": "opt_4", "text": "lựa chọn 4", "isCorrect": false }
-        ],
-        "explanation": "Giải thích chi tiết bằng tiếng Việt"
-      }
+      ... (BẮT BUỘC TẠO ĐỦ CHÍNH XÁC ${count} CÂU HỎI TRẮC NGHIỆM TỪ q_1 ĐẾN q_${count})
     ],
     "vocabulary": [
       { "kanji": "chữ Hán", "hiragana": "cách đọc", "meaning": "nghĩa tiếng Việt" }
@@ -660,18 +825,20 @@ export function buildJLPTGrammarPrompt({
   chosenContext,
   mondaiNumber = 1,
   randomSeed,
+  targetCount,
 }: JLPTGrammarPromptParams): string {
   const mNum = Number(mondaiNumber) || 1;
 
-  // Mondai 2: 文の組み立て (Dựng câu dấu sao ★) -> 5 questions
+  // Mondai 2: 文の組み立て (Dựng câu dấu sao ★) -> 5 questions (standard JLPT is 5)
   if (mNum === 2) {
+    const starCount = targetCount && targetCount > 0 ? targetCount : 5;
     return `Bạn là chuyên gia biên soạn đề thi JLPT phần 言語知識（文法） cấp độ ${level}.${DIVERSITY_RULE(level, randomSeed)}
 Hãy tạo 1 bộ bài tập DỰNG CÂU DẤU SAO (文の組み立て) CHUẨN XÁC theo Mondai 2 (Dựng câu dấu sao ★) JLPT ${level} thuộc chủ đề "${topic}".
 Bối cảnh bài luyện: "${chosenContext}".
 Mã ngẫu nhiên cho đề thi này: ${randomSeed}.
 
 Đặc trưng cấu trúc Dựng câu dấu sao ★:
-- Tạo ĐÚNG 5 CÂU HỎI TRẮC NGHIỆM (q_1, q_2, q_3, q_4, q_5).
+- Tạo ĐÚNG ${starCount} CÂU HỎI TRẮC NGHIỆM (từ q_1 đến q_${starCount}).
 - Mỗi câu gồm một câu tiếng Nhật có 4 vị trí xáo trộn: __ __ ★ __
 - Cung cấp 4 cụm từ xáo trộn (options).
 - Xác định cụm từ đúng phải nằm ở vị trí dấu sao ★.
@@ -682,7 +849,7 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
   "jlpt_grammar": {
     "mondaiNumber": ${mNum},
     "mondaiName": "問題 2: 文の組み立て (Dựng câu dấu sao ★)",
-    "mondaiSubtitle": "Sắp xếp 4 cụm từ & tìm vị trí dấu ★",
+    "mondaiSubtitle": "Sắp xếp 4 cụm từ & tìm vị trí dấu ★ (${starCount} câu)",
     "questions": [
       {
         "id": "q_1",
@@ -697,58 +864,7 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
         ],
         "explanation": "Giải thích chi tiết cấu trúc ngữ pháp và thứ tự sắp xếp câu bằng tiếng Việt"
       },
-      {
-        "id": "q_2",
-        "question": "Phần đầu câu __ ★ __ __ phần cuối câu.",
-        "question_vietnamese": "Dịch hoàn chỉnh câu sang tiếng Việt",
-        "fullSentence": "Câu tiếng Nhật hoàn chỉnh sau khi ghép đúng thứ tự",
-        "options": [
-          { "id": "opt_1", "text": "cụm từ 1 (nằm ở vị trí ★)", "isCorrect": true },
-          { "id": "opt_2", "text": "cụm từ 2", "isCorrect": false },
-          { "id": "opt_3", "text": "cụm từ 3", "isCorrect": false },
-          { "id": "opt_4", "text": "cụm từ 4", "isCorrect": false }
-        ],
-        "explanation": "Giải thích chi tiết cấu trúc ngữ pháp bằng tiếng Việt"
-      },
-      {
-        "id": "q_3",
-        "question": "Phần đầu câu __ __ __ ★ phần cuối câu.",
-        "question_vietnamese": "Dịch hoàn chỉnh câu sang tiếng Việt",
-        "fullSentence": "Câu tiếng Nhật hoàn chỉnh sau khi ghép đúng thứ tự",
-        "options": [
-          { "id": "opt_1", "text": "cụm từ 1", "isCorrect": false },
-          { "id": "opt_2", "text": "cụm từ 2", "isCorrect": false },
-          { "id": "opt_3", "text": "cụm từ 3 (nằm ở vị trí ★)", "isCorrect": true },
-          { "id": "opt_4", "text": "cụm từ 4", "isCorrect": false }
-        ],
-        "explanation": "Giải thích chi tiết cấu trúc ngữ pháp bằng tiếng Việt"
-      },
-      {
-        "id": "q_4",
-        "question": "Phần đầu câu ★ __ __ __ phần cuối câu.",
-        "question_vietnamese": "Dịch hoàn chỉnh câu sang tiếng Việt",
-        "fullSentence": "Câu tiếng Nhật hoàn chỉnh sau khi ghép đúng thứ tự",
-        "options": [
-          { "id": "opt_1", "text": "cụm từ 1", "isCorrect": false },
-          { "id": "opt_2", "text": "cụm từ 2", "isCorrect": false },
-          { "id": "opt_3", "text": "cụm từ 3", "isCorrect": false },
-          { "id": "opt_4", "text": "cụm từ 4 (nằm ở vị trí ★)", "isCorrect": true }
-        ],
-        "explanation": "Giải thích chi tiết cấu trúc ngữ pháp bằng tiếng Việt"
-      },
-      {
-        "id": "q_5",
-        "question": "Phần đầu câu __ ★ __ __ phần cuối câu.",
-        "question_vietnamese": "Dịch hoàn chỉnh câu sang tiếng Việt",
-        "fullSentence": "Câu tiếng Nhật hoàn chỉnh sau khi ghép đúng thứ tự",
-        "options": [
-          { "id": "opt_1", "text": "cụm từ 1", "isCorrect": false },
-          { "id": "opt_2", "text": "cụm từ 2 (nằm ở vị trí ★)", "isCorrect": true },
-          { "id": "opt_3", "text": "cụm từ 3", "isCorrect": false },
-          { "id": "opt_4", "text": "cụm từ 4", "isCorrect": false }
-        ],
-        "explanation": "Giải thích chi tiết cấu trúc ngữ pháp bằng tiếng Việt"
-      }
+      ... (BẮT BUỘC TẠO ĐỦ CHÍNH XÁC ${starCount} CÂU HỎI TỪ q_1 ĐẾN q_${starCount})
     ],
     "vocabulary": [
       { "kanji": "chữ Hán", "hiragana": "cách đọc", "meaning": "nghĩa tiếng Việt" }
@@ -757,16 +873,17 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
 }`;
   }
 
-  // Mondai 3: 文章の文法 (Ngữ pháp đoạn văn) -> 4 questions
+  // Mondai 3: 文章の文法 (Ngữ pháp đoạn văn) -> 4-5 questions
   if (mNum === 3) {
+    const passageQCount = targetCount && targetCount > 0 ? targetCount : (level === "N4" || level === "N5" ? 5 : 5);
     return `Bạn là chuyên gia biên soạn đề thi JLPT phần 言語知識（文法） cấp độ ${level}.${DIVERSITY_RULE(level, randomSeed)}
 Hãy tạo 1 bài tập NGỮ PHÁP ĐOẠN VĂN (文章の文法) CHUẨN XÁC theo Mondai 3 JLPT ${level} thuộc chủ đề "${topic}".
 Bối cảnh bài luyện: "${chosenContext}".
 Mã ngẫu nhiên cho đề thi này: ${randomSeed}.
 
 Đặc trưng cấu trúc Ngữ pháp đoạn văn:
-- Một đoạn văn tiếng Nhật hoàn chỉnh khoảng 300-400 chữ chứa 4 vị trí trống đánh số [1], [2], [3], [4].
-- Tạo ĐÚNG 4 CÂU HỎI TRẮC NGHIỆM (q_1 tương ứng vị trí [1], q_2 tương ứng vị trí [2], q_3 tương ứng vị trí [3], q_4 tương ứng vị trí [4]).
+- Một đoạn văn tiếng Nhật hoàn chỉnh khoảng 350-500 chữ chứa ${passageQCount} vị trí trống đánh số [1] đến [${passageQCount}].
+- Tạo ĐÚNG ${passageQCount} CÂU HỎI TRẮC NGHIỆM (q_1 tương ứng vị trí [1], ..., q_${passageQCount} tương ứng vị trí [${passageQCount}]).
 - Mỗi câu hỏi có 4 lựa chọn liên từ, hình thức ngữ pháp hoặc câu kết đoạn phù hợp bối cảnh.
 
 Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc trong markdown, phải là JSON hợp lệ):
@@ -774,8 +891,8 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
   "jlpt_grammar": {
     "mondaiNumber": ${mNum},
     "mondaiName": "問題 3: 文章の文法 (Ngữ pháp đoạn văn)",
-    "mondaiSubtitle": "Chọn liên từ & mẫu ngữ pháp phù hợp cho đoạn văn",
-    "passage": "Toàn bộ đoạn văn tiếng Nhật chứa 4 ô trống [1], [2], [3], [4]",
+    "mondaiSubtitle": "Chọn liên từ & mẫu ngữ pháp phù hợp cho đoạn văn (${passageQCount} câu)",
+    "passage": "Toàn bộ đoạn văn tiếng Nhật chứa ${passageQCount} ô trống [1] đến [${passageQCount}]",
     "passage_translation": "Bản dịch tiếng Việt toàn bộ đoạn văn",
     "questions": [
       {
@@ -790,42 +907,7 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
         ],
         "explanation": "Giải thích chi tiết lý do chọn ngữ pháp/liên từ này bằng tiếng Việt"
       },
-      {
-        "id": "q_2",
-        "question": "Điền vào vị trí [2] trong đoạn văn",
-        "question_vietnamese": "Chọn từ/mẫu ngữ pháp thích hợp điền vào vị trí [2]",
-        "options": [
-          { "id": "opt_1", "text": "lựa chọn 1", "isCorrect": false },
-          { "id": "opt_2", "text": "lựa chọn 2 (đúng)", "isCorrect": true },
-          { "id": "opt_3", "text": "lựa chọn 3", "isCorrect": false },
-          { "id": "opt_4", "text": "lựa chọn 4", "isCorrect": false }
-        ],
-        "explanation": "Giải thích chi tiết bằng tiếng Việt"
-      },
-      {
-        "id": "q_3",
-        "question": "Điền vào vị trí [3] trong đoạn văn",
-        "question_vietnamese": "Chọn từ/mẫu ngữ pháp thích hợp điền vào vị trí [3]",
-        "options": [
-          { "id": "opt_1", "text": "lựa chọn 1", "isCorrect": false },
-          { "id": "opt_2", "text": "lựa chọn 2", "isCorrect": false },
-          { "id": "opt_3", "text": "lựa chọn 3 (đúng)", "isCorrect": true },
-          { "id": "opt_4", "text": "lựa chọn 4", "isCorrect": false }
-        ],
-        "explanation": "Giải thích chi tiết bằng tiếng Việt"
-      },
-      {
-        "id": "q_4",
-        "question": "Điền vào vị trí [4] trong đoạn văn",
-        "question_vietnamese": "Chọn từ/mẫu ngữ pháp thích hợp điền vào vị trí [4]",
-        "options": [
-          { "id": "opt_1", "text": "lựa chọn 1", "isCorrect": false },
-          { "id": "opt_2", "text": "lựa chọn 2", "isCorrect": false },
-          { "id": "opt_3", "text": "lựa chọn 3", "isCorrect": false },
-          { "id": "opt_4", "text": "lựa chọn 4 (đúng)", "isCorrect": true }
-        ],
-        "explanation": "Giải thích chi tiết bằng tiếng Việt"
-      }
+      ... (BẮT BUỘC TẠO ĐỦ CHÍNH XÁC ${passageQCount} CÂU HỎI TỪ q_1 ĐẾN q_${passageQCount})
     ],
     "vocabulary": [
       { "kanji": "chữ Hán", "hiragana": "cách đọc", "meaning": "nghĩa tiếng Việt" }
@@ -834,14 +916,15 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
 }`;
   }
 
-  // Mondai 1 (Default): 文法形式の判断 -> 5 questions
+  // Mondai 1 (Default): 文法形式の判断
+  const m1Count = targetCount && targetCount > 0 ? targetCount : 5;
   return `Bạn là chuyên gia biên soạn đề thi JLPT phần 言語知識（文法） cấp độ ${level}.${DIVERSITY_RULE(level, randomSeed)}
 Hãy tạo 1 bộ bài tập NGỮ PHÁP JLPT CHUẨN XÁC theo Mondai ${mNum} cấp độ ${level} thuộc chủ đề "${topic}".
 Bối cảnh bài luyện: "${chosenContext}".
 Mã ngẫu nhiên cho đề thi này: ${randomSeed}.
 
 Yêu cầu cấu trúc bài tập BẮT BUỘC:
-- Tạo ĐÚNG 5 CÂU HỎI TRẮC NGHIỆM ngữ pháp tiếng Nhật (q_1, q_2, q_3, q_4, q_5).
+- Tạo ĐÚNG ${m1Count} CÂU HỎI TRẮC NGHIỆM ngữ pháp tiếng Nhật (từ q_1 đến q_${m1Count}).
 - Mỗi câu gồm câu dẫn chứa vị trí trống ( ... ), 4 lựa chọn ngữ pháp tiếng Nhật, 1 đáp án đúng và giải thích ngữ pháp chi tiết.
 
 Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc trong markdown, phải là JSON hợp lệ):
@@ -849,7 +932,7 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
   "jlpt_grammar": {
     "mondaiNumber": ${mNum},
     "mondaiName": "問題 ${mNum}: 文法形式の判断",
-    "mondaiSubtitle": "Lựa chọn mẫu ngữ pháp đúng JLPT ${level}",
+    "mondaiSubtitle": "Lựa chọn mẫu ngữ pháp đúng JLPT ${level} (${m1Count} câu)",
     "questions": [
       {
         "id": "q_1",
@@ -863,54 +946,7 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
         ],
         "explanation": "Giải thích chi tiết ý nghĩa mẫu ngữ pháp, cách kết hợp từ và lý do chọn đáp án bằng tiếng Việt"
       },
-      {
-        "id": "q_2",
-        "question": "Câu tiếng Nhật thứ 2 chứa vị trí trống ( ... )",
-        "question_vietnamese": "Dịch nghĩa câu 2 sang tiếng Việt",
-        "options": [
-          { "id": "opt_1", "text": "mẫu ngữ pháp 1", "isCorrect": false },
-          { "id": "opt_2", "text": "mẫu ngữ pháp 2 (đúng)", "isCorrect": true },
-          { "id": "opt_3", "text": "mẫu ngữ pháp 3", "isCorrect": false },
-          { "id": "opt_4", "text": "mẫu ngữ pháp 4", "isCorrect": false }
-        ],
-        "explanation": "Giải thích chi tiết bằng tiếng Việt"
-      },
-      {
-        "id": "q_3",
-        "question": "Câu tiếng Nhật thứ 3 chứa vị trí trống ( ... )",
-        "question_vietnamese": "Dịch nghĩa câu 3 sang tiếng Việt",
-        "options": [
-          { "id": "opt_1", "text": "mẫu ngữ pháp 1", "isCorrect": false },
-          { "id": "opt_2", "text": "mẫu ngữ pháp 2", "isCorrect": false },
-          { "id": "opt_3", "text": "mẫu ngữ pháp 3 (đúng)", "isCorrect": true },
-          { "id": "opt_4", "text": "mẫu ngữ pháp 4", "isCorrect": false }
-        ],
-        "explanation": "Giải thích chi tiết bằng tiếng Việt"
-      },
-      {
-        "id": "q_4",
-        "question": "Câu tiếng Nhật thứ 4 chứa vị trí trống ( ... )",
-        "question_vietnamese": "Dịch nghĩa câu 4 sang tiếng Việt",
-        "options": [
-          { "id": "opt_1", "text": "mẫu ngữ pháp 1", "isCorrect": false },
-          { "id": "opt_2", "text": "mẫu ngữ pháp 2", "isCorrect": false },
-          { "id": "opt_3", "text": "mẫu ngữ pháp 3", "isCorrect": false },
-          { "id": "opt_4", "text": "mẫu ngữ pháp 4 (đúng)", "isCorrect": true }
-        ],
-        "explanation": "Giải thích chi tiết bằng tiếng Việt"
-      },
-      {
-        "id": "q_5",
-        "question": "Câu tiếng Nhật thứ 5 chứa vị trí trống ( ... )",
-        "question_vietnamese": "Dịch nghĩa câu 5 sang tiếng Việt",
-        "options": [
-          { "id": "opt_1", "text": "mẫu ngữ pháp 1 (đúng)", "isCorrect": true },
-          { "id": "opt_2", "text": "mẫu ngữ pháp 2", "isCorrect": false },
-          { "id": "opt_3", "text": "mẫu ngữ pháp 3", "isCorrect": false },
-          { "id": "opt_4", "text": "mẫu ngữ pháp 4", "isCorrect": false }
-        ],
-        "explanation": "Giải thích chi tiết bằng tiếng Việt"
-      }
+      ... (BẮT BUỘC TẠO ĐỦ CHÍNH XÁC ${m1Count} CÂU HỎI TRẮC NGHIỆM TỪ q_1 ĐẾN q_${m1Count})
     ],
     "vocabulary": [
       { "kanji": "chữ Hán", "hiragana": "cách đọc", "meaning": "nghĩa tiếng Việt" }

@@ -621,19 +621,19 @@ function ExamTakingPageContent({ params }: Props) {
                 className="space-y-3 sm:space-y-4 scroll-mt-28"
               >
                 {/* Major Section Banner Header */}
-                <div className="bg-gradient-to-r from-indigo-900 via-indigo-800 to-purple-900 rounded-2xl p-3.5 sm:p-4 text-white shadow-md flex items-center justify-between">
+                <div className="bg-white rounded-2xl p-3.5 sm:p-4 text-gray-900 shadow-2xs border border-gray-200/80 flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <span className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center text-xl">
+                    <span className="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-xl">
                       {major.icon}
                     </span>
                     <div>
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-200">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-600">
                         {major.japaneseName}
                       </span>
-                      <h2 className="text-base sm:text-lg font-black">{major.name}</h2>
+                      <h2 className="text-base sm:text-lg font-black text-gray-900">{major.name}</h2>
                     </div>
                   </div>
-                  <span className="text-xs font-bold bg-white/15 px-2.5 py-1 rounded-full border border-white/20">
+                  <span className="text-xs font-bold bg-indigo-50 text-indigo-700 px-2.5 py-1 rounded-full border border-indigo-200/80">
                     {major.mondais.length} Mondai
                   </span>
                 </div>

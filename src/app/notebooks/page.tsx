@@ -245,58 +245,74 @@ export default function NotebooksPage() {
 
   return (
     <AuthGuard featureName="Sổ Tay Từ Vựng Cá Nhân">
-      <div className="w-full max-w-[1600px] mx-auto px-3.5 sm:px-6 lg:px-8 py-4 sm:py-6 min-h-screen pb-28 space-y-6">
+      <div className="w-full max-w-[1600px] mx-auto px-3 sm:px-4 lg:px-6 py-3 sm:py-4 space-y-4 sm:space-y-5 pb-8 md:pb-4">
         {/* Breadcrumb Bar */}
         <BreadcrumbNav items={[{ label: "Sổ tay từ vựng", icon: "📓" }]} />
 
-        {/* Header Banner */}
-        <div className={`rounded-2xl sm:rounded-3xl p-4 sm:p-5 lg:p-6 text-white shadow-lg transition-all duration-300 bg-gradient-to-r ${
+        {/* Header Banner (Compact Minimalist - Light Theme matching background) */}
+        <div className={`rounded-xl sm:rounded-2xl px-3.5 py-2.5 sm:px-5 sm:py-3 shadow-2xs border transition-all duration-300 bg-gradient-to-r ${
           activeLanguage.code === "en"
-            ? "from-indigo-900 via-purple-900 to-blue-900"
+            ? "from-white via-blue-50/40 to-indigo-50/30 border-blue-100/80"
             : activeLanguage.code === "de"
-            ? "from-amber-950 via-red-950 to-stone-900"
-            : "from-teal-800 via-indigo-900 to-purple-800"
+            ? "from-white via-amber-50/40 to-orange-50/30 border-amber-100/80"
+            : activeLanguage.code === "ko"
+            ? "from-white via-rose-50/40 to-pink-50/30 border-rose-100/80"
+            : activeLanguage.code === "zh"
+            ? "from-white via-red-50/40 to-amber-50/30 border-red-100/80"
+            : "from-white via-teal-50/40 to-indigo-50/30 border-teal-100/80"
         }`}>
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-bold tracking-widest uppercase mb-2 inline-block">
-              {activeLanguage.name} ({activeLanguage.code.toUpperCase()})
-            </span>
-            <h1 className="text-2xl font-bold">Sổ Tay & Bộ Sưu Tập Từ Vựng</h1>
-            <p className="text-xs text-indigo-100 mt-1">
-              Tạo và quản lý các nhóm từ vựng cá nhân, xuất/nhập file JSON dễ dàng
-            </p>
-          </div>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <span className={`px-2 py-0.5 rounded-md text-[9px] font-bold tracking-wider uppercase shrink-0 border ${
+                activeLanguage.code === "en"
+                  ? "bg-blue-50 text-blue-700 border-blue-200/80"
+                  : activeLanguage.code === "de"
+                  ? "bg-amber-50 text-amber-800 border-amber-200/80"
+                  : activeLanguage.code === "ko"
+                  ? "bg-rose-50 text-rose-700 border-rose-200/80"
+                  : activeLanguage.code === "zh"
+                  ? "bg-red-50 text-red-700 border-red-200/80"
+                  : "bg-teal-50 text-teal-700 border-teal-200/80"
+              }`}>
+                {activeLanguage.name} ({activeLanguage.code.toUpperCase()})
+              </span>
+              <div className="min-w-0">
+                <h1 className="text-sm sm:text-base font-bold text-gray-900 truncate">Sổ Tay & Bộ Sưu Tập Từ Vựng</h1>
+                <p className="text-[11px] text-gray-500 truncate hidden md:block">
+                  Quản lý nhóm từ vựng cá nhân, xuất/nhập JSON dễ dàng
+                </p>
+              </div>
+            </div>
 
-          <div className="flex flex-wrap gap-2">
-            {hasVocabulary && (
-              <Link
-                href="/flashcard/all-notebooks"
-                className="px-4 py-2.5 bg-white text-indigo-700 font-bold rounded-2xl text-xs hover:bg-purple-50 transition-colors shadow-sm flex items-center gap-1.5"
-              >
-                <span>🎴 Flashcard tất cả</span>
-              </Link>
-            )}
-            {user?.isAdmin && notebooks.length > 0 && (
-              <button
-                onClick={handleExportAll}
-                className="px-4 py-2.5 bg-white/10 hover:bg-white/20 backdrop-blur-md text-white font-bold rounded-2xl border border-white/20 text-xs transition-colors flex items-center gap-1.5"
-              >
-                <span>💾 Export tất cả</span>
-              </button>
-            )}
-            {user?.isAdmin && (
-              <button
-                onClick={() => fileRef.current?.click()}
-                className="px-4 py-2.5 bg-white/10 hover:bg-white/20 backdrop-blur-md text-white font-bold rounded-2xl border border-white/20 text-xs transition-colors flex items-center gap-1.5"
-              >
-                <span>📥 Import sổ tay</span>
-              </button>
-            )}
-            <input ref={fileRef} type="file" accept=".json" className="sr-only" onChange={handleImportFile} />
+            <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap shrink-0">
+              {hasVocabulary && (
+                <Link
+                  href="/flashcard/all-notebooks"
+                  className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg sm:rounded-xl text-xs transition-colors shadow-xs flex items-center gap-1"
+                >
+                  <span>🎴 Flashcard tất cả</span>
+                </Link>
+              )}
+              {user?.isAdmin && notebooks.length > 0 && (
+                <button
+                  onClick={handleExportAll}
+                  className="px-3 py-1.5 bg-white hover:bg-gray-50 text-gray-700 font-bold rounded-lg sm:rounded-xl border border-gray-200 shadow-3xs text-xs transition-colors flex items-center gap-1 cursor-pointer"
+                >
+                  <span>💾 Export</span>
+                </button>
+              )}
+              {user?.isAdmin && (
+                <button
+                  onClick={() => fileRef.current?.click()}
+                  className="px-3 py-1.5 bg-white/10 hover:bg-white/20 backdrop-blur-md text-white font-bold rounded-lg sm:rounded-xl border border-white/20 text-xs transition-colors flex items-center gap-1 cursor-pointer"
+                >
+                  <span>📥 Import</span>
+                </button>
+              )}
+              <input ref={fileRef} type="file" accept=".json" className="sr-only" onChange={handleImportFile} />
+            </div>
           </div>
         </div>
-      </div>
 
       {/* Messages */}
       {importError && (

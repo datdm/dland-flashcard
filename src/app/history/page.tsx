@@ -758,28 +758,42 @@ function getItemLevel(c: { id: string; name: string; level?: string }): string {
         {/* Breadcrumb Bar */}
         <BreadcrumbNav items={[{ label: "Lịch sử & Tiến độ", icon: "📊" }]} />
 
-        {/* Header Banner */}
-        <div className={`rounded-2xl p-4 sm:p-5 lg:p-6 text-white shadow-md transition-all duration-300 bg-gradient-to-r ${
-        activeLanguage.code === "en"
-          ? "from-indigo-900 via-purple-900 to-blue-900"
-          : activeLanguage.code === "de"
-          ? "from-amber-950 via-red-950 to-stone-900"
-          : "from-teal-800 via-indigo-900 to-purple-800"
-      }`}>
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div>
-            <div className="flex items-center gap-2 flex-wrap mb-1">
-              <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-bold tracking-widest uppercase">
+        {/* Header Banner (Compact Minimalist - Light Theme matching background) */}
+        <div className={`rounded-xl sm:rounded-2xl px-3.5 py-2.5 sm:px-5 sm:py-3 shadow-2xs border transition-all duration-300 bg-gradient-to-r ${
+          activeLanguage.code === "en"
+            ? "from-white via-blue-50/40 to-indigo-50/30 border-blue-100/80"
+            : activeLanguage.code === "de"
+            ? "from-white via-amber-50/40 to-orange-50/30 border-amber-100/80"
+            : activeLanguage.code === "ko"
+            ? "from-white via-rose-50/40 to-pink-50/30 border-rose-100/80"
+            : activeLanguage.code === "zh"
+            ? "from-white via-red-50/40 to-amber-50/30 border-red-100/80"
+            : "from-white via-teal-50/40 to-indigo-50/30 border-teal-100/80"
+        }`}>
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <span className={`px-2 py-0.5 rounded-md text-[9px] font-bold tracking-wider uppercase shrink-0 border ${
+                activeLanguage.code === "en"
+                  ? "bg-blue-50 text-blue-700 border-blue-200/80"
+                  : activeLanguage.code === "de"
+                  ? "bg-amber-50 text-amber-800 border-amber-200/80"
+                  : activeLanguage.code === "ko"
+                  ? "bg-rose-50 text-rose-700 border-rose-200/80"
+                  : activeLanguage.code === "zh"
+                  ? "bg-red-50 text-red-700 border-red-200/80"
+                  : "bg-teal-50 text-teal-700 border-teal-200/80"
+              }`}>
                 {activeLanguage.name} ({activeLanguage.code.toUpperCase()})
               </span>
+              <div className="min-w-0">
+                <h1 className="text-sm sm:text-base font-bold text-gray-900 truncate">Lịch Sử & Tiến Độ Học Tập</h1>
+                <p className="text-[11px] text-gray-500 truncate hidden sm:block">
+                  Theo dõi tiến độ hoàn thành giáo trình, từ vựng và ngữ pháp cho {activeLanguage.name}
+                </p>
+              </div>
             </div>
-            <h1 className="text-xl sm:text-2xl font-bold mt-1.5">Lịch Sử & Tiến Độ Học Tập</h1>
-            <p className="text-xs text-indigo-100 mt-1">
-              Theo dõi tiến độ hoàn thành giáo trình, từ vựng và ngữ pháp cho {activeLanguage.name}
-            </p>
           </div>
         </div>
-      </div>
 
       {/* Grid Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">

@@ -87,59 +87,73 @@ export default function ExamHubPage() {
         {/* Breadcrumb Bar */}
         <BreadcrumbNav items={[{ label: "Luyện Thi JLPT", icon: "📝" }]} />
 
-        {/* Header Hero Banner */}
-        <div className={`rounded-2xl p-4 sm:p-5 lg:p-6 text-white shadow-md relative overflow-hidden transition-all duration-300 bg-gradient-to-r ${
+        {/* Header Hero Banner (Compact Minimalist - Light Theme matching background) */}
+        <div className={`rounded-xl sm:rounded-2xl px-3.5 py-2.5 sm:px-5 sm:py-3 shadow-2xs border relative overflow-hidden transition-all duration-300 bg-gradient-to-r ${
           activeLanguage.code === "en"
-            ? "from-indigo-900 via-purple-900 to-blue-900"
+            ? "from-white via-blue-50/40 to-indigo-50/30 border-blue-100/80"
             : activeLanguage.code === "de"
-            ? "from-amber-950 via-red-950 to-stone-900"
-            : "from-teal-800 via-indigo-900 to-purple-800"
+            ? "from-white via-amber-50/40 to-orange-50/30 border-amber-100/80"
+            : activeLanguage.code === "ko"
+            ? "from-white via-rose-50/40 to-pink-50/30 border-rose-100/80"
+            : activeLanguage.code === "zh"
+            ? "from-white via-red-50/40 to-amber-50/30 border-red-100/80"
+            : "from-white via-teal-50/40 to-indigo-50/30 border-teal-100/80"
         }`}>
-          <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div>
-              <div className="flex items-center gap-2 flex-wrap mb-1">
-                <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-bold tracking-widest uppercase">
-                  {activeLanguage.name} ({activeLanguage.code.toUpperCase()})
-                </span>
-                <span className="px-3 py-1 bg-amber-400/30 text-amber-200 border border-amber-300/30 backdrop-blur-md rounded-full text-xs font-bold">
-                  Kỳ thi N1 ➔ N5
-                </span>
+          <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-2.5">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <span className={`px-2 py-0.5 rounded-md text-[9px] font-bold tracking-wider uppercase shrink-0 border ${
+                activeLanguage.code === "en"
+                  ? "bg-blue-50 text-blue-700 border-blue-200/80"
+                  : activeLanguage.code === "de"
+                  ? "bg-amber-50 text-amber-800 border-amber-200/80"
+                  : activeLanguage.code === "ko"
+                  ? "bg-rose-50 text-rose-700 border-rose-200/80"
+                  : activeLanguage.code === "zh"
+                  ? "bg-red-50 text-red-700 border-red-200/80"
+                  : "bg-teal-50 text-teal-700 border-teal-200/80"
+              }`}>
+                {activeLanguage.name} ({activeLanguage.code.toUpperCase()})
+              </span>
+              <span className="px-2 py-0.5 bg-amber-50 text-amber-800 border border-amber-200/80 rounded-md text-[10px] font-bold shrink-0 hidden sm:inline">
+                N1 ➔ N5
+              </span>
+              <div className="min-w-0">
+                <h1 className="text-sm sm:text-base font-black text-gray-900 truncate">
+                  Luyện Thi & Thi Thử JLPT Trực Tuyến
+                </h1>
+                <p className="text-[11px] text-gray-500 truncate hidden lg:block">
+                  Thi thử thời gian thực, đề chính thức các năm, chấm điểm & giải thích chi tiết
+                </p>
               </div>
-              <h1 className="text-xl sm:text-2xl font-black mt-1.5">
-                Luyện Thi & Thi Thử JLPT Trực Tuyến
-              </h1>
-              <p className="text-xs sm:text-sm text-indigo-100/90 mt-1 max-w-2xl leading-relaxed">
-                Hệ thống thi thử mô phỏng thời gian thực với đề thi chính thức các năm (07/2025, 12/2024...), chấm điểm tự động, giải thích chi tiết đáp án và tra cứu từ vựng trực tiếp.
-              </p>
             </div>
 
-            <div className="flex items-center gap-2 flex-wrap self-start md:self-auto shrink-0">
+            <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap shrink-0">
               <button
                 type="button"
                 onClick={() => setHistoryModalConfig({ isOpen: true, exam: null })}
-                className="px-3.5 py-2 rounded-xl bg-amber-400/30 hover:bg-amber-400/40 backdrop-blur-md text-amber-100 font-extrabold text-xs border border-amber-300/30 transition-all flex items-center gap-1.5 cursor-pointer active:scale-98"
+                className="px-3 py-1.5 rounded-lg sm:rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 font-bold text-xs border border-amber-200/80 transition-all flex items-center gap-1 cursor-pointer active:scale-98 shadow-3xs"
               >
                 <span>📜</span>
-                <span>Lịch sử thi ({results.length})</span>
+                <span>Lịch sử ({results.length})</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => setShowStructureModal(true)}
-                className="px-3.5 py-2 rounded-xl bg-white/20 hover:bg-white/30 backdrop-blur-md text-white font-extrabold text-xs border border-white/30 transition-all flex items-center gap-1.5 cursor-pointer active:scale-98"
+                className="px-3 py-1.5 rounded-lg sm:rounded-xl bg-white hover:bg-gray-50 text-gray-700 font-bold text-xs border border-gray-200 shadow-3xs transition-all flex items-center gap-1 cursor-pointer active:scale-98"
               >
                 <span>📋</span>
-                <span>Cấu trúc đề thi N1-N5</span>
+                <span>Cấu trúc đề</span>
               </button>
 
               {user?.isAdmin && (
                 <button
                   type="button"
                   onClick={() => setShowUploadModal(true)}
-                  className="px-3.5 py-2 rounded-xl bg-white text-indigo-950 font-extrabold text-xs shadow-md hover:bg-gray-100 transition-all flex items-center gap-1.5 cursor-pointer active:scale-98"
+                  className="px-3 py-1.5 rounded-lg sm:rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-xs transition-all flex items-center gap-1 cursor-pointer active:scale-98"
                 >
                   <span>📥</span>
-                  <span>Nhập đề JSON</span>
+                  <span>Nhập đề</span>
                 </button>
               )}
             </div>
