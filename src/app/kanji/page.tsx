@@ -101,14 +101,30 @@ export default function KanjiHubPage() {
 
         <button
           type="button"
-          onClick={() => setShowDrawModal(true)}
-          className="py-3 px-4 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs transition-all flex items-center gap-1.5 cursor-pointer shadow-md shadow-indigo-200 shrink-0 active:scale-98"
-          title="Vẽ Kanji để tra từ"
+          onClick={() => setShowDrawModal((prev) => !prev)}
+          className={`py-3 px-4 rounded-2xl ${
+            showDrawModal
+              ? "bg-indigo-900 text-white ring-4 ring-indigo-200"
+              : "bg-indigo-600 hover:bg-indigo-700 text-white"
+          } font-extrabold text-xs transition-all flex items-center gap-1.5 cursor-pointer shadow-md shadow-indigo-200 shrink-0 active:scale-98`}
+          title={showDrawModal ? "Đóng bảng vẽ Kanji" : "Vẽ Kanji để tra từ"}
         >
-          <span>🖌️</span>
-          <span>Vẽ Kanji</span>
+          <span>{showDrawModal ? "✕" : "🖌️"}</span>
+          <span>{showDrawModal ? "Đóng vẽ" : "Vẽ Kanji"}</span>
         </button>
       </div>
+
+      {/* Inline Kanji Handwriting Pad */}
+      {showDrawModal && (
+        <KanjiDrawModal
+          isOpen={showDrawModal}
+          onClose={() => setShowDrawModal(false)}
+          variant="inline"
+          onSelectKanji={(kanji) => {
+            setSearchQuery((prev) => (prev ? `${prev}${kanji}` : kanji));
+          }}
+        />
+      )}
 
       {/* Kanji Cards Grid */}
       {loading ? (
@@ -124,15 +140,6 @@ export default function KanjiHubPage() {
           ))}
         </div>
       )}
-
-      {/* Kanji Handwriting Modal */}
-      <KanjiDrawModal
-        isOpen={showDrawModal}
-        onClose={() => setShowDrawModal(false)}
-        onSelectKanji={(kanji) => {
-          setSearchQuery(kanji);
-        }}
-      />
     </div>
   );
 }

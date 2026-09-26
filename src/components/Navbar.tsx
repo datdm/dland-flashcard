@@ -187,7 +187,7 @@ export default function Navbar() {
   return (
     <>
       {/* Desktop Left Sidebar */}
-      <aside className={`hidden md:flex fixed top-0 left-0 bottom-0 ${isCollapsed ? 'w-20 p-3' : 'w-64 p-5'} bg-white border-r border-gray-200 flex-col justify-between z-40 shadow-2xs transition-all duration-300`}>
+      <aside className={`hidden md:flex fixed top-0 left-0 bottom-0 ${isCollapsed ? 'w-20 p-3' : 'w-64 p-5'} bg-white border-r border-gray-200 flex-col justify-between z-[60] shadow-2xs transition-all duration-300`}>
         
         {/* Toggle Button */}
         <button 
@@ -323,7 +323,7 @@ export default function Navbar() {
       </aside>
 
       {/* Mobile Top Header */}
-      <header className="md:hidden sticky top-0 z-40 flex items-center justify-between bg-white border-b border-gray-200 px-4 h-12 shadow-2xs">
+      <header className="md:hidden sticky top-0 z-[60] flex items-center justify-between bg-white border-b border-gray-200 px-4 h-12 shadow-2xs">
         <Link href="/" className="font-bold text-indigo-700 text-sm flex items-center gap-1.5 truncate">
           <span>{activeNavItem?.icon || "🌐"}</span>
           <span className="truncate">{activeNavItem?.label || "Dland Language"}</span>
@@ -361,7 +361,7 @@ export default function Navbar() {
 
       {/* Mobile Bottom Navigation Bar */}
       <nav 
-        className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-md border-t border-gray-200 flex items-center justify-around w-full h-12 px-1 select-none shadow-lg overflow-x-auto no-scrollbar"
+        className="md:hidden fixed bottom-0 inset-x-0 z-[60] bg-white/95 backdrop-blur-md border-t border-gray-200 flex items-center justify-around w-full h-12 px-1 select-none shadow-lg overflow-x-auto no-scrollbar"
         style={{ WebkitOverflowScrolling: "touch" }}
       >
         {visibleNavItems.map((item) => {

@@ -123,8 +123,8 @@ export async function POST(req: NextRequest) {
       parts: userParts,
     });
 
-    // Use latest Gemini 2.5 / 2.0 multimodal models
-    const candidateModels = ["gemini-2.5-flash", "gemini-2.5-pro", "gemini-2.0-flash", "gemini-1.5-flash"];
+    // Use Gemini 2.5 models
+    const candidateModels = ["gemini-2.5-flash", "gemini-2.5-pro"];
     let lastError: any = null;
 
     for (const modelName of candidateModels) {

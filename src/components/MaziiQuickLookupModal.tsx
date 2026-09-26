@@ -149,12 +149,16 @@ export default function MaziiQuickLookupModal({
           <div className="flex items-center gap-2">
             <button
               type="button"
-              onClick={() => setShowDrawModal(true)}
-              className="w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 text-white transition-colors flex items-center justify-center text-sm cursor-pointer"
-              title="Vẽ Kanji để tra từ"
+              onClick={() => setShowDrawModal((prev) => !prev)}
+              className={`w-8 h-8 rounded-full ${
+                showDrawModal
+                  ? "bg-white text-orange-600 font-bold"
+                  : "bg-white/20 hover:bg-white/30 text-white"
+              } transition-colors flex items-center justify-center text-sm cursor-pointer`}
+              title={showDrawModal ? "Đóng bảng vẽ" : "Vẽ Kanji để tra từ"}
               aria-label="Vẽ Kanji để tra từ"
             >
-              <span>🖌️</span>
+              <span>{showDrawModal ? "✕" : "🖌️"}</span>
             </button>
             <button
               onClick={onClose}
@@ -167,6 +171,17 @@ export default function MaziiQuickLookupModal({
 
         {/* Modal Body */}
         <div className="p-6 overflow-y-auto space-y-4 flex-1">
+          {showDrawModal && (
+            <KanjiDrawModal
+              isOpen={showDrawModal}
+              onClose={() => setShowDrawModal(false)}
+              variant="inline"
+              onSelectKanji={(kanji) => {
+                setSearchTerm(kanji);
+                setShowDrawModal(false);
+              }}
+            />
+          )}
           {loading ? (
             <div className="flex flex-col items-center justify-center py-12 space-y-3">
               <div className="w-8 h-8 border-3 border-amber-500 border-t-transparent rounded-full animate-spin" />
@@ -333,14 +348,6 @@ export default function MaziiQuickLookupModal({
         </div>
       </div>
 
-      {/* Kanji Handwriting Modal */}
-      <KanjiDrawModal
-        isOpen={showDrawModal}
-        onClose={() => setShowDrawModal(false)}
-        onSelectKanji={(kanji) => {
-          setSearchTerm(kanji);
-        }}
-      />
     </div>
   );
 }

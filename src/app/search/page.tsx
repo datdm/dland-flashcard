@@ -245,15 +245,31 @@ export default function DictionarySearchPage() {
         {langCode === "ja" && (
           <button
             type="button"
-            onClick={() => setShowDrawModal(true)}
-            className="w-14 h-14 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white transition-all flex items-center justify-center cursor-pointer shadow-md shadow-indigo-200 shrink-0 active:scale-95 text-xl"
-            title="Vẽ nét chữ Hán Kanji để tra từ"
+            onClick={() => setShowDrawModal((prev) => !prev)}
+            className={`w-14 h-14 rounded-2xl ${
+              showDrawModal
+                ? "bg-indigo-900 text-white ring-4 ring-indigo-200"
+                : "bg-indigo-600 hover:bg-indigo-700 text-white"
+            } transition-all flex items-center justify-center cursor-pointer shadow-md shadow-indigo-200 shrink-0 active:scale-95 text-xl`}
+            title={showDrawModal ? "Đóng bảng vẽ Kanji" : "Vẽ nét chữ Hán Kanji để tra từ"}
             aria-label="Vẽ Kanji để tra từ"
           >
-            <span>🖌️</span>
+            <span>{showDrawModal ? "✕" : "🖌️"}</span>
           </button>
         )}
       </div>
+
+      {/* Inline Kanji Handwriting Pad */}
+      {langCode === "ja" && showDrawModal && (
+        <KanjiDrawModal
+          isOpen={showDrawModal}
+          onClose={() => setShowDrawModal(false)}
+          variant="inline"
+          onSelectKanji={(kanji) => {
+            setQuery((prev) => (prev ? `${prev}${kanji}` : kanji));
+          }}
+        />
+      )}
 
       {/* Level Filters */}
       <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-2 mb-6">
@@ -447,14 +463,6 @@ export default function DictionarySearchPage() {
         />
       )}
 
-      {/* Kanji Handwriting Modal */}
-      <KanjiDrawModal
-        isOpen={showDrawModal}
-        onClose={() => setShowDrawModal(false)}
-        onSelectKanji={(kanji) => {
-          setQuery((prev) => (prev ? `${prev}${kanji}` : kanji));
-        }}
-      />
 
       {/* Mazii Quick Lookup Detail Modal */}
       {quickLookupWord && (
