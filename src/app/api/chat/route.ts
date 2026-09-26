@@ -123,8 +123,13 @@ export async function POST(req: NextRequest) {
       parts: userParts,
     });
 
-    // Use Gemini 2.5 Flash model
-    const candidateModels = ["gemini-2.5-flash"];
+    // Use Gemini 3.8 Flash model with reliable fallbacks
+    const candidateModels = [
+      "gemini-3.8-flash",
+      "gemini-3.7-flash",
+      "gemini-3.5-flash",
+      "gemini-flash-latest",
+    ];
     let lastError: any = null;
 
     for (const modelName of candidateModels) {

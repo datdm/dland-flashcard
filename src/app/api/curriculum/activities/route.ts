@@ -76,7 +76,12 @@ Chú ý:
 - Tiếng Nhật trong đoạn văn phải chuẩn xác, tự nhiên.
 - Dữ liệu trả về PHẢI là chuỗi JSON hợp lệ.`;
 
-    const candidateModels = ["gemini-2.5-flash"];
+    const candidateModels = [
+      "gemini-3.8-flash",
+      "gemini-3.7-flash",
+      "gemini-3.5-flash",
+      "gemini-flash-latest",
+    ];
     let text = "";
     let lastError: any = null;
 

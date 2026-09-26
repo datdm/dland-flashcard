@@ -497,8 +497,13 @@ Yêu cầu đầu ra là một đối tượng JSON duy nhất (không bọc tro
       }
     }
 
-    // Use Gemini 2.5 Flash model
-    const candidateModels = ["gemini-2.5-flash"];
+    // Use Gemini 3.8 Flash model with reliable fallbacks
+    const candidateModels = [
+      "gemini-3.8-flash",
+      "gemini-3.7-flash",
+      "gemini-3.5-flash",
+      "gemini-flash-latest",
+    ];
     let text = "";
     let lastError: any = null;
 
