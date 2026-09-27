@@ -165,28 +165,10 @@ export default function FlashCardLearnedPage() {
       if (!p || !p.learned) return;
 
       const known = map.get(id);
-      const itemLang = known?.lang || (
-        id.startsWith("en-") ? "en" :
-        id.startsWith("de-") ? "de" :
-        id.startsWith("ko-") ? "ko" :
-        id.startsWith("zh-") ? "zh" : "ja"
-      );
+      if (!known) return; // Skip orphaned IDs that don't belong to any real vocabulary item
 
-      if (effectiveLang === "all" || itemLang === effectiveLang) {
-        if (known) {
-          result.push(known);
-        } else {
-          // Fallback so no learned word is ever dropped from count or review!
-          result.push({
-            id,
-            kanji: id,
-            hiragana: "",
-            meaning: "Từ vựng đã thuộc",
-            lang: itemLang,
-            sourceType: "notebook",
-            sourceName: "Từ vựng cá nhân",
-          });
-        }
+      if (effectiveLang === "all" || known.lang === effectiveLang) {
+        result.push(known);
       }
     });
 

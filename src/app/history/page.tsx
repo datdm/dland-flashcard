@@ -449,24 +449,21 @@ function getItemLevel(c: { id: string; name: string; level?: string }): string {
     Object.entries(progress).forEach(([id, p]) => {
       if (p.learned) {
         const details = vocabLookup.get(id);
-        const itemLang = details?.lang || (
-          id.startsWith("en-") ? "en" :
-          id.startsWith("de-") ? "de" :
-          id.startsWith("ko-") ? "ko" :
-          id.startsWith("zh-") ? "zh" : "ja"
-        );
+        if (!details) return;
+
+        const itemLang = details.lang;
         if (effectiveLang === "all" || itemLang === effectiveLang) {
           items.push({
             id,
             type: "vocab",
-            title: details?.kanji || details?.hiragana || "Từ vựng",
-            subTitle: details?.kanji ? details?.hiragana : undefined,
-            meaning: details?.meaning || "",
+            title: details.kanji || details.hiragana || "Từ vựng",
+            subTitle: details.kanji ? details.hiragana : undefined,
+            meaning: details.meaning || "",
             learnedAt: p.learnedAt || new Date(0).toISOString(),
-            source: details?.source || "Từ vựng cá nhân",
-            sourceType: details?.sourceType || "other",
-            sourceId: details?.sourceId || "",
-            sourceTitle: details?.sourceTitle || details?.source || "Khác",
+            source: details.source || "Từ vựng cá nhân",
+            sourceType: details.sourceType || "other",
+            sourceId: details.sourceId || "",
+            sourceTitle: details.sourceTitle || details.source || "Khác",
             lang: itemLang
           });
         }
