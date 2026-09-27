@@ -447,7 +447,7 @@ function getItemLevel(c: { id: string; name: string; level?: string }): string {
 
     // Add learned vocabulary
     Object.entries(progress).forEach(([id, p]) => {
-      if (p.learned && p.learnedAt) {
+      if (p.learned) {
         const details = vocabLookup.get(id);
         const itemLang = details?.lang || (
           id.startsWith("en-") ? "en" :
@@ -462,7 +462,7 @@ function getItemLevel(c: { id: string; name: string; level?: string }): string {
             title: details?.kanji || details?.hiragana || "Từ vựng",
             subTitle: details?.kanji ? details?.hiragana : undefined,
             meaning: details?.meaning || "",
-            learnedAt: p.learnedAt,
+            learnedAt: p.learnedAt || new Date(0).toISOString(),
             source: details?.source || "Từ vựng cá nhân",
             sourceType: details?.sourceType || "other",
             sourceId: details?.sourceId || "",
@@ -475,7 +475,7 @@ function getItemLevel(c: { id: string; name: string; level?: string }): string {
 
     // Add learned grammar
     Object.entries(grammarProgress).forEach(([id, p]) => {
-      if (p.learned && p.learnedAt) {
+      if (p.learned) {
         const details = grammarLookup.get(id);
         const itemLang = details?.lang || (
           id.startsWith("en-") ? "en" :
@@ -489,7 +489,7 @@ function getItemLevel(c: { id: string; name: string; level?: string }): string {
             type: "grammar",
             title: details?.structure || "Ngữ pháp",
             meaning: details?.meaning || "",
-            learnedAt: p.learnedAt,
+            learnedAt: p.learnedAt || new Date(0).toISOString(),
             source: details?.source || "Ngữ pháp cá nhân",
             sourceType: details?.sourceType || "grammar",
             sourceId: details?.sourceId || "",

@@ -6,16 +6,34 @@ import { useNotebooks } from "@/hooks/useNotebooks";
 import { useProgress } from "@/hooks/useProgress";
 import FlashCardViewer from "@/components/FlashCardViewer";
 import Link from "next/link";
-
 import { useLanguageSetting } from "@/hooks/useLanguageSetting";
+import { getCurriculumRepository } from "@/lib/repositories";
+import { Vocabulary } from "@/types";
 
 export default function FlashCardLearnedPage() {
-  const { activeCurriculums: curriculums } = useCurriculums();
+  const { allCurriculums } = useCurriculums();
   const { notebooks } = useNotebooks();
   const { progress } = useProgress();
   const { activeLanguage } = useLanguageSetting();
+  const [repoBooks, setRepoBooks] = useState<any[]>([]);
   const [systemVocabList, setSystemVocabList] = useState<any[]>([]);
 
+  // 1. Load repository books across languages
+  useEffect(() => {
+    async function loadRepoBooks() {
+      try {
+        const repo = getCurriculumRepository();
+        const groups = await repo.getAllCurriculums();
+        const allBooks = groups.flatMap((g) => g.books || []);
+        setRepoBooks(allBooks);
+      } catch (err) {
+        console.error("Failed to load repo books in FlashCardLearnedPage:", err);
+      }
+    }
+    loadRepoBooks();
+  }, []);
+
+  // 2. Load system curriculum JSON files as additional fallback
   useEffect(() => {
     async function loadAllSystemData() {
       try {
@@ -41,6 +59,7 @@ export default function FlashCardLearnedPage() {
               if (lesson.vocabulary) {
                 const taggedVocab = lesson.vocabulary.map((v: any) => ({
                   ...v,
+                  lang: url.includes("en-") ? "en" : url.includes("de-") ? "de" : "ja",
                   sourceType: "curriculum" as const,
                   sourceName: `${data.title || "Giáo trình"} • ${lesson.name}`,
                 }));
@@ -59,42 +78,120 @@ export default function FlashCardLearnedPage() {
   }, []);
 
   const learnedWords = useMemo(() => {
-    // Collect all vocabulary words across curriculums, notebooks, and system curriculums
-    const curriculumVocab = curriculums.flatMap((c) =>
-      c.lessons.flatMap((l) =>
-        (l.vocabulary || []).map((v) => ({
+    const map = new Map<string, Vocabulary & { lang: string; sourceType?: string; sourceName?: string }>();
+
+    // A. Build vocabulary map from repoBooks
+    repoBooks.forEach((b) => {
+      const bookLang = b.lang || (
+        b.id.startsWith("en-") ? "en" :
+        b.id.startsWith("de-") ? "de" :
+        b.id.startsWith("ko-") ? "ko" :
+        b.id.startsWith("zh-") ? "zh" : "ja"
+      );
+      b.lessons?.forEach((l: any) => {
+        l.vocabulary?.forEach((v: any) => {
+          if (v && v.id) {
+            map.set(v.id, {
+              ...v,
+              lang: bookLang,
+              sourceType: "curriculum",
+              sourceName: `${b.name} • ${l.name}`,
+            });
+          }
+        });
+      });
+    });
+
+    // B. Build vocabulary map from user curriculums
+    allCurriculums.forEach((c) => {
+      const curriculumLang = c.lang || (
+        c.id.startsWith("en-") ? "en" :
+        c.id.startsWith("de-") ? "de" :
+        c.id.startsWith("ko-") ? "ko" :
+        c.id.startsWith("zh-") ? "zh" : "ja"
+      );
+      c.lessons?.forEach((l) => {
+        l.vocabulary?.forEach((v) => {
+          if (v && v.id && !map.has(v.id)) {
+            map.set(v.id, {
+              ...v,
+              lang: curriculumLang,
+              sourceType: "curriculum",
+              sourceName: `${c.name} • ${l.name}`,
+            });
+          }
+        });
+      });
+    });
+
+    // C. Build vocabulary map from notebooks
+    notebooks.forEach((nb) => {
+      const nbLang = nb.lang || "ja";
+      nb.vocabulary?.forEach((v) => {
+        if (v && v.id && !map.has(v.id)) {
+          map.set(v.id, {
+            ...v,
+            lang: nbLang,
+            sourceType: "notebook",
+            sourceName: `Sổ tay: ${nb.name}`,
+          });
+        }
+      });
+    });
+
+    // D. Build vocabulary map from systemVocabList
+    systemVocabList.forEach((v) => {
+      if (v && v.id && !map.has(v.id)) {
+        const itemLang = v.lang || (
+          v.id.startsWith("en-") ? "en" :
+          v.id.startsWith("de-") ? "de" :
+          v.id.startsWith("ko-") ? "ko" :
+          v.id.startsWith("zh-") ? "zh" : "ja"
+        );
+        map.set(v.id, {
           ...v,
-          sourceType: "curriculum" as const,
-          sourceName: `${c.name} • ${l.name}`,
-        }))
-      )
-    );
-    const notebookVocab = notebooks.flatMap((nb) =>
-      (nb.vocabulary || []).map((v) => ({
-        ...v,
-        sourceType: "notebook" as const,
-        sourceName: `Sổ tay: ${nb.name}`,
-      }))
-    );
-
-    const filteredSystemVocab = systemVocabList.filter((v) => {
-      if (!v || !v.id) return false;
-      if (activeLanguage.code === "en") return v.id.startsWith("en-") || v.level?.includes("Band");
-      if (activeLanguage.code === "de") return v.id.startsWith("de-") || v.level?.includes("A1") || v.level?.includes("A2");
-      return !v.id.startsWith("en-") && !v.id.startsWith("de-");
-    });
-    
-    // De-duplicate vocabulary words by ID to prevent duplicates if they appear in both systems
-    const seen = new Set<string>();
-    const allVocab = [...curriculumVocab, ...notebookVocab, ...filteredSystemVocab].filter((v) => {
-      if (!v || !v.id) return false;
-      if (seen.has(v.id)) return false;
-      seen.add(v.id);
-      return true;
+          lang: itemLang,
+          sourceType: "curriculum",
+          sourceName: v.sourceName || "Giáo trình",
+        });
+      }
     });
 
-    return allVocab.filter((v) => progress[v.id]?.learned);
-  }, [curriculums, notebooks, systemVocabList, progress, activeLanguage.code]);
+    // E. Extract ALL learned items matching activeLanguage from progress
+    const result: (Vocabulary & { lang: string; sourceType?: string; sourceName?: string })[] = [];
+    const effectiveLang = activeLanguage.code;
+
+    Object.entries(progress).forEach(([id, p]) => {
+      if (!p || !p.learned) return;
+
+      const known = map.get(id);
+      const itemLang = known?.lang || (
+        id.startsWith("en-") ? "en" :
+        id.startsWith("de-") ? "de" :
+        id.startsWith("ko-") ? "ko" :
+        id.startsWith("zh-") ? "zh" : "ja"
+      );
+
+      if (effectiveLang === "all" || itemLang === effectiveLang) {
+        if (known) {
+          result.push(known);
+        } else {
+          // Fallback so no learned word is ever dropped from count or review!
+          result.push({
+            id,
+            kanji: id,
+            hiragana: "",
+            meaning: "Từ vựng đã thuộc",
+            lang: itemLang,
+            sourceType: "notebook",
+            sourceName: "Từ vựng cá nhân",
+          });
+        }
+      }
+    });
+
+    return result;
+  }, [repoBooks, allCurriculums, notebooks, systemVocabList, progress, activeLanguage.code]);
 
   if (learnedWords.length === 0) {
     return (

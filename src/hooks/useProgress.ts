@@ -53,9 +53,14 @@ export function useProgress() {
   const updateProgress = useCallback((id: string, patch: Partial<VocabProgress>) => {
     setProgress((prev) => {
       const current = prev[id] ?? defaultProgress();
+      const isLearned = patch.learned !== undefined ? patch.learned : current.learned;
+      const learnedAt = isLearned
+        ? (patch.learnedAt || current.learnedAt || new Date().toISOString())
+        : undefined;
+
       const updated: ProgressMap = {
         ...prev,
-        [id]: { ...current, ...patch },
+        [id]: { ...current, ...patch, learned: isLearned, learnedAt },
       };
       setItem(StorageKeys.PROGRESS, updated);
       if (typeof window !== "undefined") {
