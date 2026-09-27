@@ -59,14 +59,14 @@
     const host = window.location.hostname;
     const href = window.location.href;
     return (
-      host === "flashcard-japanese-eight.vercel.app" ||
+      host === "dland-flashcard.vercel.app" ||
       (host === "localhost" && window.location.port === "3000") ||
-      href.includes("flashcard-japanese-eight.vercel.app")
+      href.includes("dland-flashcard.vercel.app")
     );
   }
 
   // =========================================================================
-  // 1. AUTO-SYNC FROM WEB APP (flashcard-japanese-eight.vercel.app / localhost:3000)
+  // 1. AUTO-SYNC FROM WEB APP (dland-flashcard.vercel.app / localhost:3000)
   // =========================================================================
   function extractSessionData() {
     try {

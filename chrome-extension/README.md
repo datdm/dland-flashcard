@@ -4,9 +4,9 @@ Tiện ích mở rộng Google Chrome / Microsoft Edge (Manifest V3) hỗ trợ 
 1. **Hiển thị toàn bộ sổ tay** trong Popup: thống kê số lượng, danh sách từ vựng, âm Hán Việt (Onyomi), nghe phát âm tiếng Nhật chuẩn (TTS), thêm/xóa từ và sổ tay.
 2. **Chế độ Đăng nhập & Đồng bộ Database**:
    - **Đăng nhập trực tiếp**: Đăng nhập ngay trong tiện ích bằng tài khoản (Username & Password) để tải trực tiếp toàn bộ sổ tay từ Database máy chủ về tiện ích.
-   - **Đồng bộ tự động từ Web App**: Chỉ cần click *"🔗 Đồng bộ từ Web App"*, tiện ích sẽ tự động nhận diện tab Web App đang mở tại `https://flashcard-japanese-eight.vercel.app/` và đồng bộ tài khoản cũng như sổ tay ngay lập tức!
+   - **Đồng bộ tự động từ Web App**: Chỉ cần click *"🔗 Đồng bộ từ Web App"*, tiện ích sẽ tự động nhận diện tab Web App đang mở tại `https://dland-flashcard.vercel.app/` và đồng bộ tài khoản cũng như sổ tay ngay lập tức!
 3. **Thay đổi Setting vào Database (Cài đặt linh hoạt)**:
-   - Thay đổi linh hoạt Web App URL (Vercel `https://flashcard-japanese-eight.vercel.app/` hoặc Localhost:3000).
+   - Thay đổi linh hoạt Web App URL (Vercel `https://dland-flashcard.vercel.app/` hoặc Localhost:3000).
    - Thay đổi API Server / Database URL (Vercel backend hoặc Localhost:3001 hoặc server VPS riêng).
    - Nút **"⚡ Kiểm tra kết nối"** để test xem Database/Server có phản hồi tốt không kèm thời gian phản hồi (latency ms).
    - Nút **"🔄 Tải lại từ Database"** và **"☁️ Đẩy máy lên Database"** để chủ động đồng bộ dữ liệu hai chiều bất cứ khi nào.
@@ -38,7 +38,7 @@ Tiện ích mở rộng Google Chrome / Microsoft Edge (Manifest V3) hỗ trợ 
 ## 🔑 Hướng dẫn Đăng nhập & Đồng bộ Web App
 
 ### Cách 1: Đồng bộ một chạm từ Web App (Khuyên dùng - Nhanh & Tiện nhất)
-1. Mở trang web ứng dụng của bạn: [https://flashcard-japanese-eight.vercel.app/](https://flashcard-japanese-eight.vercel.app/)
+1. Mở trang web ứng dụng của bạn: [https://dland-flashcard.vercel.app/](https://dland-flashcard.vercel.app/)
 2. Đăng nhập tài khoản của bạn trên web app.
 3. Mở Extension Popup ➔ Bấm nút **"🔗 Đồng bộ từ Web App"** (hoặc nút tương tự trong hộp thoại Đăng nhập).
 4. Tiện ích sẽ tự động nhận phiên đăng nhập và tải toàn bộ sổ tay của bạn từ Web App về máy, chuyển trạng thái sang: `🟢 Đã kết nối DB (Tên của bạn)`.

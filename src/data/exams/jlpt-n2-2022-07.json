@@ -577,7 +577,7 @@
       "mondai": "問題 6: 用法 (Cách dùng từ)",
       "mondaiNumber": 6,
       "majorSection": "vocab",
-      "question": "次の言葉の使い方として最もよいものを一つ選びなさい：[温厚]",
+      "question": "[温厚]",
       "type": "single",
       "options": [
         "温厚な伯父は、みんなから愛されている。",
@@ -595,7 +595,7 @@
       "mondai": "問題 6: 用法 (Cách dùng từ)",
       "mondaiNumber": 6,
       "majorSection": "vocab",
-      "question": "次の言葉の使い方として最もよいものを一つ選びなさい：[濁る]",
+      "question": "[濁る]",
       "type": "single",
       "options": [
         "外と室内の温度の差で窓が濁っている。",
@@ -613,7 +613,7 @@
       "mondai": "問題 6: 用法 (Cách dùng từ)",
       "mondaiNumber": 6,
       "majorSection": "vocab",
-      "question": "次の言葉の使い方として最もよいものを一つ選びなさい：[世代]",
+      "question": "[世代]",
       "type": "single",
       "options": [
         "野口さんはまだ20代なので、世代を取っているとはいえない。",
@@ -631,7 +631,7 @@
       "mondai": "問題 6: 用法 (Cách dùng từ)",
       "mondaiNumber": 6,
       "majorSection": "vocab",
-      "question": "次の言葉の使い方として最もよいものを一つ選びなさい：[普及]",
+      "question": "[普及]",
       "type": "single",
       "options": [
         "よくないうわさが普及しているので、気をつけてください。",
@@ -649,7 +649,7 @@
       "mondai": "問題 6: 用法 (Cách dùng từ)",
       "mondaiNumber": 6,
       "majorSection": "vocab",
-      "question": "次の言葉の使い方として最もよいものを一つ選びなさい：[生じる]",
+      "question": "[生じる]",
       "type": "single",
       "options": [
         "メールシステムに問題が生じて、メールが送れなくなった。",

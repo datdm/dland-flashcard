@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useNotebooks } from "@/hooks/useNotebooks";
 import { useLanguageSetting } from "@/hooks/useLanguageSetting";
 import { useAuth } from "@/context/AuthContext";
-import { Vocabulary, WordType, WORD_TYPES, WORD_TYPE_STYLES } from "@/types";
+import { Vocabulary, WordType, WORD_TYPES } from "@/types";
 
 interface AddToNotebookModalProps {
   selectedWord: Partial<Vocabulary> & {
@@ -13,6 +13,7 @@ interface AddToNotebookModalProps {
     meaning?: string;
     phonetic?: string;
     onyomi?: string;
+    wordType?: WordType;
   };
   onClose: () => void;
   onSuccess?: () => void;
@@ -25,7 +26,7 @@ export default function AddToNotebookModal({
 }: AddToNotebookModalProps) {
   const { notebooks, refreshNotebooks, createNotebook, addVocab, checkDuplicate } = useNotebooks();
   const { activeLanguage } = useLanguageSetting();
-  const { isAuthenticated, openAuthModal } = useAuth();
+  const { isAuthenticated, openAuthModal, user } = useAuth();
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -37,6 +38,23 @@ export default function AddToNotebookModal({
   useEffect(() => {
     refreshNotebooks();
   }, [refreshNotebooks]);
+
+  // Form input states (editable like extension dialog)
+  const [wordKanji, setWordKanji] = useState<string>(
+    selectedWord.kanji || selectedWord.hiragana || ""
+  );
+  const [wordHiragana, setWordHiragana] = useState<string>(
+    selectedWord.hiragana || selectedWord.phonetic || ""
+  );
+  const [wordOnyomi, setWordOnyomi] = useState<string>(
+    selectedWord.onyomi || ""
+  );
+  const [wordMeaning, setWordMeaning] = useState<string>(
+    selectedWord.meaning || ""
+  );
+  const [selectedWordType, setSelectedWordType] = useState<WordType>(
+    selectedWord.wordType || "Danh từ"
+  );
 
   const [targetNotebookId, setTargetNotebookId] = useState<string>(() =>
     notebooks.length > 0 ? notebooks[0].id : "NEW"
@@ -52,7 +70,7 @@ export default function AddToNotebookModal({
       : "Sổ tay Tiếng Nhật"
   );
 
-  // Sync state whenever notebooks list is reloaded or refreshed from server/localStorage
+  // Sync notebook dropdown when notebooks list changes
   useEffect(() => {
     if (notebooks.length > 0) {
       if (!targetNotebookId || targetNotebookId === "" || (!isCreatingNew && !notebooks.some((nb) => nb.id === targetNotebookId))) {
@@ -67,7 +85,18 @@ export default function AddToNotebookModal({
 
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
-  const [selectedWordType, setSelectedWordType] = useState<WordType>("Danh từ");
+
+  const handlePlayAudio = () => {
+    const textToSpeak = wordKanji || wordHiragana || selectedWord.kanji || selectedWord.hiragana;
+    if (!textToSpeak) return;
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(textToSpeak);
+      utterance.lang = activeLanguage.code === "en" ? "en-US" : activeLanguage.code === "de" ? "de-DE" : "ja-JP";
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  };
 
   const handleSubmit = async () => {
     setError(null);
@@ -92,24 +121,24 @@ export default function AddToNotebookModal({
         return;
       }
 
-      const wordTitle = selectedWord.kanji || selectedWord.hiragana || "";
-      const wordPhonetic = selectedWord.hiragana || selectedWord.phonetic || "";
+      const finalKanji = wordKanji.trim();
+      const finalHiragana = wordHiragana.trim();
 
-      if (wordTitle && wordPhonetic) {
-        const duplicates = checkDuplicate(finalNotebookId, wordTitle, wordPhonetic);
+      if (finalKanji && finalHiragana) {
+        const duplicates = checkDuplicate(finalNotebookId, finalKanji, finalHiragana);
         if (duplicates && duplicates.length > 0) {
-          setError(`Từ "${wordTitle}" đã có trong sổ tay "${duplicates[0].notebookName}"`);
+          setError(`Từ "${finalKanji}" đã có trong sổ tay "${duplicates[0].notebookName}"`);
           setSubmitting(false);
           return;
         }
       }
 
       const vocab = await addVocab(finalNotebookId, {
-        kanji: wordTitle,
-        hiragana: wordPhonetic,
-        onyomi: selectedWord.onyomi || "",
-        meaning: selectedWord.meaning || "",
-        phonetic: selectedWord.phonetic || "",
+        kanji: finalKanji,
+        hiragana: finalHiragana,
+        onyomi: wordOnyomi.trim(),
+        meaning: wordMeaning.trim(),
+        phonetic: selectedWord.phonetic || finalHiragana,
         wordType: selectedWordType,
       });
 
@@ -127,62 +156,150 @@ export default function AddToNotebookModal({
     }
   };
 
-  const mainWordText = selectedWord.kanji || selectedWord.hiragana || "";
+  const displayTitle = wordKanji || wordHiragana || "Từ mới";
+  const displaySub = wordHiragana && wordKanji && wordKanji !== wordHiragana ? wordHiragana : wordOnyomi || "";
 
   return (
-    <div onClick={onClose} className="fixed inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 z-50 animate-fadeIn">
-      <div onClick={(e) => e.stopPropagation()} className="bg-white rounded-3xl shadow-xl p-6 w-full max-w-sm border border-gray-100">
-        <div className="flex items-center justify-between mb-2">
-          <h3 className="font-extrabold text-base text-gray-900 flex items-center gap-1.5">
-            <span>📓</span> Thêm từ vào Sổ tay
-          </h3>
+    <div onClick={onClose} className="fixed inset-0 bg-slate-900/65 backdrop-blur-xs flex items-center justify-center p-4 z-50 animate-fadeIn">
+      <div onClick={(e) => e.stopPropagation()} className="bg-white rounded-3xl shadow-2xl w-full max-w-[480px] border border-slate-200 flex flex-col overflow-hidden animate-scaleIn">
+        
+        {/* Modal Header */}
+        <div className="px-5 py-4 bg-gradient-to-r from-slate-50 to-slate-100/80 border-b border-slate-200 flex items-center justify-between">
+          <div className="flex items-center gap-2 min-w-0">
+            <h3 className="text-sm font-extrabold text-slate-900 flex items-center gap-1.5 truncate">
+              <span>📖</span> Thêm Từ Vào Sổ Tay
+            </h3>
+            {isAuthenticated ? (
+              <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[11px] font-bold shrink-0 shadow-2xs" title="Dữ liệu sẽ tự động đồng bộ lên Database">
+                ☁️ {user?.username || "Đã kết nối DB"}
+              </span>
+            ) : (
+              <span className="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200 text-[11px] font-bold shrink-0">
+                💾 Lưu cục bộ
+              </span>
+            )}
+          </div>
           <button
+            type="button"
             onClick={onClose}
-            className="w-7 h-7 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 flex items-center justify-center text-xs font-bold transition-colors"
+            className="w-8 h-8 rounded-xl bg-transparent hover:bg-slate-200/80 text-slate-500 hover:text-slate-900 flex items-center justify-center text-sm font-bold transition-all shrink-0 cursor-pointer"
+            title="Đóng"
           >
             ✕
           </button>
         </div>
 
-        <p className="text-xs text-gray-500 mb-4 bg-gray-50 p-2.5 rounded-2xl border border-gray-100 leading-snug">
-          Từ: <span className="font-bold text-indigo-600">{mainWordText}</span>
-          {selectedWord.meaning ? ` — ${selectedWord.meaning}` : ""}
-        </p>
+        {/* Modal Body */}
+        <div className="p-5 flex flex-col gap-3.5 max-h-[75vh] overflow-y-auto">
 
-        {/* Word Type Selector */}
-        <div className="mb-4">
-          <label className="block text-xs font-semibold text-gray-700 mb-1.5">Loại từ:</label>
-          <div className="flex flex-wrap gap-1.5">
-            {WORD_TYPES.map((wt) => {
-              const s = WORD_TYPE_STYLES[wt];
-              const selected = selectedWordType === wt;
-              return (
-                <button
-                  key={wt}
-                  type="button"
-                  onClick={() => setSelectedWordType(wt)}
-                  className={`px-2.5 py-1 rounded-lg text-[11px] font-bold border transition-all cursor-pointer ${
-                    selected ? `${s.bg} ${s.text} ${s.border} ring-2 ring-offset-1 ring-current/30` : "bg-gray-50 text-gray-500 border-gray-200 hover:bg-gray-100"
-                  }`}
-                >
-                  {wt}
-                </button>
-              );
-            })}
+          {/* Error Message */}
+          {error && (
+            <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-xs font-semibold text-red-600 flex items-start gap-1.5">
+              <span>✕</span> <span>{error}</span>
+            </div>
+          )}
+
+          {/* Preview & Audio Box */}
+          <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-3.5 flex items-center justify-between gap-3">
+            <div className="min-w-0 flex-1">
+              <div className="text-2xl font-extrabold text-indigo-950 leading-tight truncate">
+                {displayTitle}
+              </div>
+              {displaySub && (
+                <div className="text-xs font-bold text-indigo-600 mt-0.5 truncate">
+                  {displaySub}
+                </div>
+              )}
+            </div>
+            <button
+              type="button"
+              onClick={handlePlayAudio}
+              className="w-9 h-9 rounded-xl bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 text-indigo-600 flex items-center justify-center text-base transition-all shrink-0 cursor-pointer shadow-3xs"
+              title="Phát âm"
+            >
+              🔊
+            </button>
           </div>
-        </div>
 
-        {error && (
-          <div className="mb-4 rounded-2xl border border-red-200 bg-red-50 p-3 text-xs font-semibold text-red-600 flex items-start gap-1.5">
-            <span>✕</span> <span>{error}</span>
+          {/* Form Field 1: Word / Kanji */}
+          <div className="flex flex-col gap-1">
+            <label className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+              Từ vựng (Kanji / Từ gốc)
+            </label>
+            <input
+              type="text"
+              value={wordKanji}
+              onChange={(e) => setWordKanji(e.target.value)}
+              placeholder="Ví dụ: 日本語"
+              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs font-semibold text-slate-900 bg-white focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all"
+            />
           </div>
-        )}
 
-        {/* Option 1: Choose existing notebook */}
-        {notebooks.length > 0 && !isCreatingNew ? (
-          <div className="space-y-3 mb-6">
-            <label className="block text-xs font-semibold text-gray-700">Chọn Sổ tay ({activeLanguage.name}):</label>
-            <div className="relative">
+          {/* Form Field 2: 2 Columns for Hiragana & Onyomi */}
+          <div className="grid grid-cols-2 gap-2.5">
+            <div className="flex flex-col gap-1">
+              <label className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                Hiragana / Cách đọc
+              </label>
+              <input
+                type="text"
+                value={wordHiragana}
+                onChange={(e) => setWordHiragana(e.target.value)}
+                placeholder="Ví dụ: にほんご"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs font-semibold text-slate-900 bg-white focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all"
+              />
+            </div>
+
+            <div className="flex flex-col gap-1">
+              <label className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                Âm Hán Việt (Onyomi)
+              </label>
+              <input
+                type="text"
+                value={wordOnyomi}
+                onChange={(e) => setWordOnyomi(e.target.value)}
+                placeholder="Ví dụ: NHẬT BẢN NGỮ"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs font-semibold text-slate-900 bg-white focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all"
+              />
+            </div>
+          </div>
+
+          {/* Form Field 3: Meaning */}
+          <div className="flex flex-col gap-1">
+            <label className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+              Nghĩa tiếng Việt
+            </label>
+            <textarea
+              value={wordMeaning}
+              onChange={(e) => setWordMeaning(e.target.value)}
+              placeholder="Nhập nghĩa tiếng Việt của từ..."
+              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs font-semibold text-slate-900 bg-white focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all min-h-[60px] resize-y"
+            />
+          </div>
+
+          {/* Form Field 4: 2 Columns for Word Type & Target Notebook */}
+          <div className="grid grid-cols-2 gap-2.5">
+            <div className="flex flex-col gap-1">
+              <label className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                Loại từ
+              </label>
+              <select
+                value={selectedWordType}
+                onChange={(e) => setSelectedWordType(e.target.value as WordType)}
+                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs font-semibold text-slate-900 bg-white focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 cursor-pointer transition-all"
+              >
+                {WORD_TYPES.map((wt) => (
+                  <option key={wt} value={wt}>
+                    {wt}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="flex flex-col gap-1">
+              <label className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                Lưu vào Sổ tay
+              </label>
               <select
                 value={targetNotebookId}
                 onChange={(e) => {
@@ -190,61 +307,60 @@ export default function AddToNotebookModal({
                     setIsCreatingNew(true);
                   } else {
                     setTargetNotebookId(e.target.value);
+                    setIsCreatingNew(false);
                   }
                 }}
-                className="w-full rounded-2xl border border-gray-300 px-4 py-2.5 text-xs font-semibold text-gray-800 bg-white focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 appearance-none pr-8 cursor-pointer"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs font-semibold text-slate-900 bg-white focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 cursor-pointer transition-all truncate"
               >
                 {notebooks.map((nb) => (
                   <option key={nb.id} value={nb.id}>
                     📓 {nb.name} ({nb.vocabulary?.length || 0} từ)
                   </option>
                 ))}
-                <option value="NEW">➕ + Tạo sổ tay mới...</option>
+                <option value="NEW">➕ Tạo sổ tay mới...</option>
               </select>
-              <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-gray-400 text-[10px]">
-                ▼
+            </div>
+          </div>
+
+          {/* New Notebook Input (if NEW selected) */}
+          {(isCreatingNew || targetNotebookId === "NEW") && (
+            <div className="flex flex-col gap-1 animate-fadeIn">
+              <div className="flex items-center justify-between">
+                <label className="text-[11px] font-bold uppercase tracking-wider text-indigo-600">
+                  Tên Sổ tay mới ({activeLanguage.name})
+                </label>
+                {notebooks.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsCreatingNew(false);
+                      setTargetNotebookId(notebooks[0].id);
+                    }}
+                    className="text-[11px] text-slate-500 hover:text-slate-800 font-bold underline"
+                  >
+                    ← Chọn sổ tay sẵn có
+                  </button>
+                )}
               </div>
+              <input
+                type="text"
+                value={newNotebookName}
+                onChange={(e) => setNewNotebookName(e.target.value)}
+                placeholder="Ví dụ: Từ vựng đọc báo, Sổ tay N3..."
+                autoFocus
+                className="w-full px-3.5 py-2.5 rounded-xl border border-indigo-300 text-xs font-semibold text-slate-900 bg-white focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 transition-all"
+              />
             </div>
+          )}
 
-            <button
-              type="button"
-              onClick={() => setIsCreatingNew(true)}
-              className="text-xs text-indigo-600 font-bold hover:underline inline-flex items-center gap-1"
-            >
-              + Tạo sổ tay mới cho {activeLanguage.name}
-            </button>
-          </div>
-        ) : (
-          /* Option 2: Inline create notebook */
-          <div className="space-y-3 mb-6">
-            <div className="flex items-center justify-between">
-              <label className="block text-xs font-semibold text-gray-700">Tạo Sổ tay mới ({activeLanguage.name}):</label>
-              {notebooks.length > 0 && (
-                <button
-                  type="button"
-                  onClick={() => setIsCreatingNew(false)}
-                  className="text-xs text-gray-500 hover:text-gray-700 font-semibold"
-                >
-                  ← Chọn sổ tay sẵn có
-                </button>
-              )}
-            </div>
-            <input
-              type="text"
-              value={newNotebookName}
-              onChange={(e) => setNewNotebookName(e.target.value)}
-              placeholder="Nhập tên sổ tay..."
-              autoFocus
-              className="w-full rounded-2xl border border-indigo-300 px-4 py-2.5 text-xs font-semibold focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100"
-            />
-          </div>
-        )}
+        </div>
 
-        <div className="flex gap-2 justify-end pt-2">
+        {/* Modal Footer */}
+        <div className="px-5 py-3.5 bg-slate-50 border-t border-slate-200 flex items-center justify-end gap-2.5">
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2.5 rounded-xl border border-gray-300 text-gray-600 hover:bg-gray-50 text-xs font-semibold transition-colors"
+            className="px-4 py-2.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 text-xs font-bold transition-all cursor-pointer"
           >
             Hủy
           </button>
@@ -252,11 +368,12 @@ export default function AddToNotebookModal({
             type="button"
             onClick={handleSubmit}
             disabled={submitting}
-            className="px-5 py-2.5 rounded-xl bg-indigo-600 text-white text-xs font-bold hover:bg-indigo-700 disabled:opacity-50 transition-colors shadow-xs"
+            className="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
           >
-            {submitting ? "Đang lưu..." : "Lưu vào Sổ tay"}
+            {submitting ? "⏳ Đang lưu..." : "💾 Lưu vào Sổ tay"}
           </button>
         </div>
+
       </div>
     </div>
   );

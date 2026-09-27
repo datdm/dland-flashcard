@@ -6,8 +6,8 @@ document.addEventListener("DOMContentLoaded", () => {
   let user = null;
   let authToken = null;
   let settings = {
-    webUrl: "https://flashcard-japanese-eight.vercel.app",
-    apiUrl: "https://flashcard-japanese-be.onrender.com",
+    webUrl: "https://dland-flashcard.vercel.app",
+    apiUrl: "https://dland-flashcard.vercel.app",
     autoSync: true,
     tooltipEnabled: true,
   };
@@ -114,10 +114,10 @@ document.addEventListener("DOMContentLoaded", () => {
       notebooks = res.notebooks || [];
       authToken = res.authToken || null;
       user = res.user || null;
-      settings.webUrl = res.webUrl || "https://flashcard-japanese-eight.vercel.app";
+      settings.webUrl = res.webUrl || "https://dland-flashcard.vercel.app";
       let cleanApi = res.apiUrl;
       if (!cleanApi || cleanApi.includes("vercel.app") || cleanApi.includes("localhost")) {
-        cleanApi = "https://flashcard-japanese-be.onrender.com";
+        cleanApi = "https://dland-flashcard.vercel.app";
       }
       settings.apiUrl = cleanApi;
       settings.autoSync = res.autoSync !== false;
@@ -324,7 +324,7 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("btnOpenLoginModal")?.addEventListener("click", () => {
         loginErrorMsg.style.display = "none";
         if (loginCurrentApiDisplay) {
-          loginCurrentApiDisplay.textContent = settings.apiUrl || "https://flashcard-japanese-be.onrender.com";
+          loginCurrentApiDisplay.textContent = settings.apiUrl || "https://dland-flashcard.vercel.app";
         }
         loginModal.style.display = "flex";
         loginUsername?.focus?.();
@@ -609,7 +609,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (e.target.closest("#btnOpenLoginModal")) {
       loginErrorMsg.style.display = "none";
       if (loginCurrentApiDisplay) {
-        loginCurrentApiDisplay.textContent = settings.apiUrl || "https://flashcard-japanese-be.onrender.com";
+        loginCurrentApiDisplay.textContent = settings.apiUrl || "https://dland-flashcard.vercel.app";
       }
       loginModal.style.display = "flex";
       loginUsername?.focus?.();
@@ -626,10 +626,10 @@ document.addEventListener("DOMContentLoaded", () => {
   // 5. SETTINGS MODAL ACTIONS
   // =========================================================================
   btnOpenSettings?.addEventListener("click", () => {
-    settingWebUrl.value = settings.webUrl || "https://flashcard-japanese-eight.vercel.app";
+    settingWebUrl.value = settings.webUrl || "https://dland-flashcard.vercel.app";
     let currentApi = settings.apiUrl;
     if (!currentApi || currentApi.includes("vercel.app") || currentApi.includes("localhost")) {
-      currentApi = "https://flashcard-japanese-be.onrender.com";
+      currentApi = "https://dland-flashcard.vercel.app";
     }
     settingApiUrl.value = currentApi;
     settingAutoSync.checked = settings.autoSync !== false;
@@ -720,7 +720,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Presets (Only work when unlocked by Admin)
   presetWebVercel?.addEventListener("click", () => {
     if (!presetWebVercel.disabled) {
-      settingWebUrl.value = "https://flashcard-japanese-eight.vercel.app";
+      settingWebUrl.value = "https://dland-flashcard.vercel.app";
     }
   });
   presetWebLocal?.addEventListener("click", () => {
@@ -730,7 +730,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   presetApiRender?.addEventListener("click", () => {
     if (!presetApiRender.disabled) {
-      settingApiUrl.value = "https://flashcard-japanese-be.onrender.com";
+      settingApiUrl.value = "https://dland-flashcard.vercel.app";
     }
   });
   presetApiLocal?.addEventListener("click", () => {
@@ -743,7 +743,7 @@ document.addEventListener("DOMContentLoaded", () => {
   btnTestConnection?.addEventListener("click", () => {
     let urlToTest = (settingApiUrl?.value || "").trim();
     if (!urlToTest || urlToTest.includes("vercel.app") || urlToTest.includes("localhost")) {
-      urlToTest = "https://flashcard-japanese-be.onrender.com";
+      urlToTest = "https://dland-flashcard.vercel.app";
       if (settingApiUrl) settingApiUrl.value = urlToTest;
     }
     if (!urlToTest.startsWith("http://") && !urlToTest.startsWith("https://")) {
@@ -771,7 +771,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   function testDirectlyFromPopup(url) {
-    const targetUrl = (url || "https://flashcard-japanese-be.onrender.com").replace(/\/$/, "");
+    const targetUrl = (url || "https://dland-flashcard.vercel.app").replace(/\/$/, "");
     const startTime = Date.now();
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 20000);
@@ -818,8 +818,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // Save Settings
   btnSaveSettings?.addEventListener("click", () => {
     const newSettings = {
-      webUrl: settingWebUrl.value.trim() || "https://flashcard-japanese-eight.vercel.app",
-      apiUrl: settingApiUrl.value.trim() || "https://flashcard-japanese-be.onrender.com",
+      webUrl: settingWebUrl.value.trim() || "https://dland-flashcard.vercel.app",
+      apiUrl: settingApiUrl.value.trim() || "https://dland-flashcard.vercel.app",
       autoSync: settingAutoSync.checked,
       tooltipEnabled: settingTooltipEnabled.checked,
     };

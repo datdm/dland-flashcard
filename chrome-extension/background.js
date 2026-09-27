@@ -1,7 +1,7 @@
 // Dland Language Flashcard - Background Service Worker (Manifest V3)
 
-const DEFAULT_WEB_URL = "https://flashcard-japanese-eight.vercel.app";
-const DEFAULT_API_URL = "https://flashcard-japanese-be.onrender.com";
+const DEFAULT_WEB_URL = "https://dland-flashcard.vercel.app";
+const DEFAULT_API_URL = "https://dland-flashcard.vercel.app";
 
 // Default admin passcodes that can unlock Admin-only URL configuration
 const VALID_ADMIN_KEYS = ["admin", "admin123", "dland@admin", "dlandadmin", "secret", "888888"];
@@ -201,7 +201,7 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 async function getStoredApiUrl() {
   const store = await chrome.storage.local.get(["dland_api_url"]);
   let apiUrl = store.dland_api_url;
-  if (!apiUrl || apiUrl.includes("vercel.app") || apiUrl.includes("localhost")) {
+  if (!apiUrl || apiUrl.includes("onrender.com") || apiUrl.includes("flashcard-japanese")) {
     apiUrl = DEFAULT_API_URL;
     await chrome.storage.local.set({ dland_api_url: DEFAULT_API_URL });
   }
@@ -242,10 +242,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         ])
         .then(async (res) => {
           let apiUrl = res.dland_api_url;
-          if (!apiUrl || apiUrl.includes("vercel.app") || apiUrl.includes("localhost")) {
-            apiUrl = DEFAULT_API_URL;
-            await chrome.storage.local.set({ dland_api_url: DEFAULT_API_URL });
-          }
+          if (!apiUrl || apiUrl.includes("onrender.com") || apiUrl.includes("flashcard-japanese")) {
+    apiUrl = DEFAULT_API_URL;
+    await chrome.storage.local.set({ dland_api_url: DEFAULT_API_URL });
+  }
 
           // Return immediately with the latest local stored notebooks and credentials
           sendResponse({
@@ -354,10 +354,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         ])
         .then(async (res) => {
           let apiUrl = res.dland_api_url;
-          if (!apiUrl || apiUrl.includes("vercel.app") || apiUrl.includes("localhost")) {
-            apiUrl = DEFAULT_API_URL;
-            await chrome.storage.local.set({ dland_api_url: DEFAULT_API_URL });
-          }
+          if (!apiUrl || apiUrl.includes("onrender.com") || apiUrl.includes("flashcard-japanese")) {
+    apiUrl = DEFAULT_API_URL;
+    await chrome.storage.local.set({ dland_api_url: DEFAULT_API_URL });
+  }
           sendResponse({
             apiUrl: apiUrl,
             webUrl: res.dland_web_url || DEFAULT_WEB_URL,
@@ -1044,7 +1044,7 @@ async function handleSyncFromOpenTabs() {
   const matchedTab = tabs.find((t) => {
     if (!t.url) return false;
     return (
-      t.url.includes("flashcard-japanese-eight.vercel.app") ||
+      t.url.includes("dland-flashcard.vercel.app") ||
       t.url.includes("localhost:3000") ||
       t.url.startsWith(targetWebUrl)
     );
