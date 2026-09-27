@@ -13,9 +13,11 @@ export async function POST(req: NextRequest) {
     const genAI = new GoogleGenerativeAI(apiKey);
     const candidateModels = [
       "gemini-3.8-flash",
+      "gemini-3-flash-preview",
       "gemini-3.7-flash",
+      "gemini-flash-lite-latest",
+      "gemini-3.1-flash-lite",
       "gemini-3.5-flash",
-      "gemini-flash-latest",
     ];
 
     const systemPrompt = `Bạn là chuyên gia biên soạn giáo trình luyện Shadowing video tiếng Nhật / đa ngôn ngữ.
@@ -53,14 +55,23 @@ Chỉ trả về JSON thuần túy, không kèm markdown backticks.`;
           rawText = responseText;
           break;
         }
-      } catch (mErr) {
+      } catch (mErr: any) {
         lastError = mErr;
         console.warn(`Shadowing transcript route model ${modelName} error:`, mErr);
+        const errMsg = (mErr?.message || "").toLowerCase();
+        if (mErr?.status === 503 || mErr?.status === 429 || errMsg.includes("503") || errMsg.includes("high demand") || errMsg.includes("quota")) {
+          await new Promise((resolve) => setTimeout(resolve, 800));
+        }
       }
     }
 
     if (!rawText) {
-      throw lastError || new Error("Không thể tạo phụ đề Shadowing");
+      const isOverloaded = lastError?.status === 503 || (lastError?.message || "").includes("503") || (lastError?.message || "").includes("high demand");
+      throw new Error(
+        isOverloaded
+          ? "Hệ thống AI của Google đang bị quá tải tạm thời (503 High Demand). Vui lòng thử lại sau giây lát!"
+          : (lastError?.message || "Không thể tạo phụ đề Shadowing")
+      );
     }
 
     rawText = rawText.replace(/\`\`\`json/g, "").replace(/\`\`\`/g, "").trim();

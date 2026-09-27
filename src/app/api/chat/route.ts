@@ -126,9 +126,11 @@ export async function POST(req: NextRequest) {
     // Use Gemini 3.8 Flash model with reliable fallbacks
     const candidateModels = [
       "gemini-3.8-flash",
+      "gemini-3-flash-preview",
       "gemini-3.7-flash",
+      "gemini-flash-lite-latest",
+      "gemini-3.1-flash-lite",
       "gemini-3.5-flash",
-      "gemini-flash-latest",
     ];
     let lastError: any = null;
 
@@ -167,10 +169,19 @@ export async function POST(req: NextRequest) {
       } catch (err: any) {
         lastError = err;
         console.warn(`Model ${modelName} failed for chat stream, trying next candidate...`, err?.message || err);
+        const errMsg = (err?.message || "").toLowerCase();
+        if (err?.status === 503 || err?.status === 429 || errMsg.includes("503") || errMsg.includes("high demand") || errMsg.includes("quota")) {
+          await new Promise((resolve) => setTimeout(resolve, 800));
+        }
       }
     }
 
-    throw lastError || new Error("Không thể kết nối tới các mô hình Gemini AI.");
+    const isOverloaded = lastError?.status === 503 || (lastError?.message || "").includes("503") || (lastError?.message || "").includes("high demand");
+    throw new Error(
+      isOverloaded
+        ? "Hệ thống AI của Google đang bị quá tải tạm thời (503 High Demand). Vui lòng thử lại sau giây lát!"
+        : (lastError?.message || "Không thể kết nối tới các mô hình Gemini AI.")
+    );
 
   } catch (error: any) {
     console.error("Chat API Error:", error);

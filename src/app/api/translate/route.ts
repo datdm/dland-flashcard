@@ -45,11 +45,13 @@ export async function POST(req: NextRequest) {
     if (apiKey) {
       const genAI = new GoogleGenerativeAI(apiKey);
       const candidateModels = [
-        "gemini-3.8-flash",
-        "gemini-3.7-flash",
-        "gemini-3.5-flash",
-        "gemini-flash-latest",
-      ];
+      "gemini-3.8-flash",
+      "gemini-3-flash-preview",
+      "gemini-3.7-flash",
+      "gemini-flash-lite-latest",
+      "gemini-3.1-flash-lite",
+      "gemini-3.5-flash",
+    ];
       const prompt = `Bạn là chuyên gia dịch thuật cao cấp. Hãy dịch chính xác, tự nhiên đoạn văn bản sau từ ngôn ngữ ${
         source === "auto" ? "tự động nhận diện" : source
       } sang ngôn ngữ đích ${target}.
@@ -68,8 +70,12 @@ ${q}`;
               provider: "libretranslate-neural-fallback",
             });
           }
-        } catch (mErr) {
+        } catch (mErr: any) {
           console.warn(`Translate route model ${modelName} error:`, mErr);
+          const errMsg = (mErr?.message || "").toLowerCase();
+          if (mErr?.status === 503 || mErr?.status === 429 || errMsg.includes("503") || errMsg.includes("high demand") || errMsg.includes("quota")) {
+            await new Promise((resolve) => setTimeout(resolve, 800));
+          }
         }
       }
     }

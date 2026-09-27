@@ -78,9 +78,11 @@ Chú ý:
 
     const candidateModels = [
       "gemini-3.8-flash",
+      "gemini-3-flash-preview",
       "gemini-3.7-flash",
+      "gemini-flash-lite-latest",
+      "gemini-3.1-flash-lite",
       "gemini-3.5-flash",
-      "gemini-flash-latest",
     ];
     let text = "";
     let lastError: any = null;
@@ -100,11 +102,20 @@ Chú ý:
       } catch (err: any) {
         lastError = err;
         console.warn(`Model ${modelName} failed for curriculum activities:`, err?.message);
+        const errMsg = (err?.message || "").toLowerCase();
+        if (err?.status === 503 || err?.status === 429 || errMsg.includes("503") || errMsg.includes("high demand") || errMsg.includes("quota")) {
+          await new Promise((resolve) => setTimeout(resolve, 800));
+        }
       }
     }
 
     if (!text) {
-      throw lastError || new Error("Không thể tạo hoạt động từ AI.");
+      const isOverloaded = lastError?.status === 503 || (lastError?.message || "").includes("503") || (lastError?.message || "").includes("high demand");
+      throw new Error(
+        isOverloaded
+          ? "Hệ thống AI của Google đang bị quá tải tạm thời (503 High Demand). Vui lòng thử lại sau giây lát!"
+          : (lastError?.message || "Không thể tạo hoạt động từ AI.")
+      );
     }
     
     // Parse the output to make sure it's valid JSON
