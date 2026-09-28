@@ -34,16 +34,20 @@ export default function MaziiQuickLookupModal({
   const [results, setResults] = useState<MaziiWordResult[]>([]);
   const [activeTab, setActiveTab] = useState<number>(0);
   const [searchTerm, setSearchTerm] = useState<string>(queryWord);
+  const [searchedWord, setSearchedWord] = useState<string>(queryWord);
   const [showDrawModal, setShowDrawModal] = useState<boolean>(false);
 
+  // Sync searchedWord when queryWord prop or isOpen changes
   useEffect(() => {
-    if (queryWord) {
+    if (isOpen && queryWord) {
       setSearchTerm(queryWord);
+      setSearchedWord(queryWord);
     }
-  }, [queryWord]);
+  }, [isOpen, queryWord]);
 
+  // Fetch dictionary whenever isOpen or searchedWord changes
   useEffect(() => {
-    if (!isOpen || !searchTerm) return;
+    if (!isOpen || !searchedWord || !searchedWord.trim()) return;
 
     let isMounted = true;
     setLoading(true);
@@ -51,7 +55,7 @@ export default function MaziiQuickLookupModal({
 
     async function fetchMazii() {
       try {
-        const cleanWord = searchTerm.trim();
+        const cleanWord = searchedWord.trim();
         const res = await fetch(`/api/dictionary?keyword=${encodeURIComponent(cleanWord)}&lang=ja`);
         if (!res.ok) throw new Error("Failed to search dictionary");
         const json = await res.json();
@@ -97,8 +101,8 @@ export default function MaziiQuickLookupModal({
         if (isMounted) {
           setResults([
             {
-              kanji: queryWord,
-              hiragana: initialFurigana || queryWord,
+              kanji: searchedWord,
+              hiragana: initialFurigana || searchedWord,
               meaning: initialMeaning || "Không tìm thấy dữ liệu từ điển. Vui lòng mở Mazii trực tiếp.",
               source: "Mazii Search",
             },
@@ -113,9 +117,16 @@ export default function MaziiQuickLookupModal({
     return () => {
       isMounted = false;
     };
-  }, [isOpen, queryWord, initialFurigana, initialMeaning]);
+  }, [isOpen, searchedWord, initialFurigana, initialMeaning]);
 
   if (!isOpen) return null;
+
+  const handleManualSearch = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (searchTerm.trim()) {
+      setSearchedWord(searchTerm.trim());
+    }
+  };
 
   const playSpeech = (text: string) => {
     if (typeof window === "undefined") return;
@@ -126,8 +137,8 @@ export default function MaziiQuickLookupModal({
   };
 
   const currentItem = results[activeTab] || {
-    kanji: queryWord,
-    hiragana: initialFurigana || queryWord,
+    kanji: searchedWord,
+    hiragana: initialFurigana || searchedWord,
     meaning: initialMeaning || "Đang tra cứu...",
   };
 
@@ -169,6 +180,46 @@ export default function MaziiQuickLookupModal({
           </div>
         </div>
 
+        {/* Quick Search Bar */}
+        <div className="px-6 py-3 bg-amber-50/80 border-b border-amber-100 flex items-center gap-2">
+          <form onSubmit={handleManualSearch} className="flex-1 flex items-center gap-2 bg-white px-3 py-1.5 rounded-2xl border border-amber-200 shadow-3xs focus-within:border-amber-500 focus-within:ring-2 focus-within:ring-amber-200 transition-all">
+            <span className="text-xs text-amber-500">🔍</span>
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Nhập từ vựng, Kanji cần tra..."
+              className="w-full text-xs font-bold text-gray-800 focus:outline-none bg-transparent"
+            />
+            {searchTerm && (
+              <button
+                type="button"
+                onClick={() => setSearchTerm("")}
+                className="text-xs text-gray-400 hover:text-gray-600 p-0.5 cursor-pointer"
+                title="Xóa chữ"
+              >
+                ✕
+              </button>
+            )}
+            <button
+              type="submit"
+              className="px-2.5 py-1 bg-amber-500 hover:bg-amber-600 text-white rounded-xl text-[11px] font-extrabold transition-colors cursor-pointer shrink-0"
+            >
+              Tra từ
+            </button>
+          </form>
+
+          <button
+            type="button"
+            onClick={() => setShowDrawModal((prev) => !prev)}
+            className="px-3 py-2 bg-white hover:bg-amber-100 text-amber-800 border border-amber-200 rounded-2xl text-xs font-bold transition-colors flex items-center gap-1 cursor-pointer shrink-0"
+            title="Vẽ Kanji để tra từ"
+          >
+            <span>🖌️</span>
+            <span className="hidden sm:inline">Vẽ Kanji</span>
+          </button>
+        </div>
+
         {/* Modal Body */}
         <div className="p-6 overflow-y-auto space-y-4 flex-1">
           {showDrawModal && (
@@ -178,6 +229,7 @@ export default function MaziiQuickLookupModal({
               variant="inline"
               onSelectKanji={(kanji) => {
                 setSearchTerm(kanji);
+                setSearchedWord(kanji);
                 setShowDrawModal(false);
               }}
             />
@@ -185,14 +237,14 @@ export default function MaziiQuickLookupModal({
           {loading ? (
             <div className="flex flex-col items-center justify-center py-12 space-y-3">
               <div className="w-8 h-8 border-3 border-amber-500 border-t-transparent rounded-full animate-spin" />
-              <p className="text-xs font-bold text-gray-500">Đang tra cứu từ điển Mazii cho "{queryWord}"...</p>
+              <p className="text-xs font-bold text-gray-500">Đang tra cứu từ điển Mazii cho "{searchedWord}"...</p>
             </div>
           ) : results.length === 0 ? (
             <div className="text-center py-8 space-y-3">
               <span className="text-3xl">📖</span>
-              <p className="text-xs text-gray-600 font-bold">Chưa tìm thấy giải nghĩa cho từ "{queryWord}"</p>
+              <p className="text-xs text-gray-600 font-bold">Chưa tìm thấy giải nghĩa cho từ "{searchedWord}"</p>
               <a
-                href={`https://mazii.net/search/word?dict=javi&query=${encodeURIComponent(queryWord)}`}
+                href={`https://mazii.net/search/word?dict=javi&query=${encodeURIComponent(searchedWord)}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 px-4 py-2 bg-amber-500 text-white text-xs font-bold rounded-xl shadow-xs hover:bg-amber-600 transition-colors"
@@ -207,7 +259,7 @@ export default function MaziiQuickLookupModal({
                 <div>
                   <div className="flex items-baseline gap-2 flex-wrap">
                     <span className="text-2xl font-black text-gray-900">
-                      {currentItem.kanji || currentItem.hiragana || queryWord}
+                      {currentItem.kanji || currentItem.hiragana || searchedWord}
                     </span>
                     {currentItem.hiragana && currentItem.kanji !== currentItem.hiragana && (
                       <span className="text-base font-bold text-amber-700 font-mono">
@@ -233,7 +285,7 @@ export default function MaziiQuickLookupModal({
 
                 {/* Pronounce button */}
                 <button
-                  onClick={() => playSpeech(currentItem.kanji || currentItem.hiragana || queryWord)}
+                  onClick={() => playSpeech(currentItem.kanji || currentItem.hiragana || searchedWord)}
                   className="p-2.5 bg-white hover:bg-amber-100 text-amber-700 rounded-xl border border-amber-200 shadow-3xs transition-colors shrink-0 cursor-pointer"
                   title="Phát âm từ này"
                 >
@@ -310,7 +362,7 @@ export default function MaziiQuickLookupModal({
         {/* Modal Footer Actions */}
         <div className="px-6 py-3.5 bg-gray-50 border-t border-gray-100 flex flex-wrap items-center justify-between gap-2">
           <a
-            href={`https://mazii.net/search/word?dict=javi&query=${encodeURIComponent(queryWord)}`}
+            href={`https://mazii.net/search/word?dict=javi&query=${encodeURIComponent(searchedWord)}`}
             target="_blank"
             rel="noopener noreferrer"
             className="text-xs font-extrabold text-amber-600 hover:text-amber-800 flex items-center gap-1 transition-colors"
@@ -324,8 +376,8 @@ export default function MaziiQuickLookupModal({
               <button
                 onClick={() => {
                   onAddToNotebook({
-                    kanji: currentItem.kanji || queryWord,
-                    hiragana: currentItem.hiragana || queryWord,
+                    kanji: currentItem.kanji || searchedWord,
+                    hiragana: currentItem.hiragana || searchedWord,
                     meaning: currentItem.meaning || initialMeaning || "",
                     wordType: "Danh từ",
                   });
@@ -347,7 +399,6 @@ export default function MaziiQuickLookupModal({
           </div>
         </div>
       </div>
-
     </div>
   );
 }

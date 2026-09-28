@@ -149,7 +149,7 @@ export const JLPT_STRUCTURES: Record<string, JLPTLevelStructure> = {
                 japaneseTitle: "内容理解（短文）",
                 questionCount: 5,
                 suggestedTimeMinutes: 15,
-                targetDescription: "Đọc và hiểu được nội dung của văn bản khoảng 200 Hán tự, thể loại văn giải thích, chỉ thị... liên quan đến công việc và cuộc sống.",
+                targetDescription: "Đọc và nắm bắt thông điệp của văn bản ngắn (~200 Hán tự) xoay quanh các chủ đề ngắn gọn trong đời sống, email công việc, thông báo, hướng dẫn chỉ thị hoặc đoạn văn ngắn nêu một ý kiến cụ thể.",
               },
               {
                 mondaiNumber: 11,
@@ -347,7 +347,7 @@ export const JLPT_STRUCTURES: Record<string, JLPTLevelStructure> = {
             icon: "📄",
             totalTimeMinutes: 45,
             mondais: [
-              { mondaiNumber: 9, title: "問題 4: 短文読解", subTitle: "Đoạn văn ngắn (~150-200 chữ)", japaneseTitle: "内容理解（短文）", questionCount: 4, targetDescription: "Hiểu nội dung cơ bản đời sống." },
+              { mondaiNumber: 9, title: "問題 4: 短文読解", subTitle: "Đoạn văn ngắn (~150-200 chữ)", japaneseTitle: "内容理解（短文）", questionCount: 4, targetDescription: "Đọc và hiểu nội dung xoay quanh các chủ đề ngắn gọn trong đời sống (~150-200 chữ), email, thông báo hoặc đoạn văn ngắn nêu một ý kiến cụ thể." },
               { mondaiNumber: 10, title: "問題 5: 中文読解", subTitle: "Đoạn văn vừa (~350 chữ)", japaneseTitle: "内容理解（中文）", questionCount: 6, targetDescription: "Hiểu quan điểm, giải thích." },
               { mondaiNumber: 11, title: "問題 6: 長文読解", subTitle: "Đoạn văn dài (~600 chữ)", japaneseTitle: "内容理解（長文）", questionCount: 4, targetDescription: "Hiểu mạch bài và ý đồ tác giả." },
               { mondaiNumber: 12, title: "問題 7: 情報検索", subTitle: "Tìm kiếm thông tin", japaneseTitle: "情報検索", questionCount: 2, targetDescription: "Tra cứu thông báo, quảng cáo." },
