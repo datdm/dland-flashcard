@@ -30,7 +30,6 @@ export function getNavItemsForLanguage(langCode: string): NavItem[] {
         { href: "/notebooks", label: "Sổ tay Tiếng Anh", icon: "📓" },
         { href: "/flashcard/all", label: "Ôn tập Flashcard", icon: "🎴" },
         { href: "/history", label: "Lịch sử học tập", icon: "📊" },
-        { href: "/settings", label: "Cài đặt Ngôn ngữ", icon: "⚙️" },
         { href: "/shadowing", label: "Shadowing Video", icon: "🎬", isDevOnly: true },
         { href: "/ipa", label: "Luyện phát âm IPA", icon: "🎙️", isDevOnly: true },
         { href: "/grammar", label: "Ngữ pháp Tiếng Anh", icon: "📖", isDevOnly: true },
@@ -38,6 +37,7 @@ export function getNavItemsForLanguage(langCode: string): NavItem[] {
         { href: "/admin", label: "Quản trị hệ thống", icon: "🛡️", isDevOnly: true },
         { href: "/practice/ai-voice-room", label: "Phòng Luyện Voice AI", icon: "🎙️", isComingSoon: true, isDevOnly: true },
         { href: "/practice/mock-interview", label: "Phỏng Vấn Xin Việc AI", icon: "💼", isComingSoon: true, isDevOnly: true },
+        { href: "/settings", label: "Cài đặt Ngôn ngữ", icon: "⚙️" },
       ];
 
     case "de":
@@ -51,11 +51,11 @@ export function getNavItemsForLanguage(langCode: string): NavItem[] {
         { href: "/notebooks", label: "Sổ tay Tiếng Đức", icon: "📓" },
         { href: "/flashcard/all", label: "Ôn tập Flashcard", icon: "🎴" },
         { href: "/history", label: "Lịch sử học tập", icon: "📊" },
-        { href: "/settings", label: "Cài đặt Ngôn ngữ", icon: "⚙️" },
         { href: "/shadowing", label: "Shadowing Video", icon: "🎬", isDevOnly: true },
         { href: "/grammar", label: "Ngữ pháp Tiếng Đức", icon: "📖", isDevOnly: true },
         { href: "/vocabulary", label: "Kho Từ Vựng Tiếng Đức", icon: "📝", isDevOnly: true },
         { href: "/admin", label: "Quản trị hệ thống", icon: "🛡️", isDevOnly: true },
+        { href: "/settings", label: "Cài đặt Ngôn ngữ", icon: "⚙️" },
       ];
 
     case "ko":
@@ -68,11 +68,11 @@ export function getNavItemsForLanguage(langCode: string): NavItem[] {
         { href: "/notebooks", label: "Sổ tay Tiếng Hàn", icon: "📓" },
         { href: "/flashcard/all", label: "Ôn tập Flashcard", icon: "🎴" },
         { href: "/history", label: "Lịch sử học tập", icon: "📊" },
-        { href: "/settings", label: "Cài đặt Ngôn ngữ", icon: "⚙️" },
         { href: "/shadowing", label: "Shadowing Video", icon: "🎬", isDevOnly: true },
         { href: "/grammar", label: "Ngữ pháp Tiếng Hàn", icon: "📖", isDevOnly: true },
         { href: "/vocabulary", label: "Kho Từ Vựng Tiếng Hàn", icon: "📝", isDevOnly: true },
         { href: "/admin", label: "Quản trị hệ thống", icon: "🛡️", isDevOnly: true },
+        { href: "/settings", label: "Cài đặt Ngôn ngữ", icon: "⚙️" },
       ];
 
     case "zh":
@@ -85,12 +85,12 @@ export function getNavItemsForLanguage(langCode: string): NavItem[] {
         { href: "/notebooks", label: "Sổ tay Tiếng Trung", icon: "📓" },
         { href: "/flashcard/all", label: "Ôn tập Flashcard", icon: "🎴" },
         { href: "/history", label: "Lịch sử học tập", icon: "📊" },
-        { href: "/settings", label: "Cài đặt Ngôn ngữ", icon: "⚙️" },
         { href: "/shadowing", label: "Shadowing Video", icon: "🎬", isDevOnly: true },
         { href: "/grammar", label: "Ngữ pháp Tiếng Trung", icon: "📖", isDevOnly: true },
         { href: "/kanji", label: "Hán tự Hanzi", icon: "🉐", isDevOnly: true },
         { href: "/vocabulary", label: "Kho Từ Vựng Tiếng Trung", icon: "📝", isDevOnly: true },
         { href: "/admin", label: "Quản trị hệ thống", icon: "🛡️", isDevOnly: true },
+        { href: "/settings", label: "Cài đặt Ngôn ngữ", icon: "⚙️" },
       ];
 
     case "ja":
@@ -106,7 +106,6 @@ export function getNavItemsForLanguage(langCode: string): NavItem[] {
         { href: "/notebooks", label: "Sổ tay Tiếng Nhật", icon: "📓" },
         { href: "/flashcard/all", label: "Ôn tập Flashcard", icon: "🎴" },
         { href: "/history", label: "Lịch sử học tập", icon: "📊" },
-        { href: "/settings", label: "Cài đặt Ngôn ngữ", icon: "⚙️" },
         { href: "/shadowing", label: "Shadowing Video", icon: "🎬", isDevOnly: true },
         { href: "/kaiwa", label: "Lộ trình Kaiwa", icon: "🗣️", isDevOnly: true },
         { href: "/grammar", label: "Ngữ pháp JLPT", icon: "📖", isDevOnly: true },
@@ -116,6 +115,7 @@ export function getNavItemsForLanguage(langCode: string): NavItem[] {
         { href: "/chat/live", label: "Gia Sư Voice AI (Live)", icon: "🎙️", isComingSoon: false, isDevOnly: true },
         { href: "/practice/ai-voice-room", label: "Phòng Luyện Voice AI", icon: "🎙️", isComingSoon: true, isDevOnly: true },
         { href: "/practice/mock-interview", label: "Phỏng Vấn Xin Việc AI", icon: "💼", isComingSoon: true, isDevOnly: true },
+        { href: "/settings", label: "Cài đặt Ngôn ngữ", icon: "⚙️" },
       ];
   }
 }
@@ -141,9 +141,16 @@ export default function Navbar() {
   });
 
   // When no language is chosen, only show minimal items (home + settings)
-  const displayNavItems = isLanguageChosen
+  const rawDisplayNavItems = isLanguageChosen
     ? visibleNavItems
     : visibleNavItems.filter((item) => item.href === "/" || item.href === "/settings");
+
+  // Ensure "Cài đặt Ngôn ngữ" (/settings) is always placed at the very end of navbar items
+  const settingsItem = rawDisplayNavItems.find((item) => item.href === "/settings");
+  const otherDisplayItems = rawDisplayNavItems.filter((item) => item.href !== "/settings");
+  const displayNavItems = settingsItem
+    ? [...otherDisplayItems, settingsItem]
+    : rawDisplayNavItems;
 
 
   const activeNavItem = navItems.find((item) =>
@@ -274,7 +281,7 @@ export default function Navbar() {
         </div>
 
         {/* Desktop Sidebar Footer */}
-        <div className="pt-4 border-t border-gray-100 space-y-3">
+        <div className="pt-4 border-t border-gray-100 space-y-3 shrink-0">
           {/* Language selector — highlight as CTA when not yet chosen */}
           <Link
             href={isLanguageChosen ? "/settings" : "/"}
