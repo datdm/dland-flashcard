@@ -8,16 +8,23 @@ import { useStreak } from "@/hooks/useStreak";
 import { initializeSampleData } from "@/lib/storage";
 import { useLanguageSetting } from "@/hooks/useLanguageSetting";
 import Leaderboard from "@/components/Leaderboard";
+import LanguageLandingPage from "@/components/LanguageLandingPage";
 
 export default function HomePage() {
   const { notebooks } = useNotebooks();
   const { progress } = useProgress();
   const streak = useStreak();
-  const { activeLanguage } = useLanguageSetting();
+  const { activeLanguage, isLanguageChosen } = useLanguageSetting();
 
   useEffect(() => {
     initializeSampleData();
   }, []);
+
+  // Show the language-agnostic landing page for first-time / no-language-set users
+  if (!isLanguageChosen) {
+    return <LanguageLandingPage />;
+  }
+
 
   const LEVEL_CARDS = activeLanguage.code === "de" ? [
     { level: "A1", title: "Goethe A1", desc: "Từ vựng Sơ cấp A1, Quán từ Der/Die/Das, Chia động từ hiện tại", color: "from-emerald-500 to-teal-600" },

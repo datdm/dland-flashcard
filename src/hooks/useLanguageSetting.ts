@@ -63,6 +63,28 @@ export const SUPPORTED_LANGUAGES: LanguageOption[] = [
 
 const LANGUAGE_STORAGE_KEY = "dland_target_language";
 
+/** Returns true if the user has explicitly saved a language preference. */
+export function hasLanguageBeenChosen(): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    const match = document.cookie.match(new RegExp("(^| )" + LANGUAGE_STORAGE_KEY + "=([^;]+)"));
+    if (match) {
+      const val = decodeURIComponent(match[2]);
+      if (SUPPORTED_LANGUAGES.some((l) => l.code === val)) return true;
+    }
+    const raw = localStorage.getItem(LANGUAGE_STORAGE_KEY);
+    if (raw) {
+      try {
+        const parsed = JSON.parse(raw);
+        if (typeof parsed === "string" && SUPPORTED_LANGUAGES.some((l) => l.code === parsed)) return true;
+      } catch {
+        if (SUPPORTED_LANGUAGES.some((l) => l.code === raw)) return true;
+      }
+    }
+  } catch { /* ignore */ }
+  return false;
+}
+
 export function getSavedLanguage(): string {
   if (typeof window === "undefined") return "ja";
   try {
@@ -97,12 +119,17 @@ export function getSavedLanguage(): string {
 export function useLanguageSetting() {
   const [activeLangCode, setActiveLangCode] = useState<string>(() => getSavedLanguage());
   const [draftLangCode, setDraftLangCode] = useState<string>(() => getSavedLanguage());
+  const [isLanguageChosen, setIsLanguageChosen] = useState<boolean>(() =>
+    typeof window !== "undefined" ? hasLanguageBeenChosen() : false
+  );
 
   useEffect(() => {
     const handleLangUpdate = () => {
       const saved = getSavedLanguage();
+      const chosen = hasLanguageBeenChosen();
       setActiveLangCode(saved);
       setDraftLangCode(saved);
+      setIsLanguageChosen(chosen);
     };
 
     handleLangUpdate();
@@ -149,6 +176,7 @@ export function useLanguageSetting() {
     activeLanguage,
     draftLanguage,
     hasUnsavedChanges,
+    isLanguageChosen,
     supportedLanguages: SUPPORTED_LANGUAGES,
     selectDraftLanguage,
     saveLanguage,

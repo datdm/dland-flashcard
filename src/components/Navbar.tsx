@@ -125,7 +125,7 @@ export default function Navbar() {
   const router = useRouter();
   const [showSyncDialog, setShowSyncDialog] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const { activeLanguage } = useLanguageSetting();
+  const { activeLanguage, isLanguageChosen } = useLanguageSetting();
 
   const { user, isAuthenticated, openAuthModal, logout } = useAuth();
   const isAdmin = !!user?.isAdmin;
@@ -139,6 +139,12 @@ export default function Navbar() {
     if (isDev) return false;
     return isVisible(activeLanguage.code, item.href, isAdmin, defaultDev);
   });
+
+  // When no language is chosen, only show minimal items (home + settings)
+  const displayNavItems = isLanguageChosen
+    ? visibleNavItems
+    : visibleNavItems.filter((item) => item.href === "/" || item.href === "/settings");
+
 
   const activeNavItem = navItems.find((item) =>
     item.href === "/" ? pathname === "/" : pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href))
@@ -211,7 +217,7 @@ export default function Navbar() {
                 <div className="flex items-center gap-1 mt-0.5">
                   <span className="text-xs">{activeLanguage.flag}</span>
                   <span className="text-[10px] font-bold text-indigo-600 tracking-wider uppercase">
-                    {activeLanguage.name}
+                    {isLanguageChosen ? activeLanguage.name : "Chọn ngôn ngữ"}
                   </span>
                 </div>
               </div>
@@ -222,10 +228,23 @@ export default function Navbar() {
           <nav className="space-y-1 overflow-y-auto flex-1 pr-1 scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
             {!isCollapsed && (
               <div className="px-3 mb-2 text-[11px] font-bold text-gray-400 uppercase tracking-wider whitespace-nowrap">
-                Danh mục {activeLanguage.name}
+                {isLanguageChosen ? `Danh mục ${activeLanguage.name}` : "Điều hướng"}
               </div>
             )}
-            {visibleNavItems.map((item) => {
+            {/* No language chosen → show banner prompt */}
+            {!isLanguageChosen && !isCollapsed && (
+              <Link
+                href="/"
+                className="flex items-center gap-2 px-3 py-3 rounded-2xl bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-100 text-indigo-700 text-xs font-semibold hover:shadow-sm transition-all mb-1"
+              >
+                <span className="text-lg">🌐</span>
+                <div className="min-w-0">
+                  <p className="font-bold text-xs">Chưa chọn ngôn ngữ</p>
+                  <p className="text-[10px] text-indigo-400 truncate">Nhấn để xem tổng quan</p>
+                </div>
+              </Link>
+            )}
+            {displayNavItems.map((item) => {
               const { href, label, icon } = item;
               const isActive = pathname === href || (href !== "/" && pathname.startsWith(href));
               return (
@@ -256,21 +275,30 @@ export default function Navbar() {
 
         {/* Desktop Sidebar Footer */}
         <div className="pt-4 border-t border-gray-100 space-y-3">
+          {/* Language selector — highlight as CTA when not yet chosen */}
           <Link
-            href="/settings"
+            href={isLanguageChosen ? "/settings" : "/"}
             title={isCollapsed ? "Cài đặt & Ngôn ngữ" : undefined}
-            onClick={() => router.push("/settings")}
-            className={`w-full py-2 bg-indigo-50 text-indigo-700 rounded-2xl hover:bg-indigo-100 transition text-xs font-semibold flex items-center ${isCollapsed ? 'justify-center px-0' : 'justify-between px-3'}`}
+            onClick={() => router.push(isLanguageChosen ? "/settings" : "/")}
+            className={`w-full py-2 rounded-2xl transition text-xs font-semibold flex items-center ${
+              isCollapsed ? 'justify-center px-0' : 'justify-between px-3'
+            } ${
+              isLanguageChosen
+                ? 'bg-indigo-50 text-indigo-700 hover:bg-indigo-100'
+                : 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:opacity-90 shadow-md shadow-indigo-200'
+            }`}
           >
             {isCollapsed ? (
-              <span className="text-base">{activeLanguage.flag}</span>
+              <span className="text-base">{isLanguageChosen ? activeLanguage.flag : "🌐"}</span>
             ) : (
               <>
                 <div className="flex items-center gap-1.5 overflow-hidden">
-                  <span className="shrink-0">{activeLanguage.flag}</span>
-                  <span className="truncate">{activeLanguage.name}</span>
+                  <span className="shrink-0">{isLanguageChosen ? activeLanguage.flag : "🌐"}</span>
+                  <span className="truncate">{isLanguageChosen ? activeLanguage.name : "Chọn ngôn ngữ"}</span>
                 </div>
-                <span className="text-[10px] bg-indigo-200 text-indigo-800 px-1.5 py-0.5 rounded-md font-bold shrink-0">Đổi</span>
+                <span className={`text-[10px] px-1.5 py-0.5 rounded-md font-bold shrink-0 ${
+                  isLanguageChosen ? 'bg-indigo-200 text-indigo-800' : 'bg-white/20 text-white'
+                }`}>{isLanguageChosen ? "Đổi" : "→"}</span>
               </>
             )}
           </Link>
@@ -364,7 +392,7 @@ export default function Navbar() {
         className="md:hidden fixed bottom-0 inset-x-0 z-[60] bg-white/95 backdrop-blur-md border-t border-gray-200 flex items-center justify-around w-full h-12 px-1 select-none shadow-lg overflow-x-auto no-scrollbar"
         style={{ WebkitOverflowScrolling: "touch" }}
       >
-        {visibleNavItems.map((item) => {
+        {displayNavItems.map((item) => {
           const { href, label, icon } = item;
           const isActive = pathname === href || (href !== "/" && pathname.startsWith(href));
           return (
@@ -383,6 +411,16 @@ export default function Navbar() {
             </Link>
           );
         })}
+        {/* When no language chosen, show a CTA button in bottom bar */}
+        {!isLanguageChosen && (
+          <Link
+            href="/"
+            title="Chọn ngôn ngữ"
+            className="flex-1 min-w-[48px] max-w-[80px] h-9 flex items-center justify-center gap-1 rounded-xl text-[10px] font-bold bg-indigo-600 text-white shadow-md shadow-indigo-200 shrink-0 cursor-pointer px-2"
+          >
+            🌐 Chọn
+          </Link>
+        )}
       </nav>
 
       {/* Sync Dialog */}
