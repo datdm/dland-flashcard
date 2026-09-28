@@ -1,37 +1,47 @@
 {
   "level": "German A1",
-  "title": "🇩🇪 Netzwerk neu A1 - Tiếng Đức Sơ Cấp",
-  "description": "Lộ trình học Tiếng Đức trình độ A1 theo giáo trình Netzwerk neu: Từ vựng, ngữ pháp thiết yếu và các kỹ năng giao tiếp cơ bản",
+  "title": "🇩🇪 Netzwerk Neu A1 - Tiếng Đức Sơ Cấp (Đầy Đủ)",
+  "description": "Lộ trình học Tiếng Đức trình độ A1 theo giáo trình Netzwerk Neu A1 (Klett Verlag): 12 Kapitel với từ vựng, ngữ pháp thiết yếu và các kỹ năng giao tiếp cơ bản theo chuẩn CEFR",
   "lessons": [
     {
       "id": "de-lesson-01",
       "name": "Kapitel 1: Guten Tag!",
       "description": "Chào hỏi, tự giới thiệu tên tuổi, quốc gia, ngôn ngữ, số đếm 1-20 và bảng chữ cái tiếng Đức",
       "level": "A1",
-      "curriculum": "Netzwerk neu A1",
+      "curriculum": "Netzwerk Neu A1",
       "vocabulary": [
         { "id": "de-01-01", "kanji": "Guten Tag", "hiragana": "goo-ten tahk", "meaning": "Xin chào (ban ngày)", "phonetic": "greeting" },
         { "id": "de-01-02", "kanji": "Guten Morgen", "hiragana": "goo-ten mor-gen", "meaning": "Chào buổi sáng", "phonetic": "greeting" },
         { "id": "de-01-03", "kanji": "Guten Abend", "hiragana": "goo-ten ah-bent", "meaning": "Chào buổi tối", "phonetic": "greeting" },
         { "id": "de-01-04", "kanji": "Auf Wiedersehen", "hiragana": "owf vee-der-zeen", "meaning": "Tạm biệt (trang trọng)", "phonetic": "farewell" },
         { "id": "de-01-05", "kanji": "Tschüss", "hiragana": "chüss", "meaning": "Tạm biệt (thân mật)", "phonetic": "farewell" },
-        { "id": "de-01-06", "kanji": "Der Name", "hiragana": "dair nah-me", "meaning": "Tên", "phonetic": "noun (m)" },
-        { "id": "de-01-07", "kanji": "Die Sprache", "hiragana": "dee shprah-khe", "meaning": "Ngôn ngữ", "phonetic": "noun (f)" },
-        { "id": "de-01-08", "kanji": "Das Land", "hiragana": "dahs lahnt", "meaning": "Đất nước", "phonetic": "noun (n)" },
+        { "id": "de-01-06", "kanji": "der Name", "hiragana": "dair nah-me", "meaning": "Tên (nam)", "phonetic": "noun (m)" },
+        { "id": "de-01-07", "kanji": "die Sprache", "hiragana": "dee shprah-khe", "meaning": "Ngôn ngữ", "phonetic": "noun (f)" },
+        { "id": "de-01-08", "kanji": "das Land", "hiragana": "dahs lahnt", "meaning": "Đất nước", "phonetic": "noun (n)" },
         { "id": "de-01-09", "kanji": "Deutschland", "hiragana": "doytch-lahnt", "meaning": "Nước Đức", "phonetic": "proper noun" },
-        { "id": "de-01-10", "kanji": "Ich heiße ...", "hiragana": "ikh hei-se", "meaning": "Tôi tên là ...", "phonetic": "phrase" },
-        { "id": "de-01-11", "kanji": "Wie heißen Sie?", "hiragana": "vee hei-sen zee", "meaning": "Bạn tên là gì? (trang trọng)", "phonetic": "question" },
-        { "id": "de-01-12", "kanji": "Woher kommen Sie?", "hiragana": "vo-hair kom-men zee", "meaning": "Bạn đến từ đâu?", "phonetic": "question" },
-        { "id": "de-01-13", "kanji": "Ich komme aus ...", "hiragana": "ikh kom-me ows", "meaning": "Tôi đến từ ...", "phonetic": "phrase" },
-        { "id": "de-01-14", "kanji": "Bitte", "hiragana": "bit-te", "meaning": "Làm ơn / Xin mời", "phonetic": "adverb" },
-        { "id": "de-01-15", "kanji": "Danke", "hiragana": "dahn-ke", "meaning": "Cảm ơn", "phonetic": "expression" }
+        { "id": "de-01-10", "kanji": "Österreich", "hiragana": "oes-ter-raikh", "meaning": "Nước Áo", "phonetic": "proper noun" },
+        { "id": "de-01-11", "kanji": "die Schweiz", "hiragana": "dee shvaits", "meaning": "Thụy Sĩ", "phonetic": "proper noun" },
+        { "id": "de-01-12", "kanji": "Ich heiße ...", "hiragana": "ikh hei-se", "meaning": "Tôi tên là ...", "phonetic": "phrase" },
+        { "id": "de-01-13", "kanji": "Wie heißen Sie?", "hiragana": "vee hei-sen zee", "meaning": "Bạn tên là gì? (trang trọng)", "phonetic": "question" },
+        { "id": "de-01-14", "kanji": "Woher kommen Sie?", "hiragana": "vo-hair kom-men zee", "meaning": "Bạn đến từ đâu?", "phonetic": "question" },
+        { "id": "de-01-15", "kanji": "Ich komme aus ...", "hiragana": "ikh kom-me ows", "meaning": "Tôi đến từ ...", "phonetic": "phrase" },
+        { "id": "de-01-16", "kanji": "Bitte", "hiragana": "bit-te", "meaning": "Làm ơn / Xin mời", "phonetic": "adverb" },
+        { "id": "de-01-17", "kanji": "Danke", "hiragana": "dahn-ke", "meaning": "Cảm ơn", "phonetic": "expression" },
+        { "id": "de-01-18", "kanji": "Bitte schön", "hiragana": "bit-te shern", "meaning": "Không có gì / Xin mời", "phonetic": "expression" },
+        { "id": "de-01-19", "kanji": "Entschuldigung", "hiragana": "ent-shul-di-gung", "meaning": "Xin lỗi / Excuse me", "phonetic": "expression" },
+        { "id": "de-01-20", "kanji": "Ja / Nein", "hiragana": "yah / nayn", "meaning": "Có / Không", "phonetic": "particle" },
+        { "id": "de-01-21", "kanji": "eins, zwei, drei, vier, fünf", "hiragana": "ayns, tsvay, dry, feer, fuenf", "meaning": "một, hai, ba, bốn, năm", "phonetic": "number" },
+        { "id": "de-01-22", "kanji": "sechs, sieben, acht, neun, zehn", "hiragana": "zeks, zee-ben, akht, noyn, tsane", "meaning": "sáu, bảy, tám, chín, mười", "phonetic": "number" },
+        { "id": "de-01-23", "kanji": "elf, zwölf, dreizehn, vierzehn, fünfzehn", "hiragana": "elf, tsvoelf, dry-tsane, feer-tsane, fuenf-tsane", "meaning": "mười một đến mười lăm", "phonetic": "number" },
+        { "id": "de-01-24", "kanji": "Das Alphabet", "hiragana": "dahs al-fa-bet", "meaning": "Bảng chữ cái", "phonetic": "noun (n)" },
+        { "id": "de-01-25", "kanji": "Wie schreibt man das?", "hiragana": "vee shraybt man dahs", "meaning": "Viết từ đó như thế nào?", "phonetic": "question" }
       ],
       "grammarPoints": [
         {
           "id": "g-de-01-01",
           "structure": "Personalpronomen (Đại từ nhân xưng): ich, Sie, du",
           "meaning": "ich = tôi, Sie = Bạn/Ông/Bà (trang trọng), du = bạn (thân mật)",
-          "explanation": "Tiếng Đức phân biệt rõ giữa 'Sie' (trang trọng) và 'du' (thân mật).",
+          "explanation": "Tiếng Đức phân biệt rõ giữa 'Sie' (trang trọng) và 'du' (thân mật). Trong môi trường chuyên nghiệp dùng Sie.",
           "level": "A1",
           "examples": [
             { "id": "eg-de-01-01", "sentence": "Ich heiße Anna. Wie heißen Sie?", "meaning": "Tôi tên là Anna. Bạn tên là gì?" },
@@ -40,13 +50,24 @@
         },
         {
           "id": "g-de-01-02",
-          "structure": "Verb 'sein' (Động từ 'là'): ich bin, Sie sind, du bist",
-          "meaning": "Chia động từ 'sein' ở ngôi thứ nhất và thứ hai số ít",
-          "explanation": "Động từ 'sein' là động từ bất quy tắc quan trọng nhất.",
+          "structure": "Verb 'sein' (Động từ 'là'): ich bin, du bist, er/sie/es ist, Sie sind",
+          "meaning": "Chia động từ bất quy tắc 'sein' ở hiện tại",
+          "explanation": "Động từ 'sein' là động từ quan trọng và bất quy tắc nhất trong tiếng Đức.",
           "level": "A1",
           "examples": [
             { "id": "eg-de-01-03", "sentence": "Ich bin Lehrerin.", "meaning": "Tôi là giáo viên (nữ)." },
             { "id": "eg-de-01-04", "sentence": "Sie sind aus Vietnam.", "meaning": "Bạn đến từ Việt Nam." }
+          ]
+        },
+        {
+          "id": "g-de-01-03",
+          "structure": "W-Fragen: Wie? Woher? Was?",
+          "meaning": "Câu hỏi với từ hỏi Wie (như thế nào), Woher (từ đâu), Was (cái gì)",
+          "explanation": "Câu hỏi với từ hỏi: từ hỏi đứng đầu, sau đó đến động từ, rồi chủ ngữ.",
+          "level": "A1",
+          "examples": [
+            { "id": "eg-de-01-05", "sentence": "Wie heißen Sie?", "meaning": "Bạn tên là gì?" },
+            { "id": "eg-de-01-06", "sentence": "Woher kommen Sie?", "meaning": "Bạn đến từ đâu?" }
           ]
         }
       ]
@@ -56,30 +77,40 @@
       "name": "Kapitel 2: Freunde, Kollegen und ich",
       "description": "Bạn bè, đồng nghiệp, nghề nghiệp, số đếm đến 100, gia đình và tình trạng hôn nhân",
       "level": "A1",
-      "curriculum": "Netzwerk neu A1",
+      "curriculum": "Netzwerk Neu A1",
       "vocabulary": [
-        { "id": "de-02-01", "kanji": "Der Freund / Die Freundin", "hiragana": "froind / froin-din", "meaning": "Bạn bè (nam / nữ)", "phonetic": "noun" },
-        { "id": "de-02-02", "kanji": "Der Kollege / Die Kollegin", "hiragana": "kol-leh-ge / kol-leh-gin", "meaning": "Đồng nghiệp (nam / nữ)", "phonetic": "noun" },
-        { "id": "de-02-03", "kanji": "Der Beruf", "hiragana": "dair be-roof", "meaning": "Nghề nghiệp", "phonetic": "noun (m)" },
-        { "id": "de-02-04", "kanji": "Der Arzt / Die Ärztin", "hiragana": "artst / erts-tin", "meaning": "Bác sĩ (nam / nữ)", "phonetic": "noun" },
-        { "id": "de-02-05", "kanji": "Der Lehrer / Die Lehrerin", "hiragana": "leh-rer / leh-re-rin", "meaning": "Giáo viên (nam / nữ)", "phonetic": "noun" },
-        { "id": "de-02-06", "kanji": "Der Student / Die Studentin", "hiragana": "shtu-dent / shtu-den-tin", "meaning": "Sinh viên (nam / nữ)", "phonetic": "noun" },
-        { "id": "de-02-07", "kanji": "Die Familie", "hiragana": "dee fah-mee-lie", "meaning": "Gia đình", "phonetic": "noun (f)" },
-        { "id": "de-02-08", "kanji": "Der Mann", "hiragana": "dair man", "meaning": "Người đàn ông / Chồng", "phonetic": "noun (m)" },
-        { "id": "de-02-09", "kanji": "Die Frau", "hiragana": "dee frow", "meaning": "Người phụ nữ / Vợ", "phonetic": "noun (f)" },
-        { "id": "de-02-10", "kanji": "Das Kind", "hiragana": "dahs kint", "meaning": "Đứa trẻ", "phonetic": "noun (n)" },
-        { "id": "de-02-11", "kanji": "verheiratet", "hiragana": "fer-hai-rah-tet", "meaning": "Đã kết hôn", "phonetic": "adjective" },
-        { "id": "de-02-12", "kanji": "ledig", "hiragana": "leh-dikh", "meaning": "Độc thân", "phonetic": "adjective" },
-        { "id": "de-02-13", "kanji": "Das Alter", "hiragana": "dahs al-ter", "meaning": "Tuổi tác", "phonetic": "noun (n)" },
-        { "id": "de-02-14", "kanji": "Wie alt sind Sie?", "hiragana": "vee alt zint zee", "meaning": "Bạn bao nhiêu tuổi?", "phonetic": "question" },
-        { "id": "de-02-15", "kanji": "Ich bin ... Jahre alt.", "hiragana": "ikh bin ... yah-re alt", "meaning": "Tôi ... tuổi.", "phonetic": "phrase" }
+        { "id": "de-02-01", "kanji": "der Freund / die Freundin", "hiragana": "froind / froin-din", "meaning": "Bạn bè (nam / nữ)", "phonetic": "noun" },
+        { "id": "de-02-02", "kanji": "der Kollege / die Kollegin", "hiragana": "kol-leh-ge / kol-leh-gin", "meaning": "Đồng nghiệp (nam / nữ)", "phonetic": "noun" },
+        { "id": "de-02-03", "kanji": "der Beruf", "hiragana": "dair be-roof", "meaning": "Nghề nghiệp", "phonetic": "noun (m)" },
+        { "id": "de-02-04", "kanji": "der Arzt / die Ärztin", "hiragana": "artst / erts-tin", "meaning": "Bác sĩ (nam / nữ)", "phonetic": "noun" },
+        { "id": "de-02-05", "kanji": "der Lehrer / die Lehrerin", "hiragana": "leh-rer / leh-re-rin", "meaning": "Giáo viên (nam / nữ)", "phonetic": "noun" },
+        { "id": "de-02-06", "kanji": "der Ingenieur / die Ingenieurin", "hiragana": "in-zhe-ni-oer", "meaning": "Kỹ sư (nam / nữ)", "phonetic": "noun" },
+        { "id": "de-02-07", "kanji": "der Kaufmann / die Kauffrau", "hiragana": "kowf-man / kowf-frow", "meaning": "Nhân viên kinh doanh", "phonetic": "noun" },
+        { "id": "de-02-08", "kanji": "der Kellner / die Kellnerin", "hiragana": "kel-ner / kel-ne-rin", "meaning": "Bồi bàn (nam / nữ)", "phonetic": "noun" },
+        { "id": "de-02-09", "kanji": "der Student / die Studentin", "hiragana": "shtu-dent / shtu-den-tin", "meaning": "Sinh viên (nam / nữ)", "phonetic": "noun" },
+        { "id": "de-02-10", "kanji": "die Familie", "hiragana": "dee fah-mee-lie", "meaning": "Gia đình", "phonetic": "noun (f)" },
+        { "id": "de-02-11", "kanji": "der Mann", "hiragana": "dair man", "meaning": "Người đàn ông / Chồng", "phonetic": "noun (m)" },
+        { "id": "de-02-12", "kanji": "die Frau", "hiragana": "dee frow", "meaning": "Người phụ nữ / Vợ", "phonetic": "noun (f)" },
+        { "id": "de-02-13", "kanji": "das Kind", "hiragana": "dahs kint", "meaning": "Đứa trẻ", "phonetic": "noun (n)" },
+        { "id": "de-02-14", "kanji": "verheiratet", "hiragana": "fer-hai-rah-tet", "meaning": "Đã kết hôn", "phonetic": "adjective" },
+        { "id": "de-02-15", "kanji": "ledig", "hiragana": "leh-dikh", "meaning": "Độc thân", "phonetic": "adjective" },
+        { "id": "de-02-16", "kanji": "geschieden", "hiragana": "ge-shee-den", "meaning": "Đã ly hôn", "phonetic": "adjective" },
+        { "id": "de-02-17", "kanji": "das Alter", "hiragana": "dahs al-ter", "meaning": "Tuổi tác", "phonetic": "noun (n)" },
+        { "id": "de-02-18", "kanji": "Wie alt sind Sie?", "hiragana": "vee alt zint zee", "meaning": "Bạn bao nhiêu tuổi?", "phonetic": "question" },
+        { "id": "de-02-19", "kanji": "zwanzig, dreißig, vierzig", "hiragana": "tsvan-tsikh, drai-sikh, feer-tsikh", "meaning": "hai mươi, ba mươi, bốn mươi", "phonetic": "number" },
+        { "id": "de-02-20", "kanji": "fünfzig, sechzig, siebzig, achtzig, neunzig", "hiragana": "fuenf-tsikh, zekh-tsikh, zeep-tsikh, akhts-ikh, noyn-tsikh", "meaning": "năm mươi đến chín mươi", "phonetic": "number" },
+        { "id": "de-02-21", "kanji": "hundert", "hiragana": "hun-dert", "meaning": "Một trăm", "phonetic": "number" },
+        { "id": "de-02-22", "kanji": "die Telefonnummer", "hiragana": "dee te-le-fon-num-mer", "meaning": "Số điện thoại", "phonetic": "noun (f)" },
+        { "id": "de-02-23", "kanji": "die E-Mail-Adresse", "hiragana": "dee ee-mayl-ah-dres-se", "meaning": "Địa chỉ email", "phonetic": "noun (f)" },
+        { "id": "de-02-24", "kanji": "Was sind Sie von Beruf?", "hiragana": "vahs zint zee fon be-roof", "meaning": "Bạn làm nghề gì?", "phonetic": "question" },
+        { "id": "de-02-25", "kanji": "Ich bin ... von Beruf.", "hiragana": "ikh bin ... fon be-roof", "meaning": "Tôi là ... (nghề nghiệp).", "phonetic": "phrase" }
       ],
       "grammarPoints": [
         {
           "id": "g-de-02-01",
-          "structure": "Verb 'kommen' - Chia động từ nhóm đều ở số ít",
-          "meaning": "ich komme, du kommst, er/sie/es kommt, Sie kommen",
-          "explanation": "Động từ có quy tắc (Regelverben) chia theo khuôn: bỏ đuôi -en, thêm: -e / -st / -t / -en.",
+          "structure": "Verb 'kommen' - Động từ có quy tắc (Regelverben)",
+          "meaning": "ich komme, du kommst, er/sie/es kommt, wir kommen, ihr kommt, sie/Sie kommen",
+          "explanation": "Động từ có quy tắc chia theo khuôn: bỏ đuôi -en, thêm: -e / -st / -t / -en / -t / -en.",
           "level": "A1",
           "examples": [
             { "id": "eg-de-02-01", "sentence": "Sie kommt aus Japan.", "meaning": "Cô ấy đến từ Nhật Bản." },
@@ -90,11 +121,22 @@
           "id": "g-de-02-02",
           "structure": "Zahlen 1-100 (Số đếm từ 1 đến 100)",
           "meaning": "Cách đọc và viết các con số trong tiếng Đức",
-          "explanation": "Số từ 21 trở đi đọc hàng đơn vị trước rồi mới đến hàng chục: 21 = einundzwanzig.",
+          "explanation": "Số từ 21 trở đi đọc hàng đơn vị trước rồi mới đến hàng chục, nối bằng 'und': 21 = einundzwanzig.",
           "level": "A1",
           "examples": [
             { "id": "eg-de-02-03", "sentence": "Ich bin dreißig Jahre alt.", "meaning": "Tôi 30 tuổi." },
-            { "id": "eg-de-02-04", "sentence": "Das kostet fünfzig Euro.", "meaning": "Cái đó giá năm mươi Euro." }
+            { "id": "eg-de-02-04", "sentence": "Meine Handynummer ist null-eins-sieben-drei ...", "meaning": "Số điện thoại di động của tôi là 017-3..." }
+          ]
+        },
+        {
+          "id": "g-de-02-03",
+          "structure": "Verb 'haben' (Có): ich habe, du hast, er/sie/es hat, wir haben",
+          "meaning": "Động từ 'có' - bất quy tắc một phần",
+          "explanation": "'haben' là một trong những động từ quan trọng nhất, dùng để nói về sở hữu và trong thì Perfekt.",
+          "level": "A1",
+          "examples": [
+            { "id": "eg-de-02-05", "sentence": "Ich habe zwei Kinder.", "meaning": "Tôi có hai đứa con." },
+            { "id": "eg-de-02-06", "sentence": "Hast du eine Telefonnummer?", "meaning": "Bạn có số điện thoại không?" }
           ]
         }
       ]
@@ -104,477 +146,687 @@
       "name": "Kapitel 3: In der Stadt",
       "description": "Các địa điểm trong thành phố, hỏi đường, phương tiện giao thông và quán từ không xác định",
       "level": "A1",
-      "curriculum": "Netzwerk neu A1",
+      "curriculum": "Netzwerk Neu A1",
       "vocabulary": [
-        { "id": "de-03-01", "kanji": "Der Bahnhof", "hiragana": "dair bahn-hof", "meaning": "Nhà ga tàu hỏa", "phonetic": "noun (m)" },
-        { "id": "de-03-02", "kanji": "Die Post", "hiragana": "dee post", "meaning": "Bưu điện", "phonetic": "noun (f)" },
-        { "id": "de-03-03", "kanji": "Das Hotel", "hiragana": "dahs ho-tel", "meaning": "Khách sạn", "phonetic": "noun (n)" },
-        { "id": "de-03-04", "kanji": "Die Bank", "hiragana": "dee bank", "meaning": "Ngân hàng", "phonetic": "noun (f)" },
-        { "id": "de-03-05", "kanji": "Das Café", "hiragana": "dahs ka-feh", "meaning": "Quán cà phê", "phonetic": "noun (n)" },
-        { "id": "de-03-06", "kanji": "Die Apotheke", "hiragana": "dee ah-po-teh-ke", "meaning": "Nhà thuốc", "phonetic": "noun (f)" },
-        { "id": "de-03-07", "kanji": "Die Straße", "hiragana": "dee shtrah-se", "meaning": "Đường phố", "phonetic": "noun (f)" },
-        { "id": "de-03-08", "kanji": "Links", "hiragana": "links", "meaning": "Bên trái", "phonetic": "adverb" },
-        { "id": "de-03-09", "kanji": "Rechts", "hiragana": "rekhts", "meaning": "Bên phải", "phonetic": "adverb" },
-        { "id": "de-03-10", "kanji": "Geradeaus", "hiragana": "ge-rah-de-ows", "meaning": "Đi thẳng", "phonetic": "adverb" },
-        { "id": "de-03-11", "kanji": "Die U-Bahn", "hiragana": "dee oo-bahn", "meaning": "Tàu điện ngầm", "phonetic": "noun (f)" },
-        { "id": "de-03-12", "kanji": "Der Bus", "hiragana": "dair boos", "meaning": "Xe buýt", "phonetic": "noun (m)" },
-        { "id": "de-03-13", "kanji": "Das Fahrrad", "hiragana": "dahs fahr-raht", "meaning": "Xe đạp", "phonetic": "noun (n)" },
-        { "id": "de-03-14", "kanji": "Wo ist ...?", "hiragana": "vo ist", "meaning": "... ở đâu?", "phonetic": "question" },
-        { "id": "de-03-15", "kanji": "Entschuldigung!", "hiragana": "ent-shul-di-gung", "meaning": "Xin lỗi! (hỏi đường)", "phonetic": "expression" }
+        { "id": "de-03-01", "kanji": "der Bahnhof", "hiragana": "dair bahn-hof", "meaning": "Nhà ga tàu hỏa", "phonetic": "noun (m)" },
+        { "id": "de-03-02", "kanji": "die Post", "hiragana": "dee post", "meaning": "Bưu điện", "phonetic": "noun (f)" },
+        { "id": "de-03-03", "kanji": "das Hotel", "hiragana": "dahs ho-tel", "meaning": "Khách sạn", "phonetic": "noun (n)" },
+        { "id": "de-03-04", "kanji": "die Bank", "hiragana": "dee bank", "meaning": "Ngân hàng", "phonetic": "noun (f)" },
+        { "id": "de-03-05", "kanji": "das Café", "hiragana": "dahs ka-feh", "meaning": "Quán cà phê", "phonetic": "noun (n)" },
+        { "id": "de-03-06", "kanji": "die Apotheke", "hiragana": "dee ah-po-teh-ke", "meaning": "Nhà thuốc", "phonetic": "noun (f)" },
+        { "id": "de-03-07", "kanji": "die Straße", "hiragana": "dee shtrah-se", "meaning": "Đường phố", "phonetic": "noun (f)" },
+        { "id": "de-03-08", "kanji": "der Supermarkt", "hiragana": "dair zoo-per-markt", "meaning": "Siêu thị", "phonetic": "noun (m)" },
+        { "id": "de-03-09", "kanji": "das Krankenhaus", "hiragana": "dahs kran-ken-hows", "meaning": "Bệnh viện", "phonetic": "noun (n)" },
+        { "id": "de-03-10", "kanji": "die Schule", "hiragana": "dee shoo-le", "meaning": "Trường học", "phonetic": "noun (f)" },
+        { "id": "de-03-11", "kanji": "links", "hiragana": "links", "meaning": "Bên trái", "phonetic": "adverb" },
+        { "id": "de-03-12", "kanji": "rechts", "hiragana": "rekhts", "meaning": "Bên phải", "phonetic": "adverb" },
+        { "id": "de-03-13", "kanji": "geradeaus", "hiragana": "ge-rah-de-ows", "meaning": "Đi thẳng", "phonetic": "adverb" },
+        { "id": "de-03-14", "kanji": "die Ecke", "hiragana": "dee ek-ke", "meaning": "Góc đường", "phonetic": "noun (f)" },
+        { "id": "de-03-15", "kanji": "die U-Bahn", "hiragana": "dee oo-bahn", "meaning": "Tàu điện ngầm", "phonetic": "noun (f)" },
+        { "id": "de-03-16", "kanji": "der Bus", "hiragana": "dair boos", "meaning": "Xe buýt", "phonetic": "noun (m)" },
+        { "id": "de-03-17", "kanji": "die Straßenbahn", "hiragana": "dee shtrah-sen-bahn", "meaning": "Xe điện (tram)", "phonetic": "noun (f)" },
+        { "id": "de-03-18", "kanji": "das Auto", "hiragana": "dahs ow-to", "meaning": "Ô tô", "phonetic": "noun (n)" },
+        { "id": "de-03-19", "kanji": "das Fahrrad", "hiragana": "dahs fahr-raht", "meaning": "Xe đạp", "phonetic": "noun (n)" },
+        { "id": "de-03-20", "kanji": "zu Fuß gehen", "hiragana": "tsoo foos gay-en", "meaning": "Đi bộ", "phonetic": "phrase" },
+        { "id": "de-03-21", "kanji": "Entschuldigung, wo ist ...?", "hiragana": "ent-shul-di-gung, vo ist", "meaning": "Xin lỗi, ... ở đâu?", "phonetic": "question" },
+        { "id": "de-03-22", "kanji": "die Haltestelle", "hiragana": "dee hal-te-shtel-le", "meaning": "Điểm dừng xe buýt", "phonetic": "noun (f)" },
+        { "id": "de-03-23", "kanji": "nah / weit", "hiragana": "nah / vayt", "meaning": "Gần / xa", "phonetic": "adjective" },
+        { "id": "de-03-24", "kanji": "Wie weit ist es?", "hiragana": "vee vayt ist es", "meaning": "Cách bao xa?", "phonetic": "question" },
+        { "id": "de-03-25", "kanji": "ungefähr ... Minuten", "hiragana": "un-ge-fair ... mi-noo-ten", "meaning": "Khoảng ... phút", "phonetic": "phrase" }
       ],
       "grammarPoints": [
         {
           "id": "g-de-03-01",
-          "structure": "Unbestimmter Artikel: ein / eine / ein",
-          "meaning": "ein (giống đực/trung), eine (giống cái)",
-          "explanation": "Dùng quán từ không xác định khi nhắc đến sự vật lần đầu tiên.",
+          "structure": "Artikel: der/die/das (quán từ xác định) và ein/eine (quán từ không xác định)",
+          "meaning": "Danh từ tiếng Đức có 3 giới tính: der (đực), die (cái), das (trung)",
+          "explanation": "Mỗi danh từ tiếng Đức phải học kèm quán từ. ein = đực/trung, eine = cái. Không có quán từ không xác định ở số nhiều.",
           "level": "A1",
           "examples": [
-            { "id": "eg-de-03-01", "sentence": "Gibt es hier einen Bahnhof?", "meaning": "Ở đây có nhà ga không?" },
-            { "id": "eg-de-03-02", "sentence": "Da ist eine Post.", "meaning": "Đằng kia có một bưu điện." }
+            { "id": "eg-de-03-01", "sentence": "Das ist ein Bahnhof. Der Bahnhof ist groß.", "meaning": "Đây là một nhà ga. Nhà ga rất lớn." },
+            { "id": "eg-de-03-02", "sentence": "Dort ist eine Apotheke.", "meaning": "Kia là một nhà thuốc." }
           ]
         },
         {
           "id": "g-de-03-02",
-          "structure": "Lokale Präpositionen: in, an, auf, neben + Dativ",
-          "meaning": "Giới từ chỉ vị trí (trả lời câu hỏi Wo? - Ở đâu?) đi kèm cách Dativ",
-          "explanation": "Các giới từ chỉ vị trí tĩnh luôn đi với Dativ: in dem = im, an dem = am.",
+          "structure": "Modalverb 'können' (có thể): ich kann, du kannst, er/sie/es kann",
+          "meaning": "Động từ khiếm khuyết 'có thể/biết làm'",
+          "explanation": "'Können' dùng để diễn đạt khả năng. Động từ chính đứng cuối câu ở dạng nguyên mẫu.",
           "level": "A1",
           "examples": [
-            { "id": "eg-de-03-03", "sentence": "Die Post ist neben dem Hotel.", "meaning": "Bưu điện ở cạnh khách sạn." },
-            { "id": "eg-de-03-04", "sentence": "Das Café ist im Zentrum.", "meaning": "Quán cà phê ở trung tâm thành phố." }
+            { "id": "eg-de-03-03", "sentence": "Kannst du Deutsch sprechen?", "meaning": "Bạn có nói được tiếng Đức không?" },
+            { "id": "eg-de-03-04", "sentence": "Ich kann nicht fahren.", "meaning": "Tôi không thể lái xe." }
+          ]
+        },
+        {
+          "id": "g-de-03-03",
+          "structure": "Imperativ (Câu mệnh lệnh): Gehen Sie geradeaus! / Biegen Sie links ab!",
+          "meaning": "Cách dùng câu mệnh lệnh để chỉ đường",
+          "explanation": "Câu mệnh lệnh với Sie: động từ đứng đầu, Sie đứng sau. Dùng để ra lệnh/hướng dẫn lịch sự.",
+          "level": "A1",
+          "examples": [
+            { "id": "eg-de-03-05", "sentence": "Gehen Sie geradeaus und dann links!", "meaning": "Đi thẳng rồi rẽ trái!" },
+            { "id": "eg-de-03-06", "sentence": "Nehmen Sie die U-Bahn!", "meaning": "Hãy đi tàu điện ngầm!" }
           ]
         }
       ]
     },
     {
       "id": "de-lesson-04",
-      "name": "Kapitel 4: Guten Appetit!",
-      "description": "Đồ ăn thức uống, mua sắm siêu thị, giá cả, đo lường và phủ định với kein",
+      "name": "Kapitel 4: Essen und Einkaufen",
+      "description": "Thực phẩm, đồ uống, mua sắm, giá cả, đặt đồ ăn tại nhà hàng và câu hỏi về số lượng",
       "level": "A1",
-      "curriculum": "Netzwerk neu A1",
+      "curriculum": "Netzwerk Neu A1",
       "vocabulary": [
-        { "id": "de-04-01", "kanji": "Das Brot", "hiragana": "dahs broht", "meaning": "Bánh mì", "phonetic": "noun (n)" },
-        { "id": "de-04-02", "kanji": "Die Milch", "hiragana": "dee milkh", "meaning": "Sữa", "phonetic": "noun (f)" },
-        { "id": "de-04-03", "kanji": "Das Wasser", "hiragana": "dahs vas-ser", "meaning": "Nước", "phonetic": "noun (n)" },
-        { "id": "de-04-04", "kanji": "Der Kaffee", "hiragana": "dair kaf-feh", "meaning": "Cà phê", "phonetic": "noun (m)" },
-        { "id": "de-04-05", "kanji": "Das Fleisch", "hiragana": "dahs flaish", "meaning": "Thịt", "phonetic": "noun (n)" },
-        { "id": "de-04-06", "kanji": "Das Gemüse", "hiragana": "dahs ge-mü-ze", "meaning": "Rau củ", "phonetic": "noun (n)" },
-        { "id": "de-04-07", "kanji": "Der Apfel", "hiragana": "dair ap-fel", "meaning": "Quả táo", "phonetic": "noun (m)" },
-        { "id": "de-04-08", "kanji": "Der Supermarkt", "hiragana": "dair zoo-per-markt", "meaning": "Siêu thị", "phonetic": "noun (m)" },
-        { "id": "de-04-09", "kanji": "Der Preis", "hiragana": "dair prais", "meaning": "Giá cả", "phonetic": "noun (m)" },
-        { "id": "de-04-10", "kanji": "Wie viel kostet das?", "hiragana": "vee feel kos-tet das", "meaning": "Cái đó giá bao nhiêu?", "phonetic": "question" },
-        { "id": "de-04-11", "kanji": "Das kostet ... Euro.", "hiragana": "das kos-tet ... oy-ro", "meaning": "Cái đó giá ... Euro.", "phonetic": "phrase" },
-        { "id": "de-04-12", "kanji": "Ich möchte ...", "hiragana": "ikh mösh-te", "meaning": "Tôi muốn ... (lịch sự)", "phonetic": "phrase" },
-        { "id": "de-04-13", "kanji": "Ein Kilo", "hiragana": "ain kee-lo", "meaning": "Một kilogram", "phonetic": "measure" },
-        { "id": "de-04-14", "kanji": "Eine Flasche", "hiragana": "ai-ne fla-she", "meaning": "Một chai", "phonetic": "measure" },
-        { "id": "de-04-15", "kanji": "Lecker!", "hiragana": "lek-ker", "meaning": "Ngon quá!", "phonetic": "expression" }
+        { "id": "de-04-01", "kanji": "das Brot", "hiragana": "dahs broht", "meaning": "Bánh mì", "phonetic": "noun (n)" },
+        { "id": "de-04-02", "kanji": "die Milch", "hiragana": "dee milkh", "meaning": "Sữa", "phonetic": "noun (f)" },
+        { "id": "de-04-03", "kanji": "der Käse", "hiragana": "dair kay-ze", "meaning": "Phô mai", "phonetic": "noun (m)" },
+        { "id": "de-04-04", "kanji": "das Fleisch", "hiragana": "dahs flaish", "meaning": "Thịt", "phonetic": "noun (n)" },
+        { "id": "de-04-05", "kanji": "der Fisch", "hiragana": "dair fish", "meaning": "Cá", "phonetic": "noun (m)" },
+        { "id": "de-04-06", "kanji": "das Gemüse", "hiragana": "dahs ge-mue-ze", "meaning": "Rau củ", "phonetic": "noun (n)" },
+        { "id": "de-04-07", "kanji": "das Obst", "hiragana": "dahs opst", "meaning": "Hoa quả", "phonetic": "noun (n)" },
+        { "id": "de-04-08", "kanji": "der Apfel", "hiragana": "dair ap-fel", "meaning": "Táo", "phonetic": "noun (m)" },
+        { "id": "de-04-09", "kanji": "die Banane", "hiragana": "dee bah-nah-ne", "meaning": "Chuối", "phonetic": "noun (f)" },
+        { "id": "de-04-10", "kanji": "die Tomate", "hiragana": "dee to-mah-te", "meaning": "Cà chua", "phonetic": "noun (f)" },
+        { "id": "de-04-11", "kanji": "der Kaffee", "hiragana": "dair ka-feh", "meaning": "Cà phê", "phonetic": "noun (m)" },
+        { "id": "de-04-12", "kanji": "der Tee", "hiragana": "dair teh", "meaning": "Trà", "phonetic": "noun (m)" },
+        { "id": "de-04-13", "kanji": "das Wasser", "hiragana": "dahs vas-ser", "meaning": "Nước", "phonetic": "noun (n)" },
+        { "id": "de-04-14", "kanji": "das Bier", "hiragana": "dahs beer", "meaning": "Bia", "phonetic": "noun (n)" },
+        { "id": "de-04-15", "kanji": "der Wein", "hiragana": "dair vayn", "meaning": "Rượu vang", "phonetic": "noun (m)" },
+        { "id": "de-04-16", "kanji": "der Saft", "hiragana": "dair zahft", "meaning": "Nước ép", "phonetic": "noun (m)" },
+        { "id": "de-04-17", "kanji": "Was kostet das?", "hiragana": "vahs kos-tet dahs", "meaning": "Cái này giá bao nhiêu?", "phonetic": "question" },
+        { "id": "de-04-18", "kanji": "der Euro / der Cent", "hiragana": "dair oy-ro / dair tsent", "meaning": "Euro / Xu", "phonetic": "noun (m)" },
+        { "id": "de-04-19", "kanji": "das Kilogramm (kg)", "hiragana": "dahs kee-lo-gram", "meaning": "Ki-lô-gam", "phonetic": "noun (n)" },
+        { "id": "de-04-20", "kanji": "der Liter (l)", "hiragana": "dair lee-ter", "meaning": "Lít", "phonetic": "noun (m)" },
+        { "id": "de-04-21", "kanji": "Ich möchte ...", "hiragana": "ikh merkh-te", "meaning": "Tôi muốn ...", "phonetic": "phrase" },
+        { "id": "de-04-22", "kanji": "Haben Sie ...?", "hiragana": "hah-ben zee", "meaning": "Bạn có ... không?", "phonetic": "question" },
+        { "id": "de-04-23", "kanji": "der Markt", "hiragana": "dair markt", "meaning": "Chợ", "phonetic": "noun (m)" },
+        { "id": "de-04-24", "kanji": "billig / teuer", "hiragana": "bi-likh / toy-er", "meaning": "Rẻ / Đắt", "phonetic": "adjective" },
+        { "id": "de-04-25", "kanji": "Das macht ... Euro.", "hiragana": "dahs makht ... oy-ro", "meaning": "Tổng cộng ... Euro.", "phonetic": "phrase" }
       ],
       "grammarPoints": [
         {
           "id": "g-de-04-01",
-          "structure": "Negationsartikel: kein / keine / kein",
-          "meaning": "Phủ định danh từ: kein (giống đực/trung), keine (giống cái và số nhiều)",
-          "explanation": "Dùng kein/keine để phủ định danh từ có quán từ không xác định.",
+          "structure": "Modalverb 'möchten' (muốn): ich möchte, du möchtest, er/sie/es möchte",
+          "meaning": "Diễn đạt mong muốn lịch sự",
+          "explanation": "'Möchten' là dạng Konjunktiv II của 'mögen', dùng để đề nghị hoặc đặt hàng lịch sự.",
           "level": "A1",
           "examples": [
-            { "id": "eg-de-04-01", "sentence": "Ich habe keine Zeit.", "meaning": "Tôi không có thời gian." },
-            { "id": "eg-de-04-02", "sentence": "Das ist kein Kaffee, das ist Tee.", "meaning": "Đó không phải cà phê, đó là trà." }
+            { "id": "eg-de-04-01", "sentence": "Ich möchte einen Kaffee, bitte.", "meaning": "Cho tôi một cốc cà phê." },
+            { "id": "eg-de-04-02", "sentence": "Was möchten Sie trinken?", "meaning": "Bạn muốn uống gì?" }
           ]
         },
         {
           "id": "g-de-04-02",
-          "structure": "Verb 'möchten' (muốn) - Động từ tình thái Konjunktiv II",
-          "meaning": "ich möchte, du möchtest, er/sie möchte, Sie möchten",
-          "explanation": "'Möchten' là dạng lịch sự của 'wollen'. Dùng để đặt hàng, mua sắm.",
+          "structure": "Akkusativ (Tân ngữ trực tiếp - Cách 4): den/die/das → einen/eine/ein",
+          "meaning": "Quán từ biến đổi khi danh từ làm tân ngữ trực tiếp (giới tính đực thay đổi: der→den, ein→einen)",
+          "explanation": "Trong câu, khi danh từ là tân ngữ trực tiếp (bổ ngữ trực tiếp), quán từ giống đực thay đổi.",
           "level": "A1",
           "examples": [
-            { "id": "eg-de-04-03", "sentence": "Ich möchte einen Kaffee, bitte.", "meaning": "Tôi muốn một ly cà phê, làm ơn." },
-            { "id": "eg-de-04-04", "sentence": "Was möchten Sie?", "meaning": "Quý khách muốn gì ạ?" }
+            { "id": "eg-de-04-03", "sentence": "Ich kaufe einen Apfel.", "meaning": "Tôi mua một quả táo." },
+            { "id": "eg-de-04-04", "sentence": "Ich trinke den Kaffee.", "meaning": "Tôi uống ly cà phê (đó)." }
+          ]
+        },
+        {
+          "id": "g-de-04-03",
+          "structure": "Kein / keine (Phủ định danh từ)",
+          "meaning": "kein (m/n) / keine (f/pl) = không có",
+          "explanation": "'kein/keine' dùng để phủ định danh từ, đặt trước danh từ thay cho quán từ.",
+          "level": "A1",
+          "examples": [
+            { "id": "eg-de-04-05", "sentence": "Ich habe kein Geld.", "meaning": "Tôi không có tiền." },
+            { "id": "eg-de-04-06", "sentence": "Ich möchte keinen Kaffee.", "meaning": "Tôi không muốn cà phê." }
           ]
         }
       ]
     },
     {
       "id": "de-lesson-05",
-      "name": "Kapitel 5: Tag für Tag",
-      "description": "Hoạt động hàng ngày, thời gian biểu, thứ trong tuần, giờ giấc và động từ tách",
+      "name": "Kapitel 5: Meine Wohnung",
+      "description": "Căn hộ, các phòng trong nhà, đồ nội thất, giá thuê nhà, thuê/mua nhà và giới từ chỉ vị trí",
       "level": "A1",
-      "curriculum": "Netzwerk neu A1",
+      "curriculum": "Netzwerk Neu A1",
       "vocabulary": [
-        { "id": "de-05-01", "kanji": "Der Montag", "hiragana": "dair mon-tahk", "meaning": "Thứ Hai", "phonetic": "noun (m)" },
-        { "id": "de-05-02", "kanji": "Der Dienstag", "hiragana": "dair deens-tahk", "meaning": "Thứ Ba", "phonetic": "noun (m)" },
-        { "id": "de-05-03", "kanji": "Der Mittwoch", "hiragana": "dair mit-vokh", "meaning": "Thứ Tư", "phonetic": "noun (m)" },
-        { "id": "de-05-04", "kanji": "Der Donnerstag", "hiragana": "dair don-ners-tahk", "meaning": "Thứ Năm", "phonetic": "noun (m)" },
-        { "id": "de-05-05", "kanji": "Der Freitag", "hiragana": "dair frai-tahk", "meaning": "Thứ Sáu", "phonetic": "noun (m)" },
-        { "id": "de-05-06", "kanji": "Das Wochenende", "hiragana": "dahs vo-khen-en-de", "meaning": "Cuối tuần", "phonetic": "noun (n)" },
-        { "id": "de-05-07", "kanji": "Aufstehen", "hiragana": "owf-shteh-en", "meaning": "Thức dậy (động từ tách)", "phonetic": "verb (trennbar)" },
-        { "id": "de-05-08", "kanji": "Frühstücken", "hiragana": "früh-shtü-ken", "meaning": "Ăn sáng", "phonetic": "verb" },
-        { "id": "de-05-09", "kanji": "Arbeiten", "hiragana": "ar-bai-ten", "meaning": "Làm việc", "phonetic": "verb" },
-        { "id": "de-05-10", "kanji": "Schlafen", "hiragana": "shlah-fen", "meaning": "Ngủ", "phonetic": "verb" },
-        { "id": "de-05-11", "kanji": "Um wie viel Uhr?", "hiragana": "um vee feel oor", "meaning": "Lúc mấy giờ?", "phonetic": "question" },
-        { "id": "de-05-12", "kanji": "Es ist ... Uhr.", "hiragana": "es ist ... oor", "meaning": "Bây giờ là ... giờ.", "phonetic": "phrase" },
-        { "id": "de-05-13", "kanji": "Morgens", "hiragana": "mor-gens", "meaning": "Vào buổi sáng", "phonetic": "adverb" },
-        { "id": "de-05-14", "kanji": "Abends", "hiragana": "ah-bents", "meaning": "Vào buổi tối", "phonetic": "adverb" },
-        { "id": "de-05-15", "kanji": "Jeden Tag", "hiragana": "yeh-den tahk", "meaning": "Mỗi ngày", "phonetic": "phrase" }
+        { "id": "de-05-01", "kanji": "die Wohnung", "hiragana": "dee voh-nung", "meaning": "Căn hộ, nhà ở", "phonetic": "noun (f)" },
+        { "id": "de-05-02", "kanji": "das Zimmer", "hiragana": "dahs tsim-mer", "meaning": "Phòng", "phonetic": "noun (n)" },
+        { "id": "de-05-03", "kanji": "die Küche", "hiragana": "dee kue-khe", "meaning": "Nhà bếp", "phonetic": "noun (f)" },
+        { "id": "de-05-04", "kanji": "das Wohnzimmer", "hiragana": "dahs vohn-tsim-mer", "meaning": "Phòng khách", "phonetic": "noun (n)" },
+        { "id": "de-05-05", "kanji": "das Schlafzimmer", "hiragana": "dahs shlahf-tsim-mer", "meaning": "Phòng ngủ", "phonetic": "noun (n)" },
+        { "id": "de-05-06", "kanji": "das Bad / das Badezimmer", "hiragana": "dahs baht / bah-de-tsim-mer", "meaning": "Phòng tắm", "phonetic": "noun (n)" },
+        { "id": "de-05-07", "kanji": "der Balkon", "hiragana": "dair bal-kohn", "meaning": "Ban công", "phonetic": "noun (m)" },
+        { "id": "de-05-08", "kanji": "der Garten", "hiragana": "dair gar-ten", "meaning": "Vườn", "phonetic": "noun (m)" },
+        { "id": "de-05-09", "kanji": "das Sofa", "hiragana": "dahs zo-fah", "meaning": "Ghế sofa", "phonetic": "noun (n)" },
+        { "id": "de-05-10", "kanji": "der Tisch", "hiragana": "dair tish", "meaning": "Cái bàn", "phonetic": "noun (m)" },
+        { "id": "de-05-11", "kanji": "der Stuhl", "hiragana": "dair shtool", "meaning": "Cái ghế", "phonetic": "noun (m)" },
+        { "id": "de-05-12", "kanji": "das Bett", "hiragana": "dahs bet", "meaning": "Cái giường", "phonetic": "noun (n)" },
+        { "id": "de-05-13", "kanji": "der Schrank", "hiragana": "dair shrank", "meaning": "Tủ", "phonetic": "noun (m)" },
+        { "id": "de-05-14", "kanji": "die Lampe", "hiragana": "dee lam-pe", "meaning": "Đèn", "phonetic": "noun (f)" },
+        { "id": "de-05-15", "kanji": "die Miete", "hiragana": "dee mee-te", "meaning": "Tiền thuê nhà", "phonetic": "noun (f)" },
+        { "id": "de-05-16", "kanji": "die Quadratmeter (m²)", "hiragana": "dee kvah-drat-meh-ter", "meaning": "Mét vuông", "phonetic": "noun (m)" },
+        { "id": "de-05-17", "kanji": "groß / klein", "hiragana": "grohs / klayn", "meaning": "To, lớn / Nhỏ", "phonetic": "adjective" },
+        { "id": "de-05-18", "kanji": "hell / dunkel", "hiragana": "hel / dun-kel", "meaning": "Sáng / Tối", "phonetic": "adjective" },
+        { "id": "de-05-19", "kanji": "oben / unten", "hiragana": "oh-ben / un-ten", "meaning": "Trên / Dưới", "phonetic": "adverb" },
+        { "id": "de-05-20", "kanji": "links / rechts", "hiragana": "links / rekhts", "meaning": "Bên trái / Bên phải", "phonetic": "adverb" },
+        { "id": "de-05-21", "kanji": "in / an / auf / neben / zwischen", "hiragana": "in / an / owf / neh-ben / tsvi-shen", "meaning": "trong / trên (dọc) / trên (nằm) / bên cạnh / giữa", "phonetic": "preposition" },
+        { "id": "de-05-22", "kanji": "vor / hinter / unter / über", "hiragana": "for / hin-ter / un-ter / ue-ber", "meaning": "trước / sau / dưới / trên (cao)", "phonetic": "preposition" },
+        { "id": "de-05-23", "kanji": "Wo ist ...?", "hiragana": "vo ist", "meaning": "... ở đâu?", "phonetic": "question" },
+        { "id": "de-05-24", "kanji": "der Stock / die Etage", "hiragana": "dair shtok / dee eh-tah-zhe", "meaning": "Tầng (lầu)", "phonetic": "noun" },
+        { "id": "de-05-25", "kanji": "die Wohngemeinschaft (WG)", "hiragana": "dee vohn-ge-mayn-shahft", "meaning": "Nhà ở chung (chia phòng)", "phonetic": "noun (f)" }
       ],
       "grammarPoints": [
         {
           "id": "g-de-05-01",
-          "structure": "Trennbare Verben (Động từ tách)",
-          "meaning": "Động từ ghép tách ra khi chia: aufstehen → ich stehe auf",
-          "explanation": "Trong tiếng Đức, nhiều động từ có tiền tố tách (trennbar): auf-, an-, ab-, ein-, aus-... Khi chia, tiền tố tách ra và đứng cuối câu.",
+          "structure": "Lokale Präpositionen mit Dativ: in, an, auf, neben, zwischen, vor, hinter, unter, über",
+          "meaning": "Giới từ chỉ vị trí kết hợp với Dativ khi trả lời câu hỏi 'Wo?' (Ở đâu?)",
+          "explanation": "Khi trả lời 'Wo?' dùng Dativ: im (=in dem), am (=an dem), auf dem... Khi trả lời 'Wohin?' dùng Akkusativ.",
           "level": "A1",
           "examples": [
-            { "id": "eg-de-05-01", "sentence": "Ich stehe um 7 Uhr auf.", "meaning": "Tôi thức dậy lúc 7 giờ." },
-            { "id": "eg-de-05-02", "sentence": "Er fängt um 9 Uhr an.", "meaning": "Anh ấy bắt đầu lúc 9 giờ." }
+            { "id": "eg-de-05-01", "sentence": "Das Sofa ist im Wohnzimmer.", "meaning": "Cái ghế sofa ở trong phòng khách." },
+            { "id": "eg-de-05-02", "sentence": "Die Lampe hängt über dem Tisch.", "meaning": "Đèn treo trên bàn." }
           ]
         },
         {
           "id": "g-de-05-02",
-          "structure": "Zeitangaben: um, von...bis, am",
-          "meaning": "um (lúc) + giờ cụ thể, am (vào ngày), von...bis (từ...đến)",
-          "explanation": "Các giới từ thời gian quan trọng: 'um' chỉ giờ cụ thể, 'am' đứng trước các thứ và buổi.",
+          "structure": "Possessivpronomen (Đại từ sở hữu): mein, dein, sein, ihr, unser, euer, ihr/Ihr",
+          "meaning": "Đại từ sở hữu: mein (của tôi), dein (của bạn thân mật), sein (của anh ấy), ihr (của cô ấy)...",
+          "explanation": "Đại từ sở hữu biến đổi theo giới tính và cách của danh từ đi sau nó.",
           "level": "A1",
           "examples": [
-            { "id": "eg-de-05-03", "sentence": "Am Montag arbeite ich von 9 bis 17 Uhr.", "meaning": "Thứ Hai tôi làm việc từ 9 giờ đến 17 giờ." },
-            { "id": "eg-de-05-04", "sentence": "Das Meeting ist um 10 Uhr.", "meaning": "Cuộc họp lúc 10 giờ." }
+            { "id": "eg-de-05-03", "sentence": "Mein Zimmer ist groß.", "meaning": "Phòng của tôi rộng." },
+            { "id": "eg-de-05-04", "sentence": "Wo ist Ihre Wohnung?", "meaning": "Căn hộ của bạn ở đâu?" }
+          ]
+        },
+        {
+          "id": "g-de-05-03",
+          "structure": "Es gibt + Akkusativ (Có ... không?)",
+          "meaning": "'Es gibt' = 'Có/tồn tại'. Dùng để nói về sự tồn tại của vật/người",
+          "explanation": "'Es gibt' luôn dùng với Akkusativ. Phủ định: 'Es gibt kein/keine/keinen...'",
+          "level": "A1",
+          "examples": [
+            { "id": "eg-de-05-05", "sentence": "Es gibt einen Balkon.", "meaning": "Có một ban công." },
+            { "id": "eg-de-05-06", "sentence": "Es gibt keine Garage.", "meaning": "Không có ga-ra." }
           ]
         }
       ]
     },
     {
       "id": "de-lesson-06",
-      "name": "Kapitel 6: Zeit mit Freunden",
-      "description": "Thời gian rảnh rỗi, sở thích, tháng trong năm, thời tiết và động từ tình thái können, wollen",
+      "name": "Kapitel 6: Freizeit und Hobbys",
+      "description": "Sở thích, thể thao, âm nhạc, thời gian rảnh, các ngày trong tuần và giờ giấc",
       "level": "A1",
-      "curriculum": "Netzwerk neu A1",
+      "curriculum": "Netzwerk Neu A1",
       "vocabulary": [
-        { "id": "de-06-01", "kanji": "Das Hobby", "hiragana": "dahs hob-bi", "meaning": "Sở thích", "phonetic": "noun (n)" },
-        { "id": "de-06-02", "kanji": "Musik hören", "hiragana": "moo-zeek hö-ren", "meaning": "Nghe nhạc", "phonetic": "phrase" },
-        { "id": "de-06-03", "kanji": "Lesen", "hiragana": "leh-zen", "meaning": "Đọc sách", "phonetic": "verb" },
-        { "id": "de-06-04", "kanji": "Sport treiben", "hiragana": "shport trai-ben", "meaning": "Tập thể thao", "phonetic": "phrase" },
-        { "id": "de-06-05", "kanji": "Das Wetter", "hiragana": "dahs vet-ter", "meaning": "Thời tiết", "phonetic": "noun (n)" },
-        { "id": "de-06-06", "kanji": "Warm", "hiragana": "varm", "meaning": "Ấm, nóng", "phonetic": "adjective" },
-        { "id": "de-06-07", "kanji": "Kalt", "hiragana": "kalt", "meaning": "Lạnh", "phonetic": "adjective" },
-        { "id": "de-06-08", "kanji": "Es regnet.", "hiragana": "es reg-net", "meaning": "Trời mưa.", "phonetic": "phrase" },
-        { "id": "de-06-09", "kanji": "Die Sonne scheint.", "hiragana": "dee zon-ne shaind", "meaning": "Mặt trời chiếu sáng.", "phonetic": "phrase" },
-        { "id": "de-06-10", "kanji": "Der Januar", "hiragana": "dair yah-noo-ar", "meaning": "Tháng Một", "phonetic": "noun (m)" },
-        { "id": "de-06-11", "kanji": "Der Juli", "hiragana": "dair yoo-lee", "meaning": "Tháng Bảy", "phonetic": "noun (m)" },
-        { "id": "de-06-12", "kanji": "Können", "hiragana": "kö-nen", "meaning": "Có thể (động từ tình thái)", "phonetic": "modal verb" },
-        { "id": "de-06-13", "kanji": "Wollen", "hiragana": "vol-len", "meaning": "Muốn làm gì (ý định)", "phonetic": "modal verb" },
-        { "id": "de-06-14", "kanji": "Gern", "hiragana": "gern", "meaning": "Thích (thêm vào sau động từ)", "phonetic": "adverb" },
-        { "id": "de-06-15", "kanji": "Nicht gern", "hiragana": "nikht gern", "meaning": "Không thích", "phonetic": "adverb" }
+        { "id": "de-06-01", "kanji": "das Hobby", "hiragana": "dahs ho-bee", "meaning": "Sở thích", "phonetic": "noun (n)" },
+        { "id": "de-06-02", "kanji": "der Sport", "hiragana": "dair shport", "meaning": "Thể thao", "phonetic": "noun (m)" },
+        { "id": "de-06-03", "kanji": "Fußball spielen", "hiragana": "foos-bal shpee-len", "meaning": "Chơi bóng đá", "phonetic": "verb phrase" },
+        { "id": "de-06-04", "kanji": "Tennis spielen", "hiragana": "te-nis shpee-len", "meaning": "Chơi tennis", "phonetic": "verb phrase" },
+        { "id": "de-06-05", "kanji": "schwimmen", "hiragana": "shvim-men", "meaning": "Bơi lội", "phonetic": "verb" },
+        { "id": "de-06-06", "kanji": "joggen", "hiragana": "jo-gen", "meaning": "Chạy bộ (jogging)", "phonetic": "verb" },
+        { "id": "de-06-07", "kanji": "Musik hören", "hiragana": "moo-zeek her-ren", "meaning": "Nghe nhạc", "phonetic": "verb phrase" },
+        { "id": "de-06-08", "kanji": "lesen", "hiragana": "leh-zen", "meaning": "Đọc sách", "phonetic": "verb" },
+        { "id": "de-06-09", "kanji": "kochen", "hiragana": "ko-khen", "meaning": "Nấu ăn", "phonetic": "verb" },
+        { "id": "de-06-10", "kanji": "reisen", "hiragana": "ray-zen", "meaning": "Du lịch", "phonetic": "verb" },
+        { "id": "de-06-11", "kanji": "ins Kino gehen", "hiragana": "ins kee-no gay-en", "meaning": "Đi xem phim", "phonetic": "verb phrase" },
+        { "id": "de-06-12", "kanji": "tanzen", "hiragana": "tan-tsen", "meaning": "Khiêu vũ, nhảy", "phonetic": "verb" },
+        { "id": "de-06-13", "kanji": "fotografieren", "hiragana": "fo-to-gra-fee-ren", "meaning": "Chụp ảnh", "phonetic": "verb" },
+        { "id": "de-06-14", "kanji": "Montag, Dienstag, Mittwoch", "hiragana": "mon-tahk, deens-tahk, mit-vokh", "meaning": "Thứ Hai, Thứ Ba, Thứ Tư", "phonetic": "noun" },
+        { "id": "de-06-15", "kanji": "Donnerstag, Freitag, Samstag, Sonntag", "hiragana": "don-ners-tahk, fray-tahk, zams-tahk, zon-tahk", "meaning": "Thứ Năm, Thứ Sáu, Thứ Bảy, Chủ Nhật", "phonetic": "noun" },
+        { "id": "de-06-16", "kanji": "Wie spät ist es?", "hiragana": "vee shpayt ist es", "meaning": "Mấy giờ rồi?", "phonetic": "question" },
+        { "id": "de-06-17", "kanji": "Es ist ... Uhr.", "hiragana": "es ist ... oor", "meaning": "Bây giờ là ... giờ.", "phonetic": "phrase" },
+        { "id": "de-06-18", "kanji": "Viertel vor / nach, halb", "hiragana": "feer-tel for / nakh, halp", "meaning": "kém / hơn 15 phút, rưỡi", "phonetic": "time expression" },
+        { "id": "de-06-19", "kanji": "am Wochenende", "hiragana": "am vo-khen-en-de", "meaning": "Vào cuối tuần", "phonetic": "phrase" },
+        { "id": "de-06-20", "kanji": "Was machst du in der Freizeit?", "hiragana": "vahs makhst doo in dair fray-tsayt", "meaning": "Bạn làm gì vào thời gian rảnh?", "phonetic": "question" },
+        { "id": "de-06-21", "kanji": "gern / nicht gern", "hiragana": "gairn / nikht gairn", "meaning": "Thích / Không thích (khi làm việc gì)", "phonetic": "adverb" },
+        { "id": "de-06-22", "kanji": "die Verabredung", "hiragana": "dee fer-ab-ray-dung", "meaning": "Cuộc hẹn", "phonetic": "noun (f)" },
+        { "id": "de-06-23", "kanji": "Hast du am Freitag Zeit?", "hiragana": "hast doo am fray-tahk tsayt", "meaning": "Thứ Sáu bạn có rảnh không?", "phonetic": "question" },
+        { "id": "de-06-24", "kanji": "prima / toll / super", "hiragana": "pree-ma / tol / zoo-per", "meaning": "Tuyệt vời!", "phonetic": "exclamation" },
+        { "id": "de-06-25", "kanji": "Schade!", "hiragana": "shah-de", "meaning": "Tiếc quá!", "phonetic": "exclamation" }
       ],
       "grammarPoints": [
         {
           "id": "g-de-06-01",
-          "structure": "Modalverben: können, wollen (Động từ tình thái)",
-          "meaning": "Chia: ich kann/will, du kannst/willst, er kann/will, wir können/wollen",
-          "explanation": "Động từ tình thái đứng ở vị trí số 2 trong câu, động từ chính (infinitiv) đứng cuối câu.",
+          "structure": "Trennbare Verben (Động từ tách rời): auf|machen, an|rufen, ein|kaufen",
+          "meaning": "Động từ có tiền tố tách rời: trong câu khẳng định, tiền tố tách ra và đứng cuối câu.",
+          "explanation": "Ví dụ: aufmachen → Ich mache die Tür auf. Khi dùng với động từ khiếm khuyết: tiền tố không tách.",
           "level": "A1",
           "examples": [
-            { "id": "eg-de-06-01", "sentence": "Ich kann gut schwimmen.", "meaning": "Tôi bơi giỏi." },
-            { "id": "eg-de-06-02", "sentence": "Wir wollen ins Kino gehen.", "meaning": "Chúng tôi muốn đi xem phim." }
+            { "id": "eg-de-06-01", "sentence": "Ich rufe dich an.", "meaning": "Tôi sẽ gọi điện cho bạn." },
+            { "id": "eg-de-06-02", "sentence": "Wir kaufen am Samstag ein.", "meaning": "Chúng tôi đi mua sắm vào thứ Bảy." }
           ]
         },
         {
           "id": "g-de-06-02",
-          "structure": "Verbklammer (Khung động từ) trong câu với động từ tình thái",
-          "meaning": "Động từ tình thái ở vị trí 2, động từ chính ở cuối câu tạo thành 'khung'",
-          "explanation": "Cấu trúc: [Chủ ngữ] + [Động từ tình thái] + ... + [Động từ chính - Infinitiv]",
+          "structure": "Temporale Angaben: am + Wochentag, um + Uhrzeit",
+          "meaning": "am Montag (vào thứ Hai), um 8 Uhr (lúc 8 giờ), im Januar (vào tháng Giêng)",
+          "explanation": "Giới từ chỉ thời gian: am dùng cho ngày/buổi, um dùng cho giờ, im dùng cho tháng/năm.",
           "level": "A1",
           "examples": [
-            { "id": "eg-de-06-03", "sentence": "Er will am Wochenende Freunde besuchen.", "meaning": "Anh ấy muốn thăm bạn bè vào cuối tuần." },
-            { "id": "eg-de-06-04", "sentence": "Können Sie bitte langsam sprechen?", "meaning": "Bạn có thể nói chậm hơn không?" }
+            { "id": "eg-de-06-03", "sentence": "Am Montag gehe ich schwimmen.", "meaning": "Thứ Hai tôi đi bơi." },
+            { "id": "eg-de-06-04", "sentence": "Der Kurs beginnt um 9 Uhr.", "meaning": "Khóa học bắt đầu lúc 9 giờ." }
+          ]
+        },
+        {
+          "id": "g-de-06-03",
+          "structure": "Modalverb 'mögen' (thích): ich mag, du magst, er/sie/es mag",
+          "meaning": "Diễn đạt sở thích (thích thứ gì đó)",
+          "explanation": "'mögen' dùng để nói bạn thích một thứ gì đó. Khác 'gern': gern đi với động từ, mögen đi với danh từ.",
+          "level": "A1",
+          "examples": [
+            { "id": "eg-de-06-05", "sentence": "Ich mag Musik sehr.", "meaning": "Tôi rất thích âm nhạc." },
+            { "id": "eg-de-06-06", "sentence": "Magst du Fußball?", "meaning": "Bạn có thích bóng đá không?" }
           ]
         }
       ]
     },
     {
       "id": "de-lesson-07",
-      "name": "Kapitel 7: Kontakte",
-      "description": "Liên lạc, công nghệ, viết email, đàm thoại điện thoại và thì quá khứ Perfekt với haben/sein",
+      "name": "Kapitel 7: Reisen und Mobilität",
+      "description": "Du lịch, phương tiện giao thông, đặt vé, nhà ga/sân bay, thị thực và các cụm từ khi đi du lịch",
       "level": "A1",
-      "curriculum": "Netzwerk neu A1",
+      "curriculum": "Netzwerk Neu A1",
       "vocabulary": [
-        { "id": "de-07-01", "kanji": "Das Handy", "hiragana": "dahs hendi", "meaning": "Điện thoại di động", "phonetic": "noun (n)" },
-        { "id": "de-07-02", "kanji": "Die E-Mail", "hiragana": "dee ee-mail", "meaning": "Thư điện tử", "phonetic": "noun (f)" },
-        { "id": "de-07-03", "kanji": "Das Internet", "hiragana": "dahs in-ter-net", "meaning": "Internet", "phonetic": "noun (n)" },
-        { "id": "de-07-04", "kanji": "Anrufen", "hiragana": "an-roo-fen", "meaning": "Gọi điện (động từ tách)", "phonetic": "verb (trennbar)" },
-        { "id": "de-07-05", "kanji": "Schreiben", "hiragana": "shrai-ben", "meaning": "Viết", "phonetic": "verb" },
-        { "id": "de-07-06", "kanji": "Hallo, hier ist ...", "hiragana": "ha-lo, heer ist", "meaning": "Xin chào, đây là ... (nói điện thoại)", "phonetic": "phrase" },
-        { "id": "de-07-07", "kanji": "Einen Moment bitte.", "hiragana": "ai-nen mo-ment bit-te", "meaning": "Vui lòng đợi một chút.", "phonetic": "phrase" },
-        { "id": "de-07-08", "kanji": "Die Nachricht", "hiragana": "dee nakh-rikht", "meaning": "Tin nhắn, thông báo", "phonetic": "noun (f)" },
-        { "id": "de-07-09", "kanji": "Senden", "hiragana": "zen-den", "meaning": "Gửi (email, tin nhắn)", "phonetic": "verb" },
-        { "id": "de-07-10", "kanji": "Gestern", "hiragana": "ges-tern", "meaning": "Hôm qua", "phonetic": "adverb" },
-        { "id": "de-07-11", "kanji": "Heute", "hiragana": "hoi-te", "meaning": "Hôm nay", "phonetic": "adverb" },
-        { "id": "de-07-12", "kanji": "Morgen", "hiragana": "mor-gen", "meaning": "Ngày mai", "phonetic": "adverb" },
-        { "id": "de-07-13", "kanji": "Schon", "hiragana": "shohn", "meaning": "Rồi, đã (dùng trong câu Perfekt)", "phonetic": "adverb" },
-        { "id": "de-07-14", "kanji": "Noch nicht", "hiragana": "nokh nikht", "meaning": "Chưa (phủ định trong câu Perfekt)", "phonetic": "phrase" },
-        { "id": "de-07-15", "kanji": "Die Adresse", "hiragana": "dee ah-dres-se", "meaning": "Địa chỉ", "phonetic": "noun (f)" }
+        { "id": "de-07-01", "kanji": "die Reise", "hiragana": "dee ray-ze", "meaning": "Chuyến đi, chuyến du lịch", "phonetic": "noun (f)" },
+        { "id": "de-07-02", "kanji": "das Ticket / die Fahrkarte", "hiragana": "dahs ti-ket / dee fahr-kar-te", "meaning": "Vé (tàu/xe/máy bay)", "phonetic": "noun" },
+        { "id": "de-07-03", "kanji": "der Flughafen", "hiragana": "dair flook-hah-fen", "meaning": "Sân bay", "phonetic": "noun (m)" },
+        { "id": "de-07-04", "kanji": "das Flugzeug", "hiragana": "dahs flook-tsoyk", "meaning": "Máy bay", "phonetic": "noun (n)" },
+        { "id": "de-07-05", "kanji": "der Zug", "hiragana": "dair tsook", "meaning": "Tàu hỏa", "phonetic": "noun (m)" },
+        { "id": "de-07-06", "kanji": "das Schiff", "hiragana": "dahs shif", "meaning": "Tàu thuyền", "phonetic": "noun (n)" },
+        { "id": "de-07-07", "kanji": "abfahren / ankommen", "hiragana": "ap-fah-ren / an-kom-men", "meaning": "Khởi hành / Đến nơi", "phonetic": "verb (separable)" },
+        { "id": "de-07-08", "kanji": "Wann fährt der Zug ab?", "hiragana": "van fahrt dair tsook ap", "meaning": "Tàu khởi hành lúc mấy giờ?", "phonetic": "question" },
+        { "id": "de-07-09", "kanji": "der Abflug / die Ankunft", "hiragana": "dair ap-flook / dee an-kunft", "meaning": "Giờ cất cánh / Giờ đến", "phonetic": "noun" },
+        { "id": "de-07-10", "kanji": "das Gepäck", "hiragana": "dahs ge-pek", "meaning": "Hành lý", "phonetic": "noun (n)" },
+        { "id": "de-07-11", "kanji": "der Koffer", "hiragana": "dair kof-fer", "meaning": "Vali", "phonetic": "noun (m)" },
+        { "id": "de-07-12", "kanji": "das Visum", "hiragana": "dahs vee-zoom", "meaning": "Thị thực (visa)", "phonetic": "noun (n)" },
+        { "id": "de-07-13", "kanji": "der Reisepass", "hiragana": "dair ray-ze-pas", "meaning": "Hộ chiếu", "phonetic": "noun (m)" },
+        { "id": "de-07-14", "kanji": "einsteigen / aussteigen", "hiragana": "ayn-shtay-gen / ows-shtay-gen", "meaning": "Lên tàu/xe / Xuống tàu/xe", "phonetic": "verb (separable)" },
+        { "id": "de-07-15", "kanji": "umsteigen", "hiragana": "um-shtay-gen", "meaning": "Chuyển tàu/xe", "phonetic": "verb (separable)" },
+        { "id": "de-07-16", "kanji": "hin und zurück", "hiragana": "hin unt tsoo-ruek", "meaning": "Khứ hồi", "phonetic": "phrase" },
+        { "id": "de-07-17", "kanji": "einfach", "hiragana": "ayn-fakh", "meaning": "Một chiều / Đơn giản", "phonetic": "adjective/adverb" },
+        { "id": "de-07-18", "kanji": "das Hotel / die Pension", "hiragana": "dahs ho-tel / dee pen-zi-ohn", "meaning": "Khách sạn / Nhà nghỉ nhỏ", "phonetic": "noun" },
+        { "id": "de-07-19", "kanji": "ein Zimmer buchen", "hiragana": "ayn tsim-mer boo-khen", "meaning": "Đặt phòng", "phonetic": "verb phrase" },
+        { "id": "de-07-20", "kanji": "die Übernachtung", "hiragana": "dee ue-ber-nakh-tung", "meaning": "Một đêm ở lại", "phonetic": "noun (f)" },
+        { "id": "de-07-21", "kanji": "Gute Reise!", "hiragana": "goo-te ray-ze", "meaning": "Chúc đi đường vui vẻ!", "phonetic": "expression" },
+        { "id": "de-07-22", "kanji": "der Urlaub", "hiragana": "dair oor-lowp", "meaning": "Kỳ nghỉ (vacation)", "phonetic": "noun (m)" },
+        { "id": "de-07-23", "kanji": "Wohin fährst du?", "hiragana": "vo-hin fayrst doo", "meaning": "Bạn đi đâu?", "phonetic": "question" },
+        { "id": "de-07-24", "kanji": "der Zoll", "hiragana": "dair tsol", "meaning": "Hải quan", "phonetic": "noun (m)" },
+        { "id": "de-07-25", "kanji": "der Schalter", "hiragana": "dair shal-ter", "meaning": "Quầy vé / Quầy check-in", "phonetic": "noun (m)" }
       ],
       "grammarPoints": [
         {
           "id": "g-de-07-01",
-          "structure": "Perfekt mit 'haben' (Thì quá khứ hoàn thành với 'haben')",
-          "meaning": "Cấu trúc: haben (chia) + Partizip II (ge-...-(e)t / ge-...-(e)n)",
-          "explanation": "Đây là thì quá khứ dùng trong hội thoại. Hầu hết động từ dùng 'haben'.",
+          "structure": "Modalverb 'müssen' (phải): ich muss, du musst, er/sie/es muss",
+          "meaning": "Diễn đạt sự cần thiết, bắt buộc",
+          "explanation": "'müssen' dùng khi có nghĩa vụ hoặc sự cần thiết. Động từ chính đứng cuối câu ở nguyên mẫu.",
           "level": "A1",
           "examples": [
-            { "id": "eg-de-07-01", "sentence": "Ich habe gestern eine E-Mail geschrieben.", "meaning": "Hôm qua tôi đã viết một email." },
-            { "id": "eg-de-07-02", "sentence": "Er hat schon angerufen.", "meaning": "Anh ấy đã gọi điện rồi." }
+            { "id": "eg-de-07-01", "sentence": "Ich muss um 6 Uhr aufstehen.", "meaning": "Tôi phải thức dậy lúc 6 giờ." },
+            { "id": "eg-de-07-02", "sentence": "Du musst hier umsteigen.", "meaning": "Bạn phải chuyển tàu ở đây." }
           ]
         },
         {
           "id": "g-de-07-02",
-          "structure": "Perfekt mit 'sein' (Thì quá khứ với 'sein')",
-          "meaning": "Động từ chỉ sự di chuyển và thay đổi trạng thái dùng 'sein' thay vì 'haben'",
-          "explanation": "Các động từ như gehen, kommen, fahren, fliegen, werden, sein dùng 'sein' trong thì Perfekt.",
+          "structure": "Richtungsangaben mit Wohin?: nach + Land (vô quán từ) / in + Stadt+Akk",
+          "meaning": "nach Deutschland, nach Wien, in die Schweiz (ngoại lệ với quán từ)",
+          "explanation": "Để chỉ hướng đến: nach + quốc gia (không có quán từ), in + die + quốc gia (quốc gia có quán từ).",
           "level": "A1",
           "examples": [
-            { "id": "eg-de-07-03", "sentence": "Ich bin gestern nach Berlin gefahren.", "meaning": "Hôm qua tôi đã đi Berlin." },
-            { "id": "eg-de-07-04", "sentence": "Sie ist früh aufgestanden.", "meaning": "Cô ấy đã dậy sớm." }
+            { "id": "eg-de-07-03", "sentence": "Ich fahre nach Deutschland.", "meaning": "Tôi đi đến Đức." },
+            { "id": "eg-de-07-04", "sentence": "Sie fährt in die Schweiz.", "meaning": "Cô ấy đến Thụy Sĩ." }
+          ]
+        },
+        {
+          "id": "g-de-07-03",
+          "structure": "Perfekt (Thì hoàn thành): haben/sein + Partizip II",
+          "meaning": "Thì dùng để kể về quá khứ trong tiếng Đức nói",
+          "explanation": "Partizip II của động từ thường: ge- + Verb-Stamm + -t/-et. Dùng sein với động từ di chuyển (fahren, gehen, kommen...).",
+          "level": "A1",
+          "examples": [
+            { "id": "eg-de-07-05", "sentence": "Ich habe den Zug verpasst.", "meaning": "Tôi đã lỡ tàu." },
+            { "id": "eg-de-07-06", "sentence": "Wir sind nach Berlin gefahren.", "meaning": "Chúng tôi đã đến Berlin." }
           ]
         }
       ]
     },
     {
       "id": "de-lesson-08",
-      "name": "Kapitel 8: Meine Wohnung",
-      "description": "Nhà cửa, căn hộ, đồ nội thất, màu sắc và giới từ chỉ vị trí với Dativ",
+      "name": "Kapitel 8: Gesundheit",
+      "description": "Sức khỏe, cơ thể người, triệu chứng bệnh, đi khám bác sĩ, thuốc và lời khuyên sức khỏe",
       "level": "A1",
-      "curriculum": "Netzwerk neu A1",
+      "curriculum": "Netzwerk Neu A1",
       "vocabulary": [
-        { "id": "de-08-01", "kanji": "Die Wohnung", "hiragana": "dee voh-nung", "meaning": "Căn hộ", "phonetic": "noun (f)" },
-        { "id": "de-08-02", "kanji": "Das Zimmer", "hiragana": "dahs tsim-mer", "meaning": "Phòng", "phonetic": "noun (n)" },
-        { "id": "de-08-03", "kanji": "Die Küche", "hiragana": "dee kü-khe", "meaning": "Nhà bếp", "phonetic": "noun (f)" },
-        { "id": "de-08-04", "kanji": "Das Bad", "hiragana": "dahs baht", "meaning": "Phòng tắm", "phonetic": "noun (n)" },
-        { "id": "de-08-05", "kanji": "Das Wohnzimmer", "hiragana": "dahs vohn-tsim-mer", "meaning": "Phòng khách", "phonetic": "noun (n)" },
-        { "id": "de-08-06", "kanji": "Der Tisch", "hiragana": "dair tish", "meaning": "Cái bàn", "phonetic": "noun (m)" },
-        { "id": "de-08-07", "kanji": "Der Stuhl", "hiragana": "dair shtool", "meaning": "Cái ghế", "phonetic": "noun (m)" },
-        { "id": "de-08-08", "kanji": "Das Bett", "hiragana": "dahs bet", "meaning": "Cái giường", "phonetic": "noun (n)" },
-        { "id": "de-08-09", "kanji": "Der Schrank", "hiragana": "dair shrank", "meaning": "Tủ quần áo", "phonetic": "noun (m)" },
-        { "id": "de-08-10", "kanji": "Die Lampe", "hiragana": "dee lam-pe", "meaning": "Đèn", "phonetic": "noun (f)" },
-        { "id": "de-08-11", "kanji": "Groß", "hiragana": "grohs", "meaning": "To, lớn", "phonetic": "adjective" },
-        { "id": "de-08-12", "kanji": "Klein", "hiragana": "klain", "meaning": "Nhỏ", "phonetic": "adjective" },
-        { "id": "de-08-13", "kanji": "Rot / Blau / Grün", "hiragana": "roht / blow / grün", "meaning": "Đỏ / Xanh lam / Xanh lá", "phonetic": "adjective" },
-        { "id": "de-08-14", "kanji": "Die Miete", "hiragana": "dee mee-te", "meaning": "Tiền thuê nhà", "phonetic": "noun (f)" },
-        { "id": "de-08-15", "kanji": "Gemütlich", "hiragana": "ge-müt-likh", "meaning": "Ấm cúng, thoải mái", "phonetic": "adjective" }
+        { "id": "de-08-01", "kanji": "der Kopf", "hiragana": "dair kopf", "meaning": "Đầu", "phonetic": "noun (m)" },
+        { "id": "de-08-02", "kanji": "der Hals", "hiragana": "dair hals", "meaning": "Cổ họng", "phonetic": "noun (m)" },
+        { "id": "de-08-03", "kanji": "der Bauch", "hiragana": "dair bowkh", "meaning": "Bụng", "phonetic": "noun (m)" },
+        { "id": "de-08-04", "kanji": "der Rücken", "hiragana": "dair rue-ken", "meaning": "Lưng", "phonetic": "noun (m)" },
+        { "id": "de-08-05", "kanji": "die Hand", "hiragana": "dee hant", "meaning": "Bàn tay", "phonetic": "noun (f)" },
+        { "id": "de-08-06", "kanji": "der Arm", "hiragana": "dair arm", "meaning": "Cánh tay", "phonetic": "noun (m)" },
+        { "id": "de-08-07", "kanji": "das Bein", "hiragana": "dahs bayn", "meaning": "Chân", "phonetic": "noun (n)" },
+        { "id": "de-08-08", "kanji": "der Fuß", "hiragana": "dair foos", "meaning": "Bàn chân", "phonetic": "noun (m)" },
+        { "id": "de-08-09", "kanji": "Ich bin krank.", "hiragana": "ikh bin krank", "meaning": "Tôi bị bệnh.", "phonetic": "phrase" },
+        { "id": "de-08-10", "kanji": "Was fehlt Ihnen?", "hiragana": "vahs faylt ee-nen", "meaning": "Bạn có vấn đề gì? (bác sĩ hỏi)", "phonetic": "question" },
+        { "id": "de-08-11", "kanji": "Mir ist schlecht.", "hiragana": "meer ist shlekhkt", "meaning": "Tôi buồn nôn.", "phonetic": "phrase" },
+        { "id": "de-08-12", "kanji": "Ich habe Fieber.", "hiragana": "ikh hah-be fee-ber", "meaning": "Tôi bị sốt.", "phonetic": "phrase" },
+        { "id": "de-08-13", "kanji": "Ich habe Kopfschmerzen.", "hiragana": "ikh hah-be kopf-shmerts-en", "meaning": "Tôi bị đau đầu.", "phonetic": "phrase" },
+        { "id": "de-08-14", "kanji": "der Husten / husten", "hiragana": "dair hoos-ten / hoos-ten", "meaning": "Ho (danh từ / động từ)", "phonetic": "noun/verb" },
+        { "id": "de-08-15", "kanji": "die Erkältung", "hiragana": "dee er-kel-tung", "meaning": "Cảm lạnh", "phonetic": "noun (f)" },
+        { "id": "de-08-16", "kanji": "die Tablette", "hiragana": "dee tab-let-te", "meaning": "Viên thuốc", "phonetic": "noun (f)" },
+        { "id": "de-08-17", "kanji": "das Medikament", "hiragana": "dahs me-di-ka-ment", "meaning": "Thuốc (tổng quát)", "phonetic": "noun (n)" },
+        { "id": "de-08-18", "kanji": "der Arzt / die Ärztin", "hiragana": "dair artst / dee erts-tin", "meaning": "Bác sĩ (nam/nữ)", "phonetic": "noun" },
+        { "id": "de-08-19", "kanji": "der Termin", "hiragana": "dair ter-meen", "meaning": "Cuộc hẹn (lịch khám)", "phonetic": "noun (m)" },
+        { "id": "de-08-20", "kanji": "die Krankenversicherung", "hiragana": "dee kran-ken-fer-zi-khe-rung", "meaning": "Bảo hiểm y tế", "phonetic": "noun (f)" },
+        { "id": "de-08-21", "kanji": "Sie sollen viel trinken.", "hiragana": "zee zo-len feel trin-ken", "meaning": "Bạn nên uống nhiều nước.", "phonetic": "advice phrase" },
+        { "id": "de-08-22", "kanji": "gesund / krank", "hiragana": "ge-zunt / krank", "meaning": "Khỏe mạnh / Bệnh", "phonetic": "adjective" },
+        { "id": "de-08-23", "kanji": "Gute Besserung!", "hiragana": "goo-te bes-se-rung", "meaning": "Chúc bình phục!", "phonetic": "expression" },
+        { "id": "de-08-24", "kanji": "das Rezept", "hiragana": "dahs re-tsept", "meaning": "Đơn thuốc / Công thức nấu ăn", "phonetic": "noun (n)" },
+        { "id": "de-08-25", "kanji": "schlafen gehen", "hiragana": "shlah-fen gay-en", "meaning": "Đi ngủ", "phonetic": "verb phrase" }
       ],
       "grammarPoints": [
         {
           "id": "g-de-08-01",
-          "structure": "Zwei-Wege-Präpositionen + Dativ (Wo?) vs Akkusativ (Wohin?)",
-          "meaning": "in, an, auf, über, unter, neben, zwischen, vor, hinter + Dativ (vị trí) hoặc Akkusativ (hướng đến)",
-          "explanation": "Câu hỏi 'Wo?' (Ở đâu?) → Dativ. Câu hỏi 'Wohin?' (Đến đâu?) → Akkusativ.",
+          "structure": "Modalverb 'sollen' (được/phải làm theo yêu cầu người khác): ich soll, du sollst",
+          "meaning": "Dùng khi truyền đạt yêu cầu từ người khác (bác sĩ, sếp...)",
+          "explanation": "'sollen' khác 'müssen': sollen = được yêu cầu bởi người khác, müssen = cảm thấy cần thiết bản thân.",
           "level": "A1",
           "examples": [
-            { "id": "eg-de-08-01", "sentence": "Das Buch liegt auf dem Tisch. (Wo?)", "meaning": "Quyển sách ở trên bàn. (Dativ)" },
-            { "id": "eg-de-08-02", "sentence": "Ich lege das Buch auf den Tisch. (Wohin?)", "meaning": "Tôi đặt quyển sách lên bàn. (Akkusativ)" }
+            { "id": "eg-de-08-01", "sentence": "Der Arzt sagt, ich soll viel Wasser trinken.", "meaning": "Bác sĩ nói tôi phải uống nhiều nước." },
+            { "id": "eg-de-08-02", "sentence": "Du sollst nicht so viel Zucker essen.", "meaning": "Bạn không nên ăn nhiều đường." }
           ]
         },
         {
           "id": "g-de-08-02",
-          "structure": "Adjektivdeklination (Biến cách tính từ) - Vị ngữ (predikativ)",
-          "meaning": "Khi tính từ đứng sau động từ sein, dùng dạng gốc không biến đổi",
-          "explanation": "Ở vị ngữ, tính từ không biến đổi theo giống.",
+          "structure": "Dativ mit Körperteilen: Mir tut der Kopf weh. / Wie geht es Ihnen?",
+          "meaning": "Dùng Dativ với đại từ khi nói về cảm giác cơ thể",
+          "explanation": "'wehtun' = đau. Cấu trúc: Dativ (mir/dir/ihm/ihr) + tut + bộ phận cơ thể + weh.",
           "level": "A1",
           "examples": [
-            { "id": "eg-de-08-03", "sentence": "Das Zimmer ist sehr schön.", "meaning": "Căn phòng này rất đẹp." },
-            { "id": "eg-de-08-04", "sentence": "Die Wohnung ist zu teuer.", "meaning": "Căn hộ này quá đắt." }
+            { "id": "eg-de-08-03", "sentence": "Mir tut der Rücken weh.", "meaning": "Tôi bị đau lưng." },
+            { "id": "eg-de-08-04", "sentence": "Wie geht es dir?", "meaning": "Bạn có khỏe không?" }
+          ]
+        },
+        {
+          "id": "g-de-08-03",
+          "structure": "Imperativ (Câu mệnh lệnh): Trinken Sie mehr! / Ruh dich aus!",
+          "meaning": "Câu mệnh lệnh ở ngôi Sie (trang trọng) và du (thân mật)",
+          "explanation": "Sie-Imperativ: Động từ + Sie. du-Imperativ: Chỉ cần thân động từ (+ -e nếu cần).",
+          "level": "A1",
+          "examples": [
+            { "id": "eg-de-08-05", "sentence": "Nehmen Sie die Tabletten nach dem Essen!", "meaning": "Hãy uống thuốc sau khi ăn!" },
+            { "id": "eg-de-08-06", "sentence": "Ruh dich aus!", "meaning": "Hãy nghỉ ngơi đi!" }
           ]
         }
       ]
     },
     {
       "id": "de-lesson-09",
-      "name": "Kapitel 9: Alles Arbeit?",
-      "description": "Công việc, hoạt động tại công sở và trường học, giới từ chỉ thời gian và câu hỏi W-Fragen",
+      "name": "Kapitel 9: Lernen und Arbeiten",
+      "description": "Học tập, làm việc, trường học, môn học, thời khóa biểu, hệ thống giáo dục Đức và nghề nghiệp",
       "level": "A1",
-      "curriculum": "Netzwerk neu A1",
+      "curriculum": "Netzwerk Neu A1",
       "vocabulary": [
-        { "id": "de-09-01", "kanji": "Das Büro", "hiragana": "dahs bü-ro", "meaning": "Văn phòng", "phonetic": "noun (n)" },
-        { "id": "de-09-02", "kanji": "Die Schule", "hiragana": "dee shoo-le", "meaning": "Trường học", "phonetic": "noun (f)" },
-        { "id": "de-09-03", "kanji": "Die Universität", "hiragana": "dee oo-ni-ver-zi-tet", "meaning": "Trường đại học", "phonetic": "noun (f)" },
-        { "id": "de-09-04", "kanji": "Das Meeting", "hiragana": "dahs mee-ting", "meaning": "Cuộc họp", "phonetic": "noun (n)" },
-        { "id": "de-09-05", "kanji": "Der Chef / Die Chefin", "hiragana": "dair shef / dee she-fin", "meaning": "Sếp / Giám đốc (nam / nữ)", "phonetic": "noun" },
-        { "id": "de-09-06", "kanji": "Anfangen", "hiragana": "an-fang-en", "meaning": "Bắt đầu (động từ tách)", "phonetic": "verb (trennbar)" },
-        { "id": "de-09-07", "kanji": "Aufhören", "hiragana": "owf-hö-ren", "meaning": "Kết thúc, dừng lại (động từ tách)", "phonetic": "verb (trennbar)" },
-        { "id": "de-09-08", "kanji": "Lernen", "hiragana": "ler-nen", "meaning": "Học", "phonetic": "verb" },
-        { "id": "de-09-09", "kanji": "Unterrichten", "hiragana": "un-ter-rikh-ten", "meaning": "Dạy học", "phonetic": "verb" },
-        { "id": "de-09-10", "kanji": "Der Urlaub", "hiragana": "dair oor-lowp", "meaning": "Kỳ nghỉ phép", "phonetic": "noun (m)" },
-        { "id": "de-09-11", "kanji": "Frei haben", "hiragana": "frai hah-ben", "meaning": "Được nghỉ, rảnh rỗi", "phonetic": "phrase" },
-        { "id": "de-09-12", "kanji": "Das Gehalt", "hiragana": "dahs ge-halt", "meaning": "Lương", "phonetic": "noun (n)" },
-        { "id": "de-09-13", "kanji": "Warum?", "hiragana": "vah-rum", "meaning": "Tại sao?", "phonetic": "question word" },
-        { "id": "de-09-14", "kanji": "Wann?", "hiragana": "van", "meaning": "Khi nào?", "phonetic": "question word" },
-        { "id": "de-09-15", "kanji": "Wie lange?", "hiragana": "vee lang-e", "meaning": "Bao lâu?", "phonetic": "question word" }
+        { "id": "de-09-01", "kanji": "die Schule", "hiragana": "dee shoo-le", "meaning": "Trường học (phổ thông)", "phonetic": "noun (f)" },
+        { "id": "de-09-02", "kanji": "die Universität", "hiragana": "dee oo-ni-ver-zi-tät", "meaning": "Đại học", "phonetic": "noun (f)" },
+        { "id": "de-09-03", "kanji": "das Gymnasium", "hiragana": "dahs gym-nah-zi-um", "meaning": "Trường trung học (dẫn đến đại học)", "phonetic": "noun (n)" },
+        { "id": "de-09-04", "kanji": "das Fach", "hiragana": "dahs fakh", "meaning": "Môn học", "phonetic": "noun (n)" },
+        { "id": "de-09-05", "kanji": "Mathematik / Mathe", "hiragana": "ma-te-mah-teek", "meaning": "Toán học", "phonetic": "noun (f)" },
+        { "id": "de-09-06", "kanji": "Deutsch", "hiragana": "doytch", "meaning": "Môn Tiếng Đức", "phonetic": "noun (n)" },
+        { "id": "de-09-07", "kanji": "Biologie / Chemie / Physik", "hiragana": "bi-o-lo-gee / khe-mee / fü-zeek", "meaning": "Sinh học / Hóa học / Vật lý", "phonetic": "noun" },
+        { "id": "de-09-08", "kanji": "die Prüfung", "hiragana": "dee prue-fung", "meaning": "Kỳ thi", "phonetic": "noun (f)" },
+        { "id": "de-09-09", "kanji": "bestehen / durchfallen", "hiragana": "be-shteh-en / durkh-fa-len", "meaning": "Đậu / Trượt (kỳ thi)", "phonetic": "verb" },
+        { "id": "de-09-10", "kanji": "die Ausbildung", "hiragana": "dee ows-bil-dung", "meaning": "Đào tạo nghề (apprenticeship)", "phonetic": "noun (f)" },
+        { "id": "de-09-11", "kanji": "der Azubi (Auszubildende)", "hiragana": "dair ah-tsoo-bee", "meaning": "Học nghề (thực tập sinh)", "phonetic": "noun (m)" },
+        { "id": "de-09-12", "kanji": "der Betrieb", "hiragana": "dair be-treep", "meaning": "Công ty, xí nghiệp", "phonetic": "noun (m)" },
+        { "id": "de-09-13", "kanji": "das Büro", "hiragana": "dahs bue-ro", "meaning": "Văn phòng", "phonetic": "noun (n)" },
+        { "id": "de-09-14", "kanji": "die Arbeitszeit", "hiragana": "dee ar-bayts-tsayt", "meaning": "Giờ làm việc", "phonetic": "noun (f)" },
+        { "id": "de-09-15", "kanji": "das Gehalt / der Lohn", "hiragana": "dahs ge-halt / dair lohn", "meaning": "Lương tháng / Lương công nhật", "phonetic": "noun" },
+        { "id": "de-09-16", "kanji": "der Chef / die Chefin", "hiragana": "dair shef / dee she-fin", "meaning": "Sếp, giám đốc (nam/nữ)", "phonetic": "noun" },
+        { "id": "de-09-17", "kanji": "kündigen / entlassen werden", "hiragana": "kuen-di-gen / ent-las-sen", "meaning": "Nghỉ việc / Bị sa thải", "phonetic": "verb" },
+        { "id": "de-09-18", "kanji": "Vollzeit / Teilzeit", "hiragana": "fol-tsayt / tayl-tsayt", "meaning": "Toàn thời gian / Bán thời gian", "phonetic": "noun" },
+        { "id": "de-09-19", "kanji": "lernen / studieren", "hiragana": "ler-nen / shtoo-dee-ren", "meaning": "Học (nói chung) / Học đại học", "phonetic": "verb" },
+        { "id": "de-09-20", "kanji": "die Note", "hiragana": "dee noh-te", "meaning": "Điểm số (học bạ)", "phonetic": "noun (f)" },
+        { "id": "de-09-21", "kanji": "sehr gut (1), gut (2), befriedigend (3)", "hiragana": "zair goot, goot, be-free-di-gend", "meaning": "Rất tốt (1), Tốt (2), Đạt (3) - thang điểm Đức", "phonetic": "grade" },
+        { "id": "de-09-22", "kanji": "die Hausaufgaben (Pl.)", "hiragana": "dee hows-owf-gah-ben", "meaning": "Bài tập về nhà", "phonetic": "noun (pl)" },
+        { "id": "de-09-23", "kanji": "die Pause", "hiragana": "dee pow-ze", "meaning": "Giờ nghỉ giải lao", "phonetic": "noun (f)" },
+        { "id": "de-09-24", "kanji": "anfangen / aufhören", "hiragana": "an-fan-gen / owf-her-ren", "meaning": "Bắt đầu / Kết thúc", "phonetic": "verb (separable)" },
+        { "id": "de-09-25", "kanji": "Wann beginnt der Unterricht?", "hiragana": "van be-gint dair un-ter-rikht", "meaning": "Giờ học bắt đầu lúc mấy giờ?", "phonetic": "question" }
       ],
       "grammarPoints": [
         {
           "id": "g-de-09-01",
-          "structure": "W-Fragen (Câu hỏi với từ để hỏi W-)",
-          "meaning": "wer, was, wo, woher, wohin, wann, wie, warum, wie viel, wie lange",
-          "explanation": "Từ để hỏi luôn đứng đầu câu. Sau đó là động từ (chia).",
+          "structure": "Modalverb 'dürfen' (được phép): ich darf, du darfst, er/sie/es darf",
+          "meaning": "Diễn đạt sự cho phép hoặc cấm đoán",
+          "explanation": "'dürfen' dùng khi nói về phép tắc: darf (được phép), nicht dürfen (không được phép).",
           "level": "A1",
           "examples": [
-            { "id": "eg-de-09-01", "sentence": "Warum lernst du Deutsch?", "meaning": "Tại sao bạn học tiếng Đức?" },
-            { "id": "eg-de-09-02", "sentence": "Wann fängt die Arbeit an?", "meaning": "Công việc bắt đầu khi nào?" }
+            { "id": "eg-de-09-01", "sentence": "Hier darf man nicht rauchen.", "meaning": "Ở đây không được hút thuốc." },
+            { "id": "eg-de-09-02", "sentence": "Darf ich kurz fragen?", "meaning": "Tôi có thể hỏi một chút không?" }
           ]
         },
         {
           "id": "g-de-09-02",
-          "structure": "Temporale Präpositionen: in, seit, vor, nach, ab",
-          "meaning": "Giới từ chỉ thời gian quan trọng khi nói về lịch trình và thời điểm",
-          "explanation": "in + Dativ (trong tương lai), seit + Dativ (từ quá khứ đến hiện tại - dùng với Präsens!), vor + Dativ (trước đây), nach + Dativ (sau khi).",
+          "structure": "Modalverb 'wollen' (muốn, có ý định): ich will, du willst, er/sie/es will",
+          "meaning": "Diễn đạt ý muốn, kế hoạch mạnh mẽ",
+          "explanation": "'wollen' mạnh hơn 'möchten'. Dùng khi có kế hoạch cụ thể hoặc ý chí rõ ràng.",
           "level": "A1",
           "examples": [
-            { "id": "eg-de-09-03", "sentence": "Ich lerne seit zwei Jahren Deutsch.", "meaning": "Tôi học tiếng Đức được hai năm rồi." },
-            { "id": "eg-de-09-04", "sentence": "Nach der Arbeit gehe ich ins Gym.", "meaning": "Sau giờ làm tôi đi tập gym." }
+            { "id": "eg-de-09-03", "sentence": "Ich will Ingenieur werden.", "meaning": "Tôi muốn trở thành kỹ sư." },
+            { "id": "eg-de-09-04", "sentence": "Was willst du nach der Schule machen?", "meaning": "Bạn muốn làm gì sau khi học xong?" }
+          ]
+        },
+        {
+          "id": "g-de-09-03",
+          "structure": "Konjunktion 'weil' (vì): Nebensatz - động từ đứng cuối",
+          "meaning": "'weil' = vì, bởi vì → trong mệnh đề phụ, động từ đứng ở cuối câu",
+          "explanation": "Weil tạo ra mệnh đề phụ (Nebensatz). Quy tắc vàng: trong Nebensatz, động từ luôn đứng cuối.",
+          "level": "A1",
+          "examples": [
+            { "id": "eg-de-09-05", "sentence": "Ich lerne Deutsch, weil ich in Deutschland arbeiten möchte.", "meaning": "Tôi học tiếng Đức vì tôi muốn làm việc ở Đức." },
+            { "id": "eg-de-09-06", "sentence": "Er kommt nicht, weil er krank ist.", "meaning": "Anh ấy không đến vì bị bệnh." }
           ]
         }
       ]
     },
     {
       "id": "de-lesson-10",
-      "name": "Kapitel 10: Kleidung und Mode",
-      "description": "Quần áo, màu sắc, nhận xét về trang phục và động từ tình thái müssen, dürfen",
+      "name": "Kapitel 10: Wetter und Jahreszeiten",
+      "description": "Thời tiết, các mùa trong năm, dự báo thời tiết, nhiệt độ và các hoạt động theo mùa",
       "level": "A1",
-      "curriculum": "Netzwerk neu A1",
+      "curriculum": "Netzwerk Neu A1",
       "vocabulary": [
-        { "id": "de-10-01", "kanji": "Das Hemd", "hiragana": "dahs hemt", "meaning": "Áo sơ mi", "phonetic": "noun (n)" },
-        { "id": "de-10-02", "kanji": "Die Hose", "hiragana": "dee hoh-ze", "meaning": "Quần dài", "phonetic": "noun (f)" },
-        { "id": "de-10-03", "kanji": "Das Kleid", "hiragana": "dahs klait", "meaning": "Váy đầm", "phonetic": "noun (n)" },
-        { "id": "de-10-04", "kanji": "Der Mantel", "hiragana": "dair man-tel", "meaning": "Áo khoác dài", "phonetic": "noun (m)" },
-        { "id": "de-10-05", "kanji": "Die Schuhe (Pl.)", "hiragana": "dee shoo-e", "meaning": "Giày (số nhiều)", "phonetic": "noun (f/pl)" },
-        { "id": "de-10-06", "kanji": "Die Größe", "hiragana": "dee grö-se", "meaning": "Cỡ, kích thước", "phonetic": "noun (f)" },
-        { "id": "de-10-07", "kanji": "Anprobieren", "hiragana": "an-pro-bee-ren", "meaning": "Thử (quần áo)", "phonetic": "verb (trennbar)" },
-        { "id": "de-10-08", "kanji": "Passen", "hiragana": "pas-sen", "meaning": "Vừa vặn, phù hợp", "phonetic": "verb" },
-        { "id": "de-10-09", "kanji": "Das steht dir gut!", "hiragana": "das shtett deer goot", "meaning": "Bạn mặc đẹp lắm!", "phonetic": "expression" },
-        { "id": "de-10-10", "kanji": "Müssen", "hiragana": "mü-sen", "meaning": "Phải làm gì (bắt buộc)", "phonetic": "modal verb" },
-        { "id": "de-10-11", "kanji": "Dürfen", "hiragana": "dür-fen", "meaning": "Được phép làm gì", "phonetic": "modal verb" },
-        { "id": "de-10-12", "kanji": "Die Farbe", "hiragana": "dee far-be", "meaning": "Màu sắc", "phonetic": "noun (f)" },
-        { "id": "de-10-13", "kanji": "Schwarz / Weiß", "hiragana": "shvarts / vais", "meaning": "Đen / Trắng", "phonetic": "adjective" },
-        { "id": "de-10-14", "kanji": "Der Sale", "hiragana": "dair seal", "meaning": "Đợt giảm giá", "phonetic": "noun (m)" },
-        { "id": "de-10-15", "kanji": "Zu groß / Zu klein", "hiragana": "tsoo grohs / tsoo klain", "meaning": "Quá to / Quá nhỏ", "phonetic": "phrase" }
+        { "id": "de-10-01", "kanji": "das Wetter", "hiragana": "dahs vet-ter", "meaning": "Thời tiết", "phonetic": "noun (n)" },
+        { "id": "de-10-02", "kanji": "die Jahreszeit", "hiragana": "dee yah-res-tsayt", "meaning": "Mùa trong năm", "phonetic": "noun (f)" },
+        { "id": "de-10-03", "kanji": "der Frühling", "hiragana": "dair frue-ling", "meaning": "Mùa xuân", "phonetic": "noun (m)" },
+        { "id": "de-10-04", "kanji": "der Sommer", "hiragana": "dair zo-mer", "meaning": "Mùa hè", "phonetic": "noun (m)" },
+        { "id": "de-10-05", "kanji": "der Herbst", "hiragana": "dair herpst", "meaning": "Mùa thu", "phonetic": "noun (m)" },
+        { "id": "de-10-06", "kanji": "der Winter", "hiragana": "dair vin-ter", "meaning": "Mùa đông", "phonetic": "noun (m)" },
+        { "id": "de-10-07", "kanji": "die Sonne / sonnig", "hiragana": "dee zon-ne / zo-nikh", "meaning": "Mặt trời / Nắng", "phonetic": "noun/adjective" },
+        { "id": "de-10-08", "kanji": "der Regen / regnen", "hiragana": "dair reh-gen / reg-nen", "meaning": "Mưa (danh từ / động từ)", "phonetic": "noun/verb" },
+        { "id": "de-10-09", "kanji": "der Schnee / schneien", "hiragana": "dair shneh / shnay-en", "meaning": "Tuyết (danh từ / động từ)", "phonetic": "noun/verb" },
+        { "id": "de-10-10", "kanji": "der Wind / windig", "hiragana": "dair vint / vin-dikh", "meaning": "Gió / Nhiều gió", "phonetic": "noun/adjective" },
+        { "id": "de-10-11", "kanji": "die Wolke / bewölkt", "hiragana": "dee vol-ke / be-voelkt", "meaning": "Mây / Nhiều mây", "phonetic": "noun/adjective" },
+        { "id": "de-10-12", "kanji": "kalt / warm / heiß", "hiragana": "kalt / varm / hays", "meaning": "Lạnh / Ấm / Nóng", "phonetic": "adjective" },
+        { "id": "de-10-13", "kanji": "Wie ist das Wetter heute?", "hiragana": "vee ist dahs vet-ter hoy-te", "meaning": "Hôm nay thời tiết thế nào?", "phonetic": "question" },
+        { "id": "de-10-14", "kanji": "Es ist ... Grad.", "hiragana": "es ist ... graht", "meaning": "Nhiệt độ là ... độ.", "phonetic": "phrase" },
+        { "id": "de-10-15", "kanji": "der Monat", "hiragana": "dair mo-naht", "meaning": "Tháng", "phonetic": "noun (m)" },
+        { "id": "de-10-16", "kanji": "Januar, Februar, März, April", "hiragana": "ya-noo-ar, feh-broo-ar, merts, ah-pril", "meaning": "Tháng 1, 2, 3, 4", "phonetic": "proper noun" },
+        { "id": "de-10-17", "kanji": "Mai, Juni, Juli, August", "hiragana": "may, yoo-ni, yoo-li, ow-goost", "meaning": "Tháng 5, 6, 7, 8", "phonetic": "proper noun" },
+        { "id": "de-10-18", "kanji": "September, Oktober, November, Dezember", "hiragana": "zep-tem-ber, ok-toh-ber, no-vem-ber, de-tsem-ber", "meaning": "Tháng 9, 10, 11, 12", "phonetic": "proper noun" },
+        { "id": "de-10-19", "kanji": "der Regenschirm", "hiragana": "dair reh-gen-shirm", "meaning": "Ô dù", "phonetic": "noun (m)" },
+        { "id": "de-10-20", "kanji": "der Mantel", "hiragana": "dair man-tel", "meaning": "Áo khoác", "phonetic": "noun (m)" },
+        { "id": "de-10-21", "kanji": "das Gewitter", "hiragana": "dahs ge-vit-ter", "meaning": "Cơn giông bão", "phonetic": "noun (n)" },
+        { "id": "de-10-22", "kanji": "der Nebel / neblig", "hiragana": "dair neh-bel / neh-blikh", "meaning": "Sương mù / Nhiều sương", "phonetic": "noun/adjective" },
+        { "id": "de-10-23", "kanji": "angenehm / unangenehm", "hiragana": "an-ge-nehm / un-an-ge-nehm", "meaning": "Dễ chịu / Khó chịu", "phonetic": "adjective" },
+        { "id": "de-10-24", "kanji": "der Temperaturunterschied", "hiragana": "dair tem-pe-ra-toor-un-ter-sheed", "meaning": "Chênh lệch nhiệt độ", "phonetic": "noun (m)" },
+        { "id": "de-10-25", "kanji": "Es gibt ... (Thời tiết)", "hiragana": "es gipt", "meaning": "Có ... (thời tiết)", "phonetic": "phrase" }
       ],
       "grammarPoints": [
         {
           "id": "g-de-10-01",
-          "structure": "Modalverben: müssen, dürfen, sollen",
-          "meaning": "müssen (phải - nội tại), dürfen (được phép), sollen (phải - theo lệnh người khác)",
-          "explanation": "müssen: bắt buộc do hoàn cảnh. dürfen: có/không có quyền làm gì.",
+          "structure": "Komparativ und Superlativ (So sánh hơn và nhất)",
+          "meaning": "Comparative: schneller (nhanh hơn), Superlative: am schnellsten (nhanh nhất)",
+          "explanation": "Tính từ ngắn thêm -er (so sánh hơn). So sánh nhất: am + tính từ + -sten. Một số có biến âm: alt→älter, warm→wärmer.",
           "level": "A1",
           "examples": [
-            { "id": "eg-de-10-01", "sentence": "Ich muss morgen früh aufstehen.", "meaning": "Ngày mai tôi phải dậy sớm." },
-            { "id": "eg-de-10-02", "sentence": "Hier darf man nicht rauchen.", "meaning": "Ở đây không được hút thuốc." }
+            { "id": "eg-de-10-01", "sentence": "Der Sommer ist wärmer als der Herbst.", "meaning": "Mùa hè ấm hơn mùa thu." },
+            { "id": "eg-de-10-02", "sentence": "Januar ist der kälteste Monat.", "meaning": "Tháng Giêng là tháng lạnh nhất." }
           ]
         },
         {
           "id": "g-de-10-02",
-          "structure": "Akkusativ nach mögen / Adjektivdeklination",
-          "meaning": "Sau các động từ tình thái, danh từ đứng ở cách Akkusativ",
-          "explanation": "Cách Akkusativ: Chỉ giống đực (maskulin) thay đổi quán từ: der → den, ein → einen.",
+          "structure": "Temporale Nebensatz mit 'wenn' (khi): Verb đứng cuối",
+          "meaning": "'wenn' = khi, mỗi khi. Mệnh đề phụ với 'wenn' → động từ đứng cuối",
+          "explanation": "'wenn' dùng cho hiện tại/tương lai lặp đi lặp lại, và điều kiện. Khác 'als' dùng một lần trong quá khứ.",
           "level": "A1",
           "examples": [
-            { "id": "eg-de-10-03", "sentence": "Ich kaufe den roten Mantel.", "meaning": "Tôi mua chiếc áo khoác đỏ đó." },
-            { "id": "eg-de-10-04", "sentence": "Er trägt einen blauen Pullover.", "meaning": "Anh ấy mặc một chiếc áo len màu xanh." }
+            { "id": "eg-de-10-03", "sentence": "Wenn es regnet, bleibe ich zu Hause.", "meaning": "Khi trời mưa, tôi ở nhà." },
+            { "id": "eg-de-10-04", "sentence": "Was machst du, wenn das Wetter schön ist?", "meaning": "Bạn làm gì khi thời tiết đẹp?" }
+          ]
+        },
+        {
+          "id": "g-de-10-03",
+          "structure": "Ordinalzahlen (Số thứ tự): erste, zweite, dritte... + Datum",
+          "meaning": "Cách đọc ngày tháng: am ersten Januar (ngày 1 tháng 1)",
+          "explanation": "Số thứ tự từ 1-19: thêm -te. Từ 20 trở đi: thêm -ste. Ngoại lệ: erste (1.), dritte (3.), siebte (7.), achte (8.).",
+          "level": "A1",
+          "examples": [
+            { "id": "eg-de-10-05", "sentence": "Heute ist der fünfte März.", "meaning": "Hôm nay là ngày 5 tháng 3." },
+            { "id": "eg-de-10-06", "sentence": "Am zwanzigsten Juni beginnt der Sommer.", "meaning": "Ngày 20 tháng 6 mùa hè bắt đầu." }
           ]
         }
       ]
     },
     {
       "id": "de-lesson-11",
-      "name": "Kapitel 11: Gesund und fit",
-      "description": "Sức khỏe, bộ phận cơ thể, cảm xúc, lời khuyên sức khỏe và động từ tình thái sollen",
+      "name": "Kapitel 11: Feste und Feiern",
+      "description": "Lễ hội, tiệc tùng, các ngày lễ ở Đức, lời chúc và cách mua/tặng quà",
       "level": "A1",
-      "curriculum": "Netzwerk neu A1",
+      "curriculum": "Netzwerk Neu A1",
       "vocabulary": [
-        { "id": "de-11-01", "kanji": "Der Kopf", "hiragana": "dair kopf", "meaning": "Cái đầu", "phonetic": "noun (m)" },
-        { "id": "de-11-02", "kanji": "Der Bauch", "hiragana": "dair bowkh", "meaning": "Cái bụng", "phonetic": "noun (m)" },
-        { "id": "de-11-03", "kanji": "Der Rücken", "hiragana": "dair rü-ken", "meaning": "Lưng", "phonetic": "noun (m)" },
-        { "id": "de-11-04", "kanji": "Die Hand", "hiragana": "dee hant", "meaning": "Bàn tay", "phonetic": "noun (f)" },
-        { "id": "de-11-05", "kanji": "Der Fuß", "hiragana": "dair foos", "meaning": "Bàn chân", "phonetic": "noun (m)" },
-        { "id": "de-11-06", "kanji": "Ich bin krank.", "hiragana": "ikh bin krank", "meaning": "Tôi bị bệnh.", "phonetic": "phrase" },
-        { "id": "de-11-07", "kanji": "Mir geht es gut / schlecht.", "hiragana": "meer geht es goot / shlekht", "meaning": "Tôi khỏe / Tôi không khỏe.", "phonetic": "phrase" },
-        { "id": "de-11-08", "kanji": "Die Erkältung", "hiragana": "dee er-kel-tung", "meaning": "Bệnh cảm lạnh", "phonetic": "noun (f)" },
-        { "id": "de-11-09", "kanji": "Das Fieber", "hiragana": "dahs fee-ber", "meaning": "Sốt", "phonetic": "noun (n)" },
-        { "id": "de-11-10", "kanji": "Schmerzen haben", "hiragana": "shmert-sen hah-ben", "meaning": "Bị đau (ở đâu đó)", "phonetic": "phrase" },
-        { "id": "de-11-11", "kanji": "Das Medikament", "hiragana": "dahs me-di-ka-ment", "meaning": "Thuốc", "phonetic": "noun (n)" },
-        { "id": "de-11-12", "kanji": "Der Arzttermin", "hiragana": "dair artst-ter-meen", "meaning": "Lịch hẹn bác sĩ", "phonetic": "noun (m)" },
-        { "id": "de-11-13", "kanji": "Ausruhen", "hiragana": "ows-roo-en", "meaning": "Nghỉ ngơi (động từ tách)", "phonetic": "verb (trennbar)" },
-        { "id": "de-11-14", "kanji": "Gute Besserung!", "hiragana": "goo-te bes-se-rung", "meaning": "Chúc mau hồi phục!", "phonetic": "expression" },
-        { "id": "de-11-15", "kanji": "Gesund", "hiragana": "ge-zunt", "meaning": "Khỏe mạnh", "phonetic": "adjective" }
+        { "id": "de-11-01", "kanji": "das Fest / die Feier", "hiragana": "dahs fest / dee fay-er", "meaning": "Lễ hội / Tiệc mừng", "phonetic": "noun" },
+        { "id": "de-11-02", "kanji": "der Geburtstag", "hiragana": "dair ge-burts-tahk", "meaning": "Ngày sinh nhật", "phonetic": "noun (m)" },
+        { "id": "de-11-03", "kanji": "Herzlichen Glückwunsch!", "hiragana": "herts-li-khen gluek-vunsh", "meaning": "Chúc mừng! (chân thành)", "phonetic": "expression" },
+        { "id": "de-11-04", "kanji": "Alles Gute!", "hiragana": "a-les goo-te", "meaning": "Chúc tất cả tốt lành!", "phonetic": "expression" },
+        { "id": "de-11-05", "kanji": "Weihnachten", "hiragana": "vaykh-nakh-ten", "meaning": "Lễ Giáng sinh (Christmas)", "phonetic": "noun (n/pl)" },
+        { "id": "de-11-06", "kanji": "Frohe Weihnachten!", "hiragana": "froh-e vaykh-nakh-ten", "meaning": "Mừng Giáng sinh!", "phonetic": "expression" },
+        { "id": "de-11-07", "kanji": "Silvester", "hiragana": "zil-ves-ter", "meaning": "Đêm Giao thừa (31/12)", "phonetic": "noun (m)" },
+        { "id": "de-11-08", "kanji": "Gutes Neues Jahr!", "hiragana": "goo-tes noy-es yahr", "meaning": "Chúc mừng Năm mới!", "phonetic": "expression" },
+        { "id": "de-11-09", "kanji": "Ostern", "hiragana": "os-tern", "meaning": "Lễ Phục Sinh (Easter)", "phonetic": "noun (n/pl)" },
+        { "id": "de-11-10", "kanji": "das Oktoberfest", "hiragana": "dahs ok-toh-ber-fest", "meaning": "Lễ hội Bia tháng 10 (Munich)", "phonetic": "proper noun" },
+        { "id": "de-11-11", "kanji": "das Geschenk", "hiragana": "dahs ge-shenk", "meaning": "Quà tặng", "phonetic": "noun (n)" },
+        { "id": "de-11-12", "kanji": "schenken / bekommen", "hiragana": "shen-ken / be-kom-men", "meaning": "Tặng / Nhận được", "phonetic": "verb" },
+        { "id": "de-11-13", "kanji": "einladen", "hiragana": "ayn-lah-den", "meaning": "Mời (đến dự)", "phonetic": "verb (separable)" },
+        { "id": "de-11-14", "kanji": "die Einladung", "hiragana": "dee ayn-lah-dung", "meaning": "Lời mời, thiệp mời", "phonetic": "noun (f)" },
+        { "id": "de-11-15", "kanji": "Ich komme gern!", "hiragana": "ikh kom-me gairn", "meaning": "Tôi rất vui khi đến!", "phonetic": "expression" },
+        { "id": "de-11-16", "kanji": "feiern", "hiragana": "fay-ern", "meaning": "Ăn mừng, tổ chức tiệc", "phonetic": "verb" },
+        { "id": "de-11-17", "kanji": "der Kuchen / die Torte", "hiragana": "dair koo-khen / dee tor-te", "meaning": "Bánh (nướng) / Bánh kem", "phonetic": "noun" },
+        { "id": "de-11-18", "kanji": "die Kerze", "hiragana": "dee ker-tse", "meaning": "Nến", "phonetic": "noun (f)" },
+        { "id": "de-11-19", "kanji": "Prost! / Zum Wohl!", "hiragana": "prost / tsum vohl", "meaning": "Chúc mừng! (khi uống)", "phonetic": "expression" },
+        { "id": "de-11-20", "kanji": "der Karneval / Fasching", "hiragana": "dair kar-ne-val / fa-shing", "meaning": "Lễ hội hóa trang", "phonetic": "noun" },
+        { "id": "de-11-21", "kanji": "das Lied / singen", "hiragana": "dahs leet / zing-en", "meaning": "Bài hát / Hát", "phonetic": "noun/verb" },
+        { "id": "de-11-22", "kanji": "die Überraschung", "hiragana": "dee ue-ber-ra-shung", "meaning": "Bất ngờ", "phonetic": "noun (f)" },
+        { "id": "de-11-23", "kanji": "Darf ich vorstellen? Das ist ...", "hiragana": "darf ikh for-stel-len", "meaning": "Tôi xin giới thiệu? Đây là ...", "phonetic": "phrase" },
+        { "id": "de-11-24", "kanji": "sich freuen über + Akkusativ", "hiragana": "zikh froy-en ue-ber", "meaning": "Vui mừng về điều gì đó", "phonetic": "verb phrase" },
+        { "id": "de-11-25", "kanji": "Vielen Dank für ...", "hiragana": "fee-len dank fuer", "meaning": "Cảm ơn rất nhiều vì ...", "phonetic": "phrase" }
       ],
       "grammarPoints": [
         {
           "id": "g-de-11-01",
-          "structure": "Dativpronomen: mir, dir, ihm, ihr",
-          "meaning": "Đại từ nhân xưng cách Dativ để diễn đạt cảm giác, cảm xúc",
-          "explanation": "Cấu trúc 'Mir geht es...' hay 'Wie geht es Ihnen/dir?' dùng Dativ.",
+          "structure": "Dativ (Cách 3) - Tân ngữ gián tiếp: dem/der/dem/den",
+          "meaning": "Dùng Dativ với động từ geben, schenken, zeigen, helfen, danken...",
+          "explanation": "Dativ trả lời câu hỏi 'Wem?' (Cho ai?). Quán từ: der→dem (m), die→der (f), das→dem (n), die→den (pl+n).",
           "level": "A1",
           "examples": [
-            { "id": "eg-de-11-01", "sentence": "Wie geht es Ihnen?", "meaning": "Bạn có khỏe không?" },
-            { "id": "eg-de-11-02", "sentence": "Mir geht es nicht gut, ich bin krank.", "meaning": "Tôi không khỏe, tôi bị bệnh." }
+            { "id": "eg-de-11-01", "sentence": "Ich schenke meiner Mutter Blumen.", "meaning": "Tôi tặng hoa cho mẹ." },
+            { "id": "eg-de-11-02", "sentence": "Er gibt dem Kind ein Geschenk.", "meaning": "Anh ấy tặng quà cho đứa trẻ." }
           ]
         },
         {
           "id": "g-de-11-02",
-          "structure": "Ratschläge với 'sollten' (Lời khuyên bằng 'sollten')",
-          "meaning": "Du solltest..., Sie sollten... = Bạn nên...",
-          "explanation": "'Sollten' là dạng lịch sự hơn của 'sollen', dùng để đưa ra lời khuyên.",
+          "structure": "Präposition 'für' + Akkusativ (cho, vì)",
+          "meaning": "'für' luôn đi với Akkusativ: für mich, für dich, für ihn, für sie...",
+          "explanation": "'für' dùng để nói quà/hoạt động dành cho ai, hoặc mục đích.",
           "level": "A1",
           "examples": [
-            { "id": "eg-de-11-03", "sentence": "Du solltest viel Wasser trinken.", "meaning": "Bạn nên uống nhiều nước." },
-            { "id": "eg-de-11-04", "sentence": "Sie sollten zum Arzt gehen.", "meaning": "Bạn nên đi khám bác sĩ." }
+            { "id": "eg-de-11-03", "sentence": "Das Geschenk ist für dich.", "meaning": "Quà này dành cho bạn." },
+            { "id": "eg-de-11-04", "sentence": "Vielen Dank für die Einladung!", "meaning": "Cảm ơn rất nhiều vì lời mời!" }
+          ]
+        },
+        {
+          "id": "g-de-11-03",
+          "structure": "Konjunktion 'dass' (rằng): Nebensatz - Verb đứng cuối",
+          "meaning": "dass = rằng. Giới thiệu mệnh đề phụ: Ich finde, dass ... / Ich glaube, dass ...",
+          "explanation": "Sau 'dass', động từ đứng cuối câu. 'dass' hay bị viết nhầm thành 'das' (quán từ/đại từ).",
+          "level": "A1",
+          "examples": [
+            { "id": "eg-de-11-05", "sentence": "Ich finde, dass das Fest toll ist.", "meaning": "Tôi thấy rằng lễ hội thật tuyệt." },
+            { "id": "eg-de-11-06", "sentence": "Er sagt, dass er nicht kommen kann.", "meaning": "Anh ấy nói rằng anh không thể đến được." }
           ]
         }
       ]
     },
     {
       "id": "de-lesson-12",
-      "name": "Kapitel 12: Urlaub und Ferien",
-      "description": "Kỳ nghỉ, du lịch, lập kế hoạch, các hoạt động dã ngoại và ôn tập toàn bộ A1",
+      "name": "Kapitel 12: Erinnerungen",
+      "description": "Kỷ niệm, kể chuyện quá khứ, tiểu sử, so sánh hiện tại và quá khứ, và nhìn lại hành trình học tiếng Đức",
       "level": "A1",
-      "curriculum": "Netzwerk neu A1",
+      "curriculum": "Netzwerk Neu A1",
       "vocabulary": [
-        { "id": "de-12-01", "kanji": "Der Urlaub", "hiragana": "dair oor-lowp", "meaning": "Kỳ nghỉ (có lương/phép)", "phonetic": "noun (m)" },
-        { "id": "de-12-02", "kanji": "Die Reise", "hiragana": "dee rai-ze", "meaning": "Chuyến đi, du lịch", "phonetic": "noun (f)" },
-        { "id": "de-12-03", "kanji": "Das Flugzeug", "hiragana": "dahs flook-tsoyg", "meaning": "Máy bay", "phonetic": "noun (n)" },
-        { "id": "de-12-04", "kanji": "Der Zug", "hiragana": "dair tsook", "meaning": "Tàu hỏa", "phonetic": "noun (m)" },
-        { "id": "de-12-05", "kanji": "Das Ticket", "hiragana": "dahs tik-ket", "meaning": "Vé (tàu, máy bay)", "phonetic": "noun (n)" },
-        { "id": "de-12-06", "kanji": "Das Gepäck", "hiragana": "dahs ge-pek", "meaning": "Hành lý", "phonetic": "noun (n)" },
-        { "id": "de-12-07", "kanji": "Einchecken", "hiragana": "ain-tche-ken", "meaning": "Làm thủ tục (check-in)", "phonetic": "verb (trennbar)" },
-        { "id": "de-12-08", "kanji": "Der Strand", "hiragana": "dair shtrant", "meaning": "Bãi biển", "phonetic": "noun (m)" },
-        { "id": "de-12-09", "kanji": "Der Berg", "hiragana": "dair berk", "meaning": "Núi", "phonetic": "noun (m)" },
-        { "id": "de-12-10", "kanji": "Das Meer", "hiragana": "dahs mehr", "meaning": "Biển (đại dương)", "phonetic": "noun (n)" },
-        { "id": "de-12-11", "kanji": "Schwimmen", "hiragana": "shvim-men", "meaning": "Bơi lội", "phonetic": "verb" },
-        { "id": "de-12-12", "kanji": "Wandern", "hiragana": "van-dern", "meaning": "Đi bộ đường dài, leo núi", "phonetic": "verb" },
-        { "id": "de-12-13", "kanji": "Fotografieren", "hiragana": "fo-to-gra-fee-ren", "meaning": "Chụp ảnh", "phonetic": "verb" },
-        { "id": "de-12-14", "kanji": "Es hat mir gut gefallen.", "hiragana": "es hat meer goot ge-fal-len", "meaning": "Tôi rất thích nơi đó.", "phonetic": "phrase" },
-        { "id": "de-12-15", "kanji": "Ich freue mich auf ...", "hiragana": "ikh froi-e mikh owf", "meaning": "Tôi mong đợi ... (hướng đến tương lai)", "phonetic": "phrase" }
+        { "id": "de-12-01", "kanji": "die Erinnerung", "hiragana": "dee er-in-ne-rung", "meaning": "Kỷ niệm, ký ức", "phonetic": "noun (f)" },
+        { "id": "de-12-02", "kanji": "die Vergangenheit", "hiragana": "dee fer-gan-gen-hayt", "meaning": "Quá khứ", "phonetic": "noun (f)" },
+        { "id": "de-12-03", "kanji": "damals / früher", "hiragana": "dah-mahls / frue-er", "meaning": "Hồi đó / Trước đây", "phonetic": "adverb" },
+        { "id": "de-12-04", "kanji": "jetzt / heute", "hiragana": "yetst / hoy-te", "meaning": "Bây giờ / Hôm nay", "phonetic": "adverb" },
+        { "id": "de-12-05", "kanji": "als Kind", "hiragana": "als kint", "meaning": "Khi còn nhỏ", "phonetic": "phrase" },
+        { "id": "de-12-06", "kanji": "die Biografie / Lebenslauf", "hiragana": "dee bi-o-gra-fee / leh-bens-lowf", "meaning": "Tiểu sử / Sơ yếu lý lịch", "phonetic": "noun" },
+        { "id": "de-12-07", "kanji": "geboren werden", "hiragana": "ge-boh-ren ver-den", "meaning": "Được sinh ra", "phonetic": "verb phrase" },
+        { "id": "de-12-08", "kanji": "aufwachsen", "hiragana": "owf-vak-sen", "meaning": "Lớn lên", "phonetic": "verb (separable)" },
+        { "id": "de-12-09", "kanji": "umziehen", "hiragana": "um-tsee-en", "meaning": "Chuyển nhà", "phonetic": "verb (separable)" },
+        { "id": "de-12-10", "kanji": "heiraten", "hiragana": "hay-rah-ten", "meaning": "Kết hôn", "phonetic": "verb" },
+        { "id": "de-12-11", "kanji": "das Foto / die Fotos", "hiragana": "dahs fo-to / dee fo-tos", "meaning": "Ảnh / Các ảnh", "phonetic": "noun (n)" },
+        { "id": "de-12-12", "kanji": "Das war ...", "hiragana": "dahs var", "meaning": "Đó là ... (quá khứ)", "phonetic": "phrase (Präteritum)" },
+        { "id": "de-12-13", "kanji": "Ich war ...", "hiragana": "ikh var", "meaning": "Tôi đã là ... / Tôi đã ở ...", "phonetic": "phrase (Präteritum)" },
+        { "id": "de-12-14", "kanji": "Wir hatten ...", "hiragana": "veer hat-ten", "meaning": "Chúng tôi đã có ...", "phonetic": "phrase (Präteritum)" },
+        { "id": "de-12-15", "kanji": "Es hat mir gut gefallen.", "hiragana": "es hat meer goot ge-fa-len", "meaning": "Tôi đã thích nó.", "phonetic": "phrase" },
+        { "id": "de-12-16", "kanji": "die Kindheit", "hiragana": "dee kint-hayt", "meaning": "Thời thơ ấu", "phonetic": "noun (f)" },
+        { "id": "de-12-17", "kanji": "der Traum / träumen", "hiragana": "dair trowm / troy-men", "meaning": "Giấc mơ / Mơ", "phonetic": "noun/verb" },
+        { "id": "de-12-18", "kanji": "sich erinnern an + Akkusativ", "hiragana": "zikh er-in-nern an", "meaning": "Nhớ đến điều gì đó", "phonetic": "verb phrase (reflexive)" },
+        { "id": "de-12-19", "kanji": "vergessen", "hiragana": "fer-ges-sen", "meaning": "Quên", "phonetic": "verb (irreg.)" },
+        { "id": "de-12-20", "kanji": "wichtig / unwichtig", "hiragana": "vikh-tikh / un-vikh-tikh", "meaning": "Quan trọng / Không quan trọng", "phonetic": "adjective" },
+        { "id": "de-12-21", "kanji": "schön / wunderschön", "hiragana": "shern / vun-der-shern", "meaning": "Đẹp / Tuyệt đẹp", "phonetic": "adjective" },
+        { "id": "de-12-22", "kanji": "Rückblick", "hiragana": "ruek-blik", "meaning": "Nhìn lại (tổng kết)", "phonetic": "noun (m)" },
+        { "id": "de-12-23", "kanji": "der Fortschritt", "hiragana": "dair fort-shrit", "meaning": "Tiến bộ", "phonetic": "noun (m)" },
+        { "id": "de-12-24", "kanji": "Ich habe viel gelernt.", "hiragana": "ikh hah-be feel ge-lernt", "meaning": "Tôi đã học được nhiều thứ.", "phonetic": "phrase (Perfekt)" },
+        { "id": "de-12-25", "kanji": "Auf Wiedersehen und viel Erfolg!", "hiragana": "owf vee-der-zeen unt feel er-folk", "meaning": "Tạm biệt và chúc thành công!", "phonetic": "expression" }
       ],
       "grammarPoints": [
         {
           "id": "g-de-12-01",
-          "structure": "Zukunft với 'werden' + Infinitiv (Tương lai với werden)",
-          "meaning": "Cấu trúc: werden (chia) + Infinitiv cuối câu",
-          "explanation": "Để diễn đạt dự định hoặc dự đoán trong tương lai.",
+          "structure": "Präteritum von 'sein' und 'haben': war, hatte",
+          "meaning": "Thì quá khứ đơn của 'sein' (war) và 'haben' (hatte)",
+          "explanation": "sein: ich war, du warst, er/sie/es war, wir waren... | haben: ich hatte, du hattest, er hatte, wir hatten... Dùng thì này trong văn viết.",
           "level": "A1",
           "examples": [
-            { "id": "eg-de-12-01", "sentence": "Nächsten Sommer werde ich nach Deutschland reisen.", "meaning": "Mùa hè tới tôi sẽ đi Đức." },
-            { "id": "eg-de-12-02", "sentence": "Es wird morgen regnen.", "meaning": "Ngày mai trời sẽ mưa." }
+            { "id": "eg-de-12-01", "sentence": "Ich war gestern krank.", "meaning": "Hôm qua tôi bị bệnh." },
+            { "id": "eg-de-12-02", "sentence": "Wir hatten als Kinder viel Spaß.", "meaning": "Khi còn nhỏ chúng tôi đã rất vui." }
           ]
         },
         {
           "id": "g-de-12-02",
-          "structure": "Ôn tập A1: Satzstellung (Trật tự từ trong câu tiếng Đức)",
-          "meaning": "Động từ luôn ở vị trí thứ hai trong câu kể (V2-Regel)",
-          "explanation": "Nguyên tắc V2 là xương sống của cú pháp tiếng Đức.",
+          "structure": "Perfekt (Ôn tập): haben/sein + Partizip II",
+          "meaning": "Ôn tập cách dùng thì hoàn thành để kể chuyện quá khứ trong tiếng Đức nói",
+          "explanation": "Động từ chuyển đổi (di chuyển, thay đổi trạng thái) dùng 'sein': sein + gegangen/gefahren/gekommen... Còn lại dùng 'haben'.",
           "level": "A1",
           "examples": [
-            { "id": "eg-de-12-03", "sentence": "Morgen fahren wir an den Strand.", "meaning": "Ngày mai chúng tôi đi ra bãi biển." },
-            { "id": "eg-de-12-04", "sentence": "Am Wochenende haben wir viel gemacht.", "meaning": "Cuối tuần chúng tôi đã làm rất nhiều thứ." }
+            { "id": "eg-de-12-03", "sentence": "Ich habe Deutsch gelernt.", "meaning": "Tôi đã học tiếng Đức." },
+            { "id": "eg-de-12-04", "sentence": "Sie ist nach München gezogen.", "meaning": "Cô ấy đã chuyển đến Munich." }
+          ]
+        },
+        {
+          "id": "g-de-12-03",
+          "structure": "Reflexive Verben (Động từ phản thân): sich erinnern, sich freuen, sich fühlen",
+          "meaning": "Động từ có đại từ phản thân 'sich': mich, dich, sich, uns, euch, sich",
+          "explanation": "Động từ phản thân có đại từ 'sich' (hoặc biến thể theo ngôi). Đại từ phản thân thường đứng sau động từ đã được chia.",
+          "level": "A1",
+          "examples": [
+            { "id": "eg-de-12-05", "sentence": "Ich erinnere mich an meinen ersten Schultag.", "meaning": "Tôi nhớ đến ngày đầu đi học của mình." },
+            { "id": "eg-de-12-06", "sentence": "Wir freuen uns auf das Fest.", "meaning": "Chúng tôi mong chờ lễ hội." }
           ]
         }
       ]
