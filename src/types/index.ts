@@ -45,6 +45,7 @@ export interface Curriculum {
   name: string;
   createdAt: string;
   lang?: string;
+  level?: string;
   lessons: LessonInCurriculum[];
 }
 

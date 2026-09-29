@@ -15,8 +15,10 @@ import {
   fetchCurriculumRegistry,
   getAllBooksFromRegistry,
   inferStudiedBooksFromVocabIds,
+  loadAllSystemCurriculums,
   RegistryBook
 } from "@/lib/curriculumRegistry";
+import type { Curriculum } from "@/types";
 
 export default function AdminDashboardPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -30,6 +32,7 @@ export default function AdminDashboardPage() {
   const [error, setError] = useState<string | null>(null);
   const [adminView, setAdminView] = useState<"users" | "curriculums" | "config" | "backup">("users");
   const [registryBooks, setRegistryBooks] = useState<RegistryBook[]>([]);
+  const [systemCurriculums, setSystemCurriculums] = useState<Curriculum[]>([]);
 
   // Curriculum detail tab state inside user detail
   const [activeDetailTab, setActiveDetailTab] = useState<"curriculum" | "timeline" | "notebook">("curriculum");
@@ -40,6 +43,9 @@ export default function AdminDashboardPage() {
       if (reg) {
         setRegistryBooks(getAllBooksFromRegistry(reg));
       }
+    });
+    loadAllSystemCurriculums().then((list) => {
+      setSystemCurriculums(list);
     });
   }, []);
 
@@ -84,13 +90,11 @@ export default function AdminDashboardPage() {
       const detail = await fetchAdminUserDetail(userId);
       setUserDetail(detail);
       
-      // Auto select first curriculum only if user has actually synced curriculum data
-      const synced = (detail.data && Array.isArray(detail.data.curriculums)) && detail.data.curriculums.length > 0
-        ? detail.data.curriculums
-        : [];
-      
-      if (synced.length > 0) {
-        setSelectedCurriculumId(synced[0].id);
+      const allSystem = await loadAllSystemCurriculums();
+      const synced = (detail.data && Array.isArray(detail.data.curriculums)) ? detail.data.curriculums : [];
+      const firstId = synced.length > 0 ? synced[0].id : (allSystem.length > 0 ? allSystem[0].id : null);
+      if (firstId) {
+        setSelectedCurriculumId(firstId);
       }
     } catch (err: any) {
       setError(err.message || "Không thể tải thông tin chi tiết của người dùng.");
@@ -134,13 +138,19 @@ export default function AdminDashboardPage() {
     };
   }, [users]);
 
-  // User Curriculums List — only real synced data, no DEFAULT_VOCABULARY fallback
-  const userCurriculums = useMemo(() => {
-    if (!userDetail) return [];
-    return (userDetail.data && Array.isArray(userDetail.data.curriculums)) && userDetail.data.curriculums.length > 0
+  // Merged Curriculums (All System Curriculums + User Synced Curriculums)
+  const mergedCurriculums = useMemo(() => {
+    if (!userDetail) return systemCurriculums;
+    const synced = (userDetail.data && Array.isArray(userDetail.data.curriculums))
       ? userDetail.data.curriculums
       : [];
-  }, [userDetail]);
+    
+    const map = new Map<string, Curriculum>();
+    systemCurriculums.forEach((sc) => map.set(sc.id, sc));
+    synced.forEach((uc) => map.set(uc.id, uc));
+
+    return Array.from(map.values());
+  }, [userDetail, systemCurriculums]);
 
   // Count learned vocab from progress keys (works even without curriculum data)
   const learnedVocabCount = useMemo(() => {
@@ -149,7 +159,7 @@ export default function AdminDashboardPage() {
     return Object.values(progress).filter((p: any) => p.learned).length;
   }, [userDetail]);
 
-  const hasCurriculumData = userCurriculums.length > 0;
+  const hasCurriculumData = mergedCurriculums.length > 0;
 
   // Infer studied books from user's learned vocab IDs
   const inferredStudiedBooks = useMemo(() => {
@@ -164,15 +174,15 @@ export default function AdminDashboardPage() {
   // Map of active curriculum
   const activeCurriculum = useMemo(() => {
     if (!selectedCurriculumId || !userDetail) return null;
-    return userCurriculums.find(c => c.id === selectedCurriculumId) || null;
-  }, [selectedCurriculumId, userCurriculums, userDetail]);
+    return mergedCurriculums.find(c => c.id === selectedCurriculumId) || null;
+  }, [selectedCurriculumId, mergedCurriculums, userDetail]);
 
   // Calculate detailed progress for each curriculum of selected user
   const curriculumProgresses = useMemo(() => {
     if (!userDetail) return [];
     const progress = userDetail.data.progress || {};
     
-    return userCurriculums.map((c) => {
+    return mergedCurriculums.map((c) => {
       let totalVocab = 0;
       let learnedVocab = 0;
 
@@ -188,12 +198,14 @@ export default function AdminDashboardPage() {
       return {
         id: c.id,
         name: c.name,
+        lang: c.lang,
+        level: c.level,
         total: totalVocab,
         learned: learnedVocab,
         percentage: totalVocab > 0 ? Math.round((learnedVocab / totalVocab) * 100) : 0,
       };
     });
-  }, [userDetail, userCurriculums]);
+  }, [userDetail, mergedCurriculums]);
 
   // Build lookup lists for names
   const languageName = (code: string) => {
@@ -221,7 +233,7 @@ export default function AdminDashboardPage() {
 
     // Local lookup maps inside user context to display details
     const vocabLookup = new Map<string, { kanji?: string; hiragana?: string; meaning?: string; source: string }>();
-    userCurriculums.forEach(c => {
+    mergedCurriculums.forEach(c => {
       (c.lessons || []).forEach((l: any) => {
         (l.vocabulary || []).forEach((v: any) => {
           vocabLookup.set(v.id, {
@@ -317,7 +329,7 @@ export default function AdminDashboardPage() {
     });
 
     return Object.entries(groups);
-  }, [userDetail, userCurriculums]);
+  }, [userDetail, mergedCurriculums]);
 
   if (loadingUsers) {
     return (
@@ -622,39 +634,61 @@ export default function AdminDashboardPage() {
                   
                   {/* Left List of Curriculums */}
                   <div className="md:col-span-5 bg-white rounded-3xl p-4 border border-gray-100 shadow-2xs space-y-2">
-                    <h4 className="font-extrabold text-xs text-gray-400 uppercase tracking-wider mb-2">Tiến độ Giáo trình</h4>
-                    {curriculumProgresses.map((p) => {
-                      const isSelected = selectedCurriculumId === p.id;
-                      return (
-                        <button
-                          key={p.id}
-                          onClick={() => setSelectedCurriculumId(p.id)}
-                          className={`w-full text-left p-3 rounded-2xl border transition-all flex flex-col gap-1.5 ${
-                            isSelected 
-                              ? "bg-indigo-50/50 border-indigo-200" 
-                              : "bg-gray-50/40 border-gray-100 hover:bg-gray-50"
-                          }`}
-                        >
-                          <div className="flex items-center justify-between w-full">
-                            <span className="font-extrabold text-xs text-gray-800 truncate pr-1">{p.name}</span>
-                            <span className="text-[10px] font-bold text-indigo-600 shrink-0">{p.percentage}%</span>
-                          </div>
-                          
-                          {/* Progress bar */}
-                          <div className="w-full bg-gray-200 h-1.5 rounded-full overflow-hidden">
-                            <div 
-                              className="bg-indigo-600 h-full transition-all duration-300"
-                              style={{ width: `${p.percentage}%` }}
-                            />
-                          </div>
+                    <div className="flex items-center justify-between mb-3">
+                      <h4 className="font-extrabold text-xs text-gray-400 uppercase tracking-wider">Tất Cả Giáo Trình ({curriculumProgresses.length})</h4>
+                      <span className="text-[9px] px-2 py-0.5 bg-indigo-50 text-indigo-700 font-bold rounded-md">Hệ thống Dland</span>
+                    </div>
 
-                          <div className="flex justify-between w-full text-[9px] text-gray-400 font-semibold mt-0.5">
-                            <span>Đã thuộc: {p.learned} từ</span>
-                            <span>Tổng: {p.total} từ</span>
-                          </div>
-                        </button>
-                      );
-                    })}
+                    <div className="space-y-2 max-h-[500px] overflow-y-auto pr-1 no-scrollbar">
+                      {curriculumProgresses.map((p) => {
+                        const isSelected = selectedCurriculumId === p.id;
+                        let icon = "📖";
+                        if (p.id.includes("n5")) icon = "⛩️";
+                        if (p.id.includes("super-master") || p.id.includes("tango")) icon = "⚡";
+                        if (p.id.includes("n4")) icon = "🏯";
+                        if (p.id.includes("n3")) icon = "🌸";
+                        if (p.id.includes("n2")) icon = "🗻";
+                        if (p.id.startsWith("de-")) icon = "🏰";
+                        if (p.id.startsWith("en-")) icon = "🏆";
+
+                        return (
+                          <button
+                            key={p.id}
+                            onClick={() => setSelectedCurriculumId(p.id)}
+                            className={`w-full text-left p-3 rounded-2xl border transition-all flex flex-col gap-1.5 ${
+                              isSelected 
+                                ? "bg-indigo-50/70 border-indigo-300 shadow-3xs" 
+                                : "bg-gray-50/40 border-gray-100 hover:bg-gray-50"
+                            }`}
+                          >
+                            <div className="flex items-center justify-between w-full min-w-0">
+                              <span className="font-extrabold text-xs text-gray-800 truncate pr-1 flex items-center gap-1.5 min-w-0">
+                                <span className="shrink-0">{icon}</span>
+                                <span className="truncate">{p.name}</span>
+                              </span>
+                              <span className={`text-[10px] font-black shrink-0 ${p.percentage > 0 ? "text-indigo-600" : "text-gray-400"}`}>
+                                {p.percentage}%
+                              </span>
+                            </div>
+                            
+                            {/* Progress bar */}
+                            <div className="w-full bg-gray-200 h-1.5 rounded-full overflow-hidden">
+                              <div 
+                                className={`h-full transition-all duration-300 ${p.percentage > 0 ? "bg-indigo-600" : "bg-gray-300"}`}
+                                style={{ width: `${p.percentage}%` }}
+                              />
+                            </div>
+
+                            <div className="flex justify-between w-full text-[9px] font-semibold mt-0.5">
+                              <span className={p.learned > 0 ? "text-emerald-700 font-bold" : "text-gray-400"}>
+                                {p.learned > 0 ? `✓ Đã thuộc: ${p.learned} từ` : `Đã thuộc: 0 từ`}
+                              </span>
+                              <span className="text-gray-400">Tổng: {p.total} từ</span>
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </div>
                   </div>
 
                   {/* Right Vocabulary Viewer for Selected Curriculum */}

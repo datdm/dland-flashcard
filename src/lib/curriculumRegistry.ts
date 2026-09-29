@@ -1,3 +1,5 @@
+import type { Curriculum } from "@/types";
+
 export interface RegistryBook {
   id: string;
   name: string;
@@ -28,6 +30,7 @@ export interface CurriculumRegistryData {
 }
 
 let cachedRegistry: CurriculumRegistryData | null = null;
+let cachedSystemCurriculums: Curriculum[] | null = null;
 
 export async function fetchCurriculumRegistry(): Promise<CurriculumRegistryData | null> {
   if (cachedRegistry) return cachedRegistry;
@@ -117,4 +120,69 @@ export function inferStudiedBooksFromVocabIds(
       book,
       count: bookCounts[book.id] || 0
     }));
+}
+
+/**
+ * Load all available system curricula from public/data/ as Curriculum[] objects
+ */
+export async function loadAllSystemCurriculums(): Promise<Curriculum[]> {
+  if (cachedSystemCurriculums) return cachedSystemCurriculums;
+
+  const registry = await fetchCurriculumRegistry();
+  if (!registry) return [];
+
+  const curriculums: Curriculum[] = [];
+
+  const fetchJson = async <T>(fileUrl: string): Promise<T | null> => {
+    try {
+      if (typeof window !== "undefined") {
+        const res = await fetch(fileUrl);
+        if (!res.ok) return null;
+        return (await res.json()) as T;
+      } else {
+        const fs = require("fs");
+        const path = require("path");
+        const cleanPath = fileUrl.startsWith("/") ? fileUrl.slice(1) : fileUrl;
+        const filePath = path.join(process.cwd(), "public", cleanPath);
+        if (!fs.existsSync(filePath)) return null;
+        return JSON.parse(fs.readFileSync(filePath, "utf-8")) as T;
+      }
+    } catch {
+      return null;
+    }
+  };
+
+  for (const langKey of Object.keys(registry.languages)) {
+    const langObj = registry.languages[langKey];
+    for (const book of langObj.books || []) {
+      const data = await fetchJson<any>(book.file);
+      if (!data) continue;
+
+      if (book.format === "curriculums" && Array.isArray(data.curriculums)) {
+        data.curriculums.forEach((c: Curriculum) => {
+          curriculums.push({
+            ...c,
+            lang: langKey,
+            level: book.level
+          });
+        });
+      } else if (book.format === "level" && Array.isArray(data.lessons)) {
+        curriculums.push({
+          id: book.id,
+          name: book.name,
+          lang: langKey,
+          level: book.level,
+          createdAt: new Date().toISOString(),
+          lessons: data.lessons.map((l: any) => ({
+            id: l.id,
+            name: l.name,
+            vocabulary: l.vocabulary || []
+          }))
+        });
+      }
+    }
+  }
+
+  cachedSystemCurriculums = curriculums;
+  return curriculums;
 }
