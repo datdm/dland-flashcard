@@ -1,0 +1,128 @@
+{
+  "version": "2.0.0",
+  "updatedAt": "2026-09-29T23:45:00.000Z",
+  "languages": {
+    "ja": {
+      "code": "ja",
+      "name": "Tiếng Nhật (JLPT)",
+      "flag": "🇯🇵",
+      "description": "Các bộ giáo trình chuẩn JLPT từ N5 đến N2 bao gồm Speed Master, Minna no Nihongo, Soumatome và Shinkanzen.",
+      "books": [
+        {
+          "id": "default-n5-super-master-tango",
+          "name": "N5 Speed Master 語彙",
+          "level": "N5",
+          "file": "/data/n5-super-master.json",
+          "format": "curriculums",
+          "publisher": "JLPT Master Series",
+          "tag": "Từ vựng N5 Trọng tâm",
+          "icon": "⚡",
+          "totalLessons": 30,
+          "totalVocab": 300,
+          "totalGrammar": 0,
+          "description": "30 bài từ vựng trọng tâm thi JLPT N5 siêu tốc."
+        },
+        {
+          "id": "n5-minna-1",
+          "name": "Minna no Nihongo I (Bài 1 - 25)",
+          "level": "N5",
+          "file": "/data/n5-curriculum.json",
+          "format": "level",
+          "publisher": "3A Corporation",
+          "tag": "Giáo trình Sơ cấp 1",
+          "icon": "⛩️",
+          "totalLessons": 25,
+          "totalVocab": 681,
+          "totalGrammar": 76,
+          "description": "Toàn bộ 25 bài học Minna no Nihongo I đầy đủ: Từ vựng, Ngữ pháp và Hán tự N5."
+        },
+        {
+          "id": "n4-minna-2",
+          "name": "Minna no Nihongo II (Bài 26 - 50)",
+          "level": "N4",
+          "file": "/data/n4-curriculum.json",
+          "format": "level",
+          "publisher": "3A Corporation",
+          "tag": "Giáo trình Sơ cấp 2",
+          "icon": "🏯",
+          "totalLessons": 25,
+          "totalVocab": 665,
+          "totalGrammar": 87,
+          "description": "Toàn bộ 25 bài học Minna no Nihongo II nâng cao cho trình độ JLPT N4."
+        },
+        {
+          "id": "n3-soumatome",
+          "name": "Soumatome & Shinkanzen Master N3",
+          "level": "N3",
+          "file": "/data/n3-curriculum.json",
+          "format": "level",
+          "publisher": "Ask Publishing",
+          "tag": "Trung cấp 1",
+          "icon": "🌸",
+          "totalLessons": 15,
+          "totalVocab": 300,
+          "totalGrammar": 42,
+          "description": "Chương trình tổng hợp từ vựng và cấu trúc ngữ pháp quan trọng nhất trình độ N3."
+        },
+        {
+          "id": "n2-soumatome",
+          "name": "Shinkanzen Master & Try! JLPT N2",
+          "level": "N2",
+          "file": "/data/n2-curriculum.json",
+          "format": "level",
+          "publisher": "3A & Ask Publishing",
+          "tag": "Trung cấp 2",
+          "icon": "🗻",
+          "totalLessons": 15,
+          "totalVocab": 450,
+          "totalGrammar": 60,
+          "description": "Lộ trình ôn thi JLPT N2 cao cấp với chuyên đề đọc hiểu, từ vựng và ngữ pháp."
+        }
+      ]
+    },
+    "de": {
+      "code": "de",
+      "name": "Tiếng Đức (Goethe/Telc)",
+      "flag": "🇩🇪",
+      "description": "Giáo trình Tiếng Đức sơ cấp A1 chuẩn khung tham chiếu Châu Âu CEFR.",
+      "books": [
+        {
+          "id": "de-netzwerk-a1",
+          "name": "Netzwerk Neu A1",
+          "level": "A1",
+          "file": "/data/de-curriculum.json",
+          "format": "level",
+          "publisher": "Klett Sprachen",
+          "tag": "Chuẩn Goethe / Telc A1",
+          "icon": "🏰",
+          "totalLessons": 12,
+          "totalVocab": 300,
+          "totalGrammar": 36,
+          "description": "12 Kapitel giáo trình Netzwerk Neu A1 đầy đủ Wortschatz, Grammatik và Kỹ năng giao tiếp."
+        }
+      ]
+    },
+    "en": {
+      "code": "en",
+      "name": "Tiếng Anh (IELTS)",
+      "flag": "🇬🇧",
+      "description": "Lộ trình luyện thi IELTS 7.0 toàn diện 52 tuần chuẩn Cambridge.",
+      "books": [
+        {
+          "id": "en-ielts-52w",
+          "name": "IELTS 7.0 Roadmap (52 Weeks)",
+          "level": "IELTS",
+          "file": "/data/en-curriculum.json",
+          "format": "level",
+          "publisher": "Cambridge University Press",
+          "tag": "Lộ trình 52 Tuần",
+          "icon": "🏆",
+          "totalLessons": 52,
+          "totalVocab": 260,
+          "totalGrammar": 52,
+          "description": "Chương trình luyện thi IELTS 7.0 toàn diện 4 giai đoạn 52 tuần từ cơ bản đến nâng cao."
+        }
+      ]
+    }
+  }
+}

@@ -10,6 +10,13 @@ import CurriculumDisplaySettings from "@/components/CurriculumDisplaySettings";
 import NavMenuSettingsPanel from "@/components/NavMenuSettingsPanel";
 import ExportImportPanel from "@/components/ExportImportPanel";
 import BackupHistoryPanel from "@/components/BackupHistoryPanel";
+import SystemCurriculumRegistryPanel from "@/components/SystemCurriculumRegistryPanel";
+import {
+  fetchCurriculumRegistry,
+  getAllBooksFromRegistry,
+  inferStudiedBooksFromVocabIds,
+  RegistryBook
+} from "@/lib/curriculumRegistry";
 
 export default function AdminDashboardPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -21,11 +28,20 @@ export default function AdminDashboardPage() {
   const [loadingDetail, setLoadingDetail] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const [adminView, setAdminView] = useState<"users" | "config" | "backup">("users");
+  const [adminView, setAdminView] = useState<"users" | "curriculums" | "config" | "backup">("users");
+  const [registryBooks, setRegistryBooks] = useState<RegistryBook[]>([]);
 
   // Curriculum detail tab state inside user detail
   const [activeDetailTab, setActiveDetailTab] = useState<"curriculum" | "timeline" | "notebook">("curriculum");
   const [selectedCurriculumId, setSelectedCurriculumId] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchCurriculumRegistry().then((reg) => {
+      if (reg) {
+        setRegistryBooks(getAllBooksFromRegistry(reg));
+      }
+    });
+  }, []);
 
   // Authenticate admin user
   useEffect(() => {
@@ -134,6 +150,16 @@ export default function AdminDashboardPage() {
   }, [userDetail]);
 
   const hasCurriculumData = userCurriculums.length > 0;
+
+  // Infer studied books from user's learned vocab IDs
+  const inferredStudiedBooks = useMemo(() => {
+    if (!userDetail || registryBooks.length === 0) return [];
+    const progress = userDetail.data.progress || {};
+    const learnedIds = Object.entries(progress)
+      .filter(([, p]: any) => p.learned)
+      .map(([id]) => id);
+    return inferStudiedBooksFromVocabIds(learnedIds, registryBooks);
+  }, [userDetail, registryBooks]);
 
   // Map of active curriculum
   const activeCurriculum = useMemo(() => {
@@ -394,6 +420,24 @@ export default function AdminDashboardPage() {
             adminView === "users" ? "bg-indigo-500 text-white" : "bg-gray-150 text-gray-600"
           }`}>
             {filteredUsers.length}
+          </span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setAdminView("curriculums")}
+          className={`px-4 py-2 rounded-xl font-bold text-xs transition-all cursor-pointer flex items-center gap-2 ${
+            adminView === "curriculums"
+              ? "bg-indigo-600 text-white shadow-sm"
+              : "bg-white text-gray-700 hover:bg-gray-100 border border-gray-200"
+          }`}
+        >
+          <span>📚</span>
+          <span>Giáo trình Hệ thống</span>
+          <span className={`px-1.5 py-0.2 rounded-md text-[10px] font-bold ${
+            adminView === "curriculums" ? "bg-indigo-500 text-white" : "bg-gray-150 text-gray-600"
+          }`}>
+            {registryBooks.length}
           </span>
         </button>
 
@@ -711,6 +755,40 @@ export default function AdminDashboardPage() {
                       </div>
                     </div>
 
+                    {inferredStudiedBooks.length > 0 && (
+                      <div className="mb-6 space-y-3">
+                        <h4 className="font-extrabold text-xs text-gray-700 uppercase tracking-wider">
+                          📚 Giáo Trình Hệ Thống Đã Học (Suy Luận Từ ID Tiến Độ)
+                        </h4>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          {inferredStudiedBooks.map(({ book, count }) => {
+                            const pct = Math.round((count / book.totalVocab) * 100);
+                            return (
+                              <div key={book.id} className="p-3.5 bg-gray-50/80 rounded-2xl border border-gray-150 space-y-2">
+                                <div className="flex items-center justify-between">
+                                  <div className="flex items-center gap-2 min-w-0">
+                                    <span className="text-xl shrink-0">{book.icon}</span>
+                                    <div className="min-w-0">
+                                      <span className="font-extrabold text-xs text-gray-900 block truncate">{book.name}</span>
+                                      <span className="text-[9px] text-gray-400 font-bold block truncate">{book.publisher} • Trình độ {book.level}</span>
+                                    </div>
+                                  </div>
+                                  <span className="text-xs font-black text-indigo-600 shrink-0">{pct}%</span>
+                                </div>
+                                <div className="w-full bg-gray-200 h-1.5 rounded-full overflow-hidden">
+                                  <div className="bg-indigo-600 h-full transition-all duration-300" style={{ width: `${pct}%` }} />
+                                </div>
+                                <div className="flex justify-between text-[9px] text-gray-500 font-semibold">
+                                  <span>Đã thuộc: {count} từ</span>
+                                  <span>Tổng sách: {book.totalVocab} từ ({book.totalLessons} bài)</span>
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+
                     {learnedVocabCount > 0 && (
                       <div>
                         <h4 className="font-extrabold text-xs text-gray-400 uppercase tracking-wider mb-2">ID từ vựng đã học gần đây</h4>
@@ -857,6 +935,9 @@ export default function AdminDashboardPage() {
           )}
         </div>
       </div>
+      ) : adminView === "curriculums" ? (
+        /* System Curriculum Registry View */
+        <SystemCurriculumRegistryPanel />
       ) : adminView === "config" ? (
         /* System Configuration View */
         <div className="space-y-6">

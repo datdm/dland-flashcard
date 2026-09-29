@@ -1,0 +1,122 @@
+{
+  "version": "2.0.0",
+  "updatedAt": "2026-09-29T14:44:59.946Z",
+  "languages": {
+    "ja": {
+      "name": "Tiếng Nhật (JLPT)",
+      "flag": "🇯🇵",
+      "books": [
+        {
+          "id": "n2-soumatome",
+          "name": "N2 - Trung cấp 2 (Shinkanzen Master & Try! JLPT N2)",
+          "level": "N2",
+          "file": "/data/n2-curriculum.json",
+          "format": "level",
+          "publisher": "Japan Foundation & 3A Corporation",
+          "tag": "Minna no Nihongo",
+          "icon": "⛩️",
+          "totalLessons": 15,
+          "totalVocab": 450,
+          "totalGrammar": 60,
+          "description": "Giáo trình chuẩn Shinkanzen Master N2 & Try! JLPT N2: Tổng hợp từ vựng, ngữ pháp và Hán tự N2 chuẩn JLPT 15 chủ đề kinh tế, khoa học, tin tức và báo chí."
+        },
+        {
+          "id": "n3-soumatome",
+          "name": "N3 - Trung cấp 1 (Soumatome & Shinkanzen Master N3)",
+          "level": "N3",
+          "file": "/data/n3-curriculum.json",
+          "format": "level",
+          "publisher": "Japan Foundation & 3A Corporation",
+          "tag": "Minna no Nihongo",
+          "icon": "⛩️",
+          "totalLessons": 15,
+          "totalVocab": 300,
+          "totalGrammar": 42,
+          "description": "Giáo trình chuẩn Soumatome & Shinkanzen Master N3: Tổng hợp 15 chủ đề từ vựng, ngữ pháp và Hán tự N3 chuẩn JLPT đời sống, công việc, tin tức và xã hội."
+        },
+        {
+          "id": "n4-minna-2",
+          "name": "N4 - Sơ cấp 2 (Minna no Nihongo II)",
+          "level": "N4",
+          "file": "/data/n4-curriculum.json",
+          "format": "level",
+          "publisher": "Japan Foundation & 3A Corporation",
+          "tag": "Minna no Nihongo",
+          "icon": "⛩️",
+          "totalLessons": 25,
+          "totalVocab": 665,
+          "totalGrammar": 87,
+          "description": "Nâng cao bài 26 - 50: Động từ thể khả năng, thể bị động, sai khiến, kính ngữ và câu điều kiện."
+        },
+        {
+          "id": "n5-minna-1",
+          "name": "N5 - Sơ cấp 1 (Minna no Nihongo I)",
+          "level": "N5",
+          "file": "/data/n5-curriculum.json",
+          "format": "level",
+          "publisher": "Japan Foundation & 3A Corporation",
+          "tag": "Minna no Nihongo",
+          "icon": "⛩️",
+          "totalLessons": 25,
+          "totalVocab": 681,
+          "totalGrammar": 76,
+          "description": "Toàn bộ 25 bài học Minna no Nihongo I đầy đủ và chi tiết nhất: Từ vựng (35-45 từ/bài), Ngữ pháp (4-6 cấu trúc/bài) và Hán tự N5."
+        },
+        {
+          "id": "default-n5-super-master-tango",
+          "name": "N5 Speed Master 語彙",
+          "level": "N5",
+          "file": "/data/n5-super-master.json",
+          "format": "curriculums",
+          "publisher": "JLPT Master Series",
+          "tag": "Speed Master",
+          "icon": "📘",
+          "totalLessons": 30,
+          "totalVocab": 300,
+          "totalGrammar": 0,
+          "description": "Bộ từ vựng trọng tâm JLPT theo định dạng Speed Master."
+        }
+      ]
+    },
+    "de": {
+      "name": "Tiếng Đức (Goethe/Telc)",
+      "flag": "🇩🇪",
+      "books": [
+        {
+          "id": "de-curriculum",
+          "name": "🇩🇪 Netzwerk Neu A1 - Tiếng Đức Sơ Cấp (Đầy Đủ)",
+          "level": "German A1",
+          "file": "/data/de-curriculum.json",
+          "format": "level",
+          "publisher": "Klett Sprachen",
+          "tag": "Chuẩn CEFR",
+          "icon": "🏰",
+          "totalLessons": 12,
+          "totalVocab": 300,
+          "totalGrammar": 36,
+          "description": "Lộ trình học Tiếng Đức trình độ A1 theo giáo trình Netzwerk Neu A1 (Klett Verlag): 12 Kapitel với từ vựng, ngữ pháp thiết yếu và các kỹ năng giao tiếp cơ bản theo chuẩn CEFR"
+        }
+      ]
+    },
+    "en": {
+      "name": "Tiếng Anh (IELTS)",
+      "flag": "🇬🇧",
+      "books": [
+        {
+          "id": "en-curriculum",
+          "name": "🇬🇧 English - IELTS 7.0 Roadmap (12 Months / 52 Weeks)",
+          "level": "English",
+          "file": "/data/en-curriculum.json",
+          "format": "level",
+          "publisher": "Cambridge University Press",
+          "tag": "Lộ trình IELTS 7.0",
+          "icon": "🏆",
+          "totalLessons": 52,
+          "totalVocab": 260,
+          "totalGrammar": 52,
+          "description": "Lộ trình luyện thi IELTS 7.0 toàn diện 12 Tháng / 52 Tuần: Foundation ➔ Format ➔ Advanced ➔ Target 7.0+"
+        }
+      ]
+    }
+  }
+}
