@@ -177,6 +177,10 @@ export default function AdminDashboardPage() {
     return mergedCurriculums.find(c => c.id === selectedCurriculumId) || null;
   }, [selectedCurriculumId, mergedCurriculums, userDetail]);
 
+  // Curriculum Filters State inside user detail
+  const [curriculumLangFilter, setCurriculumLangFilter] = useState<string>("all");
+  const [curriculumStatusFilter, setCurriculumStatusFilter] = useState<"all" | "studied">("all");
+
   // Calculate detailed progress for each curriculum of selected user
   const curriculumProgresses = useMemo(() => {
     if (!userDetail) return [];
@@ -195,17 +199,65 @@ export default function AdminDashboardPage() {
         });
       });
 
+      let lang = c.lang;
+      if (!lang) {
+        if (c.id.startsWith("de-")) lang = "de";
+        else if (c.id.startsWith("en-")) lang = "en";
+        else lang = "ja";
+      }
+
+      let level = c.level;
+      if (!level) {
+        if (c.id.includes("n5")) level = "N5";
+        else if (c.id.includes("n4")) level = "N4";
+        else if (c.id.includes("n3")) level = "N3";
+        else if (c.id.includes("n2")) level = "N2";
+        else if (c.id.startsWith("de")) level = "A1";
+        else if (c.id.startsWith("en")) level = "IELTS";
+        else level = "N5";
+      }
+
       return {
         id: c.id,
         name: c.name,
-        lang: c.lang,
-        level: c.level,
+        lang,
+        level,
         total: totalVocab,
         learned: learnedVocab,
         percentage: totalVocab > 0 ? Math.round((learnedVocab / totalVocab) * 100) : 0,
       };
     });
   }, [userDetail, mergedCurriculums]);
+
+  // Filtered Curriculum Progresses
+  const filteredCurriculumProgresses = useMemo(() => {
+    let list = curriculumProgresses;
+
+    if (curriculumLangFilter === "user") {
+      const userLang = userDetail?.data?.settings?.activeLangCode || "ja";
+      list = list.filter((p) => (p.lang || "ja") === userLang);
+    } else if (curriculumLangFilter !== "all") {
+      list = list.filter((p) => (p.lang || "ja") === curriculumLangFilter);
+    }
+
+    if (curriculumStatusFilter === "studied") {
+      list = list.filter((p) => p.learned > 0);
+    }
+
+    return list;
+  }, [curriculumProgresses, curriculumLangFilter, curriculumStatusFilter, userDetail]);
+
+  // Grouped by Level
+  const groupedCurriculumProgresses = useMemo(() => {
+    const map = new Map<string, typeof filteredCurriculumProgresses>();
+    filteredCurriculumProgresses.forEach((p) => {
+      let lvl = p.level || "N5";
+      if (!map.has(lvl)) map.set(lvl, []);
+      map.get(lvl)!.push(p);
+    });
+
+    return Array.from(map.entries());
+  }, [filteredCurriculumProgresses]);
 
   // Build lookup lists for names
   const languageName = (code: string) => {
@@ -633,61 +685,176 @@ export default function AdminDashboardPage() {
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
                   
                   {/* Left List of Curriculums */}
-                  <div className="md:col-span-5 bg-white rounded-3xl p-4 border border-gray-100 shadow-2xs space-y-2">
-                    <div className="flex items-center justify-between mb-3">
-                      <h4 className="font-extrabold text-xs text-gray-400 uppercase tracking-wider">Tất Cả Giáo Trình ({curriculumProgresses.length})</h4>
-                      <span className="text-[9px] px-2 py-0.5 bg-indigo-50 text-indigo-700 font-bold rounded-md">Hệ thống Dland</span>
+                  <div className="md:col-span-5 bg-white rounded-3xl p-4 border border-gray-100 shadow-2xs space-y-3">
+                    
+                    {/* Filter Header & Language Selector */}
+                    <div className="space-y-2 border-b border-gray-100 pb-3">
+                      <div className="flex items-center justify-between">
+                        <h4 className="font-extrabold text-xs text-gray-700 uppercase tracking-wider">
+                          Giáo Trình ({filteredCurriculumProgresses.length})
+                        </h4>
+                        <span className="text-[9px] px-2 py-0.5 bg-indigo-50 text-indigo-700 font-bold rounded-md">
+                          Dland Multi-Lang
+                        </span>
+                      </div>
+
+                      {/* Language Filter Pills */}
+                      <div className="flex items-center gap-1 overflow-x-auto pb-0.5 no-scrollbar">
+                        <button
+                          onClick={() => setCurriculumLangFilter("all")}
+                          className={`px-2.5 py-1 rounded-lg text-[10px] font-bold transition-all cursor-pointer whitespace-nowrap ${
+                            curriculumLangFilter === "all"
+                              ? "bg-indigo-600 text-white shadow-2xs"
+                              : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                          }`}
+                        >
+                          🌐 Tất cả
+                        </button>
+                        <button
+                          onClick={() => setCurriculumLangFilter("user")}
+                          className={`px-2.5 py-1 rounded-lg text-[10px] font-bold transition-all cursor-pointer whitespace-nowrap flex items-center gap-1 ${
+                            curriculumLangFilter === "user"
+                              ? "bg-indigo-600 text-white shadow-2xs"
+                              : "bg-indigo-50 text-indigo-700 hover:bg-indigo-100"
+                          }`}
+                        >
+                          <span>🎯 Target User</span>
+                        </button>
+                        <button
+                          onClick={() => setCurriculumLangFilter("ja")}
+                          className={`px-2.5 py-1 rounded-lg text-[10px] font-bold transition-all cursor-pointer whitespace-nowrap flex items-center gap-1 ${
+                            curriculumLangFilter === "ja"
+                              ? "bg-indigo-600 text-white shadow-2xs"
+                              : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                          }`}
+                        >
+                          <span>🇯🇵 Nhật</span>
+                        </button>
+                        <button
+                          onClick={() => setCurriculumLangFilter("de")}
+                          className={`px-2.5 py-1 rounded-lg text-[10px] font-bold transition-all cursor-pointer whitespace-nowrap flex items-center gap-1 ${
+                            curriculumLangFilter === "de"
+                              ? "bg-indigo-600 text-white shadow-2xs"
+                              : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                          }`}
+                        >
+                          <span>🇩🇪 Đức</span>
+                        </button>
+                        <button
+                          onClick={() => setCurriculumLangFilter("en")}
+                          className={`px-2.5 py-1 rounded-lg text-[10px] font-bold transition-all cursor-pointer whitespace-nowrap flex items-center gap-1 ${
+                            curriculumLangFilter === "en"
+                              ? "bg-indigo-600 text-white shadow-2xs"
+                              : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                          }`}
+                        >
+                          <span>🇬🇧 Anh</span>
+                        </button>
+                      </div>
+
+                      {/* Status Filter Sub-row */}
+                      <div className="flex items-center gap-2 pt-1">
+                        <button
+                          onClick={() => setCurriculumStatusFilter("all")}
+                          className={`text-[9px] font-extrabold px-2 py-0.5 rounded-md cursor-pointer ${
+                            curriculumStatusFilter === "all"
+                              ? "bg-gray-800 text-white"
+                              : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+                          }`}
+                        >
+                          Tất cả sách ({curriculumProgresses.length})
+                        </button>
+                        <button
+                          onClick={() => setCurriculumStatusFilter("studied")}
+                          className={`text-[9px] font-extrabold px-2 py-0.5 rounded-md cursor-pointer flex items-center gap-1 ${
+                            curriculumStatusFilter === "studied"
+                              ? "bg-emerald-600 text-white"
+                              : "bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
+                          }`}
+                        >
+                          <span>⭐ Đã học</span>
+                          <span>({curriculumProgresses.filter(p => p.learned > 0).length})</span>
+                        </button>
+                      </div>
                     </div>
 
-                    <div className="space-y-2 max-h-[500px] overflow-y-auto pr-1 no-scrollbar">
-                      {curriculumProgresses.map((p) => {
-                        const isSelected = selectedCurriculumId === p.id;
-                        let icon = "📖";
-                        if (p.id.includes("n5")) icon = "⛩️";
-                        if (p.id.includes("super-master") || p.id.includes("tango")) icon = "⚡";
-                        if (p.id.includes("n4")) icon = "🏯";
-                        if (p.id.includes("n3")) icon = "🌸";
-                        if (p.id.includes("n2")) icon = "🗻";
-                        if (p.id.startsWith("de-")) icon = "🏰";
-                        if (p.id.startsWith("en-")) icon = "🏆";
-
-                        return (
-                          <button
-                            key={p.id}
-                            onClick={() => setSelectedCurriculumId(p.id)}
-                            className={`w-full text-left p-3 rounded-2xl border transition-all flex flex-col gap-1.5 ${
-                              isSelected 
-                                ? "bg-indigo-50/70 border-indigo-300 shadow-3xs" 
-                                : "bg-gray-50/40 border-gray-100 hover:bg-gray-50"
-                            }`}
-                          >
-                            <div className="flex items-center justify-between w-full min-w-0">
-                              <span className="font-extrabold text-xs text-gray-800 truncate pr-1 flex items-center gap-1.5 min-w-0">
-                                <span className="shrink-0">{icon}</span>
-                                <span className="truncate">{p.name}</span>
-                              </span>
-                              <span className={`text-[10px] font-black shrink-0 ${p.percentage > 0 ? "text-indigo-600" : "text-gray-400"}`}>
-                                {p.percentage}%
-                              </span>
-                            </div>
-                            
-                            {/* Progress bar */}
-                            <div className="w-full bg-gray-200 h-1.5 rounded-full overflow-hidden">
-                              <div 
-                                className={`h-full transition-all duration-300 ${p.percentage > 0 ? "bg-indigo-600" : "bg-gray-300"}`}
-                                style={{ width: `${p.percentage}%` }}
-                              />
+                    {/* Grouped List of Curriculums */}
+                    <div className="space-y-4 max-h-[460px] overflow-y-auto pr-1 no-scrollbar">
+                      {filteredCurriculumProgresses.length === 0 ? (
+                        <div className="text-center py-8 text-xs text-gray-400 italic">
+                          Không có giáo trình nào phù hợp với bộ lọc.
+                        </div>
+                      ) : (
+                        groupedCurriculumProgresses.map(([levelGroup, books]) => (
+                          <div key={levelGroup} className="space-y-1.5">
+                            <div className="flex items-center justify-between text-[10px] font-extrabold text-gray-400 uppercase tracking-wider px-1 pt-1">
+                              <span>Trình độ {levelGroup}</span>
+                              <span className="text-[9px] text-gray-400 font-normal">{books.length} sách</span>
                             </div>
 
-                            <div className="flex justify-between w-full text-[9px] font-semibold mt-0.5">
-                              <span className={p.learned > 0 ? "text-emerald-700 font-bold" : "text-gray-400"}>
-                                {p.learned > 0 ? `✓ Đã thuộc: ${p.learned} từ` : `Đã thuộc: 0 từ`}
-                              </span>
-                              <span className="text-gray-400">Tổng: {p.total} từ</span>
-                            </div>
-                          </button>
-                        );
-                      })}
+                            {books.map((p) => {
+                              const isSelected = selectedCurriculumId === p.id;
+                              let icon = "📖";
+                              if (p.id.includes("n5")) icon = "⛩️";
+                              if (p.id.includes("super-master") || p.id.includes("tango")) icon = "⚡";
+                              if (p.id.includes("n4")) icon = "🏯";
+                              if (p.id.includes("n3")) icon = "🌸";
+                              if (p.id.includes("n2")) icon = "🗻";
+                              if (p.id.startsWith("de-")) icon = "🏰";
+                              if (p.id.startsWith("en-")) icon = "🏆";
+
+                              let levelBadgeColor = "bg-indigo-100 text-indigo-800 border-indigo-200";
+                              if (p.level === "N4") levelBadgeColor = "bg-blue-100 text-blue-800 border-blue-200";
+                              if (p.level === "N3") levelBadgeColor = "bg-purple-100 text-purple-800 border-purple-200";
+                              if (p.level === "N2") levelBadgeColor = "bg-rose-100 text-rose-800 border-rose-200";
+                              if (p.level === "A1") levelBadgeColor = "bg-emerald-100 text-emerald-800 border-emerald-200";
+                              if (p.level === "IELTS") levelBadgeColor = "bg-amber-100 text-amber-800 border-amber-200";
+
+                              return (
+                                <button
+                                  key={p.id}
+                                  onClick={() => setSelectedCurriculumId(p.id)}
+                                  className={`w-full text-left p-3 rounded-2xl border transition-all flex flex-col gap-1.5 ${
+                                    isSelected 
+                                      ? "bg-indigo-50/80 border-indigo-300 shadow-3xs" 
+                                      : "bg-gray-50/40 border-gray-100 hover:bg-gray-50"
+                                  }`}
+                                >
+                                  <div className="flex items-center justify-between w-full min-w-0">
+                                    <span className="font-extrabold text-xs text-gray-800 truncate pr-1 flex items-center gap-1.5 min-w-0">
+                                      <span className="shrink-0">{icon}</span>
+                                      <span className="truncate">{p.name}</span>
+                                    </span>
+                                    <div className="flex items-center gap-1 shrink-0">
+                                      <span className={`px-1.5 py-0.2 text-[8px] font-black rounded border ${levelBadgeColor}`}>
+                                        {p.level}
+                                      </span>
+                                      <span className={`text-[10px] font-black ${p.percentage > 0 ? "text-indigo-600" : "text-gray-400"}`}>
+                                        {p.percentage}%
+                                      </span>
+                                    </div>
+                                  </div>
+                                  
+                                  {/* Progress bar */}
+                                  <div className="w-full bg-gray-200 h-1.5 rounded-full overflow-hidden">
+                                    <div 
+                                      className={`h-full transition-all duration-300 ${p.percentage > 0 ? "bg-indigo-600" : "bg-gray-300"}`}
+                                      style={{ width: `${p.percentage}%` }}
+                                    />
+                                  </div>
+
+                                  <div className="flex justify-between w-full text-[9px] font-semibold mt-0.5">
+                                    <span className={p.learned > 0 ? "text-emerald-700 font-bold" : "text-gray-400"}>
+                                      {p.learned > 0 ? `✓ Đã thuộc: ${p.learned} từ` : `Đã thuộc: 0 từ`}
+                                    </span>
+                                    <span className="text-gray-400">Tổng: {p.total} từ</span>
+                                  </div>
+                                </button>
+                              );
+                            })}
+                          </div>
+                        ))
+                      )}
                     </div>
                   </div>
 
