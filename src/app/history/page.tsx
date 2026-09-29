@@ -848,7 +848,7 @@ function getItemLevel(c: { id: string; name: string; level?: string }): string {
           {curriculumProgresses.length === 0 ? (
             <p className="text-xs text-gray-400 italic">Chưa có giáo trình nào.</p>
           ) : (
-            <div className="space-y-4 flex-1 max-h-[460px] overflow-y-auto pr-1">
+            <div className="space-y-4 flex-1 max-h-[460px] overflow-y-auto pr-1 no-scrollbar">
               {groupedCurriculumProgresses.map((group) => {
                 const badgeColor = 
                   group.level === "N5" ? "bg-indigo-100 text-indigo-700 border-indigo-200" :
@@ -911,7 +911,7 @@ function getItemLevel(c: { id: string; name: string; level?: string }): string {
 
         {/* Notebooks Progress */}
         <div className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-xs flex flex-col">
-          <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center justify-between mb-3 pb-2 border-b border-gray-100">
             <h2 className="text-base font-bold text-gray-900 flex items-center gap-2">
               <span>📓</span> Tiến độ Sổ tay
             </h2>
@@ -920,7 +920,7 @@ function getItemLevel(c: { id: string; name: string; level?: string }): string {
           {notebookProgresses.length === 0 ? (
             <p className="text-xs text-gray-400 italic">Chưa tạo sổ tay nào.</p>
           ) : (
-            <div className="space-y-2 flex-1">
+            <div className="space-y-2 flex-1 max-h-[460px] overflow-y-auto pr-1 no-scrollbar">
               {notebookProgresses.map((nb) => (
                 <Link
                   key={nb.id}

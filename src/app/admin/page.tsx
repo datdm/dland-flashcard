@@ -68,13 +68,13 @@ export default function AdminDashboardPage() {
       const detail = await fetchAdminUserDetail(userId);
       setUserDetail(detail);
       
-      // Auto select first curriculum if available
-      const userCurriculums = (detail.data && Array.isArray(detail.data.curriculums)) && detail.data.curriculums.length > 0
+      // Auto select first curriculum only if user has actually synced curriculum data
+      const synced = (detail.data && Array.isArray(detail.data.curriculums)) && detail.data.curriculums.length > 0
         ? detail.data.curriculums
-        : (DEFAULT_VOCABULARY?.curriculums || []);
+        : [];
       
-      if (userCurriculums.length > 0) {
-        setSelectedCurriculumId(userCurriculums[0].id);
+      if (synced.length > 0) {
+        setSelectedCurriculumId(synced[0].id);
       }
     } catch (err: any) {
       setError(err.message || "Không thể tải thông tin chi tiết của người dùng.");
@@ -118,13 +118,22 @@ export default function AdminDashboardPage() {
     };
   }, [users]);
 
-  // User Curriculums List (including fallback default)
+  // User Curriculums List — only real synced data, no DEFAULT_VOCABULARY fallback
   const userCurriculums = useMemo(() => {
     if (!userDetail) return [];
     return (userDetail.data && Array.isArray(userDetail.data.curriculums)) && userDetail.data.curriculums.length > 0
       ? userDetail.data.curriculums
-      : (DEFAULT_VOCABULARY?.curriculums || []);
+      : [];
   }, [userDetail]);
+
+  // Count learned vocab from progress keys (works even without curriculum data)
+  const learnedVocabCount = useMemo(() => {
+    if (!userDetail) return 0;
+    const progress = userDetail.data.progress || {};
+    return Object.values(progress).filter((p: any) => p.learned).length;
+  }, [userDetail]);
+
+  const hasCurriculumData = userCurriculums.length > 0;
 
   // Map of active curriculum
   const activeCurriculum = useMemo(() => {
@@ -507,6 +516,14 @@ export default function AdminDashboardPage() {
                   <p className="text-[10px] text-gray-400 mt-0.5">
                     Đăng ký ngày: {new Date(userDetail.user.createdAt).toLocaleDateString("vi-VN", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" })}
                   </p>
+                  <div className="flex items-center gap-3 mt-2">
+                    <span className="px-2 py-1 bg-indigo-50 text-indigo-700 text-[10px] font-bold rounded-lg">
+                      📚 {learnedVocabCount} từ đã học
+                    </span>
+                    <span className="px-2 py-1 bg-purple-50 text-purple-700 text-[10px] font-bold rounded-lg">
+                      📖 {Object.keys(userDetail.data.grammarProgress || {}).filter(k => (userDetail.data.grammarProgress as any)[k]?.learned).length} ngữ pháp
+                    </span>
+                  </div>
                 </div>
                 
                 <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-2xl border border-gray-100">
@@ -515,7 +532,7 @@ export default function AdminDashboardPage() {
                     <span className="text-xs font-extrabold text-gray-800 mt-0.5 block">{languageName(userDetail.data.settings?.activeLangCode || "ja")}</span>
                   </div>
                   <span className="text-2xl">
-                    {userDetail.data.settings?.activeLangCode === "en" ? "🇬🇧" : userDetail.data.settings?.activeLangCode === "de" ? "🇩🇪" : "🇯🇵"}
+                    {(({ en: "🇬🇧", de: "🇩🇪", ko: "🇰🇷", zh: "🇨🇳", ja: "🇯🇵" } as Record<string, string>)[userDetail.data.settings?.activeLangCode || "ja"]) || "🇯🇵"}
                   </span>
                 </div>
               </div>
@@ -530,7 +547,7 @@ export default function AdminDashboardPage() {
                       : "border-transparent text-gray-500 hover:text-gray-700"
                   }`}
                 >
-                  📖 Lộ trình & Giáo trình ({curriculumProgresses.length})
+                  📖 Lộ trình & Giáo trình ({hasCurriculumData ? curriculumProgresses.length : 0})
                 </button>
                 <button
                   onClick={() => setActiveDetailTab("timeline")}
@@ -556,6 +573,7 @@ export default function AdminDashboardPage() {
 
               {/* TAB 1: CURRICULUMS TRACKING */}
               {activeDetailTab === "curriculum" && (
+                hasCurriculumData ? (
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
                   
                   {/* Left List of Curriculums */}
@@ -661,6 +679,61 @@ export default function AdminDashboardPage() {
                     )}
                   </div>
                 </div>
+                ) : (
+                  /* No curriculum synced - show progress summary from progress keys instead */
+                  <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-2xs">
+                    <div className="flex items-start gap-3 mb-5 p-3 bg-amber-50 border border-amber-100 rounded-2xl">
+                      <span className="text-lg shrink-0">⚠️</span>
+                      <div>
+                        <p className="text-xs font-bold text-amber-800">Chưa đồng bộ dữ liệu giáo trình</p>
+                        <p className="text-[10px] text-amber-700 mt-0.5 leading-relaxed">
+                          User này chưa sync danh sách giáo trình lên server. Dữ liệu bên dưới được tính từ các ID từ vựng đã học trong progress.
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-5">
+                      <div className="p-4 bg-indigo-50 rounded-2xl border border-indigo-100 text-center">
+                        <div className="text-2xl font-black text-indigo-700">{learnedVocabCount}</div>
+                        <div className="text-[10px] text-indigo-500 font-bold mt-1">Từ vựng đã học</div>
+                      </div>
+                      <div className="p-4 bg-purple-50 rounded-2xl border border-purple-100 text-center">
+                        <div className="text-2xl font-black text-purple-700">
+                          {Object.values(userDetail.data.grammarProgress || {}).filter((p: any) => p.learned).length}
+                        </div>
+                        <div className="text-[10px] text-purple-500 font-bold mt-1">Ngữ pháp đã học</div>
+                      </div>
+                      <div className="p-4 bg-emerald-50 rounded-2xl border border-emerald-100 text-center">
+                        <div className="text-2xl font-black text-emerald-700">
+                          {Object.values(userDetail.data.kanjiProgress || {}).filter((p: any) => p.learned).length}
+                        </div>
+                        <div className="text-[10px] text-emerald-500 font-bold mt-1">Kanji đã học</div>
+                      </div>
+                    </div>
+
+                    {learnedVocabCount > 0 && (
+                      <div>
+                        <h4 className="font-extrabold text-xs text-gray-400 uppercase tracking-wider mb-2">ID từ vựng đã học gần đây</h4>
+                        <div className="flex flex-wrap gap-1.5 max-h-40 overflow-y-auto no-scrollbar">
+                          {Object.entries(userDetail.data.progress || {})
+                            .filter(([, p]: any) => p.learned)
+                            .sort(([, a]: any, [, b]: any) => new Date(b.learnedAt || 0).getTime() - new Date(a.learnedAt || 0).getTime())
+                            .slice(0, 50)
+                            .map(([id]: any) => (
+                              <span key={id} className="px-1.5 py-0.5 bg-gray-100 text-gray-600 text-[9px] font-mono rounded border border-gray-200">
+                                {id}
+                              </span>
+                            ))}
+                          {learnedVocabCount > 50 && (
+                            <span className="px-1.5 py-0.5 bg-gray-200 text-gray-500 text-[9px] font-bold rounded">
+                              +{learnedVocabCount - 50} từ khác
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )
               )}
 
               {/* TAB 2: DAILY STUDY TIMELINE */}
