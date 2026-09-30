@@ -207,124 +207,26 @@ export default function SettingsPage() {
             </span>
             <div className="min-w-0">
               <h1 className="text-sm sm:text-base font-bold text-gray-900 truncate">
-                {isAuthenticated ? "Cài Đặt Ngôn Ngữ & Dữ Liệu" : "Cài Đặt Ngôn Ngữ Học Tập"}
+                {isAuthenticated ? "Cài Đặt Hệ Thống & Dữ Liệu" : "Cài Đặt Ứng Dụng"}
               </h1>
               <p className="text-[11px] text-gray-500 truncate hidden sm:block">
-                Chọn ngôn ngữ mục tiêu học tập (Tiếng Nhật, Tiếng Anh, Tiếng Đức...) và lưu để áp dụng
+                Quản lý sổ tay, khôi phục dữ liệu, cài đặt thanh điều hướng và thông tin tài khoản.
               </p>
             </div>
           </div>
+          <button
+            type="button"
+            onClick={() => window.dispatchEvent(new Event("open-language-modal"))}
+            className="px-3.5 py-1.5 bg-white border border-gray-200 hover:bg-gray-50 text-gray-800 rounded-xl text-xs font-extrabold shadow-3xs transition-all cursor-pointer shrink-0 flex items-center gap-1.5"
+          >
+            <span>{activeLanguage.flag}</span>
+            <span>{activeLanguage.name}</span>
+            <span className="text-[10px] text-indigo-600 font-bold">Đổi →</span>
+          </button>
         </div>
       </div>
 
       <div className="space-y-4 sm:space-y-5">
-        {/* Multilingual Language Mode Selection Section */}
-        <div className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-xs">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h2 className="text-base font-bold text-gray-900 flex items-center gap-2">
-                <span>🌐</span> Chọn Ngôn Ngữ Học Tập (Target Language)
-              </h2>
-              <p className="text-xs text-gray-500 mt-0.5">
-                Đang kích hoạt: <span className="font-bold text-indigo-600">{activeLanguage.flag} {activeLanguage.name}</span>
-              </p>
-            </div>
-          </div>
-
-          {/* Language Cards Selector */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-5">
-            {supportedLanguages.map((lang) => {
-              const isDraftSelected = draftLangCode === lang.code;
-              const isCurrentlyActive = activeLangCode === lang.code;
-
-              return (
-                <div
-                  key={lang.code}
-                  onClick={() => {
-                    if (lang.status === "coming_soon") return;
-                    selectDraftLanguage(lang.code);
-                  }}
-                  className={`p-4 rounded-2xl border transition-all flex flex-col justify-between ${
-                    lang.status === "coming_soon"
-                      ? "opacity-60 cursor-not-allowed bg-gray-50/80 border-gray-200"
-                      : isDraftSelected
-                      ? "border-indigo-600 bg-indigo-50/40 ring-2 ring-indigo-300 shadow-sm cursor-pointer"
-                      : "border-gray-200 bg-white hover:border-indigo-300 hover:bg-gray-50/50 cursor-pointer"
-                  }`}>
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2">
-                        <span className="text-2xl">{lang.flag}</span>
-                        <div>
-                          <h3 className="font-bold text-gray-900 text-sm">{lang.name}</h3>
-                          <span className="text-[10px] text-gray-400 font-mono">({lang.nativeName})</span>
-                        </div>
-                      </div>
-
-                      {isCurrentlyActive ? (
-                        <span className="px-2.5 py-1 bg-emerald-600 text-white rounded-xl text-[10px] font-bold">
-                          ✓ Đang học
-                        </span>
-                      ) : isDraftSelected ? (
-                        <span className="px-2.5 py-1 bg-indigo-600 text-white rounded-xl text-[10px] font-bold">
-                          Đã chọn
-                        </span>
-                      ) : lang.status === "coming_soon" ? (
-                        <span className="px-2.5 py-1 bg-amber-100 text-amber-800 rounded-xl text-[10px] font-bold">
-                          Sắp ra mắt
-                        </span>
-                      ) : (
-                        <span className="px-2.5 py-1 bg-gray-100 text-gray-600 rounded-xl text-[10px] font-semibold">
-                          Sẵn sàng
-                        </span>
-                      )}
-                    </div>
-
-                    <p className="text-xs text-gray-500 leading-relaxed mt-1">{lang.description}</p>
-                  </div>
-
-                  <div className="mt-3 pt-2 border-t border-gray-100 flex items-center gap-1.5 flex-wrap">
-                    <span className="text-[10px] text-gray-400 font-semibold">Trình độ:</span>
-                    {lang.levels.map((lvl) => (
-                      <span
-                        key={lvl}
-                        className={`text-[9px] font-bold px-1.5 py-0.5 rounded-md ${
-                          isDraftSelected ? "bg-indigo-100 text-indigo-700" : "bg-gray-100 text-gray-500"
-                        }`}
-                      >
-                        {lvl}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* SAVE LANGUAGE BUTTON */}
-          <div className="pt-4 border-t border-gray-100 flex items-center justify-between">
-            <div className="text-xs text-gray-500">
-              {hasUnsavedChanges ? (
-                <span className="text-amber-600 font-bold">⚠️ Có thay đổi chưa lưu! Hãy bấm "Lưu Ngôn Ngữ".</span>
-              ) : (
-                <span>Đã áp dụng ngôn ngữ: <strong>{activeLanguage.name}</strong></span>
-              )}
-            </div>
-
-            <button
-              onClick={saveLanguage}
-              disabled={!hasUnsavedChanges}
-              className={`px-6 py-3 rounded-2xl font-bold text-xs transition-all flex items-center gap-2 ${
-                hasUnsavedChanges
-                  ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md shadow-indigo-200 hover:opacity-95 animate-pulse"
-                  : "bg-gray-100 text-gray-400 cursor-not-allowed"
-              }`}
-            >
-              <span>💾</span>
-              <span>Lưu Ngôn Ngữ Học Tập</span>
-            </button>
-          </div>
-        </div>
 
         {/* Notebooks Progress & Learned Vocabulary */}
         <NotebookProgressSettingsPanel />

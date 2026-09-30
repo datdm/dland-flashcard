@@ -46,14 +46,7 @@ export default function LanguageSelectModal({
     }
 
     setIsSaving(true);
-    selectDraftLanguage(lang.code);
-    
-    // Save language & refresh state
-    setTimeout(async () => {
-      await saveLanguage();
-      setIsSaving(false);
-      handleClose();
-    }, 150);
+    await saveLanguage(lang.code);
   };
 
   return (

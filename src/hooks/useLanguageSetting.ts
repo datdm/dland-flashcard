@@ -146,11 +146,13 @@ export function useLanguageSetting() {
     setDraftLangCode(code);
   }, []);
 
-  const saveLanguage = useCallback(async () => {
-    setActiveLangCode(draftLangCode);
+  const saveLanguage = useCallback(async (overrideCode?: string) => {
+    const targetCode = overrideCode || draftLangCode;
+    setActiveLangCode(targetCode);
+    setDraftLangCode(targetCode);
     if (typeof window !== "undefined") {
-      localStorage.setItem(LANGUAGE_STORAGE_KEY, JSON.stringify(draftLangCode));
-      document.cookie = `${LANGUAGE_STORAGE_KEY}=${encodeURIComponent(draftLangCode)}; path=/; max-age=31536000; SameSite=Lax`;
+      localStorage.setItem(LANGUAGE_STORAGE_KEY, JSON.stringify(targetCode));
+      document.cookie = `${LANGUAGE_STORAGE_KEY}=${encodeURIComponent(targetCode)}; path=/; max-age=31536000; SameSite=Lax`;
 
       window.dispatchEvent(new Event("language-changed"));
 
