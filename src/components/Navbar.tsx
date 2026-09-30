@@ -38,7 +38,7 @@ export function getNavItemsForLanguage(langCode: string): NavItem[] {
         { href: "/admin", label: "Quản trị hệ thống", icon: "🛡️", isDevOnly: true },
         { href: "/practice/ai-voice-room", label: "Phòng Luyện Voice AI", icon: "🎙️", isComingSoon: true, isDevOnly: true },
         { href: "/practice/mock-interview", label: "Phỏng Vấn Xin Việc AI", icon: "💼", isComingSoon: true, isDevOnly: true },
-        { href: "/settings", label: "Cài đặt Ngôn ngữ", icon: "⚙️" },
+        { href: "/settings", label: "Cài đặt hệ thống", icon: "⚙️" },
       ];
 
     case "de":
@@ -56,7 +56,7 @@ export function getNavItemsForLanguage(langCode: string): NavItem[] {
         { href: "/grammar", label: "Ngữ pháp Tiếng Đức", icon: "📖", isDevOnly: true },
         { href: "/vocabulary", label: "Kho Từ Vựng Tiếng Đức", icon: "📝", isDevOnly: true },
         { href: "/admin", label: "Quản trị hệ thống", icon: "🛡️", isDevOnly: true },
-        { href: "/settings", label: "Cài đặt Ngôn ngữ", icon: "⚙️" },
+        { href: "/settings", label: "Cài đặt hệ thống", icon: "⚙️" },
       ];
 
     case "ko":
@@ -73,7 +73,7 @@ export function getNavItemsForLanguage(langCode: string): NavItem[] {
         { href: "/grammar", label: "Ngữ pháp Tiếng Hàn", icon: "📖", isDevOnly: true },
         { href: "/vocabulary", label: "Kho Từ Vựng Tiếng Hàn", icon: "📝", isDevOnly: true },
         { href: "/admin", label: "Quản trị hệ thống", icon: "🛡️", isDevOnly: true },
-        { href: "/settings", label: "Cài đặt Ngôn ngữ", icon: "⚙️" },
+        { href: "/settings", label: "Cài đặt hệ thống", icon: "⚙️" },
       ];
 
     case "zh":
@@ -91,7 +91,7 @@ export function getNavItemsForLanguage(langCode: string): NavItem[] {
         { href: "/kanji", label: "Hán tự Hanzi", icon: "🉐", isDevOnly: true },
         { href: "/vocabulary", label: "Kho Từ Vựng Tiếng Trung", icon: "📝", isDevOnly: true },
         { href: "/admin", label: "Quản trị hệ thống", icon: "🛡️", isDevOnly: true },
-        { href: "/settings", label: "Cài đặt Ngôn ngữ", icon: "⚙️" },
+        { href: "/settings", label: "Cài đặt hệ thống", icon: "⚙️" },
       ];
 
     case "ja":
@@ -116,7 +116,7 @@ export function getNavItemsForLanguage(langCode: string): NavItem[] {
         { href: "/chat/live", label: "Gia Sư Voice AI (Live)", icon: "🎙️", isComingSoon: false, isDevOnly: true },
         { href: "/practice/ai-voice-room", label: "Phòng Luyện Voice AI", icon: "🎙️", isComingSoon: true, isDevOnly: true },
         { href: "/practice/mock-interview", label: "Phỏng Vấn Xin Việc AI", icon: "💼", isComingSoon: true, isDevOnly: true },
-        { href: "/settings", label: "Cài đặt Ngôn ngữ", icon: "⚙️" },
+        { href: "/settings", label: "Cài đặt hệ thống", icon: "⚙️" },
       ];
   }
 }
@@ -256,20 +256,11 @@ export default function Navbar() {
             {displayNavItems.map((item) => {
               const { href, label, icon } = item;
               const isActive = pathname === href || (href !== "/" && pathname.startsWith(href));
-              const isSettings = href === "/settings";
               return (
                 <Link
                   key={href + label}
                   href={href}
                   title={isCollapsed ? label : undefined}
-                  onClick={(e) => {
-                    if (isSettings) {
-                      e.preventDefault();
-                      setShowLangModal(true);
-                    } else {
-                      router.push(href);
-                    }
-                  }}
                   className={`flex items-center gap-3 py-2 rounded-2xl text-xs font-semibold transition-all cursor-pointer ${
                     isCollapsed ? 'justify-center px-0' : 'px-3'
                   } ${
@@ -421,20 +412,11 @@ export default function Navbar() {
         {displayNavItems.map((item) => {
           const { href, label, icon } = item;
           const isActive = pathname === href || (href !== "/" && pathname.startsWith(href));
-          const isSettings = href === "/settings";
           return (
             <Link
               key={href + label}
               href={href}
               title={label}
-              onClick={(e) => {
-                if (isSettings) {
-                  e.preventDefault();
-                  setShowLangModal(true);
-                } else {
-                  router.push(href);
-                }
-              }}
               className={`flex-1 min-w-[32px] max-w-[56px] h-9 flex items-center justify-center rounded-xl text-base transition-all shrink-0 cursor-pointer ${
                 isActive
                   ? "bg-indigo-600 text-white shadow-md shadow-indigo-200 scale-105"

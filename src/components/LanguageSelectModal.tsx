@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { SUPPORTED_LANGUAGES, useLanguageSetting, LanguageOption } from "@/hooks/useLanguageSetting";
 
 interface LanguageSelectModalProps {
@@ -12,9 +13,10 @@ export default function LanguageSelectModal({
   isOpen: externalIsOpen,
   onClose: externalOnClose,
 }: LanguageSelectModalProps) {
+  const router = useRouter();
   const [internalIsOpen, setInternalIsOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const { activeLangCode, selectDraftLanguage, saveLanguage } = useLanguageSetting();
+  const { activeLangCode, isLanguageChosen, saveLanguage } = useLanguageSetting();
 
   const isOpen = externalIsOpen !== undefined ? externalIsOpen : internalIsOpen;
 
@@ -23,6 +25,11 @@ export default function LanguageSelectModal({
       externalOnClose();
     }
     setInternalIsOpen(false);
+  };
+
+  const handleBackToHome = () => {
+    handleClose();
+    router.push("/");
   };
 
   useEffect(() => {
@@ -85,7 +92,7 @@ export default function LanguageSelectModal({
         </div>
 
         {/* Language Options Grid */}
-        <div className="space-y-2.5 max-h-[380px] overflow-y-auto pr-1 no-scrollbar">
+        <div className="space-y-2.5 max-h-[360px] overflow-y-auto pr-1 no-scrollbar">
           {SUPPORTED_LANGUAGES.map((lang) => {
             const isActive = lang.code === activeLangCode;
             const isComingSoon = lang.status === "coming_soon";
@@ -141,10 +148,21 @@ export default function LanguageSelectModal({
           })}
         </div>
 
-        {isSaving && (
+        {isSaving ? (
           <div className="flex items-center justify-center gap-2 text-xs font-bold text-indigo-600 animate-pulse pt-1">
             <div className="w-4 h-4 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin" />
             <span>Đang lưu cài đặt ngôn ngữ...</span>
+          </div>
+        ) : (
+          <div className="pt-2 border-t border-gray-100">
+            <button
+              type="button"
+              onClick={handleBackToHome}
+              className="w-full py-2.5 px-4 bg-gray-100 hover:bg-gray-200 active:scale-98 text-gray-700 font-bold text-xs rounded-2xl transition-all flex items-center justify-center gap-2 cursor-pointer shadow-3xs"
+            >
+              <span>🏠</span>
+              <span>Quay lại trang chủ</span>
+            </button>
           </div>
         )}
       </div>
