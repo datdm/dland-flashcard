@@ -116,6 +116,14 @@ export function getSavedLanguage(): string {
   return "ja";
 }
 
+export function clearLanguageSelection() {
+  if (typeof window !== "undefined") {
+    localStorage.removeItem(LANGUAGE_STORAGE_KEY);
+    document.cookie = `${LANGUAGE_STORAGE_KEY}=; path=/; max-age=0; SameSite=Lax`;
+    window.dispatchEvent(new Event("language-changed"));
+  }
+}
+
 export function useLanguageSetting() {
   const [activeLangCode, setActiveLangCode] = useState<string>(() => getSavedLanguage());
   const [draftLangCode, setDraftLangCode] = useState<string>(() => getSavedLanguage());
@@ -167,6 +175,13 @@ export function useLanguageSetting() {
     }
   }, [draftLangCode]);
 
+  const resetLanguage = useCallback(() => {
+    clearLanguageSelection();
+    if (typeof window !== "undefined") {
+      window.location.href = "/";
+    }
+  }, []);
+
   const activeLanguage = SUPPORTED_LANGUAGES.find((l) => l.code === activeLangCode) || SUPPORTED_LANGUAGES[0];
   const draftLanguage = SUPPORTED_LANGUAGES.find((l) => l.code === draftLangCode) || SUPPORTED_LANGUAGES[0];
 
@@ -182,6 +197,7 @@ export function useLanguageSetting() {
     supportedLanguages: SUPPORTED_LANGUAGES,
     selectDraftLanguage,
     saveLanguage,
+    resetLanguage,
   };
 }
 

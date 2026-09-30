@@ -16,7 +16,7 @@ export default function LanguageSelectModal({
   const router = useRouter();
   const [internalIsOpen, setInternalIsOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const { activeLangCode, isLanguageChosen, saveLanguage } = useLanguageSetting();
+  const { activeLangCode, isLanguageChosen, saveLanguage, resetLanguage } = useLanguageSetting();
 
   const isOpen = externalIsOpen !== undefined ? externalIsOpen : internalIsOpen;
 
@@ -29,7 +29,7 @@ export default function LanguageSelectModal({
 
   const handleBackToHome = () => {
     handleClose();
-    router.push("/");
+    resetLanguage();
   };
 
   useEffect(() => {
