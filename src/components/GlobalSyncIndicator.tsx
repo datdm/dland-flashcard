@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import FullScreenLoading from "./FullScreenLoading";
 
 interface Toast {
   id: number;
@@ -18,9 +19,10 @@ export default function GlobalSyncIndicator() {
     const handleLoadingStart = () => {
       setIsLoading(true);
       if (safetyTimer) clearTimeout(safetyTimer);
+      // Long safety fallback timeout (30s) in case API freezes completely
       safetyTimer = setTimeout(() => {
         setIsLoading(false);
-      }, 4000);
+      }, 30000);
     };
 
     const handleLoadingStop = () => {
@@ -99,6 +101,14 @@ export default function GlobalSyncIndicator() {
         </>
       )}
 
+      {/* Full Screen Loading Overlay - activates ONLY if API takes > 5 seconds */}
+      <FullScreenLoading
+        show={isLoading}
+        delayMs={5000}
+        title="API Server Phản Hồi Chậm..."
+        subtitle="Yêu cầu đồng bộ API đã vượt quá 5 giây và vẫn chưa hoàn tất, vui lòng kiên nhẫn chờ trong giây lát."
+      />
+
       {/* Toast Notification Container in Top-Right */}
       <div className="fixed top-4 right-4 z-[9999] flex flex-col gap-2 max-w-sm w-full pointer-events-none">
         {toasts.map((toast) => {
@@ -141,3 +151,4 @@ export default function GlobalSyncIndicator() {
     </>
   );
 }
+

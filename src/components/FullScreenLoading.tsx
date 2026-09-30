@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 interface FullScreenLoadingProps {
   show: boolean;
+  delayMs?: number;
   title?: string;
   subtitle?: string;
   onRetry?: () => void;
@@ -11,28 +12,40 @@ interface FullScreenLoadingProps {
 
 export default function FullScreenLoading({
   show,
+  delayMs = 5000,
   title = "Đang kết nối Server & tải dữ liệu...",
-  subtitle = "Hệ thống đang phản hồi dữ liệu API, vui lòng chờ trong giây lát.",
+  subtitle = "Hệ thống đang chờ phản hồi từ API Server, quá trình này lâu hơn bình thường.",
   onRetry,
 }: FullScreenLoadingProps) {
+  const [shouldRender, setShouldRender] = useState(false);
   const [elapsedSeconds, setElapsedSeconds] = useState<number>(0);
 
   useEffect(() => {
     if (!show) {
+      setShouldRender(false);
       setElapsedSeconds(0);
       return;
     }
 
     const startTime = Date.now();
+
+    // Delay showing full screen loading until delayMs (default 5s) elapses without API response
+    const delayTimer = setTimeout(() => {
+      setShouldRender(true);
+    }, delayMs);
+
     const interval = setInterval(() => {
       const elapsed = (Date.now() - startTime) / 1000;
       setElapsedSeconds(Math.round(elapsed * 10) / 10);
     }, 100);
 
-    return () => clearInterval(interval);
-  }, [show]);
+    return () => {
+      clearTimeout(delayTimer);
+      clearInterval(interval);
+    };
+  }, [show, delayMs]);
 
-  if (!show) return null;
+  if (!show || !shouldRender) return null;
 
   return (
     <div className="fixed inset-0 z-[99999] bg-slate-950/85 backdrop-blur-md flex flex-col items-center justify-center p-6 text-white transition-opacity duration-300 animate-in fade-in">
@@ -60,23 +73,22 @@ export default function FullScreenLoading({
           <span>Thời gian chờ API: {elapsedSeconds.toFixed(1)}s</span>
         </div>
 
-        {/* Delayed Notice & Retry Button if > 4.5s */}
-        {elapsedSeconds >= 4.5 && (
-          <div className="pt-2 animate-in fade-in duration-300 space-y-3">
-            <p className="text-[11px] text-amber-200/90 bg-amber-500/10 border border-amber-500/20 rounded-xl px-4 py-2 font-medium">
-              ⚠️ API đang phản hồi lâu hơn bình thường ({elapsedSeconds.toFixed(1)}s). Vui lòng không đóng trang.
-            </p>
-            {onRetry && (
-              <button
-                onClick={onRetry}
-                className="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-xl shadow-lg transition-all cursor-pointer border border-indigo-400/30"
-              >
-                🔄 Thử tải lại API
-              </button>
-            )}
-          </div>
-        )}
+        {/* Delayed Notice & Retry Button */}
+        <div className="pt-2 animate-in fade-in duration-300 space-y-3">
+          <p className="text-[11px] text-amber-200/90 bg-amber-500/10 border border-amber-500/20 rounded-xl px-4 py-2 font-medium">
+            ⚠️ API chưa phản hồi sau {elapsedSeconds.toFixed(1)}s. Vui lòng không đóng trang hoặc thử lại bên dưới.
+          </p>
+          {onRetry && (
+            <button
+              onClick={onRetry}
+              className="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-xl shadow-lg transition-all cursor-pointer border border-indigo-400/30"
+            >
+              🔄 Thử tải lại API
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
 }
+

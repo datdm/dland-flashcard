@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { ProgressMap, VocabProgress } from "@/types";
 import { getItem, setItem, StorageKeys, updateStreak } from "@/lib/storage";
 import { autoSync, checkAuthStatus, loadProgressFromServer, patchProgressOnServer } from "@/lib/syncService";
+import { getEquivalentVocabIds, loadAllSystemCurriculums } from "@/lib/curriculumRegistry";
 
 const defaultProgress = (): VocabProgress => ({ learned: false, favorite: false });
 
@@ -21,6 +22,9 @@ export function useProgress() {
   }, []);
 
   useEffect(() => {
+    // Prime system curriculum signature maps for cross-textbook word sync
+    loadAllSystemCurriculums().catch(() => {});
+
     // Load local data first
     reloadProgress();
 
@@ -51,17 +55,21 @@ export function useProgress() {
   }, [reloadProgress]);
 
   const updateProgress = useCallback((id: string, patch: Partial<VocabProgress>) => {
-    setProgress((prev) => {
-      const current = prev[id] ?? defaultProgress();
-      const isLearned = patch.learned !== undefined ? patch.learned : current.learned;
-      const learnedAt = isLearned
-        ? (patch.learnedAt || current.learnedAt || new Date().toISOString())
-        : undefined;
+    const targetIds = getEquivalentVocabIds(id);
+    if (!targetIds.includes(id)) targetIds.push(id);
 
-      const updated: ProgressMap = {
-        ...prev,
-        [id]: { ...current, ...patch, learned: isLearned, learnedAt },
-      };
+    setProgress((prev) => {
+      const updated: ProgressMap = { ...prev };
+      for (const targetId of targetIds) {
+        const current = updated[targetId] ?? defaultProgress();
+        const isLearned = patch.learned !== undefined ? patch.learned : current.learned;
+        const learnedAt = isLearned
+          ? (patch.learnedAt || current.learnedAt || new Date().toISOString())
+          : undefined;
+
+        updated[targetId] = { ...current, ...patch, learned: isLearned, learnedAt };
+      }
+
       setItem(StorageKeys.PROGRESS, updated);
       if (typeof window !== "undefined") {
         window.dispatchEvent(new Event("progress-updated"));
@@ -73,7 +81,9 @@ export function useProgress() {
 
   const toggleLearned = useCallback(
     async (id: string) => {
-      // 1. Calculate values synchronously first
+      const targetIds = getEquivalentVocabIds(id);
+      if (!targetIds.includes(id)) targetIds.push(id);
+
       const current = progress[id] ?? defaultProgress();
       const learned = !current.learned;
       const newPatch = {
@@ -81,12 +91,13 @@ export function useProgress() {
         learnedAt: learned ? new Date().toISOString() : undefined,
       };
 
-      // 2. Update locally first (optimistic)
+      // 2. Update locally first for all matching vocabulary IDs across textbooks
       setProgress((prev) => {
-        const updated: ProgressMap = {
-          ...prev,
-          [id]: { ...(prev[id] ?? defaultProgress()), ...newPatch },
-        };
+        const updated: ProgressMap = { ...prev };
+        for (const targetId of targetIds) {
+          const itemCurrent = updated[targetId] ?? defaultProgress();
+          updated[targetId] = { ...itemCurrent, ...newPatch };
+        }
         setItem(StorageKeys.PROGRESS, updated);
         if (typeof window !== "undefined") {
           window.dispatchEvent(new Event("progress-updated"));
@@ -98,12 +109,10 @@ export function useProgress() {
         updateStreak();
       }
 
-      // 3. Delta sync to server
+      // 3. Delta sync to server for all matching IDs
       if (checkAuthStatus()) {
-        const result = await patchProgressOnServer(id, newPatch);
-        if (!result.success) {
-          console.error("Patch progress (learned) failed:", result.error);
-          autoSync(); // Fallback full sync
+        for (const targetId of targetIds) {
+          await patchProgressOnServer(targetId, newPatch);
         }
       } else {
         autoSync();
@@ -112,35 +121,39 @@ export function useProgress() {
     [progress]
   );
 
-  const toggleFavorite = useCallback(async (id: string) => {
-    // 1. Calculate values synchronously first
-    const current = progress[id] ?? defaultProgress();
-    const newPatch = { favorite: !current.favorite };
+  const toggleFavorite = useCallback(
+    async (id: string) => {
+      const targetIds = getEquivalentVocabIds(id);
+      if (!targetIds.includes(id)) targetIds.push(id);
 
-    // 2. Update locally first (optimistic)
-    setProgress((prev) => {
-      const updated: ProgressMap = {
-        ...prev,
-        [id]: { ...(prev[id] ?? defaultProgress()), ...newPatch },
-      };
-      setItem(StorageKeys.PROGRESS, updated);
-      if (typeof window !== "undefined") {
-        window.dispatchEvent(new Event("progress-updated"));
-      }
-      return updated;
-    });
+      const current = progress[id] ?? defaultProgress();
+      const newPatch = { favorite: !current.favorite };
 
-    // 3. Delta sync to server
-    if (checkAuthStatus()) {
-      const result = await patchProgressOnServer(id, newPatch);
-      if (!result.success) {
-        console.error("Patch progress (favorite) failed:", result.error);
-        autoSync(); // Fallback full sync
+      // Update locally for all matching IDs
+      setProgress((prev) => {
+        const updated: ProgressMap = { ...prev };
+        for (const targetId of targetIds) {
+          const itemCurrent = updated[targetId] ?? defaultProgress();
+          updated[targetId] = { ...itemCurrent, ...newPatch };
+        }
+        setItem(StorageKeys.PROGRESS, updated);
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(new Event("progress-updated"));
+        }
+        return updated;
+      });
+
+      // Delta sync to server
+      if (checkAuthStatus()) {
+        for (const targetId of targetIds) {
+          await patchProgressOnServer(targetId, newPatch);
+        }
+      } else {
+        autoSync();
       }
-    } else {
-      autoSync();
-    }
-  }, [progress]);
+    },
+    [progress]
+  );
 
   const getVocabProgress = useCallback(
     (id: string): VocabProgress => progress[id] ?? defaultProgress(),
@@ -149,3 +162,4 @@ export function useProgress() {
 
   return { progress, toggleLearned, toggleFavorite, updateProgress, getVocabProgress };
 }
+

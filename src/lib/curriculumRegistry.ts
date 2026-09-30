@@ -33,6 +33,44 @@ export interface CurriculumRegistryData {
 let cachedRegistry: CurriculumRegistryData | null = null;
 let cachedSystemCurriculums: Curriculum[] | null = null;
 let cachedVocabToBookMap: Map<string, Set<string>> | null = null;
+let cachedVocabSignatureMap: Map<string, Set<string>> | null = null;
+let cachedIdToSignatureMap: Map<string, string> | null = null;
+
+export function buildVocabSignatureMaps(curriculums: Curriculum[]) {
+  const keyToIds = new Map<string, Set<string>>();
+  const idToKey = new Map<string, string>();
+
+  for (const c of curriculums) {
+    for (const l of c.lessons || []) {
+      for (const v of l.vocabulary || []) {
+        if (!v || !v.id) continue;
+        const normHiragana = (v.hiragana || "").trim().toLowerCase();
+        const normKanji = (v.kanji || "").trim();
+        if (!normHiragana && !normKanji) continue;
+
+        const signature = normKanji ? `${normHiragana}:${normKanji}` : normHiragana;
+        idToKey.set(v.id, signature);
+
+        if (!keyToIds.has(signature)) {
+          keyToIds.set(signature, new Set<string>());
+        }
+        keyToIds.get(signature)!.add(v.id);
+      }
+    }
+  }
+
+  cachedVocabSignatureMap = keyToIds;
+  cachedIdToSignatureMap = idToKey;
+}
+
+export function getEquivalentVocabIds(id: string): string[] {
+  if (!cachedIdToSignatureMap || !cachedVocabSignatureMap) return [id];
+  const signature = cachedIdToSignatureMap.get(id);
+  if (!signature) return [id];
+  const matchingSet = cachedVocabSignatureMap.get(signature);
+  if (!matchingSet || matchingSet.size === 0) return [id];
+  return Array.from(matchingSet);
+}
 
 export async function fetchCurriculumRegistry(): Promise<CurriculumRegistryData | null> {
   if (cachedRegistry) return cachedRegistry;
@@ -188,6 +226,7 @@ export async function loadAllSystemCurriculums(): Promise<Curriculum[]> {
     }
 
     cachedVocabToBookMap = vocabMap;
+    buildVocabSignatureMaps(list);
     cachedSystemCurriculums = list;
     return list;
   } catch (err) {
@@ -195,4 +234,5 @@ export async function loadAllSystemCurriculums(): Promise<Curriculum[]> {
     return [];
   }
 }
+
 

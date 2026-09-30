@@ -398,12 +398,19 @@ export default function AdminDashboardPage() {
 
   if (loadingUsers) {
     return (
-      <FullScreenLoading
-        show={true}
-        title="Đang tải Admin Dashboard..."
-        subtitle="Hệ thống đang phản hồi dữ liệu danh sách người dùng từ API Backend, vui lòng chờ trong giây lát."
-        onRetry={loadUsers}
-      />
+      <div className="w-full max-w-[1600px] mx-auto px-4 py-20 text-center">
+        <FullScreenLoading
+          show={true}
+          delayMs={5000}
+          title="Đang tải Admin Dashboard..."
+          subtitle="Hệ thống đang chờ phản hồi từ API Backend, quá trình này lâu hơn bình thường."
+          onRetry={loadUsers}
+        />
+        <div className="bg-white rounded-3xl p-12 border border-gray-100 shadow-2xs max-w-sm mx-auto flex flex-col items-center gap-3">
+          <div className="w-8 h-8 border-3 border-indigo-600 border-t-transparent rounded-full animate-spin" />
+          <p className="text-xs text-gray-600 font-bold animate-pulse">Đang tải danh sách người dùng...</p>
+        </div>
+      </div>
     );
   }
 
