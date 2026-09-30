@@ -11,6 +11,7 @@ import NavMenuSettingsPanel from "@/components/NavMenuSettingsPanel";
 import ExportImportPanel from "@/components/ExportImportPanel";
 import BackupHistoryPanel from "@/components/BackupHistoryPanel";
 import SystemCurriculumRegistryPanel from "@/components/SystemCurriculumRegistryPanel";
+import FullScreenLoading from "@/components/FullScreenLoading";
 import {
   fetchCurriculumRegistry,
   getAllBooksFromRegistry,
@@ -70,6 +71,9 @@ export default function AdminDashboardPage() {
   const loadUsers = async () => {
     setLoadingUsers(true);
     setError(null);
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("sync-loading-start"));
+    }
     try {
       const data = await fetchAdminUsers();
       setUsers(data);
@@ -77,6 +81,9 @@ export default function AdminDashboardPage() {
       setError(err.message || "Không thể tải danh sách người dùng.");
     } finally {
       setLoadingUsers(false);
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new CustomEvent("sync-loading-stop"));
+      }
     }
   };
 
@@ -86,6 +93,9 @@ export default function AdminDashboardPage() {
     setError(null);
     setUserDetail(null);
     setSelectedCurriculumId(null);
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("sync-loading-start"));
+    }
     try {
       const detail = await fetchAdminUserDetail(userId);
       setUserDetail(detail);
@@ -100,6 +110,9 @@ export default function AdminDashboardPage() {
       setError(err.message || "Không thể tải thông tin chi tiết của người dùng.");
     } finally {
       setLoadingDetail(false);
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new CustomEvent("sync-loading-stop"));
+      }
     }
   };
 
@@ -385,10 +398,12 @@ export default function AdminDashboardPage() {
 
   if (loadingUsers) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[500px] gap-3">
-        <div className="w-12 h-12 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
-        <p className="text-xs text-gray-500 font-bold animate-pulse">Đang tải Admin Dashboard...</p>
-      </div>
+      <FullScreenLoading
+        show={true}
+        title="Đang tải Admin Dashboard..."
+        subtitle="Hệ thống đang phản hồi dữ liệu danh sách người dùng từ API Backend, vui lòng chờ trong giây lát."
+        onRetry={loadUsers}
+      />
     );
   }
 
@@ -603,6 +618,12 @@ export default function AdminDashboardPage() {
 
         {/* Right column: User Details and curriculum/timeline tracker */}
         <div className="lg:col-span-8">
+          <FullScreenLoading
+            show={loadingDetail}
+            title="Đang tải chi tiết học tập học viên..."
+            subtitle="Đang kết nối API Server để truy xuất toàn bộ tiến độ từ vựng, ngữ pháp, kanji và giáo trình của học viên."
+            onRetry={() => selectedUserId && loadUserDetail(selectedUserId)}
+          />
           {loadingDetail ? (
             <div className="bg-white rounded-3xl p-16 border border-gray-100 text-center flex flex-col items-center justify-center gap-3 min-h-[400px]">
               <div className="w-8 h-8 border-3 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
