@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import SyncDialog from "./SyncDialog";
+import LanguageSelectModal from "./LanguageSelectModal";
 import * as syncService from "@/lib/syncService";
 import { useLanguageSetting } from "@/hooks/useLanguageSetting";
 import { useAuth } from "@/context/AuthContext";
@@ -124,6 +125,7 @@ export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
   const [showSyncDialog, setShowSyncDialog] = useState(false);
+  const [showLangModal, setShowLangModal] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const { activeLanguage, isLanguageChosen } = useLanguageSetting();
 
@@ -254,13 +256,21 @@ export default function Navbar() {
             {displayNavItems.map((item) => {
               const { href, label, icon } = item;
               const isActive = pathname === href || (href !== "/" && pathname.startsWith(href));
+              const isSettings = href === "/settings";
               return (
                 <Link
                   key={href + label}
                   href={href}
                   title={isCollapsed ? label : undefined}
-                  onClick={() => router.push(href)}
-                  className={`flex items-center gap-3 py-2 rounded-2xl text-xs font-semibold transition-all ${
+                  onClick={(e) => {
+                    if (isSettings) {
+                      e.preventDefault();
+                      setShowLangModal(true);
+                    } else {
+                      router.push(href);
+                    }
+                  }}
+                  className={`flex items-center gap-3 py-2 rounded-2xl text-xs font-semibold transition-all cursor-pointer ${
                     isCollapsed ? 'justify-center px-0' : 'px-3'
                   } ${
                     isActive
@@ -282,12 +292,12 @@ export default function Navbar() {
 
         {/* Desktop Sidebar Footer */}
         <div className="pt-4 border-t border-gray-100 space-y-3 shrink-0">
-          {/* Language selector — highlight as CTA when not yet chosen */}
-          <Link
-            href={isLanguageChosen ? "/settings" : "/"}
+          {/* Language selector — opens quick language modal */}
+          <button
+            type="button"
+            onClick={() => setShowLangModal(true)}
             title={isCollapsed ? "Cài đặt & Ngôn ngữ" : undefined}
-            onClick={() => router.push(isLanguageChosen ? "/settings" : "/")}
-            className={`w-full py-2 rounded-2xl transition text-xs font-semibold flex items-center ${
+            className={`w-full py-2 rounded-2xl transition text-xs font-semibold flex items-center cursor-pointer ${
               isCollapsed ? 'justify-center px-0' : 'justify-between px-3'
             } ${
               isLanguageChosen
@@ -308,7 +318,7 @@ export default function Navbar() {
                 }`}>{isLanguageChosen ? "Đổi" : "→"}</span>
               </>
             )}
-          </Link>
+          </button>
 
           <button
             onClick={handleSyncClick}
@@ -362,9 +372,18 @@ export default function Navbar() {
         <Link href="/" className="font-bold text-indigo-700 text-sm flex items-center gap-1.5 truncate">
           <span>{activeNavItem?.icon || "🌐"}</span>
           <span className="truncate">{activeNavItem?.label || "Dland Language"}</span>
-          <span className="text-[10px] px-1.5 py-0.5 bg-indigo-50 rounded-md text-indigo-600 font-bold shrink-0">
-            {activeLanguage.flag} {activeLanguage.code.toUpperCase()}
-          </span>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setShowLangModal(true);
+            }}
+            className="text-[10px] px-1.5 py-0.5 bg-indigo-50 hover:bg-indigo-100 rounded-md text-indigo-600 font-bold shrink-0 cursor-pointer flex items-center gap-1 border border-indigo-100"
+          >
+            <span>{activeLanguage.flag}</span>
+            <span>{activeLanguage.code.toUpperCase()}</span>
+          </button>
         </Link>
         <div className="flex items-center gap-2">
           <button
@@ -402,12 +421,20 @@ export default function Navbar() {
         {displayNavItems.map((item) => {
           const { href, label, icon } = item;
           const isActive = pathname === href || (href !== "/" && pathname.startsWith(href));
+          const isSettings = href === "/settings";
           return (
             <Link
               key={href + label}
               href={href}
               title={label}
-              onClick={() => router.push(href)}
+              onClick={(e) => {
+                if (isSettings) {
+                  e.preventDefault();
+                  setShowLangModal(true);
+                } else {
+                  router.push(href);
+                }
+              }}
               className={`flex-1 min-w-[32px] max-w-[56px] h-9 flex items-center justify-center rounded-xl text-base transition-all shrink-0 cursor-pointer ${
                 isActive
                   ? "bg-indigo-600 text-white shadow-md shadow-indigo-200 scale-105"
@@ -420,13 +447,14 @@ export default function Navbar() {
         })}
         {/* When no language chosen, show a CTA button in bottom bar */}
         {!isLanguageChosen && (
-          <Link
-            href="/"
+          <button
+            type="button"
+            onClick={() => setShowLangModal(true)}
             title="Chọn ngôn ngữ"
             className="flex-1 min-w-[48px] max-w-[80px] h-9 flex items-center justify-center gap-1 rounded-xl text-[10px] font-bold bg-indigo-600 text-white shadow-md shadow-indigo-200 shrink-0 cursor-pointer px-2"
           >
             🌐 Chọn
-          </Link>
+          </button>
         )}
       </nav>
 
@@ -435,6 +463,12 @@ export default function Navbar() {
         isOpen={showSyncDialog}
         onClose={() => setShowSyncDialog(false)}
         onSyncComplete={() => window.location.reload()}
+      />
+
+      {/* Language Select Modal Dialog */}
+      <LanguageSelectModal
+        isOpen={showLangModal}
+        onClose={() => setShowLangModal(false)}
       />
     </>
   );
