@@ -403,6 +403,93 @@
               "meaning": "Thương mại"
             }
           ]
+        },
+        {
+          "id": "k-n2-12-02",
+          "kanji": "技",
+          "hanViet": "KỸ",
+          "radical": "Thủ (手)",
+          "strokeCount": 7,
+          "onyomi": [
+            "ギ"
+          ],
+          "kunyomi": [
+            "わざ"
+          ],
+          "meaning": "Kỹ thuật, tài nghệ",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "技術",
+              "hiragana": "ぎじゅつ",
+              "meaning": "Kỹ thuật"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-02-02",
+          "kanji": "開",
+          "hanViet": "KHAI",
+          "radical": "Môn (門)",
+          "strokeCount": 12,
+          "onyomi": [
+            "カイ"
+          ],
+          "kunyomi": [
+            "ひら",
+            "あ"
+          ],
+          "meaning": "Mở, phát triển",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "開発",
+              "hiragana": "かいはつ",
+              "meaning": "Phát triển"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-02-03",
+          "kanji": "査",
+          "hanViet": "TRA",
+          "radical": "Mộc (木)",
+          "strokeCount": 9,
+          "onyomi": [
+            "サ"
+          ],
+          "kunyomi": [],
+          "meaning": "Kiểm tra, điều tra",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "検査",
+              "hiragana": "けんさ",
+              "meaning": "Kiểm tra"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-02-04",
+          "kanji": "応",
+          "hanViet": "ỨNG",
+          "radical": "Quảng (广)",
+          "strokeCount": 7,
+          "onyomi": [
+            "オウ"
+          ],
+          "kunyomi": [
+            "こた"
+          ],
+          "meaning": "Đáp ứng, ứng dụng",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "応用",
+              "hiragana": "おうよう",
+              "meaning": "Ứng dụng"
+            }
+          ]
         }
       ]
     },
@@ -718,89 +805,173 @@
       ],
       "kanjiItems": [
         {
-          "id": "k-n2-02-01",
-          "kanji": "技",
-          "hanViet": "KỸ",
-          "radical": "Thủ (扌)",
-          "strokeCount": 7,
+          "id": "k-n2-03-01",
+          "kanji": "教",
+          "hanViet": "GIÁO",
+          "radical": "Phộc (攵)",
+          "strokeCount": 11,
           "onyomi": [
-            "ギ"
+            "キョウ"
           ],
           "kunyomi": [
-            "わざ"
+            "おし"
           ],
-          "meaning": "Kỹ thuật, kỹ năng",
+          "meaning": "Dạy, giáo dục",
           "level": "N2",
           "compounds": [
             {
-              "kanji": "技術",
-              "hiragana": "ぎじゅつ",
-              "meaning": "Kỹ thuật"
+              "kanji": "教育",
+              "hiragana": "きょういく",
+              "meaning": "Giáo dục"
             }
           ]
         },
         {
-          "id": "k-n2-02-02",
-          "kanji": "開",
-          "hanViet": "KHAI",
-          "radical": "Môn (門)",
-          "strokeCount": 12,
+          "id": "k-n2-03-02",
+          "kanji": "福",
+          "hanViet": "PHÚC",
+          "radical": "Thị (示)",
+          "strokeCount": 13,
           "onyomi": [
-            "カイ"
-          ],
-          "kunyomi": [
-            "ひら",
-            "あ"
-          ],
-          "meaning": "Mở, phát triển",
-          "level": "N2",
-          "compounds": [
-            {
-              "kanji": "開発",
-              "hiragana": "かいはつ",
-              "meaning": "Phát triển"
-            }
-          ]
-        },
-        {
-          "id": "k-n2-02-03",
-          "kanji": "査",
-          "hanViet": "TRA",
-          "radical": "Mộc (木)",
-          "strokeCount": 9,
-          "onyomi": [
-            "サ"
+            "フク"
           ],
           "kunyomi": [],
-          "meaning": "Kiểm tra, điều tra",
+          "meaning": "Hạnh phúc, phúc lợi",
           "level": "N2",
           "compounds": [
             {
-              "kanji": "検査",
-              "hiragana": "けんさ",
-              "meaning": "Kiểm tra"
+              "kanji": "福祉",
+              "hiragana": "ふくし",
+              "meaning": "Phúc lợi"
             }
           ]
         },
         {
-          "id": "k-n2-02-04",
-          "kanji": "応",
-          "hanViet": "ỨNG",
-          "radical": "Quảng (广)",
-          "strokeCount": 7,
+          "id": "k-n2-03-03",
+          "kanji": "尊",
+          "hanViet": "TÔN",
+          "radical": "Thốn (寸)",
+          "strokeCount": 12,
           "onyomi": [
-            "オウ"
+            "ソン"
           ],
           "kunyomi": [
-            "こた"
+            "たっと"
           ],
-          "meaning": "Đáp ứng, ứng dụng",
+          "meaning": "Tôn trọng, quý giá",
           "level": "N2",
           "compounds": [
             {
-              "kanji": "応用",
-              "hiragana": "おうよう",
-              "meaning": "Ứng dụng"
+              "kanji": "尊重",
+              "hiragana": "そんちょう",
+              "meaning": "Tôn trọng"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-03-04",
+          "kanji": "権",
+          "hanViet": "QUYỀN",
+          "radical": "Mộc (木)",
+          "strokeCount": 15,
+          "onyomi": [
+            "ケン"
+          ],
+          "kunyomi": [],
+          "meaning": "Quyền lực, quyền lợi",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "権利",
+              "hiragana": "けんり",
+              "meaning": "Quyền lợi"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-04-01",
+          "kanji": "株",
+          "hanViet": "CHU",
+          "radical": "Mộc",
+          "strokeCount": 10,
+          "onyomi": [
+            "シュ"
+          ],
+          "kunyomi": [
+            "かぶ"
+          ],
+          "meaning": "Cổ phiếu, gốc cây",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "株価",
+              "hiragana": "かぶか",
+              "meaning": "Giá cổ phiếu"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-04-02",
+          "kanji": "赤",
+          "hanViet": "XÍCH",
+          "radical": "Xích",
+          "strokeCount": 7,
+          "onyomi": [
+            "セキ",
+            "シャク"
+          ],
+          "kunyomi": [
+            "あか"
+          ],
+          "meaning": "Màu đỏ",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "赤字",
+              "hiragana": "あかじ",
+              "meaning": "Thâm hụt"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-04-03",
+          "kanji": "黒",
+          "hanViet": "HẮC",
+          "radical": "Hắc",
+          "strokeCount": 11,
+          "onyomi": [
+            "コク"
+          ],
+          "kunyomi": [
+            "くろ"
+          ],
+          "meaning": "Màu đen",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "黒字",
+              "hiragana": "くろじ",
+              "meaning": "Thặng dư"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-04-04",
+          "kanji": "賃",
+          "hanViet": "NHẪM",
+          "radical": "Bối",
+          "strokeCount": 13,
+          "onyomi": [
+            "チン"
+          ],
+          "kunyomi": [],
+          "meaning": "Tiền công",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "賃金",
+              "hiragana": "ちんぎん",
+              "meaning": "Tiền công"
             }
           ]
         }
@@ -1118,18 +1289,19 @@
       ],
       "kanjiItems": [
         {
-          "id": "k-n2-03-01",
-          "kanji": "教",
-          "hanViet": "GIÁO",
-          "radical": "Phộc (攵)",
-          "strokeCount": 11,
+          "id": "k-n2-05-01",
+          "kanji": "育",
+          "hanViet": "DỤC",
+          "radical": "Nhục",
+          "strokeCount": 8,
           "onyomi": [
-            "キョウ"
+            "イク"
           ],
           "kunyomi": [
-            "おし"
+            "そだ・つ",
+            "はぐく・む"
           ],
-          "meaning": "Dạy, giáo dục",
+          "meaning": "Nuôi dưỡng",
           "level": "N2",
           "compounds": [
             {
@@ -1140,64 +1312,151 @@
           ]
         },
         {
-          "id": "k-n2-03-02",
-          "kanji": "福",
-          "hanViet": "PHÚC",
-          "radical": "Thị (示)",
-          "strokeCount": 13,
+          "id": "k-n2-05-02",
+          "kanji": "能",
+          "hanViet": "NĂNG",
+          "radical": "Nguyệt",
+          "strokeCount": 10,
           "onyomi": [
-            "フク"
+            "ノウ"
           ],
           "kunyomi": [],
-          "meaning": "Hạnh phúc, phúc lợi",
+          "meaning": "Năng lực, khả năng",
           "level": "N2",
           "compounds": [
             {
-              "kanji": "福祉",
-              "hiragana": "ふくし",
-              "meaning": "Phúc lợi"
+              "kanji": "能力",
+              "hiragana": "のうりょく",
+              "meaning": "Năng lực"
             }
           ]
         },
         {
-          "id": "k-n2-03-03",
-          "kanji": "尊",
-          "hanViet": "TÔN",
-          "radical": "Thốn (寸)",
-          "strokeCount": 12,
+          "id": "k-n2-05-03",
+          "kanji": "講",
+          "hanViet": "GIẢNG",
+          "radical": "Ngôn",
+          "strokeCount": 17,
           "onyomi": [
-            "ソン"
+            "コウ"
+          ],
+          "kunyomi": [],
+          "meaning": "Giảng giải",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "講義",
+              "hiragana": "こうぎ",
+              "meaning": "Bài giảng"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-14-02",
+          "kanji": "基",
+          "hanViet": "CƠ",
+          "radical": "thổ",
+          "strokeCount": 11,
+          "onyomi": [
+            "キ"
           ],
           "kunyomi": [
-            "たっと"
+            "もと",
+            "もとい"
           ],
-          "meaning": "Tôn trọng, quý giá",
+          "meaning": "Cơ, nền tảng",
           "level": "N2",
           "compounds": [
             {
-              "kanji": "尊重",
-              "hiragana": "そんちょう",
-              "meaning": "Tôn trọng"
+              "kanji": "基本",
+              "hiragana": "きほん",
+              "meaning": "Cơ bản"
             }
           ]
         },
         {
-          "id": "k-n2-03-04",
-          "kanji": "権",
-          "hanViet": "QUYỀN",
-          "radical": "Mộc (木)",
-          "strokeCount": 15,
+          "id": "k-n2-06-01",
+          "kanji": "環",
+          "hanViet": "HOÀN",
+          "radical": "Ngọc",
+          "strokeCount": 17,
           "onyomi": [
-            "ケン"
+            "カン"
           ],
           "kunyomi": [],
-          "meaning": "Quyền lực, quyền lợi",
+          "meaning": "Môi trường",
           "level": "N2",
           "compounds": [
             {
-              "kanji": "権利",
-              "hiragana": "けんり",
-              "meaning": "Quyền lợi"
+              "kanji": "環境",
+              "hiragana": "かんきょう",
+              "meaning": "Môi trường"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-06-02",
+          "kanji": "源",
+          "hanViet": "NGUYÊN",
+          "radical": "Thủy",
+          "strokeCount": 13,
+          "onyomi": [
+            "ゲン"
+          ],
+          "kunyomi": [
+            "みなもと"
+          ],
+          "meaning": "Nguồn",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "資源",
+              "hiragana": "しげん",
+              "meaning": "Tài nguyên"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-06-03",
+          "kanji": "保",
+          "hanViet": "BẢO",
+          "radical": "Nhân",
+          "strokeCount": 9,
+          "onyomi": [
+            "ホ"
+          ],
+          "kunyomi": [
+            "たも・つ"
+          ],
+          "meaning": "Bảo vệ, duy trì",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "保護",
+              "hiragana": "ほご",
+              "meaning": "Bảo vệ"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-06-04",
+          "kanji": "滅",
+          "hanViet": "DIỆT",
+          "radical": "Thủy",
+          "strokeCount": 13,
+          "onyomi": [
+            "メツ"
+          ],
+          "kunyomi": [
+            "ほろ・びる"
+          ],
+          "meaning": "Tuyệt chủng, hủy diệt",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "絶滅",
+              "hiragana": "ぜつめつ",
+              "meaning": "Tuyệt chủng"
             }
           ]
         }
@@ -1515,89 +1774,176 @@
       ],
       "kanjiItems": [
         {
-          "id": "k-n2-04-01",
-          "kanji": "株",
-          "hanViet": "CHU",
-          "radical": "Mộc",
-          "strokeCount": 10,
+          "id": "k-n2-07-01",
+          "kanji": "景",
+          "hanViet": "CẢNH",
+          "radical": "Nhật",
+          "strokeCount": 12,
           "onyomi": [
-            "シュ"
+            "ケイ"
           ],
           "kunyomi": [
-            "かぶ"
+            "けしき"
           ],
-          "meaning": "Cổ phiếu, gốc cây",
+          "meaning": "Phong cảnh, kinh tế",
           "level": "N2",
           "compounds": [
             {
-              "kanji": "株価",
-              "hiragana": "かぶか",
-              "meaning": "Giá cổ phiếu"
+              "kanji": "景気",
+              "hiragana": "けいき",
+              "meaning": "Tình hình kinh tế"
             }
           ]
         },
         {
-          "id": "k-n2-04-02",
-          "kanji": "赤",
-          "hanViet": "XÍCH",
-          "radical": "Xích",
-          "strokeCount": 7,
+          "id": "k-n2-07-02",
+          "kanji": "騰",
+          "hanViet": "ĐẰNG",
+          "radical": "Mã",
+          "strokeCount": 20,
           "onyomi": [
-            "セキ",
-            "シャク"
+            "トウ"
           ],
           "kunyomi": [
-            "あか"
+            "あがる"
           ],
-          "meaning": "Màu đỏ",
+          "meaning": "Tăng vọt, bay lên",
           "level": "N2",
           "compounds": [
             {
-              "kanji": "赤字",
-              "hiragana": "あかじ",
-              "meaning": "Thâm hụt"
+              "kanji": "急騰",
+              "hiragana": "きゅうとう",
+              "meaning": "Tăng vọt"
             }
           ]
         },
         {
-          "id": "k-n2-04-03",
-          "kanji": "黒",
-          "hanViet": "HẮC",
-          "radical": "Hắc",
-          "strokeCount": 11,
-          "onyomi": [
-            "コク"
-          ],
-          "kunyomi": [
-            "くろ"
-          ],
-          "meaning": "Màu đen",
-          "level": "N2",
-          "compounds": [
-            {
-              "kanji": "黒字",
-              "hiragana": "くろじ",
-              "meaning": "Thặng dư"
-            }
-          ]
-        },
-        {
-          "id": "k-n2-04-04",
-          "kanji": "賃",
-          "hanViet": "NHẪM",
-          "radical": "Bối",
+          "id": "k-n2-07-03",
+          "kanji": "滞",
+          "hanViet": "TRỆ",
+          "radical": "Thủy",
           "strokeCount": 13,
           "onyomi": [
-            "チン"
+            "タイ"
           ],
-          "kunyomi": [],
-          "meaning": "Tiền công",
+          "kunyomi": [
+            "とどこおる"
+          ],
+          "meaning": "Ngưng trệ, tắc nghẽn",
           "level": "N2",
           "compounds": [
             {
-              "kanji": "賃金",
-              "hiragana": "ちんぎん",
-              "meaning": "Tiền công"
+              "kanji": "停滞",
+              "hiragana": "ていたい",
+              "meaning": "Đình trệ"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-07-04",
+          "kanji": "融",
+          "hanViet": "DUNG",
+          "radical": "Miên",
+          "strokeCount": 16,
+          "onyomi": [
+            "ユウ"
+          ],
+          "kunyomi": [
+            "とける"
+          ],
+          "meaning": "Tài chính, hòa tan",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "融資",
+              "hiragana": "ゆうし",
+              "meaning": "Tài trợ, vay vốn"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-14-01",
+          "kanji": "革",
+          "hanViet": "CÁCH",
+          "radical": "vi",
+          "strokeCount": 9,
+          "onyomi": [
+            "カク"
+          ],
+          "kunyomi": [
+            "かわ"
+          ],
+          "meaning": "Cách, da, đổi mới",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "改革",
+              "hiragana": "かいかく",
+              "meaning": "Cải cách"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-08-02",
+          "kanji": "検",
+          "hanViet": "KIỂM",
+          "radical": "Mộc",
+          "strokeCount": 13,
+          "onyomi": [
+            "ケン"
+          ],
+          "kunyomi": [
+            "しらべる"
+          ],
+          "meaning": "Kiểm tra, xét nghiệm",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "検証",
+              "hiragana": "けんしょう",
+              "meaning": "Kiểm chứng"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-08-04",
+          "kanji": "製",
+          "hanViet": "CHẾ",
+          "radical": "Y",
+          "strokeCount": 11,
+          "onyomi": [
+            "セイ"
+          ],
+          "kunyomi": [
+            "つくる"
+          ],
+          "meaning": "Chế tạo, sản xuất",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "製造",
+              "hiragana": "せいぞう",
+              "meaning": "Sản xuất"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-09-01",
+          "kanji": "祉",
+          "hanViet": "PHÚC",
+          "radical": "Thị",
+          "strokeCount": 8,
+          "onyomi": [
+            "シ"
+          ],
+          "kunyomi": [],
+          "meaning": "Phúc lợi, hạnh phúc",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "福祉",
+              "hiragana": "ふくし",
+              "meaning": "Phúc lợi"
             }
           ]
         }
@@ -1915,87 +2261,179 @@
       ],
       "kanjiItems": [
         {
-          "id": "k-n2-05-01",
-          "kanji": "育",
-          "hanViet": "DỤC",
-          "radical": "Nhục",
-          "strokeCount": 8,
-          "onyomi": [
-            "イク"
-          ],
-          "kunyomi": [
-            "そだ・つ",
-            "はぐく・む"
-          ],
-          "meaning": "Nuôi dưỡng",
-          "level": "N2",
-          "compounds": [
-            {
-              "kanji": "教育",
-              "hiragana": "きょういく",
-              "meaning": "Giáo dục"
-            }
-          ]
-        },
-        {
-          "id": "k-n2-05-02",
-          "kanji": "能",
-          "hanViet": "NĂNG",
-          "radical": "Nguyệt",
+          "id": "k-n2-09-02",
+          "kanji": "貢",
+          "hanViet": "CỐNG",
+          "radical": "Bối",
           "strokeCount": 10,
-          "onyomi": [
-            "ノウ"
-          ],
-          "kunyomi": [],
-          "meaning": "Năng lực, khả năng",
-          "level": "N2",
-          "compounds": [
-            {
-              "kanji": "能力",
-              "hiragana": "のうりょく",
-              "meaning": "Năng lực"
-            }
-          ]
-        },
-        {
-          "id": "k-n2-05-03",
-          "kanji": "講",
-          "hanViet": "GIẢNG",
-          "radical": "Ngôn",
-          "strokeCount": 17,
           "onyomi": [
             "コウ"
           ],
-          "kunyomi": [],
-          "meaning": "Giảng giải",
+          "kunyomi": [
+            "みつぐ"
+          ],
+          "meaning": "Cống hiến",
           "level": "N2",
           "compounds": [
             {
-              "kanji": "講義",
-              "hiragana": "こうぎ",
-              "meaning": "Bài giảng"
+              "kanji": "貢献",
+              "hiragana": "こうけん",
+              "meaning": "Cống hiến"
             }
           ]
         },
         {
-          "id": "k-n2-05-04",
-          "kanji": "基",
-          "hanViet": "CƠ",
+          "id": "k-n2-09-03",
+          "kanji": "域",
+          "hanViet": "VỰC",
           "radical": "Thổ",
           "strokeCount": 11,
           "onyomi": [
-            "キ"
+            "イキ"
           ],
-          "kunyomi": [
-            "もと"
-          ],
-          "meaning": "Cơ bản, nền tảng",
+          "kunyomi": [],
+          "meaning": "Khu vực, vùng",
           "level": "N2",
           "compounds": [
             {
-              "kanji": "基礎",
-              "hiragana": "きそ",
-              "meaning": "Cơ sở"
+              "kanji": "地域",
+              "hiragana": "ちいき",
+              "meaning": "Khu vực"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-09-04",
+          "kanji": "態",
+          "hanViet": "THÁI",
+          "radical": "Tâm",
+          "strokeCount": 14,
+          "onyomi": [
+            "タイ"
+          ],
+          "kunyomi": [
+            "わざと"
+          ],
+          "meaning": "Trạng thái, thái độ",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "状態",
+              "hiragana": "じょうたい",
+              "meaning": "Trạng thái"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-13-01",
+          "kanji": "過",
+          "hanViet": "QUÁ",
+          "radical": "xước",
+          "strokeCount": 12,
+          "onyomi": [
+            "カ"
+          ],
+          "kunyomi": [
+            "す.ぎる",
+            "あやま.つ"
+          ],
+          "meaning": "Quá, lỗi, vượt quá",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "過剰",
+              "hiragana": "かじょう",
+              "meaning": "Quá mức"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-10-02",
+          "kanji": "疎",
+          "hanViet": "SƠ",
+          "radical": "Nhĩ (疋)",
+          "strokeCount": 13,
+          "onyomi": [
+            "ソ"
+          ],
+          "kunyomi": [
+            "うと.い",
+            "うと.む"
+          ],
+          "meaning": "Thưa thớt, sơ sài",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "疎遠",
+              "hiragana": "そえん",
+              "meaning": "Xa cách, ít liên lạc"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-10-03",
+          "kanji": "移",
+          "hanViet": "DI",
+          "radical": "Hòa (禾)",
+          "strokeCount": 11,
+          "onyomi": [
+            "イ"
+          ],
+          "kunyomi": [
+            "うつ.る",
+            "うつ.す"
+          ],
+          "meaning": "Di chuyển",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "移動",
+              "hiragana": "いどう",
+              "meaning": "Sự di động"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-13-03",
+          "kanji": "促",
+          "hanViet": "XÚC",
+          "radical": "nhân",
+          "strokeCount": 9,
+          "onyomi": [
+            "ソク"
+          ],
+          "kunyomi": [
+            "うなが.す"
+          ],
+          "meaning": "Thúc giục, thúc đẩy",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "促進",
+              "hiragana": "そくしん",
+              "meaning": "Thúc đẩy"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-11-01",
+          "kanji": "温",
+          "hanViet": "ÔN",
+          "radical": "Thủy (氵)",
+          "strokeCount": 12,
+          "onyomi": [
+            "オン"
+          ],
+          "kunyomi": [
+            "あたた.かい"
+          ],
+          "meaning": "Ấm áp",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "温暖",
+              "hiragana": "おんだん",
+              "meaning": "Ấm áp"
             }
           ]
         }
@@ -2313,38 +2751,62 @@
       ],
       "kanjiItems": [
         {
-          "id": "k-n2-06-01",
-          "kanji": "環",
-          "hanViet": "HOÀN",
-          "radical": "Ngọc",
-          "strokeCount": 17,
+          "id": "k-n2-11-02",
+          "kanji": "染",
+          "hanViet": "NHIỄM",
+          "radical": "Thủy (氵)",
+          "strokeCount": 9,
           "onyomi": [
-            "カン"
+            "セン"
           ],
-          "kunyomi": [],
-          "meaning": "Môi trường",
+          "kunyomi": [
+            "そ.める",
+            "そ.まる"
+          ],
+          "meaning": "Nhiễm, nhuộm",
           "level": "N2",
           "compounds": [
             {
-              "kanji": "環境",
-              "hiragana": "かんきょう",
-              "meaning": "Môi trường"
+              "kanji": "汚染",
+              "hiragana": "おせん",
+              "meaning": "Ô nhiễm"
             }
           ]
         },
         {
-          "id": "k-n2-06-02",
-          "kanji": "源",
-          "hanViet": "NGUYÊN",
-          "radical": "Thủy",
-          "strokeCount": 13,
+          "id": "k-n2-11-03",
+          "kanji": "絶",
+          "hanViet": "TUYỆT",
+          "radical": "Mịch (纟)",
+          "strokeCount": 12,
           "onyomi": [
-            "ゲン"
+            "ゼツ"
           ],
           "kunyomi": [
-            "みなもと"
+            "た.える",
+            "た.やす"
           ],
-          "meaning": "Nguồn",
+          "meaning": "Cắt đứt, tuyệt diệt",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "絶滅",
+              "hiragana": "ぜつめつ",
+              "meaning": "Tuyệt chủng"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-11-04",
+          "kanji": "資",
+          "hanViet": "TƯ",
+          "radical": "Bối (貝)",
+          "strokeCount": 13,
+          "onyomi": [
+            "シ"
+          ],
+          "kunyomi": [],
+          "meaning": "Tài sản, tư liệu",
           "level": "N2",
           "compounds": [
             {
@@ -2355,46 +2817,112 @@
           ]
         },
         {
-          "id": "k-n2-06-03",
-          "kanji": "保",
-          "hanViet": "BẢO",
-          "radical": "Nhân",
-          "strokeCount": 9,
+          "id": "k-n2-12-03",
+          "kanji": "術",
+          "hanViet": "THUẬT",
+          "radical": "Hành (行)",
+          "strokeCount": 11,
           "onyomi": [
-            "ホ"
+            "ジュツ"
           ],
           "kunyomi": [
-            "たも・つ"
+            "すべ"
           ],
-          "meaning": "Bảo vệ, duy trì",
+          "meaning": "Thuật, phương pháp",
           "level": "N2",
           "compounds": [
             {
-              "kanji": "保護",
-              "hiragana": "ほご",
-              "meaning": "Bảo vệ"
+              "kanji": "芸術",
+              "hiragana": "げいじゅつ",
+              "meaning": "Nghệ thuật"
             }
           ]
         },
         {
-          "id": "k-n2-06-04",
-          "kanji": "滅",
-          "hanViet": "DIỆT",
-          "radical": "Thủy",
-          "strokeCount": 13,
+          "id": "k-n2-13-02",
+          "kanji": "密",
+          "hanViet": "MẬT",
+          "radical": "miên",
+          "strokeCount": 11,
           "onyomi": [
-            "メツ"
+            "ミツ"
           ],
           "kunyomi": [
-            "ほろ・びる"
+            "ひそ.か"
           ],
-          "meaning": "Tuyệt chủng, hủy diệt",
+          "meaning": "Mật, dày đặc",
           "level": "N2",
           "compounds": [
             {
-              "kanji": "絶滅",
-              "hiragana": "ぜつめつ",
-              "meaning": "Tuyệt chủng"
+              "kanji": "過密",
+              "hiragana": "かみつ",
+              "meaning": "Đông đúc"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-13-04",
+          "kanji": "懸",
+          "hanViet": "HUYỀN",
+          "radical": "tâm",
+          "strokeCount": 20,
+          "onyomi": [
+            "ケン"
+          ],
+          "kunyomi": [
+            "か.ける"
+          ],
+          "meaning": "Treo, lo ngại",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "懸念",
+              "hiragana": "けねん",
+              "meaning": "Lo ngại"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-14-03",
+          "kanji": "蓄",
+          "hanViet": "SÚC",
+          "radical": "thảo",
+          "strokeCount": 16,
+          "onyomi": [
+            "チク"
+          ],
+          "kunyomi": [
+            "たくわ.える"
+          ],
+          "meaning": "Tích lũy, lưu trữ",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "蓄積",
+              "hiragana": "ちくせき",
+              "meaning": "Tích lũy"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-14-04",
+          "kanji": "究",
+          "hanViet": "CỨU",
+          "radical": "miên",
+          "strokeCount": 7,
+          "onyomi": [
+            "キュウ"
+          ],
+          "kunyomi": [
+            "きわ.める"
+          ],
+          "meaning": "Nghiên cứu, tận cùng",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "研究",
+              "hiragana": "けんきゅう",
+              "meaning": "Nghiên cứu"
             }
           ]
         }
@@ -2712,92 +3240,187 @@
       ],
       "kanjiItems": [
         {
-          "id": "k-n2-07-01",
-          "kanji": "景",
-          "hanViet": "CẢNH",
-          "radical": "Nhật",
-          "strokeCount": 12,
+          "id": "k-n2-15-01",
+          "kanji": "倫",
+          "hanViet": "LUÂN",
+          "radical": "nhân",
+          "strokeCount": 10,
           "onyomi": [
-            "ケイ"
+            "リン"
           ],
-          "kunyomi": [
-            "けしき"
-          ],
-          "meaning": "Phong cảnh, kinh tế",
+          "kunyomi": [],
+          "meaning": "Luân lý, đạo đức",
           "level": "N2",
           "compounds": [
             {
-              "kanji": "景気",
-              "hiragana": "けいき",
-              "meaning": "Tình hình kinh tế"
+              "kanji": "倫理",
+              "hiragana": "りんり",
+              "meaning": "Đạo đức"
             }
           ]
         },
         {
-          "id": "k-n2-07-02",
-          "kanji": "騰",
-          "hanViet": "ĐẰNG",
-          "radical": "Mã",
+          "id": "k-n2-15-02",
+          "kanji": "偏",
+          "hanViet": "THIÊN",
+          "radical": "nhân",
+          "strokeCount": 11,
+          "onyomi": [
+            "ヘン"
+          ],
+          "kunyomi": [
+            "かたよ.る"
+          ],
+          "meaning": "Lệch, thành kiến",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "偏見",
+              "hiragana": "へんけん",
+              "meaning": "Thành kiến"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-15-03",
+          "kanji": "寛",
+          "hanViet": "KHOAN",
+          "radical": "miên",
+          "strokeCount": 13,
+          "onyomi": [
+            "カン"
+          ],
+          "kunyomi": [
+            "ひろ.い"
+          ],
+          "meaning": "Khoan dung, rộng rãi",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "寛容",
+              "hiragana": "かんよう",
+              "meaning": "Khoan dung"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-15-04",
+          "kanji": "徴",
+          "hanViet": "TRƯNG",
+          "radical": "xích",
+          "strokeCount": 15,
+          "onyomi": [
+            "チョウ"
+          ],
+          "kunyomi": [
+            "しるし"
+          ],
+          "meaning": "Biểu trưng, dấu hiệu",
+          "level": "N2",
+          "compounds": [
+            {
+              "kanji": "象徴",
+              "hiragana": "しょうちょう",
+              "meaning": "Biểu tượng"
+            }
+          ]
+        },
+        {
+          "id": "k-n2-53",
+          "kanji": "策",
+          "hanViet": "SÁCH",
+          "radical": "竹 (Trúc)",
+          "strokeCount": 12,
+          "onyomi": [
+            "サク"
+          ],
+          "kunyomi": [],
+          "meaning": "Chính sách, mưu sách",
+          "compounds": [
+            {
+              "kanji": "政策",
+              "hiragana": "せいさく",
+              "meaning": "Chính sách"
+            },
+            {
+              "kanji": "対策",
+              "hiragana": "たいさく",
+              "meaning": "Biện pháp đối phó"
+            }
+          ],
+          "level": "N2"
+        },
+        {
+          "id": "k-n2-54",
+          "kanji": "議",
+          "hanViet": "NGHỊ",
+          "radical": "言 (Ngôn)",
           "strokeCount": 20,
+          "onyomi": [
+            "ギ"
+          ],
+          "kunyomi": [],
+          "meaning": "Nghị viện, thảo luận",
+          "compounds": [
+            {
+              "kanji": "議員",
+              "hiragana": "ぎいん",
+              "meaning": "Nghị viên"
+            },
+            {
+              "kanji": "国会",
+              "hiragana": "こっかい",
+              "meaning": "Quốc hội"
+            }
+          ],
+          "level": "N2"
+        },
+        {
+          "id": "k-n2-55",
+          "kanji": "投",
+          "hanViet": "ĐẦU",
+          "radical": "扌 (Thủ)",
+          "strokeCount": 7,
           "onyomi": [
             "トウ"
           ],
           "kunyomi": [
-            "あがる"
+            "な.げる"
           ],
-          "meaning": "Tăng vọt, bay lên",
-          "level": "N2",
+          "meaning": "Ném, bỏ phiếu, đầu tư",
           "compounds": [
             {
-              "kanji": "急騰",
-              "hiragana": "きゅうとう",
-              "meaning": "Tăng vọt"
+              "kanji": "投票",
+              "hiragana": "とうひょう",
+              "meaning": "Bỏ phiếu"
+            },
+            {
+              "kanji": "投資",
+              "hiragana": "とうし",
+              "meaning": "Đầu tư"
             }
-          ]
+          ],
+          "level": "N2"
         },
         {
-          "id": "k-n2-07-03",
-          "kanji": "滞",
-          "hanViet": "TRỆ",
-          "radical": "Thủy",
-          "strokeCount": 13,
+          "id": "k-n2-56",
+          "kanji": "票",
+          "hanViet": "PHIẾU",
+          "radical": "示 (Thị)",
+          "strokeCount": 11,
           "onyomi": [
-            "タイ"
+            "ヒョウ"
           ],
-          "kunyomi": [
-            "とどこおる"
-          ],
-          "meaning": "Ngưng trệ, tắc nghẽn",
-          "level": "N2",
+          "kunyomi": [],
+          "meaning": "Lá phiếu, hóa đơn",
           "compounds": [
             {
-              "kanji": "停滞",
-              "hiragana": "ていたい",
-              "meaning": "Đình trệ"
+              "kanji": "伝票",
+              "hiragana": "でんぴょう",
+              "meaning": "Hóa đơn thanh toán"
             }
-          ]
-        },
-        {
-          "id": "k-n2-07-04",
-          "kanji": "融",
-          "hanViet": "DUNG",
-          "radical": "Miên",
-          "strokeCount": 16,
-          "onyomi": [
-            "ユウ"
           ],
-          "kunyomi": [
-            "とける"
-          ],
-          "meaning": "Tài chính, hòa tan",
-          "level": "N2",
-          "compounds": [
-            {
-              "kanji": "融資",
-              "hiragana": "ゆうし",
-              "meaning": "Tài trợ, vay vốn"
-            }
-          ]
+          "level": "N2"
         }
       ]
     },
@@ -3113,92 +3736,206 @@
       ],
       "kanjiItems": [
         {
-          "id": "k-n2-08-01",
-          "kanji": "革",
-          "hanViet": "CÁCH",
-          "radical": "Vi",
-          "strokeCount": 9,
+          "id": "k-n2-57",
+          "kanji": "補",
+          "hanViet": "BỔ",
+          "radical": "衤 (Y)",
+          "strokeCount": 12,
           "onyomi": [
-            "カク"
+            "ホ"
           ],
           "kunyomi": [
-            "かわ"
+            "おぎな.う"
           ],
-          "meaning": "Cải cách, da",
-          "level": "N2",
+          "meaning": "Bổ sung, ứng cử",
           "compounds": [
             {
-              "kanji": "革新",
-              "hiragana": "かくしん",
-              "meaning": "Đổi mới"
+              "kanji": "候補",
+              "hiragana": "こうほ",
+              "meaning": "Ứng cử viên"
+            },
+            {
+              "kanji": "補修",
+              "hiragana": "ほしゅう",
+              "meaning": "Bổ túc, sửa chữa"
             }
-          ]
+          ],
+          "level": "N2"
         },
         {
-          "id": "k-n2-08-02",
-          "kanji": "検",
-          "hanViet": "KIỂM",
-          "radical": "Mộc",
-          "strokeCount": 13,
+          "id": "k-n2-58",
+          "kanji": "宣",
+          "hanViet": "TUYÊN",
+          "radical": "宀 (Miên)",
+          "strokeCount": 9,
+          "onyomi": [
+            "セン"
+          ],
+          "kunyomi": [],
+          "meaning": "Tuyên ngôn, tuyên truyền",
+          "compounds": [
+            {
+              "kanji": "宣言",
+              "hiragana": "せんげん",
+              "meaning": "Tuyên ngôn"
+            },
+            {
+              "kanji": "宣伝",
+              "hiragana": "せんでん",
+              "meaning": "Quảng cáo, tuyên truyền"
+            }
+          ],
+          "level": "N2"
+        },
+        {
+          "id": "k-n2-59",
+          "kanji": "批",
+          "hanViet": "PHÊ",
+          "radical": "扌 (Thủ)",
+          "strokeCount": 7,
+          "onyomi": [
+            "ヒ"
+          ],
+          "kunyomi": [],
+          "meaning": "Phê bình, đánh giá",
+          "compounds": [
+            {
+              "kanji": "批判",
+              "hiragana": "ひはん",
+              "meaning": "Phê phán"
+            },
+            {
+              "kanji": "批評",
+              "hiragana": "ひひょう",
+              "meaning": "Phê bình văn học"
+            }
+          ],
+          "level": "N2"
+        },
+        {
+          "id": "k-n2-60",
+          "kanji": "判",
+          "hanViet": "PHÁN",
+          "radical": "刀 (Đao)",
+          "strokeCount": 7,
+          "onyomi": [
+            "ハン",
+            "バン"
+          ],
+          "kunyomi": [],
+          "meaning": "Phán xét, quyết định",
+          "compounds": [
+            {
+              "kanji": "判断",
+              "hiragana": "はんだん",
+              "meaning": "Phán đoán"
+            },
+            {
+              "kanji": "裁判",
+              "hiragana": "さいばん",
+              "meaning": "Phiên tòa xét xử"
+            }
+          ],
+          "level": "N2"
+        },
+        {
+          "id": "k-n2-61",
+          "kanji": "憲",
+          "hanViet": "HIẾN",
+          "radical": "心 (Tâm)",
+          "strokeCount": 16,
           "onyomi": [
             "ケン"
           ],
-          "kunyomi": [
-            "しらべる"
-          ],
-          "meaning": "Kiểm tra, xét nghiệm",
-          "level": "N2",
+          "kunyomi": [],
+          "meaning": "Hiến pháp",
           "compounds": [
             {
-              "kanji": "検証",
-              "hiragana": "けんしょう",
-              "meaning": "Kiểm chứng"
+              "kanji": "憲法",
+              "hiragana": "けんぽう",
+              "meaning": "Hiến pháp"
             }
-          ]
+          ],
+          "level": "N2"
         },
         {
-          "id": "k-n2-08-03",
-          "kanji": "技",
-          "hanViet": "KỸ",
-          "radical": "Thủ",
+          "id": "k-n2-62",
+          "kanji": "条",
+          "hanViet": "ĐIỀU",
+          "radical": "木 (Mộc)",
           "strokeCount": 7,
           "onyomi": [
-            "ギ"
+            "ジョウ"
           ],
-          "kunyomi": [
-            "わざ"
-          ],
-          "meaning": "Kỹ thuật, kỹ năng",
-          "level": "N2",
+          "kunyomi": [],
+          "meaning": "Điều khoản, hiệp ước",
           "compounds": [
             {
-              "kanji": "技術",
-              "hiragana": "ぎじゅつ",
-              "meaning": "Kỹ thuật"
+              "kanji": "条約",
+              "hiragana": "じょうやく",
+              "meaning": "Hiệp ước"
+            },
+            {
+              "kanji": "条件",
+              "hiragana": "じょうけん",
+              "meaning": "Điều kiện"
             }
-          ]
+          ],
+          "level": "N2"
         },
         {
-          "id": "k-n2-08-04",
-          "kanji": "製",
-          "hanViet": "CHẾ",
-          "radical": "Y",
-          "strokeCount": 11,
+          "id": "k-n2-63",
+          "kanji": "紛",
+          "hanViet": "PHÂN",
+          "radical": "糸 (Mịch)",
+          "strokeCount": 10,
           "onyomi": [
-            "セイ"
+            "フン"
           ],
           "kunyomi": [
-            "つくる"
+            "まぎ.れる"
           ],
-          "meaning": "Chế tạo, sản xuất",
-          "level": "N2",
+          "meaning": "Phức tạp, tranh chấp",
           "compounds": [
             {
-              "kanji": "製造",
-              "hiragana": "せいぞう",
-              "meaning": "Sản xuất"
+              "kanji": "紛争",
+              "hiragana": "ふんそう",
+              "meaning": "Tranh chấp, xung đột"
+            },
+            {
+              "kanji": "紛失",
+              "hiragana": "ふんしつ",
+              "meaning": "Đánh mất đồ"
             }
-          ]
+          ],
+          "level": "N2"
+        },
+        {
+          "id": "k-n2-64",
+          "kanji": "争",
+          "hanViet": "TRANH",
+          "radical": "亅 (Quyết)",
+          "strokeCount": 6,
+          "onyomi": [
+            "ソウ"
+          ],
+          "kunyomi": [
+            "あらそ.う"
+          ],
+          "meaning": "Tranh giành, chiến tranh",
+          "compounds": [
+            {
+              "kanji": "戦争",
+              "hiragana": "せんそう",
+              "meaning": "Chiến tranh"
+            },
+            {
+              "kanji": "競争",
+              "hiragana": "きょうそう",
+              "meaning": "Cạnh tranh"
+            }
+          ],
+          "level": "N2"
         }
       ]
     },
@@ -3514,88 +4251,214 @@
       ],
       "kanjiItems": [
         {
-          "id": "k-n2-09-01",
-          "kanji": "祉",
-          "hanViet": "PHÚC",
-          "radical": "Thị",
-          "strokeCount": 8,
+          "id": "k-n2-65",
+          "kanji": "軍",
+          "hanViet": "QUÂN",
+          "radical": "車 (Xa)",
+          "strokeCount": 9,
           "onyomi": [
-            "シ"
+            "グン"
           ],
           "kunyomi": [],
-          "meaning": "Phúc lợi, hạnh phúc",
-          "level": "N2",
+          "meaning": "Quân đội, quân sự",
           "compounds": [
             {
-              "kanji": "福祉",
-              "hiragana": "ふくし",
-              "meaning": "Phúc lợi"
+              "kanji": "軍事",
+              "hiragana": "ぐんじ",
+              "meaning": "Quân sự"
+            },
+            {
+              "kanji": "陸軍",
+              "hiragana": "りくぐん",
+              "meaning": "Lục quân"
             }
-          ]
+          ],
+          "level": "N2"
         },
         {
-          "id": "k-n2-09-02",
-          "kanji": "貢",
-          "hanViet": "CỐNG",
-          "radical": "Bối",
+          "id": "k-n2-66",
+          "kanji": "債",
+          "hanViet": "TRÁI",
+          "radical": "人 (Nhân)",
+          "strokeCount": 13,
+          "onyomi": [
+            "サイ"
+          ],
+          "kunyomi": [],
+          "meaning": "Món nợ, trái phiếu",
+          "compounds": [
+            {
+              "kanji": "国債",
+              "hiragana": "こくさい",
+              "meaning": "Trái phiếu chính phủ"
+            },
+            {
+              "kanji": "負債",
+              "hiragana": "ふさい",
+              "meaning": "Nợ nần"
+            }
+          ],
+          "level": "N2"
+        },
+        {
+          "id": "k-n2-67",
+          "kanji": "息",
+          "hanViet": "TỨC",
+          "radical": "心 (Tâm)",
           "strokeCount": 10,
           "onyomi": [
-            "コウ"
+            "ソク"
           ],
           "kunyomi": [
-            "みつぐ"
+            "いき"
           ],
-          "meaning": "Cống hiến",
-          "level": "N2",
+          "meaning": "Hơi thở, tiền lãi, con trai",
           "compounds": [
             {
-              "kanji": "貢献",
-              "hiragana": "こうけん",
-              "meaning": "Cống hiến"
+              "kanji": "利息",
+              "hiragana": "りそく",
+              "meaning": "Tiền lãi suất"
+            },
+            {
+              "kanji": "息子",
+              "hiragana": "むすこ",
+              "meaning": "Con trai"
             }
-          ]
+          ],
+          "level": "N2"
         },
         {
-          "id": "k-n2-09-03",
-          "kanji": "域",
-          "hanViet": "VỰC",
-          "radical": "Thổ",
-          "strokeCount": 11,
+          "id": "k-n2-68",
+          "kanji": "収",
+          "hanViet": "THU",
+          "radical": "又 (Hựu)",
+          "strokeCount": 4,
           "onyomi": [
-            "イキ"
+            "シュウ"
+          ],
+          "kunyomi": [
+            "おさ.める"
+          ],
+          "meaning": "Thu hoạch, thu nhập",
+          "compounds": [
+            {
+              "kanji": "収入",
+              "hiragana": "しゅうにゅう",
+              "meaning": "Thu nhập"
+            },
+            {
+              "kanji": "買収",
+              "hiragana": "ばいしゅう",
+              "meaning": "Mua lại, thâu tóm"
+            }
+          ],
+          "level": "N2"
+        },
+        {
+          "id": "k-n2-69",
+          "kanji": "営",
+          "hanViet": "DOANH",
+          "radical": "口 (Khẩu)",
+          "strokeCount": 12,
+          "onyomi": [
+            "エイ"
+          ],
+          "kunyomi": [
+            "いとな.む"
+          ],
+          "meaning": "Kinh doanh, doanh trại",
+          "compounds": [
+            {
+              "kanji": "経営",
+              "hiragana": "けいえい",
+              "meaning": "Kinh doanh, quản trị"
+            },
+            {
+              "kanji": "営業",
+              "hiragana": "えいぎょう",
+              "meaning": "Doanh nghiệp, bán hàng"
+            }
+          ],
+          "level": "N2"
+        },
+        {
+          "id": "k-n2-70",
+          "kanji": "律",
+          "hanViet": "LUẬT",
+          "radical": "彳 (Xích)",
+          "strokeCount": 9,
+          "onyomi": [
+            "リツ",
+            "リチ"
           ],
           "kunyomi": [],
-          "meaning": "Khu vực, vùng",
-          "level": "N2",
+          "meaning": "Luật pháp, quy tắc",
           "compounds": [
             {
-              "kanji": "地域",
-              "hiragana": "ちいき",
-              "meaning": "Khu vực"
+              "kanji": "法律",
+              "hiragana": "ほうりつ",
+              "meaning": "Pháp luật"
+            },
+            {
+              "kanji": "規律",
+              "hiragana": "きりつ",
+              "meaning": "Kỷ luật"
             }
-          ]
+          ],
+          "level": "N2"
         },
         {
-          "id": "k-n2-09-04",
-          "kanji": "態",
-          "hanViet": "THÁI",
-          "radical": "Tâm",
-          "strokeCount": 14,
+          "id": "k-n2-71",
+          "kanji": "審",
+          "hanViet": "THẨM",
+          "radical": "宀 (Miên)",
+          "strokeCount": 15,
           "onyomi": [
-            "タイ"
+            "シン"
           ],
-          "kunyomi": [
-            "わざと"
-          ],
-          "meaning": "Trạng thái, thái độ",
-          "level": "N2",
+          "kunyomi": [],
+          "meaning": "Thẩm tra, xét xử",
           "compounds": [
             {
-              "kanji": "状態",
-              "hiragana": "じょうたい",
-              "meaning": "Trạng thái"
+              "kanji": "審判",
+              "hiragana": "しんぱん",
+              "meaning": "Trọng tài, xét xử"
+            },
+            {
+              "kanji": "不審",
+              "hiragana": "ふしん",
+              "meaning": "Đáng ngờ"
             }
-          ]
+          ],
+          "level": "N2"
+        },
+        {
+          "id": "k-n2-72",
+          "kanji": "裁",
+          "hanViet": "TÀI",
+          "radical": "衣 (Y)",
+          "strokeCount": 12,
+          "onyomi": [
+            "サイ"
+          ],
+          "kunyomi": [
+            "た.つ",
+            "さば.く"
+          ],
+          "meaning": "Phán xử, may cắt",
+          "compounds": [
+            {
+              "kanji": "裁判所",
+              "hiragana": "さいばんしょ",
+              "meaning": "Tòa án"
+            },
+            {
+              "kanji": "制裁",
+              "hiragana": "せいさい",
+              "meaning": "Chế tài, trừng phạt"
+            }
+          ],
+          "level": "N2"
         }
       ]
     },
@@ -3911,96 +4774,209 @@
       ],
       "kanjiItems": [
         {
-          "id": "k-n2-10-01",
-          "kanji": "過",
-          "hanViet": "QUÁ",
-          "radical": "Sước (辶)",
-          "strokeCount": 12,
+          "id": "k-n2-73",
+          "kanji": "弁",
+          "hanViet": "BIỆN",
+          "radical": "廾 (Củng)",
+          "strokeCount": 5,
           "onyomi": [
-            "カ"
+            "ベン"
           ],
-          "kunyomi": [
-            "す.ぎる",
-            "す.ごす",
-            "あやま.ち"
-          ],
-          "meaning": "Quá mức, quá khứ",
-          "level": "N2",
+          "kunyomi": [],
+          "meaning": "Biện hộ, giọng địa phương",
           "compounds": [
             {
-              "kanji": "過剰",
-              "hiragana": "かじょう",
-              "meaning": "Vượt quá, dư thừa"
+              "kanji": "弁護士",
+              "hiragana": "べんごし",
+              "meaning": "Luật sư"
+            },
+            {
+              "kanji": "関西弁",
+              "hiragana": "かんさいべん",
+              "meaning": "Tiếng vùng Kansai"
             }
-          ]
+          ],
+          "level": "N2"
         },
         {
-          "id": "k-n2-10-02",
-          "kanji": "疎",
-          "hanViet": "SƠ",
-          "radical": "Nhĩ (疋)",
+          "id": "k-n2-74",
+          "kanji": "護",
+          "hanViet": "HỘ",
+          "radical": "言 (Ngôn)",
+          "strokeCount": 20,
+          "onyomi": [
+            "ゴ"
+          ],
+          "kunyomi": [
+            "まも.る"
+          ],
+          "meaning": "Bảo hộ, bảo vệ",
+          "compounds": [
+            {
+              "kanji": "看護師",
+              "hiragana": "かんごし",
+              "meaning": "Y tá, điều dưỡng"
+            },
+            {
+              "kanji": "保護",
+              "hiragana": "ほご",
+              "meaning": "Bảo hộ, che chở"
+            }
+          ],
+          "level": "N2"
+        },
+        {
+          "id": "k-n2-75",
+          "kanji": "罰",
+          "hanViet": "PHẠT",
+          "radical": "网 (Võng)",
+          "strokeCount": 14,
+          "onyomi": [
+            "バツ",
+            "バチ"
+          ],
+          "kunyomi": [],
+          "meaning": "Hình phạt, xử phạt",
+          "compounds": [
+            {
+              "kanji": "刑罰",
+              "hiragana": "けいばつ",
+              "meaning": "Hình phạt pháp luật"
+            },
+            {
+              "kanji": "処罰",
+              "hiragana": "しょばつ",
+              "meaning": "Xử phạt"
+            }
+          ],
+          "level": "N2"
+        },
+        {
+          "id": "k-n2-76",
+          "kanji": "犯",
+          "hanViet": "PHẠM",
+          "radical": "犭 (Khuyển)",
+          "strokeCount": 5,
+          "onyomi": [
+            "ハン"
+          ],
+          "kunyomi": [
+            "おか.す"
+          ],
+          "meaning": "Tội phạm, phạm tội",
+          "compounds": [
+            {
+              "kanji": "犯罪",
+              "hiragana": "はんざい",
+              "meaning": "Tội phạm"
+            },
+            {
+              "kanji": "犯人",
+              "hiragana": "はんにん",
+              "meaning": "Thủ phạm"
+            }
+          ],
+          "level": "N2"
+        },
+        {
+          "id": "k-n2-77",
+          "kanji": "罪",
+          "hanViet": "TỘI",
+          "radical": "网 (Võng)",
           "strokeCount": 13,
           "onyomi": [
-            "ソ"
+            "ザイ"
           ],
           "kunyomi": [
-            "うと.い",
-            "うと.む"
+            "つみ"
           ],
-          "meaning": "Thưa thớt, sơ sài",
-          "level": "N2",
+          "meaning": "Tội ác, tội lỗi",
           "compounds": [
             {
-              "kanji": "疎遠",
-              "hiragana": "そえん",
-              "meaning": "Xa cách, ít liên lạc"
+              "kanji": "無罪",
+              "hiragana": "むざい",
+              "meaning": "Vô tội"
+            },
+            {
+              "kanji": "有罪",
+              "hiragana": "ゆうざい",
+              "meaning": "Có tội"
             }
-          ]
+          ],
+          "level": "N2"
         },
         {
-          "id": "k-n2-10-03",
-          "kanji": "移",
-          "hanViet": "DI",
-          "radical": "Hòa (禾)",
-          "strokeCount": 11,
+          "id": "k-n2-78",
+          "kanji": "警",
+          "hanViet": "CẢNH",
+          "radical": "言 (Ngôn)",
+          "strokeCount": 19,
           "onyomi": [
-            "イ"
+            "ケイ"
           ],
-          "kunyomi": [
-            "うつ.る",
-            "うつ.す"
-          ],
-          "meaning": "Di chuyển",
-          "level": "N2",
+          "kunyomi": [],
+          "meaning": "Cảnh sát, cảnh báo",
           "compounds": [
             {
-              "kanji": "移動",
-              "hiragana": "いどう",
-              "meaning": "Sự di động"
+              "kanji": "警察",
+              "hiragana": "けいさつ",
+              "meaning": "Cảnh sát"
+            },
+            {
+              "kanji": "警告",
+              "hiragana": "けいこく",
+              "meaning": "Cảnh báo"
             }
-          ]
+          ],
+          "level": "N2"
         },
         {
-          "id": "k-n2-10-04",
-          "kanji": "促",
-          "hanViet": "XÚC",
-          "radical": "Nhân (亻)",
-          "strokeCount": 9,
+          "id": "k-n2-79",
+          "kanji": "察",
+          "hanViet": "SÁT",
+          "radical": "宀 (Miên)",
+          "strokeCount": 14,
           "onyomi": [
-            "ソク"
+            "サツ"
           ],
-          "kunyomi": [
-            "うなが.す"
-          ],
-          "meaning": "Thúc đẩy",
-          "level": "N2",
+          "kunyomi": [],
+          "meaning": "Quan sát, xem xét",
           "compounds": [
             {
-              "kanji": "促進",
-              "hiragana": "そくしん",
-              "meaning": "Sự thúc đẩy"
+              "kanji": "診察",
+              "hiragana": "しんさつ",
+              "meaning": "Khám bệnh"
+            },
+            {
+              "kanji": "観察",
+              "hiragana": "かんさつ",
+              "meaning": "Quan sát"
             }
-          ]
+          ],
+          "level": "N2"
+        },
+        {
+          "id": "k-n2-80",
+          "kanji": "捕",
+          "hanViet": "BỘ",
+          "radical": "扌 (Thủ)",
+          "strokeCount": 10,
+          "onyomi": [
+            "ホ"
+          ],
+          "kunyomi": [
+            "と.らえる",
+            "つか.まえる"
+          ],
+          "meaning": "Bắt giữ, tóm lấy",
+          "compounds": [
+            {
+              "kanji": "逮捕",
+              "hiragana": "たいほ",
+              "meaning": "Bắt giữ"
+            }
+          ],
+          "level": "N2"
         }
       ]
     },
@@ -4316,92 +5292,197 @@
       ],
       "kanjiItems": [
         {
-          "id": "k-n2-11-01",
-          "kanji": "温",
-          "hanViet": "ÔN",
-          "radical": "Thủy (氵)",
+          "id": "k-n2-81",
+          "kanji": "疑",
+          "hanViet": "NGHI",
+          "radical": "疋 (Thất)",
+          "strokeCount": 14,
+          "onyomi": [
+            "ギ"
+          ],
+          "kunyomi": [
+            "うたが.う"
+          ],
+          "meaning": "Nghi ngờ, ngờ vực",
+          "compounds": [
+            {
+              "kanji": "容疑者",
+              "hiragana": "ようぎしゃ",
+              "meaning": "Nghi can, kẻ tình nghi"
+            },
+            {
+              "kanji": "疑問",
+              "hiragana": "ぎもん",
+              "meaning": "Nghi vấn"
+            }
+          ],
+          "level": "N2"
+        },
+        {
+          "id": "k-n2-82",
+          "kanji": "拠",
+          "hanViet": "CỨ",
+          "radical": "扌 (Thủ)",
+          "strokeCount": 8,
+          "onyomi": [
+            "キョ",
+            "コ"
+          ],
+          "kunyomi": [
+            "よ.る"
+          ],
+          "meaning": "Căn cứ, bằng chứng",
+          "compounds": [
+            {
+              "kanji": "証拠",
+              "hiragana": "しょうこ",
+              "meaning": "Bằng chứng"
+            },
+            {
+              "kanji": "根拠",
+              "hiragana": "こんきょ",
+              "meaning": "Căn cứ"
+            }
+          ],
+          "level": "N2"
+        },
+        {
+          "id": "k-n2-83",
+          "kanji": "訴",
+          "hanViet": "TỐ",
+          "radical": "言 (Ngôn)",
           "strokeCount": 12,
           "onyomi": [
-            "オン"
+            "ソ"
           ],
           "kunyomi": [
-            "あたた.かい"
+            "うった.える"
           ],
-          "meaning": "Ấm áp",
-          "level": "N2",
+          "meaning": "Khởi kiện, tố cáo",
           "compounds": [
             {
-              "kanji": "温暖",
-              "hiragana": "おんだん",
-              "meaning": "Ấm áp"
+              "kanji": "訴訟",
+              "hiragana": "そしょう",
+              "meaning": "Tố tụng, vụ kiện"
             }
-          ]
+          ],
+          "level": "N2"
         },
         {
-          "id": "k-n2-11-02",
-          "kanji": "染",
-          "hanViet": "NHIỄM",
-          "radical": "Thủy (氵)",
-          "strokeCount": 9,
+          "id": "k-n2-84",
+          "kanji": "訟",
+          "hanViet": "TỤNG",
+          "radical": "言 (Ngôn)",
+          "strokeCount": 11,
           "onyomi": [
-            "セン"
-          ],
-          "kunyomi": [
-            "そ.める",
-            "そ.まる"
-          ],
-          "meaning": "Nhiễm, nhuộm",
-          "level": "N2",
-          "compounds": [
-            {
-              "kanji": "汚染",
-              "hiragana": "おせん",
-              "meaning": "Ô nhiễm"
-            }
-          ]
-        },
-        {
-          "id": "k-n2-11-03",
-          "kanji": "絶",
-          "hanViet": "TUYỆT",
-          "radical": "Mịch (纟)",
-          "strokeCount": 12,
-          "onyomi": [
-            "ゼツ"
-          ],
-          "kunyomi": [
-            "た.える",
-            "た.やす"
-          ],
-          "meaning": "Cắt đứt, tuyệt diệt",
-          "level": "N2",
-          "compounds": [
-            {
-              "kanji": "絶滅",
-              "hiragana": "ぜつめつ",
-              "meaning": "Tuyệt chủng"
-            }
-          ]
-        },
-        {
-          "id": "k-n2-11-04",
-          "kanji": "資",
-          "hanViet": "TƯ",
-          "radical": "Bối (貝)",
-          "strokeCount": 13,
-          "onyomi": [
-            "シ"
+            "ショウ"
           ],
           "kunyomi": [],
-          "meaning": "Tài sản, tư liệu",
-          "level": "N2",
+          "meaning": "Kiện tụng, tranh chấp",
           "compounds": [
             {
-              "kanji": "資源",
-              "hiragana": "しげん",
-              "meaning": "Tài nguyên"
+              "kanji": "訴訟",
+              "hiragana": "そしょう",
+              "meaning": "Vụ án kiện tụng"
             }
-          ]
+          ],
+          "level": "N2"
+        },
+        {
+          "id": "k-n2-85",
+          "kanji": "義",
+          "hanViet": "NGHĨA",
+          "radical": "羊 (Dương)",
+          "strokeCount": 13,
+          "onyomi": [
+            "ギ"
+          ],
+          "kunyomi": [],
+          "meaning": "Ý nghĩa, nghĩa vụ",
+          "compounds": [
+            {
+              "kanji": "義務",
+              "hiragana": "ぎむ",
+              "meaning": "Nghĩa vụ"
+            },
+            {
+              "kanji": "定義",
+              "hiragana": "ていぎ",
+              "meaning": "Định nghĩa"
+            }
+          ],
+          "level": "N2"
+        },
+        {
+          "id": "k-n2-86",
+          "kanji": "侵",
+          "hanViet": "XÂM",
+          "radical": "人 (Nhân)",
+          "strokeCount": 9,
+          "onyomi": [
+            "シン"
+          ],
+          "kunyomi": [
+            "おか.す"
+          ],
+          "meaning": "Xâm phạm, xâm lược",
+          "compounds": [
+            {
+              "kanji": "侵害",
+              "hiragana": "しんがい",
+              "meaning": "Xâm hại, vi phạm"
+            }
+          ],
+          "level": "N2"
+        },
+        {
+          "id": "k-n2-87",
+          "kanji": "障",
+          "hanViet": "CHƯỚNG",
+          "radical": "阝 (Phụ)",
+          "strokeCount": 14,
+          "onyomi": [
+            "ショウ"
+          ],
+          "kunyomi": [
+            "さわ.る"
+          ],
+          "meaning": "Chướng ngại, cản trở",
+          "compounds": [
+            {
+              "kanji": "故障",
+              "hiragana": "こしょう",
+              "meaning": "Hư hỏng"
+            },
+            {
+              "kanji": "保障",
+              "hiragana": "ほしょう",
+              "meaning": "Bảo đảm an toàn"
+            }
+          ],
+          "level": "N2"
+        },
+        {
+          "id": "k-n2-88",
+          "kanji": "償",
+          "hanViet": "THƯỜNG",
+          "radical": "人 (Nhân)",
+          "strokeCount": 17,
+          "onyomi": [
+            "ショウ"
+          ],
+          "kunyomi": [
+            "つぐな.う"
+          ],
+          "meaning": "Bồi thường",
+          "compounds": [
+            {
+              "kanji": "賠償",
+              "hiragana": "ばいしょう",
+              "meaning": "Bồi thường thiệt hại"
+            }
+          ],
+          "level": "N2"
         }
       ]
     },
@@ -4717,93 +5798,195 @@
       ],
       "kanjiItems": [
         {
-          "id": "k-n2-12-01",
-          "kanji": "革",
-          "hanViet": "CÁCH",
-          "radical": "Cách (革)",
+          "id": "k-n2-89",
+          "kanji": "敬",
+          "hanViet": "KÍNH",
+          "radical": "攴 (Phác)",
+          "strokeCount": 12,
+          "onyomi": [
+            "ケイ"
+          ],
+          "kunyomi": [
+            "うやま.う"
+          ],
+          "meaning": "Kính trọng, kính ngữ",
+          "compounds": [
+            {
+              "kanji": "敬語",
+              "hiragana": "けいご",
+              "meaning": "Kính ngữ"
+            },
+            {
+              "kanji": "尊敬",
+              "hiragana": "そんけい",
+              "meaning": "Tôn kính"
+            }
+          ],
+          "level": "N2"
+        },
+        {
+          "id": "k-n2-90",
+          "kanji": "謙",
+          "hanViet": "KHIÊM",
+          "radical": "言 (Ngôn)",
+          "strokeCount": 17,
+          "onyomi": [
+            "ケン"
+          ],
+          "kunyomi": [],
+          "meaning": "Khiêm tốn, khiêm nhường",
+          "compounds": [
+            {
+              "kanji": "謙遜",
+              "hiragana": "けんそん",
+              "meaning": "Khiêm tốn"
+            },
+            {
+              "kanji": "謙虚",
+              "hiragana": "けんきょ",
+              "meaning": "Khiêm nhường"
+            }
+          ],
+          "level": "N2"
+        },
+        {
+          "id": "k-n2-91",
+          "kanji": "誠",
+          "hanViet": "THÀNH",
+          "radical": "言 (Ngôn)",
+          "strokeCount": 13,
+          "onyomi": [
+            "セイ"
+          ],
+          "kunyomi": [
+            "まこと"
+          ],
+          "meaning": "Chân thành, thành thật",
+          "compounds": [
+            {
+              "kanji": "誠実",
+              "hiragana": "せいじつ",
+              "meaning": "Thành thật, trung thực"
+            }
+          ],
+          "level": "N2"
+        },
+        {
+          "id": "k-n2-92",
+          "kanji": "勇",
+          "hanViet": "DŨNG",
+          "radical": "力 (Lực)",
           "strokeCount": 9,
           "onyomi": [
-            "カク"
+            "ユウ"
           ],
           "kunyomi": [
-            "かわ"
+            "いさ.む"
           ],
-          "meaning": "Da, cách tân",
-          "level": "N2",
+          "meaning": "Dũng cảm",
           "compounds": [
             {
-              "kanji": "改革",
-              "hiragana": "かいかく",
-              "meaning": "Cải cách"
+              "kanji": "勇気",
+              "hiragana": "ゆうき",
+              "meaning": "Dũng khí"
             }
-          ]
+          ],
+          "level": "N2"
         },
         {
-          "id": "k-n2-12-02",
-          "kanji": "技",
-          "hanViet": "KỸ",
-          "radical": "Thủ (手)",
-          "strokeCount": 7,
+          "id": "k-n2-93",
+          "kanji": "巧",
+          "hanViet": "XẢO",
+          "radical": "工 (Công)",
+          "strokeCount": 5,
           "onyomi": [
-            "ギ"
+            "コウ"
           ],
           "kunyomi": [
-            "わざ"
+            "たく.み"
           ],
-          "meaning": "Kỹ thuật, tài nghệ",
-          "level": "N2",
+          "meaning": "Tinh xảo, khéo léo",
           "compounds": [
             {
-              "kanji": "技術",
-              "hiragana": "ぎじゅつ",
-              "meaning": "Kỹ thuật"
+              "kanji": "巧妙",
+              "hiragana": "こうみょう",
+              "meaning": "Khéo léo, tinh vi"
             }
-          ]
+          ],
+          "level": "N2"
         },
         {
-          "id": "k-n2-12-03",
-          "kanji": "術",
-          "hanViet": "THUẬT",
-          "radical": "Hành (行)",
-          "strokeCount": 11,
+          "id": "k-n2-94",
+          "kanji": "鋭",
+          "hanViet": "NHUỆ",
+          "radical": "金 (Kim)",
+          "strokeCount": 15,
           "onyomi": [
-            "ジュツ"
+            "エイ"
           ],
           "kunyomi": [
-            "すべ"
+            "するど.い"
           ],
-          "meaning": "Thuật, phương pháp",
-          "level": "N2",
+          "meaning": "Sắc bén, nhạy bén",
           "compounds": [
             {
-              "kanji": "芸術",
-              "hiragana": "げいじゅつ",
-              "meaning": "Nghệ thuật"
+              "kanji": "鋭い",
+              "hiragana": "するどい",
+              "meaning": "Sắc nhọn"
             }
-          ]
+          ],
+          "level": "N2"
         },
         {
-          "id": "k-n2-12-04",
-          "kanji": "基",
-          "hanViet": "CƠ",
-          "radical": "Thổ (土)",
-          "strokeCount": 11,
+          "id": "k-n2-95",
+          "kanji": "固",
+          "hanViet": "CỐ",
+          "radical": "囗 (Vi)",
+          "strokeCount": 8,
           "onyomi": [
-            "キ"
+            "コ"
           ],
           "kunyomi": [
-            "もと",
-            "もとい"
+            "かた.い",
+            "かた.める"
           ],
-          "meaning": "Cơ bản, nền tảng",
-          "level": "N2",
+          "meaning": "Kiên cố, cứng cỏi",
           "compounds": [
             {
-              "kanji": "基礎",
-              "hiragana": "きそ",
-              "meaning": "Cơ sở"
+              "kanji": "固定",
+              "hiragana": "こてい",
+              "meaning": "Cố định"
             }
-          ]
+          ],
+          "level": "N2"
+        },
+        {
+          "id": "k-n2-96",
+          "kanji": "柔",
+          "hanViet": "NHU",
+          "radical": "木 (Mộc)",
+          "strokeCount": 9,
+          "onyomi": [
+            "ジュウ",
+            "ニュウ"
+          ],
+          "kunyomi": [
+            "やわ.らかい"
+          ],
+          "meaning": "Mềm dẻo, nhu đạo",
+          "compounds": [
+            {
+              "kanji": "柔道",
+              "hiragana": "じゅうどう",
+              "meaning": "Môn võ Judo"
+            },
+            {
+              "kanji": "柔軟",
+              "hiragana": "じゅうなん",
+              "meaning": "Mềm dẻo, linh hoạt"
+            }
+          ],
+          "level": "N2"
         }
       ]
     },
@@ -5119,93 +6302,190 @@
       ],
       "kanjiItems": [
         {
-          "id": "k-n2-13-01",
-          "kanji": "過",
-          "hanViet": "QUÁ",
-          "radical": "xước",
-          "strokeCount": 12,
+          "id": "k-n2-97",
+          "kanji": "潔",
+          "hanViet": "KHIẾT",
+          "radical": "水 (Thủy)",
+          "strokeCount": 15,
           "onyomi": [
-            "カ"
+            "ケツ"
           ],
           "kunyomi": [
-            "す.ぎる",
-            "あやま.つ"
+            "いさぎよ.い"
           ],
-          "meaning": "Quá, lỗi, vượt quá",
-          "level": "N2",
+          "meaning": "Thanh khiết, sạch sẽ",
           "compounds": [
             {
-              "kanji": "過剰",
-              "hiragana": "かじょう",
-              "meaning": "Quá mức"
+              "kanji": "清潔",
+              "hiragana": "せいけつ",
+              "meaning": "Sạch sẽ, thanh khiết"
             }
-          ]
+          ],
+          "level": "N2"
         },
         {
-          "id": "k-n2-13-02",
-          "kanji": "密",
-          "hanViet": "MẬT",
-          "radical": "miên",
+          "id": "k-n2-98",
+          "kanji": "妙",
+          "hanViet": "DIỆU",
+          "radical": "女 (Nữ)",
+          "strokeCount": 7,
+          "onyomi": [
+            "ミョウ"
+          ],
+          "kunyomi": [],
+          "meaning": "Kỳ diệu, lạ lùng",
+          "compounds": [
+            {
+              "kanji": "微妙",
+              "hiragana": "びみょう",
+              "meaning": "Tế nhị, khó tả"
+            }
+          ],
+          "level": "N2"
+        },
+        {
+          "id": "k-n2-99",
+          "kanji": "奇",
+          "hanViet": "KỲ",
+          "radical": "大 (Đại)",
+          "strokeCount": 8,
+          "onyomi": [
+            "キ"
+          ],
+          "kunyomi": [],
+          "meaning": "Kỳ lạ, số lẻ",
+          "compounds": [
+            {
+              "kanji": "奇跡",
+              "hiragana": "きせき",
+              "meaning": "Kỳ tích, phép màu"
+            },
+            {
+              "kanji": "奇数",
+              "hiragana": "きすう",
+              "meaning": "Số lẻ"
+            }
+          ],
+          "level": "N2"
+        },
+        {
+          "id": "k-n2-100",
+          "kanji": "異",
+          "hanViet": "DỊ",
+          "radical": "田 (Điền)",
           "strokeCount": 11,
           "onyomi": [
-            "ミツ"
+            "イ"
           ],
           "kunyomi": [
-            "ひそ.か"
+            "こと.なる"
           ],
-          "meaning": "Mật, dày đặc",
-          "level": "N2",
+          "meaning": "Khác thường, dị biệt",
           "compounds": [
             {
-              "kanji": "過密",
-              "hiragana": "かみつ",
-              "meaning": "Đông đúc"
+              "kanji": "異常",
+              "hiragana": "いじょう",
+              "meaning": "Dị thường, bất thường"
             }
-          ]
+          ],
+          "level": "N2"
         },
         {
-          "id": "k-n2-13-03",
-          "kanji": "促",
-          "hanViet": "XÚC",
-          "radical": "nhân",
+          "id": "k-n2-101",
+          "kanji": "繁",
+          "hanViet": "PHỒN",
+          "radical": "糸 (Mịch)",
+          "strokeCount": 16,
+          "onyomi": [
+            "ハン"
+          ],
+          "kunyomi": [],
+          "meaning": "Phồn vinh, tấp nập",
+          "compounds": [
+            {
+              "kanji": "繁栄",
+              "hiragana": "はんえい",
+              "meaning": "Phồn vinh"
+            },
+            {
+              "kanji": "繁華街",
+              "hiragana": "はんかがい",
+              "meaning": "Phố xá sầm uất"
+            }
+          ],
+          "level": "N2"
+        },
+        {
+          "id": "k-n2-102",
+          "kanji": "栄",
+          "hanViet": "VINH",
+          "radical": "木 (Mộc)",
           "strokeCount": 9,
           "onyomi": [
-            "ソク"
+            "エイ"
           ],
           "kunyomi": [
-            "うなが.す"
+            "さか.える",
+            "は.え"
           ],
-          "meaning": "Thúc giục, thúc đẩy",
-          "level": "N2",
+          "meaning": "Vinh quang, nở rộ",
           "compounds": [
             {
-              "kanji": "促進",
-              "hiragana": "そくしん",
-              "meaning": "Thúc đẩy"
+              "kanji": "栄養",
+              "hiragana": "えいよう",
+              "meaning": "Dinh dưỡng"
             }
-          ]
+          ],
+          "level": "N2"
         },
         {
-          "id": "k-n2-13-04",
-          "kanji": "懸",
-          "hanViet": "HUYỀN",
-          "radical": "tâm",
-          "strokeCount": 20,
+          "id": "k-n2-103",
+          "kanji": "衰",
+          "hanViet": "SUY",
+          "radical": "衣 (Y)",
+          "strokeCount": 10,
           "onyomi": [
-            "ケン"
+            "スイ"
           ],
           "kunyomi": [
-            "か.ける"
+            "おとろ.える"
           ],
-          "meaning": "Treo, lo ngại",
-          "level": "N2",
+          "meaning": "Suy thoái, suy yếu",
           "compounds": [
             {
-              "kanji": "懸念",
-              "hiragana": "けねん",
-              "meaning": "Lo ngại"
+              "kanji": "衰退",
+              "hiragana": "すいたい",
+              "meaning": "Suy thoái"
             }
-          ]
+          ],
+          "level": "N2"
+        },
+        {
+          "id": "k-n2-104",
+          "kanji": "創",
+          "hanViet": "SÁNG",
+          "radical": "刀 (Đao)",
+          "strokeCount": 12,
+          "onyomi": [
+            "ソウ"
+          ],
+          "kunyomi": [
+            "つく.る"
+          ],
+          "meaning": "Sáng tạo, sáng lập",
+          "compounds": [
+            {
+              "kanji": "創造",
+              "hiragana": "そうぞう",
+              "meaning": "Sáng tạo"
+            },
+            {
+              "kanji": "創立",
+              "hiragana": "そうりつ",
+              "meaning": "Sáng lập"
+            }
+          ],
+          "level": "N2"
         }
       ]
     },
@@ -5521,93 +6801,199 @@
       ],
       "kanjiItems": [
         {
-          "id": "k-n2-14-01",
-          "kanji": "革",
-          "hanViet": "CÁCH",
-          "radical": "vi",
-          "strokeCount": 9,
+          "id": "k-n2-105",
+          "kanji": "造",
+          "hanViet": "TẠO",
+          "radical": "辶 (Sước)",
+          "strokeCount": 10,
           "onyomi": [
-            "カク"
+            "ゾウ"
           ],
           "kunyomi": [
-            "かわ"
+            "つく.る"
           ],
-          "meaning": "Cách, da, đổi mới",
-          "level": "N2",
+          "meaning": "Chế tạo, xây dựng",
           "compounds": [
             {
-              "kanji": "改革",
-              "hiragana": "かいかく",
-              "meaning": "Cải cách"
+              "kanji": "製造",
+              "hiragana": "せいぞう",
+              "meaning": "Chế tạo"
+            },
+            {
+              "kanji": "構造",
+              "hiragana": "こうぞう",
+              "meaning": "Cấu trúc"
             }
-          ]
+          ],
+          "level": "N2"
         },
         {
-          "id": "k-n2-14-02",
-          "kanji": "基",
-          "hanViet": "CƠ",
-          "radical": "thổ",
+          "id": "k-n2-106",
+          "kanji": "設",
+          "hanViet": "THIẾT",
+          "radical": "言 (Ngôn)",
           "strokeCount": 11,
           "onyomi": [
-            "キ"
+            "セツ"
           ],
           "kunyomi": [
-            "もと",
-            "もとい"
+            "もう.ける"
           ],
-          "meaning": "Cơ, nền tảng",
-          "level": "N2",
+          "meaning": "Thiết kế, thiết lập",
           "compounds": [
             {
-              "kanji": "基本",
-              "hiragana": "きほん",
-              "meaning": "Cơ bản"
+              "kanji": "設計",
+              "hiragana": "せっけい",
+              "meaning": "Thiết kế"
+            },
+            {
+              "kanji": "建設",
+              "hiragana": "けんせつ",
+              "meaning": "Xây dựng"
             }
-          ]
+          ],
+          "level": "N2"
         },
         {
-          "id": "k-n2-14-03",
-          "kanji": "蓄",
-          "hanViet": "SÚC",
-          "radical": "thảo",
+          "id": "k-n2-107",
+          "kanji": "築",
+          "hanViet": "TRÚC",
+          "radical": "竹 (Trúc)",
           "strokeCount": 16,
           "onyomi": [
             "チク"
           ],
           "kunyomi": [
-            "たくわ.える"
+            "きず.く"
           ],
-          "meaning": "Tích lũy, lưu trữ",
-          "level": "N2",
+          "meaning": "Kiến trúc, xây cất",
           "compounds": [
             {
-              "kanji": "蓄積",
-              "hiragana": "ちくせき",
-              "meaning": "Tích lũy"
+              "kanji": "建築",
+              "hiragana": "けんちく",
+              "meaning": "Kiến trúc"
             }
-          ]
+          ],
+          "level": "N2"
         },
         {
-          "id": "k-n2-14-04",
-          "kanji": "究",
-          "hanViet": "CỨU",
-          "radical": "miên",
-          "strokeCount": 7,
+          "id": "k-n2-108",
+          "kanji": "構",
+          "hanViet": "CẤU",
+          "radical": "木 (Mộc)",
+          "strokeCount": 14,
           "onyomi": [
-            "キュウ"
+            "コウ"
           ],
           "kunyomi": [
-            "きわ.める"
+            "かま.える"
           ],
-          "meaning": "Nghiên cứu, tận cùng",
-          "level": "N2",
+          "meaning": "Cấu tạo, kết cấu",
           "compounds": [
             {
-              "kanji": "研究",
-              "hiragana": "けんきゅう",
-              "meaning": "Nghiên cứu"
+              "kanji": "構成",
+              "hiragana": "こうせい",
+              "meaning": "Cấu thành"
             }
-          ]
+          ],
+          "level": "N2"
+        },
+        {
+          "id": "k-n2-109",
+          "kanji": "編",
+          "hanViet": "BIÊN",
+          "radical": "糸 (Mịch)",
+          "strokeCount": 15,
+          "onyomi": [
+            "ヘン"
+          ],
+          "kunyomi": [
+            "あ.む"
+          ],
+          "meaning": "Biên tập, đan len",
+          "compounds": [
+            {
+              "kanji": "編集",
+              "hiragana": "へんしゅう",
+              "meaning": "Biên tập"
+            }
+          ],
+          "level": "N2"
+        },
+        {
+          "id": "k-n2-110",
+          "kanji": "著",
+          "hanViet": "TRỨ",
+          "radical": "艹 (Thảo)",
+          "strokeCount": 11,
+          "onyomi": [
+            "チョ"
+          ],
+          "kunyomi": [
+            "あらわ.す",
+            "いちじる.しい"
+          ],
+          "meaning": "Tác phẩm, tác giả, rõ rệt",
+          "compounds": [
+            {
+              "kanji": "著名",
+              "hiragana": "ちょめい",
+              "meaning": "Nổi tiếng"
+            },
+            {
+              "kanji": "著者",
+              "hiragana": "ちょしゃ",
+              "meaning": "Tác giả"
+            }
+          ],
+          "level": "N2"
+        },
+        {
+          "id": "k-n2-111",
+          "kanji": "録",
+          "hanViet": "LỤC",
+          "radical": "金 (Kim)",
+          "strokeCount": 16,
+          "onyomi": [
+            "ロク"
+          ],
+          "kunyomi": [],
+          "meaning": "Ghi chép, thu âm",
+          "compounds": [
+            {
+              "kanji": "記録",
+              "hiragana": "きろく",
+              "meaning": "Kỷ lục, ghi chép"
+            },
+            {
+              "kanji": "録音",
+              "hiragana": "ろくおん",
+              "meaning": "Thu âm"
+            }
+          ],
+          "level": "N2"
+        },
+        {
+          "id": "k-n2-112",
+          "kanji": "載",
+          "hanViet": "TẢI",
+          "radical": "車 (Xa)",
+          "strokeCount": 13,
+          "onyomi": [
+            "サイ"
+          ],
+          "kunyomi": [
+            "の.せる"
+          ],
+          "meaning": "Đăng tải, chứa chở",
+          "compounds": [
+            {
+              "kanji": "掲載",
+              "hiragana": "けいさい",
+              "meaning": "Đăng tải bài viết"
+            }
+          ],
+          "level": "N2"
         }
       ]
     },
@@ -5921,94 +7307,7 @@
           ]
         }
       ],
-      "kanjiItems": [
-        {
-          "id": "k-n2-15-01",
-          "kanji": "倫",
-          "hanViet": "LUÂN",
-          "radical": "nhân",
-          "strokeCount": 10,
-          "onyomi": [
-            "リン"
-          ],
-          "kunyomi": [],
-          "meaning": "Luân lý, đạo đức",
-          "level": "N2",
-          "compounds": [
-            {
-              "kanji": "倫理",
-              "hiragana": "りんり",
-              "meaning": "Đạo đức"
-            }
-          ]
-        },
-        {
-          "id": "k-n2-15-02",
-          "kanji": "偏",
-          "hanViet": "THIÊN",
-          "radical": "nhân",
-          "strokeCount": 11,
-          "onyomi": [
-            "ヘン"
-          ],
-          "kunyomi": [
-            "かたよ.る"
-          ],
-          "meaning": "Lệch, thành kiến",
-          "level": "N2",
-          "compounds": [
-            {
-              "kanji": "偏見",
-              "hiragana": "へんけん",
-              "meaning": "Thành kiến"
-            }
-          ]
-        },
-        {
-          "id": "k-n2-15-03",
-          "kanji": "寛",
-          "hanViet": "KHOAN",
-          "radical": "miên",
-          "strokeCount": 13,
-          "onyomi": [
-            "カン"
-          ],
-          "kunyomi": [
-            "ひろ.い"
-          ],
-          "meaning": "Khoan dung, rộng rãi",
-          "level": "N2",
-          "compounds": [
-            {
-              "kanji": "寛容",
-              "hiragana": "かんよう",
-              "meaning": "Khoan dung"
-            }
-          ]
-        },
-        {
-          "id": "k-n2-15-04",
-          "kanji": "徴",
-          "hanViet": "TRƯNG",
-          "radical": "xích",
-          "strokeCount": 15,
-          "onyomi": [
-            "チョウ"
-          ],
-          "kunyomi": [
-            "しるし"
-          ],
-          "meaning": "Biểu trưng, dấu hiệu",
-          "level": "N2",
-          "compounds": [
-            {
-              "kanji": "象徴",
-              "hiragana": "しょうちょう",
-              "meaning": "Biểu tượng"
-            }
-          ]
-        }
-      ]
+      "kanjiItems": []
     }
   ]
 }

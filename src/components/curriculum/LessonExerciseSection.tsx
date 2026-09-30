@@ -28,7 +28,7 @@ interface Question {
   explanation: string;
 }
 
-function generateVocabDialogue(v: Vocabulary, langCode: string = "ja"): DialogueLine[] {
+export function generateVocabDialogue(v: Vocabulary, langCode: string = "ja"): DialogueLine[] {
   const meaning = (v.meaning || "").toLowerCase();
   const word = v.kanji || v.hiragana || "";
   const reading = v.hiragana || v.kanji || "";

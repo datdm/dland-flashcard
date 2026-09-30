@@ -669,8 +669,27 @@ function ExamTakingPageContent({ params }: Props) {
                       )}
                     </div>
 
-                    {/* Questions in this Mondai */}
+                    {/* Questions/Passages in this Mondai */}
                     <div className="space-y-4 pt-1">
+                      {/* Passages in this Mondai FIRST (so passage text is at the top for Mondai 9, Mondai 10, etc.) */}
+                      {(mondai.passageIds || []).map((pid) => {
+                        const pg = passageMap.get(pid);
+                        if (!pg) return null;
+                        return (
+                          <ExamPassageCard
+                            key={pg.id}
+                            passage={pg}
+                            startIndex={passageStartMap[pg.id] || 1}
+                            answers={answers}
+                            onChange={handleAnswerChange}
+                            onOpenMazii={(word) =>
+                              setMaziiState({ isOpen: true, queryWord: word })
+                            }
+                          />
+                        );
+                      })}
+
+                      {/* Standalone Questions in this Mondai */}
                       {(mondai.questionIds || []).map((qid) => {
                         const q = questionMap.get(qid);
                         if (!q) return null;
@@ -682,24 +701,6 @@ function ExamTakingPageContent({ params }: Props) {
                             index={qIndex}
                             isFocused={currentQId === q.id}
                             selected={answers[q.id] || []}
-                            onChange={handleAnswerChange}
-                            onOpenMazii={(word) =>
-                              setMaziiState({ isOpen: true, queryWord: word })
-                            }
-                          />
-                        );
-                      })}
-
-                      {/* Passages in this Mondai */}
-                      {(mondai.passageIds || []).map((pid) => {
-                        const pg = passageMap.get(pid);
-                        if (!pg) return null;
-                        return (
-                          <ExamPassageCard
-                            key={pg.id}
-                            passage={pg}
-                            startIndex={passageStartMap[pg.id] || 1}
-                            answers={answers}
                             onChange={handleAnswerChange}
                             onOpenMazii={(word) =>
                               setMaziiState({ isOpen: true, queryWord: word })

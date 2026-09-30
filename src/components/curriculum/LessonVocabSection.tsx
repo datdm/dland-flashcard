@@ -3,6 +3,7 @@
 import { useState, useMemo, useEffect, useCallback } from "react";
 import { Vocabulary, VocabProgress, WORD_TYPE_STYLES, WordType } from "@/types";
 import VocabularyListItem from "@/components/VocabularyListItem";
+import { DialogueLine, generateVocabDialogue } from "./LessonExerciseSection";
 
 interface Props {
   vocabulary: Vocabulary[];
@@ -20,6 +21,7 @@ interface QuizQuestion {
   hintText?: string;
   correctAnswer: string;
   options: string[];
+  dialogue?: DialogueLine[];
 }
 
 export default function LessonVocabSection({
@@ -71,6 +73,14 @@ export default function LessonVocabSection({
   const [quizFinished, setQuizFinished] = useState(false);
   const [newlyPassedIds, setNewlyPassedIds] = useState<string[]>([]);
   const [incorrectItems, setIncorrectItems] = useState<Vocabulary[]>([]);
+  const [showQuizTranslation, setShowQuizTranslation] = useState<Record<number, boolean>>({});
+
+  const toggleQuizTranslation = (index: number) => {
+    setShowQuizTranslation((prev) => ({
+      ...prev,
+      [index]: !prev[index],
+    }));
+  };
 
   // Function to generate 4-choice questions
   const generateQuiz = useCallback(() => {
@@ -119,6 +129,7 @@ export default function LessonVocabSection({
           hintText: item.hiragana && item.kanji ? item.hiragana : undefined,
           correctAnswer,
           options,
+          dialogue: generateVocabDialogue(item, langCode),
         };
       } else {
         // Vietnamese meaning -> Japanese
@@ -148,6 +159,7 @@ export default function LessonVocabSection({
           hintText: "Chọn từ tiếng Nhật tương ứng",
           correctAnswer,
           options,
+          dialogue: generateVocabDialogue(item, langCode),
         };
       }
     });
@@ -162,7 +174,8 @@ export default function LessonVocabSection({
     setQuizFinished(false);
     setNewlyPassedIds([]);
     setIncorrectItems([]);
-  }, [vocabulary]);
+    setShowQuizTranslation({});
+  }, [vocabulary, langCode]);
 
   const handleStartQuiz = () => {
     generateQuiz();
@@ -602,6 +615,68 @@ export default function LessonVocabSection({
                     </p>
                   )}
                 </div>
+
+                {/* Dialogue Box (A & B with translation toggle button) */}
+                {quizQuestions[quizIndex].dialogue && quizQuestions[quizIndex].dialogue!.length > 0 && (
+                  <div className="bg-slate-50/90 border border-slate-200/90 rounded-2xl p-3.5 sm:p-4 space-y-2.5 shadow-3xs text-left mb-3">
+                    <div className="flex items-center justify-between gap-2 border-b border-slate-200/60 pb-2">
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-xs">💬</span>
+                        <span className="text-[11px] font-black text-slate-700 uppercase tracking-wider">
+                          Đoạn hội thoại mẫu (A & B)
+                        </span>
+                      </div>
+
+                      {/* Switch Japanese / Vietnamese button */}
+                      <button
+                        type="button"
+                        onClick={() => toggleQuizTranslation(quizIndex)}
+                        className={`px-3 py-1 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-3xs border ${
+                          showQuizTranslation[quizIndex]
+                            ? "bg-indigo-600 text-white border-indigo-600 hover:bg-indigo-700"
+                            : "bg-white text-slate-700 border-slate-200 hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-200"
+                        }`}
+                        title="Bấm để chuyển đổi giữa Tiếng Nhật và Tiếng Việt"
+                      >
+                        <span>{showQuizTranslation[quizIndex] ? "🇯🇵" : "🌐"}</span>
+                        <span>{showQuizTranslation[quizIndex] ? "Tiếng Nhật" : "Dịch"}</span>
+                      </button>
+                    </div>
+
+                    {/* Lines A and B */}
+                    <div className="space-y-2 pt-0.5">
+                      {quizQuestions[quizIndex].dialogue!.map((line, lIdx) => (
+                        <div key={lIdx} className="flex items-start gap-2.5">
+                          <span
+                            className={`w-6 h-6 rounded-full flex items-center justify-center font-black text-[11px] shrink-0 shadow-2xs mt-0.5 ${
+                              line.speaker === "A"
+                                ? "bg-blue-600 text-white"
+                                : "bg-emerald-600 text-white"
+                            }`}
+                          >
+                            {line.speaker}
+                          </span>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-xs sm:text-sm font-semibold text-slate-800 leading-relaxed">
+                              {showQuizTranslation[quizIndex] ? line.textVi : line.textJa}
+                            </p>
+                          </div>
+                          {/* Audio speech button */}
+                          {!showQuizTranslation[quizIndex] && (
+                            <button
+                              type="button"
+                              onClick={() => speakText(line.textJa)}
+                              className="text-xs text-slate-400 hover:text-indigo-600 p-1 rounded-lg hover:bg-white transition-colors cursor-pointer shrink-0"
+                              title="Nghe phát âm câu này"
+                            >
+                              🔊
+                            </button>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 {/* 4 Choices */}
                 <div className="grid grid-cols-1 gap-2.5">

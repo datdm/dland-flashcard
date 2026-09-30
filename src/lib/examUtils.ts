@@ -82,13 +82,37 @@ export function getStructuredMajorSections(examData: ExamData): ExamMajorSection
       };
     }
 
-    const match = mondaiStr.match(/問題\s*([0-9０-９]+)/);
+    const match = mondaiStr.match(/(?:問題|Mondai)\s*([0-9０-９]+)/i);
     const num = match ? parseInt(match[1], 10) : "";
     let majorId = fallbackMajorId;
 
-    if (fallbackMajorId === "listening" || mondaiStr.includes("聴解") || mondaiStr.toLowerCase().includes("listening")) {
+    if (mondaiStr.includes("聴解") || mondaiStr.toLowerCase().includes("listening")) {
       majorId = "listening";
-    } else if (fallbackMajorId === "reading" || mondaiStr.includes("読解") || mondaiStr.toLowerCase().includes("reading")) {
+    } else if (
+      mondaiStr.includes("文章の文法") ||
+      mondaiStr.includes("文法形式の判断") ||
+      mondaiStr.includes("文の組み立て")
+    ) {
+      majorId = "grammar";
+    } else if (
+      mondaiStr.includes("漢字読み") ||
+      mondaiStr.includes("表記") ||
+      mondaiStr.includes("語形成") ||
+      mondaiStr.includes("形成語") ||
+      mondaiStr.includes("文脈規定") ||
+      mondaiStr.includes("類義語") ||
+      mondaiStr.includes("言い換え類義") ||
+      mondaiStr.includes("用法")
+    ) {
+      majorId = "vocab";
+    } else if (
+      mondaiStr.includes("短文") ||
+      mondaiStr.includes("中文") ||
+      mondaiStr.includes("長文") ||
+      mondaiStr.includes("比較") ||
+      mondaiStr.includes("統合") ||
+      mondaiStr.includes("情報検索")
+    ) {
       majorId = "reading";
     } else if (typeof num === "number" && !isNaN(num)) {
       if (level === "N1") {
@@ -150,7 +174,6 @@ export function getStructuredMajorSections(examData: ExamData): ExamMajorSection
 
   // 1. Process questions
   questions.forEach((q) => {
-    // Check if question belongs to a defined section or has majorSection explicitly
     let fallbackMajor = (q as any).majorSection || "vocab";
     const assignedSection = sections.find((s) => s.questionIds?.includes(q.id));
     if (assignedSection) {
@@ -185,8 +208,8 @@ export function getStructuredMajorSections(examData: ExamData): ExamMajorSection
 
   // 2. Process passages
   passages.forEach((p) => {
-    const info = extractMondaiInfo(p.mondai, "reading");
-    const key = `reading_${info.key}`;
+    const info = extractMondaiInfo(p.mondai, p.majorSection || "reading");
+    const key = `${info.majorId}_${info.key}`;
 
     if (!mondaiMap.has(key)) {
       mondaiMap.set(key, {
@@ -194,13 +217,23 @@ export function getStructuredMajorSections(examData: ExamData): ExamMajorSection
         mondaiNumber: info.num,
         title: info.title,
         instruction: info.instruction,
-        majorSectionId: "reading",
+        majorSectionId: info.majorId,
         questionIds: [],
         passageIds: [],
       });
     }
 
     mondaiMap.get(key)!.passageIds.push(p.id);
+  });
+
+  // Filter out questionIds that are already inside passage.questions
+  const passageQIdSet = new Set<number>();
+  passages.forEach((p) => {
+    (p.questions || []).forEach((q) => passageQIdSet.add(q.id));
+  });
+
+  mondaiMap.forEach((m) => {
+    m.questionIds = m.questionIds.filter((qid) => !passageQIdSet.has(qid));
   });
 
   // 3. Assemble into Major Sections
