@@ -374,6 +374,8 @@ export default function KaiwaRoadmapPage() {
                         .map((line) => `${line.speaker}: "${line.japanese}" (${line.vietnamese})`)
                         .join("\n")}\n\nHãy đóng vai nhân vật đầu tiên trong kịch bản và nói câu thoại đầu tiên. Tôi sẽ đóng vai nhân vật còn lại. Hãy dẫn dắt tôi đi hết kịch bản này nhé.`
                     )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="flex items-center justify-center gap-2 px-5 py-3.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:opacity-95 text-white font-extrabold text-xs sm:text-sm rounded-2xl shadow-md shadow-indigo-100 transition-all hover:scale-[1.01]"
                   >
                     <span>🗣️</span> Nhập vai luyện theo kịch bản mẫu
@@ -383,6 +385,8 @@ export default function KaiwaRoadmapPage() {
                     href={`/chat?prompt=${encodeURIComponent(
                       `Tôi muốn luyện nói tự do chủ đề N2: ${selectedWeek.title} (Tuần ${selectedWeek.week} của lộ trình Kaiwa 3 tháng).\n\nBối cảnh đóng vai:\n${selectedWeek.roleplayPrompt}\n\nHãy đóng vai nhân vật tương ứng, bắt đầu câu chuyện và cùng tôi hội thoại tự do ở cấp độ N2 nhé.`
                     )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="flex items-center justify-center gap-2 px-5 py-3.5 bg-white border border-purple-200 hover:border-purple-300 text-purple-700 hover:bg-purple-50/30 font-extrabold text-xs sm:text-sm rounded-2xl transition-all hover:scale-[1.01]"
                   >
                     <span>🤖</span> Thử thách đàm thoại tự do N2

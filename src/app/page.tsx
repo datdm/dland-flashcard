@@ -253,6 +253,8 @@ export default function HomePage() {
               ) : (
                 <Link
                   href="/chat"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-xs hover:shadow-sm transition-all group flex flex-col justify-between"
                 >
                   <div>

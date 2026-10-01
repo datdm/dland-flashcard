@@ -6,6 +6,7 @@ import GlobalSyncIndicator from "@/components/GlobalSyncIndicator";
 import { AuthProvider } from "@/context/AuthContext";
 import AuthModal from "@/components/AuthModal";
 import Footer from "@/components/Footer";
+import FloatingAiChatWidget from "@/components/FloatingAiChatWidget";
 
 export const metadata: Metadata = {
   title: "Dland Language — Nền tảng học ngôn ngữ đa năng",
@@ -34,6 +35,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Navbar />
           <GlobalSyncIndicator />
           <AuthModal />
+          <FloatingAiChatWidget />
           <main id="main-content" className="flex-1 md:pl-64 transition-all duration-300 ease-in-out w-full min-w-0 flex flex-col justify-between min-h-screen">
             <div className="flex-1 w-full pb-16 md:pb-8">{children}</div>
             <Footer />

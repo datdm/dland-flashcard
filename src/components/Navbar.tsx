@@ -16,6 +16,7 @@ export interface NavItem {
   icon: string;
   isComingSoon?: boolean;
   isDevOnly?: boolean;
+  openInNewTab?: boolean;
 }
 
 export function getNavItemsForLanguage(langCode: string): NavItem[] {
@@ -27,7 +28,6 @@ export function getNavItemsForLanguage(langCode: string): NavItem[] {
         { href: "/curriculum", label: "Lộ trình IELTS 7.0", icon: "📚" },
         { href: "/practice", label: "Luyện chuyên sâu", icon: "🏆" },
         { href: "/translate", label: "Dịch văn bản", icon: "🌐" },
-        { href: "/chat", label: "Gia Sư AI", icon: "🤖" },
         { href: "/notebooks", label: "Sổ tay Tiếng Anh", icon: "📓" },
         { href: "/flashcard/all", label: "Ôn tập Flashcard", icon: "🎴" },
         { href: "/history", label: "Lịch sử học tập", icon: "📊" },
@@ -48,7 +48,6 @@ export function getNavItemsForLanguage(langCode: string): NavItem[] {
         { href: "/curriculum", label: "Giáo trình Tiếng Đức", icon: "📚" },
         { href: "/practice", label: "Luyện chuyên sâu", icon: "🏆" },
         { href: "/translate", label: "Dịch văn bản", icon: "🌐" },
-        { href: "/chat", label: "Gia Sư AI", icon: "🤖" },
         { href: "/notebooks", label: "Sổ tay Tiếng Đức", icon: "📓" },
         { href: "/flashcard/all", label: "Ôn tập Flashcard", icon: "🎴" },
         { href: "/history", label: "Lịch sử học tập", icon: "📊" },
@@ -65,7 +64,6 @@ export function getNavItemsForLanguage(langCode: string): NavItem[] {
         { href: "/search", label: "Tra cứu từ điển", icon: "🔍" },
         { href: "/curriculum", label: "Giáo trình TOPIK", icon: "📚" },
         { href: "/translate", label: "Dịch văn bản", icon: "🌐" },
-        { href: "/chat", label: "Gia Sư AI", icon: "🤖" },
         { href: "/notebooks", label: "Sổ tay Tiếng Hàn", icon: "📓" },
         { href: "/flashcard/all", label: "Ôn tập Flashcard", icon: "🎴" },
         { href: "/history", label: "Lịch sử học tập", icon: "📊" },
@@ -82,7 +80,6 @@ export function getNavItemsForLanguage(langCode: string): NavItem[] {
         { href: "/search", label: "Tra cứu từ điển", icon: "🔍" },
         { href: "/curriculum", label: "Giáo trình HSK", icon: "📚" },
         { href: "/translate", label: "Dịch văn bản", icon: "🌐" },
-        { href: "/chat", label: "Gia Sư AI", icon: "🤖" },
         { href: "/notebooks", label: "Sổ tay Tiếng Trung", icon: "📓" },
         { href: "/flashcard/all", label: "Ôn tập Flashcard", icon: "🎴" },
         { href: "/history", label: "Lịch sử học tập", icon: "📊" },
@@ -103,7 +100,6 @@ export function getNavItemsForLanguage(langCode: string): NavItem[] {
         { href: "/exam", label: "Luyện thi JLPT", icon: "📝" },
         { href: "/practice", label: "Luyện chuyên sâu", icon: "🏆" },
         { href: "/translate", label: "Dịch văn bản", icon: "🌐" },
-        { href: "/chat", label: "Gia Sư AI", icon: "🤖" },
         { href: "/notebooks", label: "Sổ tay Tiếng Nhật", icon: "📓" },
         { href: "/flashcard/all", label: "Ôn tập Flashcard", icon: "🎴" },
         { href: "/history", label: "Lịch sử học tập", icon: "📊" },
@@ -113,7 +109,6 @@ export function getNavItemsForLanguage(langCode: string): NavItem[] {
         { href: "/kanji", label: "Tập viết Kanji", icon: "🉐", isDevOnly: true },
         { href: "/vocabulary", label: "Kho Từ Vựng Tiếng Nhật", icon: "📝", isDevOnly: true },
         { href: "/admin", label: "Quản trị hệ thống", icon: "🛡️", isDevOnly: true },
-        { href: "/chat/live", label: "Gia Sư Voice AI (Live)", icon: "🎙️", isComingSoon: false, isDevOnly: true },
         { href: "/practice/ai-voice-room", label: "Phòng Luyện Voice AI", icon: "🎙️", isComingSoon: true, isDevOnly: true },
         { href: "/practice/mock-interview", label: "Phỏng Vấn Xin Việc AI", icon: "💼", isComingSoon: true, isDevOnly: true },
         { href: "/settings", label: "Cài đặt hệ thống", icon: "⚙️" },
@@ -260,6 +255,8 @@ export default function Navbar() {
                 <Link
                   key={href + label}
                   href={href}
+                  target={item.openInNewTab ? "_blank" : undefined}
+                  rel={item.openInNewTab ? "noopener noreferrer" : undefined}
                   title={isCollapsed ? label : undefined}
                   className={`flex items-center gap-3 py-2 rounded-2xl text-xs font-semibold transition-all cursor-pointer ${
                     isCollapsed ? 'justify-center px-0' : 'px-3'
@@ -416,6 +413,8 @@ export default function Navbar() {
             <Link
               key={href + label}
               href={href}
+              target={item.openInNewTab ? "_blank" : undefined}
+              rel={item.openInNewTab ? "noopener noreferrer" : undefined}
               title={label}
               className={`flex-1 min-w-[32px] max-w-[56px] h-9 flex items-center justify-center rounded-xl text-base transition-all shrink-0 cursor-pointer ${
                 isActive

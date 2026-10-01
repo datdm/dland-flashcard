@@ -321,7 +321,13 @@ export default function PracticeHubPage() {
   const router = useRouter();
 
   const handleAiTutorReview = (promptText: string) => {
-    router.push(`/chat?prompt=${encodeURIComponent(promptText)}`);
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(
+        new CustomEvent("open-ai-chat", {
+          detail: { prompt: promptText, fullscreen: false },
+        })
+      );
+    }
   };
 
   // Language state for Practice Center

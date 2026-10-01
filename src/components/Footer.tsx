@@ -107,7 +107,7 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/chat" className="hover:text-indigo-600 transition-colors">
+                <Link href="/chat" target="_blank" rel="noopener noreferrer" className="hover:text-indigo-600 transition-colors">
                   🤖 Trợ lý AI Chat thông minh
                 </Link>
               </li>
