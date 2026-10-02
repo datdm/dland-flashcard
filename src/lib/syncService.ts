@@ -225,7 +225,7 @@ export function logout(): void {
   localStorage.removeItem(AUTH_TOKEN_KEY);
   localStorage.removeItem(USER_KEY);
   localStorage.removeItem(LAST_SYNC_KEY);
-  clearLocalData();
+  // Keep local progress and notebooks intact so user does not lose learning data
 }
 
 // Validate token & session with backend on initial load
@@ -462,10 +462,7 @@ export async function downloadFromServer(): Promise<{ success: boolean; error?: 
     const serverHasKeys = Object.keys(serverData).length > 0;
 
     if (serverHasKeys) {
-      // Clear existing app data
-      clearLocalData();
-
-      // Write server data to localStorage
+      // Write server data to localStorage without wiping existing local data
       for (const [key, value] of Object.entries(serverData)) {
         if (typeof value === 'string') {
           localStorage.setItem(key, value);
@@ -1040,9 +1037,9 @@ export async function loadGrammarCollectionsFromServer(): Promise<any[]> {
 }
 
 // Load progress data from server
-export async function loadProgressFromServer(): Promise<{ vocabulary: Record<string, any>; grammar: Record<string, any>; kanji?: Record<string, any> }> {
+export async function loadProgressFromServer(): Promise<{ vocabulary?: Record<string, any>; grammar?: Record<string, any>; kanji?: Record<string, any> } | null> {
   const token = getAuthToken();
-  if (!token) return { vocabulary: {}, grammar: {}, kanji: {} };
+  if (!token) return null;
 
   try {
     const response = await trackedFetch(`${API_URL}/api/data/progress`, {
@@ -1051,10 +1048,10 @@ export async function loadProgressFromServer(): Promise<{ vocabulary: Record<str
 
     if (!response.ok) throw new Error('Failed to load progress');
     const data = await response.json();
-    return data.data || { vocabulary: {}, grammar: {}, kanji: {} };
+    return data.data || null;
   } catch (error) {
     console.error('Load progress error:', error);
-    return { vocabulary: {}, grammar: {}, kanji: {} };
+    return null;
   }
 }
 

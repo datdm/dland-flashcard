@@ -38,10 +38,13 @@ export function useGrammarProgress() {
       if (checkAuthStatus()) {
         try {
           const serverData = await loadProgressFromServer();
-          const grammarProgressData = serverData?.grammar;
-          if (grammarProgressData && typeof grammarProgressData === "object") {
-            setProgress(grammarProgressData);
-            setItem(StorageKeys.GRAMMAR_PROGRESS, grammarProgressData);
+          const serverGrammar = serverData?.grammar;
+          if (serverGrammar && typeof serverGrammar === "object" && Object.keys(serverGrammar).length > 0) {
+            setProgress((prev) => {
+              const merged = { ...prev, ...serverGrammar };
+              setItem(StorageKeys.GRAMMAR_PROGRESS, merged);
+              return merged;
+            });
           }
         } catch (error) {
           console.error("Failed to load grammar progress from server:", error);

@@ -33,10 +33,27 @@ export function useProgress() {
       if (checkAuthStatus()) {
         try {
           const serverData = await loadProgressFromServer();
-          const vocabProgress = serverData?.vocabulary;
-          if (vocabProgress && typeof vocabProgress === "object") {
-            setProgress(vocabProgress);
-            setItem(StorageKeys.PROGRESS, vocabProgress);
+          const serverVocab = serverData?.vocabulary;
+          if (serverVocab && typeof serverVocab === "object" && Object.keys(serverVocab).length > 0) {
+            setProgress((prev) => {
+              const merged: ProgressMap = { ...prev };
+              for (const [id, sItem] of Object.entries(serverVocab)) {
+                const localItem = merged[id];
+                if (!localItem) {
+                  merged[id] = sItem as VocabProgress;
+                } else {
+                  merged[id] = {
+                    ...localItem,
+                    ...sItem,
+                    learned: localItem.learned || (sItem as VocabProgress).learned,
+                    favorite: localItem.favorite || (sItem as VocabProgress).favorite,
+                    learnedAt: localItem.learnedAt || (sItem as VocabProgress).learnedAt,
+                  };
+                }
+              }
+              setItem(StorageKeys.PROGRESS, merged);
+              return merged;
+            });
           }
         } catch (error) {
           console.error("Failed to load progress from server:", error);

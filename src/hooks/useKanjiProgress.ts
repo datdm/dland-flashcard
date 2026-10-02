@@ -44,10 +44,13 @@ export function useKanjiProgress() {
       if (checkAuthStatus()) {
         try {
           const serverData = await loadProgressFromServer();
-          const kanjiProgressData = serverData?.kanji;
-          if (kanjiProgressData && typeof kanjiProgressData === "object") {
-            setProgress(kanjiProgressData);
-            setItem(StorageKeys.KANJI_PROGRESS, kanjiProgressData);
+          const serverKanji = serverData?.kanji;
+          if (serverKanji && typeof serverKanji === "object" && Object.keys(serverKanji).length > 0) {
+            setProgress((prev) => {
+              const merged = { ...prev, ...serverKanji };
+              setItem(StorageKeys.KANJI_PROGRESS, merged);
+              return merged;
+            });
           }
         } catch (error) {
           console.error("Failed to load kanji progress from server:", error);
