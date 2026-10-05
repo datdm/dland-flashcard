@@ -5,9 +5,10 @@ import Link from "next/link";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useNotebooks } from "@/hooks/useNotebooks";
 import { useProgress } from "@/hooks/useProgress";
+import { useLanguageSetting } from "@/hooks/useLanguageSetting";
 import FilterBar, { FilterTab } from "@/components/FilterBar";
 import { useAuth } from "@/context/AuthContext";
-import { Vocabulary, WordType, WORD_TYPES, WORD_TYPE_STYLES } from "@/types";
+import { Vocabulary, WordType, WORD_TYPES, WORD_TYPE_STYLES, getFieldLabels, getSpeechLangCode } from "@/types";
 
 type VocabFields = Omit<Vocabulary, "id">;
 
@@ -20,13 +21,52 @@ const EMPTY_FIELDS: VocabFields = {
   wordType: "Danh từ",
 };
 
-const FIELD_LABELS: { key: keyof VocabFields; label: string; placeholder: string }[] = [
-  { key: "kanji", label: "Kanji / Từ", placeholder: "日本語" },
-  { key: "hiragana", label: "Hiragana", placeholder: "にほんご" },
-  { key: "onyomi", label: "Onyomi / Katakana", placeholder: "ニホンゴ" },
-  { key: "meaning", label: "Nghĩa", placeholder: "Tiếng Nhật" },
-  { key: "phonetic", label: "Phiên âm", placeholder: "nihongo" },
-];
+function getFormFieldsConfig(langCode?: string): { key: keyof VocabFields; label: string; placeholder: string }[] {
+  const code = (langCode || "").toLowerCase().trim();
+  if (code === "de") {
+    return [
+      { key: "kanji", label: "Từ vựng (Wort)", placeholder: "Guten Tag" },
+      { key: "hiragana", label: "Phát âm / Phiên âm", placeholder: "goo-ten tahk" },
+      { key: "onyomi", label: "Ghi chú / Ngữ pháp", placeholder: "Lời chào ban ngày" },
+      { key: "meaning", label: "Nghĩa tiếng Việt", placeholder: "Xin chào (ban ngày)" },
+      { key: "phonetic", label: "Phiên âm", placeholder: "goo-ten tahk" },
+    ];
+  }
+  if (code === "en") {
+    return [
+      { key: "kanji", label: "Từ vựng (Word)", placeholder: "Hello" },
+      { key: "hiragana", label: "Phiên âm (IPA)", placeholder: "/həˈləʊ/" },
+      { key: "onyomi", label: "Từ loại / Ghi chú", placeholder: "interjection" },
+      { key: "meaning", label: "Nghĩa tiếng Việt", placeholder: "Xin chào" },
+      { key: "phonetic", label: "Phiên âm", placeholder: "/həˈləʊ/" },
+    ];
+  }
+  if (code === "zh") {
+    return [
+      { key: "kanji", label: "Chữ Hán (Hán tự)", placeholder: "你好" },
+      { key: "hiragana", label: "Pinyin (Phiên âm)", placeholder: "nǐ hǎo" },
+      { key: "onyomi", label: "Âm Hán Việt", placeholder: "NHĨ HẢO" },
+      { key: "meaning", label: "Nghĩa tiếng Việt", placeholder: "Xin chào" },
+      { key: "phonetic", label: "Phiên âm", placeholder: "nǐ hǎo" },
+    ];
+  }
+  if (code === "ko") {
+    return [
+      { key: "kanji", label: "Từ vựng (Hangul)", placeholder: "안녕하세요" },
+      { key: "hiragana", label: "Phát âm (Romaja)", placeholder: "annyeonghaseyo" },
+      { key: "onyomi", label: "Âm Hán Hàn", placeholder: "AN NINH HÀ TIỂU" },
+      { key: "meaning", label: "Nghĩa tiếng Việt", placeholder: "Xin chào" },
+      { key: "phonetic", label: "Phiên âm", placeholder: "annyeonghaseyo" },
+    ];
+  }
+  return [
+    { key: "kanji", label: "Kanji / Từ", placeholder: "日本語" },
+    { key: "hiragana", label: "Hiragana", placeholder: "にほんご" },
+    { key: "onyomi", label: "Onyomi / Katakana", placeholder: "ニホンゴ" },
+    { key: "meaning", label: "Nghĩa", placeholder: "Tiếng Nhật" },
+    { key: "phonetic", label: "Phiên âm", placeholder: "nihongo" },
+  ];
+}
 
 function insertDraggedAtIndex(ids: string[], draggedId: string, insertIndex: number) {
   const baseIds = ids.filter((id) => id !== draggedId);
@@ -41,6 +81,7 @@ export default function NotebookDetailPage() {
   const searchParams = useSearchParams();
   const { notebooks, save, addVocab, updateVocab, deleteVocab, moveVocab, moveMultipleVocab, exportNotebook, importVocabFromJson, checkDuplicate } = useNotebooks();
   const { toggleLearned, toggleFavorite, progress } = useProgress();
+  const { activeLangCode } = useLanguageSetting();
   const { user } = useAuth();
 
   const [form, setForm] = useState<VocabFields>(EMPTY_FIELDS);
@@ -86,6 +127,9 @@ export default function NotebookDetailPage() {
   const notebook = notebooks.find((nb) => nb.id === id);
   const notebookName = notebook?.name ?? "";
   const notebookVocabulary = notebook?.vocabulary ?? [];
+  const effectiveLang = (notebook?.lang || activeLangCode || "ja").toLowerCase();
+  const labels = useMemo(() => getFieldLabels(effectiveLang), [effectiveLang]);
+  const fieldLabels = useMemo(() => getFormFieldsConfig(effectiveLang), [effectiveLang]);
 
   const currentIndex = notebooks.findIndex((nb) => nb.id === id);
   const prevNotebook = currentIndex > 0 ? notebooks[currentIndex - 1] : null;
@@ -124,7 +168,7 @@ export default function NotebookDetailPage() {
     if (typeof window !== "undefined" && "speechSynthesis" in window) {
       window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = "ja-JP";
+      utterance.lang = getSpeechLangCode(effectiveLang);
       utterance.rate = 0.9;
       window.speechSynthesis.speak(utterance);
     }
@@ -735,7 +779,7 @@ export default function NotebookDetailPage() {
                               })()}
                               {v.onyomi && (
                                 <p className="text-[11px] text-purple-600 font-medium">
-                                  Âm Hán: {v.onyomi}
+                                  {labels.onyomi}: {v.onyomi}
                                 </p>
                               )}
                             </div>
@@ -972,7 +1016,7 @@ export default function NotebookDetailPage() {
                   })}
                 </div>
               </div>
-              {FIELD_LABELS.map(({ key, label, placeholder }) => (
+              {fieldLabels.map(({ key, label, placeholder }) => (
                 <div key={key}>
                   <label className="block text-xs font-semibold text-gray-700 mb-1">{label}</label>
                   <input
@@ -1052,7 +1096,7 @@ export default function NotebookDetailPage() {
                   })}
                 </div>
               </div>
-              {FIELD_LABELS.map(({ key, label, placeholder }) => (
+              {fieldLabels.map(({ key, label, placeholder }) => (
                 <div key={key}>
                   <label className="block text-xs font-semibold text-gray-700 mb-1">{label}</label>
                   <input

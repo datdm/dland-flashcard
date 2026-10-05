@@ -21,6 +21,25 @@ export default function FloatingAiChatWidget() {
   const { activeLanguage } = useLanguageSetting();
   const [isOpen, setIsOpen] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 639px)");
+    const update = () => setIsMobile(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+
+  // Lock background scroll on mobile while chat is open
+  useEffect(() => {
+    if (!isOpen || !isMobile) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [isOpen, isMobile]);
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -362,7 +381,8 @@ export default function FloatingAiChatWidget() {
         <button
           type="button"
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-20 right-4 sm:bottom-6 sm:right-6 z-[80] group flex items-center gap-2.5 p-3 sm:px-4 sm:py-3.5 bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-700 text-white rounded-full shadow-2xl hover:shadow-indigo-500/50 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer border border-white/30 backdrop-blur-md"
+          style={{ bottom: isMobile ? "calc(4rem + env(safe-area-inset-bottom, 0px))" : undefined }}
+          className="fixed right-3 sm:bottom-6 sm:right-6 z-[100] group flex items-center gap-2.5 p-3 sm:px-4 sm:py-3.5 bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-700 text-white rounded-full shadow-2xl hover:shadow-indigo-500/50 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer border border-white/30 backdrop-blur-md"
           title="Hỏi đáp Gia sư AI (Mở khung chat)"
         >
           <div className="relative">
@@ -382,10 +402,11 @@ export default function FloatingAiChatWidget() {
       {/* Floating Chat Modal / Panel */}
       {isOpen && (
         <div
-          className={`fixed z-[90] flex flex-col bg-white overflow-hidden transition-all duration-300 ${
-            isFullscreen
-              ? "inset-0 w-full h-full rounded-none m-0 shadow-none border-none"
-              : "bottom-20 right-3 sm:bottom-6 sm:right-6 w-[94vw] sm:w-[500px] h-[640px] max-h-[85vh] rounded-3xl shadow-2xl border border-gray-200"
+          style={isMobile || isFullscreen ? { height: "100dvh" } : undefined}
+          className={`fixed z-[110] flex flex-col bg-white overflow-hidden transition-all duration-300 ${
+            isMobile || isFullscreen
+              ? "inset-0 w-full rounded-none m-0 shadow-none border-none"
+              : "bottom-6 right-6 w-[500px] h-[640px] max-h-[85vh] rounded-3xl shadow-2xl border border-gray-200"
           }`}
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}

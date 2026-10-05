@@ -1,6 +1,7 @@
 "use client";
 
 import { FlashCardSettings } from "@/types";
+import { useLanguageSetting } from "@/hooks/useLanguageSetting";
 import FieldSelector from "./FieldSelector";
 
 interface FlashCardSettingsPanelProps {
@@ -14,6 +15,9 @@ export default function FlashCardSettingsPanel({
   onSave,
   onClose,
 }: FlashCardSettingsPanelProps) {
+  const { activeLanguage } = useLanguageSetting();
+  const isJa = activeLanguage.code === "ja";
+
   const updateFront = (front: FlashCardSettings["front"]) => {
     onSave({ ...settings, front });
   };
@@ -38,25 +42,27 @@ export default function FlashCardSettingsPanel({
           <FieldSelector label="Mặt trước" settings={settings.front} onChange={updateFront} />
           <FieldSelector label="Mặt sau" settings={settings.back} onChange={updateBack} />
 
-          <div className="pt-3 border-t border-gray-100 flex items-center justify-between gap-3">
-            <div>
-              <span className="text-xs font-bold text-gray-800 block">🙈 Ẩn N5 Speed Master 語彙</span>
-              <span className="text-[10px] text-gray-400 block mt-0.5">Tạm ẩn bộ từ vựng mẫu này khỏi danh sách ôn tập</span>
-            </div>
-            <button
-              type="button"
-              onClick={() => onSave({ ...settings, hideSuperMasterN5: !settings.hideSuperMasterN5 })}
-              className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out ${
-                settings.hideSuperMasterN5 ? "bg-indigo-600" : "bg-gray-200"
-              }`}
-            >
-              <span
-                className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out ${
-                  settings.hideSuperMasterN5 ? "translate-x-5" : "translate-x-0"
+          {isJa && (
+            <div className="pt-3 border-t border-gray-100 flex items-center justify-between gap-3">
+              <div>
+                <span className="text-xs font-bold text-gray-800 block">🙈 Ẩn N5 Speed Master 語彙</span>
+                <span className="text-[10px] text-gray-400 block mt-0.5">Tạm ẩn bộ từ vựng mẫu này khỏi danh sách ôn tập</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => onSave({ ...settings, hideSuperMasterN5: !settings.hideSuperMasterN5 })}
+                className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out ${
+                  settings.hideSuperMasterN5 ? "bg-indigo-600" : "bg-gray-200"
                 }`}
-              />
-            </button>
-          </div>
+              >
+                <span
+                  className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out ${
+                    settings.hideSuperMasterN5 ? "translate-x-5" : "translate-x-0"
+                  }`}
+                />
+              </button>
+            </div>
+          )}
         </div>
         <button
           onClick={onClose}

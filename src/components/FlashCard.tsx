@@ -1,13 +1,16 @@
-"use client";
-
-import { Vocabulary, CardSideSettings, FIELD_LABELS, ALL_FIELDS, WORD_TYPE_STYLES, WordType } from "@/types";
+import { Vocabulary, CardSideSettings, ALL_FIELDS, WORD_TYPE_STYLES, WordType, getFieldLabels, getSpeechLangCode } from "@/types";
+import { useLanguageSetting } from "@/hooks/useLanguageSetting";
 
 interface FlashCardFaceProps {
   vocab: Vocabulary;
   settings: CardSideSettings;
+  langCode?: string;
 }
 
-function FlashCardFace({ vocab, settings }: FlashCardFaceProps) {
+function FlashCardFace({ vocab, settings, langCode }: FlashCardFaceProps) {
+  const { activeLangCode } = useLanguageSetting();
+  const effectiveLang = (langCode || activeLangCode || "ja").toLowerCase();
+  const labels = getFieldLabels(effectiveLang);
   const visibleFields = ALL_FIELDS.filter((f) => settings[f] && vocab[f]);
 
   const speakText = (e: React.MouseEvent, text: string) => {
@@ -15,13 +18,13 @@ function FlashCardFace({ vocab, settings }: FlashCardFaceProps) {
     if (typeof window !== "undefined" && "speechSynthesis" in window) {
       window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = "ja-JP";
+      utterance.lang = getSpeechLangCode(effectiveLang);
       utterance.rate = 0.85;
       window.speechSynthesis.speak(utterance);
     }
   };
 
-  const japaneseText = vocab.kanji || vocab.hiragana || "";
+  const mainWord = vocab.kanji || vocab.hiragana || "";
 
   return (
     <div className="flex flex-col items-center justify-center h-full gap-3 p-6 text-center relative">
@@ -50,9 +53,9 @@ function FlashCardFace({ vocab, settings }: FlashCardFaceProps) {
         );
       })()}
 
-      {japaneseText && (
+      {mainWord && (
         <button
-          onClick={(e) => speakText(e, japaneseText)}
+          onClick={(e) => speakText(e, mainWord)}
           className="absolute top-4 right-4 w-9 h-9 rounded-xl bg-indigo-50/80 hover:bg-indigo-100 text-indigo-600 flex items-center justify-center transition-colors text-base"
           title="Nghe phát âm"
         >
@@ -66,7 +69,7 @@ function FlashCardFace({ vocab, settings }: FlashCardFaceProps) {
         visibleFields.map((field) => (
           <div key={field} className="flex flex-col items-center">
             <span className="text-[10px] text-gray-400 uppercase tracking-widest font-semibold mb-0.5">
-              {FIELD_LABELS[field]}
+              {labels[field]}
             </span>
             <span
               className={
@@ -96,6 +99,7 @@ interface FlashCardProps {
   backSettings: CardSideSettings;
   flipped: boolean;
   onClick: () => void;
+  langCode?: string;
 }
 
 export default function FlashCard({
@@ -104,6 +108,7 @@ export default function FlashCard({
   backSettings,
   flipped,
   onClick,
+  langCode,
 }: FlashCardProps) {
   return (
     <div
@@ -123,7 +128,7 @@ export default function FlashCard({
           className="absolute inset-0 rounded-3xl border border-gray-100 bg-white shadow-lg flex flex-col justify-between overflow-hidden"
           style={{ backfaceVisibility: "hidden" }}
         >
-          <FlashCardFace vocab={vocab} settings={frontSettings} />
+          <FlashCardFace vocab={vocab} settings={frontSettings} langCode={langCode} />
           <div className="bg-gray-50/80 px-4 py-2 border-t border-gray-100 flex items-center justify-between text-[11px] text-gray-400">
             <span>Mặt trước (Front)</span>
             <span className="font-semibold text-indigo-600">Nhấn để lật thẻ ↻</span>
@@ -138,7 +143,7 @@ export default function FlashCard({
             transform: "rotateY(180deg)",
           }}
         >
-          <FlashCardFace vocab={vocab} settings={backSettings} />
+          <FlashCardFace vocab={vocab} settings={backSettings} langCode={langCode} />
           <div className="bg-indigo-100/50 px-4 py-2 border-t border-indigo-100 flex items-center justify-between text-[11px] text-indigo-600">
             <span>Mặt sau (Back)</span>
             <span className="font-semibold text-purple-600">Nhấn để lật thẻ ↺</span>

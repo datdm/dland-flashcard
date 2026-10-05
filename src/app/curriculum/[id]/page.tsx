@@ -349,7 +349,9 @@ export default function CurriculumLessonDetailPage({ params }: Props) {
                 📈 TIẾN ĐỘ BẮT BUỘC ĐỂ HOÀN THÀNH BÀI HỌC
               </h4>
               <p className="text-[11px] text-gray-500 font-medium">
-                Cần hoàn thành 100% Từ vựng, Ngữ pháp, Hán tự và Đạt điểm Bài tập để mở khóa Hoàn thành bài học.
+                {kanjiCount > 0
+                  ? "Cần hoàn thành 100% Từ vựng, Ngữ pháp, Hán tự và Đạt điểm Bài tập để mở khóa Hoàn thành bài học."
+                  : "Cần hoàn thành 100% Từ vựng, Ngữ pháp và Đạt điểm Bài tập để mở khóa Hoàn thành bài học."}
               </p>
             </div>
 

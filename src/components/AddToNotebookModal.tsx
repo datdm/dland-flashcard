@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useNotebooks } from "@/hooks/useNotebooks";
 import { useLanguageSetting } from "@/hooks/useLanguageSetting";
 import { useAuth } from "@/context/AuthContext";
-import { Vocabulary, WordType, WORD_TYPES } from "@/types";
+import { Vocabulary, WordType, WORD_TYPES, getFieldLabels } from "@/types";
 
 interface AddToNotebookModalProps {
   selectedWord: Partial<Vocabulary> & {
@@ -26,6 +26,8 @@ export default function AddToNotebookModal({
 }: AddToNotebookModalProps) {
   const { notebooks, refreshNotebooks, createNotebook, addVocab, checkDuplicate } = useNotebooks();
   const { activeLanguage } = useLanguageSetting();
+  const labels = useMemo(() => getFieldLabels(activeLanguage.code), [activeLanguage.code]);
+  const isJa = activeLanguage.code === "ja";
   const { isAuthenticated, openAuthModal, user } = useAuth();
 
   useEffect(() => {
@@ -224,13 +226,23 @@ export default function AddToNotebookModal({
           {/* Form Field 1: Word / Kanji */}
           <div className="flex flex-col gap-1">
             <label className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
-              Từ vựng (Kanji / Từ gốc)
+              {isJa ? "Từ vựng (Kanji / Từ gốc)" : `${labels.kanji} (Từ gốc)`}
             </label>
             <input
               type="text"
               value={wordKanji}
               onChange={(e) => setWordKanji(e.target.value)}
-              placeholder="Ví dụ: 日本語"
+              placeholder={
+                activeLanguage.code === "de"
+                  ? "Ví dụ: Guten Tag"
+                  : activeLanguage.code === "en"
+                  ? "Ví dụ: Hello"
+                  : activeLanguage.code === "ko"
+                  ? "Ví dụ: 안녕하세요"
+                  : activeLanguage.code === "zh"
+                  ? "Ví dụ: 你好"
+                  : "Ví dụ: 日本語"
+              }
               className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs font-semibold text-slate-900 bg-white focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all"
             />
           </div>
@@ -239,26 +251,46 @@ export default function AddToNotebookModal({
           <div className="grid grid-cols-2 gap-2.5">
             <div className="flex flex-col gap-1">
               <label className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
-                Hiragana / Cách đọc
+                {isJa ? "Hiragana / Cách đọc" : labels.hiragana}
               </label>
               <input
                 type="text"
                 value={wordHiragana}
                 onChange={(e) => setWordHiragana(e.target.value)}
-                placeholder="Ví dụ: にほんご"
+                placeholder={
+                  activeLanguage.code === "de"
+                    ? "Ví dụ: goo-ten tahk"
+                    : activeLanguage.code === "en"
+                    ? "Ví dụ: /həˈləʊ/"
+                    : activeLanguage.code === "ko"
+                    ? "Ví dụ: annyeonghaseyo"
+                    : activeLanguage.code === "zh"
+                    ? "Ví dụ: nǐ hǎo"
+                    : "Ví dụ: にほんご"
+                }
                 className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs font-semibold text-slate-900 bg-white focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all"
               />
             </div>
 
             <div className="flex flex-col gap-1">
               <label className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
-                Âm Hán Việt (Onyomi)
+                {isJa ? "Âm Hán Việt (Onyomi)" : activeLanguage.code === "zh" ? "Âm Hán Việt" : activeLanguage.code === "ko" ? "Âm Hán Hàn" : labels.onyomi}
               </label>
               <input
                 type="text"
                 value={wordOnyomi}
                 onChange={(e) => setWordOnyomi(e.target.value)}
-                placeholder="Ví dụ: NHẬT BẢN NGỮ"
+                placeholder={
+                  activeLanguage.code === "de"
+                    ? "Ví dụ: Lời chào ban ngày"
+                    : activeLanguage.code === "en"
+                    ? "Ví dụ: formal greeting"
+                    : activeLanguage.code === "zh"
+                    ? "Ví dụ: NHĨ HẢO"
+                    : activeLanguage.code === "ko"
+                    ? "Ví dụ: AN NINH HÀ TIỂU"
+                    : "Ví dụ: NHẬT BẢN NGỮ"
+                }
                 className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs font-semibold text-slate-900 bg-white focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all"
               />
             </div>

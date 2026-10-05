@@ -122,7 +122,23 @@ export default function Navbar() {
   const [showSyncDialog, setShowSyncDialog] = useState(false);
   const [showLangModal, setShowLangModal] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
   const { activeLanguage, isLanguageChosen } = useLanguageSetting();
+
+  useEffect(() => {
+    setIsMobileDrawerOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    if (isMobileDrawerOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isMobileDrawerOpen]);
 
   const { user, isAuthenticated, openAuthModal, logout } = useAuth();
   const isAdmin = !!user?.isAdmin;
@@ -197,12 +213,12 @@ export default function Navbar() {
   return (
     <>
       {/* Desktop Left Sidebar */}
-      <aside className={`hidden md:flex fixed top-0 left-0 bottom-0 ${isCollapsed ? 'w-20 p-3' : 'w-64 p-5'} bg-white border-r border-gray-200 flex-col justify-between z-[60] shadow-2xs transition-all duration-300`}>
+      <aside className={`hidden md:flex fixed top-0 left-0 bottom-0 ${isCollapsed ? 'w-20 p-3' : 'w-64 p-5'} bg-white border-r border-gray-200 flex-col justify-between z-30 shadow-2xs transition-all duration-300`}>
         
         {/* Toggle Button */}
         <button 
           onClick={toggleSidebar}
-          className="absolute -right-3 top-8 w-6 h-6 bg-white border border-gray-200 rounded-full flex items-center justify-center text-gray-400 hover:text-indigo-600 shadow-sm z-50 text-[10px]"
+          className="absolute -right-3 top-8 w-6 h-6 bg-white border border-gray-200 rounded-full flex items-center justify-center text-gray-400 hover:text-indigo-600 shadow-sm z-10 text-[10px]"
         >
           {isCollapsed ? "▶" : "◀"}
         </button>
@@ -356,87 +372,264 @@ export default function Navbar() {
       </aside>
 
       {/* Mobile Top Header */}
-      <header className="md:hidden sticky top-0 z-[60] flex items-center justify-between bg-white border-b border-gray-200 px-4 h-12 shadow-2xs">
-        <Link href="/" className="font-bold text-indigo-700 text-sm flex items-center gap-1.5 truncate">
-          <span>{activeNavItem?.icon || "🌐"}</span>
-          <span className="truncate">{activeNavItem?.label || "Dland Language"}</span>
+      <header className="md:hidden sticky top-0 z-30 flex items-center justify-between bg-white border-b border-gray-200 px-3.5 h-13 shadow-2xs">
+        <div className="flex items-center gap-2 min-w-0">
           <button
             type="button"
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              setShowLangModal(true);
-            }}
-            className="text-[10px] px-1.5 py-0.5 bg-indigo-50 hover:bg-indigo-100 rounded-md text-indigo-600 font-bold shrink-0 cursor-pointer flex items-center gap-1 border border-indigo-100"
+            onClick={() => setIsMobileDrawerOpen(true)}
+            className="w-9 h-9 rounded-xl bg-gray-50 hover:bg-indigo-50 active:bg-indigo-100 text-gray-700 hover:text-indigo-600 flex items-center justify-center text-lg font-bold border border-gray-200 transition-colors shrink-0 cursor-pointer"
+            title="Mở menu danh mục"
           >
-            <span>{activeLanguage.flag}</span>
-            <span>{activeLanguage.code.toUpperCase()}</span>
+            ☰
           </button>
-        </Link>
-        <div className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-1.5 min-w-0">
+            <span className="w-7 h-7 rounded-lg bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center text-white text-xs font-bold shadow-2xs shrink-0">
+              🌐
+            </span>
+            <span className="truncate text-xs font-black text-gray-900 tracking-tight">
+              Dland
+            </span>
+          </Link>
+        </div>
+
+        <div className="flex items-center gap-1.5 shrink-0">
+          {/* NÚT ĐỔI NGÔN NGỮ NỔI BẬT & DỄ BẤM TRÊN MOBILE */}
+          <button
+            type="button"
+            onClick={() => setShowLangModal(true)}
+            className="flex items-center gap-1 px-2.5 py-1.5 bg-gradient-to-r from-indigo-50 to-purple-50 hover:from-indigo-100 hover:to-purple-100 active:scale-95 text-indigo-700 rounded-xl font-black text-xs border border-indigo-200/90 shadow-2xs transition-all cursor-pointer"
+            title="Đổi ngôn ngữ học tập"
+          >
+            <span className="text-base leading-none">{activeLanguage.flag}</span>
+            <span className="text-[11px] font-extrabold uppercase">{activeLanguage.code}</span>
+            <span className="text-[9px] text-indigo-400 font-bold">▾</span>
+          </button>
+
           <button
             onClick={handleSyncClick}
-            className="px-2.5 py-1 bg-emerald-50 text-emerald-700 rounded-lg text-xs font-semibold flex items-center gap-1"
-            title="Đồng bộ"
+            className="w-8 h-8 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-xl text-xs font-semibold flex items-center justify-center border border-emerald-200/80 shrink-0 cursor-pointer transition-colors"
+            title="Đồng bộ dữ liệu"
           >
             <span>🔄</span>
           </button>
+
           {isAuthenticated && user ? (
             <button
               onClick={handleLogout}
-              className="px-2 py-1 bg-gray-50 text-gray-700 rounded-lg text-xs font-semibold"
-              title="Đăng xuất"
+              className="h-8 px-2 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-xl text-xs font-bold border border-gray-200/80 flex items-center gap-1 shrink-0 cursor-pointer"
+              title={`Đăng xuất (${user.username})`}
             >
-              👤 {user.username}
+              <span>👤</span>
+              <span className="max-w-[55px] truncate text-[11px]">{user.username}</span>
             </button>
           ) : (
             <button
               onClick={() => openAuthModal("Đăng nhập để lưu từ vựng và đồng bộ tiến độ học tập")}
-              className="px-2.5 py-1 bg-indigo-600 text-white rounded-lg text-xs font-extrabold shadow-xs"
+              className="h-8 px-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-extrabold shadow-2xs shrink-0 cursor-pointer transition-colors"
               title="Đăng nhập"
             >
-              🔑 Đăng nhập
+              🔑
             </button>
           )}
         </div>
       </header>
 
-      {/* Mobile Bottom Navigation Bar */}
+      {/* Mobile Left Sidebar Drawer */}
+      {isMobileDrawerOpen && (
+        <div className="md:hidden fixed inset-0 z-[120] flex animate-fadeIn">
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs transition-opacity"
+            onClick={() => setIsMobileDrawerOpen(false)}
+          />
+
+          {/* Drawer Panel */}
+          <div className="relative w-[82%] max-w-[320px] bg-white h-full shadow-2xl flex flex-col justify-between z-10 transition-transform duration-300">
+            <div className="p-4 flex flex-col flex-1 min-h-0">
+              {/* Drawer Header */}
+              <div className="flex items-center justify-between pb-3 border-b border-gray-100 mb-3">
+                <Link
+                  href="/"
+                  onClick={() => setIsMobileDrawerOpen(false)}
+                  className="flex items-center gap-2.5 group"
+                >
+                  <div className="w-9 h-9 rounded-2xl bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-600 flex items-center justify-center text-white text-lg font-bold shadow-md shadow-indigo-200">
+                    🌐
+                  </div>
+                  <div>
+                    <h2 className="font-extrabold text-gray-900 text-sm tracking-tight leading-tight">
+                      Dland Language
+                    </h2>
+                    <p className="text-[10px] text-gray-400 font-medium">Học đa ngôn ngữ</p>
+                  </div>
+                </Link>
+
+                <button
+                  type="button"
+                  onClick={() => setIsMobileDrawerOpen(false)}
+                  className="w-8 h-8 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-500 hover:text-gray-800 flex items-center justify-center text-sm font-bold transition-colors cursor-pointer"
+                  title="Đóng menu"
+                >
+                  ✕
+                </button>
+              </div>
+
+              {/* Language Switcher Card Inside Drawer */}
+              <button
+                type="button"
+                onClick={() => {
+                  setShowLangModal(true);
+                  setIsMobileDrawerOpen(false);
+                }}
+                className="w-full mb-3 p-3 rounded-2xl bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-100 flex items-center justify-between text-left hover:shadow-xs transition-all cursor-pointer active:scale-98"
+              >
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <span className="text-2xl shrink-0">{activeLanguage.flag}</span>
+                  <div className="min-w-0">
+                    <p className="text-[10px] text-indigo-500 font-bold uppercase tracking-wider">Ngôn ngữ đang học</p>
+                    <p className="text-xs font-extrabold text-indigo-950 truncate">
+                      {activeLanguage.name} ({activeLanguage.nativeName})
+                    </p>
+                  </div>
+                </div>
+                <span className="text-[10px] font-black px-2 py-1 bg-white text-indigo-600 rounded-lg shadow-3xs shrink-0 border border-indigo-100">
+                  Đổi ▾
+                </span>
+              </button>
+
+              {/* Navigation Items in Drawer */}
+              <div className="text-[11px] font-bold text-gray-400 uppercase tracking-wider px-2 mb-1.5">
+                {isLanguageChosen ? `Danh mục ${activeLanguage.name}` : "Điều hướng"}
+              </div>
+
+              <nav className="space-y-1 overflow-y-auto flex-1 pr-1">
+                {displayNavItems.map((item) => {
+                  const { href, label, icon } = item;
+                  const isActive = pathname === href || (href !== "/" && pathname.startsWith(href));
+                  return (
+                    <Link
+                      key={href + label}
+                      href={href}
+                      target={item.openInNewTab ? "_blank" : undefined}
+                      rel={item.openInNewTab ? "noopener noreferrer" : undefined}
+                      onClick={() => setIsMobileDrawerOpen(false)}
+                      className={`flex items-center gap-3 px-3 py-2.5 rounded-2xl text-xs font-bold transition-all cursor-pointer ${
+                        isActive
+                          ? "bg-indigo-600 text-white shadow-md shadow-indigo-200"
+                          : "text-gray-700 hover:text-indigo-600 hover:bg-gray-50 active:bg-gray-100"
+                      }`}
+                    >
+                      <span className="text-base shrink-0">{icon}</span>
+                      <span className="flex-1 truncate">{label}</span>
+                      {isActive && <span className="text-xs font-black">●</span>}
+                    </Link>
+                  );
+                })}
+              </nav>
+            </div>
+
+            {/* Drawer Footer */}
+            <div className="p-4 border-t border-gray-100 bg-gray-50/70 space-y-2 shrink-0">
+              <button
+                onClick={() => {
+                  setIsMobileDrawerOpen(false);
+                  handleSyncClick();
+                }}
+                className="w-full py-2 px-3 bg-white border border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 transition text-xs font-bold flex items-center justify-center gap-2 shadow-3xs cursor-pointer"
+              >
+                <span>🔄</span>
+                <span>Đồng bộ dữ liệu</span>
+              </button>
+
+              {isAuthenticated && user ? (
+                <div className="flex items-center justify-between gap-2 pt-1">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span className="w-7 h-7 rounded-full bg-indigo-100 text-indigo-700 font-black text-xs flex items-center justify-center shrink-0">
+                      {user.username.slice(0, 1).toUpperCase()}
+                    </span>
+                    <span className="text-xs font-bold text-gray-800 truncate">{user.username}</span>
+                  </div>
+                  <button
+                    onClick={() => {
+                      setIsMobileDrawerOpen(false);
+                      handleLogout();
+                    }}
+                    className="text-[11px] font-bold text-red-600 hover:text-red-700 px-2 py-1 rounded-lg hover:bg-red-50 transition-colors"
+                  >
+                    Đăng xuất
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => {
+                    setIsMobileDrawerOpen(false);
+                    openAuthModal("Đăng nhập để lưu từ vựng và đồng bộ tiến độ học tập");
+                  }}
+                  className="w-full py-2 px-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl transition text-xs font-extrabold shadow-xs flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <span>🔑</span>
+                  <span>Đăng nhập / Đăng ký</span>
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Mobile Bottom Navigation Bar: 4 Core Tabs + 1 Drawer Trigger */}
       <nav 
-        className="md:hidden fixed bottom-0 inset-x-0 z-[60] bg-white/95 backdrop-blur-md border-t border-gray-200 flex items-center justify-around w-full h-12 px-1 select-none shadow-lg overflow-x-auto no-scrollbar"
-        style={{ WebkitOverflowScrolling: "touch" }}
+        className="md:hidden fixed bottom-0 inset-x-0 z-30 bg-white/95 backdrop-blur-md border-t border-gray-200 flex items-center justify-around w-full h-14 px-1 select-none shadow-lg"
       >
-        {displayNavItems.map((item) => {
-          const { href, label, icon } = item;
-          const isActive = pathname === href || (href !== "/" && pathname.startsWith(href));
-          return (
-            <Link
-              key={href + label}
-              href={href}
-              target={item.openInNewTab ? "_blank" : undefined}
-              rel={item.openInNewTab ? "noopener noreferrer" : undefined}
-              title={label}
-              className={`flex-1 min-w-[32px] max-w-[56px] h-9 flex items-center justify-center rounded-xl text-base transition-all shrink-0 cursor-pointer ${
-                isActive
-                  ? "bg-indigo-600 text-white shadow-md shadow-indigo-200 scale-105"
-                  : "text-gray-600 hover:text-indigo-600 hover:bg-gray-50"
-              }`}
-            >
-              <span>{icon}</span>
-            </Link>
-          );
-        })}
-        {/* When no language chosen, show a CTA button in bottom bar */}
-        {!isLanguageChosen && (
-          <button
-            type="button"
-            onClick={() => setShowLangModal(true)}
-            title="Chọn ngôn ngữ"
-            className="flex-1 min-w-[48px] max-w-[80px] h-9 flex items-center justify-center gap-1 rounded-xl text-[10px] font-bold bg-indigo-600 text-white shadow-md shadow-indigo-200 shrink-0 cursor-pointer px-2"
-          >
-            🌐 Chọn
-          </button>
-        )}
+        <Link
+          href="/"
+          className={`flex-1 flex flex-col items-center justify-center py-1 rounded-xl transition-all cursor-pointer ${
+            pathname === "/" ? "text-indigo-600 font-extrabold" : "text-gray-500 hover:text-gray-900"
+          }`}
+        >
+          <span className="text-lg leading-none">🏠</span>
+          <span className="text-[10px] mt-0.5 tracking-tight font-semibold">Trang chủ</span>
+        </Link>
+
+        <Link
+          href="/curriculum"
+          className={`flex-1 flex flex-col items-center justify-center py-1 rounded-xl transition-all cursor-pointer ${
+            pathname.startsWith("/curriculum") ? "text-indigo-600 font-extrabold" : "text-gray-500 hover:text-gray-900"
+          }`}
+        >
+          <span className="text-lg leading-none">📚</span>
+          <span className="text-[10px] mt-0.5 tracking-tight font-semibold">Giáo trình</span>
+        </Link>
+
+        <Link
+          href="/flashcard/all"
+          className={`flex-1 flex flex-col items-center justify-center py-1 rounded-xl transition-all cursor-pointer ${
+            pathname.startsWith("/flashcard") ? "text-indigo-600 font-extrabold" : "text-gray-500 hover:text-gray-900"
+          }`}
+        >
+          <span className="text-lg leading-none">🎴</span>
+          <span className="text-[10px] mt-0.5 tracking-tight font-semibold">Flashcard</span>
+        </Link>
+
+        <Link
+          href="/notebooks"
+          className={`flex-1 flex flex-col items-center justify-center py-1 rounded-xl transition-all cursor-pointer ${
+            pathname.startsWith("/notebooks") ? "text-indigo-600 font-extrabold" : "text-gray-500 hover:text-gray-900"
+          }`}
+        >
+          <span className="text-lg leading-none">📓</span>
+          <span className="text-[10px] mt-0.5 tracking-tight font-semibold">Sổ tay</span>
+        </Link>
+
+        <button
+          type="button"
+          onClick={() => setIsMobileDrawerOpen(true)}
+          className={`flex-1 flex flex-col items-center justify-center py-1 rounded-xl transition-all cursor-pointer ${
+            isMobileDrawerOpen ? "text-indigo-600 font-extrabold" : "text-gray-500 hover:text-gray-900"
+          }`}
+        >
+          <span className="text-lg leading-none">☰</span>
+          <span className="text-[10px] mt-0.5 tracking-tight font-semibold">Menu</span>
+        </button>
       </nav>
 
       {/* Sync Dialog */}

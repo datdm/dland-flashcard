@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect, useCallback } from "react";
-import { Vocabulary, VocabProgress, WORD_TYPE_STYLES, WordType } from "@/types";
+import { Vocabulary, VocabProgress, WORD_TYPE_STYLES, WordType, getFieldLabels, getSpeechLangCode, getLanguageMetadata } from "@/types";
 import VocabularyListItem from "@/components/VocabularyListItem";
 import { DialogueLine, generateVocabDialogue } from "./LessonExerciseSection";
 
@@ -35,6 +35,10 @@ export default function LessonVocabSection({
   const [mode, setMode] = useState<"list" | "study" | "quiz">("list");
   const [searchQuery, setSearchQuery] = useState("");
 
+  const labels = useMemo(() => getFieldLabels(langCode), [langCode]);
+  const langMeta = useMemo(() => getLanguageMetadata(langCode), [langCode]);
+  const isJa = (langCode || "").toLowerCase() === "ja";
+
   // ====================== STUDY MODE STATES ======================
   const [studyIndex, setStudyIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
@@ -59,7 +63,7 @@ export default function LessonVocabSection({
     if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = langCode === "de" ? "de-DE" : langCode === "en" ? "en-US" : "ja-JP";
+    utterance.lang = getSpeechLangCode(langCode);
     utterance.rate = 0.85;
     window.speechSynthesis.speak(utterance);
   };
@@ -156,7 +160,7 @@ export default function LessonVocabSection({
           vocab: item,
           type: "vi_to_jp",
           questionText: primaryVi,
-          hintText: "Chọn từ tiếng Nhật tương ứng",
+          hintText: `Chọn từ ${langMeta.name} tương ứng`,
           correctAnswer,
           options,
           dialogue: generateVocabDialogue(item, langCode),
@@ -350,7 +354,7 @@ export default function LessonVocabSection({
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="🔍 Tìm nhanh từ vựng (Hán tự, Hiragana, Nghĩa tiếng Việt)..."
+              placeholder={isJa ? "🔍 Tìm nhanh từ vựng (Hán tự, Hiragana, Nghĩa tiếng Việt)..." : `🔍 Tìm nhanh từ vựng (${labels.kanji}, ${labels.hiragana}, Nghĩa tiếng Việt)...`}
               className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all shadow-2xs"
             />
             {searchQuery && (
@@ -372,6 +376,7 @@ export default function LessonVocabSection({
                 progress={getVocabProgress(v.id)}
                 onToggleLearned={toggleLearned}
                 onToggleFavorite={toggleFavorite}
+                langCode={langCode}
               />
             ))}
           </div>
@@ -477,11 +482,11 @@ export default function LessonVocabSection({
                   </div>
                   {currentStudyItem.onyomi && (
                     <p className="text-xs text-purple-600 font-semibold">
-                      Âm Hán Việt: {currentStudyItem.onyomi}
+                      {labels.onyomi}: {currentStudyItem.onyomi}
                     </p>
                   )}
                   <p className="text-xs text-gray-400 pt-3">
-                    👆 Nhấp vào thẻ để lật lại tiếng Nhật
+                    👆 Nhấp vào thẻ để lật lại {isJa ? "tiếng Nhật" : langMeta.name}
                   </p>
                 </div>
               )}
@@ -490,7 +495,7 @@ export default function LessonVocabSection({
             {/* Bottom Card Footer */}
             <div className="border-t border-gray-100 pt-3 flex items-center justify-between text-xs text-gray-400">
               <span className="flex items-center gap-1 font-semibold text-indigo-600">
-                ↻ {isFlipped ? "Mặt sau (Nghĩa)" : "Mặt trước (Tiếng Nhật)"}
+                ↻ {isFlipped ? "Mặt sau (Nghĩa)" : `Mặt trước (${langMeta.name})`}
               </span>
               <span className="text-[11px]">Nhấn thẻ hoặc nút bên dưới</span>
             </div>
@@ -604,7 +609,7 @@ export default function LessonVocabSection({
                   <p className="text-xs text-gray-400 font-medium">
                     {quizQuestions[quizIndex].type === "jp_to_vi"
                       ? "Chọn NGHĨA TIẾNG VIỆT chính xác của từ sau:"
-                      : "Chọn TỪ TIẾNG NHẬT mang ý nghĩa sau:"}
+                      : `Chọn TỪ ${langMeta.name.toUpperCase()} mang ý nghĩa sau:`}
                   </p>
                   <div className="text-3xl sm:text-4xl font-black text-gray-900 tracking-tight">
                     {quizQuestions[quizIndex].questionText}
@@ -627,7 +632,7 @@ export default function LessonVocabSection({
                         </span>
                       </div>
 
-                      {/* Switch Japanese / Vietnamese button */}
+                      {/* Switch Target Language / Vietnamese button */}
                       <button
                         type="button"
                         onClick={() => toggleQuizTranslation(quizIndex)}
@@ -636,10 +641,10 @@ export default function LessonVocabSection({
                             ? "bg-indigo-600 text-white border-indigo-600 hover:bg-indigo-700"
                             : "bg-white text-slate-700 border-slate-200 hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-200"
                         }`}
-                        title="Bấm để chuyển đổi giữa Tiếng Nhật và Tiếng Việt"
+                        title={`Bấm để chuyển đổi giữa ${langMeta.name} và Tiếng Việt`}
                       >
-                        <span>{showQuizTranslation[quizIndex] ? "🇯🇵" : "🌐"}</span>
-                        <span>{showQuizTranslation[quizIndex] ? "Tiếng Nhật" : "Dịch"}</span>
+                        <span>{showQuizTranslation[quizIndex] ? langMeta.flag : "🌐"}</span>
+                        <span>{showQuizTranslation[quizIndex] ? langMeta.name : "Dịch"}</span>
                       </button>
                     </div>
 

@@ -20,13 +20,52 @@ const EMPTY_FIELDS: VocabFields = {
   phonetic: "",
 };
 
-const FIELD_LABELS: { key: keyof VocabFields; label: string; placeholder: string }[] = [
-  { key: "kanji", label: "Kanji / Từ", placeholder: "日本語" },
-  { key: "hiragana", label: "Hiragana", placeholder: "にほんご" },
-  { key: "onyomi", label: "Onyomi / Katakana", placeholder: "ニホンゴ" },
-  { key: "meaning", label: "Nghĩa", placeholder: "Tiếng Nhật" },
-  { key: "phonetic", label: "Phiên âm", placeholder: "nihongo" },
-];
+function getFormFieldsConfig(langCode?: string): { key: keyof VocabFields; label: string; placeholder: string }[] {
+  const code = (langCode || "").toLowerCase().trim();
+  if (code === "de") {
+    return [
+      { key: "kanji", label: "Từ vựng (Wort)", placeholder: "Guten Tag" },
+      { key: "hiragana", label: "Phát âm / Phiên âm", placeholder: "goo-ten tahk" },
+      { key: "onyomi", label: "Ghi chú / Ngữ pháp", placeholder: "Lời chào ban ngày" },
+      { key: "meaning", label: "Nghĩa tiếng Việt", placeholder: "Xin chào (ban ngày)" },
+      { key: "phonetic", label: "Phiên âm", placeholder: "goo-ten tahk" },
+    ];
+  }
+  if (code === "en") {
+    return [
+      { key: "kanji", label: "Từ vựng (Word)", placeholder: "Hello" },
+      { key: "hiragana", label: "Phiên âm (IPA)", placeholder: "/həˈləʊ/" },
+      { key: "onyomi", label: "Từ loại / Ghi chú", placeholder: "interjection" },
+      { key: "meaning", label: "Nghĩa tiếng Việt", placeholder: "Xin chào" },
+      { key: "phonetic", label: "Phiên âm", placeholder: "/həˈləʊ/" },
+    ];
+  }
+  if (code === "zh") {
+    return [
+      { key: "kanji", label: "Chữ Hán (Hán tự)", placeholder: "你好" },
+      { key: "hiragana", label: "Pinyin (Phiên âm)", placeholder: "nǐ hǎo" },
+      { key: "onyomi", label: "Âm Hán Việt", placeholder: "NHĨ HẢO" },
+      { key: "meaning", label: "Nghĩa tiếng Việt", placeholder: "Xin chào" },
+      { key: "phonetic", label: "Phiên âm", placeholder: "nǐ hǎo" },
+    ];
+  }
+  if (code === "ko") {
+    return [
+      { key: "kanji", label: "Từ vựng (Hangul)", placeholder: "안녕하세요" },
+      { key: "hiragana", label: "Phát âm (Romaja)", placeholder: "annyeonghaseyo" },
+      { key: "onyomi", label: "Âm Hán Hàn", placeholder: "AN NINH HÀ TIỂU" },
+      { key: "meaning", label: "Nghĩa tiếng Việt", placeholder: "Xin chào" },
+      { key: "phonetic", label: "Phiên âm", placeholder: "annyeonghaseyo" },
+    ];
+  }
+  return [
+    { key: "kanji", label: "Kanji / Từ", placeholder: "日本語" },
+    { key: "hiragana", label: "Hiragana", placeholder: "にほんご" },
+    { key: "onyomi", label: "Onyomi / Katakana", placeholder: "ニホンゴ" },
+    { key: "meaning", label: "Nghĩa", placeholder: "Tiếng Nhật" },
+    { key: "phonetic", label: "Phiên âm", placeholder: "nihongo" },
+  ];
+}
 
 export default function LessonDetailPage() {
   const { id, lessonId } = useParams<{ id: string; lessonId: string }>();
@@ -35,6 +74,7 @@ export default function LessonDetailPage() {
   const { user } = useAuth();
   const curriculum = getCurriculumById(id);
   const lesson = curriculum ? getLessonById(id, lessonId) : null;
+  const fieldLabels = getFormFieldsConfig(curriculum?.lang);
 
   const [form, setForm] = useState<VocabFields>(EMPTY_FIELDS);
   const [showAddModal, setShowAddModal] = useState(false);
@@ -289,6 +329,7 @@ export default function LessonDetailPage() {
                 onToggleFavorite={toggleFavorite}
                 onEdit={startEdit}
                 onDelete={(vocabId) => deleteVocab(id, lessonId, vocabId)}
+                langCode={curriculum?.lang}
               />
             ))}
           </div>
@@ -359,7 +400,7 @@ export default function LessonDetailPage() {
               </div>
             )}
 
-            {FIELD_LABELS.map(({ key, label, placeholder }) => (
+            {fieldLabels.map(({ key, label, placeholder }) => (
               <div key={key} className="mb-3">
                 <label className="block text-xs font-semibold text-gray-700 mb-1">{label}</label>
                 <input
@@ -406,7 +447,7 @@ export default function LessonDetailPage() {
               </div>
             )}
 
-            {FIELD_LABELS.map(({ key, label, placeholder }) => (
+            {fieldLabels.map(({ key, label, placeholder }) => (
               <div key={key} className="mb-3">
                 <label className="block text-xs font-semibold text-gray-700 mb-1">{label}</label>
                 <input

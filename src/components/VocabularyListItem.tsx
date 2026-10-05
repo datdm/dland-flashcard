@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { Vocabulary, VocabProgress, FIELD_LABELS, WORD_TYPE_STYLES, WordType } from "@/types";
+import { Vocabulary, VocabProgress, getFieldLabels, getSpeechLangCode, WORD_TYPE_STYLES, WordType } from "@/types";
+import { useLanguageSetting } from "@/hooks/useLanguageSetting";
 
 interface VocabularyListItemProps {
   vocab: Vocabulary;
@@ -13,6 +14,7 @@ interface VocabularyListItemProps {
   onAddToNotebook?: (vocab: Vocabulary) => void;
   notebookInfo?: { id: string; name: string };
   variant?: "list" | "card";
+  langCode?: string;
 }
 
 export default function VocabularyListItem({
@@ -25,18 +27,23 @@ export default function VocabularyListItem({
   onAddToNotebook,
   notebookInfo,
   variant = "list",
+  langCode,
 }: VocabularyListItemProps) {
+  const { activeLangCode } = useLanguageSetting();
+  const effectiveLang = (langCode || activeLangCode || "ja").toLowerCase();
+  const labels = getFieldLabels(effectiveLang);
+
   const speakText = (text: string) => {
     if (typeof window !== "undefined" && "speechSynthesis" in window) {
       window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = "ja-JP";
+      utterance.lang = getSpeechLangCode(effectiveLang);
       utterance.rate = 0.9;
       window.speechSynthesis.speak(utterance);
     }
   };
 
-  const mainJapanese = vocab.kanji || vocab.hiragana || "";
+  const mainWord = vocab.kanji || vocab.hiragana || "";
 
   if (variant === "card") {
     return (
@@ -72,15 +79,15 @@ export default function VocabularyListItem({
               </div>
               {vocab.onyomi && (
                 <p className="text-[11px] text-purple-600 font-medium mt-0.5">
-                  Âm Hán: {vocab.onyomi}
+                  {labels.onyomi}: {vocab.onyomi}
                 </p>
               )}
             </div>
 
             <div className="flex items-center gap-1 shrink-0">
-              {mainJapanese && (
+              {mainWord && (
                 <button
-                  onClick={() => speakText(mainJapanese)}
+                  onClick={() => speakText(mainWord)}
                   className="w-7 h-7 rounded-lg bg-gray-50 hover:bg-indigo-50 text-gray-400 hover:text-indigo-600 flex items-center justify-center transition-colors text-xs"
                   title="Nghe phát âm"
                 >
@@ -162,26 +169,26 @@ export default function VocabularyListItem({
       {/* Main content */}
       <div className="flex-1 min-w-0 grid grid-cols-2 sm:grid-cols-4 gap-x-4 gap-y-1 items-center">
         <div>
-          <span className="text-[10px] text-gray-400 uppercase font-semibold">{FIELD_LABELS.kanji}</span>
+          <span className="text-[10px] text-gray-400 uppercase font-semibold">{labels.kanji}</span>
           <p className="text-lg font-bold text-gray-900 leading-none mt-0.5">
             {vocab.kanji || vocab.hiragana}
           </p>
         </div>
         {vocab.hiragana && vocab.kanji && (
           <div>
-            <span className="text-[10px] text-gray-400 uppercase font-semibold">{FIELD_LABELS.hiragana}</span>
+            <span className="text-[10px] text-gray-400 uppercase font-semibold">{labels.hiragana}</span>
             <p className="text-sm font-semibold text-indigo-700 leading-none mt-0.5">{vocab.hiragana}</p>
           </div>
         )}
         {vocab.onyomi && (
           <div>
-            <span className="text-[10px] text-gray-400 uppercase font-semibold">{FIELD_LABELS.onyomi}</span>
+            <span className="text-[10px] text-gray-400 uppercase font-semibold">{labels.onyomi}</span>
             <p className="text-xs font-semibold text-purple-600 leading-none mt-0.5">{vocab.onyomi}</p>
           </div>
         )}
         {vocab.meaning && (
           <div>
-            <span className="text-[10px] text-gray-400 uppercase font-semibold">{FIELD_LABELS.meaning}</span>
+            <span className="text-[10px] text-gray-400 uppercase font-semibold">{labels.meaning}</span>
             <p className="text-xs font-bold text-emerald-700 leading-none mt-0.5 truncate">{vocab.meaning}</p>
           </div>
         )}
@@ -213,9 +220,9 @@ export default function VocabularyListItem({
 
       {/* Actions */}
       <div className="flex items-center gap-1 shrink-0">
-        {mainJapanese && (
+        {mainWord && (
           <button
-            onClick={() => speakText(mainJapanese)}
+            onClick={() => speakText(mainWord)}
             className="w-9 h-9 rounded-xl bg-gray-50 hover:bg-indigo-50 text-gray-400 hover:text-indigo-600 flex items-center justify-center transition-colors text-base"
             title="Nghe đọc"
           >

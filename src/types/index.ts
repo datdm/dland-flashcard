@@ -148,6 +148,103 @@ export const FIELD_LABELS: Record<VocabField, string> = {
   phonetic: "Phiên Âm",
 };
 
+export function getFieldLabels(langCode?: string): Record<VocabField, string> {
+  const code = (langCode || "").toLowerCase().trim();
+  switch (code) {
+    case "de":
+      return {
+        kanji: "Từ vựng",
+        hiragana: "Phát âm",
+        onyomi: "Ghi chú",
+        meaning: "Nghĩa",
+        phonetic: "Phiên âm",
+      };
+    case "en":
+      return {
+        kanji: "Từ vựng",
+        hiragana: "Phát âm (IPA)",
+        onyomi: "Từ loại",
+        meaning: "Nghĩa",
+        phonetic: "Phiên âm",
+      };
+    case "ko":
+      return {
+        kanji: "Từ vựng",
+        hiragana: "Phát âm",
+        onyomi: "Âm Hán Hàn",
+        meaning: "Nghĩa",
+        phonetic: "Phiên âm",
+      };
+    case "zh":
+      return {
+        kanji: "Chữ Hán",
+        hiragana: "Pinyin",
+        onyomi: "Âm Hán Việt",
+        meaning: "Nghĩa",
+        phonetic: "Phiên âm",
+      };
+    case "ja":
+      return {
+        kanji: "Kanji",
+        hiragana: "Hiragana",
+        onyomi: "Âm Hán",
+        meaning: "Nghĩa",
+        phonetic: "Phiên Âm",
+      };
+    default:
+      if (code && code !== "ja") {
+        return {
+          kanji: "Từ vựng",
+          hiragana: "Phát âm",
+          onyomi: "Ghi chú",
+          meaning: "Nghĩa",
+          phonetic: "Phiên âm",
+        };
+      }
+      return {
+        kanji: "Kanji",
+        hiragana: "Hiragana",
+        onyomi: "Âm Hán",
+        meaning: "Nghĩa",
+        phonetic: "Phiên Âm",
+      };
+  }
+}
+
+export function getSpeechLangCode(langCode?: string): string {
+  const code = (langCode || "").toLowerCase().trim();
+  switch (code) {
+    case "de":
+      return "de-DE";
+    case "en":
+      return "en-US";
+    case "ko":
+      return "ko-KR";
+    case "zh":
+      return "zh-CN";
+    case "ja":
+    default:
+      return "ja-JP";
+  }
+}
+
+export function getLanguageMetadata(langCode?: string): { name: string; flag: string } {
+  const code = (langCode || "").toLowerCase().trim();
+  switch (code) {
+    case "de":
+      return { name: "Tiếng Đức", flag: "🇩🇪" };
+    case "en":
+      return { name: "Tiếng Anh", flag: "🇬🇧" };
+    case "ko":
+      return { name: "Tiếng Hàn", flag: "🇰🇷" };
+    case "zh":
+      return { name: "Tiếng Trung", flag: "🇨🇳" };
+    case "ja":
+    default:
+      return { name: "Tiếng Nhật", flag: "🇯🇵" };
+  }
+}
+
 export const ALL_FIELDS: VocabField[] = ["kanji", "hiragana", "onyomi", "meaning", "phonetic"];
 
 export const DEFAULT_SETTINGS: FlashCardSettings = {

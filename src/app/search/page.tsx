@@ -344,7 +344,7 @@ export default function DictionarySearchPage() {
 
                       {item.onyomi && (
                         <span className="text-[11px] font-bold text-purple-700 bg-purple-50 border border-purple-200 px-2 py-0.5 rounded-md">
-                          Âm Hán: {item.onyomi}
+                          {langCode === "ja" ? "Âm Hán: " : langCode === "zh" ? "Âm Hán: " : langCode === "ko" ? "Âm Hán Hàn: " : "Ghi chú: "}{item.onyomi}
                         </span>
                       )}
                     </div>

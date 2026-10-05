@@ -1,14 +1,20 @@
 "use client";
 
-import { CardSideSettings, VocabField, FIELD_LABELS, ALL_FIELDS } from "@/types";
+import { CardSideSettings, VocabField, ALL_FIELDS, getFieldLabels } from "@/types";
+import { useLanguageSetting } from "@/hooks/useLanguageSetting";
 
 interface FieldSelectorProps {
   label: string;
   settings: CardSideSettings;
   onChange: (settings: CardSideSettings) => void;
+  langCode?: string;
 }
 
-export default function FieldSelector({ label, settings, onChange }: FieldSelectorProps) {
+export default function FieldSelector({ label, settings, onChange, langCode }: FieldSelectorProps) {
+  const { activeLangCode } = useLanguageSetting();
+  const effectiveLang = (langCode || activeLangCode || "ja").toLowerCase();
+  const labels = getFieldLabels(effectiveLang);
+
   const toggle = (field: VocabField) => {
     onChange({ ...settings, [field]: !settings[field] });
   };
@@ -32,7 +38,7 @@ export default function FieldSelector({ label, settings, onChange }: FieldSelect
               checked={settings[field]}
               onChange={() => toggle(field)}
             />
-            {FIELD_LABELS[field]}
+            {labels[field]}
           </label>
         ))}
       </div>

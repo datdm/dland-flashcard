@@ -1,9 +1,10 @@
 "use client";
 
 import { useState, useCallback, useEffect, useRef } from "react";
-import { Vocabulary } from "@/types";
+import { Vocabulary, getSpeechLangCode, getLanguageMetadata } from "@/types";
 import { useProgress } from "@/hooks/useProgress";
 import { useFlashCardSettings } from "@/hooks/useFlashCardSettings";
+import { useLanguageSetting } from "@/hooks/useLanguageSetting";
 import { shuffle, seededShuffle } from "@/lib/shuffle";
 import FlashCard from "./FlashCard";
 import FlashCardSettingsPanel from "./FlashCardSettingsPanel";
@@ -12,6 +13,7 @@ interface FlashCardViewerProps {
   vocabulary: Vocabulary[];
   title?: string;
   dailyLimit?: number;
+  langCode?: string;
 }
 
 interface QuizQuestion {
@@ -23,9 +25,12 @@ interface QuizQuestion {
   options: string[];
 }
 
-export default function FlashCardViewer({ vocabulary, title, dailyLimit }: FlashCardViewerProps) {
+export default function FlashCardViewer({ vocabulary, title, dailyLimit, langCode }: FlashCardViewerProps) {
   const { progress, getVocabProgress, toggleLearned, toggleFavorite } = useProgress();
   const { settings, saveSettings } = useFlashCardSettings();
+  const { activeLangCode } = useLanguageSetting();
+  const effectiveLang = (langCode || activeLangCode || "ja").toLowerCase();
+  const langMeta = getLanguageMetadata(effectiveLang);
 
   const [viewMode, setViewMode] = useState<"flashcard" | "quiz">("flashcard");
   const [deck, setDeck] = useState<Vocabulary[]>([]);
@@ -52,7 +57,7 @@ export default function FlashCardViewer({ vocabulary, title, dailyLimit }: Flash
     if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = "ja-JP";
+    utterance.lang = getSpeechLangCode(effectiveLang);
     utterance.rate = 0.85;
     window.speechSynthesis.speak(utterance);
   };
@@ -184,7 +189,7 @@ export default function FlashCardViewer({ vocabulary, title, dailyLimit }: Flash
           vocab: item,
           type: "vi_to_jp",
           questionText: primaryVi,
-          hintText: "Chọn từ tiếng Nhật tương ứng",
+          hintText: `Chọn từ ${langMeta.name} tương ứng`,
           correctAnswer,
           options,
         };
@@ -504,6 +509,7 @@ export default function FlashCardViewer({ vocabulary, title, dailyLimit }: Flash
                       backSettings={settings.back}
                       flipped={flipped}
                       onClick={() => setFlipped((f) => !f)}
+                      langCode={effectiveLang}
                     />
                     <div className="text-center mt-3 hidden sm:block">
                       <span className="text-xs font-semibold text-gray-400">Nhấp vào thẻ hoặc vuốt để lật</span>
@@ -640,7 +646,7 @@ export default function FlashCardViewer({ vocabulary, title, dailyLimit }: Flash
                   <p className="text-xs text-gray-400 font-medium">
                     {quizQuestions[quizIndex].type === "jp_to_vi"
                       ? "Chọn NGHĨA TIẾNG VIỆT chính xác của từ sau:"
-                      : "Chọn TỪ TIẾNG NHẬT mang ý nghĩa sau:"}
+                      : `Chọn TỪ ${langMeta.name.toUpperCase()} mang ý nghĩa sau:`}
                   </p>
                   <div className="text-3xl sm:text-4xl font-black text-gray-900 tracking-tight">
                     {quizQuestions[quizIndex].questionText}
