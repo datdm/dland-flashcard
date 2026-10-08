@@ -97,7 +97,11 @@ export default function LessonGrammarSection({
           .map((g) => g.structure);
 
         const shuffledDistractors = distractors.sort(() => Math.random() - 0.5).slice(0, 3);
-        const fallbackOptions = ["～てください", "～てもいいです", "～なければならない", "～たことがある"];
+        const fallbackOptions = langCode === "de"
+          ? ["W-Fragen (Wie, Woher, Was)", "Konjugation im Präsens", "Personalpronomen", "Satzklammer & Verbstellung"]
+          : langCode === "en"
+          ? ["Present Simple: to be", "Wh-questions (Where, What, How)", "Subject Pronouns (I, You, They)", "Basic Word Order: SVO"]
+          : ["～てください", "～てもいいです", "～なければならない", "～たことがある"];
         while (shuffledDistractors.length < 3) {
           const fb = fallbackOptions[shuffledDistractors.length % fallbackOptions.length];
           if (!shuffledDistractors.includes(fb) && fb !== correctAnswer) {
@@ -126,7 +130,11 @@ export default function LessonGrammarSection({
           .map((g) => g.structure);
 
         const shuffledDistractors = distractors.sort(() => Math.random() - 0.5).slice(0, 3);
-        const fallbackOptions = ["～ている", "～てから", "～たほうがいい", "～まえに"];
+        const fallbackOptions = langCode === "de"
+          ? ["Akkusativ-Objekt", "Trennbare Verben", "Modalverben (können, müssen)", "Präpositionen mit Dativ"]
+          : langCode === "en"
+          ? ["Present Continuous: be + V-ing", "Past Simple: regular verbs", "Modal verbs (can, must)", "Prepositions of Place"]
+          : ["～ている", "～てから", "～たほうがいい", "～まえに"];
         while (shuffledDistractors.length < 3) {
           const fb = fallbackOptions[shuffledDistractors.length % fallbackOptions.length];
           if (!shuffledDistractors.includes(fb) && fb !== correctAnswer) {
@@ -191,7 +199,7 @@ export default function LessonGrammarSection({
     setQuizFinished(false);
     setNewlyPassedIds([]);
     setIncorrectItems([]);
-  }, [grammarPoints]);
+  }, [grammarPoints, langCode]);
 
   const handleStartQuiz = () => {
     generateQuiz();

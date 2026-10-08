@@ -55,7 +55,7 @@ export function useCurriculums() {
       try {
         const repo = getCurriculumRepository();
         const groups = await repo.getAllCurriculums();
-        const allBooks = groups.flatMap((g) => g.books || []);
+        const allBooks = groups.flatMap((g) => g.books || []).filter((b) => b.lessons && b.lessons.length > 0);
         
         const mappedBooks: Curriculum[] = allBooks.map((b) => ({
           id: b.id,

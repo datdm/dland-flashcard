@@ -334,7 +334,7 @@ function CurriculumContent() {
       ) : (
         <div className="space-y-4 sm:space-y-5">
           {/* Progress Overview Banner for Selected Textbook */}
-          {!isMultilingual && activeGroup && (
+          {!isMultilingual && activeGroup && currentBook && currentBook.status !== "updating" && (currentBook.lessons?.length || 0) > 0 && (
             <div className="bg-white rounded-2xl p-4 sm:p-5 text-gray-900 shadow-2xs border border-gray-200/80">
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div className="flex-1">
@@ -406,11 +406,12 @@ function CurriculumContent() {
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-2.5">
                 {availableBooks.map((book) => {
                   const isSelected = currentBook?.id === book.id;
+                  const isUpdating = book.status === "updating" || !book.lessons || book.lessons.length === 0;
                   
                   // Calculate total learned items for this book
                   let bookTotalLearned = 0;
                   let bookTotalItems = 0;
-                  book.lessons.forEach((l) => {
+                  (book.lessons || []).forEach((l) => {
                     const vCount = l.vocabulary?.length || 0;
                     const gCount = l.grammarPoints?.length || 0;
                     const kCount = l.kanjiItems?.length || 0;
@@ -438,7 +439,11 @@ function CurriculumContent() {
                         <div className="flex items-center justify-between gap-1 mb-1">
                           <div className="flex items-center gap-1.5 min-w-0">
                             <span className="text-base shrink-0">{book.icon || "📖"}</span>
-                            {book.tag && (
+                            {isUpdating ? (
+                              <span className="text-[9px] font-black px-1.5 py-0.5 rounded-md truncate max-w-[110px] bg-amber-50 text-amber-700 border border-amber-200/80">
+                                Đang cập nhật
+                              </span>
+                            ) : book.tag ? (
                               <span className={`text-[9px] font-extrabold px-1.5 py-0.5 rounded-md truncate max-w-[110px] ${
                                 isSelected
                                   ? "bg-indigo-600 text-white"
@@ -446,9 +451,9 @@ function CurriculumContent() {
                               }`}>
                                 {book.tag}
                               </span>
-                            )}
+                            ) : null}
                           </div>
-                          {bookPercent > 0 && (
+                          {!isUpdating && bookPercent > 0 && (
                             <span className="text-[10px] font-bold text-indigo-600 shrink-0">
                               {bookPercent}%
                             </span>
@@ -460,7 +465,11 @@ function CurriculumContent() {
                         </h4>
 
                         <div className="flex items-center justify-between text-[10px] text-gray-400 mt-0.5">
-                          <span>{book.totalLessons} bài</span>
+                          {isUpdating ? (
+                            <span className="text-amber-600 font-bold">🚧 Đang cập nhật</span>
+                          ) : (
+                            <span>{book.totalLessons} bài</span>
+                          )}
                           {book.publisher && <span className="truncate max-w-[80px]" title={`NXB: ${book.publisher}`}>{book.publisher}</span>}
                         </div>
                       </div>
@@ -470,7 +479,7 @@ function CurriculumContent() {
                           className={`h-1 rounded-full transition-all duration-300 ${
                             isSelected ? "bg-indigo-600" : "bg-indigo-400"
                           }`}
-                          style={{ width: `${bookPercent}%` }}
+                          style={{ width: `${isUpdating ? 0 : bookPercent}%` }}
                         />
                       </div>
                     </button>
@@ -492,11 +501,15 @@ function CurriculumContent() {
                     <span className="px-2.5 py-0.5 bg-amber-50 text-amber-800 border border-amber-200/70 rounded-full text-[11px] font-bold">
                       {currentBook.icon || "📘"} {currentBook.name}
                     </span>
-                    {currentBook.tag && (
+                    {currentBook.status === "updating" || currentBook.lessons.length === 0 ? (
+                      <span className="px-2 py-0.5 bg-amber-100 text-amber-800 border border-amber-300 rounded-full text-[10px] font-extrabold">
+                        🚧 Đang cập nhật
+                      </span>
+                    ) : currentBook.tag ? (
                       <span className="px-2 py-0.5 bg-gray-100 text-gray-600 border border-gray-200 rounded-full text-[10px] font-bold">
                         {currentBook.tag}
                       </span>
-                    )}
+                    ) : null}
                   </div>
                   <h2 className="text-lg sm:text-xl font-bold mt-1 text-gray-900">{currentBook.name}</h2>
                   <p className="text-xs text-gray-500 mt-1 max-w-2xl leading-relaxed">
@@ -504,111 +517,157 @@ function CurriculumContent() {
                   </p>
                 </div>
                 
-                <div className="flex gap-3 bg-gray-50 p-2.5 rounded-xl border border-gray-200/70 text-center shrink-0 self-start md:self-auto">
-                  <div>
-                    <div className="text-base sm:text-lg font-extrabold text-gray-900">{currentBook.totalLessons}</div>
-                    <div className="text-[10px] text-gray-400 uppercase font-semibold">Bài học</div>
+                {currentBook.status === "updating" || currentBook.lessons.length === 0 ? (
+                  <div className="flex items-center gap-2.5 bg-amber-50 text-amber-900 border border-amber-200 px-4 py-2.5 rounded-2xl text-xs font-bold shrink-0 self-start md:self-auto shadow-2xs">
+                    <span className="text-xl">🚧</span>
+                    <div className="text-left">
+                      <div className="font-extrabold text-amber-900">Đang cập nhật nội dung</div>
+                      <div className="text-[10px] text-amber-700 font-medium">Dữ liệu đang được chuẩn hóa theo sách gốc</div>
+                    </div>
                   </div>
-                  <div className="border-r border-gray-200" />
-                  <div>
-                    <div className="text-base sm:text-lg font-extrabold text-indigo-600">{currentBook.totalVocab}</div>
-                    <div className="text-[10px] text-gray-400 uppercase font-semibold">Từ vựng</div>
+                ) : (
+                  <div className="flex gap-3 bg-gray-50 p-2.5 rounded-xl border border-gray-200/70 text-center shrink-0 self-start md:self-auto">
+                    <div>
+                      <div className="text-base sm:text-lg font-extrabold text-gray-900">{currentBook.totalLessons}</div>
+                      <div className="text-[10px] text-gray-400 uppercase font-semibold">Bài học</div>
+                    </div>
+                    <div className="border-r border-gray-200" />
+                    <div>
+                      <div className="text-base sm:text-lg font-extrabold text-indigo-600">{currentBook.totalVocab}</div>
+                      <div className="text-[10px] text-gray-400 uppercase font-semibold">Từ vựng</div>
+                    </div>
+                    <div className="border-r border-gray-200" />
+                    <div>
+                      <div className="text-base sm:text-lg font-extrabold text-teal-600">{currentBook.totalGrammar}</div>
+                      <div className="text-[10px] text-gray-400 uppercase font-semibold">Ngữ pháp</div>
+                    </div>
+                    {!isMultilingual && currentBook.totalKanji > 0 && (
+                      <>
+                        <div className="border-r border-gray-200" />
+                        <div>
+                          <div className="text-base sm:text-lg font-extrabold text-pink-600">{currentBook.totalKanji}</div>
+                          <div className="text-[10px] text-gray-400 uppercase font-semibold">Kanji</div>
+                        </div>
+                      </>
+                    )}
                   </div>
-                  <div className="border-r border-gray-200" />
-                  <div>
-                    <div className="text-base sm:text-lg font-extrabold text-teal-600">{currentBook.totalGrammar}</div>
-                    <div className="text-[10px] text-gray-400 uppercase font-semibold">Ngữ pháp</div>
-                  </div>
-                  {!isMultilingual && currentBook.totalKanji > 0 && (
-                    <>
-                      <div className="border-r border-gray-200" />
-                      <div>
-                        <div className="text-base sm:text-lg font-extrabold text-pink-600">{currentBook.totalKanji}</div>
-                        <div className="text-[10px] text-gray-400 uppercase font-semibold">Kanji</div>
-                      </div>
-                    </>
-                  )}
-                </div>
+                )}
               </div>
             </div>
           )}
 
           {/* Lessons List of Selected Textbook */}
-          <div className="space-y-2.5">
-            <div className="flex items-center justify-between px-1">
-              <h3 className="text-xs sm:text-sm font-extrabold text-gray-800">
-                Danh sách bài học — {currentBook?.name || activeGroup.title} ({currentBook?.lessons.length || activeGroup.lessons.length} bài)
-              </h3>
+          {currentBook?.status === "updating" || (currentBook?.lessons || []).length === 0 ? (
+            <div className="bg-white rounded-3xl p-8 sm:p-12 text-center border border-dashed border-amber-300 bg-gradient-to-b from-amber-50/40 via-white to-white space-y-4 shadow-2xs">
+              <div className="w-16 h-16 bg-amber-100 text-amber-700 rounded-2xl flex items-center justify-center mx-auto text-3xl shadow-xs ring-4 ring-amber-50">
+                🚧
+              </div>
+              <div className="space-y-1.5 max-w-lg mx-auto">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-100 text-amber-800 rounded-full text-[11px] font-extrabold uppercase tracking-wider">
+                  Đang biên soạn nội dung
+                </div>
+                <h3 className="text-base sm:text-lg font-bold text-gray-900">
+                  Giáo trình {currentBook?.name} đang được cập nhật
+                </h3>
+                <p className="text-xs text-gray-500 leading-relaxed">
+                  Để đảm bảo tính chuẩn xác và bản quyền tài liệu, hệ thống chỉ hiển thị đúng nội dung của từng giáo trình gốc, <strong className="text-gray-700">tuyệt đối không sao chép trùng lặp dữ liệu</strong> từ các giáo trình khác. Dữ liệu bài học, từ vựng và ngữ pháp của {currentBook?.name} đang được kiểm duyệt và sẽ sớm có mặt!
+                </p>
+              </div>
+              {availableBooks.some((b) => b.id !== currentBook?.id && (b.status === "completed" || b.lessons.length > 0)) && (
+                <div className="pt-2">
+                  {(() => {
+                    const completedBook = availableBooks.find((b) => b.id !== currentBook?.id && (b.status === "completed" || b.lessons.length > 0));
+                    if (!completedBook) return null;
+                    return (
+                      <button
+                        onClick={() => setActiveBookId(completedBook.id)}
+                        className="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition-all shadow-xs cursor-pointer inline-flex items-center gap-2 active:scale-98"
+                      >
+                        <span>Chuyển sang học {completedBook.name}</span>
+                        <span>→</span>
+                      </button>
+                    );
+                  })()}
+                </div>
+              )}
             </div>
+          ) : (
+            <div className="space-y-2.5">
+              <div className="flex items-center justify-between px-1">
+                <h3 className="text-xs sm:text-sm font-extrabold text-gray-800">
+                  Danh sách bài học — {currentBook?.name || activeGroup.title} ({currentBook?.lessons.length || activeGroup.lessons.length} bài)
+                </h3>
+              </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-3.5">
-              {(currentBook?.lessons || activeGroup.lessons).map((lesson) => {
-                const vocabList = lesson.vocabulary || [];
-                const grammarList = lesson.grammarPoints || [];
-                const kanjiList = lesson.kanjiItems || [];
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-3.5">
+                {(currentBook?.lessons || activeGroup.lessons).map((lesson) => {
+                  const vocabList = lesson.vocabulary || [];
+                  const grammarList = lesson.grammarPoints || [];
+                  const kanjiList = lesson.kanjiItems || [];
 
-                const learnedVocab = vocabList.filter((v: any) => progress[v.id]?.learned).length;
-                const learnedGrammar = grammarList.filter((g: any) => grammarProgress[g.id]?.learned).length;
-                const learnedKanji = kanjiList.filter((k: any) => kanjiProgress[k.id]?.learned).length;
+                  const learnedVocab = vocabList.filter((v: any) => progress[v.id]?.learned).length;
+                  const learnedGrammar = grammarList.filter((g: any) => grammarProgress[g.id]?.learned).length;
+                  const learnedKanji = kanjiList.filter((k: any) => kanjiProgress[k.id]?.learned).length;
 
-                const totalItems = vocabList.length + grammarList.length + kanjiList.length;
-                const totalLearned = learnedVocab + learnedGrammar + learnedKanji;
-                const percentage = totalItems > 0 ? Math.round((totalLearned / totalItems) * 100) : 0;
+                  const totalItems = vocabList.length + grammarList.length + kanjiList.length;
+                  const totalLearned = learnedVocab + learnedGrammar + learnedKanji;
+                  const percentage = totalItems > 0 ? Math.round((totalLearned / totalItems) * 100) : 0;
 
-                return (
-                  <Link
-                    key={lesson.id}
-                    href={`/curriculum/${lesson.id}`}
-                    className="group bg-white rounded-xl p-3.5 sm:p-4 border border-gray-100 shadow-xs hover:shadow-sm hover:border-indigo-200 transition-all flex flex-col justify-between"
-                  >
-                    <div>
-                      <div className="flex items-center justify-between mb-1.5">
-                        <span className="text-[11px] font-semibold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-md">
-                          📖 {lesson.curriculum || currentBook?.name || activeGroup.level}
-                        </span>
-                        <span className="text-[11px] text-gray-400 group-hover:text-indigo-600 transition-colors font-medium">
-                          Vào bài học →
-                        </span>
-                      </div>
-                      <h3 className="font-bold text-gray-800 text-sm sm:text-base group-hover:text-indigo-600 transition-colors">
-                        {lesson.name}
-                      </h3>
-                      {lesson.description && (
-                        <p className="text-xs text-gray-500 mt-1 line-clamp-2 leading-relaxed">
-                          {lesson.description}
-                        </p>
-                      )}
-                    </div>
-
-                    <div className="mt-3 pt-2.5 border-t border-gray-50 space-y-1.5">
-                      <div className="flex items-center justify-between gap-3 text-xs text-gray-500 font-medium">
-                        <span>📝 {learnedVocab}/{vocabList.length} từ</span>
-                        <span>📖 {learnedGrammar}/{grammarList.length} ngữ pháp</span>
-                        {!isMultilingual && kanjiList.length > 0 && (
-                          <span>🉐 {learnedKanji}/{kanjiList.length} kanji</span>
+                  return (
+                    <Link
+                      key={lesson.id}
+                      href={`/curriculum/${lesson.id}`}
+                      className="group bg-white rounded-xl p-3.5 sm:p-4 border border-gray-100 shadow-xs hover:shadow-sm hover:border-indigo-200 transition-all flex flex-col justify-between"
+                    >
+                      <div>
+                        <div className="flex items-center justify-between mb-1.5">
+                          <span className="text-[11px] font-semibold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-md">
+                            📖 {lesson.curriculum || currentBook?.name || activeGroup.level}
+                          </span>
+                          <span className="text-[11px] text-gray-400 group-hover:text-indigo-600 transition-colors font-medium">
+                            Vào bài học →
+                          </span>
+                        </div>
+                        <h3 className="font-bold text-gray-800 text-sm sm:text-base group-hover:text-indigo-600 transition-colors">
+                          {lesson.name}
+                        </h3>
+                        {lesson.description && (
+                          <p className="text-xs text-gray-500 mt-1 line-clamp-2 leading-relaxed">
+                            {lesson.description}
+                          </p>
                         )}
                       </div>
 
-                      {totalLearned > 0 && (
-                        <div className="space-y-1 pt-0.5">
-                          <div className="flex justify-between items-center text-[10px] font-bold">
-                            <span className="text-indigo-600">📊 Tiến độ: {percentage}%</span>
-                            <span className="text-gray-400">{totalLearned}/{totalItems} mục</span>
-                          </div>
-                          <div className="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
-                            <div
-                              className="bg-indigo-600 h-1.5 rounded-full transition-all duration-300"
-                              style={{ width: `${percentage}%` }}
-                            />
-                          </div>
+                      <div className="mt-3 pt-2.5 border-t border-gray-50 space-y-1.5">
+                        <div className="flex items-center justify-between gap-3 text-xs text-gray-500 font-medium">
+                          <span>📝 {learnedVocab}/{vocabList.length} từ</span>
+                          <span>📖 {learnedGrammar}/{grammarList.length} ngữ pháp</span>
+                          {!isMultilingual && kanjiList.length > 0 && (
+                            <span>🉐 {learnedKanji}/{kanjiList.length} kanji</span>
+                          )}
                         </div>
-                      )}
-                    </div>
-                  </Link>
-                );
-              })}
+
+                        {totalLearned > 0 && (
+                          <div className="space-y-1 pt-0.5">
+                            <div className="flex justify-between items-center text-[10px] font-bold">
+                              <span className="text-indigo-600">📊 Tiến độ: {percentage}%</span>
+                              <span className="text-gray-400">{totalLearned}/{totalItems} mục</span>
+                            </div>
+                            <div className="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+                              <div
+                                className="bg-indigo-600 h-1.5 rounded-full transition-all duration-300"
+                                style={{ width: `${percentage}%` }}
+                              />
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       )}
     </div>

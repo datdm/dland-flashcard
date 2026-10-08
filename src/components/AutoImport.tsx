@@ -10,6 +10,11 @@ const MIGRATION_KEY = "flashcash-migrated-to-curriculums";
 
 export default function AutoImport() {
   useEffect(() => {
+    // Luôn dọn dẹp key rác cũ flashcash-lessons (đã chuyển sang curriculums)
+    if (typeof window !== "undefined") {
+      localStorage.removeItem(StorageKeys.LESSONS);
+    }
+
     const savedVersion = localStorage.getItem(VERSION_KEY);
     const existingCurriculums = getItem<CurriculumsData>(StorageKeys.CURRICULUMS);
     const oldLessonsData = getItem<LessonsData>(StorageKeys.LESSONS);

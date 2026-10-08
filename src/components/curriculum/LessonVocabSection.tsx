@@ -144,7 +144,11 @@ export default function LessonVocabSection({
           .filter((t) => t && t !== correctAnswer);
 
         const shuffledDistractors = distractors.sort(() => Math.random() - 0.5).slice(0, 3);
-        const defaultFallbacks = ["ほん", "がくせい", "せんせい", "くるま", "ともだち"];
+        const defaultFallbacks = langCode === "de"
+          ? ["Guten Tag", "Auf Wiedersehen", "Danke", "Bitte", "Name"]
+          : langCode === "en"
+          ? ["Hello", "Goodbye", "Thank you", "Please", "Friend"]
+          : ["ほん", "がくせい", "せんせい", "くるま", "ともだち"];
         while (shuffledDistractors.length < 3) {
           const fallback = defaultFallbacks[shuffledDistractors.length % defaultFallbacks.length];
           if (!shuffledDistractors.includes(fallback) && fallback !== correctAnswer) {

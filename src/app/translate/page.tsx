@@ -24,21 +24,13 @@ interface HistoryItem {
   timestamp: number;
 }
 
-const COMMON_LANGUAGES = [
-  { code: "auto", name: "Tự động", flag: "⚡", tts: "ja-JP" },
-  { code: "ja", name: "Tiếng Nhật", flag: "🇯🇵", tts: "ja-JP" },
-  { code: "en", name: "Tiếng Anh", flag: "🇬🇧", tts: "en-US" },
-  { code: "vi", name: "Tiếng Việt", flag: "🇻🇳", tts: "vi-VN" },
-  { code: "de", name: "Tiếng Đức", flag: "🇩🇪", tts: "de-DE" },
-  { code: "ko", name: "Tiếng Hàn", flag: "🇰🇷", tts: "ko-KR" },
-  { code: "zh", name: "Tiếng Trung", flag: "🇨🇳", tts: "zh-CN" },
-];
+
 
 const ALL_LANGUAGES = [
   { code: "auto", name: "⚡ Tự động nhận diện" },
-  { code: "ja", name: "🇯🇵 Tiếng Nhật (Japanese)" },
-  { code: "en", name: "🇬🇧 Tiếng Anh (English)" },
   { code: "vi", name: "🇻🇳 Tiếng Việt (Vietnamese)" },
+  { code: "en", name: "🇬🇧 Tiếng Anh (English)" },
+  { code: "ja", name: "🇯🇵 Tiếng Nhật (Japanese)" },
   { code: "de", name: "🇩🇪 Tiếng Đức (German)" },
   { code: "ko", name: "🇰🇷 Tiếng Hàn (Korean)" },
   { code: "zh", name: "🇨🇳 Tiếng Trung (Chinese)" },
@@ -71,14 +63,12 @@ const STORAGE_KEY = "dland_translate_history";
 export default function TranslatePage() {
   const { activeLanguage } = useLanguageSetting();
 
-  // Translation State
+  // Translation State - Default: Auto detect to Vietnamese
   const [sourceText, setSourceText] = useState("");
   const [translatedText, setTranslatedText] = useState("");
   const [romanization, setRomanization] = useState<string | null>(null);
   const [sourceLang, setSourceLang] = useState("auto");
-  const [targetLang, setTargetLang] = useState(
-    activeLanguage.code === "ja" ? "vi" : activeLanguage.code === "vi" ? "ja" : "vi"
-  );
+  const [targetLang, setTargetLang] = useState("vi");
   const [detectedSource, setDetectedSource] = useState<string | null>(null);
   const [provider, setProvider] = useState<string>("google-gtx");
   const [loading, setLoading] = useState(false);
@@ -254,7 +244,8 @@ export default function TranslatePage() {
   // Swap Languages
   const swapLanguages = () => {
     const newSource = targetLang;
-    const newTarget = sourceLang === "auto" ? detectedSource || "vi" : sourceLang;
+    const fallbackTarget = newSource === "vi" ? "en" : "vi";
+    const newTarget = sourceLang === "auto" ? (detectedSource || fallbackTarget) : sourceLang;
     const newSourceText = translatedText;
     const newTranslatedText = sourceText;
 
@@ -390,88 +381,64 @@ export default function TranslatePage() {
       {/* Main Translation Container */}
       <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden divide-y divide-gray-100">
         {/* Language Selector Header Bar */}
-        <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-gray-100 bg-slate-50/70 p-2 sm:p-3">
-          {/* Source Language Selector Pills */}
-          <div className="flex items-center justify-between gap-1.5 pb-2 md:pb-0 md:pr-3 overflow-x-auto no-scrollbar">
-            <div className="flex items-center gap-1.5 flex-1 min-w-max">
-              {COMMON_LANGUAGES.map((lang) => (
-                <button
-                  key={lang.code}
-                  type="button"
-                  onClick={() => setSourceLang(lang.code)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-black transition-all flex items-center gap-1 cursor-pointer shrink-0 ${
-                    sourceLang === lang.code
-                      ? "bg-indigo-600 text-white shadow-xs scale-102"
-                      : "bg-white text-gray-700 border border-gray-200/90 hover:bg-gray-100 hover:text-indigo-600"
-                  }`}
+        <div className="bg-slate-50/80 p-2.5 sm:p-3.5 border-b border-gray-100">
+          <div className="flex items-center justify-between gap-2 sm:gap-4 max-w-4xl mx-auto">
+            {/* Source Language Select Box */}
+            <div className="flex-1 min-w-0">
+              <label className="text-[10px] sm:text-[11px] font-extrabold text-gray-500 uppercase tracking-wider mb-1 block">
+                Ngôn ngữ nguồn
+              </label>
+              <div className="relative">
+                <select
+                  value={sourceLang}
+                  onChange={(e) => setSourceLang(e.target.value)}
+                  className="w-full bg-white border border-gray-200 hover:border-indigo-400 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-150 rounded-2xl px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-bold text-gray-800 transition-all cursor-pointer shadow-3xs outline-none appearance-none pr-8 truncate"
                 >
-                  <span>{lang.flag}</span>
-                  <span>{lang.name}</span>
-                </button>
-              ))}
-
-              {/* Extra Source Languages Dropdown */}
-              <select
-                value={sourceLang}
-                onChange={(e) => setSourceLang(e.target.value)}
-                className="px-2.5 py-1.5 bg-white border border-gray-200 rounded-xl text-xs font-bold text-gray-700 hover:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 cursor-pointer"
-              >
-                <option value={sourceLang} disabled hidden>
-                  Thêm...
-                </option>
-                {ALL_LANGUAGES.map((l) => (
-                  <option key={l.code} value={l.code}>
-                    {l.name}
-                  </option>
-                ))}
-              </select>
+                  {ALL_LANGUAGES.map((l) => (
+                    <option key={l.code} value={l.code}>
+                      {l.name}
+                    </option>
+                  ))}
+                </select>
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-gray-400 text-xs">
+                  ▼
+                </div>
+              </div>
             </div>
 
-            {/* Swap Button (Mobile & Desktop) */}
-            <button
-              type="button"
-              onClick={swapLanguages}
-              className="w-8 h-8 rounded-xl bg-white border border-gray-200 flex items-center justify-center text-gray-600 hover:text-indigo-600 hover:border-indigo-300 hover:bg-indigo-50/50 shadow-2xs transition-all cursor-pointer shrink-0 active:rotate-180 duration-200"
-              title="Hoán đổi ngôn ngữ (Swap)"
-            >
-              ⇄
-            </button>
-          </div>
-
-          {/* Target Language Selector Pills */}
-          <div className="flex items-center gap-1.5 pt-2 md:pt-0 md:pl-3 overflow-x-auto no-scrollbar">
-            <div className="flex items-center gap-1.5 flex-1 min-w-max">
-              {COMMON_LANGUAGES.filter((l) => l.code !== "auto").map((lang) => (
-                <button
-                  key={lang.code}
-                  type="button"
-                  onClick={() => setTargetLang(lang.code)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-black transition-all flex items-center gap-1 cursor-pointer shrink-0 ${
-                    targetLang === lang.code
-                      ? "bg-indigo-600 text-white shadow-xs scale-102"
-                      : "bg-white text-gray-700 border border-gray-200/90 hover:bg-gray-100 hover:text-indigo-600"
-                  }`}
-                >
-                  <span>{lang.flag}</span>
-                  <span>{lang.name}</span>
-                </button>
-              ))}
-
-              {/* Extra Target Languages Dropdown */}
-              <select
-                value={targetLang}
-                onChange={(e) => setTargetLang(e.target.value)}
-                className="px-2.5 py-1.5 bg-white border border-gray-200 rounded-xl text-xs font-bold text-gray-700 hover:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 cursor-pointer"
+            {/* Swap Button */}
+            <div className="shrink-0 pt-4">
+              <button
+                type="button"
+                onClick={swapLanguages}
+                className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-white border border-gray-200 hover:border-indigo-400 hover:bg-indigo-50/70 text-gray-600 hover:text-indigo-600 flex items-center justify-center shadow-3xs transition-all cursor-pointer active:scale-95 text-base active:rotate-180 duration-200"
+                title="Hoán đổi ngôn ngữ nguồn và đích"
               >
-                <option value={targetLang} disabled hidden>
-                  Thêm...
-                </option>
-                {ALL_LANGUAGES.filter((l) => l.code !== "auto").map((l) => (
-                  <option key={l.code} value={l.code}>
-                    {l.name}
-                  </option>
-                ))}
-              </select>
+                ⇄
+              </button>
+            </div>
+
+            {/* Target Language Select Box */}
+            <div className="flex-1 min-w-0">
+              <label className="text-[10px] sm:text-[11px] font-extrabold text-gray-500 uppercase tracking-wider mb-1 block">
+                Dịch sang
+              </label>
+              <div className="relative">
+                <select
+                  value={targetLang}
+                  onChange={(e) => setTargetLang(e.target.value)}
+                  className="w-full bg-white border border-gray-200 hover:border-indigo-400 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-150 rounded-2xl px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-bold text-gray-800 transition-all cursor-pointer shadow-3xs outline-none appearance-none pr-8 truncate"
+                >
+                  {ALL_LANGUAGES.filter((l) => l.code !== "auto").map((l) => (
+                    <option key={l.code} value={l.code}>
+                      {l.name}
+                    </option>
+                  ))}
+                </select>
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-gray-400 text-xs">
+                  ▼
+                </div>
+              </div>
             </div>
           </div>
         </div>

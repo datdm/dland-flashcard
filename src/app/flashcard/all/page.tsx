@@ -333,16 +333,18 @@ export default function FlashCardAllPage() {
               <option value="all_curriculums">📚 Tất cả Giáo trình ({totalCurriculumVocabCount} từ)</option>
               <option value="all_notebooks">📓 Tất cả Sổ tay cá nhân ({totalNotebookVocabCount} từ)</option>
 
-              {curriculums.length > 0 && (
+              {curriculums.filter((c) => (c.lessons?.reduce((acc, l) => acc + (l.vocabulary?.length || 0), 0) || 0) > 0).length > 0 && (
                 <optgroup label="📚 Giáo trình từng sách" className="font-bold text-gray-400">
-                  {curriculums.map((c) => {
-                    const count = c.lessons?.reduce((acc, l) => acc + (l.vocabulary?.length || 0), 0) || 0;
-                    return (
-                      <option key={c.id} value={c.id} className="text-gray-700 font-semibold">
-                        📖 {c.name} {count > 0 ? `(${count} từ)` : ""}
-                      </option>
-                    );
-                  })}
+                  {curriculums
+                    .filter((c) => (c.lessons?.reduce((acc, l) => acc + (l.vocabulary?.length || 0), 0) || 0) > 0)
+                    .map((c) => {
+                      const count = c.lessons?.reduce((acc, l) => acc + (l.vocabulary?.length || 0), 0) || 0;
+                      return (
+                        <option key={c.id} value={c.id} className="text-gray-700 font-semibold">
+                          📖 {c.name} ({count} từ)
+                        </option>
+                      );
+                    })}
                 </optgroup>
               )}
               {notebooks.length > 0 && (
@@ -382,6 +384,7 @@ export default function FlashCardAllPage() {
                   : curriculums.find(c => c.id === source)?.name || notebooks.find(nb => nb.id === source)?.name || "Ôn tập"
               } 
               dailyLimit={isDaily50 ? 50 : undefined}
+              defaultShuffled={true}
             />
           )}
         </div>

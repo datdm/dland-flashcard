@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { DetailedLesson } from "@/lib/repositories/types";
-import { Vocabulary, GrammarPoint } from "@/types";
+import { Vocabulary, GrammarPoint, getSpeechLangCode, getLanguageMetadata } from "@/types";
 
 interface Props {
   lesson: DetailedLesson;
@@ -291,7 +291,83 @@ export function generateVocabDialogue(v: Vocabulary, langCode: string = "ja"): D
         textVi: `Đúng vậy, đó là một từ vựng rất quan trọng và thường gặp trong đời sống đấy.`,
       },
     ];
+  } else if (langCode === "de") {
+    const wLower = word.toLowerCase();
+    if (wLower.includes("hallo") || wLower.includes("tag") || wLower.includes("morgen") || meaning.includes("xin chào") || meaning.includes("chào")) {
+      return [
+        { speaker: "A", textJa: "Hallo! Wie geht es Ihnen?", textVi: "Xin chào! Bạn có khỏe không?" },
+        { speaker: "B", textJa: "Guten Tag! Mir geht es sehr gut, danke.", textVi: "Xin chào! Tôi rất khỏe, cảm ơn bạn." },
+      ];
+    }
+    if (wLower.includes("danke") || meaning.includes("cảm ơn")) {
+      return [
+        { speaker: "A", textJa: "Vielen Dank für deine Hilfe!", textVi: "Cảm ơn bạn rất nhiều vì đã giúp đỡ!" },
+        { speaker: "B", textJa: "Gern geschehen! Keine Ursache.", textVi: "Không có chi! Rất sẵn lòng." },
+      ];
+    }
+    if (wLower.includes("bitte") || meaning.includes("làm ơn") || meaning.includes("xin mời")) {
+      return [
+        { speaker: "A", textJa: "Können Sie mir bitte helfen?", textVi: "Bạn có thể làm ơn giúp tôi được không?" },
+        { speaker: "B", textJa: "Ja, natürlich. Sehr gerne!", textVi: "Vâng, tất nhiên rồi. Rất sẵn lòng!" },
+      ];
+    }
+    if (wLower.includes("tschüss") || wLower.includes("wiedersehen") || meaning.includes("tạm biệt")) {
+      return [
+        { speaker: "A", textJa: "Auf Wiedersehen! Bis morgen.", textVi: "Tạm biệt! Hẹn gặp lại vào ngày mai." },
+        { speaker: "B", textJa: "Tschüss! Einen schönen Tag noch.", textVi: "Tạm biệt! Chúc một ngày tốt lành nhé." },
+      ];
+    }
+    if (wLower.includes("heißen") || wLower.includes("name") || meaning.includes("tên")) {
+      return [
+        { speaker: "A", textJa: "Wie heißen Sie?", textVi: "Bạn tên là gì vậy?" },
+        { speaker: "B", textJa: "Ich heiße Anna. Freut mich!", textVi: "Tôi tên là Anna. Rất vui được gặp bạn!" },
+      ];
+    }
+    if (wLower.includes("kommen") || meaning.includes("đến từ") || meaning.includes("quê")) {
+      return [
+        { speaker: "A", textJa: "Woher kommen Sie?", textVi: "Bạn đến từ đâu vậy?" },
+        { speaker: "B", textJa: "Ich komme aus Vietnam.", textVi: "Tôi đến từ Việt Nam." },
+      ];
+    }
+    if (wLower.includes("wohnen") || meaning.includes("sống") || meaning.includes("ở")) {
+      return [
+        { speaker: "A", textJa: "Wo wohnen Sie im Moment?", textVi: "Hiện tại bạn đang sống ở đâu?" },
+        { speaker: "B", textJa: "Ich wohne in Berlin.", textVi: "Tôi đang sống ở Berlin." },
+      ];
+    }
+    if (wLower.includes("deutsch") || meaning.includes("tiếng đức")) {
+      return [
+        { speaker: "A", textJa: "Lernen Sie Deutsch?", textVi: "Bạn đang học tiếng Đức à?" },
+        { speaker: "B", textJa: "Ja, Deutsch ist sehr interessant!", textVi: "Vâng, tiếng Đức rất là thú vị!" },
+      ];
+    }
+
+    return [
+      {
+        speaker: "A",
+        textJa: `Wie verwendet man das Wort „${word}“ im Alltag?`,
+        textVi: `Từ "${word}" (${v.meaning}) được dùng như thế nào trong đời sống?`,
+      },
+      {
+        speaker: "B",
+        textJa: `Das Wort „${word}“ ist sehr nützlich und bedeutet „${v.meaning}“.`,
+        textVi: `Từ "${word}" rất hữu dụng và mang nghĩa là "${v.meaning}".`,
+      },
+    ];
   } else if (langCode === "en") {
+    const wLower = word.toLowerCase();
+    if (meaning.includes("xin chào") || meaning.includes("chào") || wLower.includes("hello") || wLower.includes("hi")) {
+      return [
+        { speaker: "A", textJa: "Hello, how are you today?", textVi: "Xin chào, hôm nay bạn thế nào?" },
+        { speaker: "B", textJa: "I am doing well, thank you!", textVi: "Tôi khỏe, cảm ơn bạn nhé!" },
+      ];
+    }
+    if (meaning.includes("cảm ơn") || wLower.includes("thank")) {
+      return [
+        { speaker: "A", textJa: "Thank you so much for your support!", textVi: "Cảm ơn bạn rất nhiều vì đã giúp đỡ!" },
+        { speaker: "B", textJa: "You are very welcome!", textVi: "Không có chi, rất sẵn lòng!" },
+      ];
+    }
     return [
       {
         speaker: "A",
@@ -308,13 +384,13 @@ export function generateVocabDialogue(v: Vocabulary, langCode: string = "ja"): D
     return [
       {
         speaker: "A",
-        textJa: `Wie verwendet man das Wort "${word}" im Alltag?`,
-        textVi: `Từ "${word}" (${v.meaning}) được dùng như thế nào trong đời sống?`,
+        textJa: `How is the word "${word}" used?`,
+        textVi: `Từ "${word}" (${v.meaning}) được dùng như thế nào?`,
       },
       {
         speaker: "B",
-        textJa: `Das Wort "${word}" ist sehr nützlich und bedeutet "${v.meaning}".`,
-        textVi: `Từ "${word}" rất hữu dụng và mang nghĩa là "${v.meaning}".`,
+        textJa: `It means "${v.meaning}".`,
+        textVi: `Từ đó có nghĩa là "${v.meaning}".`,
       },
     ];
   }
@@ -324,6 +400,69 @@ function generateGrammarDialogue(g: GrammarPoint, langCode: string = "ja"): Dial
   const struct = g.structure || "";
   const meaning = g.meaning || "";
 
+  if (langCode === "de") {
+    if (g.examples && g.examples.length >= 1) {
+      const ex = g.examples[0];
+      return [
+        {
+          speaker: "A",
+          textJa: `Können Sie mir ein natürliches Beispiel für „${struct}“ geben?`,
+          textVi: `Bạn có thể cho tôi một ví dụ tự nhiên với cấu trúc ngữ pháp "${struct}" (${meaning}) không?`,
+        },
+        {
+          speaker: "B",
+          textJa: `Zum Beispiel: „${ex.sentence}“.`,
+          textVi: `Ví dụ như câu: "${ex.sentence}" (${ex.meaning}).`,
+        },
+      ];
+    }
+
+    return [
+      {
+        speaker: "A",
+        textJa: `Was bedeutet die Grammatikstruktur „${struct}“?`,
+        textVi: `Cấu trúc ngữ pháp "${struct}" này có ý nghĩa gì vậy?`,
+      },
+      {
+        speaker: "B",
+        textJa: `„${struct}“ wird oft verwendet für: ${meaning}.`,
+        textVi: `"${struct}" thường được dùng với ý nghĩa: ${meaning}.`,
+      },
+    ];
+  }
+
+  if (langCode === "en") {
+    if (g.examples && g.examples.length >= 1) {
+      const ex = g.examples[0];
+      return [
+        {
+          speaker: "A",
+          textJa: `Could you give me a natural example using "${struct}"?`,
+          textVi: `Bạn có thể cho tôi một ví dụ tự nhiên dùng ngữ pháp "${struct}" (${meaning}) không?`,
+        },
+        {
+          speaker: "B",
+          textJa: `For example: "${ex.sentence}".`,
+          textVi: `Ví dụ như câu: "${ex.sentence}" (${ex.meaning}).`,
+        },
+      ];
+    }
+
+    return [
+      {
+        speaker: "A",
+        textJa: `What does the grammar structure "${struct}" mean?`,
+        textVi: `Cấu trúc ngữ pháp "${struct}" này có ý nghĩa gì vậy?`,
+      },
+      {
+        speaker: "B",
+        textJa: `"${struct}" is commonly used to express: ${meaning}.`,
+        textVi: `"${struct}" thường được dùng với ý nghĩa: ${meaning}.`,
+      },
+    ];
+  }
+
+  // Default: Japanese (ja)
   if (g.examples && g.examples.length >= 1) {
     const ex = g.examples[0];
     return [
@@ -360,6 +499,7 @@ export default function LessonExerciseSection({
   onPass,
   langCode = "ja",
 }: Props) {
+  const langMeta = useMemo(() => getLanguageMetadata(langCode), [langCode]);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [selectedAnswers, setSelectedAnswers] = useState<Record<number, number>>({});
   const [showTranslation, setShowTranslation] = useState<Record<number, boolean>>({});
@@ -377,7 +517,7 @@ export default function LessonExerciseSection({
     if (typeof window !== "undefined" && "speechSynthesis" in window) {
       window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = langCode === "ja" ? "ja-JP" : langCode === "de" ? "de-DE" : "en-US";
+      utterance.lang = getSpeechLangCode(langCode);
       utterance.rate = 0.9;
       window.speechSynthesis.speak(utterance);
     }
@@ -413,11 +553,12 @@ export default function LessonExerciseSection({
       const correctIdx = options.indexOf(meaning);
       const dialogue = generateVocabDialogue(v, langCode);
 
+      const readingPart = (langCode === "ja" && v.hiragana && v.hiragana !== jp) ? ` (${v.hiragana})` : "";
       list.push({
         id: qId++,
         type: "vocab",
         title: `Từ vựng ${idx + 1}`,
-        prompt: `Nghĩa chính xác của từ "${jp}" (${v.hiragana || ""}) là gì?`,
+        prompt: `Nghĩa chính xác của từ "${jp}"${readingPart} là gì?`,
         dialogue,
         options,
         correctIndex: correctIdx,
@@ -602,7 +743,7 @@ export default function LessonExerciseSection({
                       </span>
                     </div>
 
-                    {/* Switch Japanese / Vietnamese button */}
+                    {/* Switch Target Language / Vietnamese button */}
                     <button
                       type="button"
                       onClick={() => toggleTranslation(q.id)}
@@ -611,10 +752,10 @@ export default function LessonExerciseSection({
                           ? "bg-indigo-600 text-white border-indigo-600 hover:bg-indigo-700"
                           : "bg-white text-slate-700 border-slate-200 hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-200"
                       }`}
-                      title="Bấm để chuyển đổi giữa Tiếng Nhật và Tiếng Việt"
+                      title={`Bấm để chuyển đổi giữa ${langMeta.name} và Tiếng Việt`}
                     >
-                      <span>{showTranslation[q.id] ? "🇯🇵" : "🌐"}</span>
-                      <span>{showTranslation[q.id] ? "Tiếng Nhật" : "Dịch"}</span>
+                      <span>{showTranslation[q.id] ? langMeta.flag : "🌐"}</span>
+                      <span>{showTranslation[q.id] ? langMeta.name : "Dịch"}</span>
                     </button>
                   </div>
 

@@ -593,12 +593,16 @@ export default function CurriculumLessonDetailPage({ params }: Props) {
                               <div className="text-lg font-extrabold text-gray-900 leading-relaxed">
                                 {item.japanese}
                               </div>
-                              <div className="text-xs text-gray-500 font-mono">
-                                {item.hiragana}
-                              </div>
-                              <div className="text-[11px] text-gray-400 font-mono">
-                                {item.romaji}
-                              </div>
+                              {langCode === "ja" && item.hiragana && (
+                                <div className="text-xs text-gray-500 font-mono">
+                                  {item.hiragana}
+                                </div>
+                              )}
+                              {langCode === "ja" && item.romaji && (
+                                <div className="text-[11px] text-gray-400 font-mono">
+                                  {item.romaji}
+                                </div>
+                              )}
                               <div className="text-xs font-semibold text-gray-700 bg-gray-50 p-2 rounded-xl border border-gray-100">
                                 💡 Nghĩa: {item.meaning}
                               </div>
@@ -721,7 +725,7 @@ export default function CurriculumLessonDetailPage({ params }: Props) {
                                 <span className="font-bold text-emerald-800">Đáp án chuẩn:</span>{" "}
                                 <span className="text-gray-900 font-medium">{item.meaning}</span>
                               </div>
-                              {item.hiragana && (
+                              {langCode === "ja" && item.hiragana && (
                                 <div className="text-gray-500 text-[10px] font-mono">
                                   Phát âm: {item.hiragana}
                                 </div>

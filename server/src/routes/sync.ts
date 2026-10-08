@@ -49,7 +49,6 @@ router.post('/upload', authenticate, async (req: AuthRequest, res: Response) => 
     await client.query('BEGIN');
 
     const validKeys = [
-      'flashcash-lessons',
       'flashcash-progress',
       'flashcash-settings',
       'flashcash-notebooks',

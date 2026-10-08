@@ -125,7 +125,10 @@ export default function QuickTranslateModal({
             >
               <option value="vi">🇻🇳 Tiếng Việt</option>
               <option value="en">🇬🇧 Tiếng Anh</option>
+              <option value="de">🇩🇪 Tiếng Đức</option>
               <option value="ja">🇯🇵 Tiếng Nhật</option>
+              <option value="ko">🇰🇷 Tiếng Hàn</option>
+              <option value="zh">🇨🇳 Tiếng Trung</option>
             </select>
           </div>
 

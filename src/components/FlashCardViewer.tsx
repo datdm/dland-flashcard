@@ -14,6 +14,7 @@ interface FlashCardViewerProps {
   title?: string;
   dailyLimit?: number;
   langCode?: string;
+  defaultShuffled?: boolean;
 }
 
 interface QuizQuestion {
@@ -25,7 +26,13 @@ interface QuizQuestion {
   options: string[];
 }
 
-export default function FlashCardViewer({ vocabulary, title, dailyLimit, langCode }: FlashCardViewerProps) {
+export default function FlashCardViewer({
+  vocabulary,
+  title,
+  dailyLimit,
+  langCode,
+  defaultShuffled = true,
+}: FlashCardViewerProps) {
   const { progress, getVocabProgress, toggleLearned, toggleFavorite } = useProgress();
   const { settings, saveSettings } = useFlashCardSettings();
   const { activeLangCode } = useLanguageSetting();
@@ -36,7 +43,7 @@ export default function FlashCardViewer({ vocabulary, title, dailyLimit, langCod
   const [deck, setDeck] = useState<Vocabulary[]>([]);
   const [index, setIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
-  const [shuffled, setShuffled] = useState(false);
+  const [shuffled, setShuffled] = useState(defaultShuffled);
   const [showSettings, setShowSettings] = useState(false);
   const [filterUnlearned, setFilterUnlearned] = useState(false);
   const [sessionOffset, setSessionOffset] = useState(0);
@@ -275,6 +282,16 @@ export default function FlashCardViewer({ vocabulary, title, dailyLimit, langCod
     setShuffled(next);
     const newDeck = buildDeck(next, filterUnlearned);
     setDeck(newDeck);
+    setOriginalSessionWords(newDeck);
+    setIndex(0);
+    setFlipped(false);
+  };
+
+  const handleReshuffle = () => {
+    setShuffled(true);
+    const newDeck = buildDeck(true, filterUnlearned);
+    setDeck(newDeck);
+    setOriginalSessionWords(newDeck);
     setIndex(0);
     setFlipped(false);
   };
@@ -439,15 +456,24 @@ export default function FlashCardViewer({ vocabulary, title, dailyLimit, langCod
                   </button>
                   <button
                     onClick={toggleShuffle}
-                    title="Trộn ngẫu nhiên"
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                    title={shuffled ? "Đang bật trộn ngẫu nhiên (Nhấn để chuyển sang thứ tự gốc)" : "Bật trộn ngẫu nhiên"}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                       shuffled
-                        ? "bg-indigo-100 text-indigo-700 border border-indigo-200"
+                        ? "bg-indigo-600 text-white shadow-xs hover:bg-indigo-700 font-extrabold"
                         : "bg-gray-50 text-gray-600 border border-gray-200 hover:bg-gray-100 hover:text-gray-900"
                     }`}
                   >
-                    <span>🔀 Trộn</span>
+                    <span>🔀 {shuffled ? "Đã trộn" : "Trộn"}</span>
                   </button>
+                  {shuffled && (
+                    <button
+                      onClick={handleReshuffle}
+                      title="Xáo trộn lại một lượt ngẫu nhiên mới hoàn toàn"
+                      className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-bold bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200 transition-all cursor-pointer shadow-3xs"
+                    >
+                      <span>🔄 Trộn lại</span>
+                    </button>
+                  )}
                   <button
                     onClick={() => setShowSettings(true)}
                     title="Cài đặt"

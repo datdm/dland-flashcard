@@ -34,6 +34,7 @@ export interface CurriculumBook {
   totalGrammar: number;
   totalKanji: number;
   lessons: DetailedLesson[];
+  status?: "completed" | "updating" | "coming_soon";
 }
 
 export interface CurriculumLevelGroup {

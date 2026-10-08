@@ -318,12 +318,13 @@ export async function uploadToServer(skipBackup: boolean = false): Promise<{ suc
     // Collect all localStorage data (defined keys + all dynamic app keys)
     const data: Record<string, any> = {};
     const keySet = new Set<string>(Object.values(StorageKeys));
+    keySet.delete(StorageKeys.LESSONS); // Obsolete key
 
     if (typeof window !== 'undefined') {
       for (let i = 0; i < localStorage.length; i++) {
         const k = localStorage.key(i);
         if (k && (k.startsWith('flashcash-') || k.startsWith('dland_') || k.startsWith('dland'))) {
-          if (k !== AUTH_TOKEN_KEY && k !== USER_KEY && k !== LAST_SYNC_KEY && !k.startsWith('dland_exam_progress_')) {
+          if (k !== AUTH_TOKEN_KEY && k !== USER_KEY && k !== LAST_SYNC_KEY && k !== StorageKeys.LESSONS && !k.startsWith('dland_exam_progress_')) {
             keySet.add(k);
           }
         }
@@ -464,6 +465,10 @@ export async function downloadFromServer(): Promise<{ success: boolean; error?: 
     if (serverHasKeys) {
       // Write server data to localStorage without wiping existing local data
       for (const [key, value] of Object.entries(serverData)) {
+        if (key === 'flashcash-lessons' || key === StorageKeys.LESSONS) {
+          localStorage.removeItem(key);
+          continue;
+        }
         if (typeof value === 'string') {
           localStorage.setItem(key, value);
         } else {
