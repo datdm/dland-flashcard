@@ -284,26 +284,25 @@ export default function DictionarySearchPage() {
             return (
               <div
                 key={item.id}
-                className={`bg-white rounded-2xl p-5 border transition-all shadow-2xs hover:shadow-md ${
+                className={`bg-white rounded-2xl p-4 sm:p-5 border transition-all shadow-2xs hover:shadow-md ${
                   prog.learned ? "border-emerald-200 bg-emerald-50/30" : "border-gray-100"
                 }`}
               >
-                <div className="flex items-start justify-between gap-3">
-                  <div>
+                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 sm:gap-4">
+                  {/* Left: Word Information */}
+                  <div className="flex-1 min-w-0 space-y-1.5">
+                    {/* Header: Word + Reading + Badges */}
                     <div className="flex items-center gap-2 flex-wrap">
                       <button
                         type="button"
                         onClick={() => setQuickLookupWord(item)}
-                        className="text-2xl font-extrabold text-gray-900 hover:text-indigo-600 transition-colors text-left flex items-center gap-1.5 cursor-pointer group"
+                        className="text-2xl sm:text-3xl font-black text-gray-900 hover:text-indigo-600 transition-colors text-left inline-flex items-center gap-1.5 cursor-pointer group"
                         title="Xem chi tiết từ điển Mazii & câu ví dụ"
                       >
-                        <span>{item.kanji || item.hiragana}</span>
-                        <span className="text-[11px] font-bold text-indigo-500 opacity-80 group-hover:opacity-100 group-hover:underline">
-                          🔍 Chi tiết
-                        </span>
+                        <span className="tracking-tight whitespace-nowrap">{item.kanji || item.hiragana}</span>
                       </button>
                       {item.kanji && item.hiragana && langCode === "ja" && (
-                        <span className="text-sm font-semibold text-indigo-600 font-mono">
+                        <span className="text-sm sm:text-base font-semibold text-indigo-600 font-mono">
                           ({item.hiragana})
                         </span>
                       )}
@@ -323,8 +322,8 @@ export default function DictionarySearchPage() {
                       )}
                     </div>
 
-                    {/* Phiên âm IPA & Furigana Row */}
-                    <div className="flex items-center gap-2 flex-wrap mt-1.5">
+                    {/* Phiên âm IPA & Furigana & Âm Hán Row */}
+                    <div className="flex items-center gap-2 flex-wrap pt-0.5">
                       {langCode === "en" && (item.hiragana || (item.phonetic && item.phonetic.includes("/"))) && (
                         <span className="text-xs font-black text-purple-700 bg-purple-50 border border-purple-200 px-2.5 py-0.5 rounded-lg font-mono shadow-3xs flex items-center gap-1">
                           <span>🗣️ Phiên âm IPA:</span>
@@ -343,27 +342,28 @@ export default function DictionarySearchPage() {
                       )}
 
                       {item.onyomi && (
-                        <span className="text-[11px] font-bold text-purple-700 bg-purple-50 border border-purple-200 px-2 py-0.5 rounded-md">
+                        <span className="text-xs font-bold text-purple-700 bg-purple-50 border border-purple-200 px-2.5 py-0.5 rounded-lg">
                           {langCode === "ja" ? "Âm Hán: " : langCode === "zh" ? "Âm Hán: " : langCode === "ko" ? "Âm Hán Hàn: " : "Ghi chú: "}{item.onyomi}
                         </span>
                       )}
                     </div>
 
-                    <p className="text-sm font-semibold text-emerald-700 mt-1.5 leading-snug">
+                    {/* Meaning */}
+                    <p className="text-sm sm:text-base font-medium text-emerald-800 leading-relaxed select-text pt-0.5">
                       {item.meaning}
                     </p>
 
                     {item.phonetic && !item.phonetic.startsWith("Phiên âm chuẩn IPA") && (
-                      <p className="text-xs text-gray-400 italic mt-0.5">{item.phonetic}</p>
+                      <p className="text-xs text-gray-400 italic">{item.phonetic}</p>
                     )}
                   </div>
 
-                  {/* Actions */}
-                  <div className="flex items-center gap-1.5 shrink-0 flex-wrap sm:flex-nowrap">
+                  {/* Right / Bottom on mobile: Actions */}
+                  <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 pt-2.5 sm:pt-0 border-t border-gray-100 sm:border-0 flex-wrap sm:flex-nowrap justify-end">
                     <button
                       type="button"
                       onClick={() => setQuickLookupWord(item)}
-                      className="px-2.5 py-1.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-semibold transition-colors flex items-center gap-1 cursor-pointer"
+                      className="px-3 py-1.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-bold transition-all flex items-center gap-1 cursor-pointer active:scale-95"
                       title="Xem chi tiết từ điển Mazii & câu ví dụ"
                     >
                       <span>🔍</span>
@@ -373,7 +373,7 @@ export default function DictionarySearchPage() {
                     {textToSpeak && (
                       <button
                         onClick={() => speakText(textToSpeak)}
-                        className="w-9 h-9 rounded-xl bg-gray-50 hover:bg-indigo-50 text-gray-500 hover:text-indigo-600 flex items-center justify-center transition-colors text-base cursor-pointer"
+                        className="w-8.5 h-8.5 sm:w-9 sm:h-9 rounded-xl bg-gray-50 hover:bg-indigo-50 text-gray-600 hover:text-indigo-600 flex items-center justify-center transition-all text-base cursor-pointer active:scale-95"
                         title="Nghe đọc"
                       >
                         🔊
@@ -382,7 +382,7 @@ export default function DictionarySearchPage() {
 
                     <button
                       onClick={() => toggleFavorite(item.id)}
-                      className={`w-9 h-9 rounded-xl flex items-center justify-center text-lg transition-colors cursor-pointer ${
+                      className={`w-8.5 h-8.5 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center text-lg transition-all cursor-pointer active:scale-95 ${
                         prog.favorite ? "bg-yellow-50 text-yellow-400" : "bg-gray-50 text-gray-300 hover:text-yellow-400"
                       }`}
                       title="Yêu thích"
@@ -392,7 +392,7 @@ export default function DictionarySearchPage() {
 
                     <button
                       onClick={() => toggleLearned(item.id)}
-                      className={`w-9 h-9 rounded-xl font-bold flex items-center justify-center text-xs transition-colors cursor-pointer ${
+                      className={`w-8.5 h-8.5 sm:w-9 sm:h-9 rounded-xl font-bold flex items-center justify-center text-xs transition-all cursor-pointer active:scale-95 ${
                         prog.learned ? "bg-emerald-600 text-white" : "bg-gray-50 text-gray-300 hover:text-emerald-500"
                       }`}
                       title="Đã học"
@@ -410,7 +410,7 @@ export default function DictionarySearchPage() {
                           setTargetNotebookId("NEW");
                         }
                       }}
-                      className="px-2.5 py-1.5 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-700 text-xs font-semibold transition-colors cursor-pointer"
+                      className="px-3 py-1.5 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-700 text-xs font-bold transition-all cursor-pointer active:scale-95"
                       title="Thêm vào sổ tay"
                     >
                       + Sổ tay
