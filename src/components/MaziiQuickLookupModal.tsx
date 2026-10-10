@@ -145,7 +145,7 @@ export default function MaziiQuickLookupModal({
   return (
     <div onClick={onClose} className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
       <div 
-        className="bg-white w-full max-w-lg rounded-3xl shadow-2xl border border-gray-100 overflow-hidden flex flex-col max-h-[85vh] animate-in zoom-in-95 duration-200"
+        className={`bg-white w-full ${showDrawModal ? "max-w-3xl" : "max-w-lg"} rounded-3xl shadow-2xl border border-gray-100 overflow-hidden flex flex-col max-h-[85vh] transition-all duration-200 animate-in zoom-in-95`}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Header */}
@@ -157,27 +157,13 @@ export default function MaziiQuickLookupModal({
               <p className="text-[10px] text-amber-100 font-medium">Nhật - Việt • Hán Tự • Furigana chuẩn Mazii.net</p>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={() => setShowDrawModal((prev) => !prev)}
-              className={`w-8 h-8 rounded-full ${
-                showDrawModal
-                  ? "bg-white text-orange-600 font-bold"
-                  : "bg-white/20 hover:bg-white/30 text-white"
-              } transition-colors flex items-center justify-center text-sm cursor-pointer`}
-              title={showDrawModal ? "Đóng bảng vẽ" : "Vẽ Kanji để tra từ"}
-              aria-label="Vẽ Kanji để tra từ"
-            >
-              <span>{showDrawModal ? "✕" : "🖌️"}</span>
-            </button>
-            <button
-              onClick={onClose}
-              className="w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center text-white transition-colors font-bold text-sm cursor-pointer"
-            >
-              ✕
-            </button>
-          </div>
+          <button
+            onClick={onClose}
+            className="w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center text-white transition-colors font-bold text-sm cursor-pointer"
+            title="Đóng tra cứu"
+          >
+            ✕
+          </button>
         </div>
 
         {/* Quick Search Bar */}
@@ -212,11 +198,15 @@ export default function MaziiQuickLookupModal({
           <button
             type="button"
             onClick={() => setShowDrawModal((prev) => !prev)}
-            className="px-3 py-2 bg-white hover:bg-amber-100 text-amber-800 border border-amber-200 rounded-2xl text-xs font-bold transition-colors flex items-center gap-1 cursor-pointer shrink-0"
-            title="Vẽ Kanji để tra từ"
+            className={`px-3 py-2 ${
+              showDrawModal
+                ? "bg-amber-600 text-white border-amber-600 shadow-xs"
+                : "bg-white hover:bg-amber-100 text-amber-800 border-amber-200"
+            } border rounded-2xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer shrink-0`}
+            title={showDrawModal ? "Đóng bảng vẽ" : "Vẽ Kanji để tra từ"}
           >
             <span>🖌️</span>
-            <span className="hidden sm:inline">Vẽ Kanji</span>
+            <span>{showDrawModal ? "Đang vẽ" : "Vẽ Kanji"}</span>
           </button>
         </div>
 

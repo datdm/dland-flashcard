@@ -27,7 +27,7 @@ export default function KanjiDrawModal({
   const [candidates, setCandidates] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const canvasSize = 280;
+  const canvasSize = 260;
 
   // Draw grid background and existing strokes
   const redrawCanvas = useCallback(() => {
@@ -245,7 +245,7 @@ export default function KanjiDrawModal({
         </div>
 
         {/* Inline Body */}
-        <div className="flex flex-col md:flex-row items-center md:items-start justify-center gap-6">
+        <div className="flex flex-col sm:flex-row items-center sm:items-start justify-center gap-5">
           {/* Canvas Box Column */}
           <div className="flex flex-col items-center gap-2.5 shrink-0">
             <div className="relative border-2 border-indigo-200 rounded-2xl overflow-hidden shadow-inner bg-slate-50 touch-none">
@@ -268,7 +268,7 @@ export default function KanjiDrawModal({
             </div>
 
             {/* Action Toolbar */}
-            <div className="flex items-center justify-between w-full max-w-[280px] gap-2">
+            <div className="flex items-center justify-between w-full max-w-[260px] gap-2">
               <button
                 type="button"
                 disabled={strokes.length === 0}
@@ -291,15 +291,15 @@ export default function KanjiDrawModal({
           </div>
 
           {/* Candidate Kanji Recognition Column */}
-          <div className="flex-1 w-full flex flex-col justify-start space-y-2">
+          <div className="flex-1 min-w-0 w-full flex flex-col justify-start space-y-2.5">
             <div className="flex items-center justify-between text-xs font-bold text-gray-600 px-1">
               <span>Gợi ý Kanji nhận diện được:</span>
               {loading && <span className="text-indigo-600 animate-pulse font-medium">Đang nhận diện...</span>}
             </div>
 
             {candidates.length > 0 ? (
-              <div className="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-8 gap-2 p-2.5 bg-indigo-50/50 rounded-2xl border border-indigo-100 min-h-[140px]">
-                {candidates.slice(0, 16).map((char, idx) => (
+              <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-2 p-2.5 bg-indigo-50/50 rounded-2xl border border-indigo-100 min-h-[140px] max-h-[220px] overflow-y-auto">
+                {candidates.slice(0, 18).map((char, idx) => (
                   <button
                     key={idx}
                     type="button"
@@ -307,7 +307,7 @@ export default function KanjiDrawModal({
                       onSelectKanji(char, false);
                       handleClear();
                     }}
-                    className="h-13 bg-white hover:bg-indigo-600 hover:text-white border border-indigo-200/80 rounded-xl text-xl font-black text-gray-900 transition-all cursor-pointer shadow-3xs hover:scale-105 active:scale-95 flex items-center justify-center"
+                    className="h-12 bg-white hover:bg-indigo-600 hover:text-white border border-indigo-200/80 rounded-xl text-xl font-black text-gray-900 transition-all cursor-pointer shadow-3xs hover:scale-105 active:scale-95 flex items-center justify-center"
                     title={`Nhấp để thêm "${char}" vào ô tra cứu`}
                   >
                     {char}
@@ -326,15 +326,9 @@ export default function KanjiDrawModal({
               </div>
             )}
 
-            <div className="flex items-center justify-between text-[11px] text-gray-400 italic px-1 pt-1">
-              <span>💡 Nhấp vào chữ Kanji gợi ý để điền vào ô tìm kiếm. Ô vẽ sẽ tự xóa sẵn sàng cho chữ tiếp theo.</span>
-              <button
-                type="button"
-                onClick={onClose}
-                className="text-indigo-600 hover:underline font-bold not-italic cursor-pointer ml-2 shrink-0"
-              >
-                ✕ Đóng vẽ
-              </button>
+            <div className="text-[11px] text-amber-800 bg-amber-50/90 border border-amber-200/70 rounded-xl px-3 py-2 flex items-start gap-1.5 leading-snug">
+              <span className="shrink-0 text-xs">💡</span>
+              <span>Nhấp vào chữ Kanji gợi ý để điền vào ô tìm kiếm. Ô vẽ sẽ tự xóa sẵn sàng cho chữ tiếp theo.</span>
             </div>
           </div>
         </div>
@@ -387,7 +381,7 @@ export default function KanjiDrawModal({
           </div>
 
           {/* Action Toolbar */}
-          <div className="flex items-center justify-between w-full max-w-[280px] gap-2">
+          <div className="flex items-center justify-between w-full max-w-[260px] gap-2">
             <button
               type="button"
               disabled={strokes.length === 0}
@@ -409,7 +403,7 @@ export default function KanjiDrawModal({
           </div>
 
           {/* Recognition Candidate Grid */}
-          <div className="w-full max-w-[280px] space-y-1.5">
+          <div className="w-full max-w-[260px] space-y-1.5">
             <div className="flex items-center justify-between text-[11px] font-bold text-gray-500 px-1">
               <span>Gợi ý Kanji nhận diện được:</span>
               {loading && <span className="text-indigo-600 animate-pulse">Đang nhận diện...</span>}
