@@ -110,13 +110,29 @@ export default function ExamResultPage({ params }: Props) {
     resultsMap[q.id] = isCorrect;
   });
 
-  // Passage start map
-  const passageStartMap: Record<string, number> = {};
-  let curIdx = exam.data.questions.length + 1;
-  (exam.data.passages || []).forEach((pg) => {
-    passageStartMap[pg.id] = curIdx;
-    curIdx += pg.questions.length;
-  });
+  // Question display index map (Khớp 100% với tiến độ bài thi)
+  const questionDisplayIndexMap = useMemo(() => {
+    const map = new Map<number, number>();
+    let counter = 1;
+    allMajorSections.forEach((major) => {
+      major.mondais.forEach((m) => {
+        (m.questionIds || []).forEach((qid) => {
+          if (!map.has(qid)) {
+            map.set(qid, counter++);
+          }
+        });
+        (m.passageIds || []).forEach((pid) => {
+          const pg = (exam?.data.passages || []).find((p) => p.id === pid);
+          pg?.questions.forEach((q) => {
+            if (!map.has(q.id)) {
+              map.set(q.id, counter++);
+            }
+          });
+        });
+      });
+    });
+    return map;
+  }, [allMajorSections, exam]);
 
   const questionMap = new Map<number, any>();
   exam.data.questions.forEach((q) => questionMap.set(q.id, q));
@@ -422,7 +438,7 @@ export default function ExamResultPage({ params }: Props) {
                           {(mondai.questionIds || []).map((qid) => {
                             const q = questionMap.get(qid);
                             if (!q) return null;
-                            const qIndex = exam.data.questions.findIndex((x) => x.id === qid) + 1;
+                            const qIndex = questionDisplayIndexMap.get(qid) ?? qid;
                             return (
                               <ExamQuestionCard
                                 key={q.id}
@@ -446,7 +462,7 @@ export default function ExamResultPage({ params }: Props) {
                               <ExamPassageCard
                                 key={pg.id}
                                 passage={pg}
-                                startIndex={passageStartMap[pg.id] || 1}
+                                questionIndexMap={questionDisplayIndexMap}
                                 answers={result.answers}
                                 onChange={() => {}}
                                 showResult={true}

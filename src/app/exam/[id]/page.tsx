@@ -420,13 +420,29 @@ function ExamTakingPageContent({ params }: Props) {
   const progressPercent =
     totalCount > 0 ? Math.round((answeredCount / totalCount) * 100) : 0;
 
-  // Passage start index lookup
-  const passageStartMap: Record<string, number> = {};
-  let curIdx = exam.data.questions.length + 1;
-  (exam.data.passages || []).forEach((pg) => {
-    passageStartMap[pg.id] = curIdx;
-    curIdx += pg.questions.length;
-  });
+  // Question display index map (Đảm bảo số thứ tự câu hỏi khớp 100% với tiến độ bài thi)
+  const questionDisplayIndexMap = useMemo(() => {
+    const map = new Map<number, number>();
+    let counter = 1;
+    majorSections.forEach((major) => {
+      major.mondais.forEach((m) => {
+        (m.questionIds || []).forEach((qid) => {
+          if (!map.has(qid)) {
+            map.set(qid, counter++);
+          }
+        });
+        (m.passageIds || []).forEach((pid) => {
+          const pg = (exam?.data.passages || []).find((p) => p.id === pid);
+          pg?.questions.forEach((q) => {
+            if (!map.has(q.id)) {
+              map.set(q.id, counter++);
+            }
+          });
+        });
+      });
+    });
+    return map;
+  }, [majorSections, exam]);
 
   const questionMap = new Map<number, any>();
   exam.data.questions.forEach((q) => questionMap.set(q.id, q));
@@ -679,7 +695,7 @@ function ExamTakingPageContent({ params }: Props) {
                           <ExamPassageCard
                             key={pg.id}
                             passage={pg}
-                            startIndex={passageStartMap[pg.id] || 1}
+                            questionIndexMap={questionDisplayIndexMap}
                             answers={answers}
                             onChange={handleAnswerChange}
                             onOpenMazii={(word) =>
@@ -693,7 +709,7 @@ function ExamTakingPageContent({ params }: Props) {
                       {(mondai.questionIds || []).map((qid) => {
                         const q = questionMap.get(qid);
                         if (!q) return null;
-                        const qIndex = exam.data.questions.findIndex((x) => x.id === qid) + 1;
+                        const qIndex = questionDisplayIndexMap.get(qid) ?? qid;
                         return (
                           <ExamQuestionCard
                             key={q.id}

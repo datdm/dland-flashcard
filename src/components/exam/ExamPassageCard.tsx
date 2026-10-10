@@ -6,7 +6,8 @@ import ExamQuestionCard from "./ExamQuestionCard";
 
 interface Props {
   passage: ExamPassageGroup;
-  startIndex: number;
+  startIndex?: number;
+  questionIndexMap?: Map<number, number> | Record<number, number>;
   answers: Record<number, number[]>;
   onChange: (qid: number, selected: number[]) => void;
   showResult?: boolean;
@@ -15,7 +16,8 @@ interface Props {
 
 export default function ExamPassageCard({
   passage,
-  startIndex,
+  startIndex = 1,
+  questionIndexMap,
   answers,
   onChange,
   showResult = false,
@@ -59,17 +61,25 @@ export default function ExamPassageCard({
 
         {/* Passage Questions */}
         <div className="w-full lg:w-1/2 flex-1 space-y-3">
-          {passage.questions.map((q, idx) => (
-            <ExamQuestionCard
-              key={q.id}
-              question={q}
-              index={startIndex + idx}
-              selected={answers[q.id] || []}
-              onChange={onChange}
-              showResult={showResult}
-              onOpenMazii={onOpenMazii}
-            />
-          ))}
+          {passage.questions.map((q, idx) => {
+            const displayIndex =
+              questionIndexMap instanceof Map
+                ? questionIndexMap.get(q.id) ?? q.id
+                : (questionIndexMap as Record<number, number>)?.[q.id] ??
+                  (typeof q.id === "number" ? q.id : startIndex + idx);
+
+            return (
+              <ExamQuestionCard
+                key={q.id}
+                question={q}
+                index={displayIndex}
+                selected={answers[q.id] || []}
+                onChange={onChange}
+                showResult={showResult}
+                onOpenMazii={onOpenMazii}
+              />
+            );
+          })}
         </div>
       </div>
     </div>
