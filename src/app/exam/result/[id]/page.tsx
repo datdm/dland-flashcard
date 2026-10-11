@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState, use, useMemo } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import AuthGuard from "@/components/AuthGuard";
 import { getResultById, getExamById, getAllResults, clearExamProgress } from "@/lib/examStorage";
@@ -20,7 +20,15 @@ interface Props {
 }
 
 export default function ExamResultPage({ params }: Props) {
-  const { id } = use(params);
+  const routeParams = useParams<{ id: string }>();
+  let id = routeParams?.id;
+  if (!id) {
+    try {
+      id = use(params)?.id;
+    } catch {
+      id = "";
+    }
+  }
   const router = useRouter();
 
   const [result, setResult] = useState<ExamResult | null>(null);
@@ -76,6 +84,31 @@ export default function ExamResultPage({ params }: Props) {
     return allMajorSections;
   }, [allMajorSections, result]);
 
+  // Question display index map (Khớp 100% với tiến độ bài thi)
+  // Phải đặt trước early return để tuân thủ React Rules of Hooks
+  const questionDisplayIndexMap = useMemo(() => {
+    const map = new Map<number, number>();
+    let counter = 1;
+    allMajorSections.forEach((major) => {
+      major.mondais.forEach((m) => {
+        (m.questionIds || []).forEach((qid) => {
+          if (!map.has(qid)) {
+            map.set(qid, counter++);
+          }
+        });
+        (m.passageIds || []).forEach((pid) => {
+          const pg = (exam?.data.passages || []).find((p) => p.id === pid);
+          (pg?.questions || []).forEach((q) => {
+            if (!map.has(q.id)) {
+              map.set(q.id, counter++);
+            }
+          });
+        });
+      });
+    });
+    return map;
+  }, [allMajorSections, exam]);
+
   if (!result || !exam) {
     return (
       <div className="flex items-center justify-center min-h-[500px]">
@@ -109,30 +142,6 @@ export default function ExamResultPage({ params }: Props) {
       userAns.every((a) => q.answers.includes(a));
     resultsMap[q.id] = isCorrect;
   });
-
-  // Question display index map (Khớp 100% với tiến độ bài thi)
-  const questionDisplayIndexMap = useMemo(() => {
-    const map = new Map<number, number>();
-    let counter = 1;
-    allMajorSections.forEach((major) => {
-      major.mondais.forEach((m) => {
-        (m.questionIds || []).forEach((qid) => {
-          if (!map.has(qid)) {
-            map.set(qid, counter++);
-          }
-        });
-        (m.passageIds || []).forEach((pid) => {
-          const pg = (exam?.data.passages || []).find((p) => p.id === pid);
-          pg?.questions.forEach((q) => {
-            if (!map.has(q.id)) {
-              map.set(q.id, counter++);
-            }
-          });
-        });
-      });
-    });
-    return map;
-  }, [allMajorSections, exam]);
 
   const questionMap = new Map<number, any>();
   exam.data.questions.forEach((q) => questionMap.set(q.id, q));

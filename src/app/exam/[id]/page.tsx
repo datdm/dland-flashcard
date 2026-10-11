@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState, useRef, useCallback, use, useMemo, Suspense } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams, useParams } from "next/navigation";
 import Link from "next/link";
 import AuthGuard from "@/components/AuthGuard";
 import {
@@ -29,7 +29,15 @@ interface Props {
 }
 
 function ExamTakingPageContent({ params }: Props) {
-  const { id } = use(params);
+  const routeParams = useParams<{ id: string }>();
+  let id = routeParams?.id;
+  if (!id) {
+    try {
+      id = use(params)?.id;
+    } catch {
+      id = "";
+    }
+  }
   const router = useRouter();
   const searchParams = useSearchParams();
   const urlSections = searchParams.get("sections");
@@ -395,12 +403,37 @@ function ExamTakingPageContent({ params }: Props) {
         (m.questionIds || []).forEach((qid) => set.add(qid));
         (m.passageIds || []).forEach((pid) => {
           const pg = (exam?.data.passages || []).find((p) => p.id === pid);
-          pg?.questions.forEach((q) => set.add(q.id));
+          (pg?.questions || []).forEach((q) => set.add(q.id));
         });
       });
     });
     return set;
   }, [selectedSectionIds, majorSections, exam]);
+
+  // Question display index map (Đảm bảo số thứ tự câu hỏi khớp 100% với tiến độ bài thi)
+  // Phải đặt trước early return để tuân thủ React Rules of Hooks
+  const questionDisplayIndexMap = useMemo(() => {
+    const map = new Map<number, number>();
+    let counter = 1;
+    majorSections.forEach((major) => {
+      major.mondais.forEach((m) => {
+        (m.questionIds || []).forEach((qid) => {
+          if (!map.has(qid)) {
+            map.set(qid, counter++);
+          }
+        });
+        (m.passageIds || []).forEach((pid) => {
+          const pg = (exam?.data.passages || []).find((p) => p.id === pid);
+          (pg?.questions || []).forEach((q) => {
+            if (!map.has(q.id)) {
+              map.set(q.id, counter++);
+            }
+          });
+        });
+      });
+    });
+    return map;
+  }, [majorSections, exam]);
 
   if (!exam) {
     return (
@@ -419,30 +452,6 @@ function ExamTakingPageContent({ params }: Props) {
   ).length;
   const progressPercent =
     totalCount > 0 ? Math.round((answeredCount / totalCount) * 100) : 0;
-
-  // Question display index map (Đảm bảo số thứ tự câu hỏi khớp 100% với tiến độ bài thi)
-  const questionDisplayIndexMap = useMemo(() => {
-    const map = new Map<number, number>();
-    let counter = 1;
-    majorSections.forEach((major) => {
-      major.mondais.forEach((m) => {
-        (m.questionIds || []).forEach((qid) => {
-          if (!map.has(qid)) {
-            map.set(qid, counter++);
-          }
-        });
-        (m.passageIds || []).forEach((pid) => {
-          const pg = (exam?.data.passages || []).find((p) => p.id === pid);
-          pg?.questions.forEach((q) => {
-            if (!map.has(q.id)) {
-              map.set(q.id, counter++);
-            }
-          });
-        });
-      });
-    });
-    return map;
-  }, [majorSections, exam]);
 
   const questionMap = new Map<number, any>();
   exam.data.questions.forEach((q) => questionMap.set(q.id, q));
