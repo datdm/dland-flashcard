@@ -30,7 +30,6 @@ export default function ExamHubPage() {
   const [exams, setExams] = useState<StoredExam[]>([]);
   const [results, setResults] = useState<ExamResult[]>([]);
   const [progressMap, setProgressMap] = useState<Record<string, ExamProgress | null>>({});
-  const [selectedCategory, setSelectedCategory] = useState<"all" | "real" | "mock">("all");
   const [selectedLevel, setSelectedLevel] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [showUploadModal, setShowUploadModal] = useState<boolean>(false);
@@ -218,60 +217,6 @@ export default function ExamHubPage() {
               </div>
             </div>
           </div>
-        </div>
-
-        {/* 2 Main Sections Tab Bar (JLPT Official vs Mock Test) */}
-        <div className="flex items-center gap-2 p-1.5 bg-white rounded-2xl border border-gray-100 shadow-xs overflow-x-auto">
-          <button
-            type="button"
-            onClick={() => setSelectedCategory("all")}
-            className={`px-4 py-2 rounded-xl text-xs font-black transition-all shrink-0 cursor-pointer flex items-center gap-2 ${
-              selectedCategory === "all"
-                ? "bg-gray-900 text-white shadow-xs"
-                : "bg-gray-50 text-gray-600 hover:bg-gray-100"
-            }`}
-          >
-            <span>🌟 Tất cả bộ đề</span>
-            <span className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold ${
-              selectedCategory === "all" ? "bg-gray-800 text-gray-200" : "bg-gray-200 text-gray-700"
-            }`}>
-              {filteredExams.length}
-            </span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setSelectedCategory("real")}
-            className={`px-4 py-2 rounded-xl text-xs font-black transition-all shrink-0 cursor-pointer flex items-center gap-2 ${
-              selectedCategory === "real"
-                ? "bg-amber-600 text-white shadow-xs"
-                : "bg-amber-50 text-amber-900 border border-amber-200/80 hover:bg-amber-100"
-            }`}
-          >
-            <span>🏛️ Đề thi thật JLPT</span>
-            <span className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold ${
-              selectedCategory === "real" ? "bg-amber-700 text-amber-100" : "bg-amber-200/80 text-amber-900"
-            }`}>
-              {realExams.length}
-            </span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setSelectedCategory("mock")}
-            className={`px-4 py-2 rounded-xl text-xs font-black transition-all shrink-0 cursor-pointer flex items-center gap-2 ${
-              selectedCategory === "mock"
-                ? "bg-indigo-600 text-white shadow-xs"
-                : "bg-indigo-50 text-indigo-900 border border-indigo-200/80 hover:bg-indigo-100"
-            }`}
-          >
-            <span>📝 Mock Test (Đề thi thử)</span>
-            <span className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold ${
-              selectedCategory === "mock" ? "bg-indigo-700 text-indigo-100" : "bg-indigo-200/80 text-indigo-900"
-            }`}>
-              {mockExams.length}
-            </span>
-          </button>
         </div>
 
         {/* Level Filters & Search */}
@@ -528,7 +473,7 @@ export default function ExamHubPage() {
           return (
             <div className="space-y-8">
               {/* Section 1: Đề thi thật JLPT */}
-              {(selectedCategory === "all" || selectedCategory === "real") && (
+              {realExams.length > 0 && (
                 <div className="space-y-3.5">
                   <div className="flex items-center justify-between gap-3 bg-gradient-to-r from-amber-500/10 via-amber-50/50 to-transparent p-3.5 sm:p-4 rounded-2xl border border-amber-200/80">
                     <div className="flex items-center gap-3">
@@ -549,20 +494,14 @@ export default function ExamHubPage() {
                     </div>
                   </div>
 
-                  {realExams.length > 0 ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3.5 sm:gap-4">
-                      {realExams.map(renderExamCard)}
-                    </div>
-                  ) : (
-                    <div className="text-center py-8 bg-white rounded-2xl border border-dashed border-amber-200 text-xs text-gray-500">
-                      Không có bộ đề thi thật JLPT nào phù hợp với bộ lọc cấp độ hoặc từ khóa tìm kiếm.
-                    </div>
-                  )}
+                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3.5 sm:gap-4">
+                    {realExams.map(renderExamCard)}
+                  </div>
                 </div>
               )}
 
               {/* Section 2: Mock Test (Thi thử) */}
-              {(selectedCategory === "all" || selectedCategory === "mock") && (
+              {mockExams.length > 0 && (
                 <div className="space-y-3.5">
                   <div className="flex items-center justify-between gap-3 bg-gradient-to-r from-indigo-500/10 via-purple-50/50 to-transparent p-3.5 sm:p-4 rounded-2xl border border-indigo-200/80">
                     <div className="flex items-center gap-3">
@@ -583,15 +522,9 @@ export default function ExamHubPage() {
                     </div>
                   </div>
 
-                  {mockExams.length > 0 ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3.5 sm:gap-4">
-                      {mockExams.map(renderExamCard)}
-                    </div>
-                  ) : (
-                    <div className="text-center py-8 bg-white rounded-2xl border border-dashed border-indigo-200 text-xs text-gray-500">
-                      Không có bộ đề thi thử (Mock Test) nào phù hợp với bộ lọc cấp độ hoặc từ khóa tìm kiếm.
-                    </div>
-                  )}
+                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3.5 sm:gap-4">
+                    {mockExams.map(renderExamCard)}
+                  </div>
                 </div>
               )}
             </div>
