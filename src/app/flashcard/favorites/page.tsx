@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useCurriculums } from "@/hooks/useCurriculums";
 import { useNotebooks } from "@/hooks/useNotebooks";
 import { useProgress } from "@/hooks/useProgress";
@@ -12,7 +12,24 @@ export default function FlashCardFavoritesPage() {
   const { notebooks } = useNotebooks();
   const { progress } = useProgress();
 
+  const [sessionFavoriteIds, setSessionFavoriteIds] = useState<string[]>(() =>
+    Object.entries(progress)
+      .filter(([, p]) => p && p.favorite)
+      .map(([id]) => id)
+  );
+
+  useEffect(() => {
+    setSessionFavoriteIds((prev) => {
+      if (prev.length > 0) return prev;
+      const ids = Object.entries(progress)
+        .filter(([, p]) => p && p.favorite)
+        .map(([id]) => id);
+      return ids.length > 0 ? ids : prev;
+    });
+  }, [progress]);
+
   const favorites = useMemo(() => {
+    const favoriteSet = new Set(sessionFavoriteIds);
     const curriculumVocab = curriculums.flatMap((c) =>
       c.lessons.flatMap((l) =>
         (l.vocabulary || []).map((v) => ({
@@ -30,8 +47,8 @@ export default function FlashCardFavoritesPage() {
       }))
     );
     const allVocab = [...curriculumVocab, ...notebookVocab];
-    return allVocab.filter((v) => v && progress[v.id]?.favorite);
-  }, [curriculums, notebooks, progress]);
+    return allVocab.filter((v) => v && favoriteSet.has(v.id));
+  }, [curriculums, notebooks, sessionFavoriteIds]);
 
   if (favorites.length === 0) {
     return (

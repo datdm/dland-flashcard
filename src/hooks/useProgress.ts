@@ -36,21 +36,23 @@ export function useProgress() {
           const serverVocab = serverData?.vocabulary;
           if (serverVocab && typeof serverVocab === "object" && Object.keys(serverVocab).length > 0) {
             setProgress((prev) => {
-              const merged: ProgressMap = { ...prev };
+              const latestLocal = getItem<ProgressMap>(StorageKeys.PROGRESS) || prev;
+              const merged: ProgressMap = { ...latestLocal };
+              let hasChanges = false;
+
               for (const [id, sItem] of Object.entries(serverVocab)) {
+                const serverEntry = sItem as VocabProgress;
                 const localItem = merged[id];
                 if (!localItem) {
-                  merged[id] = sItem as VocabProgress;
-                } else {
-                  merged[id] = {
-                    ...localItem,
-                    ...sItem,
-                    learned: localItem.learned || (sItem as VocabProgress).learned,
-                    favorite: localItem.favorite || (sItem as VocabProgress).favorite,
-                    learnedAt: localItem.learnedAt || (sItem as VocabProgress).learnedAt,
-                  };
+                  merged[id] = serverEntry;
+                  hasChanges = true;
                 }
               }
+
+              if (!hasChanges) {
+                return prev;
+              }
+
               setItem(StorageKeys.PROGRESS, merged);
               return merged;
             });
@@ -75,33 +77,33 @@ export function useProgress() {
     const targetIds = getEquivalentVocabIds(id);
     if (!targetIds.includes(id)) targetIds.push(id);
 
-    setProgress((prev) => {
-      const updated: ProgressMap = { ...prev };
-      for (const targetId of targetIds) {
-        const current = updated[targetId] ?? defaultProgress();
-        const isLearned = patch.learned !== undefined ? patch.learned : current.learned;
-        const learnedAt = isLearned
-          ? (patch.learnedAt || current.learnedAt || new Date().toISOString())
-          : undefined;
+    const currentMap = getItem<ProgressMap>(StorageKeys.PROGRESS) || progress;
+    const updated: ProgressMap = { ...currentMap };
+    for (const targetId of targetIds) {
+      const current = updated[targetId] ?? defaultProgress();
+      const isLearned = patch.learned !== undefined ? patch.learned : current.learned;
+      const learnedAt = isLearned
+        ? (patch.learnedAt || current.learnedAt || new Date().toISOString())
+        : undefined;
 
-        updated[targetId] = { ...current, ...patch, learned: isLearned, learnedAt };
-      }
+      updated[targetId] = { ...current, ...patch, learned: isLearned, learnedAt };
+    }
 
-      setItem(StorageKeys.PROGRESS, updated);
-      if (typeof window !== "undefined") {
-        window.dispatchEvent(new Event("progress-updated"));
-      }
-      autoSync(); // Auto-sync after save
-      return updated;
-    });
-  }, []);
+    setItem(StorageKeys.PROGRESS, updated);
+    setProgress(updated);
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new Event("progress-updated"));
+    }
+    autoSync(); // Auto-sync after save
+  }, [progress]);
 
   const toggleLearned = useCallback(
     async (id: string) => {
       const targetIds = getEquivalentVocabIds(id);
       if (!targetIds.includes(id)) targetIds.push(id);
 
-      const current = progress[id] ?? defaultProgress();
+      const currentMap = getItem<ProgressMap>(StorageKeys.PROGRESS) || progress;
+      const current = currentMap[id] ?? defaultProgress();
       const learned = !current.learned;
       const newPatch = {
         learned,
@@ -109,18 +111,17 @@ export function useProgress() {
       };
 
       // 2. Update locally first for all matching vocabulary IDs across textbooks
-      setProgress((prev) => {
-        const updated: ProgressMap = { ...prev };
-        for (const targetId of targetIds) {
-          const itemCurrent = updated[targetId] ?? defaultProgress();
-          updated[targetId] = { ...itemCurrent, ...newPatch };
-        }
-        setItem(StorageKeys.PROGRESS, updated);
-        if (typeof window !== "undefined") {
-          window.dispatchEvent(new Event("progress-updated"));
-        }
-        return updated;
-      });
+      const updated: ProgressMap = { ...currentMap };
+      for (const targetId of targetIds) {
+        const itemCurrent = updated[targetId] ?? defaultProgress();
+        updated[targetId] = { ...itemCurrent, ...newPatch };
+      }
+
+      setItem(StorageKeys.PROGRESS, updated);
+      setProgress(updated);
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new Event("progress-updated"));
+      }
 
       if (learned) {
         updateStreak();
@@ -143,22 +144,22 @@ export function useProgress() {
       const targetIds = getEquivalentVocabIds(id);
       if (!targetIds.includes(id)) targetIds.push(id);
 
-      const current = progress[id] ?? defaultProgress();
+      const currentMap = getItem<ProgressMap>(StorageKeys.PROGRESS) || progress;
+      const current = currentMap[id] ?? defaultProgress();
       const newPatch = { favorite: !current.favorite };
 
       // Update locally for all matching IDs
-      setProgress((prev) => {
-        const updated: ProgressMap = { ...prev };
-        for (const targetId of targetIds) {
-          const itemCurrent = updated[targetId] ?? defaultProgress();
-          updated[targetId] = { ...itemCurrent, ...newPatch };
-        }
-        setItem(StorageKeys.PROGRESS, updated);
-        if (typeof window !== "undefined") {
-          window.dispatchEvent(new Event("progress-updated"));
-        }
-        return updated;
-      });
+      const updated: ProgressMap = { ...currentMap };
+      for (const targetId of targetIds) {
+        const itemCurrent = updated[targetId] ?? defaultProgress();
+        updated[targetId] = { ...itemCurrent, ...newPatch };
+      }
+
+      setItem(StorageKeys.PROGRESS, updated);
+      setProgress(updated);
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new Event("progress-updated"));
+      }
 
       // Delta sync to server
       if (checkAuthStatus()) {

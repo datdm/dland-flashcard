@@ -77,7 +77,24 @@ export default function FlashCardLearnedPage() {
     loadAllSystemData();
   }, []);
 
-  const learnedWords = useMemo(() => {
+  const [sessionLearnedIds, setSessionLearnedIds] = useState<string[]>(() =>
+    Object.entries(progress)
+      .filter(([, p]) => p && p.learned)
+      .map(([id]) => id)
+  );
+
+  // Populate sessionLearnedIds once if initially empty before progress loaded
+  useEffect(() => {
+    setSessionLearnedIds((prev) => {
+      if (prev.length > 0) return prev;
+      const ids = Object.entries(progress)
+        .filter(([, p]) => p && p.learned)
+        .map(([id]) => id);
+      return ids.length > 0 ? ids : prev;
+    });
+  }, [progress]);
+
+  const vocabMap = useMemo(() => {
     const map = new Map<string, Vocabulary & { lang: string; sourceType?: string; sourceName?: string }>();
 
     // A. Build vocabulary map from repoBooks
@@ -157,14 +174,15 @@ export default function FlashCardLearnedPage() {
       }
     });
 
-    // E. Extract ALL learned items matching activeLanguage from progress
+    return map;
+  }, [repoBooks, allCurriculums, notebooks, systemVocabList]);
+
+  const learnedWords = useMemo(() => {
     const result: (Vocabulary & { lang: string; sourceType?: string; sourceName?: string })[] = [];
     const effectiveLang = activeLanguage.code;
 
-    Object.entries(progress).forEach(([id, p]) => {
-      if (!p || !p.learned) return;
-
-      const known = map.get(id);
+    sessionLearnedIds.forEach((id) => {
+      const known = vocabMap.get(id);
       if (!known) return; // Skip orphaned IDs that don't belong to any real vocabulary item
 
       if (effectiveLang === "all" || known.lang === effectiveLang) {
@@ -173,7 +191,7 @@ export default function FlashCardLearnedPage() {
     });
 
     return result;
-  }, [repoBooks, allCurriculums, notebooks, systemVocabList, progress, activeLanguage.code]);
+  }, [vocabMap, sessionLearnedIds, activeLanguage.code]);
 
   if (learnedWords.length === 0) {
     return (

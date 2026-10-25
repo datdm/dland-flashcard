@@ -1,12 +1,13 @@
 "use client";
 
+import { useMemo } from "react";
 import { useNotebooks } from "@/hooks/useNotebooks";
 import FlashCardViewer from "@/components/FlashCardViewer";
 import Link from "next/link";
 
 export default function FlashCardAllNotebooksPage() {
   const { notebooks } = useNotebooks();
-  const allVocab = notebooks.flatMap((nb) => nb.vocabulary);
+  const allVocab = useMemo(() => notebooks.flatMap((nb) => nb.vocabulary), [notebooks]);
 
   if (allVocab.length === 0) {
     return (

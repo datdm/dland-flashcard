@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { useParams } from "next/navigation";
 import { useCurriculums } from "@/hooks/useCurriculums";
 import FlashCardViewer from "@/components/FlashCardViewer";
@@ -9,6 +10,11 @@ export default function CurriculumFlashcardPage() {
   const { id } = useParams<{ id: string }>();
   const { getCurriculumById } = useCurriculums();
   const curriculum = getCurriculumById(id);
+
+  const allVocabulary = useMemo(
+    () => (curriculum ? curriculum.lessons.flatMap((lesson) => lesson.vocabulary) : []),
+    [curriculum]
+  );
 
   if (!curriculum) {
     return (
@@ -20,9 +26,6 @@ export default function CurriculumFlashcardPage() {
       </div>
     );
   }
-
-  // Flatten all vocabulary from all lessons in curriculum
-  const allVocabulary = curriculum.lessons.flatMap((lesson) => lesson.vocabulary);
 
   if (allVocabulary.length === 0) {
     return (

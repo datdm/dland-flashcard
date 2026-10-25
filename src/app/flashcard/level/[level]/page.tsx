@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { useParams } from "next/navigation";
 import { useLessons } from "@/hooks/useLessons";
 import FlashCardViewer from "@/components/FlashCardViewer";
@@ -9,9 +10,13 @@ export default function FlashCardLevelPage() {
   const { level } = useParams<{ level: string }>();
   const { lessons } = useLessons();
 
-  const levelVocab = lessons
-    .filter((l) => l.level?.toUpperCase() === level.toUpperCase())
-    .flatMap((l) => l.vocabulary);
+  const levelVocab = useMemo(
+    () =>
+      lessons
+        .filter((l) => l.level?.toUpperCase() === level.toUpperCase())
+        .flatMap((l) => l.vocabulary),
+    [lessons, level]
+  );
 
   if (lessons.length === 0) {
     return (

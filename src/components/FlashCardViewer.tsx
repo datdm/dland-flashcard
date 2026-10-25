@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback, useEffect, useRef, useMemo } from "react";
 import { Vocabulary, getSpeechLangCode, getLanguageMetadata } from "@/types";
 import { useProgress } from "@/hooks/useProgress";
 import { useFlashCardSettings } from "@/hooks/useFlashCardSettings";
@@ -98,6 +98,11 @@ export default function FlashCardViewer({
     [vocabulary, getVocabProgress, dailyLimit, title, sessionOffset, progress]
   );
 
+  const vocabSignature = useMemo(
+    () => vocabulary.map((v) => v.id).join("|"),
+    [vocabulary]
+  );
+
   useEffect(() => {
     const initialDeck = buildDeck(shuffled, filterUnlearned);
     setDeck(initialDeck);
@@ -105,7 +110,7 @@ export default function FlashCardViewer({
     setIndex(0);
     setFlipped(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [vocabulary, sessionOffset]);
+  }, [vocabSignature, sessionOffset, dailyLimit]);
 
   const handleToggleLearned = useCallback((id: string) => {
     const currentProgress = getVocabProgress(id);
@@ -113,8 +118,8 @@ export default function FlashCardViewer({
 
     toggleLearned(id);
 
-    // If the word was marked as learned, remove it from the current session deck
-    if (willBeLearned) {
+    // Only remove from current session deck when filtering unlearned words or in daily limit mode
+    if (willBeLearned && (filterUnlearned || Boolean(dailyLimit))) {
       setDeck((prevDeck) => {
         const newDeck = prevDeck.filter((v) => v.id !== id);
         // Adjust index if it's now out of bounds
@@ -128,7 +133,7 @@ export default function FlashCardViewer({
         return newDeck;
       });
     }
-  }, [toggleLearned, getVocabProgress]);
+  }, [toggleLearned, getVocabProgress, filterUnlearned, dailyLimit]);
 
   // Generate 4-choice multiple choice questions from session words
   const generateQuiz = useCallback(() => {
