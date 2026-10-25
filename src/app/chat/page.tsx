@@ -260,7 +260,10 @@ export default function ChatPage() {
 
       const res = await fetch("/api/chat", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "X-Silent-Loading": "1",
+        },
         body: JSON.stringify({
           history: historyToSend,
           message: promptText,

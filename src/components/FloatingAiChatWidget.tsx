@@ -315,7 +315,10 @@ export default function FloatingAiChatWidget() {
 
       const res = await fetch("/api/chat", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "X-Silent-Loading": "1",
+        },
         body: JSON.stringify({
           history: historyToSend,
           message: promptText,
@@ -494,7 +497,9 @@ export default function FloatingAiChatWidget() {
 
           {/* Messages Body */}
           <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4 bg-slate-50/50">
-            {messages.map((msg, idx) => (
+            {messages.map((msg, idx) => {
+              if (msg.role === "model" && !msg.parts[0]?.text) return null;
+              return (
               <div
                 key={idx}
                 className={`flex gap-2.5 sm:gap-3 ${
@@ -562,7 +567,8 @@ export default function FloatingAiChatWidget() {
                   )}
                 </div>
               </div>
-            ))}
+              );
+            })}
 
             {isLoading && (
               <div className="flex gap-2.5 items-center text-gray-400 text-xs">

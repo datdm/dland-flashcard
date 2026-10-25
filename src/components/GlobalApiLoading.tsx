@@ -28,6 +28,7 @@ export default function GlobalApiLoading() {
               ? input.href
               : input.url;
         const url = new URL(rawUrl, window.location.origin);
+        if (url.pathname.startsWith("/api/chat")) return false;
         return url.pathname.startsWith("/api/") || url.pathname.includes("/api/");
       } catch {
         return false;
