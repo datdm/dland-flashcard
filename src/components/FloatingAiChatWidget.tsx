@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
-import ReactMarkdown from "react-markdown";
+import AiMarkdownContent from "./AiMarkdownContent";
 import { useLanguageSetting } from "@/hooks/useLanguageSetting";
 
 type Message = {
@@ -535,9 +535,7 @@ export default function FloatingAiChatWidget() {
                   )}
 
                   {/* Message Markdown Content */}
-                  <div className={`prose prose-xs sm:prose-sm max-w-none ${msg.role === "user" ? "text-white prose-invert" : "text-gray-800"}`}>
-                    <ReactMarkdown>{msg.parts[0]?.text || ""}</ReactMarkdown>
-                  </div>
+                  <AiMarkdownContent content={msg.parts[0]?.text || ""} isUser={msg.role === "user"} />
 
                   {/* AI Message Action Bar */}
                   {msg.role === "model" && msg.parts[0]?.text && (

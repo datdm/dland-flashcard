@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import ReactMarkdown from "react-markdown";
+import AiMarkdownContent from "@/components/AiMarkdownContent";
 import Link from "next/link";
 import { useLanguageSetting } from "@/hooks/useLanguageSetting";
 import AuthGuard from "@/components/AuthGuard";
@@ -506,9 +506,7 @@ export default function ChatPage() {
                     <div className="whitespace-pre-wrap text-sm leading-relaxed">{msg.parts[0].text}</div>
                   ) : (
                     <div>
-                      <div className="prose prose-sm max-w-none prose-p:leading-relaxed prose-pre:bg-gray-900 prose-pre:text-gray-100 prose-a:text-indigo-600 prose-headings:mb-1.5 prose-headings:mt-3 first:prose-headings:mt-0 marker:text-indigo-500">
-                        <ReactMarkdown>{msg.parts[0].text}</ReactMarkdown>
-                      </div>
+                      <AiMarkdownContent content={msg.parts[0].text} />
 
                       {msg.parts[0].text && (
                         <div className="mt-2.5 pt-2 border-t border-gray-100 flex items-center justify-between gap-2">
