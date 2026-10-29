@@ -145,7 +145,10 @@ export default function TranslatePage() {
       try {
         const res = await fetch("/api/translate", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            "X-Silent-Loading": "1",
+          },
           body: JSON.stringify({
             q: textToTranslate.trim(),
             source: sLang,
@@ -193,7 +196,10 @@ export default function TranslatePage() {
     try {
       const res = await fetch("/api/translate", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "X-Silent-Loading": "1",
+        },
         body: JSON.stringify({
           q: sourceText.trim(),
           source: sourceLang,
