@@ -99,6 +99,7 @@ export function getNavItemsForLanguage(langCode: string): NavItem[] {
         { href: "/curriculum", label: "Giáo trình (N5-N2)", icon: "📚" },
         { href: "/exam", label: "Luyện thi JLPT", icon: "📝" },
         { href: "/practice", label: "Luyện chuyên sâu", icon: "🏆" },
+        { href: "/conjugation", label: "Luyện chia 13 thể", icon: "🔀" },
         { href: "/translate", label: "Dịch văn bản", icon: "🌐" },
         { href: "/notebooks", label: "Sổ tay Tiếng Nhật", icon: "📓" },
         { href: "/flashcard/all", label: "Ôn tập Flashcard", icon: "🎴" },

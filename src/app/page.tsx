@@ -83,6 +83,14 @@ export default function HomePage() {
           </div>
 
           <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 flex-wrap">
+            {activeLanguage.code === "ja" && (
+              <Link
+                href="/conjugation"
+                className="px-3 py-1.5 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold rounded-lg sm:rounded-xl shadow-xs transition-all text-xs flex items-center gap-1 active:scale-98"
+              >
+                <span>🔀</span> Luyện chia 13 thể
+              </Link>
+            )}
             <Link
               href="/exam"
               className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg sm:rounded-xl shadow-xs transition-all text-xs flex items-center gap-1 active:scale-98"
