@@ -11,6 +11,8 @@ import {
   VerbGroup,
 } from "@/lib/japaneseConjugation";
 import AddToNotebookModal from "@/components/AddToNotebookModal";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
+import { useLanguageSetting } from "@/hooks/useLanguageSetting";
 
 type ActiveTab = "theory" | "practice" | "ai-vocab";
 type PracticeMode = "quiz" | "typing" | "matrix";
@@ -35,6 +37,7 @@ interface QuizQuestion {
 const STORAGE_KEY_AI_VERBS = "dland_japanese_conjugation_ai_verbs_v1";
 
 export default function JapaneseConjugationPage() {
+  const { activeLanguage } = useLanguageSetting();
   const [activeTab, setActiveTab] = useState<ActiveTab>("theory");
 
   // Verb bank: Preset + AI generated (persisted in localStorage, guaranteed non-duplicate)
@@ -407,128 +410,132 @@ export default function JapaneseConjugationPage() {
   const getGroupBadge = (group: VerbGroup, isException?: boolean) => {
     if (group === 1) {
       return (
-        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
+        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">
           Nhóm I (五段){isException ? " ★ Ngoại lệ" : ""}
         </span>
       );
     }
     if (group === 2) {
       return (
-        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
           Nhóm II (一段)
         </span>
       );
     }
     return (
-      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300 border border-purple-200 dark:border-purple-800">
+      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-purple-50 text-purple-700 border border-purple-200">
         Nhóm III (Bất quy tắc)
       </span>
     );
   };
 
   return (
-    <div className="min-h-screen pb-16">
-      {/* Header Banner */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 p-6 sm:p-8 text-white shadow-xl mb-6">
-        <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-          <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 backdrop-blur-sm text-xs font-bold uppercase tracking-wider mb-3">
-              <span>🇯🇵 Ngữ pháp & Động từ Tiếng Nhật</span>
-              <span>•</span>
-              <span>Đầy đủ 13 Thể chuẩn JLPT</span>
+    <div className="w-full max-w-[1600px] mx-auto px-3 sm:px-4 lg:px-6 py-3 sm:py-4 space-y-4 sm:space-y-5 pb-8 md:pb-4">
+      {/* Breadcrumb Bar */}
+      <BreadcrumbNav items={[{ label: "Luyện Chia 13 Thể", icon: "🔀" }]} />
+
+      {/* Header Banner (Compact Minimalist - Light Theme matching background) */}
+      <div className={`rounded-xl sm:rounded-2xl px-3.5 py-2.5 sm:px-5 sm:py-3 shadow-2xs border relative overflow-hidden transition-all duration-300 bg-gradient-to-r ${
+        activeLanguage.code === "en"
+          ? "from-white via-blue-50/40 to-indigo-50/30 border-blue-100/80"
+          : activeLanguage.code === "de"
+          ? "from-white via-amber-50/40 to-orange-50/30 border-amber-100/80"
+          : activeLanguage.code === "ko"
+          ? "from-white via-rose-50/40 to-pink-50/30 border-rose-100/80"
+          : activeLanguage.code === "zh"
+          ? "from-white via-red-50/40 to-amber-50/30 border-red-100/80"
+          : "from-white via-teal-50/40 to-indigo-50/30 border-teal-100/80"
+      }`}>
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-2.5 relative z-10">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <span className="px-2 py-0.5 rounded-md text-[9px] font-bold tracking-wider uppercase shrink-0 border bg-teal-50 text-teal-700 border-teal-200/80">
+              Tiếng Nhật (JA)
+            </span>
+            <span className="px-2 py-0.5 bg-indigo-50 text-indigo-700 border border-indigo-200/80 rounded-md text-[10px] font-bold shrink-0 hidden sm:inline">
+              13 Thể Chuẩn JLPT
+            </span>
+            <div className="min-w-0">
+              <h1 className="text-sm sm:text-base font-extrabold text-gray-900 tracking-tight truncate">
+                Luyện Chia 13 Thể Động Từ Tiếng Nhật 🇯🇵
+              </h1>
+              <p className="text-[11px] text-gray-500 truncate hidden sm:block">
+                Lý thuyết phân nhóm, công thức biến âm 13 thể, thực hành phản xạ & tạo kho động từ AI ({allVerbs.length} từ)
+              </p>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
-              🔀 Luyện Chia 13 Thể Động Từ Tiếng Nhật
-            </h1>
-            <p className="mt-2 text-sm sm:text-base text-indigo-100 max-w-3xl">
-              Nắm vững lý thuyết phân nhóm, công thức biến âm 13 thể, thực hành phản xạ trắc nghiệm / tự gõ / điền bảng 13 thể và tạo kho động từ ngẫu nhiên không trùng lặp bằng AI.
-            </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3">
-            <div className="bg-white/15 backdrop-blur-md rounded-2xl px-4 py-3 border border-white/20 text-center min-w-[110px]">
-              <div className="text-2xl font-black">13</div>
-              <div className="text-[11px] font-medium text-indigo-100">Thể động từ</div>
-            </div>
-            <div className="bg-white/15 backdrop-blur-md rounded-2xl px-4 py-3 border border-white/20 text-center min-w-[110px]">
-              <div className="text-2xl font-black">{allVerbs.length}</div>
-              <div className="text-[11px] font-medium text-indigo-100">Động từ không trùng</div>
-            </div>
+          <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap shrink-0">
+            <button
+              onClick={() => setActiveTab("theory")}
+              className={`px-3 py-1.5 rounded-lg sm:rounded-xl text-xs font-bold transition-all flex items-center gap-1 cursor-pointer ${
+                activeTab === "theory"
+                  ? "bg-indigo-600 text-white shadow-xs"
+                  : "bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 shadow-3xs"
+              }`}
+            >
+              <span>📖</span>
+              <span>Lý thuyết (13 thể)</span>
+            </button>
+            <button
+              onClick={() => setActiveTab("practice")}
+              className={`px-3 py-1.5 rounded-lg sm:rounded-xl text-xs font-bold transition-all flex items-center gap-1 cursor-pointer ${
+                activeTab === "practice"
+                  ? "bg-indigo-600 text-white shadow-xs"
+                  : "bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 shadow-3xs"
+              }`}
+            >
+              <span>✍️</span>
+              <span>Thực hành</span>
+            </button>
+            <button
+              onClick={() => setActiveTab("ai-vocab")}
+              className={`px-3 py-1.5 rounded-lg sm:rounded-xl text-xs font-bold transition-all flex items-center gap-1 cursor-pointer ${
+                activeTab === "ai-vocab"
+                  ? "bg-indigo-600 text-white shadow-xs"
+                  : "bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 shadow-3xs"
+              }`}
+            >
+              <span>🤖</span>
+              <span>Kho Từ AI ({allVerbs.length})</span>
+            </button>
             <button
               onClick={() => {
                 setActiveTab("ai-vocab");
                 handleGenerateAiVerbs({ switchToVerb: true });
               }}
               disabled={isGeneratingAi}
-              className="px-4 py-3 rounded-2xl bg-white text-indigo-700 hover:bg-indigo-50 font-bold text-sm shadow-lg transition-all flex items-center gap-2 disabled:opacity-60 cursor-pointer"
+              className="px-3 py-1.5 rounded-lg sm:rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold text-xs shadow-xs transition-all flex items-center gap-1 disabled:opacity-60 cursor-pointer"
             >
               <span>{isGeneratingAi ? "⏳" : "✨"}</span>
-              <span>{isGeneratingAi ? "AI đang tạo..." : "AI Tạo Từ Mới"}</span>
+              <span>{isGeneratingAi ? "Đang tạo..." : "+ AI Tạo Từ Mới"}</span>
             </button>
           </div>
         </div>
-      </div>
-
-      {/* Main Navigation Tabs */}
-      <div className="flex flex-wrap gap-2 mb-6 bg-white dark:bg-gray-800/90 p-2 rounded-2xl shadow-sm border border-gray-200/80 dark:border-gray-700/80">
-        <button
-          onClick={() => setActiveTab("theory")}
-          className={`flex-1 min-w-[160px] py-3 px-4 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 cursor-pointer ${
-            activeTab === "theory"
-              ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md"
-              : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700/50"
-          }`}
-        >
-          <span>📖</span>
-          <span>1. Lý thuyết 13 Thể</span>
-        </button>
-        <button
-          onClick={() => setActiveTab("practice")}
-          className={`flex-1 min-w-[160px] py-3 px-4 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 cursor-pointer ${
-            activeTab === "practice"
-              ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md"
-              : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700/50"
-          }`}
-        >
-          <span>✍️</span>
-          <span>2. Bài tập Thực hành</span>
-        </button>
-        <button
-          onClick={() => setActiveTab("ai-vocab")}
-          className={`flex-1 min-w-[160px] py-3 px-4 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 cursor-pointer ${
-            activeTab === "ai-vocab"
-              ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md"
-              : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700/50"
-          }`}
-        >
-          <span>🤖</span>
-          <span>3. Kho Từ Vựng AI & Bảng 13 Thể ({allVerbs.length})</span>
-        </button>
       </div>
 
       {/* =====================================================================
           TAB 1: LÝ THUYẾT 13 THỂ ĐỘNG TỪ
          ===================================================================== */}
       {activeTab === "theory" && (
-        <div className="space-y-8">
+        <div className="space-y-6">
           {/* Section 1: 3 Verb Groups Overview */}
-          <section className="bg-white dark:bg-gray-800 rounded-3xl p-6 shadow-sm border border-gray-200/80 dark:border-gray-700/80">
+          <section className="bg-white rounded-2xl p-5 sm:p-6 shadow-xs border border-gray-200/80">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-5">
               <div>
-                <h2 className="text-xl font-extrabold text-gray-900 dark:text-white flex items-center gap-2">
+                <h2 className="text-lg sm:text-xl font-extrabold text-gray-900 flex items-center gap-2">
                   <span>🧭</span> Bước 1: Cách phân biệt 3 Nhóm Động Từ Tiếng Nhật
                 </h2>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                <p className="text-xs sm:text-sm text-gray-500 mt-1">
                   Muốn chia đúng 13 thể, trước tiên bạn cần xác định chính xác động từ thuộc Nhóm I, Nhóm II hay Nhóm III.
                 </p>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
               {VERB_GROUPS_OVERVIEW.map((g) => (
                 <div
                   key={g.group}
-                  className="rounded-2xl p-5 border border-gray-200 dark:border-gray-700 bg-gray-50/70 dark:bg-gray-900/40 flex flex-col justify-between"
+                  className="rounded-2xl p-4 sm:p-5 border border-gray-200 bg-gray-50/70 flex flex-col justify-between"
                 >
                   <div>
                     <div className="flex items-center justify-between gap-2 mb-3">
@@ -537,17 +544,17 @@ export default function JapaneseConjugationPage() {
                         Group {g.group}
                       </span>
                     </div>
-                    <h3 className="font-bold text-gray-900 dark:text-white text-base mb-2">
+                    <h3 className="font-bold text-gray-900 text-base mb-2">
                       {g.title}
                     </h3>
-                    <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mb-4 leading-relaxed">
+                    <p className="text-xs sm:text-sm text-gray-600 mb-4 leading-relaxed">
                       {g.description}
                     </p>
                     <div className="space-y-2">
-                      <div className="text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
+                      <div className="text-xs font-bold uppercase tracking-wider text-indigo-600">
                         Dấu hiệu nhận biết:
                       </div>
-                      <ul className="space-y-1.5 text-xs sm:text-sm text-gray-700 dark:text-gray-300">
+                      <ul className="space-y-1.5 text-xs sm:text-sm text-gray-700">
                         {g.identification.map((rule, idx) => (
                           <li key={idx} className="flex items-start gap-2">
                             <span className="text-indigo-500 font-bold mt-0.5">•</span>
@@ -562,16 +569,16 @@ export default function JapaneseConjugationPage() {
             </div>
 
             {/* Quick 5-Row (a-i-u-e-o) Map for Group 1 */}
-            <div className="mt-6 rounded-2xl bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 dark:from-indigo-950/40 dark:via-purple-950/30 dark:to-pink-950/30 p-5 border border-indigo-200/70 dark:border-indigo-800/60">
-              <h3 className="text-sm sm:text-base font-extrabold text-indigo-950 dark:text-indigo-200 mb-3 flex items-center gap-2">
+            <div className="mt-5 rounded-2xl bg-gradient-to-r from-indigo-50/70 via-purple-50/60 to-pink-50/60 p-4 sm:p-5 border border-indigo-200/70">
+              <h3 className="text-sm sm:text-base font-extrabold text-indigo-950 mb-3 flex items-center gap-2">
                 <span>💡</span> Sơ đồ 5 Cột Nguyên Âm (a - i - u - e - o) cho Động từ Nhóm I
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 text-xs sm:text-sm">
-                <div className="bg-white/90 dark:bg-gray-800/90 p-3.5 rounded-xl border border-rose-200 dark:border-rose-800/60">
-                  <div className="font-extrabold text-rose-600 dark:text-rose-400 mb-1">
+                <div className="bg-white p-3.5 rounded-xl border border-rose-200">
+                  <div className="font-extrabold text-rose-600 mb-1">
                     1. Cột A (あ段)
                   </div>
-                  <p className="text-gray-600 dark:text-gray-300 text-xs">
+                  <p className="text-gray-600 text-xs">
                     • <b>Thể ない</b> (+ ない)<br />
                     • <b>Thể Bị động</b> (+ れる)<br />
                     • <b>Thể Sai khiến</b> (+ せる)<br />
@@ -581,40 +588,40 @@ export default function JapaneseConjugationPage() {
                     </span>
                   </p>
                 </div>
-                <div className="bg-white/90 dark:bg-gray-800/90 p-3.5 rounded-xl border border-blue-200 dark:border-blue-800/60">
-                  <div className="font-extrabold text-blue-600 dark:text-blue-400 mb-1">
+                <div className="bg-white p-3.5 rounded-xl border border-blue-200">
+                  <div className="font-extrabold text-blue-600 mb-1">
                     2. Cột I (い段)
                   </div>
-                  <p className="text-gray-600 dark:text-gray-300 text-xs">
+                  <p className="text-gray-600 text-xs">
                     • <b>Thể ます</b> (+ ます)<br />
                     • Gốc ghép <b>〜たい, 〜ながら, 〜やすい, 〜にくい</b><br />
                     • Biến âm sang <b>Thể て / Thể た</b>
                   </p>
                 </div>
-                <div className="bg-white/90 dark:bg-gray-800/90 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700">
-                  <div className="font-extrabold text-slate-700 dark:text-slate-300 mb-1">
+                <div className="bg-white p-3.5 rounded-xl border border-slate-200">
+                  <div className="font-extrabold text-slate-700 mb-1">
                     3. Cột U (う段)
                   </div>
-                  <p className="text-gray-600 dark:text-gray-300 text-xs">
+                  <p className="text-gray-600 text-xs">
                     • <b>Thể Từ điển</b> (Nguyên mẫu)<br />
                     • <b>Thể Cấm chỉ</b> (Nguyên mẫu + な)
                   </p>
                 </div>
-                <div className="bg-white/90 dark:bg-gray-800/90 p-3.5 rounded-xl border border-emerald-200 dark:border-emerald-800/60">
-                  <div className="font-extrabold text-emerald-600 dark:text-emerald-400 mb-1">
+                <div className="bg-white p-3.5 rounded-xl border border-emerald-200">
+                  <div className="font-extrabold text-emerald-600 mb-1">
                     4. Cột E (え段)
                   </div>
-                  <p className="text-gray-600 dark:text-gray-300 text-xs">
+                  <p className="text-gray-600 text-xs">
                     • <b>Thể Khả năng</b> (+ る)<br />
                     • <b>Thể Điều kiện</b> (+ ば)<br />
                     • <b>Thể Mệnh lệnh</b> (Giữ nguyên cột E)
                   </p>
                 </div>
-                <div className="bg-white/90 dark:bg-gray-800/90 p-3.5 rounded-xl border border-purple-200 dark:border-purple-800/60">
-                  <div className="font-extrabold text-purple-600 dark:text-purple-400 mb-1">
+                <div className="bg-white p-3.5 rounded-xl border border-purple-200">
+                  <div className="font-extrabold text-purple-600 mb-1">
                     5. Cột O (お段)
                   </div>
-                  <p className="text-gray-600 dark:text-gray-300 text-xs">
+                  <p className="text-gray-600 text-xs">
                     • <b>Thể Ý chí</b> (+ う)<br />
                     (VD: 書く → 書こう, 行く → 行こう)
                   </p>
@@ -625,12 +632,12 @@ export default function JapaneseConjugationPage() {
 
           {/* Section 2: Detailed 13 Conjugation Forms */}
           <section className="space-y-4">
-            <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 sm:p-5 shadow-sm border border-gray-200/80 dark:border-gray-700/80 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="bg-white rounded-2xl p-4 sm:p-5 shadow-xs border border-gray-200/80 flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div>
-                <h2 className="text-xl font-extrabold text-gray-900 dark:text-white">
+                <h2 className="text-lg sm:text-xl font-extrabold text-gray-900">
                   📚 Chi tiết Công thức & Cách dùng 13 Thể Động Từ
                 </h2>
-                <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
+                <p className="text-xs sm:text-sm text-gray-500">
                   Chọn nhanh từng thể hoặc tìm kiếm theo tên thể / công thức.
                 </p>
               </div>
@@ -641,7 +648,7 @@ export default function JapaneseConjugationPage() {
                   value={theorySearch}
                   onChange={(e) => setTheorySearch(e.target.value)}
                   placeholder="🔍 Tìm thể (VD: bị động, sai khiến, て...)"
-                  className="px-3.5 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full sm:w-64"
+                  className="px-3.5 py-2 rounded-xl border border-gray-200 bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full sm:w-64"
                 />
               </div>
             </div>
@@ -653,7 +660,7 @@ export default function JapaneseConjugationPage() {
                 className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                   selectedTheoryForm === "ALL"
                     ? "bg-indigo-600 text-white shadow-sm"
-                    : "bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-50"
+                    : "bg-white text-gray-600 border border-gray-200 hover:bg-gray-50"
                 }`}
               >
                 Tất cả 13 thể
@@ -665,7 +672,7 @@ export default function JapaneseConjugationPage() {
                   className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                     selectedTheoryForm === f.key
                       ? "bg-indigo-600 text-white shadow-sm"
-                      : "bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-50"
+                      : "bg-white text-gray-600 border border-gray-200 hover:bg-gray-50"
                   }`}
                 >
                   #{f.index}. {f.shortName}
@@ -674,13 +681,13 @@ export default function JapaneseConjugationPage() {
             </div>
 
             {/* Cards for each of the 13 forms */}
-            <div className="grid grid-cols-1 gap-5">
+            <div className="grid grid-cols-1 gap-4">
               {filteredTheoryForms.map((form) => (
                 <div
                   key={form.key}
-                  className="bg-white dark:bg-gray-800 rounded-3xl p-5 sm:p-6 shadow-sm border border-gray-200/80 dark:border-gray-700/80 transition-all hover:shadow-md"
+                  className="bg-white rounded-2xl p-5 sm:p-6 shadow-xs border border-gray-200/80 transition-all hover:shadow-sm"
                 >
-                  <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-gray-100 dark:border-gray-700/70">
+                  <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-gray-100">
                     <div className="flex items-center gap-3">
                       <span
                         className={`inline-flex items-center justify-center w-10 h-10 rounded-2xl bg-gradient-to-br ${form.badgeColor} text-white font-black text-sm shadow-sm`}
@@ -689,14 +696,14 @@ export default function JapaneseConjugationPage() {
                       </span>
                       <div>
                         <div className="flex items-center gap-2 flex-wrap">
-                          <h3 className="text-lg font-extrabold text-gray-900 dark:text-white">
+                          <h3 className="text-lg font-extrabold text-gray-900">
                             {form.nameVi}
                           </h3>
-                          <span className="px-2.5 py-0.5 rounded-lg bg-indigo-50 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 font-bold text-xs">
+                          <span className="px-2.5 py-0.5 rounded-lg bg-indigo-50 text-indigo-700 font-bold text-xs">
                             {form.nameJp}
                           </span>
                         </div>
-                        <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mt-1">
+                        <p className="text-xs sm:text-sm text-gray-600 mt-1">
                           {form.summary}
                         </p>
                       </div>
@@ -708,7 +715,7 @@ export default function JapaneseConjugationPage() {
                         setCurrentQuestion(null);
                         setActiveTab("practice");
                       }}
-                      className="px-3.5 py-2 rounded-xl bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-900/30 dark:hover:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300 text-xs font-bold transition-all cursor-pointer"
+                      className="px-3.5 py-2 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-bold transition-all cursor-pointer"
                     >
                       ✍️ Luyện riêng {form.shortName} →
                     </button>
@@ -718,40 +725,40 @@ export default function JapaneseConjugationPage() {
                   <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 mt-5">
                     {/* Left: Conjugation Formulas */}
                     <div className="lg:col-span-7 space-y-3">
-                      <div className="text-xs font-extrabold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                      <div className="text-xs font-extrabold uppercase tracking-wider text-gray-500">
                         📐 Quy tắc chia theo 3 nhóm:
                       </div>
                       <div className="space-y-2.5 text-xs sm:text-sm">
-                        <div className="p-3 rounded-xl bg-blue-50/70 dark:bg-blue-950/30 border border-blue-200/60 dark:border-blue-800/50">
-                          <span className="font-extrabold text-blue-700 dark:text-blue-300">
+                        <div className="p-3 rounded-xl bg-blue-50/70 border border-blue-200/60">
+                          <span className="font-extrabold text-blue-700">
                             • Nhóm I (五段):{" "}
                           </span>
-                          <span className="text-gray-800 dark:text-gray-200 whitespace-pre-line">
+                          <span className="text-gray-800 whitespace-pre-line">
                             {form.rules.group1}
                           </span>
                         </div>
-                        <div className="p-3 rounded-xl bg-emerald-50/70 dark:bg-emerald-950/30 border border-emerald-200/60 dark:border-emerald-800/50">
-                          <span className="font-extrabold text-emerald-700 dark:text-emerald-300">
+                        <div className="p-3 rounded-xl bg-emerald-50/70 border border-emerald-200/60">
+                          <span className="font-extrabold text-emerald-700">
                             • Nhóm II (一段):{" "}
                           </span>
-                          <span className="text-gray-800 dark:text-gray-200">
+                          <span className="text-gray-800">
                             {form.rules.group2}
                           </span>
                         </div>
-                        <div className="p-3 rounded-xl bg-purple-50/70 dark:bg-purple-950/30 border border-purple-200/60 dark:border-purple-800/50">
-                          <span className="font-extrabold text-purple-700 dark:text-purple-300">
+                        <div className="p-3 rounded-xl bg-purple-50/70 border border-purple-200/60">
+                          <span className="font-extrabold text-purple-700">
                             • Nhóm III (Bất quy tắc):{" "}
                           </span>
-                          <span className="text-gray-800 dark:text-gray-200">
+                          <span className="text-gray-800">
                             {form.rules.group3}
                           </span>
                         </div>
                         {form.rules.exceptions && (
-                          <div className="p-3 rounded-xl bg-amber-50/80 dark:bg-amber-950/30 border border-amber-200/70 dark:border-amber-800/50">
-                            <span className="font-extrabold text-amber-700 dark:text-amber-300">
+                          <div className="p-3 rounded-xl bg-amber-50/80 border border-amber-200/70">
+                            <span className="font-extrabold text-amber-700">
                               ⚠️ Lưu ý / Ngoại lệ:{" "}
                             </span>
-                            <span className="text-gray-800 dark:text-gray-200">
+                            <span className="text-gray-800">
                               {form.rules.exceptions}
                             </span>
                           </div>
@@ -762,10 +769,10 @@ export default function JapaneseConjugationPage() {
                     {/* Right: Usages & Examples */}
                     <div className="lg:col-span-5 space-y-4">
                       <div>
-                        <div className="text-xs font-extrabold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2">
+                        <div className="text-xs font-extrabold uppercase tracking-wider text-gray-500 mb-2">
                           💡 Mẫu câu ứng dụng thường gặp:
                         </div>
-                        <ul className="space-y-1.5 text-xs sm:text-sm text-gray-700 dark:text-gray-300">
+                        <ul className="space-y-1.5 text-xs sm:text-sm text-gray-700">
                           {form.usages.map((u, idx) => (
                             <li key={idx} className="flex items-start gap-2">
                               <span className="text-emerald-500 font-bold">✓</span>
@@ -776,31 +783,31 @@ export default function JapaneseConjugationPage() {
                       </div>
 
                       <div>
-                        <div className="text-xs font-extrabold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2">
+                        <div className="text-xs font-extrabold uppercase tracking-wider text-gray-500 mb-2">
                           🎯 Ví dụ minh họa:
                         </div>
                         <div className="space-y-2">
                           {form.examples.map((ex, idx) => (
                             <div
                               key={idx}
-                              className="flex items-center justify-between gap-2 p-2.5 rounded-xl bg-gray-50 dark:bg-gray-900/60 border border-gray-200/60 dark:border-gray-700/60 text-xs"
+                              className="flex items-center justify-between gap-2 p-2.5 rounded-xl bg-gray-50 border border-gray-200/60 text-xs"
                             >
                               <div>
-                                <span className="font-semibold text-gray-500 dark:text-gray-400">
+                                <span className="font-semibold text-gray-500">
                                   [{ex.group}] {ex.before} →{" "}
                                 </span>
-                                <span className="font-extrabold text-indigo-600 dark:text-indigo-400 text-sm">
+                                <span className="font-extrabold text-indigo-600 text-sm">
                                   {ex.after}
                                 </span>{" "}
                                 <span className="text-gray-500">({ex.afterReading})</span>
-                                <div className="text-gray-600 dark:text-gray-400 mt-0.5">
+                                <div className="text-gray-600 mt-0.5">
                                   Nghĩa: {ex.meaning}
                                 </div>
                               </div>
                               <button
                                 onClick={() => speakJapanese(ex.after)}
                                 title="Nghe phát âm"
-                                className="p-2 rounded-lg bg-white dark:bg-gray-800 hover:bg-indigo-50 text-indigo-600 border border-gray-200 dark:border-gray-700 cursor-pointer shrink-0"
+                                className="p-2 rounded-lg bg-white hover:bg-indigo-50 text-indigo-600 border border-gray-200 cursor-pointer shrink-0"
                               >
                                 🔊
                               </button>
@@ -823,7 +830,7 @@ export default function JapaneseConjugationPage() {
       {activeTab === "practice" && (
         <div className="space-y-6">
           {/* Practice Mode & Filter Bar */}
-          <div className="bg-white dark:bg-gray-800 rounded-3xl p-5 sm:p-6 shadow-sm border border-gray-200/80 dark:border-gray-700/80 space-y-5">
+          <div className="bg-white rounded-2xl p-5 sm:p-6 shadow-xs border border-gray-200/80 space-y-5">
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
               {/* 3 Sub-modes */}
               <div className="flex flex-wrap gap-2">
@@ -832,7 +839,7 @@ export default function JapaneseConjugationPage() {
                   className={`px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
                     practiceMode === "quiz"
                       ? "bg-indigo-600 text-white shadow-sm"
-                      : "bg-gray-100 dark:bg-gray-700/60 text-gray-700 dark:text-gray-300 hover:bg-gray-200"
+                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                   }`}
                 >
                   🎯 1. Trắc nghiệm nhanh (4 đáp án)
@@ -842,7 +849,7 @@ export default function JapaneseConjugationPage() {
                   className={`px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
                     practiceMode === "typing"
                       ? "bg-indigo-600 text-white shadow-sm"
-                      : "bg-gray-100 dark:bg-gray-700/60 text-gray-700 dark:text-gray-300 hover:bg-gray-200"
+                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                   }`}
                 >
                   ⌨️ 2. Tự gõ đáp án (Kanji / Hiragana)
@@ -852,7 +859,7 @@ export default function JapaneseConjugationPage() {
                   className={`px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
                     practiceMode === "matrix"
                       ? "bg-indigo-600 text-white shadow-sm"
-                      : "bg-gray-100 dark:bg-gray-700/60 text-gray-700 dark:text-gray-300 hover:bg-gray-200"
+                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                   }`}
                 >
                   📋 3. Thử thách Bảng 13 Thể Đầy Đủ
@@ -861,12 +868,12 @@ export default function JapaneseConjugationPage() {
 
               {/* Score & AI Add Verb Button */}
               <div className="flex flex-wrap items-center gap-3">
-                <div className="flex items-center gap-3 px-3.5 py-2 rounded-xl bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-xs font-bold">
-                  <span className="text-emerald-600 dark:text-emerald-400">
+                <div className="flex items-center gap-3 px-3.5 py-2 rounded-xl bg-gray-50 border border-gray-200 text-xs font-bold">
+                  <span className="text-emerald-600">
                     ✅ Đúng: {score.correct}/{score.total}
                   </span>
                   <span>•</span>
-                  <span className="text-amber-600 dark:text-amber-400">
+                  <span className="text-amber-600">
                     🔥 Chuỗi: {score.streak}
                   </span>
                 </div>
@@ -893,7 +900,7 @@ export default function JapaneseConjugationPage() {
             </div>
 
             {aiBannerMsg && (
-              <div className="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 text-xs font-semibold flex items-center justify-between">
+              <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold flex items-center justify-between">
                 <span>{aiBannerMsg}</span>
                 <button
                   onClick={() => setAiBannerMsg(null)}
@@ -905,9 +912,9 @@ export default function JapaneseConjugationPage() {
             )}
 
             {/* Filter by Verb Group & Target Conjugation Forms */}
-            <div className="pt-3 border-t border-gray-100 dark:border-gray-700/60 space-y-3">
+            <div className="pt-3 border-t border-gray-100 space-y-3">
               <div className="flex flex-wrap items-center gap-2">
-                <span className="text-xs font-bold text-gray-500 dark:text-gray-400 mr-1">
+                <span className="text-xs font-bold text-gray-500 mr-1">
                   Nhóm động từ:
                 </span>
                 {[
@@ -925,8 +932,8 @@ export default function JapaneseConjugationPage() {
                     }}
                     className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                       practiceGroupFilter === g.id
-                        ? "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/60 dark:text-indigo-300 border border-indigo-300 dark:border-indigo-700"
-                        : "bg-gray-50 dark:bg-gray-900 text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-gray-700"
+                        ? "bg-indigo-100 text-indigo-700 border border-indigo-300"
+                        : "bg-gray-50 text-gray-600 border border-gray-200"
                     }`}
                   >
                     {g.label}
@@ -937,7 +944,7 @@ export default function JapaneseConjugationPage() {
               {practiceMode !== "matrix" && (
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs font-bold text-gray-500 dark:text-gray-400">
+                    <span className="text-xs font-bold text-gray-500">
                       Các thể muốn luyện ({practiceSelectedForms.length}/13 thể):
                     </span>
                     <div className="flex gap-2">
@@ -946,7 +953,7 @@ export default function JapaneseConjugationPage() {
                           setPracticeSelectedForms(CONJUGATION_FORM_KEYS);
                           setCurrentQuestion(null);
                         }}
-                        className="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline cursor-pointer"
+                        className="text-xs font-bold text-indigo-600 hover:underline cursor-pointer"
                       >
                         Chọn tất cả 13 thể
                       </button>
@@ -962,7 +969,7 @@ export default function JapaneseConjugationPage() {
                           className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                             active
                               ? "bg-indigo-600 text-white shadow-xs"
-                              : "bg-gray-100 dark:bg-gray-900 text-gray-500 dark:text-gray-400 hover:bg-gray-200"
+                              : "bg-gray-100 text-gray-500 hover:bg-gray-200"
                           }`}
                         >
                           #{f.index} {f.shortName}
@@ -977,7 +984,7 @@ export default function JapaneseConjugationPage() {
 
           {/* MODE 1 & MODE 2: QUIZ OR TYPING */}
           {(practiceMode === "quiz" || practiceMode === "typing") && currentQuestion && (
-            <div className="bg-white dark:bg-gray-800 rounded-3xl p-6 sm:p-8 shadow-sm border border-gray-200/80 dark:border-gray-700/80 max-w-3xl mx-auto">
+            <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-xs border border-gray-200/80 max-w-3xl mx-auto">
               {/* Verb Prompt Header */}
               <div className="flex flex-wrap items-center justify-between gap-2 mb-6">
                 <div className="flex items-center gap-2">
@@ -985,11 +992,11 @@ export default function JapaneseConjugationPage() {
                     currentQuestion.verb.group,
                     currentQuestion.verb.isException
                   )}
-                  <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300">
+                  <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-800">
                     JLPT {currentQuestion.verb.jlptLevel}
                   </span>
                   {currentQuestion.verb.source === "ai" && (
-                    <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300">
+                    <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-purple-100 text-purple-700">
                       ✨ Từ AI Gen
                     </span>
                   )}
@@ -997,31 +1004,31 @@ export default function JapaneseConjugationPage() {
 
                 <button
                   onClick={() => speakJapanese(currentQuestion.verb.hiragana)}
-                  className="px-3 py-1.5 rounded-xl bg-indigo-50 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-300 text-xs font-bold flex items-center gap-1.5 hover:bg-indigo-100 cursor-pointer"
+                  className="px-3 py-1.5 rounded-xl bg-indigo-50 text-indigo-600 text-xs font-bold flex items-center gap-1.5 hover:bg-indigo-100 cursor-pointer"
                 >
                   <span>🔊</span> Nghe từ gốc
                 </button>
               </div>
 
-              <div className="text-center py-4 px-4 rounded-2xl bg-gradient-to-b from-gray-50 to-white dark:from-gray-900/70 dark:to-gray-800 border border-gray-200/70 dark:border-gray-700 mb-6">
+              <div className="text-center py-4 px-4 rounded-2xl bg-gradient-to-b from-gray-50 to-white border border-gray-200/70 mb-6">
                 <div className="text-xs font-bold uppercase tracking-wider text-gray-400 mb-1">
                   Động từ nguyên mẫu (辞書形)
                 </div>
-                <div className="text-3xl sm:text-4xl font-black text-gray-900 dark:text-white">
+                <div className="text-3xl sm:text-4xl font-black text-gray-900">
                   {currentQuestion.verb.kanji}
                 </div>
-                <div className="text-base sm:text-lg font-bold text-indigo-600 dark:text-indigo-400 mt-1">
+                <div className="text-base sm:text-lg font-bold text-indigo-600 mt-1">
                   {currentQuestion.verb.hiragana}{" "}
                   <span className="text-xs font-normal text-gray-400">
                     ({currentQuestion.verb.romaji})
                   </span>
                 </div>
-                <div className="text-sm font-semibold text-gray-600 dark:text-gray-300 mt-1">
+                <div className="text-sm font-semibold text-gray-600 mt-1">
                   Nghĩa: &ldquo;{currentQuestion.verb.meaning}&rdquo;
                 </div>
 
-                <div className="mt-5 pt-4 border-t border-gray-200/70 dark:border-gray-700/70">
-                  <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
+                <div className="mt-5 pt-4 border-t border-gray-200/70">
+                  <span className="text-xs sm:text-sm text-gray-600">
                     Hãy chia động từ trên sang:{" "}
                   </span>
                   <div className="mt-1.5 inline-flex items-center gap-2 px-4 py-1.5 rounded-xl bg-indigo-600 text-white font-extrabold text-sm sm:text-base shadow-sm">
@@ -1038,18 +1045,18 @@ export default function JapaneseConjugationPage() {
                     const isAnswered = selectedOptionIdx !== null;
                     const isSelected = selectedOptionIdx === idx;
                     let btnStyle =
-                      "border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/60 hover:border-indigo-400 hover:bg-indigo-50/40";
+                      "border-gray-200 bg-white hover:border-indigo-400 hover:bg-indigo-50/40";
 
                     if (isAnswered) {
                       if (opt.isCorrect) {
                         btnStyle =
-                          "border-emerald-500 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-900 dark:text-emerald-200 ring-2 ring-emerald-500/30";
+                          "border-emerald-500 bg-emerald-50 text-emerald-900 ring-2 ring-emerald-500/30";
                       } else if (isSelected && !opt.isCorrect) {
                         btnStyle =
-                          "border-rose-500 bg-rose-50 dark:bg-rose-950/50 text-rose-900 dark:text-rose-200";
+                          "border-rose-500 bg-rose-50 text-rose-900";
                       } else {
                         btnStyle =
-                          "border-gray-200 dark:border-gray-700 opacity-55";
+                          "border-gray-200 opacity-55";
                       }
                     }
 
@@ -1061,15 +1068,15 @@ export default function JapaneseConjugationPage() {
                         className={`p-4 rounded-2xl border-2 text-left transition-all flex items-center justify-between cursor-pointer ${btnStyle}`}
                       >
                         <div>
-                          <div className="text-lg font-extrabold text-gray-900 dark:text-white">
+                          <div className="text-lg font-extrabold text-gray-900">
                             {opt.kanji}
                           </div>
-                          <div className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 font-medium">
+                          <div className="text-xs sm:text-sm text-gray-500 font-medium">
                             {opt.hiragana}
                           </div>
                         </div>
                         {isAnswered && (
-                          <span className="text-xs font-bold px-2.5 py-1 rounded-lg bg-white/80 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                          <span className="text-xs font-bold px-2.5 py-1 rounded-lg bg-white border border-gray-200">
                             {opt.isCorrect ? "✅ Đúng" : opt.formLabel}
                           </span>
                         )}
@@ -1089,7 +1096,7 @@ export default function JapaneseConjugationPage() {
                       onChange={(e) => setTypingInput(e.target.value)}
                       disabled={typingChecked}
                       placeholder="Nhập Kanji, Hiragana hoặc Romaji (VD: かきます / 書きます / kakimasu)..."
-                      className="flex-1 px-4 py-3.5 rounded-2xl border-2 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-base font-bold focus:outline-none focus:border-indigo-500"
+                      className="flex-1 px-4 py-3.5 rounded-2xl border-2 border-gray-200 bg-gray-50 text-base font-bold focus:outline-none focus:border-indigo-500"
                       autoFocus
                     />
                     {!typingChecked ? (
@@ -1115,7 +1122,7 @@ export default function JapaneseConjugationPage() {
                       <button
                         type="button"
                         onClick={() => setShowTypingHint((v) => !v)}
-                        className="text-indigo-600 dark:text-indigo-400 font-bold hover:underline cursor-pointer"
+                        className="text-indigo-600 font-bold hover:underline cursor-pointer"
                       >
                         💡 {showTypingHint ? "Ẩn gợi ý công thức" : "Xem gợi ý công thức"}
                       </button>
@@ -1124,7 +1131,7 @@ export default function JapaneseConjugationPage() {
                   )}
 
                   {showTypingHint && !typingChecked && (
-                    <div className="p-3 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 text-xs text-amber-800 dark:text-amber-300 font-medium">
+                    <div className="p-3 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-800 font-medium">
                       📐 <b>Gợi ý quy tắc:</b> {currentQuestion.ruleApplied}
                     </div>
                   )}
@@ -1133,9 +1140,9 @@ export default function JapaneseConjugationPage() {
 
               {/* Explanation & Next Button after answering */}
               {(selectedOptionIdx !== null || typingChecked) && (
-                <div className="mt-6 p-4 rounded-2xl bg-indigo-50/70 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-800/60 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="mt-6 p-4 rounded-2xl bg-indigo-50/70 border border-indigo-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div className="space-y-1 text-xs sm:text-sm">
-                    <div className="font-extrabold text-indigo-950 dark:text-indigo-200 flex items-center gap-2">
+                    <div className="font-extrabold text-indigo-950 flex items-center gap-2">
                       <span>
                         {(practiceMode === "quiz" &&
                           selectedOptionIdx !== null &&
@@ -1144,18 +1151,18 @@ export default function JapaneseConjugationPage() {
                           ? "🎉 Chính xác!"
                           : "💡 Đáp án chuẩn:"}
                       </span>
-                      <span className="text-base text-indigo-600 dark:text-indigo-400">
+                      <span className="text-base text-indigo-600">
                         {currentQuestion.correctKanji} ({currentQuestion.correctHiragana} /{" "}
                         {currentQuestion.correctRomaji})
                       </span>
                       <button
                         onClick={() => speakJapanese(currentQuestion.correctHiragana)}
-                        className="px-2 py-0.5 rounded bg-white dark:bg-gray-800 border text-xs cursor-pointer"
+                        className="px-2 py-0.5 rounded bg-white border border-gray-200 text-xs cursor-pointer"
                       >
                         🔊
                       </button>
                     </div>
-                    <p className="text-gray-700 dark:text-gray-300">
+                    <p className="text-gray-700">
                       <b>Quy tắc áp dụng:</b> {currentQuestion.ruleApplied}
                     </p>
                   </div>
@@ -1173,8 +1180,8 @@ export default function JapaneseConjugationPage() {
 
           {/* MODE 3: FULL 13-FORM MATRIX DRILL */}
           {practiceMode === "matrix" && matrixVerb && (
-            <div className="bg-white dark:bg-gray-800 rounded-3xl p-5 sm:p-6 shadow-sm border border-gray-200/80 dark:border-gray-700/80 space-y-5">
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-gray-100 dark:border-gray-700">
+            <div className="bg-white rounded-2xl p-5 sm:p-6 shadow-xs border border-gray-200/80 space-y-5">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-gray-100">
                 <div>
                   <div className="flex items-center gap-2 mb-1">
                     {getGroupBadge(matrixVerb.group, matrixVerb.isException)}
@@ -1182,20 +1189,20 @@ export default function JapaneseConjugationPage() {
                       JLPT {matrixVerb.jlptLevel}
                     </span>
                   </div>
-                  <h3 className="text-2xl font-black text-gray-900 dark:text-white flex items-center gap-2">
+                  <h3 className="text-2xl font-black text-gray-900 flex items-center gap-2">
                     <span>{matrixVerb.kanji}</span>
-                    <span className="text-lg font-bold text-indigo-600 dark:text-indigo-400">
+                    <span className="text-lg font-bold text-indigo-600">
                       ({matrixVerb.hiragana} - {matrixVerb.meaning})
                     </span>
                     <button
                       onClick={() => speakJapanese(matrixVerb.hiragana)}
-                      className="text-sm px-2.5 py-1 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-indigo-50 cursor-pointer"
+                      className="text-sm px-2.5 py-1 rounded-lg bg-gray-100 hover:bg-indigo-50 cursor-pointer"
                     >
                       🔊
                     </button>
                   </h3>
                   {matrixVerb.exceptionNote && (
-                    <p className="text-xs text-amber-600 dark:text-amber-400 font-semibold mt-1">
+                    <p className="text-xs text-amber-600 font-semibold mt-1">
                       ⚠️ {matrixVerb.exceptionNote}
                     </p>
                   )}
@@ -1204,7 +1211,7 @@ export default function JapaneseConjugationPage() {
                 <div className="flex flex-wrap gap-2">
                   <button
                     onClick={pickRandomMatrixVerb}
-                    className="px-3.5 py-2 rounded-xl bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 text-xs font-bold text-gray-700 dark:text-gray-200 cursor-pointer"
+                    className="px-3.5 py-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-xs font-bold text-gray-700 cursor-pointer"
                   >
                     🎲 Đổi động từ khác
                   </button>
@@ -1223,7 +1230,7 @@ export default function JapaneseConjugationPage() {
                       setMatrixInputs(filled);
                       setMatrixChecked(true);
                     }}
-                    className="px-3.5 py-2 rounded-xl bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800 text-xs font-bold cursor-pointer"
+                    className="px-3.5 py-2 rounded-xl bg-amber-50 text-amber-700 border border-amber-200 text-xs font-bold cursor-pointer"
                   >
                     👁️ Điền mẫu đáp án
                   </button>
@@ -1243,13 +1250,13 @@ export default function JapaneseConjugationPage() {
                       className={`p-3.5 rounded-2xl border transition-all ${
                         matrixChecked
                           ? isOk
-                            ? "border-emerald-400 bg-emerald-50/40 dark:bg-emerald-950/20"
-                            : "border-rose-300 bg-rose-50/40 dark:bg-rose-950/20"
-                          : "border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-900/40"
+                            ? "border-emerald-400 bg-emerald-50/40"
+                            : "border-rose-300 bg-rose-50/40"
+                          : "border-gray-200 bg-gray-50/50"
                       }`}
                     >
                       <div className="flex items-center justify-between text-xs font-bold mb-1.5">
-                        <span className="text-gray-800 dark:text-gray-200">
+                        <span className="text-gray-800">
                           #{form.index}. {form.shortName} ({form.nameJp})
                         </span>
                         <span className="text-gray-400">{detail.meaningVi}</span>
@@ -1264,19 +1271,19 @@ export default function JapaneseConjugationPage() {
                           }))
                         }
                         placeholder="Nhập Kanji / Hiragana / Romaji..."
-                        className="w-full px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="w-full px-3 py-2 rounded-xl border border-gray-200 bg-white text-sm font-bold focus:outline-none focus:ring-2 focus:ring-indigo-500"
                       />
                       {matrixChecked && (
                         <div className="mt-2 flex items-center justify-between text-xs">
                           <span
                             className={
                               isOk
-                                ? "text-emerald-700 dark:text-emerald-400 font-bold"
-                                : "text-rose-600 dark:text-rose-400 font-bold"
+                                ? "text-emerald-700 font-bold"
+                                : "text-rose-600 font-bold"
                             }
                           >
                             {isOk ? "✅ Đúng!" : "❌ Đáp án:"}{" "}
-                            <span className="text-indigo-600 dark:text-indigo-300">
+                            <span className="text-indigo-600">
                               {detail.kanji} ({detail.hiragana})
                             </span>
                           </span>
@@ -1303,13 +1310,13 @@ export default function JapaneseConjugationPage() {
       {activeTab === "ai-vocab" && (
         <div className="space-y-6">
           {/* AI Random Verb Generator Control Box */}
-          <div className="bg-white dark:bg-gray-800 rounded-3xl p-5 sm:p-6 shadow-sm border border-gray-200/80 dark:border-gray-700/80">
-            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-gray-100 dark:border-gray-700">
+          <div className="bg-white rounded-2xl p-5 sm:p-6 shadow-xs border border-gray-200/80">
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-gray-100">
               <div>
-                <h2 className="text-lg sm:text-xl font-extrabold text-gray-900 dark:text-white flex items-center gap-2">
+                <h2 className="text-lg sm:text-xl font-extrabold text-gray-900 flex items-center gap-2">
                   <span>🤖</span> Tạo Động Từ Ngẫu Nhiên Bằng AI (Cam Kết Không Trùng & Đầy Đủ 13 Thể)
                 </h2>
-                <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1">
+                <p className="text-xs sm:text-sm text-gray-500 mt-1">
                   Hệ thống tự động ghi nhớ toàn bộ <b>{allVerbs.length}</b> động từ đã có để yêu cầu AI sinh từ vựng hoàn toàn mới kèm bảng chia đủ 13 thể chuẩn xác.
                 </p>
               </div>
@@ -1323,7 +1330,7 @@ export default function JapaneseConjugationPage() {
                         localStorage.removeItem(STORAGE_KEY_AI_VERBS);
                       }
                     }}
-                    className="px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-700 text-xs font-semibold text-gray-500 hover:text-rose-600 cursor-pointer"
+                    className="px-3 py-2 rounded-xl border border-gray-200 text-xs font-semibold text-gray-500 hover:text-rose-600 cursor-pointer"
                   >
                     🗑️ Xóa từ AI đã lưu ({aiVerbs.length})
                   </button>
@@ -1334,13 +1341,13 @@ export default function JapaneseConjugationPage() {
             {/* AI Parameters */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 mt-4">
               <div>
-                <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1">
+                <label className="block text-xs font-bold text-gray-500 mb-1">
                   Trình độ JLPT
                 </label>
                 <select
                   value={aiLevel}
                   onChange={(e) => setAiLevel(e.target.value)}
-                  className="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-xs sm:text-sm font-bold"
+                  className="w-full px-3 py-2.5 rounded-xl border border-gray-200 bg-gray-50 text-xs sm:text-sm font-bold"
                 >
                   <option value="ALL">Tất cả (N5 - N1)</option>
                   <option value="N5">Sơ cấp N5</option>
@@ -1352,13 +1359,13 @@ export default function JapaneseConjugationPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1">
+                <label className="block text-xs font-bold text-gray-500 mb-1">
                   Nhóm động từ
                 </label>
                 <select
                   value={aiGroup}
                   onChange={(e) => setAiGroup(e.target.value)}
-                  className="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-xs sm:text-sm font-bold"
+                  className="w-full px-3 py-2.5 rounded-xl border border-gray-200 bg-gray-50 text-xs sm:text-sm font-bold"
                 >
                   <option value="ALL">Đa dạng cả 3 nhóm</option>
                   <option value="1">Chỉ Nhóm I (Godan)</option>
@@ -1368,13 +1375,13 @@ export default function JapaneseConjugationPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1">
+                <label className="block text-xs font-bold text-gray-500 mb-1">
                   Số lượng mỗi lần tạo
                 </label>
                 <select
                   value={aiCount}
                   onChange={(e) => setAiCount(Number(e.target.value))}
-                  className="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-xs sm:text-sm font-bold"
+                  className="w-full px-3 py-2.5 rounded-xl border border-gray-200 bg-gray-50 text-xs sm:text-sm font-bold"
                 >
                   <option value={5}>5 động từ mới</option>
                   <option value={6}>6 động từ mới</option>
@@ -1384,7 +1391,7 @@ export default function JapaneseConjugationPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1">
+                <label className="block text-xs font-bold text-gray-500 mb-1">
                   Chủ đề (Tùy chọn)
                 </label>
                 <input
@@ -1392,7 +1399,7 @@ export default function JapaneseConjugationPage() {
                   value={aiTopic}
                   onChange={(e) => setAiTopic(e.target.value)}
                   placeholder="VD: Công sở, nấu ăn, du lịch..."
-                  className="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-xs sm:text-sm"
+                  className="w-full px-3 py-2.5 rounded-xl border border-gray-200 bg-gray-50 text-xs sm:text-sm"
                 />
               </div>
 
@@ -1413,13 +1420,13 @@ export default function JapaneseConjugationPage() {
             </div>
 
             {aiError && (
-              <div className="mt-3 p-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-600 dark:text-rose-300 text-xs font-semibold">
+              <div className="mt-3 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-600 text-xs font-semibold">
                 ⚠️ {aiError}
               </div>
             )}
 
             {aiBannerMsg && (
-              <div className="mt-3 p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 text-xs font-semibold">
+              <div className="mt-3 p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold">
                 {aiBannerMsg}
               </div>
             )}
@@ -1428,14 +1435,14 @@ export default function JapaneseConjugationPage() {
           {/* Master-Detail Layout: Left = Verb List, Right = Full 13 Conjugation Table */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
             {/* Left Sidebar: Verb List */}
-            <div className="lg:col-span-4 bg-white dark:bg-gray-800 rounded-3xl p-4 sm:p-5 shadow-sm border border-gray-200/80 dark:border-gray-700/80 flex flex-col max-h-[820px]">
+            <div className="lg:col-span-4 bg-white rounded-2xl p-4 sm:p-5 shadow-xs border border-gray-200/80 flex flex-col max-h-[820px]">
               <div className="space-y-3 mb-3">
                 <input
                   type="text"
                   value={vocabSearch}
                   onChange={(e) => setVocabSearch(e.target.value)}
                   placeholder="🔍 Tìm kiếm Kanji, Hiragana, nghĩa..."
-                  className="w-full px-3.5 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-xs sm:text-sm"
+                  className="w-full px-3.5 py-2 rounded-xl border border-gray-200 bg-gray-50 text-xs sm:text-sm"
                 />
 
                 <div className="flex flex-wrap gap-1.5">
@@ -1450,7 +1457,7 @@ export default function JapaneseConjugationPage() {
                       className={`px-2.5 py-1 rounded-lg text-xs font-bold cursor-pointer ${
                         vocabSourceFilter === tab.id
                           ? "bg-indigo-600 text-white"
-                          : "bg-gray-100 dark:bg-gray-900 text-gray-600 dark:text-gray-400"
+                          : "bg-gray-100 text-gray-600"
                       }`}
                     >
                       {tab.label}
@@ -1471,8 +1478,8 @@ export default function JapaneseConjugationPage() {
                       onClick={() => setVocabGroupFilter(g.id)}
                       className={`px-2 py-1 rounded-lg text-[11px] font-bold cursor-pointer ${
                         vocabGroupFilter === g.id
-                          ? "bg-purple-100 text-purple-700 dark:bg-purple-900/50 dark:text-purple-300"
-                          : "text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700"
+                          ? "bg-purple-100 text-purple-700"
+                          : "text-gray-500 hover:bg-gray-100"
                       }`}
                     >
                       {g.label}
@@ -1490,31 +1497,31 @@ export default function JapaneseConjugationPage() {
                       onClick={() => setSelectedVerbId(verb.id)}
                       className={`w-full text-left p-3 rounded-2xl border transition-all flex items-center justify-between cursor-pointer ${
                         isSelected
-                          ? "border-indigo-500 bg-indigo-50/80 dark:bg-indigo-950/50 shadow-xs"
-                          : "border-gray-100 dark:border-gray-700/60 hover:bg-gray-50 dark:hover:bg-gray-700/40"
+                          ? "border-indigo-500 bg-indigo-50/80 shadow-xs"
+                          : "border-gray-100 hover:bg-gray-50"
                       }`}
                     >
                       <div>
                         <div className="flex items-center gap-2">
-                          <span className="font-extrabold text-base text-gray-900 dark:text-white">
+                          <span className="font-extrabold text-base text-gray-900">
                             {verb.kanji}
                           </span>
-                          <span className="text-xs font-semibold text-indigo-600 dark:text-indigo-400">
+                          <span className="text-xs font-semibold text-indigo-600">
                             {verb.hiragana}
                           </span>
                           {verb.source === "ai" && (
-                            <span className="px-1.5 py-0.2 rounded bg-purple-100 dark:bg-purple-900/50 text-purple-700 dark:text-purple-300 text-[10px] font-bold">
+                            <span className="px-1.5 py-0.2 rounded bg-purple-100 text-purple-700 text-[10px] font-bold">
                               AI
                             </span>
                           )}
                         </div>
-                        <div className="text-xs text-gray-600 dark:text-gray-300 mt-0.5">
+                        <div className="text-xs text-gray-600 mt-0.5">
                           {verb.meaning}
                         </div>
                       </div>
 
                       <div className="flex flex-col items-end gap-1 shrink-0">
-                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-gray-100 text-gray-700">
                           Nhóm {verb.group} • {verb.jlptLevel}
                         </span>
                       </div>
@@ -1527,38 +1534,38 @@ export default function JapaneseConjugationPage() {
             {/* Right Detail Panel: Full 13-Form Conjugation Table */}
             <div className="lg:col-span-8">
               {selectedVerb && (
-                <div className="bg-white dark:bg-gray-800 rounded-3xl p-5 sm:p-6 shadow-sm border border-gray-200/80 dark:border-gray-700/80 space-y-5">
+                <div className="bg-white rounded-2xl p-5 sm:p-6 shadow-xs border border-gray-200/80 space-y-5">
                   {/* Verb Top Summary */}
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-gray-100 dark:border-gray-700">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-gray-100">
                     <div>
                       <div className="flex flex-wrap items-center gap-2 mb-2">
                         {getGroupBadge(selectedVerb.group, selectedVerb.isException)}
-                        <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300">
+                        <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-800">
                           JLPT {selectedVerb.jlptLevel}
                         </span>
                         {selectedVerb.source === "ai" && (
-                          <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300">
+                          <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-purple-100 text-purple-700">
                             ✨ Sinh bởi AI (Không trùng)
                           </span>
                         )}
                       </div>
 
                       <div className="flex items-baseline gap-3 flex-wrap">
-                        <h3 className="text-3xl font-black text-gray-900 dark:text-white">
+                        <h3 className="text-3xl font-black text-gray-900">
                           {selectedVerb.kanji}
                         </h3>
-                        <span className="text-xl font-bold text-indigo-600 dark:text-indigo-400">
+                        <span className="text-xl font-bold text-indigo-600">
                           {selectedVerb.hiragana}
                         </span>
                         <span className="text-sm text-gray-400">
                           [{selectedVerb.romaji}]
                         </span>
                       </div>
-                      <p className="text-base font-bold text-gray-700 dark:text-gray-200 mt-1">
+                      <p className="text-base font-bold text-gray-700 mt-1">
                         Nghĩa: {selectedVerb.meaning}
                       </p>
                       {selectedVerb.exceptionNote && (
-                        <p className="text-xs font-semibold text-amber-600 dark:text-amber-400 mt-1">
+                        <p className="text-xs font-semibold text-amber-600 mt-1">
                           ⚠️ {selectedVerb.exceptionNote}
                         </p>
                       )}
@@ -1567,7 +1574,7 @@ export default function JapaneseConjugationPage() {
                     <div className="flex flex-wrap gap-2">
                       <button
                         onClick={() => speakJapanese(selectedVerb.hiragana)}
-                        className="px-3.5 py-2 rounded-xl bg-indigo-50 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 text-xs font-bold hover:bg-indigo-100 cursor-pointer"
+                        className="px-3.5 py-2 rounded-xl bg-indigo-50 text-indigo-700 text-xs font-bold hover:bg-indigo-100 cursor-pointer"
                       >
                         🔊 Phát âm
                       </button>
@@ -1580,7 +1587,7 @@ export default function JapaneseConjugationPage() {
                             wordType: "Động từ",
                           })
                         }
-                        className="px-3.5 py-2 rounded-xl bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800 text-xs font-bold hover:bg-amber-100 cursor-pointer"
+                        className="px-3.5 py-2 rounded-xl bg-amber-50 text-amber-700 border border-amber-200 text-xs font-bold hover:bg-amber-100 cursor-pointer"
                       >
                         📓 Lưu Sổ tay
                       </button>
@@ -1600,24 +1607,24 @@ export default function JapaneseConjugationPage() {
                   </div>
 
                   {/* Example Sentence Box */}
-                  <div className="p-4 rounded-2xl bg-gray-50 dark:bg-gray-900/60 border border-gray-200/70 dark:border-gray-700/70 flex items-center justify-between gap-3">
+                  <div className="p-4 rounded-2xl bg-gray-50 border border-gray-200/70 flex items-center justify-between gap-3">
                     <div className="space-y-0.5 text-xs sm:text-sm">
                       <div className="text-[11px] font-bold uppercase tracking-wider text-gray-400">
                         Câu ví dụ thực tế:
                       </div>
-                      <div className="font-bold text-gray-900 dark:text-white text-sm sm:text-base">
+                      <div className="font-bold text-gray-900 text-sm sm:text-base">
                         {selectedVerb.exampleJa}
                       </div>
-                      <div className="text-indigo-600 dark:text-indigo-400 text-xs">
+                      <div className="text-indigo-600 text-xs">
                         {selectedVerb.exampleReading}
                       </div>
-                      <div className="text-gray-600 dark:text-gray-300 text-xs">
+                      <div className="text-gray-600 text-xs">
                         → {selectedVerb.exampleVi}
                       </div>
                     </div>
                     <button
                       onClick={() => speakJapanese(selectedVerb.exampleJa)}
-                      className="p-2.5 rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-indigo-600 hover:bg-indigo-50 cursor-pointer shrink-0"
+                      className="p-2.5 rounded-xl bg-white border border-gray-200 text-indigo-600 hover:bg-indigo-50 cursor-pointer shrink-0"
                     >
                       🔊
                     </button>
@@ -1625,14 +1632,14 @@ export default function JapaneseConjugationPage() {
 
                   {/* Complete 13-Form Table */}
                   <div>
-                    <h4 className="text-sm font-extrabold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">
+                    <h4 className="text-sm font-extrabold uppercase tracking-wider text-gray-500 mb-3">
                       📊 Bảng Chia Đầy Đủ 13 Thể Động Từ ({selectedVerb.kanji})
                     </h4>
 
-                    <div className="overflow-x-auto rounded-2xl border border-gray-200 dark:border-gray-700">
+                    <div className="overflow-x-auto rounded-2xl border border-gray-200">
                       <table className="w-full text-left border-collapse text-xs sm:text-sm">
                         <thead>
-                          <tr className="bg-gray-50 dark:bg-gray-900/80 text-gray-600 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700">
+                          <tr className="bg-gray-50 text-gray-600 border-b border-gray-200">
                             <th className="py-3 px-3 font-extrabold">#</th>
                             <th className="py-3 px-3 font-extrabold">Tên Thể</th>
                             <th className="py-3 px-3 font-extrabold">Chia (Kanji)</th>
@@ -1641,30 +1648,30 @@ export default function JapaneseConjugationPage() {
                             <th className="py-3 px-3 font-extrabold text-center">Nghe</th>
                           </tr>
                         </thead>
-                        <tbody className="divide-y divide-gray-100 dark:divide-gray-700/60">
+                        <tbody className="divide-y divide-gray-100">
                           {CONJUGATION_FORMS_THEORY.map((formMeta) => {
                             const detail = selectedVerb.conjugations[formMeta.key];
                             return (
                               <tr
                                 key={formMeta.key}
-                                className="hover:bg-indigo-50/30 dark:hover:bg-indigo-950/20 transition-colors"
+                                className="hover:bg-indigo-50/30 transition-colors"
                               >
                                 <td className="py-3 px-3 font-bold text-gray-400">
                                   #{formMeta.index}
                                 </td>
                                 <td className="py-3 px-3">
-                                  <div className="font-bold text-gray-900 dark:text-white">
+                                  <div className="font-bold text-gray-900">
                                     {formMeta.shortName}
                                   </div>
                                   <div className="text-[11px] text-gray-400">
                                     {formMeta.nameJp}
                                   </div>
                                 </td>
-                                <td className="py-3 px-3 font-extrabold text-indigo-600 dark:text-indigo-400 text-sm sm:text-base">
+                                <td className="py-3 px-3 font-extrabold text-indigo-600 text-sm sm:text-base">
                                   {detail.kanji}
                                 </td>
                                 <td className="py-3 px-3">
-                                  <div className="font-bold text-gray-800 dark:text-gray-200">
+                                  <div className="font-bold text-gray-800">
                                     {detail.hiragana}
                                   </div>
                                   <div className="text-[11px] text-gray-400">
@@ -1672,17 +1679,17 @@ export default function JapaneseConjugationPage() {
                                   </div>
                                 </td>
                                 <td className="py-3 px-3">
-                                  <div className="font-medium text-gray-800 dark:text-gray-200">
+                                  <div className="font-medium text-gray-800">
                                     {detail.meaningVi}
                                   </div>
-                                  <div className="text-[11px] text-gray-500 dark:text-gray-400">
+                                  <div className="text-[11px] text-gray-500">
                                     {detail.ruleApplied}
                                   </div>
                                 </td>
                                 <td className="py-3 px-3 text-center">
                                   <button
                                     onClick={() => speakJapanese(detail.hiragana)}
-                                    className="p-1.5 rounded-lg hover:bg-indigo-100 dark:hover:bg-gray-700 text-indigo-600 cursor-pointer"
+                                    className="p-1.5 rounded-lg hover:bg-indigo-100 text-indigo-600 cursor-pointer"
                                     title="Nghe phát âm"
                                   >
                                     🔊
